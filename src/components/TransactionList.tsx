@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid } from "date-fns"; // Adicionado isValid
+import { format, isValid, setDate, getMonth, getYear } from "date-fns"; // Adicionado setDate, getMonth, getYear
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -40,8 +40,8 @@ interface TransactionListProps {
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
   selectedMonth: Date;
-  loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
-  setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
+  loadingPayInvoice: boolean;
+  setLoadingPayInvoice: (loading: boolean) => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -67,8 +67,8 @@ export const TransactionList = ({
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   selectedMonth,
-  loadingPayInvoice, // NOVO
-  setLoadingPayInvoice, // NOVO
+  loadingPayInvoice,
+  setLoadingPayInvoice,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const navigate = useNavigate();
@@ -149,7 +149,6 @@ export const TransactionList = ({
       toast.error("Selecione um cartão de crédito válido para pagar a fatura.");
       return;
     }
-    // Usar isValid do date-fns para uma verificação mais robusta
     if (!isValid(selectedMonth)) {
       toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
       console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth);
@@ -198,6 +197,36 @@ export const TransactionList = ({
       setLoadingPayInvoice(false);
     }
   };
+
+  // Calcular a data de vencimento da fatura
+  const invoiceDueDate = useMemo(() => {
+    if (!isValidUuid(filterPaymentOptionId) || !isValid(selectedMonth)) {
+      return null;
+    }
+    const selectedCard = cartoes.find(card => card.id === filterPaymentOptionId);
+    if (!selectedCard) {
+      return null;
+    }
+
+    const currentYear = getYear(selectedMonth);
+    const currentMonthIndex = getMonth(selectedMonth); // 0-indexed
+
+    let dueDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
+
+    // Se o dia de vencimento já passou no mês atual, a fatura é do próximo mês
+    // Ex: Mês selecionado é Janeiro, dia de vencimento é 5. Se hoje é 10 de Janeiro, a fatura de Janeiro já venceu.
+    // A próxima fatura a ser paga (que inclui as despesas do mês selecionado) vencerá em Fevereiro.
+    // No entanto, a lógica de "pagar fatura" se refere às despesas *do mês selecionado*.
+    // A data de vencimento exibida deve ser a do mês *seguinte* ao mês de referência das despesas.
+    // Ex: Despesas de Janeiro vencem em Fevereiro.
+    // Então, se selectedMonth é Janeiro, a data de vencimento é dia_vencimento de Fevereiro.
+    
+    // Para simplificar, vamos exibir a data de vencimento no mês seguinte ao `selectedMonth`
+    // porque as despesas do `selectedMonth` geralmente vencem no mês seguinte.
+    dueDate = addMonths(dueDate, 1); // Adiciona 1 mês para refletir o vencimento da fatura do mês selecionado
+
+    return isValid(dueDate) ? format(dueDate, "dd/MM/yyyy", { locale: ptBR }) : null;
+  }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
@@ -252,30 +281,57 @@ export const TransactionList = ({
               </SelectContent>
             </Select>
 
-            <Button
-              variant="secondary"
-              onClick={handlePayInvoice}
-              className="w-full rounded-xl col-span-1"
-              disabled={loadingPayInvoice || disableFilters}
-            >
-              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-            </Button>
+            <div className="flex flex-col items-center justify-center col-span-1"> {/* Container para botão e data */}
+              <Button
+                variant="secondary"
+                onClick={handlePayInvoice}
+                className="w-full rounded-xl"
+                disabled={loadingPayInvoice || disableFilters}
+              >
+                <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+                {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+              </Button>
+              {invoiceDueDate && (
+                <span className="text-xs text-muted-foreground mt-1">
+                  Vencimento: {invoiceDueDate}
+                </span>
+              )}
+            </div>
           </>
         ) : (
-          <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                  className={cn(isMobile && "col-span-full")}>
-            <SelectTrigger className="rounded-xl">
-              <SelectValue placeholder="Forma de Pagamento" />
-            </SelectTrigger>
-            <SelectContent>
-              {paymentFilterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className={cn("col-span-full flex flex-col gap-2", !isMobile && "grid grid-cols-2 gap-4")}> {/* Ajustado para desktop */}
+            <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                    className="rounded-xl">
+              <SelectTrigger className="rounded-xl">
+                <SelectValue placeholder="Forma de Pagamento" />
+              </SelectTrigger>
+              <SelectContent>
+                {paymentFilterOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {isValidUuid(filterPaymentOptionId) && (
+              <div className="flex flex-col items-center justify-center">
+                <Button
+                  variant="secondary"
+                  onClick={handlePayInvoice}
+                  className="w-full rounded-xl"
+                  disabled={loadingPayInvoice || disableFilters}
+                >
+                  <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+                  {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+                </Button>
+                {invoiceDueDate && (
+                  <span className="text-xs text-muted-foreground mt-1">
+                    Vencimento: {invoiceDueDate}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
         <div className={cn(
