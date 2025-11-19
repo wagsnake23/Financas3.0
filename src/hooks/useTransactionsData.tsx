@@ -37,7 +37,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { materializedRecurringTransactions, isLoading: isLoadingRecurring } = useRecurringEntries(user, selectedMonth, fetchedCategories, enabled); // Passando 'enabled'
-  console.log("useTransactionsData: materializedRecurringTransactions from hook:", materializedRecurringRecurringTransactions);
+  console.log("useTransactionsData: materializedRecurringTransactions from hook:", materializedRecurringTransactions); // Corrigido o erro de digitação
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
