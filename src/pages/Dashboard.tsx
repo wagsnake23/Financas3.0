@@ -24,6 +24,7 @@ import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
+import { CategoryStats } from "@/components/CategoryStats"; // Importar o novo componente
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -176,6 +177,11 @@ const Dashboard = () => {
                 expenseInstallments={expenseInstallments}
                 isMobile={isMobile}
               />
+              <CategoryStats
+                transactions={monthlyFilteredTransactions}
+                allCategories={allSubcategories}
+                isMobile={isMobile}
+              />
             </div>
           ) : (
             <>
@@ -257,6 +263,12 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 mb-4">
                 <TotalExpensesCard expenseInstallments={expenseInstallments} isMobile={isMobile} />
               </div>
+
+              <CategoryStats
+                transactions={monthlyFilteredTransactions}
+                allCategories={allSubcategories}
+                isMobile={isMobile}
+              />
 
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
