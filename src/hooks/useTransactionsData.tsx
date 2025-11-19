@@ -66,6 +66,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
+      console.log("useTransactionsData: Raw expenseInstallments fetched:", data.map(p => ({ id: p.id, despesa_id: p.despesas?.id, forma_pagamento: p.despesas?.forma_pagamento, cartao_id: p.despesas?.cartao_id }))); // LOG ADICIONADO
       return data.filter(p => !p.despesas?.is_fixed); // Filtrar despesas fixas legadas
     },
     enabled: enabled, // Usar o parâmetro 'enabled'
@@ -131,7 +132,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         const parentDespesa = p.despesas;
         const despesaId = parentDespesa?.id;
         const totalForNonFixed = despesaId ? totalInstallmentsMap.get(despesaId) : 1;
-        return {
+        const transaction: Transaction = { // Definir tipo para log
           id: p.id,
           type: "expense",
           amount: p.valor_parcela,
@@ -148,6 +149,8 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           cartao_id: parentDespesa?.cartao_id,
           despesa_id: parentDespesa?.id,
         };
+        console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id }); // LOG ADICIONADO
+        return transaction;
       });
 
     // 3. Combine month-specific one-off transactions with already month-specific recurring transactions

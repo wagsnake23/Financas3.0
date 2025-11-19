@@ -48,11 +48,14 @@ export const useLancamentosLogic = (
   }, [searchParams]);
 
   const initialCardId = useMemo(() => {
-    return searchParams.get("cardId") || "all";
+    const cardIdParam = searchParams.get("cardId"); // Capturar o parâmetro cardId
+    console.log("useLancamentosLogic: initialCardId from URL param:", cardIdParam); // LOG ADICIONADO
+    return cardIdParam || "all";
   }, [searchParams]);
 
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [filterCardId, setFilterCardId] = useState<string>(initialCardId); // Novo estado para o filtro de cartão
+  console.log("useLancamentosLogic: filterCardId state initialized to:", filterCardId); // LOG ADICIONADO
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
   const [fullEditingRevenue, setFullEditingRevenue] =

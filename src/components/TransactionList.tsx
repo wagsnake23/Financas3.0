@@ -60,9 +60,12 @@ export const TransactionList = ({
   // const [filterCardId, setFilterCardId] = useState<string>("all"); // Removido, agora vem via props
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
+  // LOGS ADICIONADOS AQUI
+  console.log("TransactionList: Props received - filterCardId:", filterCardId, "Cartões:", cartoes.map(c => ({ id: c.id, nome: c.nome })));
+
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
-    console.log("TransactionList: filterCardId current value:", filterCardId); // Log adicionado
+    console.log("TransactionList: filterCardId current value in useMemo:", filterCardId); // Log adicionado
     
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -71,7 +74,7 @@ export const TransactionList = ({
       
       let matchesPaymentMethod = true; 
       if (filterCardId !== "all") {
-        console.log(`  Checking transaction ID: ${transaction.id}, forma_pagamento: ${transaction.forma_pagamento}, cartao_id: ${transaction.cartao_id}`); // Log adicionado
+        console.log(`  Checking transaction ID: ${transaction.id}, Type: ${transaction.type}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} against filterCardId: ${filterCardId}`); // Log adicionado
         matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === filterCardId;
       }
 
