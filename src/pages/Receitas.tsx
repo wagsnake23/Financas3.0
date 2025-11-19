@@ -286,18 +286,24 @@ export default function Receitas() {
                 >
                   <Label
                     htmlFor="one-off-revenue"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary text-sm"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                    )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className="mb-1 h-5 w-5" />
+                    <DynamicIcon name="DollarSign" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
                     <span>Avulsa</span>
                   </Label>
                   <Label
                     htmlFor="recurring-revenue"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary text-sm"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                    )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue" className="sr-only" />
-                    <DynamicIcon name="Repeat" className="mb-1 h-5 w-5" />
+                    <DynamicIcon name="Repeat" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
                     <span>Recorrente</span>
                   </Label>
                 </RadioGroup>
@@ -324,18 +330,24 @@ export default function Receitas() {
                 >
                   <Label
                     htmlFor="one-off-revenue-desktop"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      "p-2 text-sm" // Desktop size
+                    )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className="mb-3 h-6 w-6" />
+                    <DynamicIcon name="DollarSign" className="mb-1 h-5 w-5" color="hsl(var(--success))" />
                     <span>Receita Avulsa</span>
                   </Label>
                   <Label
                     htmlFor="recurring-revenue-desktop"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      "p-2 text-sm" // Desktop size
+                    )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="Repeat" className="mb-3 h-6 w-6" />
+                    <DynamicIcon name="Repeat" className="mb-1 h-5 w-5" color="hsl(var(--primary))" />
                     <span>Receita Recorrente</span>
                   </Label>
                 </RadioGroup>

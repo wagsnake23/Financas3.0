@@ -128,18 +128,24 @@ export default function Despesas() {
                 >
                   <Label
                     htmlFor="one-off-expense"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary text-sm"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
+                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                    )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only" />
-                    <DynamicIcon name="CreditCard" className="mb-1 h-5 w-5" />
+                    <DynamicIcon name="CreditCard" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--destructive))" />
                     <span>Avulsa</span>
                   </Label>
                   <Label
                     htmlFor="recurring-expense"
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary text-sm"
+                    className={cn(
+                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                    )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only" />
-                    <DynamicIcon name="Repeat" className="mb-1 h-5 w-5" />
+                    <DynamicIcon name="Repeat" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
                     <span>Recorrente</span>
                   </Label>
                 </RadioGroup>
