@@ -108,54 +108,34 @@ export default function Despesas() {
       <RadioGroup
         value={formMode}
         onValueChange={(value: FormMode) => setFormMode(value)}
-        className={cn("grid gap-2 mb-4", isMobile ? "grid-cols-2" : "grid-cols-2")}
+        className="flex items-center justify-center gap-6 mb-4" // Estilo simplificado como o TransactionStatusToggle
       >
-        <Label
-          htmlFor="one-off-expense"
-          className={cn(
-            "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground shadow-sm",
-            "transition-all duration-200", // Adicionado para transição suave
-            "hover:border-primary", // Borda azul no hover
-            "hover:bg-primary/5", // Fundo azul suave no hover
-            "hover:text-primary", // Texto azul no hover
-            "hover:font-bold", // Negrito no hover
-            "text-muted-foreground", // Cor padrão do texto
-            "font-normal", // Peso da fonte padrão
-            "relative", // Necessário para o peer-data
-            "peer-data-[state=checked]:border-primary", // Borda azul quando selecionado
-            "peer-data-[state=checked]:bg-primary/5", // Fundo azul suave quando selecionado
-            "peer-data-[state=checked]:text-primary", // Texto azul quando selecionado
-            "peer-data-[state=checked]:font-bold", // Negrito quando selecionado
-            isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
-          )}
-        >
-          <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only peer" /> {/* Adicionado peer */}
-          <DynamicIcon name="⚡" className={cn("mb-3 h-6 w-6 text-primary", isMobile && "mb-1 h-5 w-5")} />
-          <span>Avulsa</span>
-        </Label>
-        <Label
-          htmlFor="recurring-expense"
-          className={cn(
-            "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground shadow-sm",
-            "transition-all duration-200", // Adicionado para transição suave
-            "hover:border-success", // Borda verde no hover
-            "hover:bg-success/5", // Fundo verde suave no hover
-            "hover:text-success", // Texto verde no hover
-            "hover:font-bold", // Negrito no hover
-            "text-muted-foreground", // Cor padrão do texto
-            "font-normal", // Peso da fonte padrão
-            "relative", // Necessário para o peer-data
-            "peer-data-[state=checked]:border-success", // Borda verde quando selecionado
-            "peer-data-[state=checked]:bg-success/5", // Fundo verde suave quando selecionado
-            "peer-data-[state=checked]:text-success", // Texto verde quando selecionado
-            "peer-data-[state=checked]:font-bold", // Negrito quando selecionado
-            isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
-          )}
-        >
-          <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only peer" /> {/* Adicionado peer */}
-          <DynamicIcon name="🔁" className={cn("mb-3 h-6 w-6 text-success", isMobile && "mb-1 h-5 w-5")} />
-          <span>Recorrente</span>
-        </Label>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="one-off" id="one-off-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+          <Label
+            htmlFor="one-off-expense"
+            className={cn(
+              "text-sm font-normal text-muted-foreground",
+              isMobile && "text-xs",
+              "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold" // Azul para Avulsa
+            )}
+          >
+            Avulsa
+          </Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="recurring" id="recurring-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+          <Label
+            htmlFor="recurring-expense"
+            className={cn(
+              "text-sm font-normal text-muted-foreground",
+              isMobile && "text-xs",
+              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold" // Verde para Recorrente
+            )}
+          >
+            Recorrente
+          </Label>
+        </div>
       </RadioGroup>
 
       {formMode === 'one-off' ? (
