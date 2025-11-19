@@ -14,19 +14,19 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
-import { TablesInsert, Enums, Tables, TablesUpdate } from "@/integrations/supabase/types"; // Importar TablesUpdate
-import { supabase } from "@/integrations/supabase/client"; // Importar supabase
-import { AddCardDialog } from "./AddCardDialog"; // Importar AddCardDialog
-import ManageCardsDialog from "./ManageCardsDialog"; // Importar ManageCardsDialog
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
-import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle"; // Importar TransactionStatusToggle
+import { TablesInsert, Enums, Tables, TablesUpdate } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
+import { AddCardDialog } from "./AddCardDialog";
+import ManageCardsDialog from "./ManageCardsDialog";
+import { CurrencyInput } from "@/components/ui/currency-input";
+import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle";
 
 interface RecurringEntryFormContentProps {
   isMobile: boolean;
   onSuccess?: () => void;
   fetchedCategories: AppCategory[];
   isLoadingCategories: boolean;
-  initialType?: Enums<'recurring_type'>; // Adicionado para predefinir o tipo
+  initialType?: Enums<'recurring_type'>;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -36,14 +36,15 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   onSuccess, 
   fetchedCategories, 
   isLoadingCategories,
-  initialType = "despesa" // Padrão para despesa
+  initialType = "despesa"
 }) => {
   const { user } = useAuth();
-  const { createRecurringEntry, createOrUpdateException } = useRecurringEntries(user, new Date(), fetchedCategories, true); // Passar 'true' para enabled
+  const { createRecurringEntry, createOrUpdateException } = useRecurringEntries(user, new Date(), fetchedCategories, true);
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
-  const [value, setValue] = useState<number | undefined>(undefined); // Alterado para number | undefined
-  const [categoryId, setCategoryId] = useState(UNSELECTED_VALUE);
+  const [value, setValue] = useState<number | undefined>(undefined);
+  const [selectedParentCategoryId, setSelectedParentCategoryId] = useState(UNSELECTED_VALUE); // Novo estado para categoria principal
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(UNSELECTED_VALUE); // Novo estado para subcategoria
   const [dueDay, setDueDay] = useState("1");
   const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
@@ -51,24 +52,21 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   const [loading, setLoading] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [isPaid, setIsPaid] = useState(false); // Novo estado para o status de pago
+  const [isPaid, setIsPaid] = useState(false);
 
-  // Novos estados para forma de pagamento e cartões
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
   const [cartoes, setCartoes] = useState<Tables<'cartoes'>[]>([]);
 
-  // Atualiza o tipo se initialType mudar
   useEffect(() => {
     setType(initialType);
-    setCategoryId(UNSELECTED_VALUE); // Reset category when type changes
-    // Reset payment method and card when type changes
+    setSelectedParentCategoryId(UNSELECTED_VALUE); // Resetar categoria principal
+    setSelectedSubcategoryId(UNSELECTED_VALUE); // Resetar subcategoria
     setFormaPagamento("dinheiro");
     setCartaoId(UNSELECTED_VALUE);
-    setIsPaid(false); // Resetar o status de pago
+    setIsPaid(false);
   }, [initialType]);
 
-  // Carregar cartões quando o usuário estiver disponível
   useEffect(() => {
     if (user) {
       loadCartoes();
@@ -89,29 +87,24 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     }
   };
 
-  const filteredCategories = useMemo(() => {
+  const rootCategories = useMemo(() => {
     if (type === "receita") {
-      // Filtra para exibir apenas subcategorias de 'Receitas e Investimentos'
-      return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+      return fetchedCategories.filter(cat => cat.id === 'receitas_e_investimentos');
     } else {
-      // Para despesas, exibe apenas subcategorias que não são de 'Receitas e Investimentos'
-      return fetchedCategories.filter(cat => 
-        cat.parent_id !== null && // Apenas subcategorias
-        cat.parent_id !== 'receitas_e_investimentos' // Exclui subcategorias de receita
-      );
+      return fetchedCategories.filter(cat => cat.parent_id === null && cat.id !== 'receitas_e_investimentos');
     }
   }, [type, fetchedCategories]);
 
+  const subcategories = useMemo(() => {
+    if (selectedParentCategoryId === UNSELECTED_VALUE) {
+      return [];
+    }
+    return fetchedCategories.filter(cat => cat.parent_id === selectedParentCategoryId);
+  }, [fetchedCategories, selectedParentCategoryId]);
+
   const getCategoryDisplayName = (catId: string) => {
     const category = fetchedCategories.find(cat => cat.id === catId);
-    if (!category) return catId;
-
-    // Para subcategorias de receita ou despesa, apenas mostra o nome da subcategoria
-    if (category.parent_id) {
-      return category.nome;
-    }
-    // Para categorias raiz (que não deveriam aparecer no filtro de subcategorias, mas como fallback)
-    return category.nome;
+    return category?.nome || catId;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,7 +116,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    if (value === undefined || value <= 0 || categoryId === UNSELECTED_VALUE || !dueDay || !startDate) { // Verificação para number | undefined
+    if (value === undefined || value <= 0 || selectedParentCategoryId === UNSELECTED_VALUE || selectedSubcategoryId === UNSELECTED_VALUE || !dueDay || !startDate) {
       toast.error("Preencha todos os campos obrigatórios.");
       setLoading(false);
       return;
@@ -138,7 +131,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    // Validation for cartao_id: only if formaPagamento is "cartao" AND it's an expense
     if (type === "despesa" && formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
       toast.error("Selecione um cartão para despesas com cartão de crédito.");
       setLoading(false);
@@ -148,34 +140,32 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     const newRecurringEntry: TablesInsert<'recurring_entries'> = {
       user_id: user.id,
       type,
-      title: "Lançamento Recorrente", // Título padrão
-      value: value as number, // Usar o valor como number
-      category_id: categoryId === UNSELECTED_VALUE ? null : categoryId, // <--- ALTERADO AQUI
+      title: "Lançamento Recorrente",
+      value: value as number,
+      category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
       due_day: parseInt(dueDay),
       frequency,
       start_date: format(startDate, "yyyy-MM-dd"),
       end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
       status: 'active',
-      // Novos campos de pagamento
-      forma_pagamento: formaPagamento, // Incluído para ambos os tipos
-      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null, // Condicional para cartao_id
+      forma_pagamento: formaPagamento,
+      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
     };
 
     try {
       const createdEntry = await createRecurringEntry(newRecurringEntry);
 
-      // Se a primeira ocorrência for marcada como paga, criar uma exceção
       if (isPaid && createdEntry && startDate) {
         const firstOccurrenceYear = startDate.getFullYear();
-        const firstOccurrenceMonth = startDate.getMonth() + 1; // Mês 1-indexado
+        const firstOccurrenceMonth = startDate.getMonth() + 1;
 
         const exceptionPayload: TablesUpdate<'recurring_entry_exceptions'> = {
           paid: true,
           canceled: false,
           note: "Marcado como pago na criação da recorrência",
-          override_value: value, // Usar o valor original
-          override_category_id: categoryId === UNSELECTED_VALUE ? null : categoryId, // <--- ALTERADO AQUI
-          override_due_date: format(startDate, "yyyy-MM-dd"), // Usar a data de início como data de vencimento da exceção
+          override_value: value,
+          override_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
+          override_due_date: format(startDate, "yyyy-MM-dd"),
         };
 
         await createOrUpdateException({
@@ -189,14 +179,15 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         });
       }
 
-      setValue(undefined); // Reset para undefined
-      setCategoryId(UNSELECTED_VALUE);
+      setValue(undefined);
+      setSelectedParentCategoryId(UNSELECTED_VALUE);
+      setSelectedSubcategoryId(UNSELECTED_VALUE);
       setDueDay("1");
       setStartDate(new Date());
       setEndDate(undefined);
-      setFormaPagamento("dinheiro"); // Resetar forma de pagamento
-      setCartaoId(UNSELECTED_VALUE); // Resetar cartão
-      setIsPaid(false); // Resetar o status de pago
+      setFormaPagamento("dinheiro");
+      setCartaoId(UNSELECTED_VALUE);
+      setIsPaid(false);
       onSuccess?.();
     } catch (error) {
       // Error handled by mutation's onError
@@ -207,29 +198,66 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Categoria */}
-      <div className="space-y-2">
-        <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label> {/* Label alterada */}
-        <Select value={categoryId} onValueChange={setCategoryId} disabled={loading || isLoadingCategories}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder alterado */}
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem> {/* Item desabilitado alterado */}
-            {filteredCategories.length === 0 ? (
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
-            ) : (
-              filteredCategories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                  <span className="flex items-center gap-2">
-                    <span>{cat.icone}</span>
-                    <span>{getCategoryDisplayName(cat.id)}</span>
-                  </span>
-                </SelectItem>
-              ))
-            )}
-          </SelectContent>
-        </Select>
+      {/* Categoria Principal e Subcategoria */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="parentCategory" className={cn(isMobile && "text-xs")}>Categoria Principal</Label>
+          <Select 
+            value={selectedParentCategoryId} 
+            onValueChange={(value) => {
+              setSelectedParentCategoryId(value);
+              setSelectedSubcategoryId(UNSELECTED_VALUE); // Reset subcategory when parent changes
+            }}
+            disabled={loading || isLoadingCategories}
+          >
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+              <SelectValue placeholder="Selecione a categoria principal" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a categoria principal</SelectItem>
+              {rootCategories.length === 0 ? (
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma categoria principal disponível</SelectItem>
+              ) : (
+                rootCategories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                    <span className="flex items-center gap-2">
+                      <span>{cat.icone}</span>
+                      <span>{getCategoryDisplayName(cat.id)}</span>
+                    </span>
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="subcategory" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
+          <Select 
+            value={selectedSubcategoryId} 
+            onValueChange={setSelectedSubcategoryId} 
+            disabled={loading || isLoadingCategories || selectedParentCategoryId === UNSELECTED_VALUE || subcategories.length === 0}
+          >
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+              <SelectValue placeholder="Selecione a subcategoria" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
+              {subcategories.length === 0 ? (
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
+              ) : (
+                subcategories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                    <span className="flex items-center gap-2">
+                      <span>{cat.icone}</span>
+                      <span>{getCategoryDisplayName(cat.id)}</span>
+                    </span>
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Valor e Forma de Pagamento (lado a lado) */}
