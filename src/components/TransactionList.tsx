@@ -62,6 +62,7 @@ export const TransactionList = ({
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
+    console.log("TransactionList: filterCardId current value:", filterCardId); // Log adicionado
     
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -70,6 +71,7 @@ export const TransactionList = ({
       
       let matchesPaymentMethod = true; 
       if (filterCardId !== "all") {
+        console.log(`  Checking transaction ID: ${transaction.id}, forma_pagamento: ${transaction.forma_pagamento}, cartao_id: ${transaction.cartao_id}`); // Log adicionado
         matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === filterCardId;
       }
 
