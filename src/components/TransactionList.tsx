@@ -143,7 +143,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid mb-6", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4 gap-4")}> {/* Ajustado para 2 colunas em mobile, 4 em desktop */}
+      <div className={cn("grid mb-6", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}> {/* Ajustado mb-6 para mb-4 em mobile */}
         {/* Campo de busca por descrição removido */}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
