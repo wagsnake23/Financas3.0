@@ -38,25 +38,27 @@ interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...props }) => {
-  // Evita erros com nome undefined, null ou emoji
   const safeName = typeof name === "string" ? name.trim() : "";
 
-  // Somente nomes válidos (sem emoji)
-  const isValidName = /^[A-Za-z0-9_]+$/.test(safeName);
-
-  if (!isValidName) {
-    console.warn(`Icon '${name}' is invalid (emoji or malformed).`);
-    return <HelpCircle className={className} color={color} {...props} />;
-  }
-
+  // Tenta encontrar um componente Lucide com o nome fornecido
   const IconComponent = iconMap[safeName];
 
-  if (!IconComponent) {
-    console.warn(`Icon '${name}' not found in DynamicIcon map.`);
+  if (IconComponent) {
+    // Se for um nome de ícone Lucide válido, renderiza o componente Lucide
+    return <IconComponent className={className} color={color} {...props} />;
+  } else if (safeName) {
+    // Se não for um ícone Lucide, mas não for vazio, assume que é um emoji ou texto
+    // Renderiza o texto diretamente dentro de um span, aplicando as classes e cores
+    return (
+      <span className={className} style={{ color: color }} {...props}>
+        {safeName}
+      </span>
+    );
+  } else {
+    // Se o nome for vazio ou inválido, renderiza o ícone de ajuda como fallback
+    console.warn(`Icon name is empty or invalid: '${name}'. Rendering HelpCircle.`);
     return <HelpCircle className={className} color={color} {...props} />;
   }
-
-  return <IconComponent className={className} color={color} {...props} />;
 };
 
 export default DynamicIcon;
