@@ -42,7 +42,7 @@ interface LancamentosContentProps {
   queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
   user: User | null;
   // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagão' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
-  // selectedMonth: Date; // Removido
+  selectedMonth: Date; // NOVO: Adicionado selectedMonth
   onEditTransaction: (transaction: Transaction) => void;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
   filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
@@ -63,7 +63,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   queryClient, // Recebendo queryClient
   user,
   // rawExpenseInstallments, // Removido
-  // selectedMonth, // Removido
+  selectedMonth, // NOVO: Recebendo selectedMonth
   onEditTransaction,
   markMonthPaid, // Re-adicionado
   filterPaymentOptionId, // NOVO
@@ -122,11 +122,11 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       queryClient={queryClient} // Passando queryClient para TransactionView
       user={user}
       // rawExpenseInstallments={rawExpenseInstallments} // Removido
-      // selectedMonth={selectedMonth} // Removido
+      selectedMonth={selectedMonth} // NOVO: Passando selectedMonth
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
-      filterPaymentOptionId={filterPaymentOptionId} // NOVO: Passar o estado do filtro
-      setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO: Passar o setter do filtro
+      filterPaymentOptionId={filterPaymentOptionId} // NOVO
+      setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO
     />
   );
 };

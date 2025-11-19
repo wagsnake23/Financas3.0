@@ -15,7 +15,7 @@ import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
-// import { PAYMENT_METHODS } from "@/data/colorPalette"; // Removido, pois criaremos uma lista mais específica
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 interface Cartao {
   id: string;
@@ -39,6 +39,7 @@ interface TransactionListProps {
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
   filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
   setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
+  selectedMonth: Date; // NOVO: Recebendo selectedMonth
 }
 
 const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE
@@ -63,8 +64,10 @@ export const TransactionList = ({
   markMonthPaid,
   filterPaymentOptionId, // NOVO
   setFilterPaymentOptionId, // NOVO
+  selectedMonth, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
+  const navigate = useNavigate(); // Inicializar useNavigate
   const [searchTerm, setSearchTerm] = useState(""); // Manter searchTerm para a lógica de filtro, mas o input será removido
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
@@ -137,6 +140,15 @@ export const TransactionList = ({
     return allCategories;
   }, [allCategories, filterType]);
 
+  const handleViewInvoice = () => {
+    if (isValidUuid(filterPaymentOptionId)) {
+      const formattedMonth = format(selectedMonth, "yyyy-MM-dd");
+      navigate(`/lancamentos?cardId=${filterPaymentOptionId}&month=${formattedMonth}`);
+    } else {
+      toast.error("Selecione um cartão de crédito válido para ver a fatura.");
+    }
+  };
+
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
 
@@ -159,10 +171,10 @@ export const TransactionList = ({
 
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Subcategoria" />
+            <SelectValue placeholder="Subcategoria" /> {/* Renomeado placeholder */}
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as subcategorias</SelectItem>
+            <SelectItem value="all">Subcategoria</SelectItem> {/* Renomeado item "all" */}
             {selectableCategories
               .filter(cat => cat.id !== "") 
               .map((cat) => (
@@ -178,7 +190,7 @@ export const TransactionList = ({
 
         {/* Filtro de Forma de Pagamento/Cartão Combinado */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className={cn(isMobile && "col-span-2")}> {/* Ocupa 2 colunas em mobile */}
+                className={cn(isMobile && "col-span-full")}> {/* Ocupa a linha inteira em mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -190,6 +202,18 @@ export const TransactionList = ({
             ))}
           </SelectContent>
         </Select>
+
+        {/* Botão "Ver Fatura" condicional */}
+        {isMobile && isValidUuid(filterPaymentOptionId) && (
+          <Button
+            variant="secondary"
+            onClick={handleViewInvoice}
+            className="w-full rounded-xl col-span-full mt-2" // Ocupa a linha inteira e tem margem superior
+          >
+            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+            Ver Fatura
+          </Button>
+        )}
 
         {/* Campo Valor Total (movido para dentro do grid) */}
         <div className={cn(
