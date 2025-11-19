@@ -15,7 +15,7 @@ export const categories: AppCategory[] = [
 
   { id: "transporte", nome: "Transporte", icone: "Car", cor: "hsl(225, 70%, 55%)", parent_id: null },
   { id: "transporte_combustivel", nome: "Combustível", icone: "GasStation", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
-  { id: "transporte_manutencao", nome: "Manutenção do veículo", icone: "CarService", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
+  { id: "transporte_manutencao", nome: "Manutenção do veículo", icone: "Wrench", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_seguro", nome: "Seguro", icone: "Shield", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_estacionamento", nome: "Estacionamento", icone: "ParkingSquare", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_publico", nome: "Transporte público", icone: "Bus", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
