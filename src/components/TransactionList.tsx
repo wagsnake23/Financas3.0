@@ -55,7 +55,7 @@ export const TransactionList = ({
   // setFilterCardId, // Removido
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState(""); // Removido
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
@@ -63,18 +63,19 @@ export const TransactionList = ({
     console.log("TransactionList: filteredTransactions useMemo re-running...");
     
     return transactions.filter(transaction => {
-      const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
+      // const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase()); // Removido
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
       // A lógica de filtro de cartão de crédito foi removida daqui
-      const finalResult = matchesSearch && matchesType && matchesCategory;
+      // A lógica de filtro de busca por descrição foi removida daqui
+      const finalResult = matchesType && matchesCategory; // Ajustado para remover matchesSearch
 
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, FINAL: ${finalResult}`);
+      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, isMobile]); // Removido filterCardId das dependências
+  }, [transactions, filterType, filterCategory, isMobile]); // Removido searchTerm e filterCardId das dependências
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -105,19 +106,8 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {!isMobile && (
-          <div className="relative">
-            <DynamicIcon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Buscar por descrição..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-xl"
-              disabled={disableFilters}
-            />
-          </div>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"> {/* Ajustado para 2 colunas */}
+        {/* O campo de busca por descrição foi removido daqui */}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
@@ -148,8 +138,6 @@ export const TransactionList = ({
               ))}
           </SelectContent>
         </Select>
-
-        {/* O filtro para Cartão de Crédito foi removido daqui */}
       </div>
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
