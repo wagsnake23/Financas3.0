@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-// Removido: import { toast } from "sonner";
-// Removido: import { useQueryClient } from "@tanstack/react-query";
-// Removido: import { User } from "@supabase/supabase-js";
-// Removido: import { supabase } from "@/integrations/supabase/client";
-// Removido: import { useRecurringEntries, MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries"; // Importar o hook de recorrência
+import { toast } from "sonner"; // Reintroduzido
+import { useQueryClient } from "@tanstack/react-query"; // Reintroduzido
+import { User } from "@supabase/supabase-js"; // Reintroduzido
+import { supabase } from "@/integrations/supabase/client"; // Reintroduzido
+import { useRecurringEntries, MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries"; // Reintroduzido
 
 interface Cartao {
   id: string;
@@ -29,15 +29,15 @@ interface TransactionRowProps {
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
   isMobile?: boolean;
-  // Removido: queryClient: ReturnType<typeof useQueryClient>;
-  // Removido: user: User | null;
+  queryClient: ReturnType<typeof useQueryClient>; // Reintroduzido
+  user: User | null; // Reintroduzido
 }
 
 // Helper function to validate UUID format (basic check)
-// Removido: const isValidUuid = (uuid: string) => {
-// Removido:   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-// Removido:   return uuidRegex.test(uuid);
-// Removido: };
+const isValidUuid = (uuid: string) => { // Reintroduzido
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+};
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
@@ -46,12 +46,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   allCategories,
   cartoes,
   isMobile,
-  // Removido: queryClient,
-  // Removido: user,
+  queryClient, // Reintroduzido
+  user, // Reintroduzido
 }) => {
-  // Removido: console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Current Status (on render):", transaction.status);
+  console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Current Status (on render):", transaction.status);
 
-  // Removido: const { markMonthPaid } = useRecurringEntries(user, new Date(), []);
+  const { markMonthPaid } = useRecurringEntries(user, new Date(), []); // Reintroduzido
 
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
@@ -82,123 +82,123 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   const paymentMethodDisplay = getPaymentMethodDisplay(transaction.forma_pagamento, transaction.cartao_id);
 
-  // Removido: const handleToggleStatus = async () => {
-  // Removido:   console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user);
-  // Removido:   if (!user) {
-  // Removido:     toast.error("Usuário não autenticado. Por favor, faça login novamente.");
-  // Removido:     return;
-  // Removido:   }
+  const handleToggleStatus = async () => { // Reintroduzido
+    console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user);
+    if (!user) {
+      toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+      return;
+    }
 
-  // Removido:   // Adiciona verificação defensiva para queryClient
-  // Removido:   if (!queryClient) {
-  // Removido:     console.error("queryClient is undefined in handleToggleStatus!");
-  // Removido:     toast.error("Erro interno: Cliente de consulta não disponível.");
-  // Removido:     return;
-  // Removido:   }
+    // Adiciona verificação defensiva para queryClient
+    if (!queryClient) {
+      console.error("queryClient is undefined in handleToggleStatus!");
+      toast.error("Erro interno: Cliente de consulta não disponível.");
+      return;
+    }
 
-  // Removido:   console.log("handleToggleStatus: Transaction:", transaction);
-  // Removido:   console.log("handleToggleStatus: isRecurring:", transaction.isRecurring);
-  // Removido:   console.log("handleToggleStatus: recurringEntryId:", transaction.recurringEntryId);
-  // Removido:   console.log("handleToggleStatus: Current transaction status before toggle:", transaction.status);
+    console.log("handleToggleStatus: Transaction:", transaction);
+    console.log("handleToggleStatus: isRecurring:", transaction.isRecurring);
+    console.log("handleToggleStatus: recurringEntryId:", transaction.recurringEntryId);
+    console.log("handleToggleStatus: Current transaction status before toggle:", transaction.status);
 
 
-  // Removido:   // Priority 1: Handle NEW recurring transactions (materialized from recurring_entries)
-  // Removido:   if (transaction.isRecurring && transaction.recurringEntryId) {
-  // Removido:     console.log("handleToggleStatus: Handling as recurring transaction.");
-  // Removido:     const transactionDate = new Date(transaction.date);
-  // Removido:     const year = transactionDate.getFullYear();
-  // Removido:     const month = transactionDate.getMonth() + 1; // CORRIGIDO: Mês 1-indexado
-  // Removido:     console.log("handleToggleStatus: Calculated month for RPC:", month, "Year:", year);
-  // Removido:     const isPaid = transaction.status !== "Recebida"; // Toggle status
-  // Removido:     console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year); // Log ajustado
+    // Priority 1: Handle NEW recurring transactions (materialized from recurring_entries)
+    if (transaction.isRecurring && transaction.recurringEntryId) {
+      console.log("handleToggleStatus: Handling as recurring transaction.");
+      const transactionDate = new Date(transaction.date);
+      const year = transactionDate.getFullYear();
+      const month = transactionDate.getMonth() + 1; // CORRIGIDO: Mês 1-indexado
+      console.log("handleToggleStatus: Calculated month for RPC:", month, "Year:", year);
+      const isPaid = transaction.status !== "Recebida"; // Toggle status
+      console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year); // Log ajustado
 
-  // Removido:     try {
-  // Removido:       await markMonthPaid({
-  // Removido:         recurring_id: transaction.recurringEntryId,
-  // Removido:         year,
-  // Removido:         month, // Este 'month' é o que será passado para a mutação
-  // Removido:         is_paid: isPaid,
-  // Removido:       });
-  // Removido:       console.log("handleToggleStatus: markMonthPaid called successfully.");
-  // Removido:       // Invalida as queries que useTransactionsData depende
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
-  // Removido:       console.log("handleToggleStatus: Queries invalidated for recurring transaction.");
-  // Removido:     } catch (error) {
-  // Removido:       console.error("handleToggleStatus: Error marking recurring month paid:", error);
-  // Removido:     }
-  // Removido:     return; // EXIT HERE FOR ALL RECURRING TRANSACTIONS
-  // Removido:   }
+      try {
+        await markMonthPaid({
+          recurring_id: transaction.recurringEntryId,
+          year,
+          month, // Este 'month' é o que será passado para a mutação
+          is_paid: isPaid,
+        });
+        console.log("handleToggleStatus: markMonthPaid called successfully.");
+        // Invalida as queries que useTransactionsData depende
+        queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+        console.log("handleToggleStatus: Queries invalidated for recurring transaction.");
+      } catch (error) {
+        console.error("handleToggleStatus: Error marking recurring month paid:", error);
+      }
+      return; // EXIT HERE FOR ALL RECURRING TRANSACTIONS
+    }
 
-  // Removido:   // Priority 2: Handle ONE-OFF transactions (legacy fixed are now filtered out in useTransactionsData)
-  // Removido:   console.log("handleToggleStatus: Handling as one-off transaction.");
-  // Removido:   let error = null;
-  // Removido:   const newStatus = transaction.status === "Recebida" ? "Pendente" : "Recebida";
-  // Removido:   const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+    // Priority 2: Handle ONE-OFF transactions (legacy fixed are now filtered out in useTransactionsData)
+    console.log("handleToggleStatus: Handling as one-off transaction.");
+    let error = null;
+    const newStatus = transaction.status === "Recebida" ? "Pendente" : "Recebida";
+    const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
-  // Removido:   if (transaction.type === "income") {
-  // Removido:     // For one-off income, transaction.id is always the UUID of the 'receitas' entry.
-  // Removido:     const revenueIdToUse = transaction.id;
-  // Removido:     if (!isValidUuid(revenueIdToUse)) {
-  // Removido:       // This should ideally not happen if data is clean and filtered correctly.
-  // Removido:       toast.error("Erro (TOGGLE-INC-1): ID de receita inválido.");
-  // Removido:       return;
-  // Removido:     }
-  // Removido:     const { error: updateError } = await supabase
-  // Removido:       .from("receitas")
-  // Removido:       .update({ status: newStatus })
-  // Removido:       .eq("id", revenueIdToUse)
-  // Removido:       .eq("user_id", user.id); // CORRIGIDO: de "user.id" para "user_id"
-  // Removido:     error = updateError;
+    if (transaction.type === "income") {
+      // For one-off income, transaction.id is always the UUID of the 'receitas' entry.
+      const revenueIdToUse = transaction.id;
+      if (!isValidUuid(revenueIdToUse)) {
+        // This should ideally not happen if data is clean and filtered correctly.
+        toast.error("Erro (TOGGLE-INC-1): ID de receita inválido.");
+        return;
+      }
+      const { error: updateError } = await supabase
+        .from("receitas")
+        .update({ status: newStatus })
+        .eq("id", revenueIdToUse)
+        .eq("user_id", user.id);
+      error = updateError;
 
-  // Removido:     if (!error) {
-  // Removido:       queryClient.setQueryData(["revenues", user.id], (oldData: Tables<'receitas'>[] | undefined) => {
-  // Removido:         if (!oldData) return [];
-  // Removido:         return oldData.map(r => r.id === revenueIdToUse ? { ...r, status: newStatus } : r);
-  // Removido:       });
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["revenues", user.id] }); // Invalida a query de receitas
-  // Removido:     }
-  // Removido:   } else if (transaction.type === "expense") {
-  // Removido:     // For one-off expense, transaction.id is always the ID of a 'despesas_parcelas' entry.
-  // Removido:     const isPaid = newStatus === "Recebida";
-  // Removido:     const dataPagamento = isPaid ? currentTimestamp : null;
-  // Removido:     const installmentId = transaction.id;
+      if (!error) {
+        queryClient.setQueryData(["revenues", user.id], (oldData: Tables<'receitas'>[] | undefined) => {
+          if (!oldData) return [];
+          return oldData.map(r => r.id === revenueIdToUse ? { ...r, status: newStatus } : r);
+        });
+        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] }); // Invalida a query de receitas
+      }
+    } else if (transaction.type === "expense") {
+      // For one-off expense, transaction.id is always the ID of a 'despesas_parcelas' entry.
+      const isPaid = newStatus === "Recebida";
+      const dataPagamento = isPaid ? currentTimestamp : null;
+      const installmentId = transaction.id;
 
-  // Removido:     if (!isValidUuid(installmentId)) {
-  // Removido:       // This should ideally not happen if data is clean and filtered correctly.
-  // Removido:       toast.error("Erro (TOGGLE-EXP-1): ID de parcela de despesa inválido.");
-  // Removido:       return;
-  // Removido:     }
+      if (!isValidUuid(installmentId)) {
+        // This should ideally not happen if data is clean and filtered correctly.
+        toast.error("Erro (TOGGLE-EXP-1): ID de parcela de despesa inválido.");
+        return;
+      }
 
-  // Removido:     const { error: updateError } = await supabase
-  // Removido:       .from("despesas_parcelas")
-  // Removido:       .update({
-  // Removido:         pago: isPaid,
-  // Removido:         data_pagamento: dataPagamento,
-  // Removido:       })
-  // Removido:       .eq("id", installmentId);
-  // Removido:     error = updateError;
+      const { error: updateError } = await supabase
+        .from("despesas_parcelas")
+        .update({
+          pago: isPaid,
+          data_pagamento: dataPagamento,
+        })
+        .eq("id", installmentId);
+      error = updateError;
 
-  // Removido:     if (!error) {
-  // Removido:       queryClient.setQueryData(["expenseInstallments", user.id], (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[] | undefined) => {
-  // Removido:         if (!oldData) return [];
-  // Removido:         return oldData.map(p => p.id === installmentId ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
-  // Removido:       });
-  // Removido:       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] }); // Invalida a query de parcelas
-  // Removido:     }
-  // Removido:   }
-  
-  // Removido:   if (error) {
-  // Removido:     toast.error("Erro ao atualizar status", { description: error.message });
-  // Removido:     console.error("handleToggleStatus: Status update error:", error);
-  // Removido:   } else {
-  // Removido:     toast.success("Status atualizado!", {
-  // Removido:       style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
-  // Removido:     });
-  // Removido:   }
-  // Removido: };
+      if (!error) {
+        queryClient.setQueryData(["expenseInstallments", user.id], (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[] | undefined) => {
+          if (!oldData) return [];
+          return oldData.map(p => p.id === installmentId ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
+        });
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] }); // Invalida a query de parcelas
+      }
+    }
+    
+    if (error) {
+      toast.error("Erro ao atualizar status", { description: error.message });
+      console.error("handleToggleStatus: Status update error:", error);
+    } else {
+      toast.success("Status atualizado!", {
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+      });
+    }
+  };
 
   return (
     <TableRow
@@ -250,12 +250,18 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         R$ {transaction.amount.toFixed(2)}
       </TableCell>
       <TableCell className="py-2 px-2 text-center min-w-[50px]">
-        {/* Apenas exibe o ícone de status, sem o botão de toggle */}
-        <div className="flex items-center justify-center">
+        {/* Botão de toggle para o status */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleToggleStatus}
+          disabled={transaction.status === "Cancelada"} // Desabilita o toggle se a transação estiver cancelada
+        >
           {transaction.status === "Recebida" && <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />}
           {(transaction.status === "Pendente" || transaction.status === "Prevista") && <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />}
           {transaction.status === "Cancelada" && <DynamicIcon name="XCircle" className="h-4 w-4 text-muted-foreground" />}
-        </div>
+        </Button>
       </TableCell>
       <TableCell className="py-2 px-2 text-right min-w-[50px]">
         <div className="flex justify-end gap-1">
