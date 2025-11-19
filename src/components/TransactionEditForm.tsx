@@ -239,7 +239,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (isRecurringTransaction) {
         if (editOption === "thisMonth") {
             finalRecurringPayload = {
-                override_value: amount as number,
+                override_value: amount === undefined ? null : amount, // Explicitly null if undefined
                 override_category_id: category === UNSELECTED_VALUE ? null : category,
                 override_due_date: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
                 note: note.trim() || null,
@@ -249,7 +249,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         } else { // thisMonthForward or all
             finalRecurringPayload = {
                 title: title.trim(),
-                value: amount as number,
+                value: amount === undefined ? null : amount, // Explicitly null if undefined
                 category_id: category === UNSELECTED_VALUE ? null : category,
                 due_day: parseInt(dueDay),
                 frequency,
