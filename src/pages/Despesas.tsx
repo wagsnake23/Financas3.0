@@ -120,7 +120,7 @@ export default function Despesas() {
             {/* Formulário Nova Despesa (esquerda em desktop, topo em mobile) */}
             <div className="order-2 lg:order-1 lg:col-span-2">
               <div className={cn("p-6", isMobile && "p-0")}>
-                <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
+                {/* Removido o título "Nova Despesa" */}
                 <RadioGroup
                   value={formMode}
                   onValueChange={(value: FormMode) => setFormMode(value)}
