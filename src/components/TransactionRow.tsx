@@ -107,15 +107,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       console.log("handleToggleStatus: Handling as recurring transaction.");
       const transactionDate = new Date(transaction.date);
       const year = transactionDate.getFullYear();
-      const month = transactionDate.getMonth() + 1;
+      const month = transactionDate.getMonth() + 1; // CORRIGIDO: Mês 1-indexado
+      console.log("handleToggleStatus: Calculated month for RPC:", month, "Year:", year);
       const isPaid = transaction.status !== "Recebida"; // Toggle status
-      console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month:", month, "Year:", year);
+      console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year); // Log ajustado
 
       try {
         await markMonthPaid({
           recurring_id: transaction.recurringEntryId,
           year,
-          month,
+          month, // Este 'month' é o que será passado para a mutação
           is_paid: isPaid,
         });
         console.log("handleToggleStatus: markMonthPaid called successfully.");
