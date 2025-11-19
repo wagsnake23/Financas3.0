@@ -40,9 +40,9 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
   return `${recurringId}-${year}-${month}`;
 };
 
-export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[]) => {
+export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
   const queryClient = useQueryClient();
-  console.log("useRecurringEntries: Initializing for month:", format(currentMonth, 'yyyy-MM-dd')); // Log adicionado
+  console.log("useRecurringEntries: Initializing for month:", format(currentMonth, 'yyyy-MM-dd'), "Enabled:", enabled); // Log atualizado
 
   // Fetch all recurring entries for the user
   const { data: recurringEntries = [], isLoading: isLoadingRecurringEntries } = useQuery<RecurringEntry[]>({
@@ -58,7 +58,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log("useRecurringEntries: Fetched recurringEntries (re-fetch triggered):", data);
       return data;
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
   // Fetch all exceptions for the user's recurring entries
@@ -77,7 +77,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log("useRecurringEntries: Fetched recurringExceptions (after potential update):", data); // LOG ADICIONADO
       return data;
     },
-    enabled: !!user?.id && recurringEntries.length > 0,
+    enabled: enabled && recurringEntries.length > 0, // Usar o parâmetro 'enabled'
   });
 
   // Materialize recurring transactions for the current month
@@ -88,9 +88,10 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       isLoadingRecurringExceptions,
       recurringEntriesCount: recurringEntries.length,
       recurringExceptionsCount: recurringExceptions.length,
-      currentMonth: format(currentMonth, 'yyyy-MM-dd')
+      currentMonth: format(currentMonth, 'yyyy-MM-dd'),
+      enabled: enabled // Adicionado enabled para o log
     });
-    if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions) return [];
+    if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions || !enabled) return []; // Adicionado !enabled
 
     const startOfCurrentMonth = currentMonth; // Usar o currentMonth diretamente para o contexto
     const currentYear = currentMonth.getFullYear();
@@ -190,7 +191,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
     console.log("useRecurringEntries: Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions.map(t => ({ id: t.id, status: t.status, isPaid: t.status === 'Recebida' })));
     return transactions;
-  }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions]);
+  }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions, enabled]);
 
   const invalidateQueries = useCallback(() => {
     console.log("useRecurringEntries: invalidateQueries: Invalidating recurringEntries and recurringExceptions.");

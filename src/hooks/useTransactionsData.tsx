@@ -15,9 +15,10 @@ const isValidUuid = (uuid: string) => {
 interface UseTransactionsDataProps {
   user: User | null;
   selectedMonth: Date;
+  enabled: boolean; // Adicionado 'enabled'
 }
 
-export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsDataProps) => {
+export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransactionsDataProps) => { // Adicionado 'enabled'
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -30,10 +31,10 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
-  const { materializedRecurringTransactions, isLoading: isLoadingRecurring } = useRecurringEntries(user, selectedMonth, fetchedCategories);
+  const { materializedRecurringTransactions, isLoading: isLoadingRecurring } = useRecurringEntries(user, selectedMonth, fetchedCategories, enabled); // Passando 'enabled'
   console.log("useTransactionsData: materializedRecurringTransactions from hook:", materializedRecurringTransactions);
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
@@ -48,7 +49,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       if (error) throw error;
       return data.filter(r => !r.is_fixed); // Filtrar receitas fixas legadas
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
@@ -65,7 +66,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       if (error) throw error;
       return data.filter(p => !p.despesas?.is_fixed); // Filtrar despesas fixas legadas
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
   const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<Tables<'cartoes'>[]>({
@@ -80,7 +81,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
   // Map to store total installments for each parent expense (used for `totalInstallments` in Transaction type)
@@ -98,6 +99,8 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
 
   const monthlyFilteredTransactions = useMemo(() => {
     console.log("useTransactionsData: monthlyFilteredTransactions useMemo re-running...");
+    if (!enabled) return []; // Adicionado para garantir que não materializa se não estiver enabled
+
     const startOfSelectedMonth = startOfMonth(selectedMonth);
     const endOfSelectedMonth = endOfMonth(selectedMonth);
 
@@ -155,12 +158,11 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
     console.log("useTransactionsData: Combined monthlyFilteredTransactions count:", combined.length);
     
     return combined;
-  }, [selectedMonth, revenues, expenseInstallments, materializedRecurringTransactions, totalInstallmentsMap]);
+  }, [selectedMonth, revenues, expenseInstallments, materializedRecurringTransactions, totalInstallmentsMap, enabled]);
 
   const isLoading = isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingCartoes || isLoadingRecurring;
 
   return {
-    // allRawTransactions, // No longer needed to be exposed directly
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,

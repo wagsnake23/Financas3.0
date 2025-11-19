@@ -26,15 +26,12 @@ const Lancamentos = () => {
     setFullEditingRevenue,
     setFullEditingExpense,
     loadingEditData,
-    // isEditInstallmentModalOpen, // Removido
-    // setIsEditInstallmentModalOpen, // Removido
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction, // Agora é para exclusão
     monthlyFilteredTransactions: transactions,
     fetchedCategories,
     cartoes,
-    // expenseInstallments, // Removido
     isLoading,
     handleDeleteTransaction,
     handleEditTransaction,
@@ -45,7 +42,7 @@ const Lancamentos = () => {
     queryClient: logicQueryClient, // Receber o queryClient do hook
     confirmDeleteWithOptions, // Receber a nova função de exclusão
     markMonthPaid, // Adicionado
-  } = useLancamentosLogic(user);
+  } = useLancamentosLogic(user, authLoading); // Passando authLoading aqui
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
 
@@ -88,34 +85,22 @@ const Lancamentos = () => {
             monthlyFilteredTransactions={transactions}
             cartoes={cartoes}
             user={user}
-            // rawExpenseInstallments={expenseInstallments} // Removido
-            // selectedMonth={selectedMonth} // Removido
             onEditTransaction={handleEditTransaction}
-            // Passando o queryClient aqui
             queryClient={logicQueryClient} 
-            markMonthPaid={markMonthPaid} // Passando a nova prop
+            markMonthPaid={markMonthPaid}
           />
         </main>
         <Footer isMobile={isMobile} />
 
-        {/* O modal de edição foi removido, a lógica está agora no TransactionEditForm */}
-        {/* <EditInstallmentModal
-          isOpen={isEditInstallmentModalOpen}
-          onClose={() => setIsEditInstallmentModalOpen(false)}
-          transaction={selectedRecurringTransaction}
-          isMobile={isMobile}
-          fetchedCategories={fetchedCategories}
-        /> */}
         <DeleteRecurrenceModal
           isOpen={isDeleteRecurrenceModalOpen}
           onClose={() => {
             setIsDeleteRecurrenceModalOpen(false);
-            handleCancelEdit(); // Fechar o formulário de edição quando o modal de exclusão fecha
+            handleCancelEdit();
           }}
           transaction={selectedRecurringTransaction}
           isMobile={isMobile}
-          // fetchedCategories={fetchedCategories} // Removido
-          onConfirmDeleteWithOptions={confirmDeleteWithOptions} // Passar a nova função
+          onConfirmDeleteWithOptions={confirmDeleteWithOptions}
         />
       </div>
     </ProtectedRoute>

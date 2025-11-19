@@ -15,9 +15,9 @@ const isValidUuid = (uuid: string) => {
   return uuidRegex.test(uuid);
 };
 
-export const useLancamentosLogic = (user: User | null) => {
+export const useLancamentosLogic = (user: User | null, authLoading: boolean) => { // Adicionado authLoading
   const queryClient = useQueryClient();
-  console.log("useLancamentosLogic: User received as prop:", user?.id);
+  console.log("useLancamentosLogic: User received as prop:", user?.id, "AuthLoading:", authLoading); // Log atualizado
 
   const [searchParams] = useSearchParams(); // Chamar o hook useSearchParams aqui
 
@@ -45,23 +45,26 @@ export const useLancamentosLogic = (user: User | null) => {
   const [selectedRecurringTransactionForDelete, setSelectedRecurringTransactionForDelete] = useState<Transaction | null>(null); // Alterado o tipo para Transaction
 
   const {
-    // allRawTransactions, // Não precisamos mais expor isso diretamente aqui
-    monthlyFilteredTransactions, // Agora pegamos a versão já filtrada por mês
+    monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    isLoading,
+    isLoading: isLoadingTransactionsData, // Renomeado para evitar conflito
     isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth }); // Passando selectedMonth para useTransactionsData
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading }); // Passando enabled
 
   const {
     createOrUpdateException,
     updateRecurringMasterFuture,
     updateRecurringMasterGlobal,
-    deleteRecurringEntry, // Usado para exclusão global
-    cancelMonth, // Usado para exclusão de mês específico
-    endRecurringAt, // Usado para exclusão a partir de um mês
-    markMonthPaid, // Adicionado aqui
-  } = useRecurringEntries(user, selectedMonth, fetchedCategories);
+    deleteRecurringEntry,
+    cancelMonth,
+    endRecurringAt,
+    markMonthPaid,
+    isLoading: isLoadingRecurringEntriesHook, // Renomeado para evitar conflito
+  } = useRecurringEntries(user, selectedMonth, fetchedCategories, !!user && !authLoading); // Passando enabled
+
+  // O isLoading geral do hook agora considera o authLoading e os loadings internos
+  const isLoading = authLoading || isLoadingTransactionsData || isLoadingCategories || isLoadingRecurringEntriesHook;
 
   // Handlers para navegação de mês
   const handlePreviousMonth = useCallback(() => {
@@ -316,8 +319,14 @@ export const useLancamentosLogic = (user: User | null) => {
           setLoadingEditData(false);
           return;
         }
-          toast.error("Erro ao carregar detalhes da despesa não fixa para edição (dados não encontrados).");
-          setFullEditingExpense(null);
+          // Para despesas parceladas não fixas, o ID da transação é o ID da parcela.
+          // Não precisamos buscar a despesa pai completa aqui, pois o TransactionEditForm
+          // já recebe os dados da parcela via `editingTransaction`.
+          // Se precisar de mais detalhes da despesa pai, eles já estariam em `transaction.despesa_id`
+          // e poderiam ser buscados se necessário, mas para edição da parcela, o que temos é suficiente.
+          // A mensagem de erro abaixo é um fallback e pode ser removida se não for mais relevante.
+          // toast.error("Erro ao carregar detalhes da despesa não fixa para edição (dados não encontrados).");
+          setFullEditingExpense(null); // Garante que não haja dados de despesa pai conflitantes
       }
       setFullEditingRevenue(null);
     }

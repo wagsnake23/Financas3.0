@@ -26,7 +26,7 @@ import { useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar o
 import { useTransactionsData } from "@/hooks/useTransactionsData"; // Importar useTransactionsData
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
@@ -36,12 +36,11 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Novo estado para o mês selecionado no calendário
 
   const {
-    monthlyFilteredTransactions, // Alterado de allRawTransactions para monthlyFilteredTransactions
+    monthlyFilteredTransactions,
     fetchedCategories: allCategories,
-    // expenseInstallments, // Removido
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth });
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading }); // Passando enabled
 
   // Fetch revenues
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
@@ -56,7 +55,7 @@ const Dashboard = () => {
       if (error) throw error;
       return data.filter(r => !r.is_fixed); // Filter out legacy fixed revenues
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   // Fetch expense installments and join with expenses to get category_id
@@ -74,25 +73,24 @@ const Dashboard = () => {
       if (error) throw error;
       return data.filter(p => !p.despesas?.is_fixed); // Filter out legacy fixed expenses
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   const stats = useMemo(() => {
-    // monthlyFilteredTransactions já está filtrado para o mês atual (selectedMonth)
     const totalIncome = monthlyFilteredTransactions
-      .filter(t => t.type === "income") // Removida a filtragem por data, já feita
+      .filter(t => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
     
     const totalExpenses = monthlyFilteredTransactions
-      .filter(t => t.type === "expense") // Removida a filtragem por data, já feita
+      .filter(t => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
     
     const balance = totalIncome - totalExpenses;
 
     return { totalIncome, totalExpenses, balance };
-  }, [monthlyFilteredTransactions]); // Dependência atualizada
+  }, [monthlyFilteredTransactions]);
 
-  const isLoading = isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
+  const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories; // Incluindo authLoading
 
   if (isLoading) {
     return (
@@ -103,7 +101,6 @@ const Dashboard = () => {
   }
 
   const handleCalendarClick = () => {
-    // Navega para a página de lançamentos com o mês selecionado
     const formattedMonth = format(selectedMonth, "yyyy-MM-dd");
     navigate(`/lancamentos?month=${formattedMonth}`);
   };
@@ -118,9 +115,7 @@ const Dashboard = () => {
           )}
           
           {isMobile ? (
-            // Layout específico para mobile
             <div className="grid grid-cols-1 gap-4 mb-4">
-              {/* 1. Total de Despesas */}
               <StatCard
                 title="Total de Despesas"
                 value={`R$ ${stats.totalExpenses.toFixed(2)}`}
@@ -131,7 +126,7 @@ const Dashboard = () => {
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
-                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}> {/* Ajustado mt para mobile */}
+                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 
                     variant="destructive" 
                     className="w-2/5 h-8 px-3 text-xs rounded-xl" 
@@ -143,7 +138,6 @@ const Dashboard = () => {
                 </div>
               </StatCard>
 
-              {/* 2. Total de Receitas */}
               <StatCard
                 title="Total de Receitas"
                 value={`R$ ${stats.totalIncome.toFixed(2)}`}
@@ -154,7 +148,7 @@ const Dashboard = () => {
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
               >
-                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}> {/* Ajustado mt para mobile */}
+                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 
                     variant="success" 
                     className="w-2/5 h-8 px-3 text-xs rounded-xl" 
@@ -166,7 +160,6 @@ const Dashboard = () => {
                 </div>
               </StatCard>
 
-              {/* 3. Saldo Atual */}
               <StatCard
                 title="Saldo Atual"
                 value={`R$ ${stats.balance.toFixed(2)}`}
@@ -178,17 +171,14 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowBalanceValue(!showBalanceValue)}
               />
 
-              {/* 4. MonthlyExpensesCombinedMobile (dashboard com seletor de data) */}
               <MonthlyExpensesCombinedMobile
-                transactions={monthlyFilteredTransactions} // Usando monthlyFilteredTransactions
+                transactions={monthlyFilteredTransactions}
                 expenseInstallments={expenseInstallments}
                 isMobile={isMobile}
               />
             </div>
           ) : (
-            // Layout para desktop
             <>
-              {/* Stats Cards originais para desktop */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <StatCard
                   title="Saldo Atual"
@@ -210,7 +200,6 @@ const Dashboard = () => {
                   showValue={showIncomeValue}
                   onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
                 >
-                  {/* Botões de ação para desktop */}
                   <div className="flex justify-end mt-4">
                     <Button 
                       variant="success" 
@@ -232,7 +221,6 @@ const Dashboard = () => {
                   showValue={showExpenseValue}
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 >
-                  {/* Botões de ação para desktop */}
                   <div className="flex justify-end mt-4">
                     <Button 
                       variant="destructive" 
@@ -246,46 +234,38 @@ const Dashboard = () => {
                 </StatCard>
               </div>
 
-              {/* Charts e Resumo Mensal de Despesas */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-                {/* Coluna 1: Gráfico de Pizza de Despesas */}
                 <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allCategories} isMobile={isMobile} />
 
-                {/* Coluna 2: Resumo Mensal de Despesas e Calendário de Despesas (invertidos e agrupados) */}
                 <div className="flex flex-col gap-4">
                   <MonthlyExpenseSummary
                     expenseInstallments={expenseInstallments}
                     isLoading={isLoading}
                     isMobile={isMobile}
-                    currentMonth={selectedMonth} // Passa o mês selecionado
+                    currentMonth={selectedMonth}
                   />
                   <MonthlyExpenseCalendar 
-                    transactions={monthlyFilteredTransactions} // Usando monthlyFilteredTransactions
+                    transactions={monthlyFilteredTransactions}
                     isMobile={isMobile} 
-                    currentMonth={selectedMonth} // Passa o mês selecionado
+                    currentMonth={selectedMonth}
                   />
                 </div>
 
-                {/* Coluna 3: Gráfico de Barras Mensais */}
                 <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
               </div>
 
-              {/* TotalExpensesCard em uma nova linha, abaixo do grid principal, para dar mais destaque */}
               <div className="grid grid-cols-1 mb-4">
                 <TotalExpensesCard expenseInstallments={expenseInstallments} isMobile={isMobile} />
               </div>
 
-              {/* Placeholder for other dashboard content - Renderizado apenas em desktop */}
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
             </>
           )}
-          {/* Footer para mobile, posicionado logo abaixo do grid de dashboards */}
           {isMobile && <Footer isMobile={isMobile} />}
 
         </main>
-        {/* Footer para desktop, posicionado no final da página */}
         {!isMobile && <Footer isMobile={isMobile} />}
       </div>
     </ProtectedRoute>

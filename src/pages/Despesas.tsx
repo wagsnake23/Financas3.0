@@ -35,7 +35,7 @@ type FormMode = 'one-off' | 'recurring'; // Novo tipo para o modo do formulário
 const UNSELECTED_VALUE = "unselected";
 
 export default function Despesas() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const queryClient = useQueryClient();
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const isMobile = useIsMobile();
@@ -51,7 +51,7 @@ export default function Despesas() {
     expenses,
     expenseInstallments,
     isLoading: isLoadingExpenseData,
-  } = useExpenseData(user, selectedParentCategoryId);
+  } = useExpenseData(user, selectedParentCategoryId, !!user && !authLoading); // Passando enabled
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -66,14 +66,14 @@ export default function Despesas() {
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   useEffect(() => {
-    if (user) {
+    if (user && !authLoading) { // Carregar cartões apenas se autenticado e não carregando
       loadCartoes();
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const loadCartoes = async () => {
     const { data, error } = await supabase
@@ -95,7 +95,7 @@ export default function Despesas() {
     queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida o cache de transações para o useTransactionsData
   };
 
-  if (isLoadingExpenseData || isLoadingCategories) {
+  if (authLoading || isLoadingExpenseData || isLoadingCategories) { // Incluindo authLoading
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Despesas...</div>
@@ -174,20 +174,18 @@ export default function Despesas() {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            {/* Formulário Nova Despesa (esquerda em desktop, topo em mobile) */}
             <div className="order-2 lg:order-1 lg:col-span-2">
               {isMobile ? (
-                <div className="px-4 pt-0"> {/* Wrapper simples para mobile */}
+                <div className="px-4 pt-0">
                   {formContent}
                 </div>
               ) : (
-                <Card className="p-6 rounded-xl shadow-sm"> {/* Card para desktop */}
+                <Card className="p-6 rounded-xl shadow-sm">
                   {formContent}
                 </Card>
               )}
             </div>
 
-            {/* Dashboard de Despesas (direita em desktop, ocultado em mobile) */}
             <div className="order-1 lg:order-2 lg:col-span-1 space-y-6">
               {!isMobile && (
                 <>
@@ -202,7 +200,6 @@ export default function Despesas() {
             </div>
           </div>
 
-          {/* Novas seções de dashboard abaixo do formulário */}
           {!isMobile && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">

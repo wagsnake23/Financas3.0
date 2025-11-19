@@ -39,7 +39,7 @@ type FormMode = 'one-off' | 'recurring';
 const UNSELECTED_VALUE = "unselected";
 
 export default function Receitas() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
@@ -65,7 +65,7 @@ export default function Receitas() {
       if (error) throw error;
       return data.filter(r => !r.is_fixed);
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -80,7 +80,7 @@ export default function Receitas() {
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   const incomeSubcategories = useMemo(() => {
@@ -246,7 +246,7 @@ export default function Receitas() {
     </form>
   );
 
-  if (isLoadingRevenues || isLoadingCategories) {
+  if (authLoading || isLoadingRevenues || isLoadingCategories) { // Incluindo authLoading
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Receitas...</div>

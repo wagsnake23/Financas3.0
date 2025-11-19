@@ -55,7 +55,7 @@ const buildCategoryHierarchy = (flatCategories: AppCategory[]): HierarchicalCate
 
 
 const Categories = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const queryClient = useQueryClient();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
   const isMobile = useIsMobile(); // Usar o hook para detectar se é mobile
@@ -73,7 +73,7 @@ const Categories = () => {
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   const allCategories = fetchedCategories;
@@ -86,10 +86,11 @@ const Categories = () => {
   // Mutation for adding a new category
   const addCategoryMutation = useMutation({
     mutationFn: async (newCategory: Omit<TablesInsert<'categorias'>, 'id'>) => { // Changed type to omit 'id'
+      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
       const categoryToInsert = {
         ...newCategory,
         id: crypto.randomUUID(), // Generate UUID on client-side
-        user_id: user?.id
+        user_id: user.id // Usar user.id
       };
       const { data, error } = await supabase
         .from("categorias")
@@ -108,15 +109,18 @@ const Categories = () => {
     onError: (error) => {
       toast.error("Erro ao adicionar categoria", { description: error.message });
     },
+    enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
 
   // Mutation for updating an existing category
   const updateCategoryMutation = useMutation({
     mutationFn: async ({ id, updatedCategory }: { id: string; updatedCategory: TablesUpdate<'categorias'> }) => {
+      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
       const { data, error } = await supabase
         .from("categorias")
         .update(updatedCategory)
         .eq("id", id)
+        .eq("user_id", user.id) // Adicionado eq("user_id", user.id) para segurança
         .select()
         .single();
       if (error) throw error;
@@ -132,11 +136,13 @@ const Categories = () => {
     onError: (error) => {
       toast.error("Erro ao atualizar categoria", { description: error.message });
     },
+    enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
 
   // Mutation for deleting a category
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
+      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
       // Check if it's a default category (user_id is null)
       const categoryToDelete = allCategories.find(c => c.id === id);
       if (categoryToDelete?.user_id === null) {
@@ -152,7 +158,8 @@ const Categories = () => {
       const { error } = await supabase
         .from("categorias")
         .delete()
-        .eq("id", id);
+        .eq("id", id)
+        .eq("user_id", user.id); // Adicionado eq("user_id", user.id) para segurança
       if (error) throw error;
     },
     onSuccess: () => {
@@ -164,6 +171,7 @@ const Categories = () => {
     onError: (error) => {
       toast.error("Erro ao remover categoria", { description: error.message });
     },
+    enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
 
   const handleAddCategory = (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
@@ -171,8 +179,8 @@ const Categories = () => {
       nome: category.nome,
       icone: category.icone,
       cor: category.cor,
-      forma_pagamento: category.forma_pagamento || null,
-      parent_id: category.parent_id || null,
+      forma_pagamento: null, // Definido como null, pois o campo foi removido
+      parent_id: category.parent_id,
     });
   };
 
@@ -183,8 +191,8 @@ const Categories = () => {
         nome: categoryData.nome,
         icone: categoryData.icone,
         cor: categoryData.cor,
-        forma_pagamento: categoryData.forma_pagamento || null,
-        parent_id: categoryData.parent_id || null,
+        forma_pagamento: null, // Definido como null, pois o campo foi removido
+        parent_id: categoryData.parent_id,
       },
     });
   };
@@ -204,7 +212,7 @@ const Categories = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (isLoadingCategories) {
+  if (authLoading || isLoadingCategories) { // Incluindo authLoading
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Categorias...</div>
@@ -224,7 +232,7 @@ const Categories = () => {
               onUpdateCategory={handleUpdateCategory}
               editingCategory={editingCategory}
               onCancelEdit={() => setEditingCategory(null)}
-              allCategories={allCategories} // Pass all categories (now all from DB)
+              allCategories={allCategories}
             />
           </div>
 
@@ -238,7 +246,7 @@ const Categories = () => {
               </Card>
             }>
               <CategoriesList 
-                categories={hierarchicalCategories} // Pass hierarchical categories
+                categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}
                 onEditCategory={handleEditCategory}
               />
@@ -247,7 +255,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} /> {/* Usando o componente Footer e passando isMobile */}
+      <Footer isMobile={isMobile} />
     </div>
   );
 };
