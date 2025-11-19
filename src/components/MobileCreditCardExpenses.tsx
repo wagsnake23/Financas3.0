@@ -153,7 +153,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
 
   return (
     <Card className={cn("p-4 animate-fade-in space-y-2 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm", isMobile && "p-3 space-y-2")}>
-      <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-sm mb-1")}>Cartão de Créditos</h2>
+      <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-sm mb-1")}>Cartões de Crédito</h2>
 
       {cartoes.length === 0 ? (
         <p className="text-muted-foreground text-center py-2 text-sm">Nenhum cartão de crédito cadastrado.</p>
