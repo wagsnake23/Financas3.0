@@ -39,7 +39,7 @@ interface LancamentosContentProps {
   isMobile: boolean;
   monthlyFilteredTransactions: Transaction[];
   cartoes: Tables<'cartoes'>[];
-  queryClient: ReturnType<typeof useQueryClient>;
+  queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
   user: User | null;
   rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
   selectedMonth: Date;
@@ -57,7 +57,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   isMobile,
   monthlyFilteredTransactions,
   cartoes,
-  queryClient,
+  queryClient, // Recebendo queryClient
   user,
   rawExpenseInstallments,
   selectedMonth,
@@ -111,7 +111,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       allCategories={allCategories}
       cartoes={cartoes}
       isMobile={isMobile}
-      queryClient={queryClient}
+      queryClient={queryClient} // Passando queryClient para TransactionView
       user={user}
       rawExpenseInstallments={rawExpenseInstallments}
       selectedMonth={selectedMonth}

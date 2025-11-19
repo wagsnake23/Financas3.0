@@ -9,10 +9,12 @@ import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query"; // Importar useQueryClient
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
   const { user, loading: authLoading } = useAuth();
+  const queryClient = useQueryClient(); // Obter o queryClient aqui
 
   const {
     selectedMonth,
@@ -38,6 +40,7 @@ const Lancamentos = () => {
     editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
+    queryClient: logicQueryClient, // Receber o queryClient do hook
   } = useLancamentosLogic(user);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -87,6 +90,7 @@ const Lancamentos = () => {
             rawExpenseInstallments={expenseInstallments}
             selectedMonth={selectedMonth}
             onEditTransaction={handleEditTransaction}
+            queryClient={logicQueryClient} {/* Passando o queryClient aqui */}
           />
         </main>
         <Footer isMobile={isMobile} />

@@ -374,7 +374,8 @@ export const useLancamentosLogic = (user: User | null) => {
         });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-        queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida o cache de transações para o useTransactionsData
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }); // Invalida o cache de transações para o useTransactionsData
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }); // Invalida o cache de transações para o useTransactionsData
       } else {
         // Lógica existente para transações não recorrentes (avulsas ou fixas legadas)
         const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || [];
@@ -542,5 +543,6 @@ export const useLancamentosLogic = (user: User | null) => {
     handleEditTransaction,
     handleUpdateTransaction,
     user,
+    queryClient, // Adicionado queryClient ao retorno
   };
 };
