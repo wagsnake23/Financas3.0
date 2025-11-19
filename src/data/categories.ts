@@ -26,7 +26,7 @@ export const categories: AppCategory[] = [
   { id: "alimentacao", nome: "Alimentação", icone: "UtensilsCrossed", cor: "hsl(30, 95%, 55%)", parent_id: null },
   { id: "alimentacao_supermercado", nome: "Supermercado", icone: "ShoppingCart", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
   { id: "alimentacao_padaria", nome: "Padaria", icone: "Croissant", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
-  { id: "alimentacao_restaurante", nome: "Restaurante", icone: "Restaurant", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
+  { id: "alimentacao_restaurante", nome: "Restaurante", icone: "Utensils", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
   { id: "alimentacao_delivery", nome: "Delivery", icone: "Package", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
   { id: "alimentacao_lanches", nome: "Lanches", icone: "Sandwich", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
 
@@ -94,7 +94,7 @@ export const categories: AppCategory[] = [
   { id: "receitas_e_investimentos_criptomoedas", nome: "Criptomoedas (lucros, vendas)", icone: "Bitcoin", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_poupanca", nome: "Poupança (rendimentos, resgates)", icone: "PiggyBank", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_dividendos", nome: "Dividendos", icone: "Coins", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
-  { id: "receitas_e_investimentos_aportes", icone: "PlusCircle", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
+  { id: "receitas_e_investimentos_aportes", nome: "Aportes (entrada de capital)", icone: "PlusCircle", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_reembolsos", nome: "Reembolsos", icone: "Repeat", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_extras", nome: "Receitas Extras", icone: "Wallet", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_juros_capital", nome: "Juros sobre capital", icone: "Percent", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
