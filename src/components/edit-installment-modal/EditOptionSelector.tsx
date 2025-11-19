@@ -18,40 +18,33 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
   loading,
 }) => {
   return (
-    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-3 gap-2"> {/* Alterado para grid-cols-3 e gap-2 */}
-      <Label
-        htmlFor="r1"
-        className={cn(
-          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
-          isMobile && "p-2 text-sm"
-        )}
-      >
-        <RadioGroupItem value="thisMonth" id="r1" className="sr-only" disabled={loading} />
-        <DynamicIcon name="Calendar" className={cn("mb-3 h-6 w-6", isMobile && "mb-1 h-5 w-5")} />
-        <span className={cn("block w-full text-center font-normal", isMobile && "text-xs")}>Somente este mês</span>
-      </Label>
-      <Label
-        htmlFor="r2"
-        className={cn(
-          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
-          isMobile && "p-2 text-sm"
-        )}
-      >
-        <RadioGroupItem value="thisMonthForward" id="r2" className="sr-only" disabled={loading} />
-        <DynamicIcon name="ArrowUp" className={cn("mb-3 h-6 w-6", isMobile && "mb-1 h-5 w-5")} />
-        <span className={cn("block w-full text-center font-normal", isMobile && "text-xs")}>Deste mês em diante</span>
-      </Label>
-      <Label
-        htmlFor="r3"
-        className={cn(
-          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
-          isMobile && "p-2 text-sm"
-        )}
-      >
-        <RadioGroupItem value="all" id="r3" className="sr-only" disabled={loading} />
-        <DynamicIcon name="Repeat" className={cn("mb-3 h-6 w-6", isMobile && "mb-1 h-5 w-5")} />
-        <span className={cn("block w-full text-center font-normal", isMobile && "text-xs")}>Toda a recorrência</span>
-      </Label>
+    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-3 gap-2">
+      {/* Option 1: Somente este mês */}
+      <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
+        <RadioGroupItem value="thisMonth" id="r1" disabled={loading} />
+        <Label htmlFor="r1" className={cn("flex items-center gap-1 cursor-pointer", isMobile && "text-xs")}>
+          <DynamicIcon name="Calendar" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          <span>Este mês</span>
+        </Label>
+      </div>
+
+      {/* Option 2: Deste mês em diante */}
+      <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
+        <RadioGroupItem value="thisMonthForward" id="r2" disabled={loading} />
+        <Label htmlFor="r2" className={cn("flex items-center gap-1 cursor-pointer", isMobile && "text-xs")}>
+          <DynamicIcon name="ArrowUp" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          <span>Deste mês em diante</span>
+        </Label>
+      </div>
+
+      {/* Option 3: Toda a recorrência */}
+      <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
+        <RadioGroupItem value="all" id="r3" disabled={loading} />
+        <Label htmlFor="r3" className={cn("flex items-center gap-1 cursor-pointer", isMobile && "text-xs")}>
+          <DynamicIcon name="Repeat" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          <span>Toda a recorrência</span>
+        </Label>
+      </div>
     </RadioGroup>
   );
 };
