@@ -18,7 +18,7 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
   loading,
 }) => {
   return (
-    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-3 gap-2"> {/* Alterado para grid-cols-3 e gap-2 */}
       <Label
         htmlFor="r1"
         className={cn(
