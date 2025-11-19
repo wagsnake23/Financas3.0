@@ -172,7 +172,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         // Also initialize master values (for when editOption changes later)
         setTitle(recurringTrans.recurringMasterTitle);
-        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1");
+        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1"); // Use recurringMasterDueDay
         setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
         setStartDate(parseISO(recurringTrans.recurringMasterStartDate));
         setEndDate(

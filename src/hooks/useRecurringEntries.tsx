@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables, TablesInsert, TablesUpdate, Enums } from "@/integrations/supabase/types";
-import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths } from "date-fns";
+import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths, isSameMonth, isBefore } from "date-fns";
 import { toast } from "sonner";
 import { ptBR } from "date-fns/locale";
 import { AppCategory, Transaction } from "@/types/finance";
@@ -93,10 +93,6 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     });
     if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions || !enabled) return []; // Adicionado !enabled
 
-    const startOfCurrentMonth = currentMonth; // Usar o currentMonth diretamente para o contexto
-    const currentYear = currentMonth.getFullYear();
-    const currentMonthIndex = currentMonth.getMonth() + 1; // 1-indexed month
-
     const transactions: MaterializedRecurringTransaction[] = [];
 
     recurringEntries.forEach(entry => {
@@ -117,15 +113,22 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         return; // Skip if not relevant or canceled
       }
 
-      // Calculate the base due date for the current month
+      // --- START: Adjusted logic for baseDueDate calculation ---
       let baseDueDate = setDate(startOfMonth(currentMonth), entry.due_day);
-      console.log(`[DEBUG]   Calculated baseDueDate (before clamp check): ${format(baseDueDate, 'yyyy-MM-dd')}`);
-      // Adjust if due_day is greater than days in current month
-      if (getDate(baseDueDate) !== entry.due_day) {
-        console.log(`[DEBUG]   Adjusting baseDueDate due to month end clamp. Original due_day: ${entry.due_day}, Clamped day: ${getDate(baseDueDate)}`);
+      
+      // If the entry's start_date is in the current month, and the due_day is before the start_date's day,
+      // then this occurrence should be considered from the start_date itself, not the due_day.
+      // This handles cases where a recurrence starts mid-month but has a due_day earlier in the month.
+      if (isSameMonth(entryStartDate, currentMonth) && isBefore(baseDueDate, entryStartDate)) {
+        baseDueDate = entryStartDate;
+        console.log(`[DEBUG]   Adjusted baseDueDate to entryStartDate: ${format(baseDueDate, 'yyyy-MM-dd')} because entry starts mid-month.`);
+      } else if (getDate(baseDueDate) !== entry.due_day) {
+        // Adjust if due_day is greater than days in current month (e.g., day 31 in February)
         baseDueDate = endOfMonth(currentMonth); // Set to last day of month if due_day is too high
-        console.log(`[DEBUG]   Adjusted baseDueDate: ${format(baseDueDate, 'yyyy-MM-dd')}`);
+        console.log(`[DEBUG]   Adjusted baseDueDate to endOfMonth: ${format(baseDueDate, 'yyyy-MM-dd')} due to month end clamp.`);
       }
+      console.log(`[DEBUG]   Calculated baseDueDate: ${format(baseDueDate, 'yyyy-MM-dd')}`);
+      // --- END: Adjusted logic for baseDueDate calculation ---
 
       // Find any exception for this specific month
       const exception = recurringExceptions.find(
