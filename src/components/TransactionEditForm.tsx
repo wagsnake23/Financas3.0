@@ -361,7 +361,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
           forma_pagamento: recurringTransaction.forma_pagamento,
-          cartao_id: recurringTransaction.cartao_id === "" ? null : recurringTransaction.cartao_id, // Convert empty string to null
+          // CORREÇÃO AQUI: Garante que cartao_id seja null se UNSELECTED_VALUE ou string vazia
+          cartao_id: recurringTransaction.cartao_id === UNSELECTED_VALUE || recurringTransaction.cartao_id === "" ? null : recurringTransaction.cartao_id,
         } as TablesUpdate<"recurring_entries">;
       }
     }

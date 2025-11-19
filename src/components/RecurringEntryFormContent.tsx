@@ -140,7 +140,8 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       end_date: null,
       status: 'active',
       forma_pagamento: formaPagamento,
-      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
+      // CORREÇÃO AQUI: Garante que cartao_id seja null se UNSELECTED_VALUE
+      cartao_id: type === "despesa" && formaPagamento === "cartao" && cartaoId !== UNSELECTED_VALUE ? cartaoId : null,
     };
 
     try {
