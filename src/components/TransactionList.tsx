@@ -334,14 +334,14 @@ export const TransactionList = ({
               <TableHead className="py-1 px-2 min-w-[80px]">Categoria</TableHead>
               {!isMobile && <TableHead className="py-1 px-2 min-w-[100px]">Descrição</TableHead>}
               <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead>
-              <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead>
+              {/* REMOVIDO: <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead> */}
               <TableHead className="py-1 px-2 text-right min-w-[50px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={isMobile ? 4 : 6} className="text-center py-8 text-muted-foreground"> {/* Ajustado colSpan */}
                   Nenhum lançamento encontrado
                 </TableCell>
               </TableRow>
