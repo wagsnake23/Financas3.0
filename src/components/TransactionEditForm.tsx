@@ -83,9 +83,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const filteredCategories = useMemo(() => {
     const currentType = isRecurringTransaction ? (recurringTransaction.type === 'income' ? 'receita' : 'despesa') : type;
     if (currentType === "receita" || currentType === "income") {
+      // Para receitas, listar apenas subcategorias de 'receitas_e_investimentos'
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
     } else {
-      return allCategories.filter(cat => cat.id !== 'receitas_e_investimentos' && cat.parent_id !== 'receitas_e_investimentos');
+      // Para despesas, listar apenas subcategorias que NÃO são relacionadas a receitas
+      return allCategories.filter(cat => cat.parent_id !== null && cat.parent_id !== 'receitas_e_investimentos');
     }
   }, [type, allCategories, isRecurringTransaction, recurringTransaction]);
 
