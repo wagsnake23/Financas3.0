@@ -28,7 +28,7 @@ import { CurrencyInput } from "@/components/ui/currency-input"; // Importar Curr
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
 
 export default function Investments() { // Alterado para export default function
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
 
@@ -62,12 +62,13 @@ export default function Investments() { // Alterado para export default function
       if (error) throw error;
       return data as Investment[];
     },
-    enabled: !!user?.id,
+    enabled: !!user && !authLoading, // Passando enabled
   });
 
   // Mutation for adding a new investment
   const addInvestmentMutation = useMutation({
     mutationFn: async (newInvestment: TablesInsert<'investimentos'>) => {
+      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
       const { data, error } = await supabase
         .from("investimentos")
         .insert(newInvestment)
@@ -94,17 +95,19 @@ export default function Investments() { // Alterado para export default function
     },
     onSettled: () => {
       setLoadingForm(false);
-    }
+    },
+    enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
 
   // Mutation for deleting an investment
   const deleteInvestmentMutation = useMutation({
     mutationFn: async (id: string) => {
+      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
       const { error } = await supabase
         .from("investimentos")
         .delete()
         .eq("id", id)
-        .eq("user_id", user?.id);
+        .eq("user_id", user.id); // Adicionado eq("user_id", user.id) para segurança
       if (error) throw error;
     },
     onSuccess: () => {
@@ -117,6 +120,7 @@ export default function Investments() { // Alterado para export default function
       toast.error("Erro ao remover investimento", { description: error.message });
       console.error("Supabase error deleting investment:", error);
     },
+    enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -165,7 +169,7 @@ export default function Investments() { // Alterado para export default function
     return { totalInvested, avgProfitability };
   }, [investments]);
 
-  if (isLoadingInvestments) {
+  if (authLoading || isLoadingInvestments) { // Incluindo authLoading
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
