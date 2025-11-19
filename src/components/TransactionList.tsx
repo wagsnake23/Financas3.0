@@ -143,7 +143,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6"> {/* Ajustado para 4 colunas em telas grandes */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6"> {/* Ajustado para 4 colunas em telas grandes */}
         {/* Campo de busca por descrição removido */}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
@@ -192,7 +192,7 @@ export const TransactionList = ({
 
         {/* Campo Valor Total (movido para dentro do grid) */}
         <div className={cn(
-          "p-2 rounded-xl border flex-1",
+          "p-2 rounded-xl border flex-1 text-right", // Adicionado text-right aqui
           isMobile && "py-1.5 px-3",
           accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
         )}>
