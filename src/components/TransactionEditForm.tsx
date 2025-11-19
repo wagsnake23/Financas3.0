@@ -364,7 +364,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       type,
       updatedTransaction,
       isRecurringTransaction ? editOption : undefined,
-      isRecurringTransaction && editOption === "all"
+      isRecurringTransaction && (editOption === "all" || editOption === "thisMonthForward") // Pass preserveExceptions for both "all" and "thisMonthForward"
         ? preserveExceptions
         : undefined,
       finalRecurringPayload
@@ -467,7 +467,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                   loading={loading}
                   isMobile={isMobile}
                   showStartDate={editOption === "all"}
-                  showPreserveExceptions={editOption === "all"}
+                  showPreserveExceptions={editOption === "all" || editOption === "thisMonthForward"} // Show for both "all" and "thisMonthForward"
                   preserveExceptions={preserveExceptions}
                   setPreserveExceptions={setPreserveExceptions}
                 />

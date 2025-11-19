@@ -264,12 +264,13 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
   // RPC para "A partir desta parcela" (Atualizar Registro Mestre Recorrente a partir de um mês específico)
   const updateRecurringMasterFutureMutation = useMutation({
-    mutationFn: async ({ recurring_id, start_date, payload }: { recurring_id: string; start_date: Date; payload: TablesUpdate<'recurring_entries'> }) => {
+    mutationFn: async ({ recurring_id, start_date, payload, preserve_exceptions = true }: { recurring_id: string; start_date: Date; payload: TablesUpdate<'recurring_entries'>; preserve_exceptions?: boolean }) => {
       if (!user?.id) throw new Error("User not authenticated.");
       const { data, error } = await supabase.rpc('rpc_update_recurring_master_future', {
         p_recurring_id: recurring_id,
         p_start_date: format(start_date, "yyyy-MM-dd"),
         p_payload: payload,
+        p_preserve_exceptions: preserve_exceptions, // Pass the new parameter
       });
       if (error) throw error;
       return data;
