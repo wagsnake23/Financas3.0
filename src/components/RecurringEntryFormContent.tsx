@@ -106,7 +106,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     const newRecurringEntry: TablesInsert<'recurring_entries'> = {
       user_id: user.id,
       type,
-      title: "Lançamento Recorrente", // Título padrão, já que o campo foi removido
+      title: "Lançamento Recorrente", // Título padrão
       value: parseFloat(value),
       category_id: categoryId,
       due_day: parseInt(dueDay),
@@ -183,9 +183,9 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="monthly" className={cn(isMobile && "text-sm")}>Mensal</SelectItem>
-              <SelectItem value="quarterly" className={cn(isMobile && "text-sm")}>Trimestral</SelectItem>
-              <SelectItem value="annually" className={cn(isMobile && "text-sm")}>Anual</SelectItem>
+                <SelectItem value="monthly" className={cn(isMobile && "text-sm")}>Mensal</SelectItem>
+                <SelectItem value="quarterly" className={cn(isMobile && "text-sm")}>Trimestral</SelectItem>
+                <SelectItem value="annually" className={cn(isMobile && "text-sm")}>Anual</SelectItem>
             </SelectContent>
           </Select>
         </div>
