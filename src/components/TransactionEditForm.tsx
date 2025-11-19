@@ -19,6 +19,7 @@ import { ThisMonthFields } from "./edit-installment-modal/ThisMonthFields";
 import { RecurringMasterFields } from "./edit-installment-modal/RecurringMasterFields";
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields"; // Novo
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions"; // Novo
+import { StatusToggleButton } from "./StatusToggleButton"; // NEW IMPORT
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 type EditOption = "thisMonth" | "thisMonthForward" | "all";
@@ -58,7 +59,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<ReceitaStatus>('Pendente');
+  const [status, setStatus] = useState<ReceitaStatus>('Pendente'); // For one-off income, kept for consistency
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -75,7 +76,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isOverrideDueDateCalendarOpen, setIsOverrideDueDateCalendarOpen] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [isPaid, setIsPaid] = useState(false);
+  const [isPaid, setIsPaid] = useState(false); // For one-off expenses and recurring exceptions
   const [showGlobalConfirmDialog, setShowGlobalConfirmDialog] = useState(false);
   const [preserveExceptions, setPreserveExceptions] = useState(true);
 
@@ -115,14 +116,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       let initialStatus: ReceitaStatus = 'Pendente';
       const validStatuses: ReceitaStatus[] = ['Prevista', 'Pendente', 'Recebida', 'Cancelada'];
-      if (editingTransaction.type === "income" && editingTransaction.status) {
-        const transactionStatus = editingTransaction.status as ReceitaStatus;
-        if (validStatuses.includes(transactionStatus)) {
-          initialStatus = transactionStatus;
-        }
+      if (editingTransaction.status && validStatuses.includes(editingTransaction.status)) {
+        initialStatus = editingTransaction.status;
       }
-      setStatus(initialStatus);
-      
+      setStatus(initialStatus); // Set status for one-off income
+
       if (isRecurringTransaction) {
         setTitle(recurringTransaction.recurringMasterTitle);
         setAmount(recurringTransaction.originalValue);
@@ -137,17 +135,19 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           const match = recurringTransaction.description.match(/\(([^)]+)\)$/);
           setNote(match ? match[1] : "");
           setOverrideDueDate(parseISO(recurringTransaction.date));
-          setIsPaid(recurringTransaction.status === 'Recebida');
-          setAmount(recurringTransaction.amount);
-          setCategory(recurringTransaction.category || UNSELECTED_VALUE);
+          setIsPaid(recurringTransaction.status === 'Recebida'); // Set isPaid for recurring exception
+          setAmount(recurringTransaction.amount); // Override amount for exception
+          setCategory(recurringTransaction.category || UNSELECTED_VALUE); // Override category for exception
         } else {
           setNote("");
           setOverrideDueDate(parseISO(editingTransaction.date));
-          setIsPaid(editingTransaction.status === 'Recebida');
+          setIsPaid(editingTransaction.status === 'Recebida'); // Set isPaid for recurring occurrence (no exception yet)
         }
         setEditOption("thisMonth");
         setPreserveExceptions(true);
       } else {
+        // For one-off transactions, determine initial isPaid state
+        setIsPaid(editingTransaction.status === 'Recebida'); // Use transaction.status for one-off
         setTitle("");
         setDueDay("1");
         setFrequency("monthly");
@@ -156,11 +156,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         setRecurringStatus("active");
         setNote("");
         setOverrideDueDate(undefined);
-        setIsPaid(false);
+        // isPaid already set above
         setEditOption("thisMonth");
         setPreserveExceptions(true);
       }
     } else {
+      // Reset form when not editing
       setType("expense");
       setAmount(undefined);
       setDate(new Date());
@@ -175,7 +176,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setRecurringStatus("active");
       setNote("");
       setOverrideDueDate(undefined);
-      setIsPaid(false);
+      setIsPaid(false); // Reset
       setEditOption("thisMonth");
       setPreserveExceptions(true);
     }
@@ -222,13 +223,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}` 
       : "";
 
+    // Determine the status to pass based on transaction type and isPaid state
+    let finalStatus: ReceitaStatus = 'Pendente';
+    if (isPaid) {
+      finalStatus = 'Recebida';
+    } else if (editingTransaction.status === 'Cancelada') { // Preserve canceled status if it was already canceled
+      finalStatus = 'Cancelada';
+    } else if (editingTransaction.status === 'Prevista' && !isPaid) { // Preserve Prevista if not explicitly paid
+      finalStatus = 'Prevista';
+    }
+
     const updatedTransaction: Omit<Transaction, "id"> = {
       type,
       amount: amount as number,
       date: formattedDate,
       category,
       description,
-      ...(type === "income" && { status }),
+      status: finalStatus, // Use finalStatus for one-off income/expense
       is_fixed: editingTransaction.is_fixed,
       recurrence_frequency: editingTransaction.recurrence_frequency,
       recurrence_installments_count: editingTransaction.recurrence_installments_count,
@@ -243,7 +254,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 override_category_id: category === UNSELECTED_VALUE ? null : category,
                 override_due_date: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
                 note: note.trim() || null,
-                paid: isPaid,
+                paid: isPaid, // Use local isPaid state
                 canceled: false,
             } as TablesUpdate<'recurring_entry_exceptions'>;
         } else { // thisMonthForward or all
@@ -324,10 +335,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                   setIsOverrideDueDateCalendarOpen={setIsOverrideDueDateCalendarOpen}
                   note={note}
                   setNote={setNote}
-                  isPaid={isPaid}
-                  setIsPaid={setIsPaid}
+                  isPaid={isPaid} // Pass isPaid
+                  setIsPaid={setIsPaid} // Pass setIsPaid
                   loading={loading}
                   isMobile={isMobile}
+                  transactionType={type} // Pass transactionType
+                  currentTransactionStatus={editingTransaction?.status || 'Pendente'} // Pass current status
                 />
               )}
 
@@ -367,8 +380,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setCategory={setCategory}
             description={description}
             setDescription={setDescription}
-            status={status}
-            setStatus={setStatus}
+            status={status} // Still pass status for one-off income, but it will be derived from isPaid
+            setStatus={setStatus} // Still pass setStatus, but it will be derived from isPaid
             isCalendarOpen={isCalendarOpen}
             setIsCalendarOpen={setIsCalendarOpen}
             filteredCategories={filteredCategories} // Já são subcategorias
@@ -376,6 +389,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             isFixedLegacy={editingTransaction?.is_fixed}
             transactionType={type}
             UNSELECTED_VALUE={UNSELECTED_VALUE}
+            isPaid={isPaid} // Pass isPaid
+            setIsPaid={setIsPaid} // Pass setIsPaid
           />
         )}
 

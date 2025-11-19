@@ -9,6 +9,10 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
+import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
+import { Database } from "@/integrations/supabase/types"; // NEW IMPORT for ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface ThisMonthFieldsProps {
   overrideDueDate: Date | undefined;
@@ -21,6 +25,8 @@ interface ThisMonthFieldsProps {
   setIsPaid: (paid: boolean) => void;
   loading: boolean;
   isMobile: boolean;
+  transactionType: "income" | "expense"; // NEW PROP
+  currentTransactionStatus: ReceitaStatus; // NEW PROP to pass original status for disabled state
 }
 
 export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
@@ -34,6 +40,8 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
   setIsPaid,
   loading,
   isMobile,
+  transactionType, // NEW
+  currentTransactionStatus, // NEW
 }) => {
   return (
     <>
@@ -78,17 +86,16 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
           className={cn("rounded-xl", isMobile && "h-9 text-sm")}
         />
       </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="isPaid"
-          checked={isPaid}
-          onCheckedChange={(checked: boolean) => setIsPaid(checked)}
-          disabled={loading}
-          className={cn(isMobile && "h-4 w-4")}
+      {/* Replaced Checkbox with StatusToggleButton */}
+      <div className="space-y-2">
+        <Label className={cn(isMobile && "text-xs")}>Status</Label>
+        <StatusToggleButton
+          currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
+          transactionType={transactionType}
+          onToggle={() => setIsPaid(!isPaid)}
+          isMobile={isMobile}
+          disabled={loading || currentTransactionStatus === "Cancelada"} // Disable if loading or already canceled
         />
-        <Label htmlFor="isPaid" className={cn("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", isMobile && "text-xs")}>
-          Marcar como Pago/Recebido
-        </Label>
       </div>
     </>
   );

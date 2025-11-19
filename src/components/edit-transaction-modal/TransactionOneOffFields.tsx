@@ -13,7 +13,7 @@ import { CalendarIcon } from "lucide-react";
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
-import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle"; // Importar RevenueStatusToggle
+import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -26,8 +26,8 @@ interface TransactionOneOffFieldsProps {
   setCategory: (category: string) => void;
   description: string;
   setDescription: (description: string) => void;
-  status: ReceitaStatus;
-  setStatus: (status: ReceitaStatus) => void;
+  status: ReceitaStatus; // Kept for consistency, but derived from isPaid
+  setStatus: (status: ReceitaStatus) => void; // Kept for consistency, but derived from isPaid
   isCalendarOpen: boolean;
   setIsCalendarOpen: (open: boolean) => void;
   filteredCategories: AppCategory[]; // Agora contém apenas subcategorias
@@ -35,6 +35,8 @@ interface TransactionOneOffFieldsProps {
   isFixedLegacy?: boolean;
   transactionType: "income" | "expense";
   UNSELECTED_VALUE: string;
+  isPaid: boolean; // NEW PROP
+  setIsPaid: (paid: boolean) => void; // NEW PROP
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -46,8 +48,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   setCategory,
   description,
   setDescription,
-  status,
-  setStatus,
+  status, // Still passed, but its value will be derived from isPaid
+  setStatus, // Still passed, but its function will be replaced by setIsPaid
   isCalendarOpen,
   setIsCalendarOpen,
   filteredCategories, // Usar filteredCategories diretamente (já são subcategorias)
@@ -55,6 +57,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   isFixedLegacy,
   transactionType,
   UNSELECTED_VALUE,
+  isPaid, // NEW
+  setIsPaid, // NEW
 }) => {
   return (
     <>
@@ -146,13 +150,17 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         />
       </div>
 
-      {transactionType === "income" && (
-        <RevenueStatusToggle
-          status={status}
-          setStatus={setStatus}
+      {/* Replaced RevenueStatusToggle with StatusToggleButton */}
+      <div className="space-y-2">
+        <Label className={cn(isMobile && "text-xs")}>Status</Label>
+        <StatusToggleButton
+          currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
+          transactionType={transactionType}
+          onToggle={() => setIsPaid(!isPaid)}
           isMobile={isMobile}
+          disabled={isFixedLegacy} // Disable if legacy fixed, as status is not directly editable
         />
-      )}
+      </div>
     </>
   );
 };
