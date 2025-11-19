@@ -33,7 +33,7 @@ export const categories: AppCategory[] = [
   { id: "saude", nome: "Saúde", icone: "Heart", cor: "hsl(0, 60%, 70%)", parent_id: null },
   { id: "saude_plano", nome: "Plano de saúde", icone: "Stethoscope", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
   { id: "saude_medicamentos", nome: "Medicamentos", icone: "Pill", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
-  { id: "saude_consultas", nome: "Consultas", icone: "UserMd", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
+  { id: "saude_consultas", nome: "Consultas", icone: "Stethoscope", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
   { id: "saude_exames", nome: "Exames", icone: "TestTube", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
   { id: "saude_academia", nome: "Academia", icone: "Dumbbell", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
   { id: "saude_terapia", nome: "Terapia", icone: "Brain", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
@@ -76,7 +76,7 @@ export const categories: AppCategory[] = [
   { id: "trabalho_materiais", nome: "Materiais", icone: "Package", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
   { id: "trabalho_servicos", nome: "Serviços contratados", icone: "Handshake", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
   { id: "trabalho_marketing", nome: "Marketing", icone: "Megaphone", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
-  { id: "trabalho_equipamentos", icone: "Monitor", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
+  { id: "trabalho_equipamentos", nome: "Equipamentos", icone: "Monitor", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
 
   { id: "familia_filhos", nome: "Família e Filhos", icone: "Users", cor: "hsl(345, 75%, 60%)", parent_id: null },
   { id: "familia_atividades_extracurriculares", nome: "Atividades extracurriculares", icone: "Puzzle", cor: "hsl(345, 75%, 60%)", parent_id: "familia_filhos" },
