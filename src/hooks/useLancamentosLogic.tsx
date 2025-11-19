@@ -19,7 +19,7 @@ const isValidUuid = (uuid: string) => {
   return uuidRegex.test(uuid);
 };
 
-const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE aqui também
+const UNSELECTED_VALUE = "unselected";
 
 export const useLancamentosLogic = (
   user: User | null,
@@ -41,15 +41,14 @@ export const useLancamentosLogic = (
       try {
         const [year, month, day] = monthParam.split("-").map(Number);
         const date = new Date(year, month - 1, day);
-        // Explicitamente verificar se a data é válida após a criação
         if (isNaN(date.getTime())) {
           console.error("Invalid date created from URL parameter:", monthParam);
-          return new Date(); // Fallback para a data atual
+          return new Date();
         }
         return date;
       } catch (e) {
         console.error("Error parsing month parameter from URL:", monthParam, e);
-        return new Date(); // Fallback para a data atual
+        return new Date();
       }
     }
     return new Date();
@@ -57,7 +56,6 @@ export const useLancamentosLogic = (
 
   const initialFilterPaymentOption = useMemo(() => {
     const cardIdParam = searchParams.get("cardId");
-    // Se houver um cardId válido na URL, use-o. Caso contrário, defina como "all".
     return cardIdParam && isValidUuid(cardIdParam) ? cardIdParam : "all";
   }, [searchParams]);
 
@@ -69,6 +67,7 @@ export const useLancamentosLogic = (
   const [fullEditingExpense, setFullEditingExpense] =
     useState<Tables<"despesas"> | null>(null);
   const [loadingEditData, setLoadingEditData] = useState(false);
+  const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // NOVO: Estado de carregamento para pagar fatura
 
   const [isDeleteRecurrenceModalOpen, setIsDeleteRecurrenceModalOpen] =
     useState(false);
@@ -77,7 +76,6 @@ export const useLancamentosLogic = (
     setSelectedRecurringTransactionForDelete,
   ] = useState<Transaction | null>(null);
 
-  // Novo estado para o filtro de forma de pagamento, inicializado com o cardId da URL
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
 
   const {
@@ -265,8 +263,6 @@ export const useLancamentosLogic = (
         queryClient.invalidateQueries({
           queryKey: ["expenseInstallments", user?.id],
         });
-        // Opcional: força recarregar tudo também
-        // queryClient.invalidateQueries();
       } catch (error: any) {
         toast.error("Erro ao excluir lançamento", {
           description: error.message,
@@ -374,8 +370,6 @@ export const useLancamentosLogic = (
         queryClient.invalidateQueries({
           queryKey: ["recurringExceptions", user?.id],
         });
-        // Opcional: também aqui, se quiser reforçar:
-        // queryClient.invalidateQueries();
       }
       setLoadingEditData(false);
     },
@@ -542,7 +536,6 @@ export const useLancamentosLogic = (
             },
           });
 
-          // Invalida queries específicas
           queryClient.invalidateQueries({
             queryKey: ["recurringEntries", user?.id],
           });
@@ -556,10 +549,8 @@ export const useLancamentosLogic = (
             queryKey: ["expenseInstallments", user?.id],
           });
 
-          // 🔥 Força recomputar qualquer lista derivada (incluindo useTransactionsData)
           queryClient.invalidateQueries();
         } else {
-          // --- ONE-OFF / LEGACY FIXED TRANSACTIONS ---
           if (type === "income") {
             let revenueIdToUse = id;
             if (originalTransaction?.is_fixed) {
@@ -668,7 +659,6 @@ export const useLancamentosLogic = (
                 }
               }
             } else {
-              // One-off or installment expense (NOT legacy fixed)
               if (!isValidUuid(id)) {
                 toast.error(
                   "Erro (UPD-NF-1): ID de parcela de despesa inválido."
@@ -677,7 +667,6 @@ export const useLancamentosLogic = (
                 return;
               }
 
-              // 1. Update the installment (despesas_parcelas)
               const { error: updateParcelaError } = await supabase
                 .from("despesas_parcelas")
                 .update({
@@ -686,14 +675,12 @@ export const useLancamentosLogic = (
                   pago: updatedTransaction.status === "Recebida",
                   data_pagamento: updatedTransaction.status === "Recebida" ? new Date().toISOString() : null,
                 })
-                .eq("id", id); // 'id' here is the installment ID
+                .eq("id", id);
               
               if (updateParcelaError) {
-                throw updateParcelaError; // Propagate error
+                throw updateParcelaError;
               }
 
-              // 2. Update the parent expense (despesas) for category and description
-              // We need the parent despesa_id, which is available in originalTransaction
               const parentDespesaId = originalTransaction?.despesa_id;
               if (parentDespesaId && isValidUuid(parentDespesaId)) {
                 const { error: updateDespesaParentError } = await supabase
@@ -703,20 +690,17 @@ export const useLancamentosLogic = (
                     descricao: updatedTransaction.description,
                   })
                   .eq("id", parentDespesaId)
-                  .eq("user_id", user.id); // Ensure user owns the parent expense
+                  .eq("user_id", user.id);
                 
                 if (updateDespesaParentError) {
-                  throw updateDespesaParentError; // Propagate error
+                  throw updateDespesaParentError;
                 }
               } else {
                 console.warn("handleUpdateTransaction: Parent despesa_id not found or invalid for installment update:", parentDespesaId);
-                // This might be an edge case for very old data or malformed data.
-                // For now, we'll let it proceed without updating parent if ID is missing/invalid.
               }
             }
           }
 
-          // If we reach here, all updates were successful for non-recurring transactions
           toast.success("Lançamento atualizado!", {
             style: {
               backgroundColor: "hsl(var(--soft-green))",
@@ -729,11 +713,11 @@ export const useLancamentosLogic = (
           queryClient.invalidateQueries({
             queryKey: ["expenseInstallments", user?.id],
           });
-          queryClient.invalidateQueries(); // Invalidate all relevant queries
+          queryClient.invalidateQueries();
         }
-      } catch (err: any) { // Catch all errors thrown in the try block
+      } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
-        toast.error("Erro ao atualizar lançamento.", { description: err.message }); // Show specific error message
+        toast.error("Erro ao atualizar lançamento.", { description: err.message });
       } finally {
         setEditingTransaction(null);
         setFullEditingRevenue(null);
@@ -764,6 +748,8 @@ export const useLancamentosLogic = (
     setFullEditingExpense,
     loadingEditData,
     setLoadingEditData,
+    loadingPayInvoice, // NOVO
+    setLoadingPayInvoice, // NOVO
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction: selectedRecurringTransactionForDelete,
@@ -780,7 +766,7 @@ export const useLancamentosLogic = (
     queryClient,
     confirmDeleteWithOptions,
     markMonthPaid,
-    filterPaymentOptionId, // Expor o novo estado
-    setFilterPaymentOptionId, // Expor o setter
+    filterPaymentOptionId,
+    setFilterPaymentOptionId,
   };
 };

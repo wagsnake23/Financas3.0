@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, addMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { format, isValid } from "date-fns"; // Adicionado isValid
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -37,12 +37,14 @@ interface TransactionListProps {
   user: User | null;
   disableFilters?: boolean;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
-  filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
-  setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
-  selectedMonth: Date; // NOVO: Recebendo selectedMonth
+  filterPaymentOptionId: string;
+  setFilterPaymentOptionId: (cardId: string) => void;
+  selectedMonth: Date;
+  loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
 }
 
-const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE
+const UNSELECTED_VALUE = "unselected";
 
 // Helper function to validate if a string is a UUID
 const isValidUuid = (value: string | null | undefined): boolean => {
@@ -62,16 +64,17 @@ export const TransactionList = ({
   user,
   disableFilters = false,
   markMonthPaid,
-  filterPaymentOptionId, // NOVO
-  setFilterPaymentOptionId, // NOVO
-  selectedMonth, // NOVO
+  filterPaymentOptionId,
+  setFilterPaymentOptionId,
+  selectedMonth,
+  loadingPayInvoice, // NOVO
+  setLoadingPayInvoice, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
-  const navigate = useNavigate(); // Inicializar useNavigate
-  const [searchTerm, setSearchTerm] = useState(""); // Manter searchTerm para a lógica de filtro, mas o input será removido
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // Novo estado de carregamento
 
   const paymentFilterOptions = useMemo(() => {
     const options = [
@@ -92,7 +95,6 @@ export const TransactionList = ({
     console.log("TransactionList: filteredTransactions useMemo re-running...");
     
     return transactions.filter(transaction => {
-      // A busca por descrição só será aplicada se não for mobile, já que o campo será removido em desktop
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
@@ -103,11 +105,9 @@ export const TransactionList = ({
           matchesPaymentOption = transaction.forma_pagamento === "dinheiro";
         } else if (filterPaymentOptionId === "pix") {
           matchesPaymentOption = transaction.forma_pagamento === "pix";
-        } else if (isValidUuid(filterPaymentOptionId)) { // Se for um ID de cartão
+        } else if (isValidUuid(filterPaymentOptionId)) {
           matchesPaymentOption = transaction.forma_pagamento === "cartao" && transaction.cartao_id === filterPaymentOptionId;
         } else {
-          // Fallback para outras formas de pagamento que não sejam dinheiro, pix ou cartão (ex: boleto)
-          // Se o filtro for "boleto", por exemplo, e não for um UUID
           matchesPaymentOption = transaction.forma_pagamento === filterPaymentOptionId;
         }
       }
@@ -118,7 +118,7 @@ export const TransactionList = ({
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentOptionId, isMobile]); // Adicionar filterPaymentOptionId às dependências
+  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentOptionId, isMobile]);
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -149,9 +149,10 @@ export const TransactionList = ({
       toast.error("Selecione um cartão de crédito válido para pagar a fatura.");
       return;
     }
-    if (!selectedMonth || isNaN(selectedMonth.getTime())) {
+    // Usar isValid do date-fns para uma verificação mais robusta
+    if (!isValid(selectedMonth)) {
       toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
-      console.error("Invalid selectedMonth in handlePayInvoice:", selectedMonth);
+      console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth);
       return;
     }
 
@@ -159,7 +160,7 @@ export const TransactionList = ({
 
     try {
       const installmentIdsToUpdate = filteredTransactions
-        .filter(t => t.type === "expense" && t.status !== "Recebida") // FilteredTransactions already applies card filter
+        .filter(t => t.type === "expense" && t.status !== "Recebida")
         .map(t => t.id);
 
       if (installmentIdsToUpdate.length === 0) {
@@ -184,12 +185,11 @@ export const TransactionList = ({
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
 
-      // Invalidate queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }); // In case some recurring entries were affected
+      queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-      queryClient.invalidateQueries(); // Force re-fetch all derived data
+      queryClient.invalidateQueries();
       
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
@@ -205,9 +205,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid mb-6", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}> {/* Ajustado mb-6 para mb-4 em mobile */}
-        {/* Campo de busca por descrição removido */}
-
+      <div className={cn("grid mb-6", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}>
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
@@ -221,10 +219,10 @@ export const TransactionList = ({
 
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Subcategoria" /> {/* Renomeado placeholder */}
+            <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Subcategoria</SelectItem> {/* Renomeado item "all" */}
+            <SelectItem value="all">Subcategoria</SelectItem>
             {selectableCategories
               .filter(cat => cat.id !== "") 
               .map((cat) => (
@@ -238,12 +236,10 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Filtro de Forma de Pagamento/Cartão Combinado e Botão Pagar Fatura (lado a lado em mobile) */}
         {isMobile && isValidUuid(filterPaymentOptionId) ? (
           <>
-            {/* Filtro de Forma de Pagamento (col-span-1 em mobile) */}
             <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                    className="rounded-xl col-span-1"> {/* col-span-1 para mobile */}
+                    className="rounded-xl col-span-1">
               <SelectTrigger className="rounded-xl">
                 <SelectValue placeholder="Forma de Pagamento" />
               </SelectTrigger>
@@ -256,7 +252,6 @@ export const TransactionList = ({
               </SelectContent>
             </Select>
 
-            {/* Botão Pagar Fatura (col-span-1 em mobile) */}
             <Button
               variant="secondary"
               onClick={handlePayInvoice}
@@ -268,9 +263,8 @@ export const TransactionList = ({
             </Button>
           </>
         ) : (
-          // Se nenhum cartão selecionado ou não for mobile, o filtro de Forma de Pagamento ocupa a largura total
           <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                  className={cn(isMobile && "col-span-full")}> {/* col-span-full para mobile */}
+                  className={cn(isMobile && "col-span-full")}>
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Forma de Pagamento" />
             </SelectTrigger>
@@ -284,10 +278,9 @@ export const TransactionList = ({
           </Select>
         )}
 
-        {/* Campo Valor Total (sempre na sua própria linha, alinhado à direita em mobile) */}
         <div className={cn(
           "p-2 rounded-xl text-right",
-          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1" // Sempre col-span-full em mobile
+          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1"
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(

@@ -3,32 +3,33 @@ import { Navigation } from "@/components/Navigation";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
-import { MonthNavigator } from "@/components/MonthNavigator"; // Re-adicionado
-// import { EditInstallmentModal } from "@/components/EditInstallmentModal"; // Removido
+import { MonthNavigator } from "@/components/MonthNavigator";
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
-import { useQueryClient } from "@tanstack/react-query"; // Importar useQueryClient
-import { Card } from "@/components/ui/card"; // Importar Card para o fallback
+import { useQueryClient } from "@tanstack/react-query";
+import { Card } from "@/components/ui/card";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
   const { user, loading: authLoading } = useAuth();
-  const queryClient = useQueryClient(); // Obter o queryClient aqui
+  const queryClient = useQueryClient();
 
   const {
     selectedMonth,
     setSelectedMonth,
-    handlePreviousMonth, // Re-adicionado
-    handleNextMonth,     // Re-adicionado
+    handlePreviousMonth,
+    handleNextMonth,
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
     loadingEditData,
+    loadingPayInvoice, // NOVO: Receber loadingPayInvoice
+    setLoadingPayInvoice, // NOVO: Receber setter
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransaction, // Agora é para exclusão
+    selectedRecurringTransaction,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
@@ -39,12 +40,12 @@ const Lancamentos = () => {
     editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
-    queryClient: logicQueryClient, // Receber o queryClient do hook
-    confirmDeleteWithOptions, // Receber a nova função de exclusão
-    markMonthPaid, // Re-adicionado
-    filterPaymentOptionId, // NOVO: Receber o estado do filtro
-    setFilterPaymentOptionId, // NOVO: Receber o setter do filtro
-  } = useLancamentosLogic(user, authLoading); // Passando authLoading aqui
+    queryClient: logicQueryClient,
+    confirmDeleteWithOptions,
+    markMonthPaid,
+    filterPaymentOptionId,
+    setFilterPaymentOptionId,
+  } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
 
@@ -67,7 +68,6 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          {/* MonthNavigator re-adicionado */}
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
@@ -89,10 +89,12 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient} 
-            confirmDeleteWithOptions={confirmDeleteWithOptions} // Passando para LancamentosContent
-            markMonthPaid={markMonthPaid} // Re-adicionado
-            filterPaymentOptionId={filterPaymentOptionId} // NOVO: Passar o estado do filtro
-            setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO: Passar o setter do filtro
+            confirmDeleteWithOptions={confirmDeleteWithOptions}
+            markMonthPaid={markMonthPaid}
+            filterPaymentOptionId={filterPaymentOptionId}
+            setFilterPaymentOptionId={setFilterPaymentOptionId}
+            loadingPayInvoice={loadingPayInvoice} // NOVO
+            setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
           />
         </main>
         <Footer isMobile={isMobile} />

@@ -39,14 +39,15 @@ interface LancamentosContentProps {
   isMobile: boolean;
   monthlyFilteredTransactions: Transaction[];
   cartoes: Tables<'cartoes'>[];
-  queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
+  queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagão' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
-  selectedMonth: Date; // NOVO: Adicionado selectedMonth
+  selectedMonth: Date;
   onEditTransaction: (transaction: Transaction) => void;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
-  setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
+  filterPaymentOptionId: string;
+  setFilterPaymentOptionId: (cardId: string) => void;
+  loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -60,18 +61,18 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   isMobile,
   monthlyFilteredTransactions,
   cartoes,
-  queryClient, // Recebendo queryClient
+  queryClient,
   user,
-  // rawExpenseInstallments, // Removido
-  selectedMonth, // NOVO: Recebendo selectedMonth
+  selectedMonth,
   onEditTransaction,
-  markMonthPaid, // Re-adicionado
-  filterPaymentOptionId, // NOVO
-  setFilterPaymentOptionId, // NOVO
+  markMonthPaid,
+  filterPaymentOptionId,
+  setFilterPaymentOptionId,
+  loadingPayInvoice, // NOVO
+  setLoadingPayInvoice, // NOVO
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
-  // Combine editingTransaction with full details if available, for legacy fixed/one-off
   const transactionToEdit = useMemo(() => {
     if (!editingTransaction) return null;
 
@@ -79,7 +80,6 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       return editingTransaction as MaterializedRecurringTransaction;
     }
 
-    // For non-recurring, combine with full details if available
     const baseTransaction = { ...editingTransaction };
     if (editingTransaction.type === "income" && fullEditingRevenue) {
       return {
@@ -100,7 +100,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
     return baseTransaction;
   }, [editingTransaction, fullEditingRevenue, fullEditingExpense]);
 
-  const disableFilters = !!editingTransaction; // Desativa os filtros se houver uma transação sendo editada
+  const disableFilters = !!editingTransaction;
 
   return transactionToEdit ? (
     <TransactionEditForm
@@ -119,14 +119,15 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       allCategories={allCategories}
       cartoes={cartoes}
       isMobile={isMobile}
-      queryClient={queryClient} // Passando queryClient para TransactionView
+      queryClient={queryClient}
       user={user}
-      // rawExpenseInstallments={rawExpenseInstallments} // Removido
-      selectedMonth={selectedMonth} // NOVO: Passando selectedMonth
-      disableFilters={disableFilters} // Passando a prop disableFilters
-      markMonthPaid={markMonthPaid} // Re-adicionado
-      filterPaymentOptionId={filterPaymentOptionId} // NOVO
-      setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO
+      selectedMonth={selectedMonth}
+      disableFilters={disableFilters}
+      markMonthPaid={markMonthPaid}
+      filterPaymentOptionId={filterPaymentOptionId}
+      setFilterPaymentOptionId={setFilterPaymentOptionId}
+      loadingPayInvoice={loadingPayInvoice} // NOVO
+      setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
     />
   );
 };
