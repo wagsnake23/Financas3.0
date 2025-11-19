@@ -108,7 +108,7 @@ export default function Despesas() {
       <RadioGroup
         value={formMode}
         onValueChange={(value: FormMode) => setFormMode(value)}
-        className="flex items-center justify-center gap-6 mb-4" // Estilo simplificado como o TransactionStatusToggle
+        className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="one-off" id="one-off-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
