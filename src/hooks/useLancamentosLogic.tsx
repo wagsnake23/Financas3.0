@@ -471,7 +471,6 @@ export const useLancamentosLogic = (
         | TablesUpdate<"recurring_entries">
         | TablesUpdate<"recurring_entry_exceptions">
     ) => {
-      let error = null;
       setLoadingEditData(true);
 
       if (!user) {
@@ -586,7 +585,7 @@ export const useLancamentosLogic = (
               })
               .eq("id", revenueIdToUse)
               .eq("user_id", user.id);
-            error = updateError;
+            if (updateError) throw updateError;
           } else if (type === "expense") {
             if (originalTransaction?.is_fixed) {
               const lastHyphenIndex = id.lastIndexOf("-");
@@ -623,7 +622,7 @@ export const useLancamentosLogic = (
                 })
                 .eq("id", parentDespesaId)
                 .eq("user_id", user.id);
-              error = updateDespesaError;
+              if (updateDespesaError) throw updateDespesaError;
 
               const {
                 data: firstInstallment,
@@ -673,8 +672,7 @@ export const useLancamentosLogic = (
                 .eq("id", id); // 'id' here is the installment ID
               
               if (updateParcelaError) {
-                error = updateParcelaError;
-                throw error; // Propagate error to catch block
+                throw updateParcelaError; // Propagate error
               }
 
               // 2. Update the parent expense (despesas) for category and description
@@ -691,8 +689,7 @@ export const useLancamentosLogic = (
                   .eq("user_id", user.id); // Ensure user owns the parent expense
                 
                 if (updateDespesaParentError) {
-                  error = updateDespesaParentError;
-                  throw error; // Propagate error
+                  throw updateDespesaParentError; // Propagate error
                 }
               } else {
                 console.warn("handleUpdateTransaction: Parent despesa_id not found or invalid for installment update:", parentDespesaId);
@@ -702,32 +699,24 @@ export const useLancamentosLogic = (
             }
           }
 
-          if (error) {
-            toast.error("Erro ao atualizar lançamento", {
-              description: error.message,
-            });
-            console.error("handleUpdateTransaction: Update error:", error);
-          } else {
-            toast.success("Lançamento atualizado!", {
-              style: {
-                backgroundColor: "hsl(var(--soft-green))",
-                color: "hsl(var(--success-darker))",
-              },
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["revenues", user?.id],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ["expenseInstallments", user?.id],
-            });
-
-            // 🔥 Garante que qualquer lista derivada também seja recalculada
-            queryClient.invalidateQueries();
-          }
+          // If we reach here, all updates were successful for non-recurring transactions
+          toast.success("Lançamento atualizado!", {
+            style: {
+              backgroundColor: "hsl(var(--soft-green))",
+              color: "hsl(var(--success-darker))",
+            },
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["revenues", user?.id],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["expenseInstallments", user?.id],
+          });
+          queryClient.invalidateQueries(); // Invalidate all relevant queries
         }
-      } catch (err) {
-        console.error("handleUpdateTransaction: Unexpected error:", err);
-        toast.error("Ocorreu um erro inesperado ao atualizar o lançamento.");
+      } catch (err: any) { // Catch all errors thrown in the try block
+        console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
+        toast.error("Erro ao atualizar lançamento.", { description: err.message }); // Show specific error message
       } finally {
         setEditingTransaction(null);
         setFullEditingRevenue(null);

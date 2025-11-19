@@ -1,4 +1,4 @@
-import React, { memo } from "react"; // Removido useState, useEffect
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
@@ -43,7 +43,7 @@ const isValidUuid = (uuid: string) => {
 };
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
-  transaction, // Usar transaction diretamente
+  transaction,
   onEditTransaction,
   allCategories,
   cartoes,
@@ -101,11 +101,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
 
-    // ---------------------------------------------
-    // 🔁 RECORRENTE
-    // ---------------------------------------------
-    if (transaction.isRecurring && transaction.recurringEntryId) {
-      try {
+    try {
+      // ---------------------------------------------
+      // 🔁 RECORRENTE
+      // ---------------------------------------------
+      if (transaction.isRecurring && transaction.recurringEntryId) {
         const d = new Date(transaction.date);
         const year = d.getFullYear();
         const month = d.getMonth() + 1;
@@ -116,23 +116,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           month,
           is_paid: newStatus === "Recebida",
         });
-
         toast.success("Status atualizado!");
-        // A invalidação de queries já é feita dentro de markMonthPaid
-        return;
-      } catch (error) {
-        console.error(error);
-        toast.error("Erro ao atualizar recorrente.");
-        return;
+        return; // Exit after successful recurring update
       }
-    }
 
-    // ---------------------------------------------
-    // 💸 AVULSA / PARCELADA
-    // ---------------------------------------------
-    let updateError: any = null;
-
-    try {
+      // ---------------------------------------------
+      // 💸 AVULSA / PARCELADA
+      // ---------------------------------------------
       if (transaction.type === "income") {
         const { error } = await supabase
           .from("receitas")
@@ -140,11 +130,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .eq("id", transaction.id)
           .eq("user_id", user.id);
 
-        updateError = error;
-        if (!updateError) {
-          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-        }
-      } else {
+        if (error) throw error; // Throw Supabase error
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+      } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
           ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
@@ -158,21 +146,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           })
           .eq("id", transaction.id);
 
-        updateError = error;
-        if (!updateError) {
-          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-        }
+        if (error) throw error; // Throw Supabase error
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       }
 
-      if (updateError) {
-        console.error(updateError);
-        toast.error("Erro ao atualizar status.");
-      } else {
-        toast.success("Status atualizado!");
-      }
-    } catch (error) {
-      console.error("Erro inesperado ao atualizar status:", error);
-      toast.error("Ocorreu um erro inesperado.");
+      toast.success("Status atualizado!"); // Only show success if no error was thrown
+    } catch (error: any) {
+      console.error("Erro ao atualizar status:", error);
+      toast.error("Erro ao atualizar status.", { description: error.message }); // More specific error toast
     }
   };
 
