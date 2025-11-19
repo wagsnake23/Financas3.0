@@ -147,7 +147,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
 
     // 3. Combine month-specific one-off transactions with already month-specific recurring transactions
     //    materializedRecurringTransactions from useRecurringEntries is already filtered for `selectedMonth`
-    const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Alterado para ordem decrescente
     
     console.log("useTransactionsData: Monthly Income transactions count:", monthlyIncomeTransactions.length);
     console.log("useTransactionsData: Monthly Expense transactions count:", monthlyExpenseTransactions.length);
