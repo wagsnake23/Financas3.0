@@ -20,7 +20,7 @@ export const categories: AppCategory[] = [
   { id: "transporte_estacionamento", nome: "Estacionamento", icone: "ParkingSquare", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_publico", nome: "Transporte público", icone: "Bus", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_apps", nome: "Apps (Uber, 99...)", icone: "Smartphone", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
-  { id: "transporte_pedagio", nome: "Pedágio", icone: "Road", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
+  { id: "transporte_pedagio", nome: "Pedágio", icone: "Route", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_financiamento", nome: "Financiamento de veículo", icone: "Car", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
 
   { id: "alimentacao", nome: "Alimentação", icone: "UtensilsCrossed", cor: "hsl(30, 95%, 55%)", parent_id: null },
