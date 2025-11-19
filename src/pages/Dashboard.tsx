@@ -133,7 +133,7 @@ const Dashboard = () => {
                   {/* Alterado para um botão direto para despesas avulsas em mobile */}
                   <Button
                     variant="destructive"
-                    className={cn("w-2/5 h-8 px-3 text-xs rounded-xl")}
+                    className={cn("w-4/5 h-8 px-3 text-xs rounded-xl")} {/* Alterado de w-2/5 para w-4/5 */}
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -155,7 +155,7 @@ const Dashboard = () => {
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 
                     variant="success" 
-                    className="w-2/5 h-8 px-3 text-xs rounded-xl" 
+                    className="w-4/5 h-8 px-3 text-xs rounded-xl" {/* Alterado de w-2/5 para w-4/5 */}
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
