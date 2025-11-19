@@ -30,23 +30,24 @@ import {
 import { Footer } from "@/components/Footer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 import { Database, Enums } from "@/integrations/supabase/types";
+import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle"; // Importar o novo componente
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 type FormMode = 'one-off' | 'recurring';
 
 const UNSELECTED_VALUE = "unselected";
 
 export default function Receitas() {
-  const { user, loading: authLoading } = useAuth(); // Obter authLoading
+  const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
   const [formMode, setFormMode] = useState<FormMode>('one-off');
 
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
-  const [valor, setValor] = useState<number | undefined>(undefined); // Alterado para number | undefined
+  const [valor, setValor] = useState<number | undefined>(undefined);
   const [data, setData] = useState<Date | undefined>(new Date());
   const [descricao, setDescricao] = useState("");
   const [status, setStatus] = useState<ReceitaStatus>('Pendente');
@@ -65,7 +66,7 @@ export default function Receitas() {
       if (error) throw error;
       return data.filter(r => !r.is_fixed);
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user && !authLoading,
   });
 
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -80,7 +81,7 @@ export default function Receitas() {
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user && !authLoading,
   });
 
   const incomeSubcategories = useMemo(() => {
@@ -91,7 +92,7 @@ export default function Receitas() {
     e.preventDefault();
     setLoading(true);
 
-    if (valor === undefined || !data || tipoReceitaId === UNSELECTED_VALUE) { // Verificação para number | undefined
+    if (valor === undefined || !data || tipoReceitaId === UNSELECTED_VALUE) {
       toast.error("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
@@ -104,7 +105,7 @@ export default function Receitas() {
     const newRevenueData = {
       user_id: user?.id,
       tipo_receita_id: tipoReceitaId,
-      valor: valor as number, // Usar o valor como number
+      valor: valor as number,
       data: formattedDate,
       descricao,
       status,
@@ -123,7 +124,7 @@ export default function Receitas() {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       setTipoReceitaId(UNSELECTED_VALUE);
-      setValor(undefined); // Reset para undefined
+      setValor(undefined);
       setData(new Date());
       setDescricao("");
       setStatus('Pendente');
@@ -225,20 +226,12 @@ export default function Receitas() {
         />
       </div>
 
-      <div>
-        <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Receita</Label>
-        <Select value={status} onValueChange={(value: ReceitaStatus) => setStatus(value)}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione o status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Prevista" className={cn(isMobile && "text-sm")}>Prevista</SelectItem>
-            <SelectItem value="Pendente" className={cn(isMobile && "text-sm")}>Pendente</SelectItem>
-            <SelectItem value="Recebida" className={cn(isMobile && "text-sm")}>Recebida</SelectItem>
-            <SelectItem value="Cancelada" className={cn(isMobile && "text-sm")}>Cancelada</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {/* Substituído o Select pelo RevenueStatusToggle */}
+      <RevenueStatusToggle
+        status={status}
+        setStatus={setStatus}
+        isMobile={isMobile}
+      />
 
       <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         {loading ? "Salvando..." : "Salvar Receita"}
@@ -246,7 +239,7 @@ export default function Receitas() {
     </form>
   );
 
-  if (authLoading || isLoadingRevenues || isLoadingCategories) { // Incluindo authLoading
+  if (authLoading || isLoadingRevenues || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Receitas...</div>
