@@ -220,6 +220,7 @@ export default function Auth() {
               required
               disabled={loading}
               placeholder="seu@email.com"
+              className="rounded-xl"
             />
           </div>
           <div>
@@ -233,6 +234,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
+                className="rounded-xl"
               />
               <button
                 type="button"
@@ -280,6 +282,7 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
+              className="rounded-xl"
             />
           </div>
           <div>
@@ -292,6 +295,7 @@ export default function Auth() {
               required
               disabled={loading}
               placeholder="seu@email.com"
+              className="rounded-xl"
             />
           </div>
           <div>
@@ -305,6 +309,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
+                className="rounded-xl"
               />
               <button
                 type="button"
@@ -326,6 +331,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
+                className="rounded-xl"
               />
               <button
                 type="button"
@@ -363,6 +369,7 @@ export default function Auth() {
               required
               disabled={loading}
               placeholder="seu@email.com"
+              className="rounded-xl"
             />
           </div>
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
@@ -393,6 +400,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
+                className="rounded-xl"
               />
               <button
                 type="button"
@@ -414,6 +422,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
+                className="rounded-xl"
               />
               <button
                 type="button"

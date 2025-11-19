@@ -144,7 +144,7 @@ export default function Receitas() {
         <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Tipo de Receita</Label>
         <div className="flex gap-2">
           <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione a subcategoria de receita" />
             </SelectTrigger>
             <SelectContent>
@@ -174,7 +174,7 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !data && "text-muted-foreground",
                 isMobile && "h-9 text-sm"
               )}
@@ -210,7 +210,7 @@ export default function Receitas() {
           onChange={(e) => setValor(e.target.value)}
           required
           placeholder="0,00"
-          className={cn(isMobile && "h-9 text-sm")}
+          className={cn("rounded-xl", isMobile && "h-9 text-sm")}
         />
       </div>
 
@@ -222,14 +222,14 @@ export default function Receitas() {
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a receita..."
           rows={3}
-          className={cn(isMobile && "text-sm")}
+          className={cn("rounded-xl", isMobile && "text-sm")}
         />
       </div>
 
       <div>
         <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Receita</Label>
         <Select value={status} onValueChange={(value: ReceitaStatus) => setStatus(value)}>
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue placeholder="Selecione o status" />
           </SelectTrigger>
           <SelectContent>
@@ -241,7 +241,7 @@ export default function Receitas() {
         </Select>
       </div>
 
-      <Button type="submit" className={cn("w-full", isMobile && "h-9 text-sm")} disabled={loading}>
+      <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         {loading ? "Salvando..." : "Salvar Receita"}
       </Button>
     </form>

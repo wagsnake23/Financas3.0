@@ -91,7 +91,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               setType(value as TransactionType);
               setCategory(UNSELECTED_VALUE); // Reset category when type changes to UNSELECTED_VALUE
             }}>
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -111,6 +111,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0,00"
               required
+              className="rounded-xl"
             />
           </div>
 
@@ -122,13 +123,14 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
+              className="rounded-xl"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="category">Categoria</Label>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl">
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
               <SelectContent>
@@ -156,10 +158,11 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Adicione uma descrição..."
             rows={3}
+            className="rounded-xl"
           />
         </div>
 
-        <Button type="submit" className="w-full" size="lg">
+        <Button type="submit" className="w-full rounded-xl" size="lg">
           <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
           Adicionar Lançamento
         </Button>

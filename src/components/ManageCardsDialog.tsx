@@ -150,7 +150,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 cards.map((card) => (
                   <Card
                     key={card.id}
-                    className="flex items-center justify-between p-3 border rounded-lg bg-card shadow-sm" // Adicionado shadow-sm
+                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm" // Adicionado shadow-sm e rounded-xl
                   >
                     <div>
                       <p className="font-medium">{card.nome}</p>
@@ -196,11 +196,11 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           <div className="space-y-4">
             <div>
               <Label>Nome do Cartão</Label>
-              <Input value={nomeCartao} onChange={(e) => setNomeCartao(e.target.value)} />
+              <Input value={nomeCartao} onChange={(e) => setNomeCartao(e.target.value)} className="rounded-xl" />
             </div>
             <div>
               <Label>Banco</Label>
-              <Input value={banco} onChange={(e) => setBanco(e.target.value)} />
+              <Input value={banco} onChange={(e) => setBanco(e.target.value)} className="rounded-xl" />
             </div>
             <div>
               <Label>Últimos 4 Dígitos</Label>
@@ -208,6 +208,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 value={ultimosDigitos}
                 onChange={(e) => setUltimosDigitos(e.target.value)}
                 maxLength={4}
+                className="rounded-xl"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -219,6 +220,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   max="31"
                   value={diaFechamento}
                   onChange={(e) => setDiaFechamento(e.target.value)}
+                  className="rounded-xl"
                 />
               </div>
               <div>
@@ -229,6 +231,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   max="31"
                   value={diaVencimento}
                   onChange={(e) => setDiaVencimento(e.target.value)}
+                  className="rounded-xl"
                 />
               </div>
             </div>

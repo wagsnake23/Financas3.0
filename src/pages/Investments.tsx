@@ -180,7 +180,7 @@ const Investments = () => {
         {/* Stats Cards - Ocultados em mobile */}
         {!isMobile && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+            <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 rounded-xl shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Total Investido</p>
@@ -190,7 +190,7 @@ const Investments = () => {
               </div>
             </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20">
+            <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 rounded-xl shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Rentabilidade Média</p>
@@ -205,7 +205,7 @@ const Investments = () => {
         <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
           {/* Form */}
           <div>
-            <Card className={cn("p-6 animate-slide-up", isMobile && "p-4")}>
+            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -218,14 +218,14 @@ const Investments = () => {
                     placeholder="Ex: Tesouro Direto"
                     required
                     disabled={loadingForm}
-                    className={cn(isMobile && "h-9 text-sm")}
+                    className={cn("rounded-xl", isMobile && "h-9 text-sm")}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
                   <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                    <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+                    <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -251,7 +251,7 @@ const Investments = () => {
                       placeholder="0,00"
                       required
                       disabled={loadingForm}
-                      className={cn(isMobile && "h-9 text-sm")}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm")}
                     />
                   </div>
 
@@ -266,7 +266,7 @@ const Investments = () => {
                       placeholder="Ex: 13.75"
                       required
                       disabled={loadingForm}
-                      className={cn(isMobile && "h-9 text-sm")}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm")}
                     />
                   </div>
                 </div>
@@ -278,7 +278,7 @@ const Investments = () => {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full justify-start text-left font-normal h-10",
+                          "w-full justify-start text-left font-normal h-10 rounded-xl",
                           !date && "text-muted-foreground",
                           isMobile && "h-9 text-sm"
                         )}
@@ -305,7 +305,7 @@ const Investments = () => {
                   </Popover>
                 </div>
 
-                <Button type="submit" className={cn("w-full", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
+                <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
                   {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
                 </Button>
               </form>
@@ -314,7 +314,7 @@ const Investments = () => {
 
           {/* Investments List */}
           <div>
-            <Card className={cn("p-6", isMobile && "p-4")}>
+            <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
               <div className="space-y-3">
                 {investments.length === 0 ? (
@@ -388,5 +388,3 @@ const Investments = () => {
     </div>
   );
 };
-
-export default Investments;

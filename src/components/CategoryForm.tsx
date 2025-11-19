@@ -139,7 +139,7 @@ export const CategoryForm = ({
             value={selectedParentId || UNSELECTED_VALUE} 
             onValueChange={(value) => setSelectedParentId(value === UNSELECTED_VALUE ? null : value)}
           >
-            <SelectTrigger id="parent_id">
+            <SelectTrigger id="parent_id" className="rounded-xl">
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
@@ -164,6 +164,7 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
+            className="rounded-xl"
           />
         </div>
         
@@ -175,7 +176,7 @@ export const CategoryForm = ({
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="w-full p-4 border-2 border-border rounded-lg hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background"
+              className="w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background"
             >
               {icone}
             </button>
@@ -195,7 +196,7 @@ export const CategoryForm = ({
         </div>
 
         <div className="flex gap-2">
-          <Button type="submit" className="flex-1" size="lg">
+          <Button type="submit" className="flex-1 rounded-xl" size="lg">
             {editingCategory ? "Atualizar Subcategoria" : "Adicionar Subcategoria"}
           </Button>
           {editingCategory && (
@@ -204,6 +205,7 @@ export const CategoryForm = ({
               variant="outline"
               onClick={handleCancel}
               size="lg"
+              className="rounded-xl"
             >
               Cancelar
             </Button>

@@ -71,13 +71,13 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
             onChange={(e) => setDueDay(e.target.value)}
             required
             disabled={loading}
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
         <div className="space-y-2">
           <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
           <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -98,7 +98,7 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-full justify-start text-left font-normal h-10",
+                    "w-full justify-start text-left font-normal h-10 rounded-xl",
                     !startDate && "text-muted-foreground",
                     isMobile && "h-9 text-sm"
                   )}
@@ -128,7 +128,7 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-full justify-start text-left font-normal h-10",
+                    "w-full justify-start text-left font-normal h-10 rounded-xl",
                     !endDate && "text-muted-foreground",
                     isMobile && "h-9 text-sm"
                   )}
@@ -157,7 +157,7 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
       <div className="space-y-2">
         <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Recorrência</Label>
         <Select value={status} onValueChange={(value: Enums<'recurring_status'>) => setStatus(value)} disabled={loading}>
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

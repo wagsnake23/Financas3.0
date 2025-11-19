@@ -224,14 +224,14 @@ export const TransactionList = ({
               placeholder="Buscar por descrição..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 rounded-xl"
               disabled={disableFilters} // Desabilitar busca
             />
           </div>
         )}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}> {/* Desabilitar tipo */}
-          <SelectTrigger>
+          <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -242,7 +242,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}> {/* Desabilitar categoria */}
-          <SelectTrigger>
+          <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
@@ -263,7 +263,7 @@ export const TransactionList = ({
 
       <div className="mb-6">
         <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}> {/* Desabilitar forma de pagamento */}
-          <SelectTrigger>
+          <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
           <SelectContent>
@@ -296,7 +296,7 @@ export const TransactionList = ({
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
         <div className={cn(
-          "p-2 rounded-lg border flex-1",
+          "p-2 rounded-xl border flex-1",
           isMobile && "py-1.5 px-3",
           accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
         )}>
@@ -312,7 +312,7 @@ export const TransactionList = ({
         {!isMobile && selectedCard && invoiceDetails && (
           <Button 
             variant="outline" 
-            className="h-auto py-3"
+            className="h-auto py-3 rounded-xl"
             onClick={handlePayInvoice}
             disabled={disableFilters} // Desabilitar botão de pagar fatura
           >

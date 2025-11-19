@@ -272,7 +272,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <div>
           <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
           <Select value={tipoPagamento} onValueChange={(v: any) => setTipoPagamento(v)}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -296,7 +296,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
               }}
               required
-              className={cn(isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
             />
           </div>
         )}
@@ -321,7 +321,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
           rows={3}
-          className={cn(isMobile && "text-sm")}
+          className={cn("rounded-xl", isMobile && "text-sm")}
         />
       </div>
 
@@ -332,7 +332,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       />
 
       {tipoPagamento === "parcelado" && valor && numeroParcelas && (
-        <div className={cn("p-4 bg-secondary/20 rounded-lg", isMobile && "p-3")}>
+        <div className={cn("p-4 bg-secondary/20 rounded-xl", isMobile && "p-3")}>
           <p className={cn("font-medium mb-2", isMobile && "text-sm")}>Pré-visualização das Parcelas:</p>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>
             {numeroParcelas}x de R$ {(parseFloat(valor) / parseInt(numeroParcelas)).toFixed(2)}

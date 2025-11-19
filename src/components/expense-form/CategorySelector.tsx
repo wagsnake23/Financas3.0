@@ -40,7 +40,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
             setSelectedSubcategoryId(UNSELECTED_VALUE);
           }}
         >
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue placeholder="Selecione a categoria principal" />
           </SelectTrigger>
           <SelectContent>
@@ -72,7 +72,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
           }}
           disabled={selectedParentCategoryId === UNSELECTED_VALUE || filteredSubcategories.length === 0}
         >
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm", validationErrors.selectedSubcategoryId && "border-destructive")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.selectedSubcategoryId && "border-destructive")}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>

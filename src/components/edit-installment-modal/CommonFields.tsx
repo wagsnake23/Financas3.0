@@ -48,7 +48,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             onChange={(e) => setTitle(e.target.value)}
             required
             disabled={loading}
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
       )}
@@ -64,14 +64,14 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             onChange={(e) => setValue(e.target.value)}
             required
             disabled={loading}
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="category" className={cn(isMobile && "text-xs")}>{categoryLabel}</Label> {/* Usando a nova prop */}
           <Select value={categoryId} onValueChange={setCategoryId} disabled={loading}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione a categoria" />
             </SelectTrigger>
             <SelectContent>

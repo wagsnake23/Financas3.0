@@ -44,7 +44,7 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !overrideDueDate && "text-muted-foreground",
                 isMobile && "h-9 text-sm"
               )}
@@ -75,7 +75,7 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
           value={note}
           onChange={(e) => setNote(e.target.value)}
           disabled={loading}
-          className={cn(isMobile && "h-9 text-sm")}
+          className={cn("rounded-xl", isMobile && "h-9 text-sm")}
         />
       </div>
       <div className="flex items-center space-x-2">

@@ -44,7 +44,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !dataVencimento && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 validationErrors.dataVencimento && "border-destructive"

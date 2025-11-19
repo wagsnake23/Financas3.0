@@ -54,14 +54,14 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           }}
           required
           placeholder="0,00"
-          className={cn(isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
+          className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
         />
       </div>
 
       <div>
         <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
         <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +81,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setCartaoId(v);
               setValidationErrors(prev => ({ ...prev, cartaoId: false }));
             }}>
-              <SelectTrigger className={cn(isMobile && "h-9 text-sm", validationErrors.cartaoId && "border-destructive")}>
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.cartaoId && "border-destructive")}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>

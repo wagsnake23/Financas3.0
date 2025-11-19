@@ -82,11 +82,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         <div className="space-y-4">
           <div>
             <Label>Nome do Cartão</Label>
-            <Input value={newCardNome} onChange={(e) => setNewCardNome(e.target.value)} />
+            <Input value={newCardNome} onChange={(e) => setNewCardNome(e.target.value)} className="rounded-xl" />
           </div>
           <div>
             <Label>Banco</Label>
-            <Input value={newCardBanco} onChange={(e) => setNewCardBanco(e.target.value)} />
+            <Input value={newCardBanco} onChange={(e) => setNewCardBanco(e.target.value)} className="rounded-xl" />
           </div>
           <div>
             <Label>Últimos 4 Dígitos</Label>
@@ -94,6 +94,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               value={newCardUltimosDigitos} 
               onChange={(e) => setNewCardUltimosDigitos(e.target.value)}
               maxLength={4}
+              className="rounded-xl"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -105,6 +106,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 max="31"
                 value={newCardDiaFechamento} 
                 onChange={(e) => setNewCardDiaFechamento(e.target.value)}
+                className="rounded-xl"
               />
             </div>
             <div>
@@ -115,6 +117,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 max="31"
                 value={newCardDiaVencimento} 
                 onChange={(e) => setNewCardDiaVencimento(e.target.value)}
+                className="rounded-xl"
               />
             </div>
           </div>

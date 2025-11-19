@@ -60,7 +60,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       <div className="space-y-2">
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -94,7 +94,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0,00"
             required
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
 
@@ -106,7 +106,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left font-normal h-10",
+                  "w-full justify-start text-left font-normal h-10 rounded-xl",
                   !date && "text-muted-foreground",
                   isMobile && "h-9 text-sm"
                 )}
@@ -142,7 +142,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
           rows={3}
-          className={cn(isMobile && "text-sm")}
+          className={cn("rounded-xl", isMobile && "text-sm")}
         />
       </div>
 
@@ -150,7 +150,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         <div>
           <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Receita</Label>
           <Select value={status} onValueChange={(value: ReceitaStatus) => setStatus(value)}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione o status" />
             </SelectTrigger>
             <SelectContent>

@@ -180,7 +180,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       <div className="space-y-2">
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label> {/* Label alterada */}
         <Select value={categoryId} onValueChange={setCategoryId} disabled={loading || isLoadingCategories}>
-          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
             <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder alterado */}
           </SelectTrigger>
           <SelectContent>
@@ -215,7 +215,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             placeholder="0,00"
             required
             disabled={loading}
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
 
@@ -223,7 +223,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         <div className="space-y-2">
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)} disabled={loading}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -242,7 +242,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select value={cartaoId} onValueChange={(v: any) => setCartaoId(v)} disabled={loading}>
-              <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
@@ -270,7 +270,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         <div className="space-y-2">
           <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
           <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
-            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -293,7 +293,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             onChange={(e) => setDueDay(e.target.value)}
             required
             disabled={loading}
-            className={cn(isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
       </div>
@@ -306,7 +306,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !startDate && "text-muted-foreground",
                 isMobile && "h-9 text-sm"
               )}
@@ -338,7 +338,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !endDate && "text-muted-foreground",
                 isMobile && "h-9 text-sm"
               )}
