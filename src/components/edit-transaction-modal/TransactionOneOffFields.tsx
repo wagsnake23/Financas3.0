@@ -13,6 +13,7 @@ import { CalendarIcon } from "lucide-react";
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle"; // Importar RevenueStatusToggle
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -146,20 +147,11 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {transactionType === "income" && (
-        <div>
-          <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Receita</Label>
-          <Select value={status} onValueChange={(value: ReceitaStatus) => setStatus(value)}>
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione o status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Prevista" className={cn(isMobile && "text-sm")}>Prevista</SelectItem>
-              <SelectItem value="Pendente" className={cn(isMobile && "text-sm")}>Pendente</SelectItem>
-              <SelectItem value="Recebida" className={cn(isMobile && "text-sm")}>Recebida</SelectItem>
-              <SelectItem value="Cancelada" className={cn(isMobile && "text-sm")}>Cancelada</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <RevenueStatusToggle
+          status={status}
+          setStatus={setStatus}
+          isMobile={isMobile}
+        />
       )}
     </>
   );
