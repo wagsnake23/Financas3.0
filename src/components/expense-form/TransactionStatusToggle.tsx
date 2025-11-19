@@ -20,29 +20,29 @@ export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = (
       <RadioGroup
         value={isPaid ? "paid" : "pending"}
         onValueChange={(value) => setIsPaid(value === "paid")}
-        className="flex items-center justify-center gap-6" // Aumentado o gap de 4 para 6
+        className="flex items-center justify-center gap-6"
       >
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="paid" id="status-paid" className={cn(isMobile && "h-3.5 w-3.5")} />
+          <RadioGroupItem value="paid" id="status-paid" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
           <Label
             htmlFor="status-paid"
             className={cn(
-              "text-sm font-normal text-muted-foreground", // Alterado para font-normal
+              "text-sm font-normal text-muted-foreground",
               isMobile && "text-xs",
-              "data-[state=checked]:text-success data-[state=checked]:font-bold" // Verde e negrito quando selecionado
+              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold" // Corrigido para usar peer-data
             )}
           >
             Pago!
           </Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="pending" id="status-pending" className={cn(isMobile && "h-3.5 w-3.5")} />
+          <RadioGroupItem value="pending" id="status-pending" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
           <Label
             htmlFor="status-pending"
             className={cn(
-              "text-sm font-normal text-muted-foreground", // Alterado para font-normal
+              "text-sm font-normal text-muted-foreground",
               isMobile && "text-xs",
-              "data-[state=checked]:text-destructive data-[state=checked]:font-bold" // Vermelho e negrito quando selecionado
+              "peer-data-[state=checked]:text-destructive peer-data-[state=checked]:font-bold" // Corrigido para usar peer-data
             )}
           >
             Pendente
