@@ -113,23 +113,47 @@ export default function Despesas() {
         <Label
           htmlFor="one-off-expense"
           className={cn(
-            "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
+            "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground shadow-sm",
+            "transition-all duration-200", // Adicionado para transição suave
+            "hover:border-destructive", // Borda vermelha no hover
+            "hover:bg-destructive/5", // Fundo vermelho suave no hover
+            "hover:text-destructive", // Texto vermelho no hover
+            "hover:font-bold", // Negrito no hover
+            "text-muted-foreground", // Cor padrão do texto
+            "font-normal", // Peso da fonte padrão
+            "relative", // Necessário para o peer-data
+            "peer-data-[state=checked]:border-destructive", // Borda vermelha quando selecionado
+            "peer-data-[state=checked]:bg-destructive/5", // Fundo vermelho suave quando selecionado
+            "peer-data-[state=checked]:text-destructive", // Texto vermelho quando selecionado
+            "peer-data-[state=checked]:font-bold", // Negrito quando selecionado
             isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
           )}
         >
-          <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only" />
-          <DynamicIcon name="CreditCard" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--destructive))" />
+          <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only peer" /> {/* Adicionado peer */}
+          <DynamicIcon name="CreditCard" className={cn("mb-3 h-6 w-6 text-destructive", isMobile && "mb-1 h-5 w-5")} />
           <span>Avulsa</span>
         </Label>
         <Label
           htmlFor="recurring-expense"
           className={cn(
-            "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+            "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground shadow-sm",
+            "transition-all duration-200", // Adicionado para transição suave
+            "hover:border-primary", // Borda azul no hover
+            "hover:bg-primary/5", // Fundo azul suave no hover
+            "hover:text-primary", // Texto azul no hover
+            "hover:font-bold", // Negrito no hover
+            "text-muted-foreground", // Cor padrão do texto
+            "font-normal", // Peso da fonte padrão
+            "relative", // Necessário para o peer-data
+            "peer-data-[state=checked]:border-primary", // Borda azul quando selecionado
+            "peer-data-[state=checked]:bg-primary/5", // Fundo azul suave quando selecionado
+            "peer-data-[state=checked]:text-primary", // Texto azul quando selecionado
+            "peer-data-[state=checked]:font-bold", // Negrito quando selecionado
             isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
           )}
         >
-          <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only" />
-          <DynamicIcon name="Repeat" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
+          <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only peer" /> {/* Adicionado peer */}
+          <DynamicIcon name="Repeat" className={cn("mb-3 h-6 w-6 text-primary", isMobile && "mb-1 h-5 w-5")} />
           <span>Recorrente</span>
         </Label>
       </RadioGroup>
