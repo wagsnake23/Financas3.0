@@ -118,7 +118,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               />
             </div>
           </div>
-          <Button onClick={handleAddNewCartao} className="w-full" disabled={loading}>
+          <Button onClick={handleAddNewCartao} className="w-full rounded-xl" disabled={loading}>
             {loading ? "Adicionando..." : "Adicionar Cartão"}
           </Button>
         </div>

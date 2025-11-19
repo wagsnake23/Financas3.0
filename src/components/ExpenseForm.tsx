@@ -340,7 +340,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       )}
 
-      <Button type="submit" className={cn("w-full", isMobile && "h-9 text-sm")} disabled={loading}>
+      <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         {loading ? "Salvando..." : "Salvar Despesa"}
       </Button>
     </form>

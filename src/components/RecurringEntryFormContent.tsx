@@ -362,7 +362,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </Popover>
       </div>
 
-      <Button type="submit" className={cn("w-full", isMobile && "h-9 text-sm")} disabled={loading}>
+      <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         <DynamicIcon name="Plus" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
         {loading ? "Criando..." : "Criar Lançamento Recorrente"}
       </Button>
