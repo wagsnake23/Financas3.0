@@ -68,6 +68,7 @@ All colors MUST be HSL.
     --soft-blue: 210 60% 90%; /* Nova cor azul suave */
     --soft-green: 150 60% 90%; /* Nova cor verde suave */
     --soft-red: 0 70% 90%; /* Nova cor vermelho suave */
+    --soft-purple: 280 60% 90%; /* Nova cor roxo suave */
   }
 
   .dark {
@@ -122,6 +123,7 @@ All colors MUST be HSL.
     --soft-blue: 210 60% 20%; /* Nova cor azul suave para dark mode */
     --soft-green: 150 60% 20%; /* Darker soft green for dark mode */
     --soft-red: 0 70% 20%; /* Darker soft red for dark mode */
+    --soft-purple: 280 60% 20%; /* Darker soft purple for dark mode */
   }
 }
 

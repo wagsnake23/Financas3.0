@@ -76,7 +76,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   if (!isMobile) return null; // Only render on mobile
 
   return (
-    <Card className={cn("p-4 animate-fade-in space-y-2 bg-card rounded-xl shadow-sm", isMobile && "p-3 space-y-2")}>
+    <Card className={cn("p-4 animate-fade-in space-y-2 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm", isMobile && "p-3 space-y-2")}>
       <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-base mb-1")}>Despesas do Cartão de Crédito</h2>
 
       {cartoes.length === 0 ? (
