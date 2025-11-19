@@ -14,13 +14,16 @@ export const TotalExpensesCard = ({ expenseInstallments, isMobile }: TotalExpens
     .reduce((sum, p) => sum + p.valor_parcela, 0);
 
   return (
-    <Card className={cn("p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
+    <Card className={cn(
+      "p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm", 
+      isMobile ? "p-4 h-24" : "h-auto" // Ajustar padding e altura para mobile
+    )}>
       <div className="flex items-center justify-between">
         <div>
-          <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs")}>Total Geral de Despesas</p> {/* Ajustar tamanho da fonte */}
-          <p className={cn("text-3xl font-bold text-foreground", isMobile && "text-xl")}>R$ {totalOverallExpenses.toFixed(2)}</p> {/* Ajustar tamanho da fonte (de text-2xl para text-xl) */}
+          <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs")}>Total Geral de Despesas</p>
+          <p className={cn("text-3xl font-bold text-foreground", isMobile && "text-xl")}>R$ {totalOverallExpenses.toFixed(2)}</p>
         </div>
-        <DynamicIcon name="CreditCard" className={cn("h-12 w-12 text-destructive", isMobile && "h-10 w-10")} /> {/* Ajustar tamanho do ícone */}
+        <DynamicIcon name="CreditCard" className={cn("h-12 w-12 text-destructive", isMobile && "h-8 w-8")} /> {/* Ajustar tamanho do ícone */}
       </div>
     </Card>
   );
