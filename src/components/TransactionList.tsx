@@ -38,6 +38,7 @@ interface TransactionListProps {
   user: User | null;
   rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
   selectedMonth: Date; // Reintroduzido
+  disableFilters?: boolean; // Nova prop para desativar filtros
 }
 
 export const TransactionList = ({
@@ -52,7 +53,8 @@ export const TransactionList = ({
   queryClient,
   user,
   rawExpenseInstallments,
-  selectedMonth // Reintroduzido
+  selectedMonth, // Reintroduzido
+  disableFilters = false, // Valor padrão é false
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
@@ -221,11 +223,12 @@ export const TransactionList = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
+              disabled={disableFilters} // Desabilitar busca
             />
           </div>
         )}
 
-        <Select value={filterType} onValueChange={setFilterType}>
+        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}> {/* Desabilitar tipo */}
           <SelectTrigger>
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -236,7 +239,7 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
+        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}> {/* Desabilitar categoria */}
           <SelectTrigger>
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
@@ -257,7 +260,7 @@ export const TransactionList = ({
       </div>
 
       <div className="mb-6">
-        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod}>
+        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}> {/* Desabilitar forma de pagamento */}
           <SelectTrigger>
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -281,6 +284,7 @@ export const TransactionList = ({
             variant="outline" 
             className="h-auto py-2 text-sm w-3/4 mx-auto whitespace-normal rounded-xl"
             onClick={handlePayInvoice}
+            disabled={disableFilters} // Desabilitar botão de pagar fatura
           >
             <span className="mr-2">💳</span>
             Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}
@@ -308,6 +312,7 @@ export const TransactionList = ({
             variant="outline" 
             className="h-auto py-3"
             onClick={handlePayInvoice}
+            disabled={disableFilters} // Desabilitar botão de pagar fatura
           >
             <span className="mr-2">💳</span>
             Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}

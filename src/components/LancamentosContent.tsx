@@ -94,6 +94,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
     return baseTransaction;
   }, [editingTransaction, fullEditingRevenue, fullEditingExpense]);
 
+  const disableFilters = !!editingTransaction; // Desativa os filtros se houver uma transação sendo editada
+
   return transactionToEdit ? (
     <TransactionEditForm
       editingTransaction={transactionToEdit}
@@ -115,6 +117,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       user={user}
       rawExpenseInstallments={rawExpenseInstallments}
       selectedMonth={selectedMonth}
+      disableFilters={disableFilters} // Passando a prop disableFilters
     />
   );
 };
