@@ -60,6 +60,7 @@ export const TransactionList = ({
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const filteredTransactions = useMemo(() => {
+    console.log("TransactionList: filteredTransactions useMemo re-running...");
     const startOfSelectedMonth = startOfMonth(selectedMonth);
     const endOfSelectedMonth = endOfMonth(selectedMonth);
 
@@ -86,7 +87,7 @@ export const TransactionList = ({
       }
 
       const finalResult = matchesMonth && matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
-      console.log("Filtering transaction:", {
+      console.log("TransactionList: Filtering transaction:", {
         id: transaction.id,
         type: transaction.type,
         isRecurring: transaction.isRecurring,

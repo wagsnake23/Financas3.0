@@ -84,6 +84,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
   });
 
   const allRawTransactions: Transaction[] = useMemo(() => {
+    console.log("allRawTransactions useMemo re-running...");
     const incomeTransactions: Transaction[] = [];
 
     revenues.forEach(r => {
@@ -140,11 +141,13 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
     console.log("useTransactionsData: Income transactions count:", incomeTransactions.length);
     console.log("useTransactionsData: Expense transactions count:", expenseTransactions.length);
     console.log("useTransactionsData: Materialized Recurring transactions count:", materializedRecurringTransactions.length);
+    console.log("useTransactionsData: Combined allRawTransactions count:", [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].length);
     
     return [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [revenues, expenseInstallments, materializedRecurringTransactions]);
 
   const monthlyFilteredTransactions = useMemo(() => {
+    console.log("monthlyFilteredTransactions useMemo re-running...");
     const startOfSelectedMonth = startOfMonth(selectedMonth);
     const endOfSelectedMonth = endOfMonth(selectedMonth);
 
@@ -153,7 +156,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       const isWithin = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
       return isWithin;
     });
-    console.log("useTransactionsData: monthlyFilteredTransactions (after date filter):", filtered);
+    console.log("useTransactionsData: monthlyFilteredTransactions (after date filter) count:", filtered.length);
     return filtered;
   }, [allRawTransactions, selectedMonth]);
 

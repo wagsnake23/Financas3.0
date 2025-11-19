@@ -51,7 +51,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         .eq("user_id", user.id)
         .order("start_date", { ascending: true });
       if (error) throw error;
-      console.log("Fetched recurringEntries:", data);
+      console.log("Fetched recurringEntries (re-fetch triggered):", data);
       return data;
     },
     enabled: !!user?.id,
@@ -78,6 +78,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
   // Materialize recurring transactions for the current month
   const materializedRecurringTransactions = useMemo(() => {
+    console.log("materializedRecurringTransactions useMemo re-running...");
     if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions) return [];
 
     const startOfCurrentMonth = startOfMonth(currentMonth);
@@ -176,12 +177,12 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
     console.log("Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions);
     return transactions;
-  }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories]);
+  }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions]);
 
   const invalidateQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida o cache de transações para o useTransactionsData
+    // Removido: queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Esta linha não é mais necessária
   }, [queryClient, user?.id]);
 
   const createRecurringEntryMutation = useMutation({
