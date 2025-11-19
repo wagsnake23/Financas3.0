@@ -28,7 +28,7 @@ export const categories: AppCategory[] = [
   { id: "alimentacao_padaria", nome: "Padaria", icone: "Croissant", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
   { id: "alimentacao_restaurante", nome: "Restaurante", icone: "Restaurant", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
   { id: "alimentacao_delivery", nome: "Delivery", icone: "Package", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
-  { id: "alimentacao_lanches", nome: "Lanches", icone: "Burger", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
+  { id: "alimentacao_lanches", nome: "Lanches", icone: "Sandwich", cor: "hsl(30, 95%, 55%)", parent_id: "alimentacao" },
 
   { id: "saude", nome: "Saúde", icone: "Heart", cor: "hsl(0, 60%, 70%)", parent_id: null },
   { id: "saude_plano", nome: "Plano de saúde", icone: "Stethoscope", cor: "hsl(0, 60%, 70%)", parent_id: "saude" },
@@ -99,6 +99,6 @@ export const categories: AppCategory[] = [
   { id: "receitas_e_investimentos_extras", nome: "Receitas Extras", icone: "Wallet", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_juros_capital", nome: "Juros sobre capital", icone: "Percent", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_aluguel_imoveis", nome: "Aluguel de imóveis", icone: "Building", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
-  { id: "receitas_e_investimentos_outros_rendimentos", nome: "Outros rendimentos", icone: "FileText", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
-  { id: "receitas_e_investimentos_cofrinho", nome: "Cofrinho", icone: "PiggyBank", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
+  { id: "receitas_e_investimentos_outros_rendimentos", icone: "FileText", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
+  { id: "receitas_e_investimentos_cofrinho", icone: "PiggyBank", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
 ];
