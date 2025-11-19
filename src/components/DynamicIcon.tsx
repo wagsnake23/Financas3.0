@@ -38,14 +38,24 @@ interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...props }) => {
-  const IconComponent = iconMap[name];
+  // Evita erros com nome undefined, null ou emoji
+  const safeName = typeof name === "string" ? name.trim() : "";
 
-  if (!IconComponent) {
-    console.warn(`Icon '${name}' not found in DynamicIcon map. Using HelpCircle as fallback.`);
-    return <HelpCircle className={className} {...props} />; // Ícone de fallback
+  // Somente nomes válidos (sem emoji)
+  const isValidName = /^[A-Za-z0-9_]+$/.test(safeName);
+
+  if (!isValidName) {
+    console.warn(`Icon '${name}' is invalid (emoji or malformed).`);
+    return <HelpCircle className={className} color={color} {...props} />;
   }
 
-  // Passa a propriedade 'color' diretamente para o componente Lucide
+  const IconComponent = iconMap[safeName];
+
+  if (!IconComponent) {
+    console.warn(`Icon '${name}' not found in DynamicIcon map.`);
+    return <HelpCircle className={className} color={color} {...props} />;
+  }
+
   return <IconComponent className={className} color={color} {...props} />;
 };
 
