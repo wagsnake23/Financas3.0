@@ -192,9 +192,8 @@ export const TransactionList = ({
 
         {/* Campo Valor Total (movido para dentro do grid) */}
         <div className={cn(
-          "p-2 rounded-xl border flex-1 text-right", // Adicionado text-right aqui
-          isMobile && "py-1.5 px-3",
-          accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
+          "p-2 rounded-xl flex-1 text-right", // Removido 'border' e classes de fundo condicionais
+          isMobile && "py-1.5 px-3"
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p> {/* Título alterado */}
           <p className={cn(
