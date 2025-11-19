@@ -35,7 +35,7 @@ interface TransactionListProps {
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
   disableFilters?: boolean;
-  // markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Removido
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
 }
 
 export const TransactionList = ({
@@ -48,7 +48,7 @@ export const TransactionList = ({
   queryClient,
   user,
   disableFilters = false,
-  // markMonthPaid, // Removido
+  markMonthPaid, // Re-adicionado
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
@@ -198,7 +198,7 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
-                  // markMonthPaid={markMonthPaid} // Removido
+                  markMonthPaid={markMonthPaid} // Re-adicionado
                 />
               ))
             )}

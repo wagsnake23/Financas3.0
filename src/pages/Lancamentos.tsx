@@ -41,7 +41,7 @@ const Lancamentos = () => {
     fullEditingExpense,
     queryClient: logicQueryClient, // Receber o queryClient do hook
     confirmDeleteWithOptions, // Receber a nova função de exclusão
-    // markMonthPaid, // Removido
+    markMonthPaid, // Re-adicionado
   } = useLancamentosLogic(user, authLoading); // Passando authLoading aqui
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -88,7 +88,7 @@ const Lancamentos = () => {
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient} 
             confirmDeleteWithOptions={confirmDeleteWithOptions} // Passando para LancamentosContent
-            // markMonthPaid={markMonthPaid} // Removido
+            markMonthPaid={markMonthPaid} // Re-adicionado
           />
         </main>
         <Footer isMobile={isMobile} />

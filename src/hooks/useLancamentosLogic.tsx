@@ -59,7 +59,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     deleteRecurringEntry,
     cancelMonth,
     endRecurringAt,
-    // markMonthPaid, // Removido
+    markMonthPaid, // Re-adicionado
     isLoading: isLoadingRecurringEntriesHook,
   } = useRecurringEntries(user, selectedMonth, allSubcategories, !!user && !authLoading); // Passando allSubcategories
 
@@ -506,6 +506,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     user,
     queryClient,
     confirmDeleteWithOptions,
-    // markMonthPaid, // Removido
+    markMonthPaid, // Re-adicionado
   };
 };

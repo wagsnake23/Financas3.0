@@ -12,7 +12,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar useRecurringEntries para o tipo
-import { TogglePago } from "./TogglePago"; // Importar o novo componente TogglePago
 
 interface Cartao {
   id: string;
@@ -32,7 +31,7 @@ interface TransactionRowProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  // markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Removido
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
 }
 
 // Helper function to validate UUID format (basic check)
@@ -50,7 +49,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
-  // markMonthPaid, // Removido
+  markMonthPaid, // Re-adicionado
 }) => {
   console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Type:", transaction.type, "IsRecurring:", transaction.isRecurring, "Current Status (on render):", transaction.status);
 
@@ -91,29 +90,28 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
-    // A lógica para transações recorrentes será movida para o componente TogglePago
-    // if (transaction.isRecurring && transaction.recurringEntryId) {
-    //   console.log("handleToggleStatus: Identified as recurring transaction. Transaction object:", transaction);
-    //   const transactionDate = new Date(transaction.date);
-    //   const year = transactionDate.getFullYear();
-    //   const month = transactionDate.getMonth() + 1;
-    //   const isPaid = transaction.status !== "Recebida"; // Toggle logic: if currently 'Recebida', set to false (Pendente), else set to true (Recebida)
-    //   console.log("handleToggleStatus: Toggling recurring status. Target isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year);
+    if (transaction.isRecurring && transaction.recurringEntryId) {
+      console.log("handleToggleStatus: Identified as recurring transaction. Transaction object:", transaction);
+      const transactionDate = new Date(transaction.date);
+      const year = transactionDate.getFullYear();
+      const month = transactionDate.getMonth() + 1;
+      const isPaid = transaction.status !== "Recebida"; // Toggle logic: if currently 'Recebida', set to false (Pendente), else set to true (Recebida)
+      console.log("handleToggleStatus: Toggling recurring status. Target isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year);
 
-    //   try {
-    //     await markMonthPaid({
-    //       recurring_id: transaction.recurringEntryId,
-    //       year,
-    //       month,
-    //       is_paid: isPaid,
-    //     });
-    //     console.log("handleToggleStatus: markMonthPaid call AWAITED. Mutation should be in progress/completed.");
-    //   } catch (error) {
-    //     console.error("handleToggleStatus: Error marking recurring month paid:", error);
-    //     toast.error("Erro ao atualizar status de lançamento recorrente.");
-    //   }
-    //   return;
-    // }
+      try {
+        await markMonthPaid({
+          recurring_id: transaction.recurringEntryId,
+          year,
+          month,
+          is_paid: isPaid,
+        });
+        console.log("handleToggleStatus: markMonthPaid call AWAITED. Mutation should be in progress/completed.");
+      } catch (error) {
+        console.error("handleToggleStatus: Error marking recurring month paid:", error);
+        toast.error("Erro ao atualizar status de lançamento recorrente.");
+      }
+      return;
+    }
 
     console.log("handleToggleStatus: Handling as one-off transaction.");
     let error = null;
@@ -130,7 +128,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         .from("receitas")
         .update({ status: newStatus })
         .eq("id", revenueIdToUse)
-        .eq("user.id", user.id); // Corrigido para user.id
+        .eq("user_id", user.id); // Corrigido para user.id
       error = updateError;
 
       if (!error) {
@@ -176,14 +174,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     }
-  };
-
-  const handleToggleUpdate = () => {
-    // Invalida as queries para forçar a atualização da lista de transações
-    queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
   };
 
   const transactionDate = new Date(transaction.date);
@@ -240,27 +230,17 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         R$ {transaction.amount.toFixed(2)}
       </TableCell>
       <TableCell className="py-2 px-2 text-center min-w-[50px]">
-        {transaction.isRecurring && transaction.recurringEntryId ? (
-          <TogglePago
-            recurringId={transaction.recurringEntryId}
-            year={currentYear}
-            month={currentMonth}
-            initialPaid={transaction.status === "Recebida"}
-            onUpdated={handleToggleUpdate}
-          />
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={handleToggleStatus}
-            disabled={transaction.status === "Cancelada"}
-          >
-            {transaction.status === "Recebida" && <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />}
-            {(transaction.status === "Pendente" || transaction.status === "Prevista") && <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />}
-            {transaction.status === "Cancelada" && <DynamicIcon name="XCircle" className="h-4 w-4 text-muted-foreground" />}
-          </Button>
-        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7"
+          onClick={handleToggleStatus}
+          disabled={transaction.status === "Cancelada"}
+        >
+          {transaction.status === "Recebida" && <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />}
+          {(transaction.status === "Pendente" || transaction.status === "Prevista") && <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />}
+          {transaction.status === "Cancelada" && <DynamicIcon name="XCircle" className="h-4 w-4 text-muted-foreground" />}
+        </Button>
       </TableCell>
       <TableCell className="py-2 px-2 text-right min-w-[50px]">
         <div className="flex justify-end gap-1">
