@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid, setDate, getMonth, getYear } from "date-fns"; // Adicionado setDate, getMonth, getYear
+import { format, isValid, setDate, getMonth, getYear, addMonths } from "date-fns"; // Adicionado addMonths
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -213,14 +213,6 @@ export const TransactionList = ({
 
     let dueDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
 
-    // Se o dia de vencimento já passou no mês atual, a fatura é do próximo mês
-    // Ex: Mês selecionado é Janeiro, dia de vencimento é 5. Se hoje é 10 de Janeiro, a fatura de Janeiro já venceu.
-    // A próxima fatura a ser paga (que inclui as despesas do mês selecionado) vencerá em Fevereiro.
-    // No entanto, a lógica de "pagar fatura" se refere às despesas *do mês selecionado*.
-    // A data de vencimento exibida deve ser a do mês *seguinte* ao mês de referência das despesas.
-    // Ex: Despesas de Janeiro vencem em Fevereiro.
-    // Então, se selectedMonth é Janeiro, a data de vencimento é dia_vencimento de Fevereiro.
-    
     // Para simplificar, vamos exibir a data de vencimento no mês seguinte ao `selectedMonth`
     // porque as despesas do `selectedMonth` geralmente vencem no mês seguinte.
     dueDate = addMonths(dueDate, 1); // Adiciona 1 mês para refletir o vencimento da fatura do mês selecionado
@@ -265,78 +257,52 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {isMobile && isValidUuid(filterPaymentOptionId) ? (
-          <>
-            <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                    className="rounded-xl col-span-1">
-              <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Forma de Pagamento" />
-              </SelectTrigger>
-              <SelectContent>
-                {paymentFilterOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Payment Option Select */}
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                className="rounded-xl">
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Forma de Pagamento" />
+          </SelectTrigger>
+          <SelectContent>
+            {paymentFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-            <div className="flex flex-col items-center justify-center col-span-1"> {/* Container para botão e data */}
-              <Button
-                variant="secondary"
-                onClick={handlePayInvoice}
-                className="w-full rounded-xl"
-                disabled={loadingPayInvoice || disableFilters}
-              >
-                <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-                {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-              </Button>
-              {invoiceDueDate && (
-                <span className="text-xs text-muted-foreground mt-1">
-                  Vencimento: {invoiceDueDate}
-                </span>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className={cn("col-span-full flex flex-col gap-2", !isMobile && "grid grid-cols-2 gap-4")}> {/* Ajustado para desktop */}
-            <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                    className="rounded-xl">
-              <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Forma de Pagamento" />
-              </SelectTrigger>
-              <SelectContent>
-                {paymentFilterOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {isValidUuid(filterPaymentOptionId) && (
-              <div className="flex flex-col items-center justify-center">
-                <Button
-                  variant="secondary"
-                  onClick={handlePayInvoice}
-                  className="w-full rounded-xl"
-                  disabled={loadingPayInvoice || disableFilters}
-                >
-                  <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-                  {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-                </Button>
-                {invoiceDueDate && (
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Vencimento: {invoiceDueDate}
-                  </span>
-                )}
-              </div>
+        {/* Conditional Button and Due Date for Credit Card */}
+        {isValidUuid(filterPaymentOptionId) ? (
+          <div className={cn(
+            "flex flex-col items-center justify-center",
+            isMobile ? "col-span-1" : "col-span-1" // Always 1 col for this block
+          )}>
+            <Button
+              variant="secondary"
+              onClick={handlePayInvoice}
+              className="w-full rounded-xl"
+              disabled={loadingPayInvoice || disableFilters}
+            >
+              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+            </Button>
+            {invoiceDueDate && (
+              <span className="text-xs text-muted-foreground mt-1">
+                Vencimento: {invoiceDueDate}
+              </span>
             )}
           </div>
+        ) : (
+          // Se nenhum cartão de crédito for selecionado, este slot permanece vazio no desktop
+          // para manter a estrutura da grade.
+          <div className={cn("hidden", !isMobile && "block")}></div> 
         )}
 
+        {/* Accumulated Value */}
         <div className={cn(
           "p-2 rounded-xl text-right",
-          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1"
+          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1" // Sempre 1 coluna no desktop, largura total no mobile
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
