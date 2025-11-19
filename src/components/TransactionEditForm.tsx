@@ -134,15 +134,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     const category = allCategories.find((cat) => cat.id === catId);
     return category ? category.nome : catId;
   };
+
+  // Effect to initialize form fields when editingTransaction changes
   useEffect(() => {
     if (editingTransaction) {
       setType(editingTransaction.type);
-      setAmount(editingTransaction.amount);
-
-      const [year, month, day] = editingTransaction.date.split("-").map(Number);
-      setDate(new Date(year, month - 1, day));
-
-      setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setDescription(editingTransaction.description || "");
 
       const validStatuses: ReceitaStatus[] = [
@@ -158,53 +154,44 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           : "Pendente";
       setStatus(initialStatus);
 
+      // Default to 'thisMonth' for recurring, or no specific option for one-off
+      setEditOption(isRecurringTransaction ? "thisMonth" : "thisMonth"); // Keep "thisMonth" as default for recurring
+      setPreserveExceptions(true); // Default for "all" option
+
       if (isRecurringTransaction) {
-        setTitle(recurringTransaction.recurringMasterTitle);
-        setAmount(recurringTransaction.originalValue);
-        setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE);
-        setDueDay(recurringTransaction.originalDueDate?.toString() || "1");
-        setFrequency(
-          recurringTransaction.recurringMasterFrequency || "monthly"
-        );
-        setStartDate(parseISO(recurringTransaction.recurringMasterStartDate));
+        const recurringTrans = editingTransaction as MaterializedRecurringTransaction;
+        // Initialize with materialized/exception values (for 'thisMonth' default)
+        setAmount(recurringTrans.amount);
+        setCategory(recurringTrans.category || UNSELECTED_VALUE);
+        setOverrideDueDate(parseISO(recurringTrans.date));
+        setIsPaid(recurringTrans.status === "Recebida");
+        
+        // Extract note from description if it's an exception
+        const match = recurringTrans.description.match(/\(([^)]+)\)$/);
+        setNote(match ? match[1] : "");
+
+        // Also initialize master values (for when editOption changes later)
+        setTitle(recurringTrans.recurringMasterTitle);
+        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1");
+        setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
+        setStartDate(parseISO(recurringTrans.recurringMasterStartDate));
         setEndDate(
-          recurringTransaction.recurringMasterEndDate
-            ? parseISO(recurringTransaction.recurringMasterEndDate)
+          recurringTrans.recurringMasterEndDate
+            ? parseISO(recurringTrans.recurringMasterEndDate)
             : undefined
         );
-        setRecurringStatus(
-          recurringTransaction.recurringMasterStatus || "active"
-        );
+        setRecurringStatus(recurringTrans.recurringMasterStatus || "active");
 
-        if (recurringTransaction.isException) {
-          const match = recurringTransaction.description.match(/\(([^)]+)\)$/);
-          setNote(match ? match[1] : "");
-          setOverrideDueDate(parseISO(recurringTransaction.date));
-          setIsPaid(recurringTransaction.status === "Recebida");
-          setAmount(recurringTransaction.amount);
-          setCategory(recurringTransaction.category || UNSELECTED_VALUE);
-        } else {
-          setNote("");
-          setOverrideDueDate(parseISO(editingTransaction.date));
-          setIsPaid(editingTransaction.status === "Recebida");
-        }
-
-        setEditOption("thisMonth");
-        setPreserveExceptions(true);
       } else {
+        // One-off transaction initialization
+        setAmount(editingTransaction.amount);
+        const [year, month, day] = editingTransaction.date.split("-").map(Number);
+        setDate(new Date(year, month - 1, day));
+        setCategory(editingTransaction.category || UNSELECTED_VALUE);
         setIsPaid(editingTransaction.status === "Recebida");
-        setTitle("");
-        setDueDay("1");
-        setFrequency("monthly");
-        setStartDate(new Date());
-        setEndDate(undefined);
-        setRecurringStatus("active");
-        setNote("");
-        setOverrideDueDate(undefined);
-        setEditOption("thisMonth");
-        setPreserveExceptions(true);
       }
     } else {
+      // Reset form when not editing
       setType("expense");
       setAmount(undefined);
       setDate(new Date());
@@ -223,12 +210,42 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setEditOption("thisMonth");
       setPreserveExceptions(true);
     }
-  }, [
-    editingTransaction,
-    isRecurringTransaction,
-    recurringTransaction,
-    allCategories,
-  ]);
+  }, [editingTransaction, isRecurringTransaction, allCategories]);
+
+  // Effect to re-populate fields when editOption changes for recurring transactions
+  useEffect(() => {
+    if (editingTransaction && isRecurringTransaction) {
+      const recurringTrans = editingTransaction as MaterializedRecurringTransaction;
+
+      if (editOption === "thisMonth") {
+        // Use materialized/exception values
+        setAmount(recurringTrans.amount);
+        setCategory(recurringTrans.category || UNSELECTED_VALUE);
+        setOverrideDueDate(parseISO(recurringTrans.date));
+        setIsPaid(recurringTrans.status === "Recebida");
+        const match = recurringTrans.description.match(/\(([^)]+)\)$/);
+        setNote(match ? match[1] : "");
+        setTitle(recurringTrans.recurringMasterTitle); // Title is hidden for thisMonth, but keep it consistent
+      } else { // "thisMonthForward" or "all"
+        // Use master values
+        setAmount(recurringTrans.originalValue);
+        setCategory(recurringTrans.originalCategory || UNSELECTED_VALUE);
+        setTitle(recurringTrans.recurringMasterTitle);
+        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1");
+        setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
+        setStartDate(parseISO(recurringTrans.recurringMasterStartDate));
+        setEndDate(
+          recurringTrans.recurringMasterEndDate
+            ? parseISO(recurringTrans.recurringMasterEndDate)
+            : undefined
+        );
+        setRecurringStatus(recurringTrans.recurringMasterStatus || "active");
+        setNote(""); // No note for master edits
+        setOverrideDueDate(undefined); // No override date for master edits
+        setIsPaid(false); // Master doesn't have a 'paid' status directly, it's for occurrences
+      }
+    }
+  }, [editOption, editingTransaction, isRecurringTransaction]); // Dependencies for this effect
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
