@@ -332,6 +332,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         paid: false, // A canceled entry is not paid
         note: "Cancelado por exceção",
         override_value: 0, // Set value to 0 for canceled
+        override_category_id: null, // Explicitly set to null
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
@@ -390,7 +391,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
       const payload: TablesUpdate<'recurring_entry_exceptions'> = {
         paid: is_paid,
-        canceled: false, // Garante que não seja marcado como cancelado se estamos marcando como pago
+        canceled: false,
+        override_category_id: null, // Explicitly set to null
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
