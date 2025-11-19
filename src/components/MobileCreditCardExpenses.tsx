@@ -158,9 +158,9 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
       {cartoes.length === 0 ? (
         <p className="text-muted-foreground text-center py-2 text-sm">Nenhum cartão de crédito cadastrado.</p>
       ) : (
-        <div className="flex items-center gap-2">
-          <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-            <SelectTrigger className={cn("rounded-xl flex-1", isMobile && "h-9 text-sm")}>
+        <div className="grid grid-cols-4 gap-2"> {/* Alterado para grid com 4 colunas */}
+          <Select value={selectedCardId} onValueChange={setSelectedCardId} className="col-span-3"> {/* Ocupa 3 das 4 colunas */}
+            <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione um cartão" />
             </SelectTrigger>
             <SelectContent>
@@ -177,7 +177,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
             size={isMobile ? "icon" : "sm"} // Ícone em mobile, sm em desktop
             onClick={handlePayMonthlyBill}
             disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE || payMonthlyBillMutation.isPending || totalPending === 0}
-            className={cn("rounded-xl flex-shrink-0", isMobile ? "h-9 w-9" : "h-9 text-xs px-3")}
+            className={cn("rounded-xl col-span-1", isMobile ? "h-9 w-9" : "h-9 text-xs px-3")} // Ocupa 1 coluna
           >
             {payMonthlyBillMutation.isPending ? (
               "..."

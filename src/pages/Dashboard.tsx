@@ -130,7 +130,15 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
-                  <NewExpenseSelectionDialog isMobile={isMobile} />
+                  {/* Alterado para um botão direto para despesas avulsas em mobile */}
+                  <Button
+                    variant="destructive"
+                    className={cn("w-2/5 h-8 px-3 text-xs rounded-xl")}
+                    onClick={() => navigate("/despesas?mode=one-off")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Despesa
+                  </Button>
                 </div>
               </StatCard>
 
