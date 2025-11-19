@@ -24,7 +24,8 @@ import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
-import { NewExpenseSelectionDialog } from "@/components/NewExpenseSelectionDialog"; // Importar o novo componente
+import { NewExpenseSelectionDialog } from "@/components/NewExpenseSelectionDialog";
+import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses"; // NEW IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -39,6 +40,7 @@ const Dashboard = () => {
   const {
     monthlyFilteredTransactions,
     fetchedCategories: allSubcategories, // Renomeado para allSubcategories
+    cartoes, // Destructure cartoes from useTransactionsData
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
   } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
@@ -128,7 +130,7 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
-                  <NewExpenseSelectionDialog isMobile={isMobile} /> {/* Usar o novo componente */}
+                  <NewExpenseSelectionDialog isMobile={isMobile} />
                 </div>
               </StatCard>
 
@@ -163,6 +165,15 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showBalanceValue}
                 onToggleVisibility={() => setShowBalanceValue(!showBalanceValue)}
+              />
+
+              {/* NEW: Mobile Credit Card Expenses Dashboard */}
+              <MobileCreditCardExpenses
+                cartoes={cartoes}
+                expenseInstallments={expenseInstallments}
+                allCategories={allSubcategories}
+                isMobile={isMobile}
+                selectedMonth={selectedMonth}
               />
 
               <MonthlyExpensesCombinedMobile
@@ -216,7 +227,7 @@ const Dashboard = () => {
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 >
                   <div className="flex justify-end mt-4">
-                    <NewExpenseSelectionDialog isMobile={isMobile} /> {/* Usar o novo componente */}
+                    <NewExpenseSelectionDialog isMobile={isMobile} />
                   </div>
                 </StatCard>
               </div>
