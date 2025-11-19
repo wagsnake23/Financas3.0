@@ -392,9 +392,11 @@ export type Database = {
       recurring_entries: {
         Row: {
           category_id: string | null
+          cartao_id: string | null // Adicionado
           created_at: string
           due_day: number
           end_date: string | null
+          forma_pagamento: string | null // Adicionado
           frequency: Database["public"]["Enums"]["recurring_frequency"]
           id: string
           start_date: string
@@ -407,9 +409,11 @@ export type Database = {
         }
         Insert: {
           category_id?: string | null
+          cartao_id?: string | null // Adicionado
           created_at?: string
           due_day: number
           end_date?: string | null
+          forma_pagamento?: string | null // Adicionado
           frequency: Database["public"]["Enums"]["recurring_frequency"]
           id?: string
           start_date: string
@@ -422,9 +426,11 @@ export type Database = {
         }
         Update: {
           category_id?: string | null
+          cartao_id?: string | null // Adicionado
           created_at?: string
           due_day?: number
           end_date?: string | null
+          forma_pagamento?: string | null // Adicionado
           frequency?: Database["public"]["Enums"]["recurring_frequency"]
           id?: string
           start_date?: string
@@ -670,7 +676,7 @@ export type Enums<
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  ? Database[PublicTableNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never

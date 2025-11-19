@@ -95,7 +95,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       const transactionDate = new Date(transaction.date);
       const year = transactionDate.getFullYear();
       const month = transactionDate.getMonth() + 1;
-      const isPaid = transaction.status !== "Recebida";
+      const isPaid = transaction.status !== "Recebida"; // Toggle logic: if currently 'Recebida', set to false (Pendente), else set to true (Recebida)
       console.log("handleToggleStatus: Toggling recurring status. Target isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year);
 
       try {

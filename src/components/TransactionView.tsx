@@ -12,7 +12,7 @@ interface TransactionViewProps {
   transactions: Transaction[];
   onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
   onEditTransaction: (transaction: Transaction) => void;
-  allCategories: AppCategory[];
+  allCategories: AppCategory[]; // Agora contém apenas subcategorias
   cartoes: Tables<'cartoes'>[];
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
