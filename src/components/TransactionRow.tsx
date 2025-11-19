@@ -85,7 +85,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   const paymentMethodDisplay = getPaymentMethodDisplay(transaction.forma_pagamento, transaction.cartao_id);
 
   const handleToggleStatus = async () => {
-    console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user);
+    console.log("handleToggleStatus: START for transaction ID:", transaction.id, "Current Status:", transaction.status); // Log adicionado
     if (!user) {
       toast.error("Usuário não autenticado. Por favor, faça login novamente.");
       return;
@@ -106,11 +106,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
     // Priority 1: Handle NEW recurring transactions (materialized from recurring_entries)
     if (transaction.isRecurring && transaction.recurringEntryId) {
-      console.log("handleToggleStatus: Handling as recurring transaction.");
+      console.log("handleToggleStatus: Identified as recurring transaction."); // Log adicionado
       const transactionDate = new Date(transaction.date);
       const year = transactionDate.getFullYear();
       const month = transactionDate.getMonth() + 1; // CORRIGIDO: Mês 1-indexado
-      console.log("handleToggleStatus: Calculated month for RPC:", month, "Year:", year);
+      console.log("handleToggleStatus: Calculated month for RPC:", month, "Year:", year); // Log adicionado
       const isPaid = transaction.status !== "Recebida"; // Toggle status
       console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year); // Log ajustado
 
@@ -121,21 +121,18 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           month, // Este 'month' é o que será passado para a mutação
           is_paid: isPaid,
         });
-        console.log("handleToggleStatus: markMonthPaid called successfully.");
-        // Invalida as queries que useTransactionsData depende
-        queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
-        queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
-        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
-        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
-        console.log("handleToggleStatus: Queries invalidated for recurring transaction.");
+        console.log("handleToggleStatus: markMonthPaid call AWAITED. Mutation should be in progress/completed."); // Log adicionado
+        // The UI update happens via query invalidation, so we don't expect immediate state change here.
+        // The next render cycle will pick up the new data.
       } catch (error) {
         console.error("handleToggleStatus: Error marking recurring month paid:", error);
+        toast.error("Erro ao atualizar status de lançamento recorrente."); // Toast de erro mais específico
       }
       return; // EXIT HERE FOR ALL RECURRING TRANSACTIONS
     }
 
     // Priority 2: Handle ONE-OFF transactions (legacy fixed are now filtered out in useTransactionsData)
-    console.log("handleToggleStatus: Handling as one-off transaction.");
+    console.log("handleToggleStatus: Handling as one-off transaction."); // Log adicionado
     let error = null;
     const newStatus = transaction.status === "Recebida" ? "Pendente" : "Recebida";
     const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");

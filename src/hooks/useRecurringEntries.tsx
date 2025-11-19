@@ -42,6 +42,7 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
 
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[]) => {
   const queryClient = useQueryClient();
+  console.log("useRecurringEntries: Initializing for month:", format(currentMonth, 'yyyy-MM-dd')); // Log adicionado
 
   // Fetch all recurring entries for the user
   const { data: recurringEntries = [], isLoading: isLoadingRecurringEntries } = useQuery<RecurringEntry[]>({
