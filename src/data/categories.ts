@@ -19,7 +19,7 @@ export const categories: AppCategory[] = [
   { id: "transporte_seguro", nome: "Seguro", icone: "Shield", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_estacionamento", nome: "Estacionamento", icone: "ParkingSquare", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_publico", nome: "Transporte público", icone: "Bus", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
-  { id: "transporte_apps", nome: "Apps (Uber, 99...)", icone: "CarTaxi", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
+  { id: "transporte_apps", nome: "Apps (Uber, 99...)", icone: "Smartphone", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_pedagio", nome: "Pedágio", icone: "Road", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
   { id: "transporte_financiamento", nome: "Financiamento de veículo", icone: "Car", cor: "hsl(225, 70%, 55%)", parent_id: "transporte" },
 
@@ -98,7 +98,7 @@ export const categories: AppCategory[] = [
   { id: "receitas_e_investimentos_reembolsos", nome: "Reembolsos", icone: "Repeat", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_extras", nome: "Receitas Extras", icone: "Wallet", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_juros_capital", nome: "Juros sobre capital", icone: "Percent", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
-  { id: "receitas_e_investimentos_aluguel_imoveis", nome: "Aluguel de imóveis", icone: "Building", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
+  { id: "receitas_e_investimentos_aluguel_imoveis", icone: "Building", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_outros_rendimentos", icone: "FileText", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
   { id: "receitas_e_investimentos_cofrinho", icone: "PiggyBank", cor: "hsl(150, 65%, 55%)", parent_id: "receitas_e_investimentos" },
 ];
