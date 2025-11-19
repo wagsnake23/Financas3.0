@@ -329,19 +329,19 @@ export const TransactionList = ({
         <Table>
           <TableHeader className="sticky top-0 bg-soft-blue z-10">
             <TableRow>
-              <TableHead className="py-1 px-2">Data</TableHead>
-              {!isMobile && <TableHead className="py-1 px-2">Tipo</TableHead>}
-              <TableHead className="py-1 px-2">Categoria</TableHead>
-              {!isMobile && <TableHead className="py-1 px-2">Descrição</TableHead>}
-              <TableHead className="py-1 px-2 text-right">Valor</TableHead>
-              <TableHead className="py-1 px-2 text-center">Status</TableHead>
-              {/* Coluna de Ações removida */}
+              <TableHead className="py-1 px-2 min-w-[70px]">Data</TableHead>
+              {!isMobile && <TableHead className="py-1 px-2 min-w-[60px]">Tipo</TableHead>}
+              <TableHead className="py-1 px-2 min-w-[80px]">Categoria</TableHead>
+              {!isMobile && <TableHead className="py-1 px-2 min-w-[100px]">Descrição</TableHead>}
+              <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead>
+              <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead>
+              <TableHead className="py-1 px-2 text-right min-w-[50px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={isMobile ? 4 : 6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
                   Nenhum lançamento encontrado
                 </TableCell>
               </TableRow>
@@ -350,13 +350,13 @@ export const TransactionList = ({
                 <TransactionRow
                   key={transaction.id}
                   transaction={transaction}
-                  // onDeleteTransaction={onDeleteTransaction} // Removido
-                  // onEditTransaction={onEditTransaction} // Removido
+                  onDeleteTransaction={onDeleteTransaction}
+                  onEditTransaction={onEditTransaction}
                   allCategories={allCategories}
                   cartoes={cartoes}
                   isMobile={isMobile}
-                  // queryClient={queryClient} // Removido
-                  // user={user} // Removido
+                  queryClient={queryClient}
+                  user={user}
                 />
               ))
             )}
