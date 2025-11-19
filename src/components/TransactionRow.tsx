@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo } from "react"; // Removido useState, useEffect
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
@@ -43,7 +43,7 @@ const isValidUuid = (uuid: string) => {
 };
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
-  transaction,
+  transaction, // Usar transaction diretamente
   onEditTransaction,
   allCategories,
   cartoes,
@@ -52,18 +52,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   user,
   markMonthPaid,
 }) => {
-  // ⭐⭐⭐ ESTADO LOCAL COMPLETO + STATUS CONTROLADO ⭐⭐⭐
-  const [localTransaction, setLocalTransaction] = useState(transaction);
-
-  // ⛔ NÃO sobrescrevemos o status ao receber refetch
-  useEffect(() => {
-    setLocalTransaction((prev) => ({
-      ...prev,
-      ...transaction,
-      status: prev.status, // preserva o status local
-    }));
-  }, [transaction.id]); // só sincroniza quando muda a linha
-
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
     return {
@@ -73,7 +61,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   };
 
   const { name: categoryName, icon: categoryIcon } = getCategoryDisplay(
-    localTransaction.category
+    transaction.category
   );
 
   const getPaymentMethodDisplay = (
@@ -100,11 +88,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   };
 
   const paymentMethodDisplay = getPaymentMethodDisplay(
-    localTransaction.forma_pagamento,
-    localTransaction.cartao_id
+    transaction.forma_pagamento,
+    transaction.cartao_id
   );
 
-  // 🔄 TOGGLE STATUS – FUNCIONA SEM "VOLTAR ATRÁS"
   const handleToggleStatus = async () => {
     if (!user) {
       toast.error("Usuário não autenticado.");
@@ -112,31 +99,26 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     }
 
     const newStatus =
-      localTransaction.status === "Recebida" ? "Pendente" : "Recebida";
+      transaction.status === "Recebida" ? "Pendente" : "Recebida";
 
     // ---------------------------------------------
     // 🔁 RECORRENTE
     // ---------------------------------------------
-    if (localTransaction.isRecurring && localTransaction.recurringEntryId) {
+    if (transaction.isRecurring && transaction.recurringEntryId) {
       try {
-        const d = new Date(localTransaction.date);
+        const d = new Date(transaction.date);
         const year = d.getFullYear();
         const month = d.getMonth() + 1;
 
         await markMonthPaid({
-          recurring_id: localTransaction.recurringEntryId,
+          recurring_id: transaction.recurringEntryId,
           year,
           month,
           is_paid: newStatus === "Recebida",
         });
 
-        // ⭐ Atualização instantânea sem esperar refetch
-        setLocalTransaction((prev) => ({
-          ...prev,
-          status: newStatus,
-        }));
-
         toast.success("Status atualizado!");
+        // A invalidação de queries já é feita dentro de markMonthPaid
         return;
       } catch (error) {
         console.error(error);
@@ -150,63 +132,67 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     // ---------------------------------------------
     let updateError: any = null;
 
-    if (localTransaction.type === "income") {
-      const { error } = await supabase
-        .from("receitas")
-        .update({ status: newStatus })
-        .eq("id", localTransaction.id)
-        .eq("user_id", user.id);
+    try {
+      if (transaction.type === "income") {
+        const { error } = await supabase
+          .from("receitas")
+          .update({ status: newStatus })
+          .eq("id", transaction.id)
+          .eq("user_id", user.id);
 
-      updateError = error;
-    } else {
-      const pago = newStatus === "Recebida";
-      const dataPagamento = pago
-        ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
-        : null;
+        updateError = error;
+        if (!updateError) {
+          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        }
+      } else {
+        const pago = newStatus === "Recebida";
+        const dataPagamento = pago
+          ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
+          : null;
 
-      const { error } = await supabase
-        .from("despesas_parcelas")
-        .update({
-          pago,
-          data_pagamento: dataPagamento,
-        })
-        .eq("id", localTransaction.id);
+        const { error } = await supabase
+          .from("despesas_parcelas")
+          .update({
+            pago,
+            data_pagamento: dataPagamento,
+          })
+          .eq("id", transaction.id);
 
-      updateError = error;
+        updateError = error;
+        if (!updateError) {
+          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        }
+      }
+
+      if (updateError) {
+        console.error(updateError);
+        toast.error("Erro ao atualizar status.");
+      } else {
+        toast.success("Status atualizado!");
+      }
+    } catch (error) {
+      console.error("Erro inesperado ao atualizar status:", error);
+      toast.error("Ocorreu um erro inesperado.");
     }
-
-    if (updateError) {
-      console.error(updateError);
-      toast.error("Erro ao atualizar status.");
-      return;
-    }
-
-    // ⭐⭐⭐ Status local atualizado permanentemente
-    setLocalTransaction((prev) => ({
-      ...prev,
-      status: newStatus,
-    }));
-
-    toast.success("Status atualizado!");
   };
 
   return (
     <TableRow
-      key={localTransaction.id}
+      key={transaction.id}
       className={cn(
-        localTransaction.status === "Recebida" &&
+        transaction.status === "Recebida" &&
           "bg-soft-green/30 hover:bg-soft-green/50",
-        (localTransaction.status === "Pendente" ||
-          localTransaction.status === "Prevista") &&
+        (transaction.status === "Pendente" ||
+          transaction.status === "Prevista") &&
           "bg-soft-red/30 hover:bg-soft-red/50",
-        localTransaction.status === "Cancelada" &&
+        transaction.status === "Cancelada" &&
           "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
       )}
     >
       {/* DATA */}
       <TableCell className="py-2 px-2 text-xs min-w-[70px]">
         {(() => {
-          const [y, m, d] = localTransaction.date.split("-").map(Number);
+          const [y, m, d] = transaction.date.split("-").map(Number);
           return new Date(y, m - 1, d).toLocaleDateString("pt-BR");
         })()}
       </TableCell>
@@ -216,12 +202,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         <TableCell className="py-2 px-2 text-xs min-w-[60px]">
           <span
             className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-              localTransaction.type === "income"
+              transaction.type === "income"
                 ? "bg-success/10 text-success"
                 : "bg-destructive/10 text-destructive"
             }`}
           >
-            {localTransaction.type === "income" ? "Receita" : "Despesa"}
+            {transaction.type === "income" ? "Receita" : "Despesa"}
           </span>
         </TableCell>
       )}
@@ -237,11 +223,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* DESCRIÇÃO */}
       {!isMobile && (
         <TableCell className="py-2 px-2 text-xs min-w-[100px]">
-          {localTransaction.installmentNumber &&
-          localTransaction.totalInstallments &&
-          localTransaction.totalInstallments > 1
-            ? `Parcela ${localTransaction.installmentNumber} de ${localTransaction.totalInstallments}`
-            : localTransaction.description || "-"}
+          {transaction.installmentNumber &&
+          transaction.totalInstallments &&
+          transaction.totalInstallments > 1
+            ? `Parcela ${transaction.installmentNumber} de ${transaction.totalInstallments}`
+            : transaction.description || "-"}
 
           {paymentMethodDisplay && (
             <span className="block text-xs text-muted-foreground mt-0.5">
@@ -254,13 +240,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* VALOR */}
       <TableCell
         className={`py-2 px-2 text-right font-semibold text-xs min-w-[80px] ${
-          localTransaction.type === "income"
+          transaction.type === "income"
             ? "text-success"
             : "text-destructive"
         }`}
       >
-        {localTransaction.type === "income" ? "+" : "-"}
-        R$ {localTransaction.amount.toFixed(2)}
+        {transaction.type === "income" ? "+" : "-"}
+        R$ {transaction.amount.toFixed(2)}
       </TableCell>
 
       {/* TOGGLE */}
@@ -270,16 +256,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           size="icon"
           className="h-7 w-7"
           onClick={handleToggleStatus}
-          disabled={localTransaction.status === "Cancelada"}
+          disabled={transaction.status === "Cancelada"}
         >
-          {localTransaction.status === "Recebida" && (
+          {transaction.status === "Recebida" && (
             <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />
           )}
-          {(localTransaction.status === "Pendente" ||
-            localTransaction.status === "Prevista") && (
+          {(transaction.status === "Pendente" ||
+            transaction.status === "Prevista") && (
             <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />
           )}
-          {localTransaction.status === "Cancelada" && (
+          {transaction.status === "Cancelada" && (
             <DynamicIcon
               name="XCircle"
               className="h-4 w-4 text-muted-foreground"
@@ -295,7 +281,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             variant="ghost"
             size="icon"
             className="h-7 w-7"
-            onClick={() => onEditTransaction(localTransaction)}
+            onClick={() => onEditTransaction(transaction)}
           >
             <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
           </Button>
