@@ -37,7 +37,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { materializedRecurringTransactions, isLoading: isLoadingRecurring } = useRecurringEntries(user, selectedMonth, fetchedCategories, enabled); // Passando 'enabled'
-  console.log("useTransactionsData: materializedRecurringTransactions from hook:", materializedRecurringTransactions);
+  console.log("useTransactionsData: materializedRecurringTransactions from hook:", materializedRecurringRecurringTransactions);
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
@@ -152,7 +152,16 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
     // 3. Combine month-specific one-off transactions with already month-specific recurring transactions
     //    materializedRecurringTransactions from useRecurringEntries is already filtered for `selectedMonth`
-    const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Alterado para ordem decrescente
+    const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+
+      if (dateA !== dateB) {
+        return dateB - dateA; // Descending date
+      }
+      // If dates are the same, sort by ID to ensure stable order
+      return a.id.localeCompare(b.id);
+    });
     
     console.log("useTransactionsData: Monthly Income transactions count:", monthlyIncomeTransactions.length);
     console.log("useTransactionsData: Monthly Expense transactions count:", monthlyExpenseTransactions.length);

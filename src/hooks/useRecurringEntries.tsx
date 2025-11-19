@@ -388,13 +388,31 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     mutationFn: async ({ recurring_id, year, month, is_paid }: { recurring_id: string; year: number; month: number; is_paid: boolean }) => {
       if (!user?.id) throw new Error("User not authenticated.");
 
+      // Fetch existing exception to preserve other override fields if they exist
+      const { data: existingException, error: fetchError } = await supabase
+        .from("recurring_entry_exceptions")
+        .select("override_due_date, override_value, override_category_id, note")
+        .eq("recurring_id", recurring_id)
+        .eq("year", year)
+        .eq("month", month)
+        .maybeSingle(); // Use maybeSingle to get null if no record
+
+      if (fetchError) {
+        console.error("Error fetching existing exception:", fetchError);
+        // Decide whether to throw or proceed with default payload
+        // For now, let's proceed with default, but log the error
+      }
+
       const payload: TablesInsert<'recurring_entry_exceptions'> = {
         recurring_id,
         year,
         month,
         paid: is_paid,
         canceled: false, // Ensure it's not marked as canceled when toggling paid status
-        note: null, // Alterado para null para remover a mensagem da descrição
+        note: existingException?.note || null, // Preserve existing note
+        override_value: existingException?.override_value || null, // Preserve existing override_value
+        override_category_id: existingException?.override_category_id || null, // Preserve existing override_category_id
+        override_due_date: existingException?.override_due_date || null, // Preserve existing override_due_date
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
