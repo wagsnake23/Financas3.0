@@ -236,7 +236,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
   };
 
-  const formContent = (
+  return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <CategorySelector
         rootExpenseCategories={rootExpenseCategories}
@@ -256,7 +256,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setValor={setValor}
         formaPagamento={formaPagamento}
         setFormaPagamento={setFormaPagamento}
-        // tipoPagamento e setTipoPagamento não são mais passados para PaymentDetails
         cartaoId={cartaoId}
         setCartaoId={setCartaoId}
         cartoes={cartoes}
@@ -305,7 +304,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <DateAndInstallmentFields
         tipoPagamento={tipoPagamento} // Ainda necessário para a label da data
-        // numeroParcelas e setNumeroParcelas não são mais passados para DateAndInstallmentFields
         dataVencimento={dataVencimento}
         setDataVencimento={setDataVencimento}
         isCalendarOpen={isCalendarOpen}
@@ -346,17 +344,5 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         {loading ? "Salvando..." : "Salvar Despesa"}
       </Button>
     </form>
-  );
-
-  return isMobile ? (
-    <div className="px-4 pt-0">
-      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
-      {formContent}
-    </div>
-  ) : (
-    <Card className="p-6 rounded-xl shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Nova Despesa</h2>
-      {formContent}
-    </Card>
   );
 };

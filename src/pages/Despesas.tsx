@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label"; // Importar Label
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent"; // Importar o novo componente
 import { AppCategory } from "@/types/finance"; // Importar AppCategory
+import { Card } from "@/components/ui/card"; // Importar Card
 
 interface Cartao {
   id: string;
@@ -102,6 +103,62 @@ export default function Despesas() {
     );
   }
 
+  const formContent = (
+    <>
+      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
+      <RadioGroup
+        value={formMode}
+        onValueChange={(value: FormMode) => setFormMode(value)}
+        className={cn("grid gap-2 mb-4", isMobile ? "grid-cols-2" : "grid-cols-2")}
+      >
+        <Label
+          htmlFor="one-off-expense"
+          className={cn(
+            "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
+            isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
+          )}
+        >
+          <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only" />
+          <DynamicIcon name="CreditCard" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--destructive))" />
+          <span>Avulsa</span>
+        </Label>
+        <Label
+          htmlFor="recurring-expense"
+          className={cn(
+            "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+            isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
+          )}
+        >
+          <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only" />
+          <DynamicIcon name="Repeat" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
+          <span>Recorrente</span>
+        </Label>
+      </RadioGroup>
+
+      {formMode === 'one-off' ? (
+        <ExpenseForm
+          user={user}
+          cartoes={cartoes}
+          loadCartoes={loadCartoes}
+          rootExpenseCategories={rootExpenseCategories}
+          filteredSubcategories={filteredSubcategories}
+          selectedParentCategoryId={selectedParentCategoryId}
+          setSelectedParentCategoryId={setSelectedParentCategoryId}
+          queryClient={queryClient}
+          isMobile={isMobile}
+        />
+      ) : (
+        <RecurringEntryFormContent
+          isMobile={isMobile}
+          onSuccess={handleRecurringFormSuccess}
+          fetchedCategories={allCategories}
+          isLoadingCategories={isLoadingCategories}
+          initialType="despesa"
+        />
+      )}
+    </>
+  );
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-destructive/5 pt-16">
@@ -119,59 +176,15 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             {/* Formulário Nova Despesa (esquerda em desktop, topo em mobile) */}
             <div className="order-2 lg:order-1 lg:col-span-2">
-              <div className={cn("p-6", isMobile && "p-0")}>
-                {/* Removido o título "Nova Despesa" */}
-                <RadioGroup
-                  value={formMode}
-                  onValueChange={(value: FormMode) => setFormMode(value)}
-                  className={cn("grid gap-2 mb-4", isMobile ? "grid-cols-2" : "grid-cols-2")}
-                >
-                  <Label
-                    htmlFor="one-off-expense"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
-                    )}
-                  >
-                    <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only" />
-                    <DynamicIcon name="CreditCard" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--destructive))" />
-                    <span>Avulsa</span>
-                  </Label>
-                  <Label
-                    htmlFor="recurring-expense"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
-                    )}
-                  >
-                    <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only" />
-                    <DynamicIcon name="Repeat" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
-                    <span>Recorrente</span>
-                  </Label>
-                </RadioGroup>
-
-                {formMode === 'one-off' ? (
-                  <ExpenseForm
-                    user={user}
-                    cartoes={cartoes}
-                    loadCartoes={loadCartoes}
-                    rootExpenseCategories={rootExpenseCategories}
-                    filteredSubcategories={filteredSubcategories}
-                    selectedParentCategoryId={selectedParentCategoryId}
-                    setSelectedParentCategoryId={setSelectedParentCategoryId}
-                    queryClient={queryClient}
-                    isMobile={isMobile}
-                  />
-                ) : (
-                  <RecurringEntryFormContent
-                    isMobile={isMobile}
-                    onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={allCategories} // Passar todas as categorias
-                    isLoadingCategories={isLoadingCategories}
-                    initialType="despesa"
-                  />
-                )}
-              </div>
+              {isMobile ? (
+                <div className="px-4 pt-0"> {/* Wrapper simples para mobile */}
+                  {formContent}
+                </div>
+              ) : (
+                <Card className="p-6 rounded-xl shadow-sm"> {/* Card para desktop */}
+                  {formContent}
+                </Card>
+              )}
             </div>
 
             {/* Dashboard de Despesas (direita em desktop, ocultado em mobile) */}
