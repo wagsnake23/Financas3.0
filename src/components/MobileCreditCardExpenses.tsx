@@ -7,6 +7,11 @@ import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import { format, isWithinInterval, startOfMonth, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Button } from "@/components/ui/button"; // Importar Button
+import { useMutation, useQueryClient } from "@tanstack/react-query"; // Importar useMutation e useQueryClient
+import { supabase } from "@/integrations/supabase/client"; // Importar supabase
+import { toast } from "sonner"; // Importar toast
+import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<'cartoes'>[];
@@ -25,6 +30,8 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   isMobile,
   selectedMonth,
 }) => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedCardId, setSelectedCardId] = useState<string>(UNSELECTED_VALUE);
 
   // Efeito para definir o primeiro cartão como selecionado quando os cartões são carregados
@@ -63,6 +70,75 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
     return { totalPaid: paid, totalPending: pending, totalCardExpenses: paid + pending };
   }, [filteredExpenses]);
 
+  // Mutation para marcar parcelas como pagas
+  const payMonthlyBillMutation = useMutation({
+    mutationFn: async ({ cardId, monthStart, monthEnd }: { cardId: string; monthStart: Date; monthEnd: Date }) => {
+      if (!user?.id) throw new Error("Usuário não autenticado.");
+
+      const { data: installmentsToUpdate, error: fetchError } = await supabase
+        .from("despesas_parcelas")
+        .select("id")
+        .eq("pago", false)
+        .gte("vencimento", format(monthStart, "yyyy-MM-dd"))
+        .lte("vencimento", format(monthEnd, "yyyy-MM-dd"))
+        .in("despesa_id", supabase
+          .from("despesas")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("cartao_id", cardId)
+          .eq("forma_pagamento", "cartao")
+          .filter("is_fixed", "eq", false) // Excluir despesas fixas legadas
+        );
+
+      if (fetchError) throw fetchError;
+
+      if (installmentsToUpdate.length === 0) {
+        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês.");
+        return;
+      }
+
+      const installmentIds = installmentsToUpdate.map(i => i.id);
+
+      const { error: updateError } = await supabase
+        .from("despesas_parcelas")
+        .update({
+          pago: true,
+          data_pagamento: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        })
+        .in("id", installmentIds);
+
+      if (updateError) throw updateError;
+      return installmentsToUpdate.length;
+    },
+    onSuccess: (updatedCount) => {
+      queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida também a lista de transações
+      toast.success(`${updatedCount} despesa(s) do cartão marcada(s) como paga(s)!`, {
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+      });
+    },
+    onError: (error) => {
+      toast.error("Erro ao pagar fatura mensal", { description: error.message });
+      console.error("Supabase error paying monthly bill:", error);
+    },
+  });
+
+  const handlePayMonthlyBill = () => {
+    if (!selectedCardId || selectedCardId === UNSELECTED_VALUE) {
+      toast.error("Selecione um cartão para pagar a fatura.");
+      return;
+    }
+    if (totalPending === 0) {
+      toast.info("Não há despesas pendentes para este cartão no mês selecionado.");
+      return;
+    }
+
+    const monthStart = startOfMonth(selectedMonth);
+    const monthEnd = endOfMonth(selectedMonth);
+
+    payMonthlyBillMutation.mutate({ cardId: selectedCardId, monthStart, monthEnd });
+  };
+
   // A função getCategoryDisplay não é mais necessária se a tabela for removida, mas a manterei caso seja útil para depuração ou futuras expansões.
   const getCategoryDisplay = (categoryId: string | null) => {
     if (!categoryId) return { name: "Outros", icon: "MoreHorizontal" };
@@ -82,19 +158,37 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
       {cartoes.length === 0 ? (
         <p className="text-muted-foreground text-center py-2 text-sm">Nenhum cartão de crédito cadastrado.</p>
       ) : (
-        <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione um cartão" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione um cartão</SelectItem>
-            {cartoes.map(card => (
-              <SelectItem key={card.id} value={card.id} className={cn(isMobile && "text-sm")}>
-                {card.nome} (****{card.ultimos_digitos})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Select value={selectedCardId} onValueChange={setSelectedCardId}>
+            <SelectTrigger className={cn("rounded-xl flex-1", isMobile && "h-9 text-sm")}>
+              <SelectValue placeholder="Selecione um cartão" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione um cartão</SelectItem>
+              {cartoes.map(card => (
+                <SelectItem key={card.id} value={card.id} className={cn(isMobile && "text-sm")}>
+                  {card.nome} (****{card.ultimos_digitos})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant="success"
+            size={isMobile ? "icon" : "sm"} // Ícone em mobile, sm em desktop
+            onClick={handlePayMonthlyBill}
+            disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE || payMonthlyBillMutation.isPending || totalPending === 0}
+            className={cn("rounded-xl flex-shrink-0", isMobile ? "h-9 w-9" : "h-9 text-xs px-3")}
+          >
+            {payMonthlyBillMutation.isPending ? (
+              "..."
+            ) : (
+              <>
+                <DynamicIcon name="CheckCircle" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                {!isMobile && <span className="ml-2">Pagar Fatura</span>}
+              </>
+            )}
+          </Button>
+        </div>
       )}
 
       {selectedCardId !== UNSELECTED_VALUE && (
