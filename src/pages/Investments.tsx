@@ -25,7 +25,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"; // Importar Popover components
 
-const Investments = () => {
+export default function Investments() { // Alterado para export default function
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
@@ -387,4 +387,4 @@ const Investments = () => {
       <Footer isMobile={isMobile} />
     </div>
   );
-};
+}
