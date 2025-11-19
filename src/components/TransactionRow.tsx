@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useRecurringEntries, MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
+import { useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar useRecurringEntries para o tipo
 
 interface Cartao {
   id: string;
@@ -31,6 +31,7 @@ interface TransactionRowProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
 }
 
 // Helper function to validate UUID format (basic check)
@@ -48,10 +49,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
+  markMonthPaid, // Destruturando a nova prop
 }) => {
   console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Current Status (on render):", transaction.status);
 
-  const { markMonthPaid } = useRecurringEntries(user, new Date(), []);
+  // REMOVIDO: const { markMonthPaid } = useRecurringEntries(user, new Date(), []);
 
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);

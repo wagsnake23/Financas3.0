@@ -14,7 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
-import { MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
+import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar useRecurringEntries para o tipo
 
 interface Cartao {
   id: string;
@@ -39,6 +39,7 @@ interface TransactionListProps {
   // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
 }
 
 export const TransactionList = ({
@@ -55,6 +56,7 @@ export const TransactionList = ({
   // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
+  markMonthPaid, // Destruturando a nova prop
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
@@ -338,6 +340,7 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
+                  markMonthPaid={markMonthPaid} // Passando a nova prop
                 />
               ))
             )}
