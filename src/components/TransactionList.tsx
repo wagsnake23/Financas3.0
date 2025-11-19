@@ -15,7 +15,7 @@ import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
-import { PAYMENT_METHODS } from "@/data/colorPalette"; // Importar PAYMENT_METHODS
+// import { PAYMENT_METHODS } from "@/data/colorPalette"; // Removido, pois criaremos uma lista mais específica
 
 interface Cartao {
   id: string;
@@ -39,6 +39,8 @@ interface TransactionListProps {
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
 }
 
+const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE
+
 export const TransactionList = ({
   transactions, 
   onDeleteTransaction, 
@@ -55,7 +57,17 @@ export const TransactionList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Novo estado para o filtro de forma de pagamento
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all");
+  const [filterCardId, setFilterCardId] = useState<string>(UNSELECTED_VALUE); // Novo estado para o filtro de cartão
+
+  // Opções para o filtro principal de forma de pagamento
+  const mainPaymentMethodOptions = [
+    { value: "all", label: "Todas as formas" },
+    { value: "dinheiro", label: "Dinheiro" },
+    { value: "pix", label: "Pix" },
+    { value: "boleto", label: "Boleto" },
+    { value: "cartao", label: "Cartão" },
+  ];
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
@@ -64,15 +76,24 @@ export const TransactionList = ({
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
-      const matchesPaymentMethod = filterPaymentMethod === "all" || transaction.forma_pagamento === filterPaymentMethod; // Nova lógica de filtro
+      
+      let matchesPaymentMethod = true;
+      if (filterPaymentMethod !== "all") {
+        if (filterPaymentMethod === "cartao") {
+          matchesPaymentMethod = transaction.forma_pagamento === "cartao" && 
+                                 (filterCardId === UNSELECTED_VALUE || transaction.cartao_id === filterCardId);
+        } else {
+          matchesPaymentMethod = transaction.forma_pagamento === filterPaymentMethod;
+        }
+      }
 
-      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod; // Incluir o novo filtro
+      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
 
       console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile]); // Adicionar filterPaymentMethod às dependências
+  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, filterCardId, isMobile]); // Adicionar filterCardId às dependências
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -144,20 +165,41 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Novo filtro de Forma de Pagamento */}
-        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}>
+        {/* Filtro principal de Forma de Pagamento */}
+        <Select value={filterPaymentMethod} onValueChange={(value) => {
+          setFilterPaymentMethod(value);
+          if (value !== "cartao") {
+            setFilterCardId(UNSELECTED_VALUE); // Resetar o cartão selecionado se não for "cartao"
+          }
+        }} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as formas</SelectItem>
-            {PAYMENT_METHODS.map((method) => (
+            {mainPaymentMethodOptions.map((method) => (
               <SelectItem key={method.value} value={method.value}>
                 {method.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+
+        {/* Filtro de Cartão de Crédito (condicional) */}
+        {filterPaymentMethod === "cartao" && (
+          <Select value={filterCardId} onValueChange={setFilterCardId} disabled={disableFilters}>
+            <SelectTrigger className="rounded-xl">
+              <SelectValue placeholder="Selecione o cartão" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE}>Todos os cartões</SelectItem>
+              {cartoes.map((card) => (
+                <SelectItem key={card.id} value={card.id}>
+                  {card.nome} (****{card.ultimos_digitos})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
