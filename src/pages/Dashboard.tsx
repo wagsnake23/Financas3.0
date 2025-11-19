@@ -36,7 +36,7 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Novo estado para o mês selecionado no calendário
 
   const {
-    allRawTransactions,
+    monthlyFilteredTransactions, // Alterado de allRawTransactions para monthlyFilteredTransactions
     fetchedCategories: allCategories,
     // expenseInstallments, // Removido
     isLoading: isLoadingTransactionsData,
@@ -78,22 +78,19 @@ const Dashboard = () => {
   });
 
   const stats = useMemo(() => {
-    const today = new Date();
-    const startOfCurrentMonth = startOfMonth(today);
-    const endOfCurrentMonth = endOfMonth(today);
-
-    const totalIncome = allRawTransactions
-      .filter(t => t.type === "income" && isWithinInterval(new Date(t.date), { start: startOfCurrentMonth, end: endOfCurrentMonth }))
+    // monthlyFilteredTransactions já está filtrado para o mês atual (selectedMonth)
+    const totalIncome = monthlyFilteredTransactions
+      .filter(t => t.type === "income") // Removida a filtragem por data, já feita
       .reduce((sum, t) => sum + t.amount, 0);
     
-    const totalExpenses = allRawTransactions
-      .filter(t => t.type === "expense" && isWithinInterval(new Date(t.date), { start: startOfCurrentMonth, end: endOfCurrentMonth }))
+    const totalExpenses = monthlyFilteredTransactions
+      .filter(t => t.type === "expense") // Removida a filtragem por data, já feita
       .reduce((sum, t) => sum + t.amount, 0);
     
     const balance = totalIncome - totalExpenses;
 
     return { totalIncome, totalExpenses, balance };
-  }, [allRawTransactions]);
+  }, [monthlyFilteredTransactions]); // Dependência atualizada
 
   const isLoading = isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
 
@@ -183,7 +180,7 @@ const Dashboard = () => {
 
               {/* 4. MonthlyExpensesCombinedMobile (dashboard com seletor de data) */}
               <MonthlyExpensesCombinedMobile
-                transactions={allRawTransactions}
+                transactions={monthlyFilteredTransactions} // Usando monthlyFilteredTransactions
                 expenseInstallments={expenseInstallments}
                 isMobile={isMobile}
               />
@@ -252,7 +249,7 @@ const Dashboard = () => {
               {/* Charts e Resumo Mensal de Despesas */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                 {/* Coluna 1: Gráfico de Pizza de Despesas */}
-                <ExpensesPieChart transactions={allRawTransactions} allCategories={allCategories} isMobile={isMobile} />
+                <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allCategories} isMobile={isMobile} />
 
                 {/* Coluna 2: Resumo Mensal de Despesas e Calendário de Despesas (invertidos e agrupados) */}
                 <div className="flex flex-col gap-4">
@@ -263,14 +260,14 @@ const Dashboard = () => {
                     currentMonth={selectedMonth} // Passa o mês selecionado
                   />
                   <MonthlyExpenseCalendar 
-                    transactions={allRawTransactions} 
+                    transactions={monthlyFilteredTransactions} // Usando monthlyFilteredTransactions
                     isMobile={isMobile} 
                     currentMonth={selectedMonth} // Passa o mês selecionado
                   />
                 </div>
 
                 {/* Coluna 3: Gráfico de Barras Mensais */}
-                <MonthlyBarChart transactions={allRawTransactions} isMobile={isMobile} />
+                <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
               </div>
 
               {/* TotalExpensesCard em uma nova linha, abaixo do grid principal, para dar mais destaque */}
