@@ -74,19 +74,17 @@ export const TransactionList = ({
       
       let matchesPaymentMethod = true;
       if (filterPaymentMethod !== "all") {
-        if (transaction.isRecurring) {
-          // Recurring transactions do not have a direct forma_pagamento.
-          // They should only show if 'all' payment methods are selected.
-          matchesPaymentMethod = false; 
-        } else if (transaction.type === "income") {
-          // Income transactions also don't have forma_pagamento in this context
+        if (transaction.type === "income") {
+          // Income transactions don't have forma_pagamento in this context
           matchesPaymentMethod = false;
-        } else { // It's a non-recurring expense
+        } else { // It's an expense (recurring or non-recurring)
           if (filterPaymentMethod === "dinheiro" || filterPaymentMethod === "pix" || filterPaymentMethod === "boleto") {
             matchesPaymentMethod = transaction.forma_pagamento === filterPaymentMethod;
           } else if (filterPaymentMethod.startsWith("cartao_")) {
             const cardId = filterPaymentMethod.split("_")[1];
             matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === cardId;
+          } else {
+            matchesPaymentMethod = false; // Should not happen with current filter options
           }
         }
       }

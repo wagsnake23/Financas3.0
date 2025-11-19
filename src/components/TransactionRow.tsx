@@ -44,6 +44,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   onDeleteTransaction,
   onEditTransaction,
   allCategories,
+  cartoes,
   isMobile,
   queryClient,
   user, // This is the prop we need to check
@@ -64,6 +65,22 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   };
 
   const { name: categoryName, icon: categoryIcon } = getCategoryDisplay(transaction.category);
+
+  const getPaymentMethodDisplay = (formaPagamento: string | null, cartaoId: string | null) => {
+    if (!formaPagamento) return null;
+
+    switch (formaPagamento) {
+      case "dinheiro": return "Dinheiro";
+      case "pix": return "PIX";
+      case "boleto": return "Boleto";
+      case "cartao":
+        const card = cartoes.find(c => c.id === cartaoId);
+        return card ? `Cartão: ${card.nome} (****${card.ultimos_digitos})` : "Cartão";
+      default: return formaPagamento;
+    }
+  };
+
+  const paymentMethodDisplay = getPaymentMethodDisplay(transaction.forma_pagamento, transaction.cartao_id);
 
   const handleToggleStatus = async () => {
     console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user); // ADD THIS LOG
@@ -271,6 +288,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           {transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1
             ? `Parcela ${transaction.installmentNumber} de ${transaction.totalInstallments}`
             : transaction.description || "-"}
+          {paymentMethodDisplay && (
+            <span className="block text-xs text-muted-foreground mt-0.5">
+              {paymentMethodDisplay}
+            </span>
+          )}
         </TableCell>
       )}
       <TableCell className={`py-2 px-2 text-right font-semibold text-xs min-w-[80px] ${

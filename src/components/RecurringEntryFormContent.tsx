@@ -14,7 +14,10 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
-import { TablesInsert, Enums } from "@/integrations/supabase/types";
+import { TablesInsert, Enums, Tables } from "@/integrations/supabase/types"; // Importar Tables
+import { supabase } from "@/integrations/supabase/client"; // Importar supabase
+import { AddCardDialog } from "./AddCardDialog"; // Importar AddCardDialog
+import ManageCardsDialog from "./ManageCardsDialog"; // Importar ManageCardsDialog
 
 interface RecurringEntryFormContentProps {
   isMobile: boolean;
@@ -47,11 +50,40 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
 
+  // Novos estados para forma de pagamento e cartões
+  const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
+  const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
+  const [cartoes, setCartoes] = useState<Tables<'cartoes'>[]>([]);
+
   // Atualiza o tipo se initialType mudar
   useEffect(() => {
     setType(initialType);
     setCategoryId(UNSELECTED_VALUE); // Reset category when type changes
+    // Reset payment method and card when type changes
+    setFormaPagamento("dinheiro");
+    setCartaoId(UNSELECTED_VALUE);
   }, [initialType]);
+
+  // Carregar cartões quando o usuário estiver disponível
+  useEffect(() => {
+    if (user) {
+      loadCartoes();
+    }
+  }, [user]);
+
+  const loadCartoes = async () => {
+    const { data, error } = await supabase
+      .from("cartoes")
+      .select("*")
+      .eq("user_id", user?.id)
+      .order("nome");
+
+    if (error) {
+      console.error(error);
+    } else {
+      setCartoes(data || []);
+    }
+  };
 
   const filteredCategories = useMemo(() => {
     if (type === "receita") {
@@ -102,6 +134,11 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
+    if (type === "despesa" && formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
+      toast.error("Selecione um cartão para despesas com cartão de crédito.");
+      setLoading(false);
+      return;
+    }
 
     const newRecurringEntry: TablesInsert<'recurring_entries'> = {
       user_id: user.id,
@@ -114,6 +151,9 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       start_date: format(startDate, "yyyy-MM-dd"),
       end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
       status: 'active',
+      // Novos campos de pagamento
+      forma_pagamento: type === "despesa" ? formaPagamento : null,
+      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
     };
 
     try {
@@ -123,6 +163,8 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setDueDay("1");
       setStartDate(new Date());
       setEndDate(undefined);
+      setFormaPagamento("dinheiro"); // Resetar forma de pagamento
+      setCartaoId(UNSELECTED_VALUE); // Resetar cartão
       onSuccess?.();
     } catch (error) {
       // Error handled by mutation's onError
@@ -158,21 +200,71 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </Select>
       </div>
 
-      {/* Valor */}
-      <div className="space-y-2">
-        <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-        <Input
-          id="value"
-          type="number"
-          step="0.01"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="0,00"
-          required
-          disabled={loading}
-          className={cn(isMobile && "h-9 text-sm")}
-        />
+      {/* Valor e Forma de Pagamento (lado a lado) */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Valor */}
+        <div className="space-y-2">
+          <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+          <Input
+            id="value"
+            type="number"
+            step="0.01"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="0,00"
+            required
+            disabled={loading}
+            className={cn(isMobile && "h-9 text-sm")}
+          />
+        </div>
+
+        {/* Forma de Pagamento (apenas para despesas) */}
+        {type === "despesa" && (
+          <div className="space-y-2">
+            <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
+            <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)} disabled={loading}>
+              <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
+                <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
+                <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
+                <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
+
+      {/* Cartão de Crédito (apenas para despesas e forma de pagamento 'cartao') */}
+      {type === "despesa" && formaPagamento === "cartao" && (
+        <div className="space-y-2">
+          <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <div className="flex gap-2">
+            <Select value={cartaoId} onValueChange={(v: any) => setCartaoId(v)} disabled={loading}>
+              <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+                <SelectValue placeholder="Selecione o cartão" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o cartão</SelectItem>
+                {cartoes
+                  .map((cartao) => (
+                    <SelectItem key={cartao.id} value={cartao.id} className={cn(isMobile && "text-sm")}>
+                      {cartao.nome} - {cartao.banco}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+            <AddCardDialog user={user} onCardAdded={loadCartoes} />
+            <ManageCardsDialog 
+              cards={cartoes} 
+              onCardUpdated={loadCartoes} 
+              onCardDeleted={loadCartoes} 
+            />
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4"> {/* Layout para Frequência e Vencimento */}
         {/* Frequência */}

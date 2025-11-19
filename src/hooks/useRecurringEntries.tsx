@@ -30,6 +30,9 @@ export interface MaterializedRecurringTransaction extends Transaction {
   recurringMasterFrequency: RecurringFrequency;
   recurringMasterDueDay: number;
   recurringMasterStatus: Enums<'recurring_status'>;
+  // Novos campos de pagamento
+  forma_pagamento: string | null;
+  cartao_id: string | null;
 }
 
 // Helper to generate a unique ID for materialized occurrences
@@ -156,8 +159,9 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         recurrence_installments_count: null, // Not applicable for single occurrence
         installmentNumber: currentMonthIndex, // Use month number as installment for display
         totalInstallments: null, // Not applicable
-        forma_pagamento: null, // Recurring entries don't have this directly
-        cartao_id: null, // Recurring entries don't have this directly
+        // Novos campos de pagamento
+        forma_pagamento: entry.forma_pagamento,
+        cartao_id: entry.cartao_id,
         originalValue: entry.value,
         originalCategory: entry.category_id,
         originalDueDate: entry.due_day,
