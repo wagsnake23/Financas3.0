@@ -188,60 +188,64 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Filtro de Forma de Pagamento/Cartão Combinado */}
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className={cn(isMobile && "col-span-full")}> {/* Ocupa a linha inteira em mobile */}
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Forma de Pagamento" />
-          </SelectTrigger>
-          <SelectContent>
-            {paymentFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* NOVO: Pagar Fatura Button (conditional) e Valor Total */}
+        {/* Filtro de Forma de Pagamento/Cartão Combinado e Botão Pagar Fatura (lado a lado em mobile) */}
         {isMobile && isValidUuid(filterPaymentOptionId) ? (
           <>
+            {/* Filtro de Forma de Pagamento (col-span-1 em mobile) */}
+            <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                    className="rounded-xl col-span-1"> {/* col-span-1 para mobile */}
+              <SelectTrigger className="rounded-xl">
+                <SelectValue placeholder="Forma de Pagamento" />
+              </SelectTrigger>
+              <SelectContent>
+                {paymentFilterOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Botão Pagar Fatura (col-span-1 em mobile) */}
             <Button
               variant="secondary"
               onClick={handleViewInvoice}
-              className="w-full rounded-xl col-span-1" // col-span-1 para mobile
+              className="w-full rounded-xl col-span-1"
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
               Pagar Fatura
             </Button>
-            <div className={cn(
-              "p-2 rounded-xl text-right col-span-1", // col-span-1 para mobile
-              isMobile && "py-1.5 px-3"
-            )}>
-              <p className="text-xs text-muted-foreground">Valor Total:</p>
-              <p className={cn(
-                "text-base font-bold",
-                accumulatedValue >= 0 ? "text-success" : "text-destructive"
-              )}>
-                R$ {accumulatedValue.toFixed(2)}
-              </p>
-            </div>
           </>
         ) : (
-          // Se nenhum cartão selecionado ou não for mobile, Valor Total ocupa a largura total em mobile, ou sua largura normal em desktop
-          <div className={cn(
-            "p-2 rounded-xl text-right",
-            isMobile ? "py-1.5 px-3 col-span-2" : "col-span-1" // col-span-2 para mobile se não houver botão, col-span-1 para desktop
-          )}>
-            <p className="text-xs text-muted-foreground">Valor Total:</p>
-            <p className={cn(
-              "text-base font-bold",
-              accumulatedValue >= 0 ? "text-success" : "text-destructive"
-            )}>
-              R$ {accumulatedValue.toFixed(2)}
-            </p>
-          </div>
+          // Se nenhum cartão selecionado ou não for mobile, o filtro de Forma de Pagamento ocupa a largura total
+          <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                  className={cn(isMobile && "col-span-full")}> {/* col-span-full para mobile */}
+            <SelectTrigger className="rounded-xl">
+              <SelectValue placeholder="Forma de Pagamento" />
+            </SelectTrigger>
+            <SelectContent>
+              {paymentFilterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )}
+
+        {/* Campo Valor Total (sempre na sua própria linha, alinhado à direita em mobile) */}
+        <div className={cn(
+          "p-2 rounded-xl text-right",
+          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1" // Sempre col-span-full em mobile
+        )}>
+          <p className="text-xs text-muted-foreground">Valor Total:</p>
+          <p className={cn(
+            "text-base font-bold",
+            accumulatedValue >= 0 ? "text-success" : "text-destructive"
+          )}>
+            R$ {accumulatedValue.toFixed(2)}
+          </p>
+        </div>
       </div>
 
       <div className={cn(
