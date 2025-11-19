@@ -340,19 +340,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     updatedTransaction: Omit<Transaction, "id">,
     editOption?: "thisMonth" | "thisMonthForward" | "all",
     preserveExceptions?: boolean,
-    recurringData?: {
-      title: string;
-      value: number;
-      categoryId: string | null;
-      dueDay: number;
-      frequency: Enums<'recurring_frequency'>;
-      startDate: string | null;
-      endDate: string | null;
-      recurringStatus: Enums<'recurring_status'>;
-      note: string | null;
-      overrideDueDate: string | null;
-      isPaid: boolean;
-    }
+    recurringData?: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> // Tipo flexível
   ) => {
     let error = null;
     setLoadingEditData(true);
@@ -373,14 +361,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
         const currentMonth = new Date(recurringTrans.date).getMonth() + 1;
 
         if (editOption === "thisMonth") {
-          const payload: TablesUpdate<'recurring_entry_exceptions'> = {
-            override_value: recurringData.value,
-            override_category_id: recurringData.categoryId,
-            override_due_date: recurringData.overrideDueDate,
-            note: recurringData.note,
-            canceled: false, // Ensure it's not marked as canceled if we are editing it
-            paid: recurringData.isPaid,
-          };
+          const payload = recurringData as TablesUpdate<'recurring_entry_exceptions'>;
           await createOrUpdateException({
             recurring_id: recurringTrans.recurringEntryId,
             year: currentYear,
@@ -388,31 +369,14 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
             payload,
           });
         } else if (editOption === "thisMonthForward") {
-          const payload: TablesUpdate<'recurring_entries'> = {
-            title: recurringData.title,
-            value: recurringData.value,
-            category_id: recurringData.categoryId,
-            due_day: recurringData.dueDay,
-            frequency: recurringData.frequency,
-            end_date: recurringData.endDate,
-            status: recurringData.recurringStatus,
-          };
+          const payload = recurringData as TablesUpdate<'recurring_entries'>;
           await updateRecurringMasterFuture({
             recurring_id: recurringTrans.recurringEntryId,
             start_date: startOfMonth(new Date(recurringTrans.date)),
             payload,
           });
         } else if (editOption === "all") {
-          const payload: TablesUpdate<'recurring_entries'> = {
-            title: recurringData.title,
-            value: recurringData.value,
-            category_id: recurringData.categoryId,
-            due_day: recurringData.dueDay,
-            frequency: recurringData.frequency,
-            start_date: recurringData.startDate,
-            end_date: recurringData.endDate,
-            status: recurringData.recurringStatus,
-          };
+          const payload = recurringData as TablesUpdate<'recurring_entries'>;
           await updateRecurringMasterGlobal({
             recurring_id: recurringTrans.recurringEntryId,
             payload,

@@ -64,12 +64,12 @@ BEGIN
         -- Atualizar exceção existente
         UPDATE public.recurring_entry_exceptions
         SET
-            override_value = COALESCE(v_override_value, override_value),
-            override_category_id = COALESCE(v_override_category_id, override_category_id),
-            override_due_date = COALESCE(v_override_due_date, override_due_date),
-            note = COALESCE(v_note, note),
-            canceled = COALESCE(v_canceled, canceled),
-            paid = COALESCE(v_paid, paid),
+            override_value = CASE WHEN p_payload ? 'override_value' THEN v_override_value ELSE override_value END,
+            override_category_id = CASE WHEN p_payload ? 'override_category_id' THEN v_override_category_id ELSE override_category_id END,
+            override_due_date = CASE WHEN p_payload ? 'override_due_date' THEN v_override_due_date ELSE override_due_date END,
+            note = CASE WHEN p_payload ? 'note' THEN v_note ELSE note END,
+            canceled = CASE WHEN p_payload ? 'canceled' THEN v_canceled ELSE canceled END,
+            paid = CASE WHEN p_payload ? 'paid' THEN v_paid ELSE paid END,
             updated_at = now()
         WHERE id = v_existing_exception_id
         RETURNING * INTO v_result_exception;
@@ -85,12 +85,12 @@ BEGIN
             v_note, v_canceled, v_paid
         )
         ON CONFLICT (recurring_id, year, month) DO UPDATE SET
-            override_value = COALESCE(EXCLUDED.override_value, recurring_entry_exceptions.override_value),
-            override_category_id = COALESCE(EXCLUDED.override_category_id, recurring_entry_exceptions.override_category_id),
-            override_due_date = COALESCE(EXCLUDED.override_due_date, recurring_entry_exceptions.override_due_date),
-            note = COALESCE(EXCLUDED.note, recurring_entry_exceptions.note),
-            canceled = COALESCE(EXCLUDED.canceled, recurring_entry_exceptions.canceled),
-            paid = COALESCE(EXCLUDED.paid, recurring_entry_exceptions.paid),
+            override_value = CASE WHEN p_payload ? 'override_value' THEN EXCLUDED.override_value ELSE recurring_entry_exceptions.override_value END,
+            override_category_id = CASE WHEN p_payload ? 'override_category_id' THEN EXCLUDED.override_category_id ELSE recurring_entry_exceptions.override_category_id END,
+            override_due_date = CASE WHEN p_payload ? 'override_due_date' THEN EXCLUDED.override_due_date ELSE recurring_entry_exceptions.override_due_date END,
+            note = CASE WHEN p_payload ? 'note' THEN EXCLUDED.note ELSE recurring_entry_exceptions.note END,
+            canceled = CASE WHEN p_payload ? 'canceled' THEN EXCLUDED.canceled ELSE recurring_entry_exceptions.canceled END,
+            paid = COALESCE(EXCLUDED.paid, recurring_entry_exceptions.paid), -- Keep COALESCE for paid, as it's a toggle
             updated_at = now()
         RETURNING * INTO v_result_exception;
     END IF;

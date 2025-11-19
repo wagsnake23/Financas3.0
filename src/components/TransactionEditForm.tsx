@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
-import { Database, Enums } from "@/integrations/supabase/types";
+import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types"; // Importar TablesUpdate
 import { MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
@@ -31,19 +31,7 @@ interface TransactionEditFormProps {
     updatedTransaction: Omit<Transaction, "id">,
     editOption?: EditOption, // Adicionado para recorrência
     preserveExceptions?: boolean, // Adicionado para recorrência global
-    recurringData?: {
-      title: string;
-      value: number;
-      categoryId: string | null;
-      dueDay: number;
-      frequency: Enums<'recurring_frequency'>;
-      startDate: string | null;
-      endDate: string | null;
-      recurringStatus: Enums<'recurring_status'>;
-      note: string | null;
-      overrideDueDate: string | null;
-      isPaid: boolean;
-    }
+    recurringData?: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> // Tipo flexível
   ) => void;
   onCancelEdit: () => void;
   onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
@@ -246,25 +234,42 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       recurrence_installments_count: editingTransaction.recurrence_installments_count,
     };
 
+    let finalRecurringPayload: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> | undefined;
+
+    if (isRecurringTransaction) {
+        if (editOption === "thisMonth") {
+            finalRecurringPayload = {
+                override_value: amount as number,
+                override_category_id: category === UNSELECTED_VALUE ? null : category,
+                override_due_date: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
+                note: note.trim() || null,
+                paid: isPaid,
+                canceled: false, // When editing, we assume it's not being canceled via this form
+            } as TablesUpdate<'recurring_entry_exceptions'>;
+        } else { // thisMonthForward or all
+            finalRecurringPayload = {
+                title: title.trim(),
+                value: amount as number,
+                category_id: category === UNSELECTED_VALUE ? null : category,
+                due_day: parseInt(dueDay),
+                frequency,
+                start_date: startDate ? format(startDate, "yyyy-MM-dd") : null,
+                end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
+                status: recurringStatus,
+                // Preserve forma_pagamento and cartao_id from the original master entry if not explicitly editable in this form
+                forma_pagamento: recurringTransaction.forma_pagamento,
+                cartao_id: recurringTransaction.cartao_id,
+            } as TablesUpdate<'recurring_entries'>;
+        }
+    }
+
     onUpdateTransaction(
       editingTransaction.id,
       type,
       updatedTransaction,
       isRecurringTransaction ? editOption : undefined,
       isRecurringTransaction && editOption === "all" ? preserveExceptions : undefined,
-      {
-        title: title.trim(),
-        value: amount as number, // Usar o valor como number
-        categoryId: category === UNSELECTED_VALUE ? null : category,
-        dueDay: parseInt(dueDay),
-        frequency,
-        startDate: startDate ? format(startDate, "yyyy-MM-dd") : null,
-        endDate: endDate ? format(endDate, "yyyy-MM-dd") : null,
-        recurringStatus,
-        note: note.trim() || null,
-        overrideDueDate: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
-        isPaid,
-      }
+      finalRecurringPayload // Pass the correctly structured payload
     );
     setLoading(false);
     setShowGlobalConfirmDialog(false);
