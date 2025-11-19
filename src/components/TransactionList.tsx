@@ -201,15 +201,15 @@ export const TransactionList = ({
         </Select>
       </div>
 
-      <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
+      {/* Campo Valor Total (anteriormente Valor Acumulado) */}
+      <div className={cn("mb-6 mt-4", isMobile && "mb-0 mt-2")}>
         <div className={cn(
-          "p-2 rounded-xl border flex-1",
-          isMobile && "py-1.5 px-3",
+          "p-4 rounded-xl border",
           accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
         )}>
-          <p className="text-xs text-muted-foreground">Valor Acumulado (Filtro Atual):</p>
+          <p className="text-sm text-muted-foreground">Valor Total:</p>
           <p className={cn(
-            "text-lg font-bold",
+            "text-xl font-bold",
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
             R$ {accumulatedValue.toFixed(2)}
