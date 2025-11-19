@@ -137,7 +137,7 @@ export default function Despesas() {
             )}
           >
             <span>Recorrente</span>
-            <DynamicIcon name="🔁" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Adicionado bg-transparent */}
+            <DynamicIcon name="Repeat" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Alterado para 'Repeat' */}
           </Label>
         </div>
       </RadioGroup>
