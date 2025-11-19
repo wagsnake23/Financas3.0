@@ -197,7 +197,7 @@ export const TransactionList = ({
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p> {/* Título alterado */}
           <p className={cn(
-            "text-lg font-bold",
+            "text-base font-bold", // Alterado de text-lg para text-base
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
             R$ {accumulatedValue.toFixed(2)}
