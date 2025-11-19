@@ -14,7 +14,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
-import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar useRecurringEntries para o tipo
+import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
+import { PAYMENT_METHODS } from "@/data/colorPalette"; // Importar PAYMENT_METHODS
 
 interface Cartao {
   id: string;
@@ -29,53 +30,49 @@ interface TransactionListProps {
   transactions: Transaction[];
   onDeleteTransaction: (id: string, type: "income" | "expense", isFixed?: boolean) => void;
   onEditTransaction: (transaction: Transaction) => void;
-  allCategories: AppCategory[]; // Agora contém apenas subcategorias
+  allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
   disableFilters?: boolean;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  // filterCardId: string; // Removido
-  // setFilterCardId: (cardId: string) => void; // Removido
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
 }
 
 export const TransactionList = ({
   transactions, 
   onDeleteTransaction, 
   onEditTransaction, 
-  allCategories, // Usar allCategories diretamente (já são subcategorias)
+  allCategories,
   cartoes,
   isMobile,
   queryClient,
   user,
   disableFilters = false,
-  markMonthPaid, // Re-adicionado
-  // filterCardId, // Removido
-  // setFilterCardId, // Removido
+  markMonthPaid,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
-  // const [searchTerm, setSearchTerm] = useState(""); // Removido
+  const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Novo estado para o filtro de forma de pagamento
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
     
     return transactions.filter(transaction => {
-      // const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase()); // Removido
+      const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
-      
-      // A lógica de filtro de cartão de crédito foi removida daqui
-      // A lógica de filtro de busca por descrição foi removida daqui
-      const finalResult = matchesType && matchesCategory; // Ajustado para remover matchesSearch
+      const matchesPaymentMethod = filterPaymentMethod === "all" || transaction.forma_pagamento === filterPaymentMethod; // Nova lógica de filtro
 
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, FINAL: ${finalResult}`);
+      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod; // Incluir o novo filtro
+
+      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, filterType, filterCategory, isMobile]); // Removido searchTerm e filterCardId das dependências
+  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile]); // Adicionar filterPaymentMethod às dependências
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -85,19 +82,16 @@ export const TransactionList = ({
 
   const getCategoryDisplayName = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
-    // Como agora só temos subcategorias, não precisamos mais da hierarquia "Pai > Filho"
     return category?.nome || categoryId;
   };
 
-  // `allCategories` já são as subcategorias.
-  // Filtrar para obter apenas as subcategorias relevantes para o filtro de tipo.
   const selectableCategories = useMemo(() => {
     if (filterType === "income") {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
     } else if (filterType === "expense") {
       return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
-    return allCategories; // Se "all", retorna todas as subcategorias
+    return allCategories;
   }, [allCategories, filterType]);
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
@@ -106,8 +100,19 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"> {/* Ajustado para 2 colunas */}
-        {/* O campo de busca por descrição foi removido daqui */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {!isMobile && (
+          <div className="relative">
+            <DynamicIcon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Buscar por descrição..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 rounded-xl"
+              disabled={disableFilters}
+            />
+          </div>
+        )}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
@@ -122,10 +127,10 @@ export const TransactionList = ({
 
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Subcategoria" /> {/* Placeholder atualizado */}
+            <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as subcategorias</SelectItem> {/* Item atualizado */}
+            <SelectItem value="all">Todas as subcategorias</SelectItem>
             {selectableCategories
               .filter(cat => cat.id !== "") 
               .map((cat) => (
@@ -136,6 +141,21 @@ export const TransactionList = ({
                   </span>
                 </SelectItem>
               ))}
+          </SelectContent>
+        </Select>
+
+        {/* Novo filtro de Forma de Pagamento */}
+        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}>
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Forma de Pagamento" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas as formas</SelectItem>
+            {PAYMENT_METHODS.map((method) => (
+              <SelectItem key={method.value} value={method.value}>
+                {method.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -165,7 +185,7 @@ export const TransactionList = ({
             <TableRow>
               <TableHead className="py-1 px-2 min-w-[70px]">Data</TableHead>
               {!isMobile && <TableHead className="py-1 px-2 min-w-[60px]">Tipo</TableHead>}
-              <TableHead className="py-1 px-2 min-w-[80px]">Subcategoria</TableHead> {/* Título atualizado */}
+              <TableHead className="py-1 px-2 min-w-[80px]">Subcategoria</TableHead>
               {!isMobile && <TableHead className="py-1 px-2 min-w-[100px]">Descrição</TableHead>}
               <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead>
               <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead>
@@ -191,7 +211,7 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
-                  markMonthPaid={markMonthPaid} // Re-adicionado
+                  markMonthPaid={markMonthPaid}
                 />
               ))
             )}
