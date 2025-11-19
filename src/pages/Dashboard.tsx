@@ -130,14 +130,13 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
-                  {/* Alterado para um botão direto para despesas avulsas em mobile */}
                   <Button
                     variant="destructive"
-                    className={cn("w-4/5 h-8 px-3 text-xs rounded-xl")} 
+                    className={cn("w-full h-8 px-3 text-xs rounded-xl")} 
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Despesa
+                    Nova Despesa
                   </Button>
                 </div>
               </StatCard>
@@ -155,7 +154,7 @@ const Dashboard = () => {
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 
                     variant="success" 
-                    className="w-4/5 h-8 px-3 text-xs rounded-xl" 
+                    className="w-full h-8 px-3 text-xs rounded-xl" 
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -216,7 +215,7 @@ const Dashboard = () => {
                   <div className="flex justify-end mt-4">
                     <Button 
                       variant="success" 
-                      className="w-2/5 h-8 px-3 text-xs rounded-xl" 
+                      className="w-auto px-4 h-8 text-xs rounded-xl" 
                       onClick={() => navigate("/receitas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />

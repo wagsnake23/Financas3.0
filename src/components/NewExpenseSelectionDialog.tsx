@@ -34,10 +34,10 @@ export const NewExpenseSelectionDialog: React.FC<NewExpenseSelectionDialogProps>
       <DialogTrigger asChild>
         <Button
           variant="destructive"
-          className={cn("w-full h-8 px-3 text-xs rounded-xl", isMobile && "w-2/5")}
+          className={cn("h-8 px-3 text-xs rounded-xl", isMobile ? "w-full" : "w-auto px-4")}
         >
           <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-          Despesa
+          Nova Despesa
         </Button>
       </DialogTrigger>
       <DialogContent className={cn("sm:max-w-[425px]", isMobile && "max-w-[90vw] rounded-lg")}>
