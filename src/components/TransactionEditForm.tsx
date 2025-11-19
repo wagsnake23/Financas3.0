@@ -120,7 +120,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       const [year, month, day] = editingTransaction.date.split('-').map(Number);
       setDate(new Date(year, month - 1, day));
 
-      setCategory(editingTransaction.category);
+      // FIX: Ensure category state never holds an empty string
+      setCategory(editingTransaction.category || UNSELECTED_VALUE);
+      
       setDescription(editingTransaction.description || "");
 
       let initialStatus: ReceitaStatus = 'Pendente';
@@ -136,7 +138,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       if (isRecurringTransaction) {
         setTitle(recurringTransaction.recurringMasterTitle);
         setAmount(recurringTransaction.originalValue); // Definir como number
-        setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE);
+        setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE); // Also ensure this is not empty string
         setDueDay(recurringTransaction.originalDueDate?.toString() || "1");
         setFrequency(recurringTransaction.recurringMasterFrequency || "monthly");
         setStartDate(parseISO(recurringTransaction.recurringMasterStartDate));
@@ -148,8 +150,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           setNote(match ? match[1] : "");
           setOverrideDueDate(parseISO(recurringTransaction.date));
           setIsPaid(recurringTransaction.status === 'Recebida');
-          setAmount(recurringTransaction.amount); // Definir como number
-          setCategory(recurringTransaction.category || UNSELECTED_VALUE);
+          setAmount(recurringTransaction.amount);
+          setCategory(recurringTransaction.category || UNSELECTED_VALUE); // Also ensure this is not empty string
         } else {
           setNote("");
           setOverrideDueDate(parseISO(editingTransaction.date));
