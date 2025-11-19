@@ -100,32 +100,43 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     const transactions: MaterializedRecurringTransaction[] = [];
 
     recurringEntries.forEach(entry => {
-      console.log(`useRecurringEntries: Processing recurring entry: ${entry.id} - ${entry.title} (Type: ${entry.type})`);
+      console.log(`[DEBUG] Processing recurring entry: ${entry.id} - ${entry.title}`);
+      console.log(`[DEBUG]   Master due_day: ${entry.due_day}`);
+      console.log(`[DEBUG]   Current Month (start): ${format(startOfMonth(currentMonth), 'yyyy-MM-dd')}`);
+
       // Check if the entry is active and within its date range
       const entryStartDate = new Date(entry.start_date);
       const entryEndDate = entry.end_date ? new Date(entry.end_date) : null;
 
       // Check if the recurring entry is relevant for the current month
       const isRelevantForMonth = isWithinInterval(currentMonth, { start: entryStartDate, end: entryEndDate || new Date(9999, 11, 31) });
-      console.log(`useRecurringEntries:   isRelevantForMonth: ${isRelevantForMonth} (Current Month: ${format(currentMonth, 'yyyy-MM-dd')}, Start: ${format(entryStartDate, 'yyyy-MM-dd')}, End: ${entryEndDate ? format(entryEndDate, 'yyyy-MM-dd') : 'N/A'})`);
+      console.log(`[DEBUG]   isRelevantForMonth: ${isRelevantForMonth} (Current Month: ${format(currentMonth, 'yyyy-MM-dd')}, Start: ${format(entryStartDate, 'yyyy-MM-dd')}, End: ${entryEndDate ? format(entryEndDate, 'yyyy-MM-dd') : 'N/A'})`);
 
       if (!isRelevantForMonth || entry.status === 'canceled') {
-        console.log(`useRecurringEntries:   Skipping entry: Not relevant for month or canceled (status: ${entry.status})`);
+        console.log(`[DEBUG]   Skipping entry: Not relevant for month or canceled (status: ${entry.status})`);
         return; // Skip if not relevant or canceled
       }
 
       // Calculate the base due date for the current month
       let baseDueDate = setDate(startOfMonth(currentMonth), entry.due_day);
+      console.log(`[DEBUG]   Calculated baseDueDate (before clamp check): ${format(baseDueDate, 'yyyy-MM-dd')}`);
       // Adjust if due_day is greater than days in current month
       if (getDate(baseDueDate) !== entry.due_day) {
+        console.log(`[DEBUG]   Adjusting baseDueDate due to month end clamp. Original due_day: ${entry.due_day}, Clamped day: ${getDate(baseDueDate)}`);
         baseDueDate = endOfMonth(currentMonth); // Set to last day of month if due_day is too high
+        console.log(`[DEBUG]   Adjusted baseDueDate: ${format(baseDueDate, 'yyyy-MM-dd')}`);
       }
 
       // Find any exception for this specific month
       const exception = recurringExceptions.find(
         ex => ex.recurring_id === entry.id && ex.year === currentYear && ex.month === currentMonthIndex
       );
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Exception found: ${!!exception}, Exception object:`, exception); // LOG ADICIONADO
+      console.log(`[DEBUG]   Exception found for ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}): ${!!exception ? 'Yes' : 'No'}`); // LOG ADICIONADO
+      if (exception) {
+        console.log(`[DEBUG]     Exception override_due_date: ${exception.override_due_date}`);
+        console.log(`[DEBUG]     Exception paid status: ${exception.paid}`);
+        console.log(`[DEBUG]     Exception canceled status: ${exception.canceled}`);
+      }
 
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
@@ -133,10 +144,11 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const finalDueDate = exception?.override_due_date ? new Date(exception.override_due_date) : baseDueDate;
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - isPaidByException: ${isPaidByException}`); // LOG ADICIONADO
+      console.log(`[DEBUG]   Final Due Date for transaction: ${format(finalDueDate, 'yyyy-MM-dd')}`);
+      console.log(`[DEBUG]   Final isPaidByException: ${isPaidByException}`); // LOG ADICIONADO
 
       if (isCanceledByException) {
-        console.log(`useRecurringEntries:   Skipping entry ${entry.id}: Canceled by exception for this month`);
+        console.log(`[DEBUG]   Skipping entry ${entry.id}: Canceled by exception for this month`);
         return; // Skip if this month is canceled by an exception
       }
 
@@ -151,7 +163,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       } else { // Se a data está no futuro e não foi pago
         status = 'Prevista';
       }
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final status: ${status}`); // LOG ADICIONADO
+      console.log(`[DEBUG]   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final status: ${status}`); // LOG ADICIONADO
       
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
@@ -189,7 +201,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       transactions.push(materializedTransaction);
     });
 
-    console.log("useRecurringEntries: Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions.map(t => ({ id: t.id, status: t.status, isPaid: t.status === 'Recebida' })));
+    console.log("useRecurringEntries: Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions.map(t => ({ id: t.id, status: t.status, isPaid: t.status === 'Recebida', date: t.date })));
     return transactions;
   }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions, enabled]);
 
