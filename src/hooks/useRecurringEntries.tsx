@@ -159,7 +159,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         amount: finalValue,
         date: format(finalDueDate, "yyyy-MM-dd"),
         category: finalCategory || "outros_diversos", // Fallback category ID
-        description: entry.title + (note ? ` (${note})` : ''),
+        description: entry.title + (exception?.note ? ` (${exception.note})` : ''), // Corrigido: usando exception?.note
         status: status,
         is_fixed: true, // Mark as fixed for compatibility with TransactionRow
         recurrence_frequency: entry.frequency,
