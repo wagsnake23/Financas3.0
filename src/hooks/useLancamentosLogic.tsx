@@ -95,7 +95,7 @@ export const useLancamentosLogic = (user: User | null) => {
         } else if (deleteOption === "all") {
           await deleteRecurringEntry(recurringTrans.recurringEntryId);
         }
-        toast.success("Lançamento recorrente excluído/cancelado!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' } });
+        toast.success("Lançamento recorrente excluído/cancelado!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
       } else if (transaction.type === "expense" && transaction.installmentNumber && transaction.despesa_id) {
         // Lógica para despesas parceladas (não recorrentes)
         const parentDespesaId = transaction.despesa_id;
@@ -111,7 +111,7 @@ export const useLancamentosLogic = (user: User | null) => {
           if (remainingParcelas && remainingParcelas.length === 0) {
             await supabase.from("despesas").delete().eq("id", parentDespesaId);
           }
-          toast.success("Parcela excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' } });
+          toast.success("Parcela excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         } else if (deleteOption === "thisMonthForward") {
           // Excluir esta parcela e todas as parcelas futuras para esta despesa pai
           const { error } = await supabase.from("despesas_parcelas").delete().eq("despesa_id", parentDespesaId).gte("numero_parcela", transaction.installmentNumber);
@@ -122,12 +122,12 @@ export const useLancamentosLogic = (user: User | null) => {
           if (remainingParcelas && remainingParcelas.length === 0) {
             await supabase.from("despesas").delete().eq("id", parentDespesaId);
           }
-          toast.success("Parcelas futuras excluídas!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' } });
+          toast.success("Parcelas futuras excluídas!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         } else if (deleteOption === "all") {
           // Excluir a despesa pai inteira e todas as suas parcelas
           const { error } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
           if (error) throw error;
-          toast.success("Despesa parcelada excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' } });
+          toast.success("Despesa parcelada excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         }
       } else {
         // Este caso não deve ser atingido se o modal for aberto apenas para recorrentes/parceladas
@@ -212,8 +212,8 @@ export const useLancamentosLogic = (user: User | null) => {
         setLoadingEditData(false);
         return;
       } else if (installmentData) {
-        const despesaId = installmentData.despesa_id;
-        if (!isValidUuid(despesaId)) {
+        const despesaId = installmentData.despesas?.id;
+        if (!despesaId || !isValidUuid(despesaId)) { // Adicionado verificação para despesaId
           toast.error("Erro (DEL-NF-2): ID da despesa principal da parcela inválido.");
           setLoadingEditData(false);
           return;
@@ -251,7 +251,7 @@ export const useLancamentosLogic = (user: User | null) => {
       console.error("handleDeleteTransaction: Deletion error:", error);
     } else {
       toast.success("Lançamento excluído!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       setEditingTransaction(null); // Fechar o formulário de edição
       setFullEditingRevenue(null);
@@ -442,7 +442,7 @@ export const useLancamentosLogic = (user: User | null) => {
           });
         }
         toast.success("Lançamento recorrente atualizado!", {
-          style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+          style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
         });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
@@ -569,7 +569,7 @@ export const useLancamentosLogic = (user: User | null) => {
           console.error("handleUpdateTransaction: Update error:", error);
         } else {
           toast.success("Lançamento atualizado!", {
-            style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+            style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
           });
           queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
           queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });

@@ -79,7 +79,7 @@ export default function Investments() { // Alterado para export default function
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento adicionado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       // Reset form
       setName("");
@@ -110,7 +110,7 @@ export default function Investments() { // Alterado para export default function
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento removido!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {

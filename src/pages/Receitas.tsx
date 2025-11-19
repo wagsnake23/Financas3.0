@@ -120,7 +120,7 @@ export default function Receitas() {
       console.error("Supabase error adding revenue:", error);
     } else {
       toast.success("Receita adicionada com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       setTipoReceitaId(UNSELECTED_VALUE);
       setValor(undefined); // Reset para undefined

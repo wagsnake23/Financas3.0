@@ -217,7 +217,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
 
     toast.success("Despesa adicionada com sucesso!", {
-      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
     });
     
     // Reset form

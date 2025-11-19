@@ -56,7 +56,7 @@ export default function Auth() {
       });
     } else if (data.user) {
       toast.success("Login realizado com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       navigate("/");
     }
@@ -119,7 +119,7 @@ export default function Auth() {
         toast.error("Conta criada, mas houve erro ao definir permissões");
       } else {
         toast.success("Conta criada com sucesso!", {
-          style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+          style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
         });
         navigate("/");
       }
@@ -150,7 +150,7 @@ export default function Auth() {
       });
     } else {
       toast.success("Se o email existir, o link foi enviado.", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       setViewMode("login");
     }
@@ -185,7 +185,7 @@ export default function Auth() {
       });
     } else {
       toast.success("Senha redefinida com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       navigate("/");
     }

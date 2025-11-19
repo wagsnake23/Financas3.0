@@ -96,7 +96,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       console.error(error);
     } else {
       toast.success("Cartão atualizado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       setIsEditCardOpen(false);
       setEditingCard(null);
@@ -121,7 +121,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       console.error(error);
     } else {
       toast.success("Cartão excluído!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       onCardDeleted();
     }

@@ -204,7 +204,7 @@ export const TransactionList = ({
       console.error("Supabase error paying invoice:", error);
     } else {
       toast.success(`Fatura do cartão ${selectedCard.nome} (${invoiceDetails.invoiceMonth}) paga com sucesso!`, {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
     }

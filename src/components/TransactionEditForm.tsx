@@ -104,6 +104,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const getCategoryDisplayName = (catId: string) => {
     const category = allCategories.find(cat => cat.id === catId);
     if (!category) return catId;
+
     if (category.parent_id) {
       const parent = allCategories.find(p => p.id === category.parent_id);
       return `${parent?.nome || 'Categoria Principal'} > ${category.nome}`;

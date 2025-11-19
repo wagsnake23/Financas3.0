@@ -77,7 +77,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
     setDescription("");
     
     toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
-      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
     });
   };
 

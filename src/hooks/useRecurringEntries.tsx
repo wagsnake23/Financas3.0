@@ -211,7 +211,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Lançamento recorrente criado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -236,7 +236,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Exceção de recorrência salva!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -260,7 +260,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Recorrência atualizada a partir deste mês!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -284,7 +284,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Recorrência atualizada globalmente!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -306,7 +306,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Recorrência excluída!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -341,7 +341,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Mês cancelado com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -369,7 +369,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     onSuccess: () => {
       invalidateQueries();
       toast.success("Recorrência finalizada a partir do mês selecionado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {
@@ -404,7 +404,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log("useRecurringEntries: markMonthPaidMutation: onSuccess - Invalidating queries. Payload sent:", variables);
       invalidateQueries();
       toast.success("Status de pagamento atualizado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
     onError: (error) => {

@@ -195,7 +195,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       console.error("handleToggleStatus: Status update error:", error);
     } else {
       toast.success("Status atualizado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     }
   };
