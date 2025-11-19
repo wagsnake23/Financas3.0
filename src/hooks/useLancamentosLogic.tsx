@@ -17,8 +17,6 @@ const isValidUuid = (uuid: string) => {
 
 export const useLancamentosLogic = (user: User | null) => {
   const queryClient = useQueryClient();
-  const [searchParams] = useSearchParams();
-
   console.log("useLancamentosLogic: User received as prop:", user?.id);
 
   const initialMonth = useMemo(() => {
@@ -60,6 +58,7 @@ export const useLancamentosLogic = (user: User | null) => {
     deleteRecurringEntry, // Usado para exclusão global
     cancelMonth, // Usado para exclusão de mês específico
     endRecurringAt, // Usado para exclusão a partir de um mês
+    markMonthPaid, // Adicionado aqui
   } = useRecurringEntries(user, selectedMonth, fetchedCategories);
 
   // Handlers para navegação de mês
@@ -565,5 +564,6 @@ export const useLancamentosLogic = (user: User | null) => {
     user,
     queryClient, // Adicionado queryClient ao retorno
     confirmDeleteWithOptions, // Adicionado a nova função de exclusão
+    markMonthPaid, // Adicionado aqui
   };
 };
