@@ -37,6 +37,8 @@ interface TransactionListProps {
   user: User | null;
   disableFilters?: boolean;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
+  filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
+  setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
 }
 
 const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE
@@ -59,12 +61,14 @@ export const TransactionList = ({
   user,
   disableFilters = false,
   markMonthPaid,
+  filterPaymentOptionId, // NOVO
+  setFilterPaymentOptionId, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>("all"); // Estado combinado para forma de pagamento/cartão
+  // Removido o estado local filterPaymentOptionId, agora ele vem das props
 
   const paymentFilterOptions = useMemo(() => {
     const options = [

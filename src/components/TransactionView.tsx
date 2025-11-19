@@ -17,12 +17,12 @@ interface TransactionViewProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
+  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagão' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  // filterCardId: string; // Removido
-  // setFilterCardId: (cardId: string) => void; // Removido
+  filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
+  setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -38,8 +38,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
   markMonthPaid, // Re-adicionado
-  // filterCardId, // Removido
-  // setFilterCardId, // Removido
+  filterPaymentOptionId, // NOVO
+  setFilterPaymentOptionId, // NOVO
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
   // const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Removido
@@ -60,8 +60,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
-      // filterCardId={filterCardId} // Removido
-      // setFilterCardId={setFilterCardId} // Removido
+      filterPaymentOptionId={filterPaymentOptionId} // NOVO
+      setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO
     />
   );
 

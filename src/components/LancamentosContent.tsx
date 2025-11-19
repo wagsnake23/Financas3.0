@@ -45,8 +45,8 @@ interface LancamentosContentProps {
   // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  // filterCardId: string; // Removido
-  // setFilterCardId: (cardId: string) => void; // Removido
+  filterPaymentOptionId: string; // NOVO: Receber o estado do filtro
+  setFilterPaymentOptionId: (cardId: string) => void; // NOVO: Receber o setter do filtro
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -66,8 +66,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // selectedMonth, // Removido
   onEditTransaction,
   markMonthPaid, // Re-adicionado
-  // filterCardId, // Removido
-  // setFilterCardId, // Removido
+  filterPaymentOptionId, // NOVO
+  setFilterPaymentOptionId, // NOVO
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -125,8 +125,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
-      // filterCardId={filterCardId} // Removido
-      // setFilterCardId={setFilterCardId} // Removido
+      filterPaymentOptionId={filterPaymentOptionId} // NOVO: Passar o estado do filtro
+      setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO: Passar o setter do filtro
     />
   );
 };

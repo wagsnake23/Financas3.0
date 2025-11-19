@@ -19,6 +19,8 @@ const isValidUuid = (uuid: string) => {
   return uuidRegex.test(uuid);
 };
 
+const UNSELECTED_VALUE = "unselected"; // Definir UNSELECTED_VALUE aqui também
+
 export const useLancamentosLogic = (
   user: User | null,
   authLoading: boolean
@@ -47,8 +49,10 @@ export const useLancamentosLogic = (
     return new Date();
   }, [searchParams]);
 
-  // Removido: const initialCardId = useMemo(() => { ... });
-  // Removido: const [filterCardId, setFilterCardId] = useState<string>(initialCardId);
+  const initialFilterCardId = useMemo(() => {
+    const cardIdParam = searchParams.get("cardId");
+    return cardIdParam && isValidUuid(cardIdParam) ? cardIdParam : UNSELECTED_VALUE;
+  }, [searchParams]);
 
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [editingTransaction, setEditingTransaction] =
@@ -65,6 +69,9 @@ export const useLancamentosLogic = (
     selectedRecurringTransactionForDelete,
     setSelectedRecurringTransactionForDelete,
   ] = useState<Transaction | null>(null);
+
+  // Novo estado para o filtro de forma de pagamento, inicializado com o cardId da URL
+  const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterCardId);
 
   const {
     monthlyFilteredTransactions,
@@ -766,7 +773,7 @@ export const useLancamentosLogic = (
     queryClient,
     confirmDeleteWithOptions,
     markMonthPaid,
-    // filterCardId, // Removido
-    // setFilterCardId, // Removido
+    filterPaymentOptionId, // Expor o novo estado
+    setFilterPaymentOptionId, // Expor o setter
   };
 };

@@ -42,6 +42,8 @@ const Lancamentos = () => {
     queryClient: logicQueryClient, // Receber o queryClient do hook
     confirmDeleteWithOptions, // Receber a nova função de exclusão
     markMonthPaid, // Re-adicionado
+    filterPaymentOptionId, // NOVO: Receber o estado do filtro
+    setFilterPaymentOptionId, // NOVO: Receber o setter do filtro
   } = useLancamentosLogic(user, authLoading); // Passando authLoading aqui
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -89,6 +91,8 @@ const Lancamentos = () => {
             queryClient={logicQueryClient} 
             confirmDeleteWithOptions={confirmDeleteWithOptions} // Passando para LancamentosContent
             markMonthPaid={markMonthPaid} // Re-adicionado
+            filterPaymentOptionId={filterPaymentOptionId} // NOVO: Passar o estado do filtro
+            setFilterPaymentOptionId={setFilterPaymentOptionId} // NOVO: Passar o setter do filtro
           />
         </main>
         <Footer isMobile={isMobile} />
