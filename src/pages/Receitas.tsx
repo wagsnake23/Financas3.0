@@ -326,7 +326,7 @@ export default function Receitas() {
                   className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only peer" />
+                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="peer" />
                     <Label
                       htmlFor="one-off-revenue-desktop"
                       className={cn(
@@ -340,7 +340,7 @@ export default function Receitas() {
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only peer" />
+                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="peer" />
                     <Label
                       htmlFor="recurring-revenue-desktop"
                       className={cn(
