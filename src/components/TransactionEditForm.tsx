@@ -377,6 +377,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       }
     }
 
+    console.log("DEBUG: finalRecurringPayload being sent:", finalRecurringPayload); // <--- NOVO LOG AQUI
+
     onUpdateTransaction(
       editingTransaction.id,
       type,
