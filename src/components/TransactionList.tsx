@@ -203,31 +203,45 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Botão "Ver Fatura" condicional */}
-        {isMobile && isValidUuid(filterPaymentOptionId) && (
-          <Button
-            variant="secondary"
-            onClick={handleViewInvoice}
-            className="w-full rounded-xl col-span-full mt-2" // Ocupa a linha inteira e tem margem superior
-          >
-            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-            Ver Fatura
-          </Button>
-        )}
-
-        {/* Campo Valor Total (movido para dentro do grid) */}
-        <div className={cn(
-          "p-2 rounded-xl text-right", // Removido 'flex-1'
-          isMobile && "py-1.5 px-3 col-span-2" // Ocupa 2 colunas em mobile
-        )}>
-          <p className="text-xs text-muted-foreground">Valor Total:</p> {/* Título alterado */}
-          <p className={cn(
-            "text-base font-bold",
-            accumulatedValue >= 0 ? "text-success" : "text-destructive"
+        {/* NOVO: Pagar Fatura Button (conditional) e Valor Total */}
+        {isMobile && isValidUuid(filterPaymentOptionId) ? (
+          <>
+            <Button
+              variant="secondary"
+              onClick={handleViewInvoice}
+              className="w-full rounded-xl col-span-1" // col-span-1 para mobile
+            >
+              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+              Pagar Fatura
+            </Button>
+            <div className={cn(
+              "p-2 rounded-xl text-right col-span-1", // col-span-1 para mobile
+              isMobile && "py-1.5 px-3"
+            )}>
+              <p className="text-xs text-muted-foreground">Valor Total:</p>
+              <p className={cn(
+                "text-base font-bold",
+                accumulatedValue >= 0 ? "text-success" : "text-destructive"
+              )}>
+                R$ {accumulatedValue.toFixed(2)}
+              </p>
+            </div>
+          </>
+        ) : (
+          // Se nenhum cartão selecionado ou não for mobile, Valor Total ocupa a largura total em mobile, ou sua largura normal em desktop
+          <div className={cn(
+            "p-2 rounded-xl text-right",
+            isMobile ? "py-1.5 px-3 col-span-2" : "col-span-1" // col-span-2 para mobile se não houver botão, col-span-1 para desktop
           )}>
-            R$ {accumulatedValue.toFixed(2)}
-          </p>
-        </div>
+            <p className="text-xs text-muted-foreground">Valor Total:</p>
+            <p className={cn(
+              "text-base font-bold",
+              accumulatedValue >= 0 ? "text-success" : "text-destructive"
+            )}>
+              R$ {accumulatedValue.toFixed(2)}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className={cn(
