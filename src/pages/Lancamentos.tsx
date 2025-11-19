@@ -29,7 +29,7 @@ const Lancamentos = () => {
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction, // Agora é para exclusão
-    monthlyFilteredTransactions: transactions,
+    monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
     isLoading,
@@ -82,7 +82,7 @@ const Lancamentos = () => {
             onDeleteTransaction={handleDeleteTransaction}
             allCategories={fetchedCategories}
             isMobile={isMobile}
-            monthlyFilteredTransactions={transactions}
+            monthlyFilteredTransactions={monthlyFilteredTransactions}
             cartoes={cartoes}
             user={user}
             onEditTransaction={handleEditTransaction}

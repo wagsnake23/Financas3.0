@@ -41,12 +41,12 @@ interface LancamentosContentProps {
   cartoes: Tables<'cartoes'>[];
   queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
   user: User | null;
-  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
+  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagão' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  filterCardId: string; // Novo: filtro de cartão
-  setFilterCardId: (cardId: string) => void; // Novo: função para atualizar o filtro de cartão
+  // filterCardId: string; // Removido
+  // setFilterCardId: (cardId: string) => void; // Removido
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -66,8 +66,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // selectedMonth, // Removido
   onEditTransaction,
   markMonthPaid, // Re-adicionado
-  filterCardId, // Novo
-  setFilterCardId, // Novo
+  // filterCardId, // Removido
+  // setFilterCardId, // Removido
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -125,8 +125,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
-      filterCardId={filterCardId} // Novo
-      setFilterCardId={setFilterCardId} // Novo
+      // filterCardId={filterCardId} // Removido
+      // setFilterCardId={setFilterCardId} // Removido
     />
   );
 };

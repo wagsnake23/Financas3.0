@@ -47,15 +47,10 @@ export const useLancamentosLogic = (
     return new Date();
   }, [searchParams]);
 
-  const initialCardId = useMemo(() => {
-    const cardIdParam = searchParams.get("cardId"); // Capturar o parâmetro cardId
-    console.log("useLancamentosLogic: initialCardId from URL param:", cardIdParam); // LOG ADICIONADO
-    return cardIdParam || "all";
-  }, [searchParams]);
+  // Removido: const initialCardId = useMemo(() => { ... });
+  // Removido: const [filterCardId, setFilterCardId] = useState<string>(initialCardId);
 
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
-  const [filterCardId, setFilterCardId] = useState<string>(initialCardId); // Novo estado para o filtro de cartão
-  console.log("useLancamentosLogic: filterCardId state initialized to:", filterCardId); // LOG ADICIONADO
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
   const [fullEditingRevenue, setFullEditingRevenue] =
@@ -771,7 +766,7 @@ export const useLancamentosLogic = (
     queryClient,
     confirmDeleteWithOptions,
     markMonthPaid,
-    filterCardId, // Retornar o novo estado
-    setFilterCardId, // Retornar a função para atualizar o novo estado
+    // filterCardId, // Removido
+    // setFilterCardId, // Removido
   };
 };

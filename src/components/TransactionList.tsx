@@ -36,8 +36,8 @@ interface TransactionListProps {
   user: User | null;
   disableFilters?: boolean;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
-  filterCardId: string; // Novo
-  setFilterCardId: (cardId: string) => void; // Novo
+  // filterCardId: string; // Removido
+  // setFilterCardId: (cardId: string) => void; // Removido
 }
 
 export const TransactionList = ({
@@ -51,40 +51,30 @@ export const TransactionList = ({
   user,
   disableFilters = false,
   markMonthPaid, // Re-adicionado
-  filterCardId, // Novo
-  setFilterCardId, // Novo
+  // filterCardId, // Removido
+  // setFilterCardId, // Removido
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
-  // const [filterCardId, setFilterCardId] = useState<string>("all"); // Removido, agora vem via props
   const [filterCategory, setFilterCategory] = useState<string>("all");
-
-  // LOGS ADICIONADOS AQUI
-  console.log("TransactionList: Props received - filterCardId:", filterCardId, "Cartões:", cartoes.map(c => ({ id: c.id, nome: c.nome })));
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
-    console.log("TransactionList: filterCardId current value in useMemo:", filterCardId); // Log adicionado
     
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
-      let matchesPaymentMethod = true; 
-      if (filterCardId !== "all") {
-        console.log(`  Checking transaction ID: ${transaction.id}, Type: ${transaction.type}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} against filterCardId: ${filterCardId}`); // Log adicionado
-        matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === filterCardId;
-      }
+      // A lógica de filtro de cartão de crédito foi removida daqui
+      const finalResult = matchesSearch && matchesType && matchesCategory;
 
-      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
-
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
+      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterCardId, isMobile]); // Adicionado filterCardId
+  }, [transactions, searchTerm, filterType, filterCategory, isMobile]); // Removido filterCardId das dependências
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -159,20 +149,7 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Novo filtro para Cartão de Crédito */}
-        <Select value={filterCardId} onValueChange={setFilterCardId} disabled={disableFilters}>
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Cartão de Crédito" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os cartões</SelectItem>
-            {cartoes.map((card) => (
-              <SelectItem key={card.id} value={card.id}>
-                {card.nome} (****{card.ultimos_digitos})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* O filtro para Cartão de Crédito foi removido daqui */}
       </div>
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
