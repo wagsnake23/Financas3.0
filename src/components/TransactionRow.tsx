@@ -47,15 +47,15 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   cartoes,
   isMobile,
   queryClient,
-  user, // This is the prop we need to check
+  user,
 }) => {
   console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "User prop:", user?.id, "Is user null?", !user);
 
-  const { markMonthPaid } = useRecurringEntries(user, new Date(), []); // Ensure user is passed here too
+  const { markMonthPaid } = useRecurringEntries(user, new Date(), []);
 
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
-    if (!category) return { name: categoryId, icon: null }; // Fallback if category not found
+    if (!category) return { name: categoryId, icon: null };
 
     if (category.parent_id) {
       const parent = allCategories.find(p => p.id === category.parent_id);
@@ -83,14 +83,19 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   const paymentMethodDisplay = getPaymentMethodDisplay(transaction.forma_pagamento, transaction.cartao_id);
 
   const handleToggleStatus = async () => {
-    console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user); // ADD THIS LOG
+    console.log("handleToggleStatus: User at start of function:", user?.id, "Is user null?", !user);
     if (!user) {
       toast.error("Usuário não autenticado. Por favor, faça login novamente.");
       return;
     }
 
-    // Handle recurring transactions status toggle
+    console.log("handleToggleStatus: Transaction:", transaction);
+    console.log("handleToggleStatus: isRecurring:", transaction.isRecurring);
+    console.log("handleToggleStatus: recurringEntryId:", transaction.recurringEntryId);
+
+    // Priority 1: Handle NEW recurring transactions (materialized from recurring_entries)
     if (transaction.isRecurring && transaction.recurringEntryId) {
+      console.log("handleToggleStatus: Handling as recurring transaction.");
       const transactionDate = new Date(transaction.date);
       const year = transactionDate.getFullYear();
       const month = transactionDate.getMonth() + 1;
@@ -103,29 +108,26 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           month,
           is_paid: isPaid,
         });
-        // Invalidate queries to refetch and re-materialize transactions
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate combined transactions
       } catch (error) {
-        // Error handled by mutation's onError
+        console.error("handleToggleStatus: Error marking recurring month paid:", error);
       }
-      return;
+      return; // EXIT HERE FOR ALL RECURRING TRANSACTIONS
     }
 
-    // --- Existing logic for non-recurring transactions ---
+    // Priority 2: Handle ONE-OFF transactions (legacy fixed are now filtered out in useTransactionsData)
+    console.log("handleToggleStatus: Handling as one-off transaction.");
     let error = null;
     const newStatus = transaction.status === "Recebida" ? "Pendente" : "Recebida";
     const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
     if (transaction.type === "income") {
-      let revenueIdToUse = transaction.id;
-      if (transaction.is_fixed) {
-        const lastHyphenIndex = transaction.id.lastIndexOf('-');
-        if (lastHyphenIndex !== -1) {
-          revenueIdToUse = transaction.id.substring(0, lastHyphenIndex);
-        }
-      }
+      // For one-off income, transaction.id is always the UUID of the 'receitas' entry.
+      const revenueIdToUse = transaction.id;
       if (!isValidUuid(revenueIdToUse)) {
+        // This should ideally not happen if data is clean and filtered correctly.
         toast.error("Erro (TOGGLE-INC-1): ID de receita inválido.");
         return;
       }
@@ -133,112 +135,43 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         .from("receitas")
         .update({ status: newStatus })
         .eq("id", revenueIdToUse)
-        .eq("user_id", user.id); // Use user.id directly
+        .eq("user_id", user.id);
       error = updateError;
 
       if (!error) {
-        queryClient.setQueryData(["revenues", user.id], (oldData: Tables<'receitas'>[] | undefined) => { // Use user.id directly
+        queryClient.setQueryData(["revenues", user.id], (oldData: Tables<'receitas'>[] | undefined) => {
           if (!oldData) return [];
           return oldData.map(r => r.id === revenueIdToUse ? { ...r, status: newStatus } : r);
         });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
       }
     } else if (transaction.type === "expense") {
+      // For one-off expense, transaction.id is always the ID of a 'despesas_parcelas' entry.
       const isPaid = newStatus === "Recebida";
       const dataPagamento = isPaid ? currentTimestamp : null;
+      const installmentId = transaction.id;
 
-      if (transaction.is_fixed) {
-        const lastHyphenIndex = transaction.id.lastIndexOf('-');
-        const parentDespesaId = transaction.id.substring(0, lastHyphenIndex);
-        const occurrenceNumber = parseInt(transaction.id.substring(lastHyphenIndex + 1));
+      if (!isValidUuid(installmentId)) {
+        // This should ideally not happen if data is clean and filtered correctly.
+        toast.error("Erro (TOGGLE-EXP-1): ID de parcela de despesa inválido.");
+        return;
+      }
 
-        if (!isValidUuid(parentDespesaId) || isNaN(occurrenceNumber)) {
-          toast.error("Erro (TOGGLE-FX-1): ID de ocorrência de despesa fixa inválido.");
-          return;
-        }
+      const { error: updateError } = await supabase
+        .from("despesas_parcelas")
+        .update({
+          pago: isPaid,
+          data_pagamento: dataPagamento,
+        })
+        .eq("id", installmentId);
+      error = updateError;
 
-        const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || []; // Use user.id directly
-        const existingInstallment = currentExpenseInstallments.find(p => p.despesa_id === parentDespesaId && p.numero_parcela === occurrenceNumber);
-
-        if (existingInstallment) {
-          // Update existing installment in DB
-          const { error: updateError } = await supabase
-            .from("despesas_parcelas")
-            .update({
-              pago: isPaid,
-              data_pagamento: dataPagamento,
-            })
-            .eq("id", existingInstallment.id);
-          error = updateError;
-
-          if (!error) {
-            // Update cache directly
-            queryClient.setQueryData(["expenseInstallments", user.id], (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[] | undefined) => { // Use user.id directly
-              if (!oldData) return [];
-              return oldData.map(p => p.id === existingInstallment.id ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
-            });
-          }
-        } else {
-          // Insert new installment in DB
-          const parentDespesa = queryClient.getQueryData<Tables<'despesas'>[]>(["expenses", user.id])?.find(d => d.id === parentDespesaId); // Use user.id directly
-          if (!parentDespesa) {
-            toast.error("Erro (TOGGLE-FX-2): Despesa fixa pai não encontrada.");
-            return;
-          }
-
-          const firstInstallmentVencimento = currentExpenseInstallments.find(p => p.despesa_id === parentDespesaId && p.numero_parcela === 1)?.vencimento;
-          let baseRecurrenceDate: Date;
-          if (firstInstallmentVencimento) {
-            const [year, month, day] = firstInstallmentVencimento.split('-').map(Number);
-            baseRecurrenceDate = new Date(year, month - 1, day); // Explicitly local date
-          } else {
-            baseRecurrenceDate = new Date(parentDespesa.created_at); // created_at is ISO string, new Date() handles it well
-          }
-          
-          let occurrenceDate = new Date(baseRecurrenceDate);
-          if (parentDespesa.recurrence_frequency === "monthly") {
-            occurrenceDate = addMonths(baseRecurrenceDate, occurrenceNumber - 1);
-          } else if (parentDespesa.recurrence_frequency === "quarterly") {
-            occurrenceDate = addQuarters(baseRecurrenceDate, occurrenceNumber - 1);
-          } else if (parentDespesa.recurrence_frequency === "annually") {
-            occurrenceDate = addYears(baseRecurrenceDate, occurrenceNumber - 1);
-          }
-          const formattedOccurrenceDate = format(occurrenceDate, "yyyy-MM-dd");
-
-          const { data: newInstallmentData, error: insertError } = await supabase
-            .from("despesas_parcelas")
-            .insert({
-              despesa_id: parentDespesa.id, // Use parentDespesa.id directly
-              numero_parcela: occurrenceNumber,
-              valor_parcela: parentDespesa.valor_total,
-              vencimento: formattedOccurrenceDate,
-              pago: isPaid,
-              data_pagamento: dataPagamento,
-            })
-            .select()
-            .single();
-          error = insertError;
-
-          if (!error && newInstallmentData) {
-            const newInstallmentEntry = {
-              ...newInstallmentData,
-              despesas: {
-                id: parentDespesa.id,
-                categoria_id: parentDespesa.categoria_id,
-                user_id: parentDespesa.user_id,
-                descricao: parentDespesa.descricao,
-                forma_pagamento: parentDespesa.forma_pagamento,
-                tipo_pagamento: parentDespesa.tipo_pagamento,
-                cartao_id: parentDespesa.cartao_id,
-                is_fixed: parentDespesa.is_fixed,
-                recurrence_frequency: parentDespesa.recurrence_frequency,
-                recurrence_installments_count: parentDespesa.recurrence_installments_count,
-              }
-            };
-            queryClient.setQueryData(["expenseInstallments", user.id], (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[] | undefined) => { // Use user.id directly
-              return oldData ? [...oldData, newInstallmentEntry] : [newInstallmentEntry];
-            });
-          }
-        }
+      if (!error) {
+        queryClient.setQueryData(["expenseInstallments", user.id], (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[] | undefined) => {
+          if (!oldData) return [];
+          return oldData.map(p => p.id === installmentId ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
+        });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
       }
     }
   

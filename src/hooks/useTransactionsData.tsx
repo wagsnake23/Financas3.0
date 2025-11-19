@@ -46,7 +46,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data;
+      return data.filter(r => !r.is_fixed); // Filtrar receitas fixas legadas
     },
     enabled: !!user?.id,
   });
@@ -63,7 +63,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
-      return data;
+      return data.filter(p => !p.despesas?.is_fixed); // Filtrar despesas fixas legadas
     },
     enabled: !!user?.id,
   });
