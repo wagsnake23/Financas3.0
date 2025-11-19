@@ -150,7 +150,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       type,
       title: "Lançamento Recorrente", // Título padrão
       value: value as number, // Usar o valor como number
-      category_id: categoryId,
+      category_id: categoryId === UNSELECTED_VALUE ? null : categoryId, // <--- ALTERADO AQUI
       due_day: parseInt(dueDay),
       frequency,
       start_date: format(startDate, "yyyy-MM-dd"),
@@ -174,7 +174,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           canceled: false,
           note: "Marcado como pago na criação da recorrência",
           override_value: value, // Usar o valor original
-          override_category_id: categoryId,
+          override_category_id: categoryId === UNSELECTED_VALUE ? null : categoryId, // <--- ALTERADO AQUI
           override_due_date: format(startDate, "yyyy-MM-dd"), // Usar a data de início como data de vencimento da exceção
         };
 
