@@ -16,6 +16,7 @@ export interface Transaction {
   totalInstallments?: number; // Novo campo para o total de parcelas
   forma_pagamento?: string | null; // Novo campo para a forma de pagamento
   cartao_id?: string | null; // Novo campo para o ID do cartão (se for pagamento com cartão)
+  despesa_id?: string; // ID da despesa principal para parcelas
 
   // Novos campos para o sistema de recorrência
   recurringEntryId?: string; // ID do registro mestre de recorrência

@@ -41,6 +41,7 @@ const Lancamentos = () => {
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient, // Receber o queryClient do hook
+    confirmDeleteWithOptions, // Receber a nova função de exclusão
   } = useLancamentosLogic(user);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -81,7 +82,8 @@ const Lancamentos = () => {
             rawExpenseInstallments={expenseInstallments}
             // selectedMonth={selectedMonth} // Removido
             onEditTransaction={handleEditTransaction}
-            queryClient={logicQueryClient}
+            // Passando o queryClient aqui
+            queryClient={logicQueryClient} 
           />
         </main>
         <Footer isMobile={isMobile} />
@@ -96,10 +98,14 @@ const Lancamentos = () => {
         /> */}
         <DeleteRecurrenceModal
           isOpen={isDeleteRecurrenceModalOpen}
-          onClose={() => setIsDeleteRecurrenceModalOpen(false)}
+          onClose={() => {
+            setIsDeleteRecurrenceModalOpen(false);
+            handleCancelEdit(); // Fechar o formulário de edição quando o modal de exclusão fecha
+          }}
           transaction={selectedRecurringTransaction}
           isMobile={isMobile}
-          fetchedCategories={fetchedCategories}
+          // fetchedCategories={fetchedCategories} // Removido
+          onConfirmDeleteWithOptions={confirmDeleteWithOptions} // Passar a nova função
         />
       </div>
     </ProtectedRoute>

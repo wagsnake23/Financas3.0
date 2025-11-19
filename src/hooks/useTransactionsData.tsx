@@ -135,6 +135,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
         totalInstallments: totalForNonFixed,
         forma_pagamento: parentDespesa?.forma_pagamento,
         cartao_id: parentDespesa?.cartao_id,
+        despesa_id: parentDespesa?.id, // Adicionado despesa_id aqui
       });
     });
 
