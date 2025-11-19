@@ -95,6 +95,10 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
     const transactions: MaterializedRecurringTransaction[] = [];
 
+    // Define currentYear and currentMonthIndex here
+    const currentYear = currentMonth.getFullYear();
+    const currentMonthIndex = currentMonth.getMonth() + 1; // getMonth() is 0-indexed
+
     recurringEntries.forEach(entry => {
       console.log(`[DEBUG] Processing recurring entry: ${entry.id} - ${entry.title}`);
       console.log(`[DEBUG]   Master due_day: ${entry.due_day}`);
