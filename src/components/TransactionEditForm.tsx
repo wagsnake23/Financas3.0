@@ -44,7 +44,20 @@ interface TransactionEditFormProps {
     type: TransactionType,
     updatedTransaction: Omit<Transaction, "id">,
     editOption?: EditOption, // Adicionado para recorrência
-    preserveExceptions?: boolean // Adicionado para recorrência global
+    preserveExceptions?: boolean, // Adicionado para recorrência global
+    recurringData?: {
+      title: string;
+      value: number;
+      categoryId: string | null;
+      dueDay: number;
+      frequency: Enums<'recurring_frequency'>;
+      startDate: string | null;
+      endDate: string | null;
+      recurringStatus: Enums<'recurring_status'>;
+      note: string | null;
+      overrideDueDate: string | null;
+      isPaid: boolean;
+    }
   ) => void;
   onCancelEdit: () => void;
   onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
@@ -73,7 +86,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ReceitaStatus>('Pendente'); // Only for income
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  // REMOVIDO: [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Adicionado estado de loading
 
   // Recurring specific states
@@ -197,6 +210,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     }
   }, [editingTransaction, isRecurringTransaction, recurringTransaction]);
 
+  // REMOVIDO: useEffect para fechar o AlertDialog de confirmação de exclusão
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -281,26 +296,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setShowGlobalConfirmDialog(false);
   };
 
+  // MODIFICADO: handleDeleteClick agora chama diretamente onDeleteTransaction
   const handleDeleteClick = () => {
     if (editingTransaction) {
-      setIsConfirmDeleteOpen(true);
-    }
-  };
-
-  const confirmDelete = () => {
-    if (editingTransaction) {
       onDeleteTransaction(editingTransaction.id, editingTransaction.type, editingTransaction.is_fixed);
-      setIsConfirmDeleteOpen(false);
     }
   };
 
-  const deleteDialogTitle = editingTransaction?.is_fixed || isRecurringTransaction
-    ? "Excluir Lançamento Recorrente?"
-    : "Excluir Lançamento?";
-  
-  const deleteDialogDescription = editingTransaction?.is_fixed || isRecurringTransaction
-    ? "Esta ação não pode ser desfeita. Isso removerá a regra de recorrência e todas as ocorrências futuras deste lançamento."
-    : "Esta ação não pode ser desfeita. Isso excluirá permanentemente este lançamento.";
+  // REMOVIDO: confirmDelete function
+  // REMOVIDO: deleteDialogTitle e deleteDialogDescription
 
   const formContent = (
     <>
@@ -498,7 +502,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <Button
               type="button"
               variant="destructive"
-              onClick={handleDeleteClick}
+              onClick={handleDeleteClick} // Agora chama diretamente handleDeleteClick
               className={cn("w-full", !isMobile && "md:flex-1", isMobile && "h-9 text-sm")}
               disabled={loading}
             >
@@ -517,23 +521,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         </div>
       </form>
 
-      {/* AlertDialog for Delete Confirmation */}
-      <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{deleteDialogTitle}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {deleteDialogDescription}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} disabled={loading}>
-              Excluir
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* REMOVIDO: AlertDialog for Delete Confirmation */}
 
       {/* AlertDialog for Global Recurring Update Confirmation */}
       <AlertDialog open={showGlobalConfirmDialog} onOpenChange={setShowGlobalConfirmDialog}>
