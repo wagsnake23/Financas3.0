@@ -13,9 +13,13 @@ DECLARE
     v_override_value numeric;
     v_override_due_date date;
     v_note text;
+    v_paid boolean;
+    v_canceled boolean;
 BEGIN
-    -- Extrai e sanitiza valores do payload
+    -- Extrai e sanitiza valores do payload para variáveis locais
     v_note := NULLIF(p_payload->>'note', '');
+    v_paid := COALESCE((p_payload->>'paid')::boolean, false);
+    v_canceled := COALESCE((p_payload->>'canceled')::boolean, false);
     
     -- Lida com override_value, convertendo string vazia para NULL antes do cast
     BEGIN
@@ -42,6 +46,7 @@ BEGIN
         v_override_due_date := NULL; -- Define como NULL se o cast falhar (ex: string de data inválida)
     END;
 
+    -- Tenta inserir a exceção. Se houver conflito (já existe uma exceção para o mês/ano), atualiza.
     INSERT INTO public.recurring_entry_exceptions (
         recurring_id,
         year,
@@ -56,20 +61,24 @@ BEGIN
         p_recurring_id,
         p_year,
         p_month,
-        COALESCE((p_payload->>'paid')::boolean, false),
-        COALESCE((p_payload->>'canceled')::boolean, false),
+        v_paid,
+        v_canceled,
         v_note,
         v_override_value,
         v_override_category_id,
         v_override_due_date
     )
     ON CONFLICT (recurring_id, year, month) DO UPDATE SET
-        paid = COALESCE((p_payload->>'paid')::boolean, recurring_entry_exceptions.paid),
-        canceled = COALESCE((p_payload->>'canceled')::boolean, recurring_entry_exceptions.canceled),
-        note = COALESCE(v_note, recurring_entry_exceptions.note),
-        override_value = COALESCE(v_override_value, recurring_entry_exceptions.override_value),
-        override_category_id = COALESCE(v_override_category_id, recurring_entry_exceptions.override_category_id),
-        override_due_date = COALESCE(v_override_due_date, recurring_entry_exceptions.override_due_date),
+        -- Para cada campo, usa o novo valor (v_variavel) se ele não for NULL,
+        -- caso contrário, mantém o valor existente na linha (EXCLUDED.coluna).
+        -- Isso garante que apenas os campos fornecidos no payload sejam atualizados,
+        -- e que os tipos sejam sempre consistentes.
+        paid = v_paid, -- paid e canceled sempre vêm no payload, então não precisam de COALESCE com EXCLUDED
+        canceled = v_canceled,
+        note = CASE WHEN v_note IS NOT NULL THEN v_note ELSE EXCLUDED.note END,
+        override_value = CASE WHEN v_override_value IS NOT NULL THEN v_override_value ELSE EXCLUDED.override_value END,
+        override_category_id = CASE WHEN v_override_category_id IS NOT NULL THEN v_override_category_id ELSE EXCLUDED.override_category_id END,
+        override_due_date = CASE WHEN v_override_due_date IS NOT NULL THEN v_override_due_date ELSE EXCLUDED.override_due_date END,
         updated_at = now()
     RETURNING * INTO v_result;
 
