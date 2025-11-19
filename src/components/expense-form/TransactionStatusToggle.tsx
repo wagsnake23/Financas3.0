@@ -20,14 +20,14 @@ export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = (
       <RadioGroup
         value={isPaid ? "paid" : "pending"}
         onValueChange={(value) => setIsPaid(value === "paid")}
-        className="flex items-center justify-center gap-4" // Adicionado justify-center para centralizar
+        className="flex items-center justify-center gap-6" // Aumentado o gap de 4 para 6
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="paid" id="status-paid" className={cn(isMobile && "h-3.5 w-3.5")} />
           <Label
             htmlFor="status-paid"
             className={cn(
-              "text-sm font-medium text-muted-foreground", // Cor padrão quando não selecionado
+              "text-sm font-normal text-muted-foreground", // Alterado para font-normal
               isMobile && "text-xs",
               "data-[state=checked]:text-success data-[state=checked]:font-bold" // Verde e negrito quando selecionado
             )}
@@ -40,7 +40,7 @@ export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = (
           <Label
             htmlFor="status-pending"
             className={cn(
-              "text-sm font-medium text-muted-foreground", // Cor padrão quando não selecionado
+              "text-sm font-normal text-muted-foreground", // Alterado para font-normal
               isMobile && "text-xs",
               "data-[state=checked]:text-destructive data-[state=checked]:font-bold" // Vermelho e negrito quando selecionado
             )}
