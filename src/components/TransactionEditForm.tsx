@@ -8,35 +8,40 @@ import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
-import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types"; // Importar TablesUpdate
+import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types";
 import { MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { CurrencyInput } from "@/components/ui/currency-input";
 
-// Importar os novos componentes modulares
 import { EditOptionSelector } from "./edit-installment-modal/EditOptionSelector";
 import { CommonFields } from "./edit-installment-modal/CommonFields";
 import { ThisMonthFields } from "./edit-installment-modal/ThisMonthFields";
 import { RecurringMasterFields } from "./edit-installment-modal/RecurringMasterFields";
-import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields"; // Novo
-import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions"; // Novo
-import { StatusToggleButton } from "./StatusToggleButton"; // NEW IMPORT
+import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
+import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
+import { StatusToggleButton } from "./StatusToggleButton";
 
-type ReceitaStatus = Database['public']['Enums']['receita_status'];
+type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 type EditOption = "thisMonth" | "thisMonthForward" | "all";
 
 interface TransactionEditFormProps {
-  editingTransaction: Transaction | null; // Pode ser Transaction ou MaterializedRecurringTransaction
+  editingTransaction: Transaction | null;
   onUpdateTransaction: (
     id: string,
     type: TransactionType,
     updatedTransaction: Omit<Transaction, "id">,
-    editOption?: EditOption, // Adicionado para recorrência
-    preserveExceptions?: boolean, // Adicionado para recorrência global
-    recurringData?: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> // Tipo flexível
+    editOption?: EditOption,
+    preserveExceptions?: boolean,
+    recurringData?:
+      | TablesUpdate<"recurring_entries">
+      | TablesUpdate<"recurring_entry_exceptions">
   ) => void;
   onCancelEdit: () => void;
-  onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
-  allCategories: AppCategory[]; // Agora contém apenas subcategorias
+  onDeleteTransaction: (
+    id: string,
+    type: TransactionType,
+    isFixed?: boolean
+  ) => void;
+  allCategories: AppCategory[];
   isMobile: boolean;
 }
 
@@ -47,116 +52,147 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   onUpdateTransaction,
   onCancelEdit,
   onDeleteTransaction,
-  allCategories, // Usar allCategories diretamente (já são subcategorias)
+  allCategories,
   isMobile,
 }) => {
-  const isRecurringTransaction = (editingTransaction as MaterializedRecurringTransaction)?.isRecurring;
-  const recurringTransaction = editingTransaction as MaterializedRecurringTransaction;
+  const isRecurringTransaction = (
+    editingTransaction as MaterializedRecurringTransaction
+  )?.isRecurring;
+  const recurringTransaction =
+    editingTransaction as MaterializedRecurringTransaction;
 
-  // Form states
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<ReceitaStatus>('Pendente'); // For one-off income, kept for consistency
+  const [status, setStatus] = useState<ReceitaStatus>("Pendente");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Recurring specific states
   const [editOption, setEditOption] = useState<EditOption>("thisMonth");
   const [title, setTitle] = useState("");
   const [dueDay, setDueDay] = useState("1");
-  const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
+  const [frequency, setFrequency] =
+    useState<Enums<"recurring_frequency">>("monthly");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [recurringStatus, setRecurringStatus] = useState<Enums<'recurring_status'>>("active");
+  const [recurringStatus, setRecurringStatus] =
+    useState<Enums<"recurring_status">>("active");
   const [note, setNote] = useState("");
-  const [overrideDueDate, setOverrideDueDate] = useState<Date | undefined>(undefined);
-  const [isOverrideDueDateCalendarOpen, setIsOverrideDueDateCalendarOpen] = useState(false);
+  const [overrideDueDate, setOverrideDueDate] = useState<Date | undefined>(
+    undefined
+  );
+  const [isOverrideDueDateCalendarOpen, setIsOverrideDueDateCalendarOpen] =
+    useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
-  const [isPaid, setIsPaid] = useState(false); // For one-off expenses and recurring exceptions
+  const [isPaid, setIsPaid] = useState(false);
   const [showGlobalConfirmDialog, setShowGlobalConfirmDialog] = useState(false);
   const [preserveExceptions, setPreserveExceptions] = useState(true);
 
-  // Filter categories based on transaction type
-  // `allCategories` já são as subcategorias filtradas pelos hooks de dados.
-  // Não precisamos mais filtrar por `parent_id` aqui, apenas por tipo de transação.
   const filteredCategories = useMemo(() => {
-    const currentType = isRecurringTransaction ? (recurringTransaction.type === 'income' ? 'receita' : 'despesa') : type;
+    const currentType = isRecurringTransaction
+      ? recurringTransaction.type === "income"
+        ? "receita"
+        : "despesa"
+      : type;
     let baseCategories: AppCategory[] = [];
 
     if (currentType === "receita" || currentType === "income") {
-      baseCategories = allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+      baseCategories = allCategories.filter(
+        (cat) => cat.parent_id === "receitas_e_investimentos"
+      );
     } else {
-      baseCategories = allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
+      baseCategories = allCategories.filter(
+        (cat) => cat.parent_id !== "receitas_e_investimentos"
+      );
     }
 
-    // Ensure the currently selected category is always available in the options
-    if (editingTransaction && editingTransaction.category && !baseCategories.some(cat => cat.id === editingTransaction.category)) {
-      const currentCategory = allCategories.find(cat => cat.id === editingTransaction.category);
-      if (currentCategory) {
+    if (
+      editingTransaction &&
+      editingTransaction.category &&
+      !baseCategories.some((cat) => cat.id === editingTransaction.category)
+    ) {
+      const currentCategory = allCategories.find(
+        (cat) => cat.id === editingTransaction.category
+      );
+      if (currentCategory)
         baseCategories = [currentCategory, ...baseCategories];
-      }
     }
+
     return baseCategories;
-  }, [type, allCategories, isRecurringTransaction, recurringTransaction, editingTransaction]); // Adicionado editingTransaction como dependência
+  }, [
+    type,
+    allCategories,
+    isRecurringTransaction,
+    recurringTransaction,
+    editingTransaction,
+  ]);
 
   const getCategoryDisplayName = (catId: string) => {
-    const category = allCategories.find(cat => cat.id === catId);
-    if (!category) return catId;
-
-    // Como agora só temos subcategorias, não precisamos mais da hierarquia "Pai > Filho"
-    return category.nome;
+    const category = allCategories.find((cat) => cat.id === catId);
+    return category ? category.nome : catId;
   };
-
   useEffect(() => {
     if (editingTransaction) {
       setType(editingTransaction.type);
       setAmount(editingTransaction.amount);
-      
-      const [year, month, day] = editingTransaction.date.split('-').map(Number);
+
+      const [year, month, day] = editingTransaction.date.split("-").map(Number);
       setDate(new Date(year, month - 1, day));
 
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
-      
       setDescription(editingTransaction.description || "");
 
-      let initialStatus: ReceitaStatus = 'Pendente';
-      const validStatuses: ReceitaStatus[] = ['Prevista', 'Pendente', 'Recebida', 'Cancelada'];
-      if (editingTransaction.status && validStatuses.includes(editingTransaction.status)) {
-        initialStatus = editingTransaction.status;
-      }
-      setStatus(initialStatus); // Set status for one-off income
+      const validStatuses: ReceitaStatus[] = [
+        "Prevista",
+        "Pendente",
+        "Recebida",
+        "Cancelada",
+      ];
+      const initialStatus =
+        editingTransaction.status &&
+        validStatuses.includes(editingTransaction.status)
+          ? editingTransaction.status
+          : "Pendente";
+      setStatus(initialStatus);
 
       if (isRecurringTransaction) {
         setTitle(recurringTransaction.recurringMasterTitle);
         setAmount(recurringTransaction.originalValue);
         setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE);
         setDueDay(recurringTransaction.originalDueDate?.toString() || "1");
-        setFrequency(recurringTransaction.recurringMasterFrequency || "monthly");
+        setFrequency(
+          recurringTransaction.recurringMasterFrequency || "monthly"
+        );
         setStartDate(parseISO(recurringTransaction.recurringMasterStartDate));
-        setEndDate(recurringTransaction.recurringMasterEndDate ? parseISO(recurringTransaction.recurringMasterEndDate) : undefined);
-        setRecurringStatus(recurringTransaction.recurringMasterStatus || "active");
-        
+        setEndDate(
+          recurringTransaction.recurringMasterEndDate
+            ? parseISO(recurringTransaction.recurringMasterEndDate)
+            : undefined
+        );
+        setRecurringStatus(
+          recurringTransaction.recurringMasterStatus || "active"
+        );
+
         if (recurringTransaction.isException) {
           const match = recurringTransaction.description.match(/\(([^)]+)\)$/);
           setNote(match ? match[1] : "");
           setOverrideDueDate(parseISO(recurringTransaction.date));
-          setIsPaid(recurringTransaction.status === 'Recebida'); // Set isPaid for recurring exception
-          setAmount(recurringTransaction.amount); // Override amount for exception
-          setCategory(recurringTransaction.category || UNSELECTED_VALUE); // Override category for exception
+          setIsPaid(recurringTransaction.status === "Recebida");
+          setAmount(recurringTransaction.amount);
+          setCategory(recurringTransaction.category || UNSELECTED_VALUE);
         } else {
           setNote("");
           setOverrideDueDate(parseISO(editingTransaction.date));
-          setIsPaid(editingTransaction.status === 'Recebida'); // Set isPaid for recurring occurrence (no exception yet)
+          setIsPaid(editingTransaction.status === "Recebida");
         }
+
         setEditOption("thisMonth");
         setPreserveExceptions(true);
       } else {
-        // For one-off transactions, determine initial isPaid state
-        setIsPaid(editingTransaction.status === 'Recebida'); // Use transaction.status for one-off
+        setIsPaid(editingTransaction.status === "Recebida");
         setTitle("");
         setDueDay("1");
         setFrequency("monthly");
@@ -165,18 +201,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         setRecurringStatus("active");
         setNote("");
         setOverrideDueDate(undefined);
-        // isPaid already set above
         setEditOption("thisMonth");
         setPreserveExceptions(true);
       }
     } else {
-      // Reset form when not editing
       setType("expense");
       setAmount(undefined);
       setDate(new Date());
       setCategory(UNSELECTED_VALUE);
       setDescription("");
-      setStatus('Pendente');
+      setStatus("Pendente");
       setTitle("");
       setDueDay("1");
       setFrequency("monthly");
@@ -185,11 +219,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setRecurringStatus("active");
       setNote("");
       setOverrideDueDate(undefined);
-      setIsPaid(false); // Reset
+      setIsPaid(false);
       setEditOption("thisMonth");
       setPreserveExceptions(true);
     }
-  }, [editingTransaction, isRecurringTransaction, recurringTransaction, allCategories]); // Adicionado allCategories como dependência
+  }, [
+    editingTransaction,
+    isRecurringTransaction,
+    recurringTransaction,
+    allCategories,
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,7 +236,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (!editingTransaction) return;
 
     if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) {
-      toast.error("Preencha todos os campos obrigatórios (Valor e Subcategoria).");
+      toast.error(
+        "Preencha todos os campos obrigatórios (Valor e Subcategoria)."
+      );
       return;
     }
 
@@ -206,11 +247,18 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         toast.error("O título do lançamento recorrente é obrigatório.");
         return;
       }
+
       if (parseInt(dueDay) < 1 || parseInt(dueDay) > 31) {
         toast.error("O dia de vencimento deve ser entre 1 e 31.");
         return;
       }
-      if (endDate && startDate && endDate < startDate) {
+
+      if (
+        (editOption === "thisMonthForward" || editOption === "all") &&
+        endDate &&
+        startDate &&
+        endDate < startDate
+      ) {
         toast.error("A data final não pode ser anterior à data inicial.");
         return;
       }
@@ -223,63 +271,75 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     performUpdate();
   };
-
   const performUpdate = () => {
     if (!editingTransaction) return;
     setLoading(true);
 
-    const formattedDate = date 
-      ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}` 
+    const formattedDate = date
+      ? `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`
       : "";
 
-    // Determine the status to pass based on transaction type and isPaid state
-    let finalStatus: ReceitaStatus = 'Pendente';
-    if (isPaid) {
-      finalStatus = 'Recebida';
-    } else if (editingTransaction.status === 'Cancelada') { // Preserve canceled status if it was already canceled
-      finalStatus = 'Cancelada';
-    } else if (editingTransaction.status === 'Prevista' && !isPaid) { // Preserve Prevista if not explicitly paid
-      finalStatus = 'Prevista';
-    }
+    let finalStatus: ReceitaStatus = isPaid
+      ? "Recebida"
+      : editingTransaction.status === "Cancelada"
+      ? "Cancelada"
+      : editingTransaction.status === "Prevista"
+      ? "Prevista"
+      : "Pendente";
 
     const updatedTransaction: Omit<Transaction, "id"> = {
       type,
       amount: amount as number,
       date: formattedDate,
-      category: category === UNSELECTED_VALUE ? null : category, // Convert UNSELECTED_VALUE to null
+      category: category === UNSELECTED_VALUE ? null : category,
       description,
-      status: finalStatus, // Use finalStatus for one-off income/expense
+      status: finalStatus,
       is_fixed: editingTransaction.is_fixed,
       recurrence_frequency: editingTransaction.recurrence_frequency,
-      recurrence_installments_count: editingTransaction.recurrence_installments_count,
+      recurrence_installments_count:
+        editingTransaction.recurrence_installments_count,
     };
 
-    let finalRecurringPayload: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> | undefined;
+    let finalRecurringPayload:
+      | TablesUpdate<"recurring_entries">
+      | TablesUpdate<"recurring_entry_exceptions">
+      | undefined;
 
     if (isRecurringTransaction) {
-        if (editOption === "thisMonth") {
-            finalRecurringPayload = {
-                override_value: amount === undefined ? null : amount,
-                override_category_id: category === UNSELECTED_VALUE ? null : category, // Convert UNSELECTED_VALUE to null
-                override_due_date: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
-                note: note.trim() || null,
-                paid: isPaid, // Use local isPaid state
-                canceled: false,
-            } as TablesUpdate<'recurring_entry_exceptions'>;
-        } else { // thisMonthForward or all
-            finalRecurringPayload = {
-                title: title.trim(),
-                value: amount === undefined ? null : amount,
-                category_id: category === UNSELECTED_VALUE ? null : category, // Convert UNSELECTED_VALUE to null
-                due_day: parseInt(dueDay),
-                frequency,
-                start_date: startDate ? format(startDate, "yyyy-MM-dd") : null,
-                end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
-                status: recurringStatus,
-                forma_pagamento: recurringTransaction.forma_pagamento,
-                cartao_id: recurringTransaction.cartao_id,
-            } as TablesUpdate<'recurring_entries'>;
+      if (editOption === "thisMonth") {
+        finalRecurringPayload = {
+          override_value: amount === undefined ? null : amount,
+          override_category_id: category === UNSELECTED_VALUE ? null : category,
+          override_due_date: overrideDueDate
+            ? format(overrideDueDate, "yyyy-MM-dd")
+            : null,
+          note: note.trim() || null,
+          paid: isPaid,
+          canceled: false,
+        } as TablesUpdate<"recurring_entry_exceptions">;
+      } else {
+        if (editOption === "thisMonthForward") {
+          const year = date!.getFullYear();
+          const month = date!.getMonth() + 1;
+          const newStart = new Date(year, month - 1, 1);
+          setStartDate(newStart);
         }
+
+        finalRecurringPayload = {
+          title: title.trim(),
+          value: amount === undefined ? null : amount,
+          category_id: category === UNSELECTED_VALUE ? null : category,
+          due_day: parseInt(dueDay),
+          frequency,
+          start_date: startDate ? format(startDate, "yyyy-MM-dd") : null,
+          end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
+          status: recurringStatus,
+          forma_pagamento: recurringTransaction.forma_pagamento,
+          cartao_id: recurringTransaction.cartao_id,
+        } as TablesUpdate<"recurring_entries">;
+      }
     }
 
     onUpdateTransaction(
@@ -287,16 +347,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       type,
       updatedTransaction,
       isRecurringTransaction ? editOption : undefined,
-      isRecurringTransaction && editOption === "all" ? preserveExceptions : undefined,
+      isRecurringTransaction && editOption === "all"
+        ? preserveExceptions
+        : undefined,
       finalRecurringPayload
     );
+
     setLoading(false);
     setShowGlobalConfirmDialog(false);
   };
 
   const handleDeleteClick = () => {
     if (editingTransaction) {
-      onDeleteTransaction(editingTransaction.id, editingTransaction.type, editingTransaction.is_fixed);
+      onDeleteTransaction(
+        editingTransaction.id,
+        editingTransaction.type,
+        editingTransaction.is_fixed
+      );
     }
   };
 
@@ -304,9 +371,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <div className="flex items-center justify-between mb-6">
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-          {isRecurringTransaction ? "Editar Lançamento Recorrente" : "Editar Lançamento"}
+          {isRecurringTransaction
+            ? "Editar Lançamento Recorrente"
+            : "Editar Lançamento"}
         </h2>
-        <Button variant="ghost" size="icon" onClick={onCancelEdit} className={cn(isMobile && "h-8 w-8")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onCancelEdit}
+          className={cn(isMobile && "h-8 w-8")}
+        >
           <X className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
         </Button>
       </div>
@@ -320,6 +394,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               isMobile={isMobile}
               loading={loading}
             />
+
             <div className="space-y-4 mt-4">
               <CommonFields
                 title={title}
@@ -328,28 +403,31 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 setValue={setAmount}
                 categoryId={category}
                 setCategoryId={setCategory}
-                filteredCategories={filteredCategories} // Já são subcategorias
+                filteredCategories={filteredCategories}
                 getCategoryDisplayName={getCategoryDisplayName}
                 loading={loading}
                 isMobile={isMobile}
                 hideTitle={editOption === "thisMonth"}
                 categoryLabel="Subcategoria"
               />
-
               {editOption === "thisMonth" && (
                 <ThisMonthFields
                   overrideDueDate={overrideDueDate}
                   setOverrideDueDate={setOverrideDueDate}
                   isOverrideDueDateCalendarOpen={isOverrideDueDateCalendarOpen}
-                  setIsOverrideDueDateCalendarOpen={setIsOverrideDueDateCalendarOpen}
+                  setIsOverrideDueDateCalendarOpen={
+                    setIsOverrideDueDateCalendarOpen
+                  }
                   note={note}
                   setNote={setNote}
-                  isPaid={isPaid} // Pass isPaid
-                  setIsPaid={setIsPaid} // Pass setIsPaid
+                  isPaid={isPaid}
+                  setIsPaid={setIsPaid}
                   loading={loading}
                   isMobile={isMobile}
-                  transactionType={type} // Pass transactionType
-                  currentTransactionStatus={editingTransaction?.status || 'Pendente'} // Pass current status
+                  transactionType={type}
+                  currentTransactionStatus={
+                    editingTransaction?.status || "Pendente"
+                  }
                 />
               )}
 
@@ -389,17 +467,17 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setCategory={setCategory}
             description={description}
             setDescription={setDescription}
-            status={status} // Still pass status for one-off income, but it will be derived from isPaid
-            setStatus={setStatus} // Still pass setStatus, but it will be derived from isPaid
+            status={status}
+            setStatus={setStatus}
             isCalendarOpen={isCalendarOpen}
             setIsCalendarOpen={setIsCalendarOpen}
-            filteredCategories={filteredCategories} // Já são subcategorias
+            filteredCategories={filteredCategories}
             isMobile={isMobile}
             isFixedLegacy={editingTransaction?.is_fixed}
             transactionType={type}
             UNSELECTED_VALUE={UNSELECTED_VALUE}
-            isPaid={isPaid} // Pass isPaid
-            setIsPaid={setIsPaid} // Pass setIsPaid
+            isPaid={isPaid}
+            setIsPaid={setIsPaid}
           />
         )}
 
@@ -421,9 +499,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   );
 
   return isMobile ? (
-    <div className={cn("p-4", isMobile && "p-0")}>
-      {formContent}
-    </div>
+    <div className={cn("p-4", isMobile && "p-0")}>{formContent}</div>
   ) : (
     <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm")}>
       {formContent}
