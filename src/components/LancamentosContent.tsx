@@ -44,7 +44,7 @@ interface LancamentosContentProps {
   // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
+  // markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Removido
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -63,7 +63,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   onEditTransaction,
-  markMonthPaid, // Destruturando a nova prop
+  // markMonthPaid, // Destruturando a nova prop
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -120,7 +120,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       // rawExpenseInstallments={rawExpenseInstallments} // Removido
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
-      markMonthPaid={markMonthPaid} // Passando a nova prop
+      // markMonthPaid={markMonthPaid} // Removido
     />
   );
 };

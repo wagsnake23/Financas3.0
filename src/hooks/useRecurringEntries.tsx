@@ -384,42 +384,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     },
   });
 
-  const markMonthPaidMutation = useMutation({
-    mutationFn: async ({ recurring_id, year, month, is_paid }: { recurring_id: string; year: number; month: number; is_paid: boolean }) => {
-      if (!user?.id) throw new Error("User not authenticated.");
-      console.log("useRecurringEntries: markMonthPaidMutation: Calling rpc_create_or_update_recurring_exception with payload:", { recurring_id, year, month, is_paid });
-
-      const payload: TablesUpdate<'recurring_entry_exceptions'> = {
-        paid: is_paid,
-        canceled: false, // Explicitly set to false when marking as paid/unpaid
-        override_value: null, // Do not override value
-        override_category_id: null, // Do not override category
-        note: null, // Do not override note
-        override_due_date: null, // Do not override due date
-      };
-
-      const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
-        p_recurring_id: recurring_id,
-        p_year: year,
-        p_month: month,
-        p_payload: payload,
-      });
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: (data, variables) => {
-      console.log("useRecurringEntries: markMonthPaidMutation: onSuccess - Invalidating queries. Payload sent:", variables, "Response data:", data);
-      invalidateQueries();
-      toast.success("Status de pagamento atualizado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
-      });
-    },
-    onError: (error) => {
-      toast.error("Erro ao atualizar status de pagamento", { description: error.message });
-      console.error("Supabase error updating paid status:", error);
-    },
-  });
-
+  // markMonthPaidMutation foi removido, pois a funcionalidade agora é tratada por rpc_edit_recurring_entry
 
   return {
     materializedRecurringTransactions,
@@ -431,6 +396,6 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     deleteRecurringEntry: deleteRecurringEntryMutation.mutateAsync,
     cancelMonth: cancelMonthMutation.mutateAsync,
     endRecurringAt: endRecurringAtMutation.mutateAsync,
-    markMonthPaid: markMonthPaidMutation.mutateAsync,
+    // markMonthPaid foi removido
   };
 };

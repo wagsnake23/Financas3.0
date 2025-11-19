@@ -20,7 +20,7 @@ interface TransactionViewProps {
   // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
+  // markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Removido
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -35,7 +35,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
-  markMonthPaid, // Destruturando a nova prop
+  // markMonthPaid, // Destruturando a nova prop
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
   // const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Removido
@@ -55,7 +55,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       // rawExpenseInstallments={rawExpenseInstallments} // Removido
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
-      markMonthPaid={markMonthPaid} // Passando a nova prop
+      // markMonthPaid={markMonthPaid} // Removido
     />
   );
 
