@@ -160,7 +160,8 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
       ) : (
         <div className="flex flex-col gap-2"> {/* Alterado para flex-col gap-2 */}
           <Select value={selectedCardId} onValueChange={setSelectedCardId} className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione um cartão" />
+            <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}> {/* Adicionada a tag SelectTrigger */}
+              <SelectValue placeholder="Selecione um cartão" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione um cartão</SelectItem>
