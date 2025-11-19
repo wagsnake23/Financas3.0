@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -14,7 +14,7 @@ const isValidUuid = (uuid: string) => {
 
 interface UseTransactionsDataProps {
   user: User | null;
-  selectedMonth: Date; // Mantido para useRecurringEntries
+  selectedMonth: Date;
 }
 
 export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsDataProps) => {
@@ -83,12 +83,28 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
     enabled: !!user?.id,
   });
 
-  const allRawTransactions: Transaction[] = useMemo(() => {
-    console.log("useTransactionsData: allRawTransactions useMemo re-running...");
-    const incomeTransactions: Transaction[] = [];
+  // Map to store total installments for each parent expense (used for `totalInstallments` in Transaction type)
+  const totalInstallmentsMap = useMemo(() => {
+    const map = new Map<string, number>();
+    expenseInstallments.forEach(p => {
+      if (p.despesas) {
+        const despesaId = p.despesas.id;
+        map.set(despesaId, (map.get(despesaId) || 0) + 1);
+      }
+    });
+    return map;
+  }, [expenseInstallments]);
 
-    revenues.forEach(r => {
-      incomeTransactions.push({
+
+  const monthlyFilteredTransactions = useMemo(() => {
+    console.log("useTransactionsData: monthlyFilteredTransactions useMemo re-running...");
+    const startOfSelectedMonth = startOfMonth(selectedMonth);
+    const endOfSelectedMonth = endOfMonth(selectedMonth);
+
+    // 1. Filter one-off revenues for the selected month
+    const monthlyIncomeTransactions: Transaction[] = revenues
+      .filter(r => isWithinInterval(new Date(r.data), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
+      .map(r => ({
         id: r.id,
         type: "income",
         amount: r.valor,
@@ -101,87 +117,53 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
         recurrence_installments_count: r.recurrence_installments_count,
         forma_pagamento: null,
         cartao_id: null,
+      }));
+
+    // 2. Filter one-off expense installments for the selected month
+    const monthlyExpenseTransactions: Transaction[] = expenseInstallments
+      .filter(p => isWithinInterval(new Date(p.vencimento), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
+      .map(p => {
+        const parentDespesa = p.despesas;
+        const despesaId = parentDespesa?.id;
+        const totalForNonFixed = despesaId ? totalInstallmentsMap.get(despesaId) : 1;
+        return {
+          id: p.id,
+          type: "expense",
+          amount: p.valor_parcela,
+          date: p.vencimento,
+          category: parentDespesa?.categoria_id || "outros_diversos",
+          description: parentDespesa?.descricao || "Despesa",
+          status: p.pago ? 'Recebida' : 'Pendente',
+          is_fixed: parentDespesa?.is_fixed || false,
+          recurrence_frequency: parentDespesa?.recurrence_frequency,
+          recurrence_installments_count: parentDespesa?.recurrence_installments_count,
+          installmentNumber: p.numero_parcela,
+          totalInstallments: totalForNonFixed,
+          forma_pagamento: parentDespesa?.forma_pagamento,
+          cartao_id: parentDespesa?.cartao_id,
+          despesa_id: parentDespesa?.id,
+        };
       });
-    });
 
-    const expenseTransactions: Transaction[] = [];
-    const processedFixedExpenseParentIds = new Set<string>();
-
-    const totalInstallmentsMap = new Map<string, number>();
-    expenseInstallments.forEach(p => {
-      if (p.despesas) {
-        const despesaId = p.despesas.id;
-        totalInstallmentsMap.set(despesaId, (totalInstallmentsMap.get(despesaId) || 0) + 1);
-      }
-    });
-
-    expenseInstallments.forEach(p => {
-      const parentDespesa = p.despesas;
-
-      const despesaId = parentDespesa?.id;
-      const totalForNonFixed = despesaId ? totalInstallmentsMap.get(despesaId) : 1;
-      expenseTransactions.push({
-        id: p.id,
-        type: "expense",
-        amount: p.valor_parcela,
-        date: p.vencimento,
-        category: parentDespesa?.categoria_id || "outros_diversos",
-        description: parentDespesa?.descricao || "Despesa",
-        status: p.pago ? 'Recebida' : 'Pendente',
-        is_fixed: parentDespesa?.is_fixed || false,
-        recurrence_frequency: parentDespesa?.recurrence_frequency,
-        recurrence_installments_count: parentDespesa?.recurrence_installments_count,
-        installmentNumber: p.numero_parcela,
-        totalInstallments: totalForNonFixed,
-        forma_pagamento: parentDespesa?.forma_pagamento,
-        cartao_id: parentDespesa?.cartao_id,
-        despesa_id: parentDespesa?.id, // Adicionado despesa_id aqui
-      });
-    });
-
-    const combined = [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    // 3. Combine month-specific one-off transactions with already month-specific recurring transactions
+    //    materializedRecurringTransactions from useRecurringEntries is already filtered for `selectedMonth`
+    const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
-    // Log para a transação específica após a combinação
-    const specificRecurringTransaction = combined.find(t => t.id === 'b964d461-309a-4841-b72b-d68c92702b18-2025-11'); // Substitua pelo ID da sua transação de teste
-    if (specificRecurringTransaction) {
-      console.log("useTransactionsData: Specific recurring transaction (b964d461-309a-4841-b72b-d68c92702b18-2025-11) status in allRawTransactions:", specificRecurringTransaction.status);
-    }
-
-    console.log("useTransactionsData: Income transactions count:", incomeTransactions.length);
-    console.log("useTransactionsData: Expense transactions count:", expenseTransactions.length);
-    console.log("useTransactionsData: Materialized Recurring transactions count:", materializedRecurringTransactions.length);
-    console.log("useTransactionsData: Combined allRawTransactions count:", combined.length);
+    console.log("useTransactionsData: Monthly Income transactions count:", monthlyIncomeTransactions.length);
+    console.log("useTransactionsData: Monthly Expense transactions count:", monthlyExpenseTransactions.length);
+    console.log("useTransactionsData: Materialized Recurring transactions count (already month-specific):", materializedRecurringTransactions.length);
+    console.log("useTransactionsData: Combined monthlyFilteredTransactions count:", combined.length);
     
     return combined;
-  }, [revenues, expenseInstallments, materializedRecurringTransactions]);
-
-  const monthlyFilteredTransactions = useMemo(() => {
-    console.log("useTransactionsData: monthlyFilteredTransactions useMemo re-running...");
-    const startOfSelectedMonth = startOfMonth(selectedMonth);
-    const endOfSelectedMonth = endOfMonth(selectedMonth);
-
-    const filtered = allRawTransactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      const isWithin = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
-      return isWithin;
-    });
-    // Log para a transação específica
-    const specificTransaction = filtered.find(t => t.id === 'b964d461-309a-4841-b72b-d68c92702b18-2025-11'); // Substitua pelo ID da sua transação de teste
-    if (specificTransaction) {
-      console.log("useTransactionsData: Specific transaction (b964d461-309a-4841-b72b-d68c92702b18-2025-11) status in monthlyFilteredTransactions:", specificTransaction.status);
-    }
-    console.log("useTransactionsData: monthlyFilteredTransactions (after date filter) count:", filtered.length);
-    return filtered;
-  }, [allRawTransactions, selectedMonth]);
+  }, [selectedMonth, revenues, expenseInstallments, materializedRecurringTransactions, totalInstallmentsMap]);
 
   const isLoading = isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingCartoes || isLoadingRecurring;
 
   return {
-    allRawTransactions,
-    monthlyFilteredTransactions, // Retornando as transações filtradas pelo mês
+    // allRawTransactions, // No longer needed to be exposed directly
+    monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    // expenseInstallments, // Removido
     isLoading,
     isLoadingCategories,
   };
