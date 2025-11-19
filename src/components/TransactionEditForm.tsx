@@ -337,7 +337,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         finalRecurringPayload = {
           override_value: amount === undefined ? null : amount,
-          override_category_id: category === UNSELECTED_VALUE ? null : category,
+          override_category_id: category === UNSELECTED_VALUE || category === "" ? null : category, // Convert empty string to null
           override_due_date: formattedOverrideDueDate, // Usar a string formatada
           note: note.trim() || null,
           paid: isPaid,
@@ -354,14 +354,14 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         finalRecurringPayload = {
           title: title.trim(),
           value: amount === undefined ? null : amount,
-          category_id: category === UNSELECTED_VALUE ? null : category,
+          category_id: category === UNSELECTED_VALUE || category === "" ? null : category, // Convert empty string to null
           due_day: parseInt(dueDay),
           frequency,
           start_date: formattedStartDateForMaster, // Usar a string formatada
           end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
           forma_pagamento: recurringTransaction.forma_pagamento,
-          cartao_id: recurringTransaction.cartao_id,
+          cartao_id: recurringTransaction.cartao_id === "" ? null : recurringTransaction.cartao_id, // Convert empty string to null
         } as TablesUpdate<"recurring_entries">;
       }
     }
