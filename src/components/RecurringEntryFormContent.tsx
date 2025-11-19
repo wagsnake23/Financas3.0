@@ -43,15 +43,15 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
   const [value, setValue] = useState<number | undefined>(undefined);
-  const [selectedParentCategoryId, setSelectedParentCategoryId] = useState(UNSELECTED_VALUE); // Novo estado para categoria principal
-  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(UNSELECTED_VALUE); // Novo estado para subcategoria
+  const [selectedParentCategoryId, setSelectedParentCategoryId] = useState(UNSELECTED_VALUE);
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(UNSELECTED_VALUE);
   const [dueDay, setDueDay] = useState("1");
   const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  // Removido o estado endDate e isEndDateCalendarOpen
   const [loading, setLoading] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
-  const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
+  // Removido o estado isEndDateCalendarOpen
   const [isPaid, setIsPaid] = useState(false);
 
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
@@ -60,11 +60,13 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   useEffect(() => {
     setType(initialType);
-    setSelectedParentCategoryId(UNSELECTED_VALUE); // Resetar categoria principal
-    setSelectedSubcategoryId(UNSELECTED_VALUE); // Resetar subcategoria
+    setSelectedParentCategoryId(UNSELECTED_VALUE);
+    setSelectedSubcategoryId(UNSELECTED_VALUE);
     setFormaPagamento("dinheiro");
     setCartaoId(UNSELECTED_VALUE);
     setIsPaid(false);
+    // Resetar endDate para undefined ao mudar o tipo inicial
+    // setEndDate(undefined); // Removido, pois o campo foi removido
   }, [initialType]);
 
   useEffect(() => {
@@ -126,11 +128,12 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    if (endDate && startDate && endDate < startDate) {
-      toast.error("A data final não pode ser anterior à data inicial.");
-      setLoading(false);
-      return;
-    }
+    // Removida a validação de endDate, pois o campo foi removido
+    // if (endDate && startDate && endDate < startDate) {
+    //   toast.error("A data final não pode ser anterior à data inicial.");
+    //   setLoading(false);
+    //   return;
+    // }
     if (type === "despesa" && formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
       toast.error("Selecione um cartão para despesas com cartão de crédito.");
       setLoading(false);
@@ -146,7 +149,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       due_day: parseInt(dueDay),
       frequency,
       start_date: format(startDate, "yyyy-MM-dd"),
-      end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
+      end_date: null, // Sempre null, pois o campo foi removido
       status: 'active',
       forma_pagamento: formaPagamento,
       cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
@@ -184,7 +187,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setSelectedSubcategoryId(UNSELECTED_VALUE);
       setDueDay("1");
       setStartDate(new Date());
-      setEndDate(undefined);
+      // setEndDate(undefined); // Removido
       setFormaPagamento("dinheiro");
       setCartaoId(UNSELECTED_VALUE);
       setIsPaid(false);
@@ -387,8 +390,8 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </Popover>
       </div>
 
-      {/* Data de Fim (Opcional) */}
-      <div className="space-y-2">
+      {/* Removido: Data de Fim (Opcional) */}
+      {/* <div className="space-y-2">
         <Label htmlFor="endDate" className={cn(isMobile && "text-xs")}>Data de Fim (Opcional)</Label>
         <Popover open={isEndDateCalendarOpen} onOpenChange={setIsEndDateCalendarOpen}>
           <PopoverTrigger asChild>
@@ -417,7 +420,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             />
           </PopoverContent>
         </Popover>
-      </div>
+      </div> */}
 
       {/* Status de Pago/Pendente */}
       <TransactionStatusToggle
