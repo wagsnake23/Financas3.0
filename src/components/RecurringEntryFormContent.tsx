@@ -14,11 +14,12 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
-import { TablesInsert, Enums, Tables } from "@/integrations/supabase/types"; // Importar Tables
+import { TablesInsert, Enums, Tables, TablesUpdate } from "@/integrations/supabase/types"; // Importar TablesUpdate
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { AddCardDialog } from "./AddCardDialog"; // Importar AddCardDialog
 import ManageCardsDialog from "./ManageCardsDialog"; // Importar ManageCardsDialog
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle"; // Importar TransactionStatusToggle
 
 interface RecurringEntryFormContentProps {
   isMobile: boolean;
@@ -38,7 +39,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   initialType = "despesa" // Padrão para despesa
 }) => {
   const { user } = useAuth();
-  const { createRecurringEntry } = useRecurringEntries(user, new Date(), fetchedCategories);
+  const { createRecurringEntry, createOrUpdateException } = useRecurringEntries(user, new Date(), fetchedCategories, true); // Passar 'true' para enabled
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
   const [value, setValue] = useState<number | undefined>(undefined); // Alterado para number | undefined
@@ -50,6 +51,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   const [loading, setLoading] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
   const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
+  const [isPaid, setIsPaid] = useState(false); // Novo estado para o status de pago
 
   // Novos estados para forma de pagamento e cartões
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
@@ -63,6 +65,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     // Reset payment method and card when type changes
     setFormaPagamento("dinheiro");
     setCartaoId(UNSELECTED_VALUE);
+    setIsPaid(false); // Resetar o status de pago
   }, [initialType]);
 
   // Carregar cartões quando o usuário estiver disponível
@@ -159,7 +162,33 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     };
 
     try {
-      await createRecurringEntry(newRecurringEntry);
+      const createdEntry = await createRecurringEntry(newRecurringEntry);
+
+      // Se a primeira ocorrência for marcada como paga, criar uma exceção
+      if (isPaid && createdEntry && startDate) {
+        const firstOccurrenceYear = startDate.getFullYear();
+        const firstOccurrenceMonth = startDate.getMonth() + 1; // Mês 1-indexado
+
+        const exceptionPayload: TablesUpdate<'recurring_entry_exceptions'> = {
+          paid: true,
+          canceled: false,
+          note: "Marcado como pago na criação da recorrência",
+          override_value: value, // Usar o valor original
+          override_category_id: categoryId,
+          override_due_date: format(startDate, "yyyy-MM-dd"), // Usar a data de início como data de vencimento da exceção
+        };
+
+        await createOrUpdateException({
+          recurring_id: createdEntry.id,
+          year: firstOccurrenceYear,
+          month: firstOccurrenceMonth,
+          payload: exceptionPayload,
+        });
+        toast.success("Primeira ocorrência marcada como paga!", {
+          style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        });
+      }
+
       setValue(undefined); // Reset para undefined
       setCategoryId(UNSELECTED_VALUE);
       setDueDay("1");
@@ -167,6 +196,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setEndDate(undefined);
       setFormaPagamento("dinheiro"); // Resetar forma de pagamento
       setCartaoId(UNSELECTED_VALUE); // Resetar cartão
+      setIsPaid(false); // Resetar o status de pago
       onSuccess?.();
     } catch (error) {
       // Error handled by mutation's onError
@@ -360,6 +390,13 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           </PopoverContent>
         </Popover>
       </div>
+
+      {/* Status de Pago/Pendente */}
+      <TransactionStatusToggle
+        isPaid={isPaid}
+        setIsPaid={setIsPaid}
+        isMobile={isMobile}
+      />
 
       <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         <DynamicIcon name="Plus" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
