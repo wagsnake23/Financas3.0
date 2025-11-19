@@ -345,8 +345,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         finalRecurringPayload = {
           override_value: amount === undefined ? null : amount,
-          // Apply UUID validation for category_id in exceptions
-          override_category_id: (category === UNSELECTED_VALUE || category === "" || !isValidUuid(category)) ? null : category,
+          // category_id é TEXT, então não precisa de isValidUuid
+          override_category_id: (category === UNSELECTED_VALUE || category === "") ? null : category,
           override_due_date: formattedOverrideDueDate, // Usar a string formatada
           note: note.trim() || null,
           paid: isPaid,
@@ -363,15 +363,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         finalRecurringPayload = {
           title: title.trim(),
           value: amount === undefined ? null : amount,
-          // Apply UUID validation for category_id in master entry
-          category_id: (category === UNSELECTED_VALUE || category === "" || !isValidUuid(category)) ? null : category,
+          // category_id é TEXT, então não precisa de isValidUuid
+          category_id: (category === UNSELECTED_VALUE || category === "") ? null : category,
           due_day: parseInt(dueDay),
           frequency,
           start_date: formattedStartDateForMaster, // Usar a string formatada
           end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
           forma_pagamento: recurringTransaction.forma_pagamento,
-          // Apply UUID validation for cartao_id in master entry
+          // cartao_id é UUID, então precisa de isValidUuid
           cartao_id: (recurringTransaction.cartao_id === UNSELECTED_VALUE || recurringTransaction.cartao_id === "" || !isValidUuid(recurringTransaction.cartao_id)) ? null : recurringTransaction.cartao_id,
         } as TablesUpdate<"recurring_entries">;
       }
