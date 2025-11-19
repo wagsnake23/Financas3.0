@@ -23,19 +23,13 @@ All colors MUST be HSL.
     --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 95%;
-    --muted-foreground: 215 15% 50%;
-
-    --accent: 150 65% 55%;
-    --accent-foreground: 0 0% 100%;
-
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
     --destructive-darker: 0 70% 45%; /* Nova cor mais escura */
 
-    --success: 150 65% 50%;
+    --success: 150 65% 40%; /* Verde mais escuro */
     --success-foreground: 0 0% 100%;
-    --success-darker: 150 65% 40%; /* Nova cor mais escura */
+    --success-darker: 150 65% 30%; /* Verde ainda mais escuro para texto */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;
@@ -102,9 +96,9 @@ All colors MUST be HSL.
     --destructive-foreground: 0 0% 100%;
     --destructive-darker: 0 70% 45%; /* Nova cor mais escura */
 
-    --success: 150 65% 50%;
+    --success: 150 65% 30%; /* Verde mais escuro para dark mode */
     --success-foreground: 0 0% 100%;
-    --success-darker: 150 65% 40%; /* Nova cor mais escura */
+    --success-darker: 150 65% 20%; /* Verde ainda mais escuro para texto em dark mode */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;
