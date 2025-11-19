@@ -118,6 +118,17 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       return;
     }
 
+    // Formatar a data de início explicitamente para evitar problemas de fuso horário
+    const formattedStartDate = startDate 
+      ? `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}` 
+      : null;
+
+    if (!formattedStartDate) {
+      toast.error("Data de início inválida.");
+      setLoading(false);
+      return;
+    }
+
     const newRecurringEntry: TablesInsert<'recurring_entries'> = {
       user_id: user.id,
       type,
@@ -126,7 +137,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
       due_day: parseInt(dueDay),
       frequency,
-      start_date: format(startDate, "yyyy-MM-dd"),
+      start_date: formattedStartDate, // Usar a data formatada explicitamente
       end_date: null,
       status: 'active',
       forma_pagamento: formaPagamento,
@@ -146,7 +157,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           note: "Marcado como pago na criação da recorrência",
           override_value: value,
           override_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
-          override_due_date: format(startDate, "yyyy-MM-dd"),
+          override_due_date: formattedStartDate, // Usar a data formatada explicitamente
         };
 
         await createOrUpdateException({
