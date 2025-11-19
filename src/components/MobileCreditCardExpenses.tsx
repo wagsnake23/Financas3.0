@@ -76,11 +76,11 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   if (!isMobile) return null; // Only render on mobile
 
   return (
-    <Card className={cn("p-4 animate-fade-in space-y-4 bg-card rounded-xl shadow-sm", isMobile && "p-3 space-y-3")}>
+    <Card className={cn("p-4 animate-fade-in space-y-2 bg-card rounded-xl shadow-sm", isMobile && "p-3 space-y-2")}>
       <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-base mb-1")}>Despesas do Cartão de Crédito</h2>
 
       {cartoes.length === 0 ? (
-        <p className="text-muted-foreground text-center py-4 text-sm">Nenhum cartão de crédito cadastrado.</p>
+        <p className="text-muted-foreground text-center py-2 text-sm">Nenhum cartão de crédito cadastrado.</p>
       ) : (
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
@@ -98,7 +98,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
       )}
 
       {selectedCardId !== UNSELECTED_VALUE && (
-        <div className={cn("grid grid-cols-3 gap-2 text-center border-t pt-3 mt-3", isMobile && "gap-1 pt-2 mt-2")}>
+        <div className={cn("grid grid-cols-3 gap-2 text-center mt-2", isMobile && "gap-1 mt-1")}>
           <div className={cn("flex flex-col items-center justify-center p-1", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
@@ -117,7 +117,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
         </div>
       )}
       {selectedCardId !== UNSELECTED_VALUE && filteredExpenses.length === 0 && (
-        <p className="text-muted-foreground text-center py-4 text-sm">Nenhuma despesa encontrada para este cartão no mês selecionado.</p>
+        <p className="text-muted-foreground text-center py-2 text-sm">Nenhuma despesa encontrada para este cartão no mês selecionado.</p>
       )}
     </Card>
   );
