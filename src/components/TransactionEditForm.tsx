@@ -85,14 +85,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   // Não precisamos mais filtrar por `parent_id` aqui, apenas por tipo de transação.
   const filteredCategories = useMemo(() => {
     const currentType = isRecurringTransaction ? (recurringTransaction.type === 'income' ? 'receita' : 'despesa') : type;
+    let baseCategories: AppCategory[] = [];
+
     if (currentType === "receita" || currentType === "income") {
-      // Para receitas, listar apenas subcategorias de 'receitas_e_investimentos'
-      return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+      baseCategories = allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
     } else {
-      // Para despesas, listar apenas subcategorias que NÃO são relacionadas a receitas
-      return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
+      baseCategories = allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
-  }, [type, allCategories, isRecurringTransaction, recurringTransaction]);
+
+    // Ensure the currently selected category is always available in the options
+    if (editingTransaction && editingTransaction.category && !baseCategories.some(cat => cat.id === editingTransaction.category)) {
+      const currentCategory = allCategories.find(cat => cat.id === editingTransaction.category);
+      if (currentCategory) {
+        baseCategories = [currentCategory, ...baseCategories];
+      }
+    }
+    return baseCategories;
+  }, [type, allCategories, isRecurringTransaction, recurringTransaction, editingTransaction]); // Adicionado editingTransaction como dependência
 
   const getCategoryDisplayName = (catId: string) => {
     const category = allCategories.find(cat => cat.id === catId);
