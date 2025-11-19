@@ -151,7 +151,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {/* Replaced RevenueStatusToggle with StatusToggleButton */}
-      <div className="space-y-2">
+      <div className="flex flex-col items-start space-y-2"> {/* Adicionado flex-col items-start e space-y-2 */}
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
         <StatusToggleButton
           currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
