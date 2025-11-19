@@ -40,10 +40,16 @@ export const useLancamentosLogic = (
     if (monthParam) {
       try {
         const [year, month, day] = monthParam.split("-").map(Number);
-        return new Date(year, month - 1, day);
+        const date = new Date(year, month - 1, day);
+        // Explicitamente verificar se a data é válida após a criação
+        if (isNaN(date.getTime())) {
+          console.error("Invalid date created from URL parameter:", monthParam);
+          return new Date(); // Fallback para a data atual
+        }
+        return date;
       } catch (e) {
-        console.error("Invalid month parameter in URL:", monthParam, e);
-        return new Date();
+        console.error("Error parsing month parameter from URL:", monthParam, e);
+        return new Date(); // Fallback para a data atual
       }
     }
     return new Date();

@@ -142,6 +142,12 @@ export const TransactionList = ({
 
   const handleViewInvoice = () => {
     if (isValidUuid(filterPaymentOptionId)) {
+      // Adicionar verificação de validade da data antes de formatar
+      if (!selectedMonth || isNaN(selectedMonth.getTime())) {
+        toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
+        console.error("Invalid selectedMonth in handleViewInvoice:", selectedMonth);
+        return;
+      }
       const formattedMonth = format(selectedMonth, "yyyy-MM-dd");
       navigate(`/lancamentos?cardId=${filterPaymentOptionId}&month=${formattedMonth}`);
     } else {
