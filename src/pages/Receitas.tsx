@@ -285,7 +285,7 @@ export default function Receitas() {
                       )}
                     >
                       <span>Avulsa</span>
-                      <DynamicIcon name="DollarSign" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
+                      <DynamicIcon name="⚡" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -300,7 +300,7 @@ export default function Receitas() {
                       )}
                     >
                       <span>Recorrente</span>
-                      <DynamicIcon name="Calendar" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
+                      <DynamicIcon name="Repeat" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
                     </Label>
                   </div>
                 </RadioGroup>
@@ -326,7 +326,7 @@ export default function Receitas() {
                   className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only peer" />
+                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="peer" />
                     <Label
                       htmlFor="one-off-revenue-desktop"
                       className={cn(
@@ -336,11 +336,11 @@ export default function Receitas() {
                       )}
                     >
                       <span>Receita Avulsa</span>
-                      <DynamicIcon name="DollarSign" className="ml-1 h-5 w-5" color="hsl(var(--success))" />
+                      <DynamicIcon name="⚡" className="ml-1 h-5 w-5" color="hsl(var(--success))" />
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only peer" />
+                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="peer" />
                     <Label
                       htmlFor="recurring-revenue-desktop"
                       className={cn(
@@ -350,7 +350,7 @@ export default function Receitas() {
                       )}
                     >
                       <span>Receita Recorrente</span>
-                      <DynamicIcon name="Calendar" className="ml-1 h-5 w-5 bg-transparent" color="hsl(var(--primary))" />
+                      <DynamicIcon name="Repeat" className="ml-1 h-5 w-5 bg-transparent" color="hsl(var(--primary))" />
                     </Label>
                   </div>
                 </RadioGroup>
