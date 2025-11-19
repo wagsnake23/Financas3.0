@@ -28,9 +28,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
 import { CurrencyInput } from "@/components/ui/currency-input";
+import { SegmentedReceitaType } from "@/components/SegmentedReceitaType"; // Importar o novo componente
 
 import { Database, Enums } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
@@ -78,7 +78,7 @@ export default function Receitas() {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
-        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
+        .not("parent_id", "is", null)
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -108,7 +108,7 @@ export default function Receitas() {
 
     const newRevenueData = {
       user_id: user?.id,
-      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId, // Convert UNSELECTED_VALUE to null
+      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
       valor: valor as number,
       data: formattedDate,
       descricao,
@@ -147,7 +147,7 @@ export default function Receitas() {
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
       <div>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label> {/* Label atualizada */}
+        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
         <div className="flex gap-2">
           <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
@@ -268,41 +268,20 @@ export default function Receitas() {
             {isMobile ? (
               <div className="px-4 pt-0">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <RadioGroup
-                  value={formMode}
-                  onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="grid grid-cols-2 gap-2 mb-4"
-                >
-                  <Label
-                    htmlFor="one-off-revenue"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="one-off" id="one-off-revenue" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
-                    <span>Avulsa</span>
-                  </Label>
-                  <Label
-                    htmlFor="recurring-revenue"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="recurring" id="recurring-revenue" className="sr-only" />
-                    <DynamicIcon name="Repeat" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
-                    <span>Recorrente</span>
-                  </Label>
-                </RadioGroup>
+                <div className="mb-4"> {/* Wrapper para o Segmented Control */}
+                  <SegmentedReceitaType
+                    mode={formMode}
+                    onSelectAvulsa={() => setFormMode('one-off')}
+                    onSelectRecorrente={() => setFormMode('recurring')}
+                  />
+                </div>
                 {formMode === 'one-off' ? (
                   oneOffFormContent
                 ) : (
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
+                    fetchedCategories={incomeSubcategories}
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />
@@ -312,41 +291,20 @@ export default function Receitas() {
             ) : (
               <Card className="p-6 rounded-xl shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <RadioGroup
-                  value={formMode}
-                  onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="grid grid-cols-2 gap-2 mb-4"
-                >
-                  <Label
-                    htmlFor="one-off-revenue-desktop"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      "py-2 px-4 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className="mr-1 h-5 w-5" color="hsl(var(--success))" />
-                    <span>Receita Avulsa</span>
-                  </Label>
-                  <Label
-                    htmlFor="recurring-revenue-desktop"
-                    className={cn(
-                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      "py-2 px-4 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="Repeat" className="mr-1 h-5 w-5" color="hsl(var(--primary))" />
-                    <span>Receita Recorrente</span>
-                  </Label>
-                </RadioGroup>
+                <div className="mb-4"> {/* Wrapper para o Segmented Control */}
+                  <SegmentedReceitaType
+                    mode={formMode}
+                    onSelectAvulsa={() => setFormMode('one-off')}
+                    onSelectRecorrente={() => setFormMode('recurring')}
+                  />
+                </div>
                 {formMode === 'one-off' ? (
                   oneOffFormContent
                 ) : (
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
+                    fetchedCategories={incomeSubcategories}
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />
