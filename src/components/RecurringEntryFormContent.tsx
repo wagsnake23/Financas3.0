@@ -1,0 +1,280 @@
+import React, { useState, useMemo, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
+import DynamicIcon from "./DynamicIcon";
+import { AppCategory } from "@/types/finance";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useRecurringEntries } from "@/hooks/useRecurringEntries";
+import { TablesInsert, Enums } from "@/integrations/supabase/types";
+
+interface RecurringEntryFormContentProps {
+  isMobile: boolean;
+  onSuccess?: () => void;
+  fetchedCategories: AppCategory[];
+  isLoadingCategories: boolean;
+  initialType?: Enums<'recurring_type'>; // Adicionado para predefinir o tipo
+}
+
+const UNSELECTED_VALUE = "unselected";
+
+export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps> = ({ 
+  isMobile, 
+  onSuccess, 
+  fetchedCategories, 
+  isLoadingCategories,
+  initialType = "despesa" // Padrão para despesa
+}) => {
+  const { user } = useAuth();
+  const { createRecurringEntry } = useRecurringEntries(user, new Date(), fetchedCategories);
+  
+  const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
+  const [value, setValue] = useState("");
+  const [categoryId, setCategoryId] = useState(UNSELECTED_VALUE);
+  const [dueDay, setDueDay] = useState("1");
+  const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
+  const [isEndDateCalendarOpen, setIsEndDateCalendarOpen] = useState(false);
+
+  // Atualiza o tipo se initialType mudar
+  useEffect(() => {
+    setType(initialType);
+    setCategoryId(UNSELECTED_VALUE); // Reset category when type changes
+  }, [initialType]);
+
+  const filteredCategories = useMemo(() => {
+    if (type === "receita") {
+      // Filtra para exibir apenas subcategorias de 'Receitas e Investimentos'
+      return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+    } else {
+      // Para despesas, exibe apenas subcategorias que não são de 'Receitas e Investimentos'
+      return fetchedCategories.filter(cat => 
+        cat.parent_id !== null && // Apenas subcategorias
+        cat.parent_id !== 'receitas_e_investimentos' // Exclui subcategorias de receita
+      );
+    }
+  }, [type, fetchedCategories]);
+
+  const getCategoryDisplayName = (catId: string) => {
+    const category = fetchedCategories.find(cat => cat.id === catId);
+    if (!category) return catId;
+
+    // Para subcategorias de receita ou despesa, apenas mostra o nome da subcategoria
+    if (category.parent_id) {
+      return category.nome;
+    }
+    // Para categorias raiz (que não deveriam aparecer no filtro de subcategorias, mas como fallback)
+    return category.nome;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!user) {
+      toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+      setLoading(false);
+      return;
+    }
+    if (!value || parseFloat(value) <= 0 || categoryId === UNSELECTED_VALUE || !dueDay || !startDate) {
+      toast.error("Preencha todos os campos obrigatórios.");
+      setLoading(false);
+      return;
+    }
+    if (parseInt(dueDay) < 1 || parseInt(dueDay) > 31) {
+      toast.error("O dia de vencimento deve ser entre 1 e 31.");
+      setLoading(false);
+      return;
+    }
+    if (endDate && startDate && endDate < startDate) {
+      toast.error("A data final não pode ser anterior à data inicial.");
+      setLoading(false);
+      return;
+    }
+
+    const newRecurringEntry: TablesInsert<'recurring_entries'> = {
+      user_id: user.id,
+      type,
+      title: "Lançamento Recorrente", // Título padrão, já que o campo foi removido
+      value: parseFloat(value),
+      category_id: categoryId,
+      due_day: parseInt(dueDay),
+      frequency,
+      start_date: format(startDate, "yyyy-MM-dd"),
+      end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
+      status: 'active',
+    };
+
+    try {
+      await createRecurringEntry(newRecurringEntry);
+      setValue("");
+      setCategoryId(UNSELECTED_VALUE);
+      setDueDay("1");
+      setStartDate(new Date());
+      setEndDate(undefined);
+      onSuccess?.();
+    } catch (error) {
+      // Error handled by mutation's onError
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Categoria */}
+      <div className="space-y-2">
+        <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label> {/* Label alterada */}
+        <Select value={categoryId} onValueChange={setCategoryId} disabled={loading || isLoadingCategories}>
+          <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+            <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder alterado */}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem> {/* Item desabilitado alterado */}
+            {filteredCategories.length === 0 ? (
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
+            ) : (
+              filteredCategories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                  <span className="flex items-center gap-2">
+                    <span>{cat.icone}</span>
+                    <span>{getCategoryDisplayName(cat.id)}</span>
+                  </span>
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Valor */}
+      <div className="space-y-2">
+        <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+        <Input
+          id="value"
+          type="number"
+          step="0.01"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="0,00"
+          required
+          disabled={loading}
+          className={cn(isMobile && "h-9 text-sm")}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4"> {/* Layout para Frequência e Vencimento */}
+        {/* Frequência */}
+        <div className="space-y-2">
+          <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
+          <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
+            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly" className={cn(isMobile && "text-sm")}>Mensal</SelectItem>
+              <SelectItem value="quarterly" className={cn(isMobile && "text-sm")}>Trimestral</SelectItem>
+              <SelectItem value="annually" className={cn(isMobile && "text-sm")}>Anual</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Dia de Vencimento */}
+        <div className="space-y-2">
+          <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>Vencimento</Label>
+          <Input
+            id="dueDay"
+            type="number"
+            min="1"
+            max="31"
+            value={dueDay}
+            onChange={(e) => setDueDay(e.target.value)}
+            required
+            disabled={loading}
+            className={cn(isMobile && "h-9 text-sm")}
+          />
+        </div>
+      </div>
+
+      {/* Data de Início */}
+      <div className="space-y-2">
+        <Label htmlFor="startDate" className={cn(isMobile && "text-xs")}>Data de Início</Label>
+        <Popover open={isStartDateCalendarOpen} onOpenChange={setIsStartDateCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal h-10",
+                !startDate && "text-muted-foreground",
+                isMobile && "h-9 text-sm"
+              )}
+              disabled={loading}
+            >
+              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              {startDate ? format(startDate, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+            <Calendar
+              mode="single"
+              selected={startDate}
+              onSelect={setStartDate}
+              initialFocus
+              locale={ptBR}
+              showOutsideDays={false}
+              className={cn(isMobile && "text-sm")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Data de Fim (Opcional) */}
+      <div className="space-y-2">
+        <Label htmlFor="endDate" className={cn(isMobile && "text-xs")}>Data de Fim (Opcional)</Label>
+        <Popover open={isEndDateCalendarOpen} onOpenChange={setIsEndDateCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal h-10",
+                !endDate && "text-muted-foreground",
+                isMobile && "h-9 text-sm"
+              )}
+              disabled={loading}
+            >
+              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              {endDate ? format(endDate, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+            <Calendar
+              mode="single"
+              selected={endDate}
+              onSelect={setEndDate}
+              initialFocus
+              locale={ptBR}
+              showOutsideDays={false}
+              className={cn(isMobile && "text-sm")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <Button type="submit" className={cn("w-full", isMobile && "h-9 text-sm")} disabled={loading}>
+        <DynamicIcon name="Plus" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+        {loading ? "Criando..." : "Criar Lançamento Recorrente"}
+      </Button>
+    </form>
+  );
+};

@@ -1,0 +1,36 @@
+export const COLOR_PALETTE = [
+  { id: 1, color: "hsl(0, 70%, 55%)", name: "Vermelho" },
+  { id: 2, color: "hsl(15, 80%, 55%)", name: "Laranja Avermelhado" },
+  { id: 3, color: "hsl(30, 95%, 55%)", name: "Laranja" },
+  { id: 4, color: "hsl(45, 90%, 55%)", name: "Amarelo Ouro" },
+  { id: 5, color: "hsl(60, 80%, 55%)", name: "Amarelo" },
+  { id: 6, color: "hsl(75, 60%, 50%)", name: "Lima" },
+  { id: 7, color: "hsl(90, 60%, 45%)", name: "Verde Limão" },
+  { id: 8, color: "hsl(120, 55%, 45%)", name: "Verde" },
+  { id: 9, color: "hsl(150, 60%, 45%)", name: "Verde Esmeralda" },
+  { id: 10, color: "hsl(165, 65%, 50%)", name: "Turquesa" },
+  { id: 11, color: "hsl(180, 70%, 50%)", name: "Ciano" },
+  { id: 12, color: "hsl(195, 70%, 50%)", name: "Azul Claro" },
+  { id: 13, color: "hsl(210, 70%, 50%)", name: "Azul" },
+  { id: 14, color: "hsl(225, 70%, 55%)", name: "Azul Royal" },
+  { id: 15, color: "hsl(240, 70%, 60%)", name: "Índigo" },
+  { id: 16, color: "hsl(255, 65%, 60%)", name: "Violeta" },
+  { id: 17, color: "hsl(270, 70%, 60%)", name: "Roxo" },
+  { id: 18, color: "hsl(285, 70%, 55%)", name: "Púrpura" },
+  { id: 19, color: "hsl(300, 70%, 55%)", name: "Magenta" },
+  { id: 20, color: "hsl(330, 70%, 55%)", name: "Rosa Pink" },
+  { id: 21, color: "hsl(345, 75%, 60%)", name: "Rosa" },
+  { id: 22, color: "hsl(215, 15%, 35%)", name: "Cinza Escuro" },
+  { id: 23, color: "hsl(215, 15%, 50%)", name: "Cinza" },
+  { id: 24, color: "hsl(25, 45%, 45%)", name: "Marrom" },
+];
+
+export const PAYMENT_METHODS = [
+  { value: "none", label: "Nenhuma" }, // Changed from "" to "none"
+  { value: "pix", label: "PIX" },
+  { value: "credit", label: "Cartão de Crédito" },
+  { value: "debit", label: "Cartão de Débito" },
+  { value: "cash", label: "Dinheiro" },
+  { value: "boleto", label: "Boleto" },
+  { value: "other", label: "Outros" },
+];

@@ -1,0 +1,79 @@
+import { Card } from "@/components/ui/card";
+import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
+import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
+import { Button } from "@/components/ui/button"; // Importar Button para o toggle
+
+interface StatCardProps {
+  title: string;
+  value: string;
+  icon: string; // Alterado para string para usar DynamicIcon
+  trend?: string;
+  variant: "income" | "expense" | "balance";
+  children?: React.ReactNode; // Adicionado a prop children
+  isMobile?: boolean; // Adicionado a prop isMobile
+  showValue?: boolean; // Nova prop para controlar a visibilidade do valor
+  onToggleVisibility?: () => void; // Nova prop para a função de alternância
+}
+
+export const StatCard = ({ title, value, icon, trend, variant, children, isMobile, showValue = true, onToggleVisibility }: StatCardProps) => {
+  const variantStyles = {
+    income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
+    expense: "bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20",
+    balance: "bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20",
+  };
+
+  const iconStyles = {
+    income: "bg-success/10 text-success",
+    expense: "bg-destructive/10 text-destructive",
+    balance: "bg-secondary/10 text-secondary",
+  };
+
+  // Classes condicionais para mobile
+  const cardPaddingClass = isMobile ? "p-2" : "p-6"; // Diminui o padding em mobile
+  const titleFontSizeClass = isMobile ? "text-[0.65rem]" : "text-sm"; // Diminui a fonte do título em mobile
+  const valueFontSizeClass = isMobile ? "text-base" : "text-3xl"; // Diminui o tamanho da fonte do valor em mobile (de text-lg para text-base)
+  const iconSizeClass = isMobile ? "h-4 w-4" : "h-6 w-6"; // Diminui o tamanho do ícone em mobile
+  const valueColorClass = isMobile
+    ? variant === "income"
+      ? "text-success" // Verde para receitas em mobile
+      : variant === "expense"
+        ? "text-destructive" // Vermelho para despesas em mobile
+        : "text-secondary" // Cor secundária para saldo em mobile
+    : "text-foreground"; // Cor padrão para desktop
+
+  return (
+    <Card className={cn(
+      cardPaddingClass, // Aplica o padding condicional
+      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl", // Adicionado rounded-xl
+      variantStyles[variant]
+    )}>
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
+          <div className="flex items-center gap-2">
+            <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
+              {showValue ? value : "R$ *****"}
+            </p>
+            {isMobile && onToggleVisibility && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleVisibility}
+                className="h-5 w-5 text-muted-foreground hover:text-foreground" // Botão de toggle menor
+              >
+                <DynamicIcon name={showValue ? "EyeOff" : "Eye"} className="h-3.5 w-3.5" /> {/* Ícone menor */}
+              </Button>
+            )}
+          </div>
+          {trend && (
+            <p className="text-xs text-muted-foreground">{trend}</p>
+          )}
+        </div>
+        <div className={`p-1.5 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-2 para p-1.5 */}
+          <DynamicIcon name={icon} className={iconSizeClass} /> {/* Aplica o tamanho do ícone condicional */}
+        </div>
+      </div>
+      {children} {/* Renderiza os children aqui */}
+    </Card>
+  );
+};
