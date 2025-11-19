@@ -49,9 +49,10 @@ export const useLancamentosLogic = (
     return new Date();
   }, [searchParams]);
 
-  const initialFilterCardId = useMemo(() => {
+  const initialFilterPaymentOption = useMemo(() => {
     const cardIdParam = searchParams.get("cardId");
-    return cardIdParam && isValidUuid(cardIdParam) ? cardIdParam : UNSELECTED_VALUE;
+    // Se houver um cardId válido na URL, use-o. Caso contrário, defina como "all".
+    return cardIdParam && isValidUuid(cardIdParam) ? cardIdParam : "all";
   }, [searchParams]);
 
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
@@ -71,7 +72,7 @@ export const useLancamentosLogic = (
   ] = useState<Transaction | null>(null);
 
   // Novo estado para o filtro de forma de pagamento, inicializado com o cardId da URL
-  const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterCardId);
+  const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
 
   const {
     monthlyFilteredTransactions,
