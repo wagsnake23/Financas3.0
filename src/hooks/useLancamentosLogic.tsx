@@ -62,6 +62,15 @@ export const useLancamentosLogic = (user: User | null) => {
     endRecurringAt, // Usado para exclusão a partir de um mês
   } = useRecurringEntries(user, selectedMonth, fetchedCategories);
 
+  // Handlers para navegação de mês
+  const handlePreviousMonth = useCallback(() => {
+    setSelectedMonth(prevMonth => subMonths(prevMonth, 1));
+  }, []);
+
+  const handleNextMonth = useCallback(() => {
+    setSelectedMonth(prevMonth => addMonths(prevMonth, 1));
+  }, []);
+
   // Nova função para lidar com a exclusão baseada nas opções do modal
   const confirmDeleteWithOptions = useCallback(async (transaction: Transaction, deleteOption: "thisMonth" | "thisMonthForward" | "all") => {
     setLoadingEditData(true);
@@ -589,6 +598,8 @@ export const useLancamentosLogic = (user: User | null) => {
   return {
     selectedMonth,
     setSelectedMonth,
+    handlePreviousMonth, // Adicionado ao retorno
+    handleNextMonth,     // Adicionado ao retorno
     editingTransaction,
     setEditingTransaction,
     fullEditingRevenue,

@@ -3,7 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
-// import { MonthNavigator } from "@/components/MonthNavigator"; // Removido
+import { MonthNavigator } from "@/components/MonthNavigator"; // Re-adicionado
 // import { EditInstallmentModal } from "@/components/EditInstallmentModal"; // Removido
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
@@ -18,7 +18,10 @@ const Lancamentos = () => {
   const queryClient = useQueryClient(); // Obter o queryClient aqui
 
   const {
-    selectedMonth, // Mantido para o console.log, mas não usado na UI
+    selectedMonth,
+    setSelectedMonth,
+    handlePreviousMonth, // Re-adicionado
+    handleNextMonth,     // Re-adicionado
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
@@ -33,8 +36,6 @@ const Lancamentos = () => {
     cartoes,
     // expenseInstallments, // Removido
     isLoading,
-    // handlePreviousMonth, // Removido
-    // handleNextMonth, // Removido
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
@@ -66,7 +67,13 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          {/* Removido o MonthNavigator */}
+          {/* MonthNavigator re-adicionado */}
+          <MonthNavigator
+            selectedMonth={selectedMonth}
+            onPreviousMonth={handlePreviousMonth}
+            onNextMonth={handleNextMonth}
+            isMobile={isMobile}
+          />
 
           <LancamentosContent
             editingTransaction={editingTransaction}
