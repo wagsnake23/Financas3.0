@@ -3,7 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
-import { MonthNavigator } from "@/components/MonthNavigator";
+// import { MonthNavigator } from "@/components/MonthNavigator"; // Removido
 // import { EditInstallmentModal } from "@/components/EditInstallmentModal"; // Removido
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
@@ -17,7 +17,7 @@ const Lancamentos = () => {
   const queryClient = useQueryClient(); // Obter o queryClient aqui
 
   const {
-    selectedMonth,
+    selectedMonth, // Mantido para o console.log, mas não usado na UI
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
@@ -32,8 +32,8 @@ const Lancamentos = () => {
     cartoes,
     expenseInstallments,
     isLoading,
-    handlePreviousMonth,
-    handleNextMonth,
+    // handlePreviousMonth, // Removido
+    // handleNextMonth, // Removido
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
@@ -64,16 +64,7 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          {!editingTransaction && (
-            <div className="mb-4">
-              <MonthNavigator
-                selectedMonth={selectedMonth}
-                onPreviousMonth={handlePreviousMonth}
-                onNextMonth={handleNextMonth}
-                isMobile={isMobile}
-              />
-            </div>
-          )}
+          {/* Removido o MonthNavigator */}
 
           <LancamentosContent
             editingTransaction={editingTransaction}
@@ -88,10 +79,9 @@ const Lancamentos = () => {
             cartoes={cartoes}
             user={user}
             rawExpenseInstallments={expenseInstallments}
-            selectedMonth={selectedMonth}
+            // selectedMonth={selectedMonth} // Removido
             onEditTransaction={handleEditTransaction}
-            // Passando o queryClient aqui
-            queryClient={logicQueryClient} 
+            queryClient={logicQueryClient}
           />
         </main>
         <Footer isMobile={isMobile} />

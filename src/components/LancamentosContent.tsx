@@ -42,7 +42,7 @@ interface LancamentosContentProps {
   queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
   user: User | null;
   rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
-  selectedMonth: Date;
+  // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
 }
 
@@ -60,7 +60,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   queryClient, // Recebendo queryClient
   user,
   rawExpenseInstallments,
-  selectedMonth,
+  // selectedMonth, // Removido
   onEditTransaction,
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
@@ -116,7 +116,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       queryClient={queryClient} // Passando queryClient para TransactionView
       user={user}
       rawExpenseInstallments={rawExpenseInstallments}
-      selectedMonth={selectedMonth}
+      // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
     />
   );

@@ -63,13 +63,7 @@ export const useLancamentosLogic = (user: User | null) => {
     endRecurringAt, // Usado para exclusão a partir de um mês
   } = useRecurringEntries(user, selectedMonth, fetchedCategories);
 
-  const handlePreviousMonth = useCallback(() => {
-    setSelectedMonth(prev => subMonths(prev, 1));
-  }, []);
-
-  const handleNextMonth = useCallback(() => {
-    setSelectedMonth(prev => addMonths(prev, 1));
-  }, []);
+  // Removido handlePreviousMonth e handleNextMonth
 
   const handleDeleteTransaction = useCallback(async (id: string, type: "income" | "expense", isFixed?: boolean) => {
     setLoadingEditData(true);
@@ -537,8 +531,8 @@ export const useLancamentosLogic = (user: User | null) => {
     expenseInstallments,
     isLoading,
     isLoadingCategories,
-    handlePreviousMonth,
-    handleNextMonth,
+    // handlePreviousMonth, // Removido
+    // handleNextMonth, // Removido
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,

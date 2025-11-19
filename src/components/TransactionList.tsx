@@ -37,7 +37,7 @@ interface TransactionListProps {
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
   rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
-  selectedMonth: Date; // Reintroduzido
+  // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
 }
 
@@ -53,7 +53,7 @@ export const TransactionList = ({
   queryClient,
   user,
   rawExpenseInstallments,
-  selectedMonth, // Reintroduzido
+  // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
@@ -63,12 +63,13 @@ export const TransactionList = ({
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
-    const startOfSelectedMonth = startOfMonth(selectedMonth);
-    const endOfSelectedMonth = endOfMonth(selectedMonth);
+    // A prop 'transactions' já vem filtrada pelo mês de useTransactionsData
+    // const startOfSelectedMonth = startOfMonth(selectedMonth);
+    // const endOfSelectedMonth = endOfMonth(selectedMonth);
 
     return transactions.filter(transaction => {
-      const transactionDate = new Date(transaction.date);
-      const matchesMonth = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
+      // const transactionDate = new Date(transaction.date);
+      // const matchesMonth = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth }); // Removido
       
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
@@ -91,14 +92,14 @@ export const TransactionList = ({
         }
       }
 
-      const finalResult = matchesMonth && matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
+      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod; // matchesMonth removido
 
       // Log detalhado para cada transação
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesMonth: ${matchesMonth}, MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
+      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile, selectedMonth]); // selectedMonth adicionado às dependências
+  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile]); // selectedMonth removido das dependências
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -143,7 +144,8 @@ export const TransactionList = ({
     if (!selectedCard) return null;
 
     // Usar o selectedMonth para determinar o mês da fatura
-    const currentMonthForInvoice = selectedMonth; 
+    // const currentMonthForInvoice = selectedMonth; // Removido
+    const currentMonthForInvoice = new Date(); // Usar o mês atual como base
     const currentDay = currentMonthForInvoice.getDate();
     
     let invoiceMonthDate = currentMonthForInvoice;
@@ -161,7 +163,7 @@ export const TransactionList = ({
       dueDate: format(invoiceDueDate, "dd/MM", { locale: ptBR }),
       invoiceMonthDate: invoiceMonthDate,
     };
-  }, [selectedCard, selectedMonth]); // selectedMonth adicionado às dependências
+  }, [selectedCard]); // selectedMonth removido das dependências
 
   const handlePayInvoice = async () => {
     if (!selectedCard || !invoiceDetails || !user?.id) {
