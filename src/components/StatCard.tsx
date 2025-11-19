@@ -29,10 +29,10 @@ export const StatCard = ({ title, value, icon, trend, variant, children, isMobil
   };
 
   // Classes condicionais para mobile
-  const cardPaddingClass = isMobile ? "p-2" : "p-6"; // Diminui o padding em mobile
+  const cardPaddingClass = isMobile ? "p-1.5" : "p-6"; // Diminui o padding em mobile (de p-2 para p-1.5)
   const titleFontSizeClass = isMobile ? "text-[0.65rem]" : "text-sm"; // Diminui a fonte do título em mobile
   const valueFontSizeClass = isMobile ? "text-base" : "text-3xl"; // Diminui o tamanho da fonte do valor em mobile (de text-lg para text-base)
-  const iconSizeClass = isMobile ? "h-4 w-4" : "h-6 w-6"; // Diminui o tamanho do ícone em mobile
+  const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6"; // Diminui o tamanho do ícone em mobile (de h-4 w-4 para h-3.5 w-3.5)
   const valueColorClass = isMobile
     ? variant === "income"
       ? "text-success" // Verde para receitas em mobile
@@ -69,11 +69,15 @@ export const StatCard = ({ title, value, icon, trend, variant, children, isMobil
             <p className="text-xs text-muted-foreground">{trend}</p>
           )}
         </div>
-        <div className={`p-1.5 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-2 para p-1.5 */}
+        <div className={`p-1 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-1.5 para p-1 */}
           <DynamicIcon name={icon} className={iconSizeClass} /> {/* Aplica o tamanho do ícone condicional */}
         </div>
       </div>
-      {children} {/* Renderiza os children aqui */}
+      {children && (
+        <div className={cn("flex justify-end mt-1", isMobile && "mt-1")}> {/* Reduzido mt-2 para mt-1 em mobile */}
+          {children}
+        </div>
+      )}
     </Card>
   );
 };
