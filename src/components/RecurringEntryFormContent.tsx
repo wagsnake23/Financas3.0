@@ -134,6 +134,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
+    // Validation for cartao_id: only if formaPagamento is "cartao" AND it's an expense
     if (type === "despesa" && formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
       toast.error("Selecione um cartão para despesas com cartão de crédito.");
       setLoading(false);
@@ -152,8 +153,8 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
       status: 'active',
       // Novos campos de pagamento
-      forma_pagamento: type === "despesa" ? formaPagamento : null,
-      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
+      forma_pagamento: formaPagamento, // Incluído para ambos os tipos
+      cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null, // Condicional para cartao_id
     };
 
     try {
@@ -218,27 +219,25 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           />
         </div>
 
-        {/* Forma de Pagamento (apenas para despesas) */}
-        {type === "despesa" && (
-          <div className="space-y-2">
-            <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-            <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)} disabled={loading}>
-              <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
-                <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
-                <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
-                <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
+        {/* Forma de Pagamento (AGORA SEM CONDICIONAL type === "despesa") */}
+        <div className="space-y-2">
+          <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)} disabled={loading}>
+            <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
+              <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
+              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
+              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Cartão de Crédito (apenas para despesas e forma de pagamento 'cartao') */}
-      {type === "despesa" && formaPagamento === "cartao" && (
+      {/* Cartão de Crédito (apenas se formaPagamento for 'cartao' E o tipo for 'despesa') */}
+      {formaPagamento === "cartao" && type === "despesa" && (
         <div className="space-y-2">
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
