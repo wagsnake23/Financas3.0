@@ -71,7 +71,7 @@ export const TransactionList = ({
   const [searchTerm, setSearchTerm] = useState(""); // Manter searchTerm para a lógica de filtro, mas o input será removido
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  // Removido o estado local filterPaymentOptionId, agora ele vem das props
+  const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // Novo estado de carregamento
 
   const paymentFilterOptions = useMemo(() => {
     const options = [
@@ -140,18 +140,62 @@ export const TransactionList = ({
     return allCategories;
   }, [allCategories, filterType]);
 
-  const handleViewInvoice = () => {
-    if (isValidUuid(filterPaymentOptionId)) {
-      // Adicionar verificação de validade da data antes de formatar
-      if (!selectedMonth || isNaN(selectedMonth.getTime())) {
-        toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
-        console.error("Invalid selectedMonth in handleViewInvoice:", selectedMonth);
+  const handlePayInvoice = async () => {
+    if (!user) {
+      toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+      return;
+    }
+    if (!isValidUuid(filterPaymentOptionId)) {
+      toast.error("Selecione um cartão de crédito válido para pagar a fatura.");
+      return;
+    }
+    if (!selectedMonth || isNaN(selectedMonth.getTime())) {
+      toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
+      console.error("Invalid selectedMonth in handlePayInvoice:", selectedMonth);
+      return;
+    }
+
+    setLoadingPayInvoice(true);
+
+    try {
+      const installmentIdsToUpdate = filteredTransactions
+        .filter(t => t.type === "expense" && t.status !== "Recebida") // FilteredTransactions already applies card filter
+        .map(t => t.id);
+
+      if (installmentIdsToUpdate.length === 0) {
+        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês selecionado.");
+        setLoadingPayInvoice(false);
         return;
       }
-      const formattedMonth = format(selectedMonth, "yyyy-MM-dd");
-      navigate(`/lancamentos?cardId=${filterPaymentOptionId}&month=${formattedMonth}`);
-    } else {
-      toast.error("Selecione um cartão de crédito válido para ver a fatura.");
+
+      const { error } = await supabase
+        .from("despesas_parcelas")
+        .update({
+          pago: true,
+          data_pagamento: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        })
+        .in("id", installmentIdsToUpdate);
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Fatura paga com sucesso!", {
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+      });
+
+      // Invalidate queries to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }); // In case some recurring entries were affected
+      queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
+      queryClient.invalidateQueries(); // Force re-fetch all derived data
+      
+    } catch (error: any) {
+      console.error("Erro ao pagar fatura:", error);
+      toast.error("Erro ao pagar fatura.", { description: error.message });
+    } finally {
+      setLoadingPayInvoice(false);
     }
   };
 
@@ -215,11 +259,12 @@ export const TransactionList = ({
             {/* Botão Pagar Fatura (col-span-1 em mobile) */}
             <Button
               variant="secondary"
-              onClick={handleViewInvoice}
+              onClick={handlePayInvoice}
               className="w-full rounded-xl col-span-1"
+              disabled={loadingPayInvoice || disableFilters}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              Pagar Fatura
+              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
             </Button>
           </>
         ) : (
