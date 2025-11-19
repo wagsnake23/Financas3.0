@@ -100,7 +100,7 @@ export default function Despesas() {
   const formContent = (
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
-      <div className="mb-4"> {/* Wrapper para o Segmented Control */}
+      <div className="mb-4 w-full"> {/* Adicionado w-full aqui */}
         <SegmentedDespesaType
           mode={formMode}
           onSelectAvulsa={() => setFormMode('one-off')}

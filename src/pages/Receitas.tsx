@@ -268,7 +268,7 @@ export default function Receitas() {
             {isMobile ? (
               <div className="px-4 pt-0">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <div className="mb-4"> {/* Wrapper para o Segmented Control */}
+                <div className="mb-4 w-full"> {/* Adicionado w-full aqui */}
                   <SegmentedReceitaType
                     mode={formMode}
                     onSelectAvulsa={() => setFormMode('one-off')}
@@ -291,7 +291,7 @@ export default function Receitas() {
             ) : (
               <Card className="p-6 rounded-xl shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <div className="mb-4"> {/* Wrapper para o Segmented Control */}
+                <div className="mb-4 w-full"> {/* Adicionado w-full aqui */}
                   <SegmentedReceitaType
                     mode={formMode}
                     onSelectAvulsa={() => setFormMode('one-off')}
