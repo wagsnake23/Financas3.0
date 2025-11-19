@@ -13,7 +13,7 @@ import { Navigation } from "@/components/Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
-import { TotalRevenueCard } => "@/components/TotalRevenueCard";
+import { TotalRevenueCard } from "@/components/TotalRevenueCard"; // Linha corrigida
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
@@ -28,25 +28,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
-import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent"; // Importar o novo componente
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
 
-// Import the new enum type
 import { Database, Enums } from "@/integrations/supabase/types";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
-type FormMode = 'one-off' | 'recurring'; // Novo tipo para o modo do formulário
+type FormMode = 'one-off' | 'recurring';
 
-const UNSELECTED_VALUE = "unselected"; // Valor único para representar 'não selecionado'
+const UNSELECTED_VALUE = "unselected";
 
 export default function Receitas() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
-  // Form mode state
   const [formMode, setFormMode] = useState<FormMode>('one-off');
 
-  // Form states for one-off revenue
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState("");
   const [data, setData] = useState<Date | undefined>(new Date());
@@ -55,7 +52,6 @@ export default function Receitas() {
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  // Fetch receitas using Tanstack Query
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
     queryFn: async () => {
@@ -66,12 +62,11 @@ export default function Receitas() {
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data.filter(r => !r.is_fixed); // Filter out legacy fixed revenues
+      return data.filter(r => !r.is_fixed);
     },
     enabled: !!user?.id,
   });
 
-  // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -87,7 +82,6 @@ export default function Receitas() {
     enabled: !!user?.id,
   });
 
-  // Filter for income-related categories (subcategories of 'Receitas e Investimentos' root)
   const incomeSubcategories = useMemo(() => {
     return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
   }, [fetchedCategories]);
@@ -139,9 +133,9 @@ export default function Receitas() {
   };
 
   const handleRecurringFormSuccess = () => {
-    setFormMode('one-off'); // Volta para o formulário avulso após o sucesso
+    setFormMode('one-off');
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida o cache de transações para o useTransactionsData
+    queryClient.invalidateQueries({ queryKey: ["transactions"] });
   };
 
   const oneOffFormContent = (
@@ -288,7 +282,7 @@ export default function Receitas() {
                     htmlFor="one-off-revenue"
                     className={cn(
                       "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
+                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
                     )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue" className="sr-only" />
@@ -299,7 +293,7 @@ export default function Receitas() {
                     htmlFor="recurring-revenue"
                     className={cn(
                       "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
+                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
                     )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue" className="sr-only" />
@@ -332,7 +326,7 @@ export default function Receitas() {
                     htmlFor="one-off-revenue-desktop"
                     className={cn(
                       "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      "py-2 px-4 text-sm" // Desktop size, menor padding
+                      "py-2 px-4 text-sm"
                     )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only" />
@@ -343,7 +337,7 @@ export default function Receitas() {
                     htmlFor="recurring-revenue-desktop"
                     className={cn(
                       "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      "py-2 px-4 text-sm" // Desktop size, menor padding
+                      "py-2 px-4 text-sm"
                     )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only" />
