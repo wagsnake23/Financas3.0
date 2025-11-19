@@ -74,7 +74,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         .select("*")
         .in("recurring_id", recurringIds);
       if (error) throw error;
-      console.log("useRecurringEntries: Fetched recurringExceptions (after potential update):", data);
+      console.log("useRecurringEntries: Fetched recurringExceptions (after potential update):", data); // LOG ADICIONADO
       return data;
     },
     enabled: !!user?.id && recurringEntries.length > 0,
@@ -124,7 +124,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const exception = recurringExceptions.find(
         ex => ex.recurring_id === entry.id && ex.year === currentYear && ex.month === currentMonthIndex
       );
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Exception found: ${!!exception}, Paid in exception: ${exception?.paid}`);
+      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Exception found: ${!!exception}, Exception object:`, exception); // LOG ADICIONADO
 
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
@@ -132,6 +132,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const finalDueDate = exception?.override_due_date ? new Date(exception.override_due_date) : baseDueDate;
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
+      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - isPaidByException: ${isPaidByException}`); // LOG ADICIONADO
 
       if (isCanceledByException) {
         console.log(`useRecurringEntries:   Skipping entry ${entry.id}: Canceled by exception for this month`);
@@ -149,7 +150,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       } else { // Se a data está no futuro e não foi pago
         status = 'Prevista';
       }
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final isPaid: ${isPaidByException}, Final status: ${status}`);
+      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final status: ${status}`); // LOG ADICIONADO
       
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
