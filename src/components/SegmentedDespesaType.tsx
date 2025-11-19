@@ -19,7 +19,7 @@ export const SegmentedDespesaType: React.FC<SegmentedDespesaTypeProps> = ({
     {
       label: "Avulsa",
       value: "avulsa",
-      iconName: "CreditCard",
+      iconName: "Zap", // Alterado de CreditCard para Zap
     },
     {
       label: "Recorrente",

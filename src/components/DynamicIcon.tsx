@@ -11,7 +11,7 @@ import {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
-  Building2, Sandwich
+  Building2, Sandwich, Zap // Adicionado Zap
 } from 'lucide-react';
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
@@ -28,7 +28,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
-  Building2, Sandwich
+  Building2, Sandwich, Zap // Adicionado Zap
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
