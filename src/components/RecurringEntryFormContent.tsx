@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format } from "date-fns"; // Mantido para formatar a exibição da data no botão
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,7 +43,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
   const [value, setValue] = useState<number | undefined>(undefined);
-  // Removido selectedParentCategoryId
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(UNSELECTED_VALUE);
   const [dueDay, setDueDay] = useState("1");
   const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
@@ -58,7 +57,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   useEffect(() => {
     setType(initialType);
-    // Removido setSelectedParentCategoryId(UNSELECTED_VALUE);
     setSelectedSubcategoryId(UNSELECTED_VALUE);
     setFormaPagamento("dinheiro");
     setCartaoId(UNSELECTED_VALUE);
@@ -85,7 +83,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     }
   };
 
-  // `fetchedCategories` agora já são as subcategorias filtradas pelo hook `useRecurringEntries`
   const subcategories = fetchedCategories;
 
   const getCategoryDisplayName = (catId: string) => {
@@ -118,16 +115,11 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       return;
     }
 
-    // Formatar a data de início explicitamente para evitar problemas de fuso horário
+    // Formatar a data de início como string YYYY-MM-DD (local)
     const formattedStartDate = startDate
-      ? new Date(
-          startDate.getFullYear(),
-          startDate.getMonth(),
-          startDate.getDate(),
-          12, // meio-dia para evitar virada de dia
-          0,
-          0
-        ).toISOString()
+      ? `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, "0")}-${String(
+          startDate.getDate()
+        ).padStart(2, "0")}`
       : null;
 
     if (!formattedStartDate) {
@@ -144,7 +136,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
       due_day: parseInt(dueDay),
       frequency,
-      start_date: formattedStartDate, // Usar a data formatada explicitamente
+      start_date: formattedStartDate, // Enviar a string formatada
       end_date: null,
       status: 'active',
       forma_pagamento: formaPagamento,
@@ -164,7 +156,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           note: "Marcado como pago na criação da recorrência",
           override_value: value,
           override_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
-          override_due_date: formattedStartDate, // Usar a data formatada explicitamente
+          override_due_date: formattedStartDate, // Enviar a string formatada
         };
 
         await createOrUpdateException({
@@ -179,7 +171,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       }
 
       setValue(undefined);
-      // Removido setSelectedParentCategoryId(UNSELECTED_VALUE);
       setSelectedSubcategoryId(UNSELECTED_VALUE);
       setDueDay("1");
       setStartDate(new Date());
@@ -196,7 +187,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Campo de Subcategoria (antiga Categoria Principal e Subcategoria combinadas) */}
+      {/* Campo de Subcategoria */}
       <div>
         <Label htmlFor="subcategory" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select 
@@ -339,7 +330,16 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             <Calendar
               mode="single"
               selected={startDate}
-              onSelect={setStartDate}
+              onSelect={(date) => {
+                if (!date) return;
+                const fixedDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate()
+                );
+                setStartDate(fixedDate);
+                setIsStartDateCalendarOpen(false);
+              }}
               initialFocus
               locale={ptBR}
               showOutsideDays={false}
