@@ -54,6 +54,13 @@ const createSafeDate = (dateString: string | null | undefined): Date | undefined
   return new Date(y, m - 1, d);
 };
 
+// Helper function to validate if a string is a UUID
+const isValidUuid = (value: string | null | undefined): boolean => {
+  if (!value) return false;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(value);
+};
+
 export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   editingTransaction,
   onUpdateTransaction,
@@ -116,6 +123,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
 
+    // Ensure the current category is always available in the dropdown if it's not in the filtered list
     if (
       editingTransaction &&
       editingTransaction.category &&
@@ -337,7 +345,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         finalRecurringPayload = {
           override_value: amount === undefined ? null : amount,
-          override_category_id: category === UNSELECTED_VALUE || category === "" ? null : category, // Convert empty string to null
+          // Apply UUID validation for category_id in exceptions
+          override_category_id: (category === UNSELECTED_VALUE || category === "" || !isValidUuid(category)) ? null : category,
           override_due_date: formattedOverrideDueDate, // Usar a string formatada
           note: note.trim() || null,
           paid: isPaid,
@@ -354,15 +363,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         finalRecurringPayload = {
           title: title.trim(),
           value: amount === undefined ? null : amount,
-          category_id: category === UNSELECTED_VALUE || category === "" ? null : category, // Convert empty string to null
+          // Apply UUID validation for category_id in master entry
+          category_id: (category === UNSELECTED_VALUE || category === "" || !isValidUuid(category)) ? null : category,
           due_day: parseInt(dueDay),
           frequency,
           start_date: formattedStartDateForMaster, // Usar a string formatada
           end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
           forma_pagamento: recurringTransaction.forma_pagamento,
-          // CORREÇÃO AQUI: Garante que cartao_id seja null se UNSELECTED_VALUE ou string vazia
-          cartao_id: recurringTransaction.cartao_id === UNSELECTED_VALUE || recurringTransaction.cartao_id === "" ? null : recurringTransaction.cartao_id,
+          // Apply UUID validation for cartao_id in master entry
+          cartao_id: (recurringTransaction.cartao_id === UNSELECTED_VALUE || recurringTransaction.cartao_id === "" || !isValidUuid(recurringTransaction.cartao_id)) ? null : recurringTransaction.cartao_id,
         } as TablesUpdate<"recurring_entries">;
       }
     }
