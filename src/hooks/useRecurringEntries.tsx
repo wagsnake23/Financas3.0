@@ -385,11 +385,9 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log("useRecurringEntries: markMonthPaidMutation: Calling rpc_create_or_update_recurring_exception with payload:", { recurring_id, year, month, is_paid });
 
       const payload: TablesUpdate<'recurring_entry_exceptions'> = {
-        recurring_id,
-        year,
-        month,
+        // Removido recurring_id, year, month do payload, pois já são passados como argumentos separados
         paid: is_paid,
-        canceled: false, // Ensure it's not marked as canceled if we are marking it paid
+        canceled: false, // Garante que não seja marcado como cancelado se estamos marcando como pago
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
