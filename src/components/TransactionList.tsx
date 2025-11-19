@@ -36,6 +36,8 @@ interface TransactionListProps {
   user: User | null;
   disableFilters?: boolean;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
+  filterCardId: string; // Novo
+  setFilterCardId: (cardId: string) => void; // Novo
 }
 
 export const TransactionList = ({
@@ -49,10 +51,13 @@ export const TransactionList = ({
   user,
   disableFilters = false,
   markMonthPaid, // Re-adicionado
+  filterCardId, // Novo
+  setFilterCardId, // Novo
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  // const [filterCardId, setFilterCardId] = useState<string>("all"); // Removido, agora vem via props
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const filteredTransactions = useMemo(() => {
@@ -64,6 +69,9 @@ export const TransactionList = ({
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
       let matchesPaymentMethod = true; 
+      if (filterCardId !== "all") {
+        matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === filterCardId;
+      }
 
       const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
 
@@ -71,7 +79,7 @@ export const TransactionList = ({
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, isMobile]);
+  }, [transactions, searchTerm, filterType, filterCategory, filterCardId, isMobile]); // Adicionado filterCardId
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -143,6 +151,21 @@ export const TransactionList = ({
                   </span>
                 </SelectItem>
               ))}
+          </SelectContent>
+        </Select>
+
+        {/* Novo filtro para Cartão de Crédito */}
+        <Select value={filterCardId} onValueChange={setFilterCardId} disabled={disableFilters}>
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Cartão de Crédito" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os cartões</SelectItem>
+            {cartoes.map((card) => (
+              <SelectItem key={card.id} value={card.id}>
+                {card.nome} (****{card.ultimos_digitos})
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

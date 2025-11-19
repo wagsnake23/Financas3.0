@@ -45,6 +45,8 @@ interface LancamentosContentProps {
   // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
+  filterCardId: string; // Novo: filtro de cartão
+  setFilterCardId: (cardId: string) => void; // Novo: função para atualizar o filtro de cartão
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -64,6 +66,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // selectedMonth, // Removido
   onEditTransaction,
   markMonthPaid, // Re-adicionado
+  filterCardId, // Novo
+  setFilterCardId, // Novo
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -121,6 +125,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
+      filterCardId={filterCardId} // Novo
+      setFilterCardId={setFilterCardId} // Novo
     />
   );
 };

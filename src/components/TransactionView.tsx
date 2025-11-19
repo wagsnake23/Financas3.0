@@ -21,6 +21,8 @@ interface TransactionViewProps {
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
   markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Re-adicionado
+  filterCardId: string; // Novo
+  setFilterCardId: (cardId: string) => void; // Novo
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -36,6 +38,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
   markMonthPaid, // Re-adicionado
+  filterCardId, // Novo
+  setFilterCardId, // Novo
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
   // const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Removido
@@ -56,6 +60,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
       markMonthPaid={markMonthPaid} // Re-adicionado
+      filterCardId={filterCardId} // Novo
+      setFilterCardId={setFilterCardId} // Novo
     />
   );
 

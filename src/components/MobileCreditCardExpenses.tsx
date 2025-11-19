@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"; // Importar
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { toast } from "sonner"; // Importar toast
 import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<'cartoes'>[];
@@ -31,6 +32,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   selectedMonth,
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // Inicializar useNavigate
   const queryClient = useQueryClient();
   const [selectedCardId, setSelectedCardId] = useState<string>(UNSELECTED_VALUE);
 
@@ -70,73 +72,17 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
     return { totalPaid: paid, totalPending: pending, totalCardExpenses: paid + pending };
   }, [filteredExpenses]);
 
-  // Mutation para marcar parcelas como pagas
-  const payMonthlyBillMutation = useMutation({
-    mutationFn: async ({ cardId, monthStart, monthEnd }: { cardId: string; monthStart: Date; monthEnd: Date }) => {
-      if (!user?.id) throw new Error("Usuário não autenticado.");
-
-      const { data: installmentsToUpdate, error: fetchError } = await supabase
-        .from("despesas_parcelas")
-        .select("id")
-        .eq("pago", false)
-        .gte("vencimento", format(monthStart, "yyyy-MM-dd"))
-        .lte("vencimento", format(monthEnd, "yyyy-MM-dd"))
-        .in("despesa_id", supabase
-          .from("despesas")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("cartao_id", cardId)
-          .eq("forma_pagamento", "cartao")
-          .filter("is_fixed", "eq", false) // Excluir despesas fixas legadas
-        );
-
-      if (fetchError) throw fetchError;
-
-      if (installmentsToUpdate.length === 0) {
-        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês.");
-        return;
-      }
-
-      const installmentIds = installmentsToUpdate.map(i => i.id);
-
-      const { error: updateError } = await supabase
-        .from("despesas_parcelas")
-        .update({
-          pago: true,
-          data_pagamento: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-        })
-        .in("id", installmentIds);
-
-      if (updateError) throw updateError;
-      return installmentsToUpdate.length;
-    },
-    onSuccess: (updatedCount) => {
-      queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida também a lista de transações
-      toast.success(`${updatedCount} despesa(s) do cartão marcada(s) como paga(s)!`, {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
-      });
-    },
-    onError: (error) => {
-      toast.error("Erro ao pagar fatura mensal", { description: error.message });
-      console.error("Supabase error paying monthly bill:", error);
-    },
-  });
+  // Removendo a mutação de pagamento, pois a lógica será de navegação
+  // const payMonthlyBillMutation = useMutation({ ... });
 
   const handlePayMonthlyBill = () => {
     if (!selectedCardId || selectedCardId === UNSELECTED_VALUE) {
-      toast.error("Selecione um cartão para pagar a fatura.");
+      toast.error("Selecione um cartão para ver a fatura.");
       return;
     }
-    if (totalPending === 0) {
-      toast.info("Não há despesas pendentes para este cartão no mês selecionado.");
-      return;
-    }
-
-    const monthStart = startOfMonth(selectedMonth);
-    const monthEnd = endOfMonth(selectedMonth);
-
-    payMonthlyBillMutation.mutate({ cardId: selectedCardId, monthStart, monthEnd });
+    // Navegar para a página de lançamentos com os filtros de cartão e mês
+    const formattedMonth = format(selectedMonth, "yyyy-MM-dd");
+    navigate(`/lancamentos?cardId=${selectedCardId}&month=${formattedMonth}`);
   };
 
   // A função getCategoryDisplay não é mais necessária se a tabela for removida, mas a manterei caso seja útil para depuração ou futuras expansões.
@@ -176,17 +122,13 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
             variant="success"
             size="default" // Usar size="default" para que o w-full funcione bem
             onClick={handlePayMonthlyBill}
-            disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE || payMonthlyBillMutation.isPending || totalPending === 0}
+            disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE} // Removido isPending e totalPending
             className={cn("rounded-xl w-full", isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs")} // Ajustado para w-full em mobile
           >
-            {payMonthlyBillMutation.isPending ? (
-              "..."
-            ) : (
-              <>
-                <DynamicIcon name="CheckCircle" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-                <span className="ml-2">Pagar Fatura</span>
-              </>
-            )}
+            <>
+              <DynamicIcon name="CreditCard" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              <span className="ml-2">Ver Fatura</span>
+            </>
           </Button>
         </div>
       )}
