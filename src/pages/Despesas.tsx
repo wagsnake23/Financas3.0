@@ -121,8 +121,8 @@ export default function Despesas() {
               "flex items-center" // Adicionado para alinhar ícone e texto
             )}
           >
-            <DynamicIcon name="⚡" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} />
-            Avulsa
+            <span>Avulsa</span>
+            <DynamicIcon name="⚡" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Movido para a direita */}
           </Label>
         </div>
         <div className="flex items-center space-x-2">
@@ -136,8 +136,8 @@ export default function Despesas() {
               "flex items-center" // Adicionado para alinhar ícone e texto
             )}
           >
-            <DynamicIcon name="🔁" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} />
-            Recorrente
+            <span>Recorrente</span>
+            <DynamicIcon name="🔁" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Movido para a direita */}
           </Label>
         </div>
       </RadioGroup>
