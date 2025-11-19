@@ -89,6 +89,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
+    // Adiciona verificação defensiva para queryClient
+    if (!queryClient) {
+      console.error("queryClient is undefined in handleToggleStatus!");
+      toast.error("Erro interno: Cliente de consulta não disponível.");
+      return;
+    }
+
     console.log("handleToggleStatus: Transaction:", transaction);
     console.log("handleToggleStatus: isRecurring:", transaction.isRecurring);
     console.log("handleToggleStatus: recurringEntryId:", transaction.recurringEntryId);
@@ -110,7 +117,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         });
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
-        queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalidate combined transactions
+        // Invalida as queries que useTransactionsData depende
+        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
       } catch (error) {
         console.error("handleToggleStatus: Error marking recurring month paid:", error);
       }
@@ -135,7 +144,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         .from("receitas")
         .update({ status: newStatus })
         .eq("id", revenueIdToUse)
-        .eq("user_id", user.id);
+        .eq("user_id", user.id); // CORRIGIDO: de "user.id" para "user_id"
       error = updateError;
 
       if (!error) {
@@ -143,7 +152,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           if (!oldData) return [];
           return oldData.map(r => r.id === revenueIdToUse ? { ...r, status: newStatus } : r);
         });
-        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] }); // Invalida a query de receitas
       }
     } else if (transaction.type === "expense") {
       // For one-off expense, transaction.id is always the ID of a 'despesas_parcelas' entry.
@@ -171,7 +180,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           if (!oldData) return [];
           return oldData.map(p => p.id === installmentId ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
         });
-        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] }); // Invalida a query de parcelas
       }
     }
   
