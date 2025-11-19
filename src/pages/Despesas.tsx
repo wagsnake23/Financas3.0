@@ -130,7 +130,7 @@ export default function Despesas() {
           )}
         >
           <RadioGroupItem value="one-off" id="one-off-expense" className="sr-only peer" /> {/* Adicionado peer */}
-          <DynamicIcon name="CreditCard" className={cn("mb-3 h-6 w-6 text-primary", isMobile && "mb-1 h-5 w-5")} />
+          <DynamicIcon name="⚡" className={cn("mb-3 h-6 w-6 text-primary", isMobile && "mb-1 h-5 w-5")} />
           <span>Avulsa</span>
         </Label>
         <Label
@@ -153,7 +153,7 @@ export default function Despesas() {
           )}
         >
           <RadioGroupItem value="recurring" id="recurring-expense" className="sr-only peer" /> {/* Adicionado peer */}
-          <DynamicIcon name="Repeat" className={cn("mb-3 h-6 w-6 text-success", isMobile && "mb-1 h-5 w-5")} />
+          <DynamicIcon name="🔁" className={cn("mb-3 h-6 w-6 text-success", isMobile && "mb-1 h-5 w-5")} />
           <span>Recorrente</span>
         </Label>
       </RadioGroup>
