@@ -84,7 +84,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
   });
 
   const allRawTransactions: Transaction[] = useMemo(() => {
-    console.log("allRawTransactions useMemo re-running...");
+    console.log("useTransactionsData: allRawTransactions useMemo re-running...");
     const incomeTransactions: Transaction[] = [];
 
     revenues.forEach(r => {
@@ -139,16 +139,24 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       });
     });
 
+    const combined = [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    // Log para a transação específica após a combinação
+    const specificRecurringTransaction = combined.find(t => t.id === 'b964d461-309a-4841-b72b-d68c92702b18-2025-11'); // Substitua pelo ID da sua transação de teste
+    if (specificRecurringTransaction) {
+      console.log("useTransactionsData: Specific recurring transaction (b964d461-309a-4841-b72b-d68c92702b18-2025-11) status in allRawTransactions:", specificRecurringTransaction.status);
+    }
+
     console.log("useTransactionsData: Income transactions count:", incomeTransactions.length);
     console.log("useTransactionsData: Expense transactions count:", expenseTransactions.length);
     console.log("useTransactionsData: Materialized Recurring transactions count:", materializedRecurringTransactions.length);
-    console.log("useTransactionsData: Combined allRawTransactions count:", [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].length);
+    console.log("useTransactionsData: Combined allRawTransactions count:", combined.length);
     
-    return [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    return combined;
   }, [revenues, expenseInstallments, materializedRecurringTransactions]);
 
   const monthlyFilteredTransactions = useMemo(() => {
-    console.log("monthlyFilteredTransactions useMemo re-running...");
+    console.log("useTransactionsData: monthlyFilteredTransactions useMemo re-running...");
     const startOfSelectedMonth = startOfMonth(selectedMonth);
     const endOfSelectedMonth = endOfMonth(selectedMonth);
 
@@ -158,9 +166,9 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       return isWithin;
     });
     // Log para a transação específica
-    const specificTransaction = filtered.find(t => t.id === 'c563ab68-47fd-4c7e-9988-cab53dd28abf-2025-11');
+    const specificTransaction = filtered.find(t => t.id === 'b964d461-309a-4841-b72b-d68c92702b18-2025-11'); // Substitua pelo ID da sua transação de teste
     if (specificTransaction) {
-      console.log("useTransactionsData: Specific transaction (c563ab68-47fd-4c7e-9988-cab53dd28abf-2025-11) status in monthlyFilteredTransactions:", specificTransaction.status);
+      console.log("useTransactionsData: Specific transaction (b964d461-309a-4841-b72b-d68c92702b18-2025-11) status in monthlyFilteredTransactions:", specificTransaction.status);
     }
     console.log("useTransactionsData: monthlyFilteredTransactions (after date filter) count:", filtered.length);
     return filtered;

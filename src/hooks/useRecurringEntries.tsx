@@ -54,7 +54,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         .eq("user_id", user.id)
         .order("start_date", { ascending: true });
       if (error) throw error;
-      console.log("Fetched recurringEntries (re-fetch triggered):", data);
+      console.log("useRecurringEntries: Fetched recurringEntries (re-fetch triggered):", data);
       return data;
     },
     enabled: !!user?.id,
@@ -73,7 +73,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         .select("*")
         .in("recurring_id", recurringIds);
       if (error) throw error;
-      console.log("Fetched recurringExceptions (after potential update):", data); // ADD THIS LOG
+      console.log("useRecurringEntries: Fetched recurringExceptions (after potential update):", data);
       return data;
     },
     enabled: !!user?.id && recurringEntries.length > 0,
@@ -81,7 +81,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
   // Materialize recurring transactions for the current month
   const materializedRecurringTransactions = useMemo(() => {
-    console.log("materializedRecurringTransactions useMemo re-running...");
+    console.log("useRecurringEntries: materializedRecurringTransactions useMemo re-running...");
     if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions) return [];
 
     const startOfCurrentMonth = currentMonth; // Usar o currentMonth diretamente para o contexto
@@ -91,17 +91,17 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     const transactions: MaterializedRecurringTransaction[] = [];
 
     recurringEntries.forEach(entry => {
-      console.log(`Processing recurring entry: ${entry.id} - ${entry.title} (Type: ${entry.type})`);
+      console.log(`useRecurringEntries: Processing recurring entry: ${entry.id} - ${entry.title} (Type: ${entry.type})`);
       // Check if the entry is active and within its date range
       const entryStartDate = new Date(entry.start_date);
       const entryEndDate = entry.end_date ? new Date(entry.end_date) : null;
 
       // Check if the recurring entry is relevant for the current month
       const isRelevantForMonth = isWithinInterval(currentMonth, { start: entryStartDate, end: entryEndDate || new Date(9999, 11, 31) });
-      console.log(`  isRelevantForMonth: ${isRelevantForMonth} (Current Month: ${format(currentMonth, 'yyyy-MM-dd')}, Start: ${format(entryStartDate, 'yyyy-MM-dd')}, End: ${entryEndDate ? format(entryEndDate, 'yyyy-MM-dd') : 'N/A'})`);
+      console.log(`useRecurringEntries:   isRelevantForMonth: ${isRelevantForMonth} (Current Month: ${format(currentMonth, 'yyyy-MM-dd')}, Start: ${format(entryStartDate, 'yyyy-MM-dd')}, End: ${entryEndDate ? format(entryEndDate, 'yyyy-MM-dd') : 'N/A'})`);
 
       if (!isRelevantForMonth || entry.status === 'canceled') {
-        console.log(`  Skipping entry: Not relevant for month or canceled (status: ${entry.status})`);
+        console.log(`useRecurringEntries:   Skipping entry: Not relevant for month or canceled (status: ${entry.status})`);
         return; // Skip if not relevant or canceled
       }
 
@@ -116,23 +116,23 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const exception = recurringExceptions.find(
         ex => ex.recurring_id === entry.id && ex.year === currentYear && ex.month === currentMonthIndex
       );
-      console.log(`  Found exception for this month: ${!!exception ? JSON.stringify(exception) : 'None'}`);
+      console.log(`useRecurringEntries:   Found exception for this month: ${!!exception ? JSON.stringify(exception) : 'None'}`);
 
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
       const finalCategory = exception?.override_category_id ?? entry.category_id;
       const finalDueDate = exception?.override_due_date ? new Date(exception.override_due_date) : baseDueDate;
       const isCanceled = exception?.canceled ?? false;
-      const isPaid = exception?.paid ?? false;
+      const isPaid = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
       const note = exception?.note ?? null;
 
-      console.log(`  Exception details for entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}):`);
-      console.log(`    exception?.paid: ${exception?.paid}`);
-      console.log(`    isPaid (derived from exception): ${isPaid}`);
+      console.log(`useRecurringEntries:   Exception details for entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}):`);
+      console.log(`useRecurringEntries:     exception?.paid: ${exception?.paid}`);
+      console.log(`useRecurringEntries:     isPaid (derived from exception): ${isPaid}`);
 
 
       if (isCanceled) {
-        console.log(`  Skipping entry: Canceled by exception for this month`);
+        console.log(`useRecurringEntries:   Skipping entry: Canceled by exception for this month`);
         return; // Skip if this month is canceled by an exception
       }
 
@@ -145,7 +145,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       } else {
         status = 'Prevista';
       }
-      console.log(`    Final status assigned to materialized transaction: ${status}`);
+      console.log(`useRecurringEntries:     Final status assigned to materialized transaction: ${status}`);
       
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
@@ -181,15 +181,15 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       };
 
       transactions.push(materializedTransaction);
-      console.log("  Materialized transaction:", materializedTransaction);
+      console.log("useRecurringEntries:   Materialized transaction:", materializedTransaction);
     });
 
-    console.log("Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions);
+    console.log("useRecurringEntries: Final materializedRecurringTransactions for month:", format(currentMonth, 'yyyy-MM'), transactions);
     return transactions;
   }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions]);
 
   const invalidateQueries = useCallback(() => {
-    console.log("invalidateQueries: Invalidating recurringEntries and recurringExceptions.");
+    console.log("useRecurringEntries: invalidateQueries: Invalidating recurringEntries and recurringExceptions.");
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
     // Invalida também as queries que useTransactionsData depende para garantir que a lista seja re-renderizada
@@ -381,7 +381,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
   const markMonthPaidMutation = useMutation({
     mutationFn: async ({ recurring_id, year, month, is_paid }: { recurring_id: string; year: number; month: number; is_paid: boolean }) => {
       if (!user?.id) throw new Error("User not authenticated.");
-      console.log("markMonthPaidMutation: Calling rpc_create_or_update_recurring_exception with payload:", { recurring_id, year, month, is_paid });
+      console.log("useRecurringEntries: markMonthPaidMutation: Calling rpc_create_or_update_recurring_exception with payload:", { recurring_id, year, month, is_paid });
 
       const payload: TablesUpdate<'recurring_entry_exceptions'> = {
         recurring_id,
@@ -400,8 +400,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
-      console.log("markMonthPaidMutation: onSuccess - Invalidating queries.");
+    onSuccess: (data, variables) => {
+      console.log("useRecurringEntries: markMonthPaidMutation: onSuccess - Invalidating queries. Payload sent:", variables);
       invalidateQueries();
       toast.success("Status de pagamento atualizado!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
