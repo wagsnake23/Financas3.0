@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<'cartoes'>[];
-  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
+  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagão' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
   allCategories: AppCategory[];
   isMobile: boolean;
   selectedMonth: Date;
@@ -158,10 +158,9 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
       {cartoes.length === 0 ? (
         <p className="text-muted-foreground text-center py-2 text-sm">Nenhum cartão de crédito cadastrado.</p>
       ) : (
-        <div className="grid grid-cols-4 gap-2"> {/* Alterado para grid com 4 colunas */}
-          <Select value={selectedCardId} onValueChange={setSelectedCardId} className="col-span-3"> {/* Ocupa 3 das 4 colunas */}
-            <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione um cartão" />
+        <div className="flex flex-col gap-2"> {/* Alterado para flex-col gap-2 */}
+          <Select value={selectedCardId} onValueChange={setSelectedCardId} className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
+            <SelectValue placeholder="Selecione um cartão" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione um cartão</SelectItem>
@@ -174,17 +173,17 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
           </Select>
           <Button
             variant="success"
-            size={isMobile ? "icon" : "sm"} // Ícone em mobile, sm em desktop
+            size="default" // Usar size="default" para que o w-full funcione bem
             onClick={handlePayMonthlyBill}
             disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE || payMonthlyBillMutation.isPending || totalPending === 0}
-            className={cn("rounded-xl col-span-1", isMobile ? "h-9 w-9" : "h-9 text-xs px-3")} // Ocupa 1 coluna
+            className={cn("rounded-xl w-full", isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs")} // Ajustado para w-full em mobile
           >
             {payMonthlyBillMutation.isPending ? (
               "..."
             ) : (
               <>
                 <DynamicIcon name="CheckCircle" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-                {!isMobile && <span className="ml-2">Pagar Fatura</span>}
+                <span className="ml-2">Pagar Fatura</span>
               </>
             )}
           </Button>
