@@ -119,12 +119,16 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     }
 
     // Formatar a data de início explicitamente para evitar problemas de fuso horário
-    const formattedStartDate =
-      startDate
-        ? `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, "0")}-${String(
-            startDate.getDate()
-          ).padStart(2, "0")}`
-        : null;
+    const formattedStartDate = startDate
+      ? new Date(
+          startDate.getFullYear(),
+          startDate.getMonth(),
+          startDate.getDate(),
+          12, // meio-dia para evitar virada de dia
+          0,
+          0
+        ).toISOString()
+      : null;
 
     if (!formattedStartDate) {
       toast.error("Data de início inválida.");
