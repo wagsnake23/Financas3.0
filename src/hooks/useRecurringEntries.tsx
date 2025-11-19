@@ -126,6 +126,9 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         ex => ex.recurring_id === entry.id && ex.year === currentYear && ex.month === currentMonthIndex
       );
       console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Exception found: ${!!exception}, Exception object:`, exception); // LOG ADICIONADO
+      if (exception) {
+        console.log(`useRecurringEntries:   Exception note for entry ${entry.id}: '${exception.note}'`); // NEW LOG
+      }
 
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
@@ -153,6 +156,12 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       }
       console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final status: ${status}`); // LOG ADICIONADO
       
+      // Remove the explicit "Marcado como pago/pendente" suffix
+      let descriptionSuffix = '';
+      if (exception?.note) { // Only add custom note if it exists
+        descriptionSuffix = ` (${exception.note})`;
+      }
+
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
         recurringEntryId: entry.id,
@@ -163,7 +172,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         amount: finalValue,
         date: format(finalDueDate, "yyyy-MM-dd"),
         category: finalCategory || "outros_diversos", // Fallback category ID
-        description: entry.title + (exception?.note ? ` (${exception.note})` : ''), // Corrigido: usando exception?.note
+        description: entry.title + descriptionSuffix, // Use the new suffix logic
         status: status,
         is_fixed: true, // Mark as fixed for compatibility with TransactionRow
         recurrence_frequency: entry.frequency,
@@ -394,7 +403,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         month,
         paid: is_paid,
         canceled: false, // Ensure it's not marked as canceled when toggling paid status
-        note: is_paid ? "Marcado como pago" : "Marcado como pendente", // Descrição removida
+        note: null, // Definido como null para que a descrição seja gerada com base no status
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
@@ -408,7 +417,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     },
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Status de pagamento atualizado!", { // Descrição removida
+      toast.success("Status de pagamento atualizado!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
