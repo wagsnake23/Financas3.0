@@ -302,7 +302,7 @@ export default function Receitas() {
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={fetchedCategories} // fetchedCategories agora são as subcategorias
+                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />
@@ -346,7 +346,7 @@ export default function Receitas() {
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={fetchedCategories} // fetchedCategories agora são as subcategorias
+                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />
