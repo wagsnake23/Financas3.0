@@ -181,7 +181,7 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
     monthlyFilteredTransactions, // Retornando as transações filtradas pelo mês
     fetchedCategories,
     cartoes,
-    expenseInstallments,
+    // expenseInstallments, // Removido
     isLoading,
     isLoadingCategories,
   };

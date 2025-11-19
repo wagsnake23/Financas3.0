@@ -41,7 +41,7 @@ interface LancamentosContentProps {
   cartoes: Tables<'cartoes'>[];
   queryClient: ReturnType<typeof useQueryClient>; // Adicionado queryClient aqui
   user: User | null;
-  rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
+  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   onEditTransaction: (transaction: Transaction) => void;
 }
@@ -59,7 +59,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   cartoes,
   queryClient, // Recebendo queryClient
   user,
-  rawExpenseInstallments,
+  // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   onEditTransaction,
 }) => {
@@ -115,7 +115,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       isMobile={isMobile}
       queryClient={queryClient} // Passando queryClient para TransactionView
       user={user}
-      rawExpenseInstallments={rawExpenseInstallments}
+      // rawExpenseInstallments={rawExpenseInstallments} // Removido
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
     />

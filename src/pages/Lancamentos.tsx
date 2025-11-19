@@ -31,7 +31,7 @@ const Lancamentos = () => {
     monthlyFilteredTransactions: transactions,
     fetchedCategories,
     cartoes,
-    expenseInstallments,
+    // expenseInstallments, // Removido
     isLoading,
     // handlePreviousMonth, // Removido
     // handleNextMonth, // Removido
@@ -80,7 +80,7 @@ const Lancamentos = () => {
             monthlyFilteredTransactions={transactions}
             cartoes={cartoes}
             user={user}
-            rawExpenseInstallments={expenseInstallments}
+            // rawExpenseInstallments={expenseInstallments} // Removido
             // selectedMonth={selectedMonth} // Removido
             onEditTransaction={handleEditTransaction}
             // Passando o queryClient aqui

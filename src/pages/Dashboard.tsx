@@ -23,6 +23,7 @@ import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
 import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar o novo hook
+import { useTransactionsData } from "@/hooks/useTransactionsData"; // Importar useTransactionsData
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -34,8 +35,13 @@ const Dashboard = () => {
   const [showBalanceValue, setShowBalanceValue] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Novo estado para o mês selecionado no calendário
 
-  // Use the new recurring entries hook
-  const { materializedRecurringTransactions, isLoading: isLoadingRecurring } = useRecurringEntries(user, selectedMonth, []); // Pass empty categories for now
+  const {
+    allRawTransactions,
+    fetchedCategories: allCategories,
+    // expenseInstallments, // Removido
+    isLoading: isLoadingTransactionsData,
+    isLoadingCategories,
+  } = useTransactionsData({ user, selectedMonth });
 
   // Fetch revenues
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
@@ -71,64 +77,25 @@ const Dashboard = () => {
     enabled: !!user?.id,
   });
 
-  // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id], // Unificado
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
-      return data as AppCategory[];
-    },
-    enabled: !!user?.id,
-  });
-
-  const allTransactions: Transaction[] = useMemo(() => {
-    const incomeTransactions: Transaction[] = revenues.map(r => ({
-      id: r.id,
-      type: "income",
-      amount: r.valor,
-      date: r.data,
-      category: r.tipo_receita_id || "receitas_e_investimentos_extras",
-      description: r.descricao || "Receita",
-    }));
-
-    const expenseTransactions: Transaction[] = expenseInstallments.map(p => ({
-      id: p.id,
-      type: "expense",
-      amount: p.valor_parcela,
-      date: p.vencimento,
-      category: p.despesas?.categoria_id || "outros_diversos",
-      description: `Parcela ${p.numero_parcela} de despesa`,
-    }));
-
-    // Combine one-off transactions with materialized recurring transactions
-    return [...incomeTransactions, ...expenseTransactions, ...materializedRecurringTransactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [revenues, expenseInstallments, materializedRecurringTransactions]);
-
   const stats = useMemo(() => {
     const today = new Date();
     const startOfCurrentMonth = startOfMonth(today);
     const endOfCurrentMonth = endOfMonth(today);
 
-    const totalIncome = allTransactions
+    const totalIncome = allRawTransactions
       .filter(t => t.type === "income" && isWithinInterval(new Date(t.date), { start: startOfCurrentMonth, end: endOfCurrentMonth }))
       .reduce((sum, t) => sum + t.amount, 0);
     
-    const totalExpenses = allTransactions
+    const totalExpenses = allRawTransactions
       .filter(t => t.type === "expense" && isWithinInterval(new Date(t.date), { start: startOfCurrentMonth, end: endOfCurrentMonth }))
       .reduce((sum, t) => sum + t.amount, 0);
     
     const balance = totalIncome - totalExpenses;
 
     return { totalIncome, totalExpenses, balance };
-  }, [allTransactions]);
+  }, [allRawTransactions]);
 
-  const isLoading = isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingRecurring;
+  const isLoading = isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
 
   if (isLoading) {
     return (
@@ -216,7 +183,7 @@ const Dashboard = () => {
 
               {/* 4. MonthlyExpensesCombinedMobile (dashboard com seletor de data) */}
               <MonthlyExpensesCombinedMobile
-                transactions={allTransactions}
+                transactions={allRawTransactions}
                 expenseInstallments={expenseInstallments}
                 isMobile={isMobile}
               />
@@ -285,7 +252,7 @@ const Dashboard = () => {
               {/* Charts e Resumo Mensal de Despesas */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                 {/* Coluna 1: Gráfico de Pizza de Despesas */}
-                <ExpensesPieChart transactions={allTransactions} allCategories={allCategories} isMobile={isMobile} />
+                <ExpensesPieChart transactions={allRawTransactions} allCategories={allCategories} isMobile={isMobile} />
 
                 {/* Coluna 2: Resumo Mensal de Despesas e Calendário de Despesas (invertidos e agrupados) */}
                 <div className="flex flex-col gap-4">
@@ -296,14 +263,14 @@ const Dashboard = () => {
                     currentMonth={selectedMonth} // Passa o mês selecionado
                   />
                   <MonthlyExpenseCalendar 
-                    transactions={allTransactions} 
+                    transactions={allRawTransactions} 
                     isMobile={isMobile} 
                     currentMonth={selectedMonth} // Passa o mês selecionado
                   />
                 </div>
 
                 {/* Coluna 3: Gráfico de Barras Mensais */}
-                <MonthlyBarChart transactions={allTransactions} isMobile={isMobile} />
+                <MonthlyBarChart transactions={allRawTransactions} isMobile={isMobile} />
               </div>
 
               {/* TotalExpensesCard em uma nova linha, abaixo do grid principal, para dar mais destaque */}

@@ -31,12 +31,12 @@ interface TransactionListProps {
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
-  filterPaymentMethod: string;
-  setFilterPaymentMethod: (method: string) => void;
+  // filterPaymentMethod: string; // Removido
+  // setFilterPaymentMethod: (method: string) => void; // Removido
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
+  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
 }
@@ -47,12 +47,12 @@ export const TransactionList = ({
   onEditTransaction, 
   allCategories, 
   cartoes,
-  filterPaymentMethod,
-  setFilterPaymentMethod,
+  // filterPaymentMethod, // Removido
+  // setFilterPaymentMethod, // Removido
   isMobile,
   queryClient,
   user,
-  rawExpenseInstallments,
+  // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
 }: TransactionListProps) => {
@@ -63,43 +63,23 @@ export const TransactionList = ({
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
-    // A prop 'transactions' já vem filtrada pelo mês de useTransactionsData
-    // const startOfSelectedMonth = startOfMonth(selectedMonth);
-    // const endOfSelectedMonth = endOfMonth(selectedMonth);
-
+    
     return transactions.filter(transaction => {
-      // const transactionDate = new Date(transaction.date);
-      // const matchesMonth = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth }); // Removido
-      
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
-      let matchesPaymentMethod = true;
-      if (filterPaymentMethod !== "all") {
-        if (transaction.type === "income") {
-          // Income transactions don't have forma_pagamento in this context
-          matchesPaymentMethod = false;
-        } else { // It's an expense (recurring or non-recurring)
-          if (filterPaymentMethod === "dinheiro" || filterPaymentMethod === "pix" || filterPaymentMethod === "boleto") {
-            matchesPaymentMethod = transaction.forma_pagamento === filterPaymentMethod;
-          } else if (filterPaymentMethod.startsWith("cartao_")) {
-            const cardId = filterPaymentMethod.split("_")[1];
-            matchesPaymentMethod = transaction.forma_pagamento === "cartao" && transaction.cartao_id === cardId;
-          } else {
-            matchesPaymentMethod = false; // Should not happen with current filter options
-          }
-        }
-      }
+      // Lógica de filtro de forma de pagamento removida
+      let matchesPaymentMethod = true; 
 
-      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod; // matchesMonth removido
+      const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
 
       // Log detalhado para cada transação
       console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile]); // selectedMonth removido das dependências
+  }, [transactions, searchTerm, filterType, filterCategory, isMobile]);
 
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
@@ -135,80 +115,78 @@ export const TransactionList = ({
     );
   }, [allCategories]);
 
-  const selectedCardId = filterPaymentMethod.startsWith("cartao_") ? filterPaymentMethod.split("_")[1] : null;
-  const selectedCard = useMemo(() => {
-    return cartoes.find(card => card.id === selectedCardId);
-  }, [cartoes, selectedCardId]);
+  // Lógica de cartão e fatura removida
+  // const selectedCardId = filterPaymentMethod.startsWith("cartao_") ? filterPaymentMethod.split("_")[1] : null;
+  // const selectedCard = useMemo(() => {
+  //   return cartoes.find(card => card.id === selectedCardId);
+  // }, [cartoes, selectedCardId]);
 
-  const invoiceDetails = useMemo(() => {
-    if (!selectedCard) return null;
-
-    // Usar o selectedMonth para determinar o mês da fatura
-    // const currentMonthForInvoice = selectedMonth; // Removido
-    const currentMonthForInvoice = new Date(); // Usar o mês atual como base
-    const currentDay = currentMonthForInvoice.getDate();
+  // const invoiceDetails = useMemo(() => {
+  //   if (!selectedCard) return null;
+  //   const currentMonthForInvoice = new Date();
+  //   const currentDay = currentMonthForInvoice.getDate();
     
-    let invoiceMonthDate = currentMonthForInvoice;
+  //   let invoiceMonthDate = currentMonthForInvoice;
 
-    if (currentDay > selectedCard.dia_fechamento) {
-      invoiceMonthDate = addMonths(currentMonthForInvoice, 1);
-    }
+  //   if (currentDay > selectedCard.dia_fechamento) {
+  //     invoiceMonthDate = addMonths(currentMonthForInvoice, 1);
+  //   }
 
-    const invoiceClosingDate = new Date(invoiceMonthDate.getFullYear(), invoiceMonthDate.getMonth(), selectedCard.dia_fechamento);
-    const invoiceDueDate = new Date(addMonths(invoiceMonthDate, 1).getFullYear(), addMonths(invoiceMonthDate, 1).getMonth(), selectedCard.dia_vencimento);
+  //   const invoiceClosingDate = new Date(invoiceMonthDate.getFullYear(), invoiceMonthDate.getMonth(), selectedCard.dia_fechamento);
+  //   const invoiceDueDate = new Date(addMonths(invoiceMonthDate, 1).getFullYear(), addMonths(invoiceMonthDate, 1).getMonth(), selectedCard.dia_vencimento);
 
-    return {
-      cardName: selectedCard.nome,
-      invoiceMonth: format(invoiceMonthDate, "MMMM", { locale: ptBR }),
-      dueDate: format(invoiceDueDate, "dd/MM", { locale: ptBR }),
-      invoiceMonthDate: invoiceMonthDate,
-    };
-  }, [selectedCard]); // selectedMonth removido das dependências
+  //   return {
+  //     cardName: selectedCard.nome,
+  //     invoiceMonth: format(invoiceMonthDate, "MMMM", { locale: ptBR }),
+  //     dueDate: format(invoiceDueDate, "dd/MM", { locale: ptBR }),
+  //     invoiceMonthDate: invoiceMonthDate,
+  //   };
+  // }, [selectedCard]);
 
-  const handlePayInvoice = async () => {
-    if (!selectedCard || !invoiceDetails || !user?.id) {
-      toast.error("Não foi possível processar o pagamento da fatura. Dados incompletos.");
-      return;
-    }
+  // const handlePayInvoice = async () => {
+  //   if (!selectedCard || !invoiceDetails || !user?.id) {
+  //     toast.error("Não foi possível processar o pagamento da fatura. Dados incompletos.");
+  //     return;
+  //   }
 
-    const invoiceMonthStart = startOfMonth(invoiceDetails.invoiceMonthDate);
-    const invoiceMonthEnd = endOfMonth(invoiceDetails.invoiceMonthDate);
+  //   const invoiceMonthStart = startOfMonth(invoiceDetails.invoiceMonthDate);
+  //   const invoiceMonthEnd = endOfMonth(invoiceDetails.invoiceMonthDate);
 
-    const installmentsToPay = rawExpenseInstallments.filter(p => {
-      const installmentDate = new Date(p.vencimento);
-      return (
-        p.despesas?.cartao_id === selectedCard.id &&
-        !p.pago &&
-        isWithinInterval(installmentDate, { start: invoiceMonthStart, end: invoiceMonthEnd })
-      );
-    });
+  //   const installmentsToPay = rawExpenseInstallments.filter(p => {
+  //     const installmentDate = new Date(p.vencimento);
+  //     return (
+  //       p.despesas?.cartao_id === selectedCard.id &&
+  //       !p.pago &&
+  //       isWithinInterval(installmentDate, { start: invoiceMonthStart, end: invoiceMonthEnd })
+  //     );
+  //   });
 
-    if (installmentsToPay.length === 0) {
-      toast.info(`Não há parcelas pendentes para o cartão ${selectedCard.nome} na fatura de ${invoiceDetails.invoiceMonth}.`);
-      return;
-    }
+  //   if (installmentsToPay.length === 0) {
+  //     toast.info(`Não há parcelas pendentes para o cartão ${selectedCard.nome} na fatura de ${invoiceDetails.invoiceMonth}.`);
+  //     return;
+  //   }
 
-    const installmentIdsToUpdate = installmentsToPay.map(p => p.id);
-    const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+  //   const installmentIdsToUpdate = installmentsToPay.map(p => p.id);
+  //   const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
-    const { error } = await supabase
-      .from("despesas_parcelas")
-      .update({
-        pago: true,
-        data_pagamento: currentTimestamp,
-      })
-      .in("id", installmentIdsToUpdate);
+  //   const { error } = await supabase
+  //     .from("despesas_parcelas")
+  //     .update({
+  //       pago: true,
+  //       data_pagamento: currentTimestamp,
+  //     })
+  //     .in("id", installmentIdsToUpdate);
 
-    if (error) {
-      toast.error("Erro ao pagar a fatura do cartão", { description: error.message });
-      console.error("Supabase error paying invoice:", error);
-    } else {
-      toast.success(`Fatura do cartão ${selectedCard.nome} (${invoiceDetails.invoiceMonth}) paga com sucesso!`, {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
-      });
-      queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-    }
-  };
+  //   if (error) {
+  //     toast.error("Erro ao pagar a fatura do cartão", { description: error.message });
+  //     console.error("Supabase error paying invoice:", error);
+  //   } else {
+  //     toast.success(`Fatura do cartão ${selectedCard.nome} (${invoiceDetails.invoiceMonth}) paga com sucesso!`, {
+  //       style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+  //     });
+  //     queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+  //   }
+  // };
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
@@ -261,8 +239,9 @@ export const TransactionList = ({
         </Select>
       </div>
 
-      <div className="mb-6">
-        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}> {/* Desabilitar forma de pagamento */}
+      {/* Bloco do filtro de forma de pagamento removido */}
+      {/* <div className="mb-6">
+        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -278,21 +257,22 @@ export const TransactionList = ({
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
 
-      {isMobile && selectedCard && invoiceDetails && (
+      {/* Botão de pagar fatura para mobile removido */}
+      {/* {isMobile && selectedCard && invoiceDetails && (
         <div className="mb-4">
           <Button 
             variant="outline" 
             className="h-auto py-2 text-sm w-3/4 mx-auto whitespace-normal rounded-xl"
             onClick={handlePayInvoice}
-            disabled={disableFilters} // Desabilitar botão de pagar fatura
+            disabled={disableFilters}
           >
             <span className="mr-2">💳</span>
             Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}
           </Button>
         </div>
-      )}
+      )} */}
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
         <div className={cn(
@@ -309,21 +289,22 @@ export const TransactionList = ({
           </p>
         </div>
 
-        {!isMobile && selectedCard && invoiceDetails && (
+        {/* Botão de pagar fatura para desktop removido */}
+        {/* {!isMobile && selectedCard && invoiceDetails && (
           <Button 
             variant="outline" 
             className="h-auto py-3 rounded-xl"
             onClick={handlePayInvoice}
-            disabled={disableFilters} // Desabilitar botão de pagar fatura
+            disabled={disableFilters}
           >
             <span className="mr-2">💳</span>
             Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}
           </Button>
-        )}
+        )} */}
       </div>
 
       <div className={cn(
-        "rounded-xl border overflow-hidden shadow-sm", // Adicionado rounded-xl e shadow-sm
+        "rounded-xl border overflow-hidden shadow-sm",
         isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
       )}>
         <Table>
@@ -334,14 +315,14 @@ export const TransactionList = ({
               <TableHead className="py-1 px-2 min-w-[80px]">Categoria</TableHead>
               {!isMobile && <TableHead className="py-1 px-2 min-w-[100px]">Descrição</TableHead>}
               <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead>
-              <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead> {/* RE-ADICIONADO */}
+              <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead>
               <TableHead className="py-1 px-2 text-right min-w-[50px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground"> {/* colSpan ajustado */}
+                <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
                   Nenhum lançamento encontrado
                 </TableCell>
               </TableRow>

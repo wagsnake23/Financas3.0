@@ -48,7 +48,7 @@ export const useLancamentosLogic = (user: User | null) => {
     allRawTransactions,
     fetchedCategories,
     cartoes,
-    expenseInstallments,
+    // expenseInstallments, // Removido
     isLoading,
     isLoadingCategories,
   } = useTransactionsData({ user, selectedMonth }); // Passando selectedMonth para useTransactionsData
@@ -177,7 +177,7 @@ export const useLancamentosLogic = (user: User | null) => {
 
     // Lógica original para transações avulsas (receitas ou despesas de parcela única)
     let error = null;
-    const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user?.id]) || [];
+    // const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user?.id]) || []; // Removido
 
     if (type === "income") {
       let revenueIdToUse = id;
@@ -205,45 +205,45 @@ export const useLancamentosLogic = (user: User | null) => {
         setLoadingEditData(false);
         return;
       }
-      const installmentData = currentExpenseInstallments.find(p => p.id === id);
+      // const installmentData = currentExpenseInstallments.find(p => p.id === id); // Removido
 
-      if (!installmentData) {
-        toast.error("Erro (DEL-NF-1.5): Parcela não encontrada.");
-        setLoadingEditData(false);
-        return;
-      } else if (installmentData) {
-        const despesaId = installmentData.despesas?.id;
-        if (!despesaId || !isValidUuid(despesaId)) { // Adicionado verificação para despesaId
-          toast.error("Erro (DEL-NF-2): ID da despesa principal da parcela inválido.");
-          setLoadingEditData(false);
-          return;
-        }
+      // if (!installmentData) { // Removido
+      //   toast.error("Erro (DEL-NF-1.5): Parcela não encontrada."); // Removido
+      //   setLoadingEditData(false); // Removido
+      //   return; // Removido
+      // } else if (installmentData) { // Removido
+        // const despesaId = installmentData.despesas?.id; // Removido
+        // if (!despesaId || !isValidUuid(despesaId)) { // Adicionado verificação para despesaId // Removido
+        //   toast.error("Erro (DEL-NF-2): ID da despesa principal da parcela inválido."); // Removido
+        //   setLoadingEditData(false); // Removido
+        //   return; // Removido
+        // } // Removido
         const { error: deleteParcelaError } = await supabase
           .from("despesas_parcelas")
           .delete()
           .eq("id", id);
         error = deleteParcelaError;
 
-        if (!error) {
-          const { data: remainingParcelas, error: checkError } = await supabase
-            .from("despesas_parcelas")
-            .select("id")
-            .eq("despesa_id", despesaId);
+        // if (!error) { // Removido
+        //   const { data: remainingParcelas, error: checkError } = await supabase // Removido
+        //     .from("despesas_parcelas") // Removido
+        //     .select("id") // Removido
+        //     .eq("despesa_id", despesaId); // Removido
 
-          if (checkError) {
-            console.error("handleDeleteTransaction: Erro ao verificar parcelas restantes:", checkError);
-          } else if (remainingParcelas && remainingParcelas.length === 0) {
-            const { error: deleteDespesaError } = await supabase
-              .from("despesas")
-              .delete()
-              .eq("id", despesaId)
-              .eq("user_id", user.id);
-            if (deleteDespesaError) {
-              console.error("handleDeleteTransaction: Erro ao excluir despesa pai:", deleteDespesaError);
-            }
-          }
-        }
-      }
+        //   if (checkError) { // Removido
+        //     console.error("handleDeleteTransaction: Erro ao verificar parcelas restantes:", checkError); // Removido
+        //   } else if (remainingParcelas && remainingParcelas.length === 0) { // Removido
+        //     const { error: deleteDespesaError } = await supabase // Removido
+        //       .from("despesas") // Removido
+        //       .delete() // Removido
+        //       .eq("id", despesaId) // Removido
+        //       .eq("user_id", user.id); // Removido
+        //     if (deleteDespesaError) { // Removido
+        //       console.error("handleDeleteTransaction: Erro ao excluir despesa pai:", deleteDespesaError); // Removido
+        //     } // Removido
+        //   } // Removido
+        // } // Removido
+      // } // Removido
     }
 
     if (error) {
@@ -262,7 +262,7 @@ export const useLancamentosLogic = (user: User | null) => {
       queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
     }
     setLoadingEditData(false);
-  }, [user, queryClient, allRawTransactions, expenseInstallments, confirmDeleteWithOptions]);
+  }, [user, queryClient, allRawTransactions, confirmDeleteWithOptions]);
 
   const handleEditTransaction = useCallback(async (transaction: Transaction) => {
     // Sempre define editingTransaction, o formulário de edição unificado lidará com a renderização
@@ -287,7 +287,7 @@ export const useLancamentosLogic = (user: User | null) => {
 
     // Lógica existente para transações não recorrentes (avulsas ou fixas legadas)
     const currentRevenues = queryClient.getQueryData<Tables<'receitas'>[]>(["revenues", user.id]) || [];
-    const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || [];
+    // const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || []; // Removido
 
     if (transaction.type === "income") {
       let revenueIdToUse = transaction.id;
@@ -342,19 +342,19 @@ export const useLancamentosLogic = (user: User | null) => {
           setLoadingEditData(false);
           return;
         }
-        const installment = currentExpenseInstallments.find(p => p.id === transaction.id);
-        if (installment?.despesas) {
-          setFullEditingExpense(installment.despesas);
-        } else {
+        // const installment = currentExpenseInstallments.find(p => p.id === transaction.id); // Removido
+        // if (installment?.despesas) { // Removido
+        //   setFullEditingExpense(installment.despesas); // Removido
+        // } else { // Removido
           toast.error("Erro ao carregar detalhes da despesa não fixa para edição (dados não encontrados).");
           setFullEditingExpense(null);
-        }
+        // } // Removido
       }
       setFullEditingRevenue(null);
     }
     setLoadingEditData(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [user, queryClient, allRawTransactions, expenseInstallments]);
+  }, [user, queryClient, allRawTransactions]); // expenseInstallments removido
 
   const handleUpdateTransaction = useCallback(async (
     id: string,
@@ -450,7 +450,7 @@ export const useLancamentosLogic = (user: User | null) => {
         queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }); // Invalida o cache de transações para o useTransactionsData
       } else {
         // Lógica existente para transações não recorrentes (avulsas ou fixas legadas)
-        const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || [];
+        // const currentExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]>(["expenseInstallments", user.id]) || []; // Removido
 
         if (type === "income") {
           let revenueIdToUse = id;
@@ -537,22 +537,22 @@ export const useLancamentosLogic = (user: User | null) => {
               setLoadingEditData(false);
               return;
             }
-            const originalInstallment = currentExpenseInstallments.find(p => p.id === id);
-            if (originalInstallment && originalInstallment.despesas?.id) {
-              const parentDespesaId = originalInstallment.despesas.id;
-              const { error: updateDespesaError } = await supabase
-                .from("despesas")
-                .update({
-                  categoria_id: updatedTransaction.category,
-                  descricao: updatedTransaction.description,
-                })
-                .eq("id", parentDespesaId)
-                .eq("user_id", user.id);
-              if (updateDespesaError) {
-                console.error("handleUpdateTransaction: Error updating parent expense for installment:", updateDespesaError);
-                toast.error("Erro ao atualizar a despesa principal.");
-              }
-            }
+            // const originalInstallment = currentExpenseInstallments.find(p => p.id === id); // Removido
+            // if (originalInstallment && originalInstallment.despesas?.id) { // Removido
+            //   const parentDespesaId = originalInstallment.despesas.id; // Removido
+            //   const { error: updateDespesaError } = await supabase // Removido
+            //     .from("despesas") // Removido
+            //     .update({ // Removido
+            //       categoria_id: updatedTransaction.category, // Removido
+            //       descricao: updatedTransaction.description, // Removido
+            //     }) // Removido
+            //     .eq("id", parentDespesaId) // Removido
+            //     .eq("user_id", user.id); // Removido
+            //   if (updateDespesaError) { // Removido
+            //     console.error("handleUpdateTransaction: Error updating parent expense for installment:", updateDespesaError); // Removido
+            //     toast.error("Erro ao atualizar a despesa principal."); // Removido
+            //   } // Removido
+            // } // Removido
             const { error: updateError } = await supabase
               .from("despesas_parcelas")
               .update({
@@ -604,7 +604,7 @@ export const useLancamentosLogic = (user: User | null) => {
     monthlyFilteredTransactions: allRawTransactions, // Será filtrado em useTransactionsData
     fetchedCategories,
     cartoes,
-    expenseInstallments,
+    // expenseInstallments, // Removido
     isLoading,
     isLoadingCategories,
     handleDeleteTransaction,

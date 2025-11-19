@@ -16,7 +16,7 @@ interface TransactionViewProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[];
+  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_fixed' | 'recurrence_frequency' | 'recurrence_installments_count'> | null })[]; // Removido
   // selectedMonth: Date; // Removido
   disableFilters?: boolean; // Nova prop para desativar filtros
 }
@@ -30,12 +30,12 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   isMobile,
   queryClient,
   user,
-  rawExpenseInstallments,
+  // rawExpenseInstallments, // Removido
   // selectedMonth, // Removido
   disableFilters = false, // Valor padrão é false
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
-  const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all");
+  // const [filterPaymentMethod, setFilterPaymentMethod] = useState<string>("all"); // Removido
 
   const content = (
     <TransactionList
@@ -44,12 +44,12 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       onEditTransaction={onEditTransaction}
       allCategories={allCategories}
       cartoes={cartoes}
-      filterPaymentMethod={filterPaymentMethod}
-      setFilterPaymentMethod={setFilterPaymentMethod}
+      // filterPaymentMethod={filterPaymentMethod} // Removido
+      // setFilterPaymentMethod={setFilterPaymentMethod} // Removido
       isMobile={isMobile}
       queryClient={queryClient}
       user={user}
-      rawExpenseInstallments={rawExpenseInstallments}
+      // rawExpenseInstallments={rawExpenseInstallments} // Removido
       // selectedMonth={selectedMonth} // Removido
       disableFilters={disableFilters} // Passando a prop disableFilters
     />
