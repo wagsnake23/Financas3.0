@@ -394,7 +394,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         month,
         paid: is_paid,
         canceled: false, // Ensure it's not marked as canceled when toggling paid status
-        note: is_paid ? "Marcado como pago" : "Marcado como pendente",
+        note: null, // Alterado para null para remover a mensagem da descrição
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
