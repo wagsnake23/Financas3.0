@@ -394,7 +394,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         month,
         paid: is_paid,
         canceled: false, // Ensure it's not marked as canceled when toggling paid status
-        note: is_paid ? "Marcado como pago" : "Marcado como pendente",
+        note: is_paid ? "Marcado como pago" : "Marcado como pendente", // Descrição removida
       };
 
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
@@ -408,7 +408,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     },
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Status de pagamento atualizado!", {
+      toast.success("Status de pagamento atualizado!", { // Descrição removida
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
     },
