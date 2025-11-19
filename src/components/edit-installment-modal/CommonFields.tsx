@@ -75,7 +75,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
               <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
             </SelectTrigger>
             <SelectContent>
-              {/* Removido o item "Selecione a categoria" */}
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
               {filteredCategories.length === 0 ? (
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
               ) : (

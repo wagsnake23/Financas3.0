@@ -108,7 +108,7 @@ export default function Receitas() {
 
     const newRevenueData = {
       user_id: user?.id,
-      tipo_receita_id: tipoReceitaId,
+      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId, // Convert UNSELECTED_VALUE to null
       valor: valor as number,
       data: formattedDate,
       descricao,
@@ -154,7 +154,7 @@ export default function Receitas() {
               <SelectValue placeholder="Selecione a subcategoria de receita" />
             </SelectTrigger>
             <SelectContent>
-              {/* Removido o item "Selecione a subcategoria de receita" */}
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
               {incomeSubcategories.length === 0 ? (
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
               ) : (

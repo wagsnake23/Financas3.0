@@ -190,7 +190,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
-            {/* Removido o item "Selecione a subcategoria" */}
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
             {subcategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
             ) : (

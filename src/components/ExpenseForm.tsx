@@ -143,7 +143,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       .from("despesas")
       .insert({
         user_id: user.id,
-        categoria_id: selectedSubcategoryId, // Usar selectedSubcategoryId diretamente
+        categoria_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId, // Convert UNSELECTED_VALUE to null
         forma_pagamento: formaPagamento,
         tipo_pagamento: dbTipoPagamento,
         cartao_id: formaPagamento === "cartao" ? cartaoId : null,
@@ -245,7 +245,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
-            {/* Removido o item "Selecione a subcategoria" */}
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
             {allSubcategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
             ) : (

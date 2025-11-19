@@ -67,7 +67,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       type,
       amount: amount as number,
       date,
-      category,
+      category: category === UNSELECTED_VALUE ? null : category, // Convert UNSELECTED_VALUE to null
       description,
     });
 
@@ -133,7 +133,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
                 <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
               </SelectTrigger>
               <SelectContent>
-                {/* Removido o item "Selecione..." */}
+                <SelectItem value={UNSELECTED_VALUE} disabled>Selecione a subcategoria</SelectItem>
                 {filteredSubcategories.length === 0 ? (
                   <SelectItem value={UNSELECTED_VALUE} disabled>Nenhuma subcategoria disponível</SelectItem>
                 ) : (

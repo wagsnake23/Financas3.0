@@ -70,7 +70,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
           </SelectTrigger>
           <SelectContent>
-            {/* Removido o item "Selecione..." */}
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
             {filteredCategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
             ) : (
@@ -151,7 +151,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {/* Replaced RevenueStatusToggle with StatusToggleButton */}
-      <div className="flex flex-col items-start space-y-2"> {/* Adicionado flex-col items-start e space-y-2 */}
+      <div className="flex flex-col items-start space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
         <StatusToggleButton
           currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
