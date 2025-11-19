@@ -90,7 +90,8 @@ const Lancamentos = () => {
             rawExpenseInstallments={expenseInstallments}
             selectedMonth={selectedMonth}
             onEditTransaction={handleEditTransaction}
-            queryClient={logicQueryClient} {/* Passando o queryClient aqui */}
+            // Passando o queryClient aqui
+            queryClient={logicQueryClient} 
           />
         </main>
         <Footer isMobile={isMobile} />
