@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+// Removido: import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
@@ -54,6 +54,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
     return { totalPaid: paid, totalPending: pending, totalCardExpenses: paid + pending };
   }, [filteredExpenses]);
 
+  // A função getCategoryDisplay não é mais necessária se a tabela for removida, mas a manterei caso seja útil para depuração ou futuras expansões.
   const getCategoryDisplay = (categoryId: string | null) => {
     if (!categoryId) return { name: "Outros", icon: "MoreHorizontal" };
     const category = allCategories.find(cat => cat.id === categoryId);
@@ -106,45 +107,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
           </div>
         </div>
       )}
-
-      {selectedCardId !== UNSELECTED_VALUE && filteredExpenses.length > 0 && (
-        <div className={cn("rounded-xl border overflow-hidden shadow-sm", isMobile ? "max-h-[30vh] overflow-y-auto" : "")}>
-          <Table>
-            <TableHeader className="sticky top-0 bg-soft-blue z-10">
-              <TableRow>
-                <TableHead className="py-1 px-2 text-xs">Data</TableHead>
-                <TableHead className="py-1 px-2 text-xs">Subcategoria</TableHead>
-                <TableHead className="py-1 px-2 text-right text-xs">Valor</TableHead>
-                <TableHead className="py-1 px-2 text-center text-xs">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredExpenses.map(installment => {
-                const { name: categoryName, icon: categoryIcon } = getCategoryDisplay(installment.despesas?.categoria_id || null);
-                return (
-                  <TableRow key={installment.id}>
-                    <TableCell className="py-1 px-2 text-xs">{format(new Date(installment.vencimento), "dd/MM", { locale: ptBR })}</TableCell>
-                    <TableCell className="py-1 px-2 text-xs flex items-center gap-1">
-                      {categoryIcon && <DynamicIcon name={categoryIcon} className="h-3 w-3" />}
-                      <span>{categoryName}</span>
-                    </TableCell>
-                    <TableCell className={cn("py-1 px-2 text-right font-semibold text-xs", installment.pago ? "text-success" : "text-destructive")}>
-                      R$ {installment.valor_parcela.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="py-1 px-2 text-center text-xs">
-                      {installment.pago ? (
-                        <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success mx-auto" />
-                      ) : (
-                        <DynamicIcon name="Circle" className="h-4 w-4 text-destructive mx-auto" />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      {/* Removido o bloco da tabela de lançamentos detalhados */}
       {selectedCardId !== UNSELECTED_VALUE && filteredExpenses.length === 0 && (
         <p className="text-muted-foreground text-center py-4 text-sm">Nenhuma despesa encontrada para este cartão no mês selecionado.</p>
       )}
