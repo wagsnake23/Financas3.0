@@ -13,7 +13,7 @@ import { Navigation } from "@/components/Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
-import { TotalRevenueCard } from "@/components/TotalRevenueCard";
+import { TotalRevenueCard } => "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
@@ -287,23 +287,23 @@ export default function Receitas() {
                   <Label
                     htmlFor="one-off-revenue"
                     className={cn(
-                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
                     )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
+                    <DynamicIcon name="DollarSign" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
                     <span>Avulsa</span>
                   </Label>
                   <Label
                     htmlFor="recurring-revenue"
                     className={cn(
-                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      isMobile ? "p-1.5 text-xs" : "p-2 text-sm" // Menor para mobile, um pouco menor para desktop
+                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
                     )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue" className="sr-only" />
-                    <DynamicIcon name="Repeat" className={cn("mb-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
+                    <DynamicIcon name="Repeat" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
                     <span>Recorrente</span>
                   </Label>
                 </RadioGroup>
@@ -331,23 +331,23 @@ export default function Receitas() {
                   <Label
                     htmlFor="one-off-revenue-desktop"
                     className={cn(
-                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
-                      "p-2 text-sm" // Desktop size
+                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      "py-2 px-4 text-sm" // Desktop size, menor padding
                     )}
                   >
                     <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className="mb-1 h-5 w-5" color="hsl(var(--success))" />
+                    <DynamicIcon name="DollarSign" className="mr-1 h-5 w-5" color="hsl(var(--success))" />
                     <span>Receita Avulsa</span>
                   </Label>
                   <Label
                     htmlFor="recurring-revenue-desktop"
                     className={cn(
-                      "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
-                      "p-2 text-sm" // Desktop size
+                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      "py-2 px-4 text-sm" // Desktop size, menor padding
                     )}
                   >
                     <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only" />
-                    <DynamicIcon name="Repeat" className="mb-1 h-5 w-5" color="hsl(var(--primary))" />
+                    <DynamicIcon name="Repeat" className="mr-1 h-5 w-5" color="hsl(var(--primary))" />
                     <span>Receita Recorrente</span>
                   </Label>
                 </RadioGroup>
