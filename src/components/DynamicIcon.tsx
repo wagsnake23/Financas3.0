@@ -8,7 +8,7 @@ import {
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, UserMd, TestTube, Dumbbell, Brain, School, Laptop,
-  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt, Tshirt,
+  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
   Building2, Sandwich
@@ -25,7 +25,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, UserMd, TestTube, Dumbbell, Brain, School, Laptop,
-  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt, Tshirt,
+  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
   Building2, Sandwich

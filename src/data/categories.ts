@@ -52,7 +52,7 @@ export const categories: AppCategory[] = [
   { id: "lazer_hobbies", nome: "Hobbies", icone: "Palette", cor: "hsl(280, 70%, 55%)", parent_id: "lazer" },
 
   { id: "pessoais", nome: "Pessoais", icone: "Shirt", cor: "hsl(330, 70%, 55%)", parent_id: null },
-  { id: "pessoais_roupas", nome: "Roupas", icone: "Tshirt", cor: "hsl(330, 70%, 55%)", parent_id: "pessoais" },
+  { id: "pessoais_roupas", nome: "Roupas", icone: "Shirt", cor: "hsl(330, 70%, 55%)", parent_id: "pessoais" },
   { id: "pessoais_cuidados", nome: "Cuidados pessoais", icone: "Sparkles", cor: "hsl(330, 70%, 55%)", parent_id: "pessoais" },
   { id: "pessoais_presentes", nome: "Presentes", icone: "Gift", cor: "hsl(330, 70%, 55%)", parent_id: "pessoais" },
   { id: "pessoais_assinaturas", nome: "Assinaturas", icone: "Package", cor: "hsl(330, 70%, 55%)", parent_id: "pessoais" },
@@ -76,7 +76,7 @@ export const categories: AppCategory[] = [
   { id: "trabalho_materiais", nome: "Materiais", icone: "Package", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
   { id: "trabalho_servicos", nome: "Serviços contratados", icone: "Handshake", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
   { id: "trabalho_marketing", nome: "Marketing", icone: "Megaphone", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
-  { id: "trabalho_equipamentos", nome: "Equipamentos", icone: "Monitor", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
+  { id: "trabalho_equipamentos", icone: "Monitor", cor: "hsl(255, 65%, 60%)", parent_id: "trabalho_negocio" },
 
   { id: "familia_filhos", nome: "Família e Filhos", icone: "Users", cor: "hsl(345, 75%, 60%)", parent_id: null },
   { id: "familia_atividades_extracurriculares", nome: "Atividades extracurriculares", icone: "Puzzle", cor: "hsl(345, 75%, 60%)", parent_id: "familia_filhos" },
