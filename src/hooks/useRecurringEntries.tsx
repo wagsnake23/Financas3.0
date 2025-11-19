@@ -40,6 +40,12 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
   return `${recurringId}-${year}-${month}`;
 };
 
+// Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
+function parseDateOnly(dateString: string): Date {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
   const queryClient = useQueryClient();
   console.log("useRecurringEntries: Initializing for month:", format(currentMonth, 'yyyy-MM-dd'), "Enabled:", enabled); // Log atualizado
@@ -105,8 +111,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log(`[DEBUG]   Current Month (start): ${format(startOfMonth(currentMonth), 'yyyy-MM-dd')}`);
 
       // Check if the entry is active and within its date range
-      const entryStartDate = new Date(entry.start_date);
-      const entryEndDate = entry.end_date ? new Date(entry.end_date) : null;
+      const entryStartDate = parseDateOnly(entry.start_date); // Usar parseDateOnly
+      const entryEndDate = entry.end_date ? parseDateOnly(entry.end_date) : null; // Usar parseDateOnly
 
       // Check if the recurring entry is relevant for the current month
       const isRelevantForMonth = isWithinInterval(currentMonth, { start: entryStartDate, end: entryEndDate || new Date(9999, 11, 31) });
@@ -148,7 +154,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
       const finalCategory = exception?.override_category_id ?? entry.category_id;
-      const finalDueDate = exception?.override_due_date ? new Date(exception.override_due_date) : baseDueDate;
+      const finalDueDate = exception?.override_due_date ? parseDateOnly(exception.override_due_date) : baseDueDate; // Usar parseDateOnly
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
       console.log(`[DEBUG]   Final Due Date for transaction: ${format(finalDueDate, 'yyyy-MM-dd')}`);
