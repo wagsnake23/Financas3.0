@@ -117,9 +117,11 @@ export default function Despesas() {
             className={cn(
               "text-sm font-normal text-muted-foreground",
               isMobile && "text-xs",
-              "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold" // Azul para Avulsa
+              "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Avulsa
+              "flex items-center" // Adicionado para alinhar ícone e texto
             )}
           >
+            <DynamicIcon name="⚡" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} />
             Avulsa
           </Label>
         </div>
@@ -130,9 +132,11 @@ export default function Despesas() {
             className={cn(
               "text-sm font-normal text-muted-foreground",
               isMobile && "text-xs",
-              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold" // Verde para Recorrente
+              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Recorrente
+              "flex items-center" // Adicionado para alinhar ícone e texto
             )}
           >
+            <DynamicIcon name="🔁" className={cn("mr-1", isMobile ? "h-4 w-4" : "h-5 w-5")} />
             Recorrente
           </Label>
         </div>
