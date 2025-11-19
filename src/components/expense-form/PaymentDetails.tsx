@@ -13,7 +13,6 @@ interface PaymentDetailsProps {
   setValor: (value: string) => void;
   formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
   setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
-  // tipoPagamento e setTipoPagamento removidos daqui
   cartaoId: string;
   setCartaoId: (value: string) => void;
   cartoes: Tables<'cartoes'>[];
@@ -30,7 +29,6 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setValor,
   formaPagamento,
   setFormaPagamento,
-  // tipoPagamento e setTipoPagamento removidos daqui
   cartaoId,
   setCartaoId,
   cartoes,
@@ -42,7 +40,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   UNSELECTED_VALUE,
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Ajustado para 2 colunas em desktop */}
+    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}> {/* Alterado para grid-cols-2 em mobile, com gap menor */}
       <div>
         <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
         <Input
@@ -76,7 +74,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {formaPagamento === "cartao" && (
-        <div className="col-span-full"> {/* Mantido col-span-full para cartões */}
+        <div className="col-span-full"> {/* Este ainda ocupará a largura total */}
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select value={cartaoId} onValueChange={(v: any) => {
