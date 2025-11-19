@@ -49,7 +49,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   queryClient,
   user,
 }) => {
-  console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "User prop:", user?.id, "Is user null?", !user);
+  console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Current Status (on render):", transaction.status);
 
   const { markMonthPaid } = useRecurringEntries(user, new Date(), []);
 
@@ -99,6 +99,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     console.log("handleToggleStatus: Transaction:", transaction);
     console.log("handleToggleStatus: isRecurring:", transaction.isRecurring);
     console.log("handleToggleStatus: recurringEntryId:", transaction.recurringEntryId);
+    console.log("handleToggleStatus: Current transaction status before toggle:", transaction.status);
+
 
     // Priority 1: Handle NEW recurring transactions (materialized from recurring_entries)
     if (transaction.isRecurring && transaction.recurringEntryId) {
@@ -107,6 +109,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       const year = transactionDate.getFullYear();
       const month = transactionDate.getMonth() + 1;
       const isPaid = transaction.status !== "Recebida"; // Toggle status
+      console.log("handleToggleStatus: Toggling recurring status to isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month:", month, "Year:", year);
 
       try {
         await markMonthPaid({
@@ -115,11 +118,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           month,
           is_paid: isPaid,
         });
+        console.log("handleToggleStatus: markMonthPaid called successfully.");
+        // Invalida as queries que useTransactionsData depende
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user.id] });
-        // Invalida as queries que useTransactionsData depende
         queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
         queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+        console.log("handleToggleStatus: Queries invalidated for recurring transaction.");
       } catch (error) {
         console.error("handleToggleStatus: Error marking recurring month paid:", error);
       }

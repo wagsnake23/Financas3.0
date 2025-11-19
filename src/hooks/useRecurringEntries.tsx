@@ -73,7 +73,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         .select("*")
         .in("recurring_id", recurringIds);
       if (error) throw error;
-      console.log("Fetched recurringExceptions:", data);
+      console.log("Fetched recurringExceptions (after potential update):", data); // ADD THIS LOG
       return data;
     },
     enabled: !!user?.id && recurringEntries.length > 0,
@@ -84,8 +84,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     console.log("materializedRecurringTransactions useMemo re-running...");
     if (!user || isLoadingRecurringEntries || isLoadingRecurringExceptions) return [];
 
-    const startOfCurrentMonth = startOfMonth(currentMonth);
-    const endOfCurrentMonth = endOfMonth(currentMonth);
+    const startOfCurrentMonth = currentMonth; // Usar o currentMonth diretamente para o contexto
     const currentYear = currentMonth.getFullYear();
     const currentMonthIndex = currentMonth.getMonth() + 1; // 1-indexed month
 
@@ -107,17 +106,17 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       }
 
       // Calculate the base due date for the current month
-      let baseDueDate = setDate(startOfCurrentMonth, entry.due_day);
+      let baseDueDate = setDate(startOfMonth(currentMonth), entry.due_day);
       // Adjust if due_day is greater than days in current month
       if (getDate(baseDueDate) !== entry.due_day) {
-        baseDueDate = endOfCurrentMonth; // Set to last day of month if due_day is too high
+        baseDueDate = endOfMonth(currentMonth); // Set to last day of month if due_day is too high
       }
 
       // Find any exception for this specific month
       const exception = recurringExceptions.find(
         ex => ex.recurring_id === entry.id && ex.year === currentYear && ex.month === currentMonthIndex
       );
-      console.log(`  Found exception for this month: ${!!exception}`);
+      console.log(`  Found exception for this month: ${!!exception ? JSON.stringify(exception) : 'None'}`);
 
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
@@ -184,6 +183,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
   }, [currentMonth, recurringEntries, recurringExceptions, user, allCategories, isLoadingRecurringEntries, isLoadingRecurringExceptions]);
 
   const invalidateQueries = useCallback(() => {
+    console.log("invalidateQueries: Invalidating recurringEntries and recurringExceptions.");
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
     // Removido: queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Esta linha não é mais necessária
@@ -373,6 +373,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
   const markMonthPaidMutation = useMutation({
     mutationFn: async ({ recurring_id, year, month, is_paid }: { recurring_id: string; year: number; month: number; is_paid: boolean }) => {
       if (!user?.id) throw new Error("User not authenticated.");
+      console.log("markMonthPaidMutation: Calling rpc_create_or_update_recurring_exception with payload:", { recurring_id, year, month, is_paid });
 
       const payload: TablesUpdate<'recurring_entry_exceptions'> = {
         recurring_id,
@@ -392,6 +393,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       return data;
     },
     onSuccess: () => {
+      console.log("markMonthPaidMutation: onSuccess - Invalidating queries.");
       invalidateQueries();
       toast.success("Status de pagamento atualizado!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
