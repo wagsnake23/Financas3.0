@@ -33,7 +33,7 @@ import { RecurringEntryFormContent } from "@/components/RecurringEntryFormConten
 import { CurrencyInput } from "@/components/ui/currency-input";
 
 import { Database, Enums } from "@/integrations/supabase/types";
-import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle"; // Importar o novo componente
+import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 type FormMode = 'one-off' | 'recurring';
 
@@ -69,6 +69,7 @@ export default function Receitas() {
     enabled: !!user && !authLoading,
   });
 
+  // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -77,6 +78,7 @@ export default function Receitas() {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -84,6 +86,8 @@ export default function Receitas() {
     enabled: !!user && !authLoading,
   });
 
+  // `fetchedCategories` agora já são as subcategorias.
+  // Filtrar para obter apenas as subcategorias de 'receitas_e_investimentos'.
   const incomeSubcategories = useMemo(() => {
     return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
   }, [fetchedCategories]);
@@ -143,14 +147,14 @@ export default function Receitas() {
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
       <div>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Tipo de Receita</Label>
+        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label> {/* Label atualizada */}
         <div className="flex gap-2">
           <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione a subcategoria de receita" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
+              {/* Removido o item "Selecione a subcategoria de receita" */}
               {incomeSubcategories.length === 0 ? (
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
               ) : (
@@ -226,7 +230,6 @@ export default function Receitas() {
         />
       </div>
 
-      {/* Substituído o Select pelo RevenueStatusToggle */}
       <RevenueStatusToggle
         status={status}
         setStatus={setStatus}
@@ -299,7 +302,7 @@ export default function Receitas() {
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={fetchedCategories}
+                    fetchedCategories={fetchedCategories} // fetchedCategories agora são as subcategorias
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />
@@ -343,7 +346,7 @@ export default function Receitas() {
                   <RecurringEntryFormContent
                     isMobile={isMobile}
                     onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={fetchedCategories}
+                    fetchedCategories={fetchedCategories} // fetchedCategories agora são as subcategorias
                     isLoadingCategories={isLoadingCategories}
                     initialType="receita"
                   />

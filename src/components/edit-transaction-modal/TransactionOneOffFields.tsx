@@ -17,8 +17,8 @@ import { CurrencyInput } from "@/components/ui/currency-input"; // Importar Curr
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface TransactionOneOffFieldsProps {
-  amount: number | undefined; // Alterado para number | undefined
-  setAmount: (amount: number | undefined) => void; // Alterado para number | undefined
+  amount: number | undefined;
+  setAmount: (amount: number | undefined) => void;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   category: string;
@@ -29,10 +29,10 @@ interface TransactionOneOffFieldsProps {
   setStatus: (status: ReceitaStatus) => void;
   isCalendarOpen: boolean;
   setIsCalendarOpen: (open: boolean) => void;
-  filteredCategories: AppCategory[];
+  filteredCategories: AppCategory[]; // Agora contém apenas subcategorias
   isMobile: boolean;
-  isFixedLegacy?: boolean; // Para desabilitar a data em transações fixas legadas
-  transactionType: "income" | "expense"; // Adicionado para controlar o status
+  isFixedLegacy?: boolean;
+  transactionType: "income" | "expense";
   UNSELECTED_VALUE: string;
 }
 
@@ -49,7 +49,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   setStatus,
   isCalendarOpen,
   setIsCalendarOpen,
-  filteredCategories,
+  filteredCategories, // Usar filteredCategories diretamente (já são subcategorias)
   isMobile,
   isFixedLegacy,
   transactionType,
@@ -57,15 +57,15 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 }) => {
   return (
     <>
-      {/* Categoria (agora Subcategoria e primeiro campo) */}
+      {/* Subcategoria */}
       <div className="space-y-2">
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione..." />
+            <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione...</SelectItem>
+            {/* Removido o item "Selecione..." */}
             {filteredCategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
             ) : (
@@ -109,7 +109,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                   !date && "text-muted-foreground",
                   isMobile && "h-9 text-sm"
                 )}
-                disabled={isFixedLegacy} // Disable date for legacy fixed transactions
+                disabled={isFixedLegacy}
               >
                 <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
                 {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
@@ -145,7 +145,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         />
       </div>
 
-      {transactionType === "income" && ( // Status dropdown only for income
+      {transactionType === "income" && (
         <div>
           <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Receita</Label>
           <Select value={status} onValueChange={(value: ReceitaStatus) => setStatus(value)}>

@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { PAYMENT_METHODS } from "@/data/colorPalette";
+import { PAYMENT_METHODS } from "@/data/colorPalette"; // Manter para referência, se necessário
 import { X } from "lucide-react";
 
 interface CategoryFormProps {
@@ -15,10 +15,10 @@ interface CategoryFormProps {
   onUpdateCategory?: (id: string, category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
   editingCategory?: AppCategory | null;
   onCancelEdit?: () => void;
-  allCategories: AppCategory[]; // Agora recebe todas as categorias já do Supabase
+  allCategories: AppCategory[]; // Agora recebe todas as categorias (principais e sub)
 }
 
-const UNSELECTED_VALUE = "unselected"; // Valor único para representar 'não selecionado'
+const UNSELECTED_VALUE = "unselected";
 
 export const CategoryForm = ({ 
   onAddCategory, 
@@ -30,7 +30,6 @@ export const CategoryForm = ({
   const [nome, setNome] = useState("");
   const [icone, setIcone] = useState("😀");
   const [cor, setCor] = useState("hsl(210, 70%, 50%)");
-  // Removido o estado para forma_pagamento, pois o campo será removido
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
@@ -41,17 +40,15 @@ export const CategoryForm = ({
       setNome(editingCategory.nome);
       setIcone(editingCategory.icone);
       setCor(editingCategory.cor);
-      // Não define forma_pagamento ao editar, pois o campo foi removido
       setSelectedParentId(editingCategory.parent_id);
     } else {
       // Reset form when not editing
       setNome("");
       setIcone("😀");
       setCor("hsl(210, 70%, 50%)");
-      // Não define forma_pagamento ao resetar, pois o campo foi removido
       setSelectedParentId(null);
     }
-  }, [editingCategory, allCategories]);
+  }, [editingCategory]);
 
   // Close emoji picker when clicking outside
   useEffect(() => {
@@ -74,7 +71,7 @@ export const CategoryForm = ({
     e.preventDefault();
     
     if (!selectedParentId || selectedParentId === UNSELECTED_VALUE) {
-      toast.error("Selecione uma Categoria Principal.");
+      toast.error("Selecione uma Categoria Principal para a subcategoria.");
       return;
     }
 
@@ -87,7 +84,7 @@ export const CategoryForm = ({
       nome: nome.trim(),
       icone,
       cor,
-      forma_pagamento: null, // Definido como null, pois o campo foi removido
+      forma_pagamento: null,
       parent_id: selectedParentId,
     };
 
@@ -138,12 +135,13 @@ export const CategoryForm = ({
           <Select 
             value={selectedParentId || UNSELECTED_VALUE} 
             onValueChange={(value) => setSelectedParentId(value === UNSELECTED_VALUE ? null : value)}
+            disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
           >
             <SelectTrigger id="parent_id" className="rounded-xl">
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled>Nenhuma</SelectItem> {/* Usando UNSELECTED_VALUE */}
+              {/* Removido o item "Nenhuma" */}
               {possibleParentCategories
                 .filter(cat => cat.id !== editingCategory?.id && cat.id !== "") 
                 .map((cat) => (
@@ -165,11 +163,10 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className="rounded-xl"
+            disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
           />
         </div>
         
-        {/* Campo Forma de Pagamento removido */}
-
         <div className="space-y-2">
           <Label>Ícone / Emoji</Label>
           <div className="relative">
@@ -177,6 +174,7 @@ export const CategoryForm = ({
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className="w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background"
+              disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
             >
               {icone}
             </button>
@@ -196,7 +194,7 @@ export const CategoryForm = ({
         </div>
 
         <div className="flex gap-2">
-          <Button type="submit" className="flex-1 rounded-xl" size="lg">
+          <Button type="submit" className="flex-1 rounded-xl" size="lg" disabled={editingCategory?.user_id === null}>
             {editingCategory ? "Atualizar Subcategoria" : "Adicionar Subcategoria"}
           </Button>
           {editingCategory && (

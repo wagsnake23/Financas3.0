@@ -26,12 +26,12 @@ interface TransactionRowProps {
   transaction: Transaction;
   onDeleteTransaction: (id: string, type: "income" | "expense", isFixed?: boolean) => void;
   onEditTransaction: (transaction: Transaction) => void;
-  allCategories: AppCategory[];
+  allCategories: AppCategory[]; // Agora contém apenas subcategorias
   cartoes: Tables<'cartoes'>[];
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
 }
 
 // Helper function to validate UUID format (basic check)
@@ -44,24 +44,19 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
   onDeleteTransaction,
   onEditTransaction,
-  allCategories,
+  allCategories, // Usar allCategories diretamente (já são subcategorias)
   cartoes,
   isMobile,
   queryClient,
   user,
-  markMonthPaid, // Destruturando a nova prop
+  markMonthPaid,
 }) => {
   console.log("TransactionRow: Rendering for transaction ID:", transaction.id, "Type:", transaction.type, "IsRecurring:", transaction.isRecurring, "Current Status (on render):", transaction.status);
 
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
-    if (!category) return { name: categoryId, icon: null };
-
-    if (category.parent_id) {
-      const parent = allCategories.find(p => p.id === category.parent_id);
-      return { name: category.nome, icon: category.icone };
-    }
-    return { name: category.nome, icon: category.icone };
+    // Como agora só temos subcategorias, não precisamos mais da hierarquia "Pai > Filho"
+    return { name: category?.nome || categoryId, icon: category?.icone || null };
   };
 
   const { name: categoryName, icon: categoryIcon } = getCategoryDisplay(transaction.category);
@@ -89,7 +84,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
-    // Adiciona verificação defensiva para queryClient
     if (!queryClient) {
       console.error("queryClient is undefined in handleToggleStatus!");
       toast.error("Erro interno: Cliente de consulta não disponível.");
@@ -101,7 +95,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       const transactionDate = new Date(transaction.date);
       const year = transactionDate.getFullYear();
       const month = transactionDate.getMonth() + 1;
-      const isPaid = transaction.status !== "Recebida"; // Toggle status
+      const isPaid = transaction.status !== "Recebida";
       console.log("handleToggleStatus: Toggling recurring status. Target isPaid:", isPaid, "for recurring ID:", transaction.recurringEntryId, "Month (1-indexed):", month, "Year:", year);
 
       try {
@@ -119,17 +113,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
-    // Priority 2: Handle ONE-OFF transactions (legacy fixed are now filtered out in useTransactionsData)
     console.log("handleToggleStatus: Handling as one-off transaction.");
     let error = null;
     const newStatus = transaction.status === "Recebida" ? "Pendente" : "Recebida";
     const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
     if (transaction.type === "income") {
-      // For one-off income, transaction.id is always the UUID of the 'receitas' entry.
       const revenueIdToUse = transaction.id;
       if (!isValidUuid(revenueIdToUse)) {
-        // This should ideally not happen if data is clean and filtered correctly.
         toast.error("Erro (TOGGLE-INC-1): ID de receita inválido.");
         return;
       }
@@ -145,16 +136,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           if (!oldData) return [];
           return oldData.map(r => r.id === revenueIdToUse ? { ...r, status: newStatus } : r);
         });
-        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] }); // Invalida a query de receitas
+        queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
       }
     } else if (transaction.type === "expense") {
-      // For one-off expense, transaction.id is always the ID of a 'despesas_parcelas' entry.
       const isPaid = newStatus === "Recebida";
       const dataPagamento = isPaid ? currentTimestamp : null;
       const installmentId = transaction.id;
 
       if (!isValidUuid(installmentId)) {
-        // This should ideally not happen if data is clean and filtered correctly.
         toast.error("Erro (TOGGLE-EXP-1): ID de parcela de despesa inválido.");
         return;
       }
@@ -173,7 +162,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           if (!oldData) return [];
           return oldData.map(p => p.id === installmentId ? { ...p, pago: isPaid, data_pagamento: dataPagamento } : p);
         });
-        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] }); // Invalida a query de parcelas
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
       }
     }
     
@@ -203,7 +192,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           return localDate.toLocaleDateString("pt-BR");
         })()}
       </TableCell>
-      {!isMobile && ( // Ocultar em mobile
+      {!isMobile && (
         <TableCell className="py-2 px-2 min-w-[60px]">
           <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
             transaction.type === "income"
@@ -215,10 +204,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         </TableCell>
       )}
       <TableCell className="py-2 px-2 text-xs min-w-[80px] flex items-center gap-1">
-        {categoryIcon && <span>{categoryIcon}</span>}
+        {categoryIcon && <DynamicIcon name={categoryIcon} className="h-4 w-4" />} {/* Usar DynamicIcon */}
         <span>{categoryName}</span>
       </TableCell>
-      {!isMobile && ( // Ocultar em mobile
+      {!isMobile && (
         <TableCell className="py-2 px-2 text-xs min-w-[100px]">
           {transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1
             ? `Parcela ${transaction.installmentNumber} de ${transaction.totalInstallments}`
@@ -237,13 +226,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         R$ {transaction.amount.toFixed(2)}
       </TableCell>
       <TableCell className="py-2 px-2 text-center min-w-[50px]">
-        {/* Botão de toggle para o status */}
         <Button
           variant="ghost"
           size="icon"
           className="h-7 w-7"
           onClick={handleToggleStatus}
-          disabled={transaction.status === "Cancelada"} // Desabilita o toggle se a transação estiver cancelada
+          disabled={transaction.status === "Cancelada"}
         >
           {transaction.status === "Recebida" && <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />}
           {(transaction.status === "Pendente" || transaction.status === "Prevista") && <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />}

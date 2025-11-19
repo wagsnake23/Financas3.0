@@ -3,7 +3,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
-import { useQueryClient, useQuery } from "@tanstack/react-query"; // Importar useQuery
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { ExpensesDashboard } from "@/components/ExpensesDashboard";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,12 +14,12 @@ import { MostUsedCategories } from "@/components/MostUsedCategories";
 import { CategoryDistributionSummary } from "@/components/CategoryDistributionSummary";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
-import { Label } from "@/components/ui/label"; // Importar Label
-import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
-import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent"; // Importar o novo componente
-import { AppCategory } from "@/types/finance"; // Importar AppCategory
-import { Card } from "@/components/ui/card"; // Importar Card
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import DynamicIcon from "@/components/DynamicIcon";
+import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
+import { AppCategory } from "@/types/finance";
+import { Card } from "@/components/ui/card";
 
 interface Cartao {
   id: string;
@@ -30,30 +30,27 @@ interface Cartao {
   dia_vencimento: number;
 }
 
-type FormMode = 'one-off' | 'recurring'; // Novo tipo para o modo do formulário
+type FormMode = 'one-off' | 'recurring';
 
 const UNSELECTED_VALUE = "unselected";
 
 export default function Despesas() {
-  const { user, loading: authLoading } = useAuth(); // Obter authLoading
+  const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
-  const [cartoes, setCartoes] = useState<Cartao[]>([]);
+  // Removido selectedParentCategoryId, pois não é mais necessário para a seleção
   const isMobile = useIsMobile();
-  const [selectedParentCategoryId, setSelectedParentCategoryId] = useState<string>(UNSELECTED_VALUE);
 
-  // Form mode state
   const [formMode, setFormMode] = useState<FormMode>('one-off');
 
   const {
-    fetchedCategories,
-    rootExpenseCategories,
-    filteredSubcategories,
+    allSubcategories, // Renomeado de fetchedCategories para allSubcategories
     expenses,
     expenseInstallments,
     isLoading: isLoadingExpenseData,
-  } = useExpenseData(user, selectedParentCategoryId, !!user && !authLoading); // Passando enabled
+  } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading); // Passando UNSELECTED_VALUE para selectedParentCategoryId, pois não é mais usado para filtrar
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
+  // Este hook agora busca APENAS SUBCATEGORIAS
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -62,15 +59,16 @@ export default function Despesas() {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user && !authLoading,
   });
 
   useEffect(() => {
-    if (user && !authLoading) { // Carregar cartões apenas se autenticado e não carregando
+    if (user && !authLoading) {
       loadCartoes();
     }
   }, [user, authLoading]);
@@ -90,12 +88,12 @@ export default function Despesas() {
   };
 
   const handleRecurringFormSuccess = () => {
-    setFormMode('one-off'); // Volta para o formulário avulso após o sucesso
+    setFormMode('one-off');
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida o cache de transações para o useTransactionsData
+    queryClient.invalidateQueries({ queryKey: ["transactions"] });
   };
 
-  if (authLoading || isLoadingExpenseData || isLoadingCategories) { // Incluindo authLoading
+  if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Despesas...</div>
@@ -140,10 +138,7 @@ export default function Despesas() {
           user={user}
           cartoes={cartoes}
           loadCartoes={loadCartoes}
-          rootExpenseCategories={rootExpenseCategories}
-          filteredSubcategories={filteredSubcategories}
-          selectedParentCategoryId={selectedParentCategoryId}
-          setSelectedParentCategoryId={setSelectedParentCategoryId}
+          allSubcategories={allSubcategories} // Passando allSubcategories
           queryClient={queryClient}
           isMobile={isMobile}
         />
@@ -151,7 +146,7 @@ export default function Despesas() {
         <RecurringEntryFormContent
           isMobile={isMobile}
           onSuccess={handleRecurringFormSuccess}
-          fetchedCategories={allCategories}
+          fetchedCategories={allCategories} // allCategories agora são as subcategorias
           isLoadingCategories={isLoadingCategories}
           initialType="despesa"
         />
@@ -192,7 +187,7 @@ export default function Despesas() {
                   <ExpensesDashboard 
                     expenses={expenses} 
                     expenseInstallments={expenseInstallments} 
-                    categories={fetchedCategories}
+                    categories={allSubcategories} // Passando allSubcategories
                     isMobile={isMobile}
                   />
                 </>
@@ -203,10 +198,10 @@ export default function Despesas() {
           {!isMobile && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                <TopCategoriesByValue expenses={expenses} categories={fetchedCategories} />
-                <MostUsedCategories expenses={expenses} categories={fetchedCategories} />
+                <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
+                <MostUsedCategories expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
               </div>
-              <CategoryDistributionSummary expenses={expenses} categories={fetchedCategories} />
+              <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
             </>
           )}
         </div>

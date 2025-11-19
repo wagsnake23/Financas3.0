@@ -29,34 +29,26 @@ interface TransactionListProps {
   transactions: Transaction[];
   onDeleteTransaction: (id: string, type: "income" | "expense", isFixed?: boolean) => void;
   onEditTransaction: (transaction: Transaction) => void;
-  allCategories: AppCategory[];
+  allCategories: AppCategory[]; // Agora contém apenas subcategorias
   cartoes: Tables<'cartoes'>[];
-  // filterPaymentMethod: string; // Removido
-  // setFilterPaymentMethod: (method: string) => void; // Removido
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  // rawExpenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[]; // Removido
-  // selectedMonth: Date; // Removido
-  disableFilters?: boolean; // Nova prop para desativar filtros
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // Adicionado
+  disableFilters?: boolean;
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
 }
 
 export const TransactionList = ({
   transactions, 
   onDeleteTransaction, 
   onEditTransaction, 
-  allCategories, 
+  allCategories, // Usar allCategories diretamente (já são subcategorias)
   cartoes,
-  // filterPaymentMethod, // Removido
-  // setFilterPaymentMethod, // Removido
   isMobile,
   queryClient,
   user,
-  // rawExpenseInstallments, // Removido
-  // selectedMonth, // Removido
-  disableFilters = false, // Valor padrão é false
-  markMonthPaid, // Destruturando a nova prop
+  disableFilters = false,
+  markMonthPaid,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,12 +63,10 @@ export const TransactionList = ({
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
-      // Lógica de filtro de forma de pagamento removida
       let matchesPaymentMethod = true; 
 
       const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
 
-      // Log detalhado para cada transação
       console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
       return finalResult;
@@ -91,104 +81,20 @@ export const TransactionList = ({
 
   const getCategoryDisplayName = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
-    if (!category) return categoryId;
-
-    if (category.parent_id) {
-      const parent = allCategories.find(p => p.id === category.parent_id);
-      return `${parent?.nome || 'Categoria Principal'} > ${category.nome}`;
-    }
-    return category.nome;
+    // Como agora só temos subcategorias, não precisamos mais da hierarquia "Pai > Filho"
+    return category?.nome || categoryId;
   };
 
+  // `allCategories` já são as subcategorias.
+  // Filtrar para obter apenas as subcategorias relevantes para o filtro de tipo.
   const selectableCategories = useMemo(() => {
-    return allCategories.filter(cat => 
-      cat.parent_id !== null || 
-      cat.id === 'receitas_e_investimentos' || 
-      cat.id === 'moradia' || 
-      cat.id === 'transporte' || 
-      cat.id === 'alimentacao' || 
-      cat.id === 'saude' || 
-      cat.id === 'educacao' || 
-      cat.id === 'lazer' || 
-      cat.id === 'pessoais' || 
-      cat.id === 'obrigacoes_financeiras' || 
-      cat.id === 'trabalho_negocio' || 
-      cat.id === 'familia_filhos'
-    );
-  }, [allCategories]);
-
-  // Lógica de cartão e fatura removida
-  // const selectedCardId = filterPaymentMethod.startsWith("cartao_") ? filterPaymentMethod.split("_")[1] : null;
-  // const selectedCard = useMemo(() => {
-  //   return cartoes.find(card => card.id === selectedCardId);
-  // }, [cartoes, selectedCardId]);
-
-  // const invoiceDetails = useMemo(() => {
-  //   if (!selectedCard) return null;
-  //   const currentMonthForInvoice = new Date();
-  //   const currentDay = currentMonthForInvoice.getDate();
-    
-  //   let invoiceMonthDate = currentMonthForInvoice;
-
-  //   if (currentDay > selectedCard.dia_fechamento) {
-  //     invoiceMonthDate = addMonths(currentMonthForInvoice, 1);
-  //   }
-
-  //   const invoiceClosingDate = new Date(invoiceMonthDate.getFullYear(), invoiceMonthDate.getMonth(), selectedCard.dia_fechamento);
-  //   const invoiceDueDate = new Date(addMonths(invoiceMonthDate, 1).getFullYear(), addMonths(invoiceMonthDate, 1).getMonth(), selectedCard.dia_vencimento);
-
-  //   return {
-  //     cardName: selectedCard.nome,
-  //     invoiceMonth: format(invoiceMonthDate, "MMMM", { locale: ptBR }),
-  //     dueDate: format(invoiceDueDate, "dd/MM", { locale: ptBR }),
-  //     invoiceMonthDate: invoiceMonthDate,
-  //   };
-  // }, [selectedCard]);
-
-  // const handlePayInvoice = async () => {
-  //   if (!selectedCard || !invoiceDetails || !user?.id) {
-  //     toast.error("Não foi possível processar o pagamento da fatura. Dados incompletos.");
-  //     return;
-  //   }
-
-  //   const invoiceMonthStart = startOfMonth(invoiceDetails.invoiceMonthDate);
-  //   const invoiceMonthEnd = endOfMonth(invoiceDetails.invoiceMonthDate);
-
-  //   const installmentsToPay = rawExpenseInstallments.filter(p => {
-  //     const installmentDate = new Date(p.vencimento);
-  //     return (
-  //       p.despesas?.cartao_id === selectedCard.id &&
-  //       !p.pago &&
-  //       isWithinInterval(installmentDate, { start: invoiceMonthStart, end: invoiceMonthEnd })
-  //     );
-  //   });
-
-  //   if (installmentsToPay.length === 0) {
-  //     toast.info(`Não há parcelas pendentes para o cartão ${selectedCard.nome} na fatura de ${invoiceDetails.invoiceMonth}.`);
-  //     return;
-  //   }
-
-  //   const installmentIdsToUpdate = installmentsToPay.map(p => p.id);
-  //   const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
-
-  //   const { error } = await supabase
-  //     .from("despesas_parcelas")
-  //     .update({
-  //       pago: true,
-  //       data_pagamento: currentTimestamp,
-  //     })
-  //     .in("id", installmentIdsToUpdate);
-
-  //   if (error) {
-  //     toast.error("Erro ao pagar a fatura do cartão", { description: error.message });
-  //     console.error("Supabase error paying invoice:", error);
-  //   } else {
-  //     toast.success(`Fatura do cartão ${selectedCard.nome} (${invoiceDetails.invoiceMonth}) paga com sucesso!`, {
-  //       style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
-  //     });
-  //     queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-  //   }
-  // };
+    if (filterType === "income") {
+      return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+    } else if (filterType === "expense") {
+      return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
+    }
+    return allCategories; // Se "all", retorna todas as subcategorias
+  }, [allCategories, filterType]);
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
@@ -205,12 +111,12 @@ export const TransactionList = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 rounded-xl"
-              disabled={disableFilters} // Desabilitar busca
+              disabled={disableFilters}
             />
           </div>
         )}
 
-        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}> {/* Desabilitar tipo */}
+        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -221,12 +127,12 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}> {/* Desabilitar categoria */}
+        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Categoria" />
+            <SelectValue placeholder="Subcategoria" /> {/* Placeholder atualizado */}
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as categorias</SelectItem>
+            <SelectItem value="all">Todas as subcategorias</SelectItem> {/* Item atualizado */}
             {selectableCategories
               .filter(cat => cat.id !== "") 
               .map((cat) => (
@@ -240,41 +146,6 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
       </div>
-
-      {/* Bloco do filtro de forma de pagamento removido */}
-      {/* <div className="mb-6">
-        <Select value={filterPaymentMethod} onValueChange={setFilterPaymentMethod} disabled={disableFilters}>
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Forma de Pagamento" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as formas de pagamento</SelectItem>
-            <SelectItem value="dinheiro">Dinheiro</SelectItem>
-            <SelectItem value="pix">PIX</SelectItem>
-            <SelectItem value="boleto">Boleto</SelectItem>
-            {cartoes.map(card => (
-              <SelectItem key={card.id} value={`cartao_${card.id}`}>
-                Cartão: {card.nome} ({card.banco} ****{card.ultimos_digitos})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div> */}
-
-      {/* Botão de pagar fatura para mobile removido */}
-      {/* {isMobile && selectedCard && invoiceDetails && (
-        <div className="mb-4">
-          <Button 
-            variant="outline" 
-            className="h-auto py-2 text-sm w-3/4 mx-auto whitespace-normal rounded-xl"
-            onClick={handlePayInvoice}
-            disabled={disableFilters}
-          >
-            <span className="mr-2">💳</span>
-            Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}
-          </Button>
-        </div>
-      )} */}
 
       <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
         <div className={cn(
@@ -290,19 +161,6 @@ export const TransactionList = ({
             R$ {accumulatedValue.toFixed(2)}
           </p>
         </div>
-
-        {/* Botão de pagar fatura para desktop removido */}
-        {/* {!isMobile && selectedCard && invoiceDetails && (
-          <Button 
-            variant="outline" 
-            className="h-auto py-3 rounded-xl"
-            onClick={handlePayInvoice}
-            disabled={disableFilters}
-          >
-            <span className="mr-2">💳</span>
-            Pagar fatura {selectedCard.nome} ({invoiceDetails.invoiceMonth}) Venc: {invoiceDetails.dueDate}
-          </Button>
-        )} */}
       </div>
 
       <div className={cn(
@@ -314,7 +172,7 @@ export const TransactionList = ({
             <TableRow>
               <TableHead className="py-1 px-2 min-w-[70px]">Data</TableHead>
               {!isMobile && <TableHead className="py-1 px-2 min-w-[60px]">Tipo</TableHead>}
-              <TableHead className="py-1 px-2 min-w-[80px]">Categoria</TableHead>
+              <TableHead className="py-1 px-2 min-w-[80px]">Subcategoria</TableHead> {/* Título atualizado */}
               {!isMobile && <TableHead className="py-1 px-2 min-w-[100px]">Descrição</TableHead>}
               <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead>
               <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead>
@@ -340,7 +198,7 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
-                  markMonthPaid={markMonthPaid} // Passando a nova prop
+                  markMonthPaid={markMonthPaid}
                 />
               ))
             )}

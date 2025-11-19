@@ -7,8 +7,9 @@ import { AppCategory } from "@/types/finance";
 
 const UNSELECTED_VALUE = "unselected";
 
-export const useExpenseData = (user: User | null, selectedParentCategoryId: string) => {
+export const useExpenseData = (user: User | null, selectedParentCategoryId: string, enabled: boolean) => { // Adicionado 'enabled'
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
+  // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id], // Unificado
     queryFn: async () => {
@@ -17,27 +18,23 @@ export const useExpenseData = (user: User | null, selectedParentCategoryId: stri
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
     },
-    enabled: !!user?.id,
+    enabled: enabled, // Usar o parâmetro 'enabled'
   });
 
-  // Filter for root expense categories (parent_id is null and not 'receitas_e_investimentos')
-  const rootExpenseCategories = useMemo(() => {
-    return fetchedCategories.filter(cat => 
-      cat.parent_id === null && cat.id !== 'receitas_e_investimentos'
-    );
-  }, [fetchedCategories]);
+  // rootExpenseCategories e filteredSubcategories se tornam redundantes ou precisam ser reavaliados
+  // Como agora só buscamos subcategorias, 'fetchedCategories' JÁ SÃO as subcategorias.
+  // O 'selectedParentCategoryId' não será mais usado para filtrar subcategorias, mas sim para
+  // pré-selecionar a categoria pai da subcategoria, se necessário, ou apenas para contexto.
+  const allSubcategories = fetchedCategories;
 
-  // Filter for subcategories based on the selected parent category
-  const filteredSubcategories = useMemo(() => {
-    if (selectedParentCategoryId === UNSELECTED_VALUE || !selectedParentCategoryId) {
-      return [];
-    }
-    return fetchedCategories.filter(cat => cat.parent_id === selectedParentCategoryId);
-  }, [fetchedCategories, selectedParentCategoryId]);
+  // O 'selectedParentCategoryId' não será mais usado para filtrar a lista de subcategorias,
+  // mas pode ser útil para outras lógicas ou para preencher o formulário de edição.
+  // Por enquanto, vamos manter a prop, mas ela não filtrará a lista de subcategorias aqui.
 
   // Fetch despesas using Tanstack Query
   const { data: expenses = [], isLoading: isLoadingExpenses } = useQuery<Tables<'despesas'>[]>({
@@ -52,7 +49,7 @@ export const useExpenseData = (user: User | null, selectedParentCategoryId: stri
       if (error) throw error;
       return data.filter(d => !d.is_fixed); // Filter out legacy fixed expenses
     },
-    enabled: !!user?.id,
+    enabled: enabled,
   });
 
   // Fetch despesas_parcelas using Tanstack Query
@@ -70,15 +67,13 @@ export const useExpenseData = (user: User | null, selectedParentCategoryId: stri
       if (error) throw error;
       return data.filter(p => !p.despesas?.is_fixed); // Filter out legacy fixed expenses
     },
-    enabled: !!user?.id,
+    enabled: enabled,
   });
 
   const isLoading = isLoadingCategories || isLoadingExpenses || isLoadingInstallments;
 
   return {
-    fetchedCategories,
-    rootExpenseCategories,
-    filteredSubcategories,
+    allSubcategories, // Renomeado para clareza
     expenses,
     expenseInstallments,
     isLoading,

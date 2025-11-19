@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom"; // Importar useSearchParams
+import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
@@ -15,11 +15,11 @@ const isValidUuid = (uuid: string) => {
   return uuidRegex.test(uuid);
 };
 
-export const useLancamentosLogic = (user: User | null, authLoading: boolean) => { // Adicionado authLoading
+export const useLancamentosLogic = (user: User | null, authLoading: boolean) => {
   const queryClient = useQueryClient();
-  console.log("useLancamentosLogic: User received as prop:", user?.id, "AuthLoading:", authLoading); // Log atualizado
+  console.log("useLancamentosLogic: User received as prop:", user?.id, "AuthLoading:", authLoading);
 
-  const [searchParams] = useSearchParams(); // Chamar o hook useSearchParams aqui
+  const [searchParams] = useSearchParams();
 
   const initialMonth = useMemo(() => {
     const monthParam = searchParams.get("month");
@@ -42,15 +42,15 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
   const [loadingEditData, setLoadingEditData] = useState(false);
 
   const [isDeleteRecurrenceModalOpen, setIsDeleteRecurrenceModalOpen] = useState(false);
-  const [selectedRecurringTransactionForDelete, setSelectedRecurringTransactionForDelete] = useState<Transaction | null>(null); // Alterado o tipo para Transaction
+  const [selectedRecurringTransactionForDelete, setSelectedRecurringTransactionForDelete] = useState<Transaction | null>(null);
 
   const {
     monthlyFilteredTransactions,
-    fetchedCategories,
+    fetchedCategories: allSubcategories, // Renomeado para allSubcategories
     cartoes,
-    isLoading: isLoadingTransactionsData, // Renomeado para evitar conflito
+    isLoading: isLoadingTransactionsData,
     isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading }); // Passando enabled
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
 
   const {
     createOrUpdateException,
@@ -60,13 +60,11 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     cancelMonth,
     endRecurringAt,
     markMonthPaid,
-    isLoading: isLoadingRecurringEntriesHook, // Renomeado para evitar conflito
-  } = useRecurringEntries(user, selectedMonth, fetchedCategories, !!user && !authLoading); // Passando enabled
+    isLoading: isLoadingRecurringEntriesHook,
+  } = useRecurringEntries(user, selectedMonth, allSubcategories, !!user && !authLoading); // Passando allSubcategories
 
-  // O isLoading geral do hook agora considera o authLoading e os loadings internos
   const isLoading = authLoading || isLoadingTransactionsData || isLoadingCategories || isLoadingRecurringEntriesHook;
 
-  // Handlers para navegação de mês
   const handlePreviousMonth = useCallback(() => {
     setSelectedMonth(prevMonth => subMonths(prevMonth, 1));
   }, []);
@@ -75,7 +73,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     setSelectedMonth(prevMonth => addMonths(prevMonth, 1));
   }, []);
 
-  // Nova função para lidar com a exclusão baseada nas opções do modal
   const confirmDeleteWithOptions = useCallback(async (transaction: Transaction, deleteOption: "thisMonth" | "thisMonthForward" | "all") => {
     setLoadingEditData(true);
     if (!user) {
@@ -86,7 +83,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
 
     try {
       if (transaction.isRecurring && transaction.recurringEntryId) {
-        // Lógica para lançamentos recorrentes (MaterializedRecurringTransaction)
         const recurringTrans = transaction as MaterializedRecurringTransaction;
         const transactionDate = new Date(recurringTrans.date);
         const year = transactionDate.getFullYear();
@@ -110,15 +106,12 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
         }
         toast.success("Lançamento recorrente excluído/cancelado!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
       } else if (transaction.type === "expense" && transaction.installmentNumber && transaction.despesa_id) {
-        // Lógica para despesas parceladas (não recorrentes)
         const parentDespesaId = transaction.despesa_id;
         const installmentId = transaction.id;
 
         if (deleteOption === "thisMonth") {
-          // Excluir apenas esta parcela específica
           const { error } = await supabase.from("despesas_parcelas").delete().eq("id", installmentId);
           if (error) throw error;
-          // Verificar se a despesa pai precisa ser excluída (se não houver mais parcelas)
           const { data: remainingParcelas, error: checkError } = await supabase.from("despesas_parcelas").select("id").eq("despesa_id", parentDespesaId);
           if (checkError) console.error("Error checking remaining installments:", checkError);
           if (remainingParcelas && remainingParcelas.length === 0) {
@@ -126,10 +119,8 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
           }
           toast.success("Parcela excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         } else if (deleteOption === "thisMonthForward") {
-          // Excluir esta parcela e todas as parcelas futuras para esta despesa pai
           const { error } = await supabase.from("despesas_parcelas").delete().eq("despesa_id", parentDespesaId).gte("numero_parcela", transaction.installmentNumber);
           if (error) throw error;
-          // Verificar se a despesa pai precisa ser excluída (se não houver mais parcelas)
           const { data: remainingParcelas, error: checkError } = await supabase.from("despesas_parcelas").select("id").eq("despesa_id", parentDespesaId);
           if (checkError) console.error("Error checking remaining installments:", checkError);
           if (remainingParcelas && remainingParcelas.length === 0) {
@@ -137,19 +128,16 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
           }
           toast.success("Parcelas futuras excluídas!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         } else if (deleteOption === "all") {
-          // Excluir a despesa pai inteira e todas as suas parcelas
           const { error } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
           if (error) throw error;
           toast.success("Despesa parcelada excluída!", { style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' } });
         }
       } else {
-        // Este caso não deve ser atingido se o modal for aberto apenas para recorrentes/parceladas
         toast.error("Tipo de transação não suportado para exclusão avançada.");
         setLoadingEditData(false);
         return;
       }
 
-      // Invalidar queries após exclusão bem-sucedida
       queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
@@ -159,10 +147,10 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       console.error("Deletion error:", error);
     } finally {
       setLoadingEditData(false);
-      setIsDeleteRecurrenceModalOpen(false); // Fechar o modal
-      setEditingTransaction(null); // Fechar o formulário de edição
+      setIsDeleteRecurrenceModalOpen(false);
+      setEditingTransaction(null);
     }
-  }, [user, queryClient, cancelMonth, endRecurringAt, deleteRecurringEntry]);
+  }, [user, queryClient, monthlyFilteredTransactions, cancelMonth, endRecurringAt, deleteRecurringEntry]);
 
   const handleDeleteTransaction = useCallback(async (id: string, type: "income" | "expense", isFixed?: boolean) => {
     setLoadingEditData(true);
@@ -173,14 +161,13 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       return;
     }
 
-    const transactionToDelete = monthlyFilteredTransactions.find(t => t.id === id); // Usar monthlyFilteredTransactions
+    const transactionToDelete = monthlyFilteredTransactions.find(t => t.id === id);
     if (!transactionToDelete) {
       toast.error("Lançamento não encontrado.");
       setLoadingEditData(false);
       return;
     }
 
-    // Se for um lançamento recorrente OU uma despesa parcelada (com mais de 1 parcela), abrir o modal de exclusão avançada
     if (transactionToDelete.isRecurring || (transactionToDelete.type === "expense" && transactionToDelete.installmentNumber && transactionToDelete.totalInstallments && transactionToDelete.totalInstallments > 1)) {
       setSelectedRecurringTransactionForDelete(transactionToDelete);
       setIsDeleteRecurrenceModalOpen(true);
@@ -188,12 +175,11 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       return;
     }
 
-    // Lógica original para transações avulsas (receitas ou despesas de parcela única)
     let error = null;
 
     if (type === "income") {
       let revenueIdToUse = id;
-      if (isFixed) { // Este caminho para receitas fixas legadas, que devem ser filtradas por useTransactionsData agora
+      if (isFixed) {
         const lastHyphenIndex = revenueIdToUse.lastIndexOf('-');
         if (lastHyphenIndex !== -1) {
           revenueIdToUse = revenueIdToUse.substring(0, lastHyphenIndex);
@@ -211,7 +197,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
         .eq("user_id", user.id);
       error = deleteError;
     } else if (type === "expense") {
-      // Este caminho para despesas de parcela única (não recorrentes)
       if (!isValidUuid(id)) {
         toast.error("Erro (DEL-NF-1): ID de parcela de despesa inválido.");
         setLoadingEditData(false);
@@ -231,7 +216,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       toast.success("Lançamento excluído!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
-      setEditingTransaction(null); // Fechar o formulário de edição
+      setEditingTransaction(null);
       setFullEditingRevenue(null);
       setFullEditingExpense(null);
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
@@ -240,10 +225,9 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
     }
     setLoadingEditData(false);
-  }, [user, queryClient, monthlyFilteredTransactions, confirmDeleteWithOptions]); // Usar monthlyFilteredTransactions
+  }, [user, queryClient, monthlyFilteredTransactions, confirmDeleteWithOptions]);
 
   const handleEditTransaction = useCallback(async (transaction: Transaction) => {
-    // Sempre define editingTransaction, o formulário de edição unificado lidará com a renderização
     setEditingTransaction(transaction);
     setLoadingEditData(true);
 
@@ -253,8 +237,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       return;
     }
 
-    // Se for uma transação recorrente materializada, não precisamos buscar dados adicionais
-    // O TransactionEditForm usará as propriedades de MaterializedRecurringTransaction
     if (transaction.isRecurring) {
       setFullEditingRevenue(null);
       setFullEditingExpense(null);
@@ -263,7 +245,6 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       return;
     }
 
-    // Lógica existente para transações não recorrentes (avulsas ou fixas legadas)
     const currentRevenues = queryClient.getQueryData<Tables<'receitas'>[]>(["revenues", user.id]) || [];
 
     if (transaction.type === "income") {
@@ -314,25 +295,13 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
           setFullEditingExpense(null);
         }
       } else {
-        if (!isValidUuid(transaction.id)) {
-          toast.error("Erro (EDIT-NF-1): ID de parcela de despesa inválido.");
-          setLoadingEditData(false);
-          return;
-        }
-          // Para despesas parceladas não fixas, o ID da transação é o ID da parcela.
-          // Não precisamos buscar a despesa pai completa aqui, pois o TransactionEditForm
-          // já recebe os dados da parcela via `editingTransaction`.
-          // Se precisar de mais detalhes da despesa pai, eles já estariam em `transaction.despesa_id`
-          // e poderiam ser buscados se necessário, mas para edição da parcela, o que temos é suficiente.
-          // A mensagem de erro abaixo é um fallback e pode ser removida se não for mais relevante.
-          // toast.error("Erro ao carregar detalhes da despesa não fixa para edição (dados não encontrados).");
-          setFullEditingExpense(null); // Garante que não haja dados de despesa pai conflitantes
+          setFullEditingExpense(null);
       }
       setFullEditingRevenue(null);
     }
     setLoadingEditData(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [user, queryClient, monthlyFilteredTransactions]); // Usar monthlyFilteredTransactions
+  }, [user, queryClient, monthlyFilteredTransactions]);
 
   const handleUpdateTransaction = useCallback(async (
     id: string,
@@ -340,7 +309,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     updatedTransaction: Omit<Transaction, "id">,
     editOption?: "thisMonth" | "thisMonthForward" | "all",
     preserveExceptions?: boolean,
-    recurringData?: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'> // Tipo flexível
+    recurringData?: TablesUpdate<'recurring_entries'> | TablesUpdate<'recurring_entry_exceptions'>
   ) => {
     let error = null;
     setLoadingEditData(true);
@@ -351,7 +320,7 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       return;
     }
 
-    const originalTransaction = monthlyFilteredTransactions.find(t => t.id === id); // Usar monthlyFilteredTransactions
+    const originalTransaction = monthlyFilteredTransactions.find(t => t.id === id);
     const isRecurring = originalTransaction?.isRecurring;
 
     try {
@@ -388,11 +357,9 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
         });
         queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
         queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }); // Invalida o cache de transações para o useTransactionsData
-        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }); // Invalida o cache de transações para o useTransactionsData
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       } else {
-        // Lógica existente para transações não recorrentes (avulsas ou fixas legadas)
-
         if (type === "income") {
           let revenueIdToUse = id;
           if (originalTransaction?.is_fixed) {
@@ -509,13 +476,13 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
       setFullEditingExpense(null);
       setLoadingEditData(false);
     }
-  }, [user, queryClient, monthlyFilteredTransactions, createOrUpdateException, updateRecurringMasterFuture, updateRecurringMasterGlobal]); // Usar monthlyFilteredTransactions
+  }, [user, queryClient, monthlyFilteredTransactions, createOrUpdateException, updateRecurringMasterFuture, updateRecurringMasterGlobal]);
 
   return {
     selectedMonth,
     setSelectedMonth,
-    handlePreviousMonth, // Adicionado ao retorno
-    handleNextMonth,     // Adicionado ao retorno
+    handlePreviousMonth,
+    handleNextMonth,
     editingTransaction,
     setEditingTransaction,
     fullEditingRevenue,
@@ -526,10 +493,10 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     setLoadingEditData,
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransaction: selectedRecurringTransactionForDelete, // Renomeado para clareza
-    setSelectedRecurringTransaction: setSelectedRecurringTransactionForDelete, // Renomeado para clareza
-    monthlyFilteredTransactions, // Retornando a versão já filtrada por mês
-    fetchedCategories,
+    selectedRecurringTransaction: selectedRecurringTransactionForDelete,
+    setSelectedRecurringTransaction: setSelectedRecurringTransactionForDelete,
+    monthlyFilteredTransactions,
+    fetchedCategories: allSubcategories, // Renomeado para allSubcategories
     cartoes,
     isLoading,
     isLoadingCategories,
@@ -537,8 +504,8 @@ export const useLancamentosLogic = (user: User | null, authLoading: boolean) => 
     handleEditTransaction,
     handleUpdateTransaction,
     user,
-    queryClient, // Adicionado queryClient ao retorno
-    confirmDeleteWithOptions, // Adicionado a nova função de exclusão
-    markMonthPaid, // Adicionado aqui
+    queryClient,
+    confirmDeleteWithOptions,
+    markMonthPaid,
   };
 };

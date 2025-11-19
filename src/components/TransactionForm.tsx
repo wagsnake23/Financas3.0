@@ -22,12 +22,13 @@ const UNSELECTED_VALUE = "unselected"; // Valor único para representar 'não se
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
   const [type, setType] = useState<TransactionType>("expense");
-  const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
+  const [amount, setAmount] = useState<number | undefined>(undefined);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [category, setCategory] = useState(UNSELECTED_VALUE); // Inicializado com UNSELECTED_VALUE
+  const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
+  // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
   const { data: fetchedCategories = [] } = useQuery<AppCategory[]>({
     queryKey: ["transactionFormCategories", user?.id],
     queryFn: async () => {
@@ -36,6 +37,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -43,37 +45,35 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
     enabled: !!user?.id,
   });
 
-  const allCategories = fetchedCategories;
-
-  const filteredCategories = useMemo(() => {
+  // `fetchedCategories` agora já são as subcategorias.
+  // Filtrar para obter apenas as subcategorias relevantes para o tipo de transação.
+  const filteredSubcategories = useMemo(() => {
     if (type === "income") {
-      // For income, show only subcategories of the 'Receitas e Investimentos' root
-      return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+      return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
     } else {
-      // For expense, show all categories that are not the 'Receitas e Investimentos' root or its subcategories
-      return allCategories.filter(cat => cat.id !== 'receitas_e_investimentos' && cat.parent_id !== 'receitas_e_investimentos');
+      return fetchedCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
-  }, [type, allCategories]);
+  }, [type, fetchedCategories]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (amount === undefined || category === UNSELECTED_VALUE) { // Verificação com UNSELECTED_VALUE e amount
-      toast.error("Preencha todos os campos obrigatórios");
+    if (amount === undefined || category === UNSELECTED_VALUE) {
+      toast.error("Preencha todos os campos obrigatórios (Valor e Subcategoria).");
       return;
     }
 
     onAddTransaction({
       type,
-      amount: amount as number, // Usar o valor como number
+      amount: amount as number,
       date,
       category,
       description,
     });
 
     // Reset form
-    setAmount(undefined); // Reset para undefined
-    setCategory(UNSELECTED_VALUE); // Reset para UNSELECTED_VALUE
+    setAmount(undefined);
+    setCategory(UNSELECTED_VALUE);
     setDescription("");
     
     toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
@@ -90,7 +90,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             <Label htmlFor="type">Tipo</Label>
             <Select value={type} onValueChange={(value) => {
               setType(value as TransactionType);
-              setCategory(UNSELECTED_VALUE); // Reset category when type changes to UNSELECTED_VALUE
+              setCategory(UNSELECTED_VALUE); // Reset category when type changes
             }}>
               <SelectTrigger className="rounded-xl">
                 <SelectValue />
@@ -127,20 +127,20 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Categoria</Label>
+            <Label htmlFor="category">Subcategoria</Label> {/* Label atualizada */}
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Selecione..." />
+                <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={UNSELECTED_VALUE} disabled>Selecione...</SelectItem> {/* Usando UNSELECTED_VALUE */}
-                {filteredCategories.length === 0 ? (
-                  <SelectItem value={UNSELECTED_VALUE} disabled>Nenhuma categoria disponível</SelectItem>
+                {/* Removido o item "Selecione..." */}
+                {filteredSubcategories.length === 0 ? (
+                  <SelectItem value={UNSELECTED_VALUE} disabled>Nenhuma subcategoria disponível</SelectItem>
                 ) : (
-                  filteredCategories
+                  filteredSubcategories
                     .map((cat) => (
                       <SelectItem key={cat.id} value={cat.id}>
-                        {cat.parent_id ? `— ${allCategories.find(p => p.id === cat.parent_id)?.nome} > ${cat.nome}` : cat.nome}
+                        {cat.nome} {/* Exibir apenas o nome da subcategoria */}
                       </SelectItem>
                     ))
                 )}

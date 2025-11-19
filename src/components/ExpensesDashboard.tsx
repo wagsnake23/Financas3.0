@@ -7,19 +7,19 @@ import { AppCategory } from "@/types/finance";
 interface ExpensesDashboardProps {
   expenses: Tables<'despesas'>[];
   expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[];
-  categories: AppCategory[];
+  categories: AppCategory[]; // Agora contém apenas subcategorias
   isMobile: boolean;
 }
 
 export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, isMobile }: ExpensesDashboardProps) => {
-  const filteredExpenseInstallments = expenseInstallments.filter(p => !p.despesas?.is_fixed); // Filter out legacy fixed expenses
+  const filteredExpenseInstallments = expenseInstallments.filter(p => !p.despesas?.is_fixed);
   const totalExpenses = filteredExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
-  const allCategories: AppCategory[] = categories;
+  const allSubcategories: AppCategory[] = categories; // Renomeado para clareza
 
   const expensesByCategory = expenses
-    .filter(d => !d.is_fixed) // Filter out legacy fixed expenses
+    .filter(d => !d.is_fixed)
     .reduce((acc, expense) => {
-      const category = allCategories.find(c => c.id === expense.categoria_id);
+      const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryNome = category?.nome || "Outros";
       const categoryCor = category?.cor || "hsl(215, 15%, 50%)";
       
@@ -49,7 +49,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
       </Card>
 
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Despesas por Categoria</h2>
+        <h2 className="text-xl font-semibold mb-4">Despesas por Subcategoria</h2> {/* Título atualizado */}
         {chartData.length === 0 ? (
           <div className="h-60 flex items-center justify-center text-muted-foreground">
             Nenhuma despesa registrada

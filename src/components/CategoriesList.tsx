@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { AppCategory } from "@/types/finance";
+import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 import { Search, Pencil, Trash2, ChevronRight, ChevronDown } from "lucide-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories = category.subCategories && category.subCategories.length > 0;
   const [isExpanded, setIsExpanded] = useState(false);
-  const isDefault = category.user_id === null; // Determine if it's a default category
+  const isDefault = category.user_id === null;
 
   return (
     <>
@@ -60,24 +61,20 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
             className="p-2 rounded-lg flex items-center justify-center text-2xl"
             style={{ backgroundColor: category.cor }}
           >
-            <span>{category.icone}</span>
+            <DynamicIcon name={category.icone} className="h-6 w-6" /> {/* Usar DynamicIcon */}
           </div>
           <div className="flex-1">
             <p className="font-semibold">{category.nome}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {/* Removido: {isDefault && <span>Categoria padrão</span>} */}
               {paymentLabel && (
-                <>
-                  {/* Removido: {isDefault && <span>•</span>} */}
-                  <span>{paymentLabel}</span>
-                </>
+                <span>{paymentLabel}</span>
               )}
             </div>
           </div>
         </div>
         
         <div className="flex items-center gap-1">
-          {!isDefault && (
+          {!isDefault && category.parent_id !== null && ( // Apenas subcategorias não padrão podem ser editadas/excluídas
             <Button
               variant="ghost"
               size="icon"
@@ -88,7 +85,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
             </Button>
           )}
           
-          {!isDefault && (
+          {!isDefault && category.parent_id !== null && ( // Apenas subcategorias não padrão podem ser editadas/excluídas
             <Button
               variant="ghost"
               size="icon"
@@ -153,6 +150,7 @@ const CategoriesList = ({
       cat.nome.toLowerCase().includes(term)
     );
 
+    // Reconstruir a hierarquia para as categorias filtradas
     const filteredMap = new Map<string, HierarchicalCategory>();
     filteredFlat.forEach(cat => filteredMap.set(cat.id, { ...cat, subCategories: [] }));
 
@@ -161,34 +159,42 @@ const CategoriesList = ({
       if (cat.parent_id && filteredMap.has(cat.parent_id)) {
         const parent = filteredMap.get(cat.parent_id);
         if (parent) {
-          parent.subCategories?.push(filteredMap.get(cat.id)!);
+          // Adicionar subcategoria ao pai, se o pai também estiver filtrado
+          if (!parent.subCategories?.some(sub => sub.id === cat.id)) {
+            parent.subCategories?.push(filteredMap.get(cat.id)!);
+          }
         }
       } else if (!cat.parent_id) {
-        rootFiltered.push(filteredMap.get(cat.id)!);
+        // Adicionar categoria raiz se ela estiver filtrada
+        if (!rootFiltered.some(root => root.id === cat.id)) {
+          rootFiltered.push(filteredMap.get(cat.id)!);
+        }
       }
     });
 
-    const finalFilteredHierarchy: HierarchicalCategory[] = [];
+    // Garantir que as subcategorias sejam adicionadas aos pais corretos
     rootFiltered.forEach(root => {
-      const processNode = (node: HierarchicalCategory): HierarchicalCategory | null => {
+      const processNode = (node: HierarchicalCategory): HierarchicalCategory => {
         const newNode: HierarchicalCategory = { ...node, subCategories: [] };
         if (node.subCategories) {
           node.subCategories.forEach(sub => {
             if (filteredMap.has(sub.id)) {
               const processedSub = processNode(sub);
-              if (processedSub) {
-                newNode.subCategories?.push(processedSub);
-              }
+              newNode.subCategories?.push(processedSub);
             }
           });
         }
         return newNode;
       };
-      const processedRoot = processNode(root);
-      if (processedRoot) {
-        finalFilteredHierarchy.push(processedRoot);
-      }
+      // Limpar e re-adicionar subcategorias para evitar duplicação e garantir ordem
+      root.subCategories = root.subCategories?.filter(sub => filteredMap.has(sub.id)).map(processNode) || [];
     });
+
+    // Filtrar categorias raiz que não têm subcategorias correspondentes no filtro
+    // e que não são elas mesmas o resultado de uma busca
+    const finalFilteredHierarchy = rootFiltered.filter(root => 
+      root.subCategories?.length > 0 || filteredMap.has(root.id)
+    );
 
     return finalFilteredHierarchy;
   }, [categories, searchTerm, flatCategories]);

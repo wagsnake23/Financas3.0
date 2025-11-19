@@ -19,6 +19,7 @@ interface UseTransactionsDataProps {
 }
 
 export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransactionsDataProps) => { // Adicionado 'enabled'
+  // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -27,6 +28,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -164,7 +166,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
   return {
     monthlyFilteredTransactions,
-    fetchedCategories,
+    fetchedCategories, // Agora contém apenas subcategorias
     cartoes,
     isLoading,
     isLoadingCategories,

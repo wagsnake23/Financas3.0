@@ -35,7 +35,7 @@ interface TransactionEditFormProps {
   ) => void;
   onCancelEdit: () => void;
   onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
-  allCategories: AppCategory[];
+  allCategories: AppCategory[]; // Agora contém apenas subcategorias
   isMobile: boolean;
 }
 
@@ -46,7 +46,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   onUpdateTransaction,
   onCancelEdit,
   onDeleteTransaction,
-  allCategories,
+  allCategories, // Usar allCategories diretamente (já são subcategorias)
   isMobile,
 }) => {
   const isRecurringTransaction = (editingTransaction as MaterializedRecurringTransaction)?.isRecurring;
@@ -54,11 +54,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   // Form states
   const [type, setType] = useState<TransactionType>("expense");
-  const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
+  const [amount, setAmount] = useState<number | undefined>(undefined);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<ReceitaStatus>('Pendente'); // Only for income
+  const [status, setStatus] = useState<ReceitaStatus>('Pendente');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -80,6 +80,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [preserveExceptions, setPreserveExceptions] = useState(true);
 
   // Filter categories based on transaction type
+  // `allCategories` já são as subcategorias filtradas pelos hooks de dados.
+  // Não precisamos mais filtrar por `parent_id` aqui, apenas por tipo de transação.
   const filteredCategories = useMemo(() => {
     const currentType = isRecurringTransaction ? (recurringTransaction.type === 'income' ? 'receita' : 'despesa') : type;
     if (currentType === "receita" || currentType === "income") {
@@ -87,7 +89,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
     } else {
       // Para despesas, listar apenas subcategorias que NÃO são relacionadas a receitas
-      return allCategories.filter(cat => cat.parent_id !== null && cat.parent_id !== 'receitas_e_investimentos');
+      return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
   }, [type, allCategories, isRecurringTransaction, recurringTransaction]);
 
@@ -95,22 +97,18 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     const category = allCategories.find(cat => cat.id === catId);
     if (!category) return catId;
 
-    if (category.parent_id) {
-      const parent = allCategories.find(p => p.id === category.parent_id);
-      return `${parent?.nome || 'Categoria Principal'} > ${category.nome}`;
-    }
+    // Como agora só temos subcategorias, não precisamos mais da hierarquia "Pai > Filho"
     return category.nome;
   };
 
   useEffect(() => {
     if (editingTransaction) {
       setType(editingTransaction.type);
-      setAmount(editingTransaction.amount); // Definir como number
+      setAmount(editingTransaction.amount);
       
       const [year, month, day] = editingTransaction.date.split('-').map(Number);
       setDate(new Date(year, month - 1, day));
 
-      // FIX: Ensure category state never holds an empty string
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       
       setDescription(editingTransaction.description || "");
@@ -127,8 +125,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       
       if (isRecurringTransaction) {
         setTitle(recurringTransaction.recurringMasterTitle);
-        setAmount(recurringTransaction.originalValue); // Definir como number
-        setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE); // Also ensure this is not empty string
+        setAmount(recurringTransaction.originalValue);
+        setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE);
         setDueDay(recurringTransaction.originalDueDate?.toString() || "1");
         setFrequency(recurringTransaction.recurringMasterFrequency || "monthly");
         setStartDate(parseISO(recurringTransaction.recurringMasterStartDate));
@@ -141,7 +139,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           setOverrideDueDate(parseISO(recurringTransaction.date));
           setIsPaid(recurringTransaction.status === 'Recebida');
           setAmount(recurringTransaction.amount);
-          setCategory(recurringTransaction.category || UNSELECTED_VALUE); // Also ensure this is not empty string
+          setCategory(recurringTransaction.category || UNSELECTED_VALUE);
         } else {
           setNote("");
           setOverrideDueDate(parseISO(editingTransaction.date));
@@ -164,7 +162,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       }
     } else {
       setType("expense");
-      setAmount(undefined); // Reset para undefined
+      setAmount(undefined);
       setDate(new Date());
       setCategory(UNSELECTED_VALUE);
       setDescription("");
@@ -181,14 +179,14 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setEditOption("thisMonth");
       setPreserveExceptions(true);
     }
-  }, [editingTransaction, isRecurringTransaction, recurringTransaction]);
+  }, [editingTransaction, isRecurringTransaction, recurringTransaction, allCategories]); // Adicionado allCategories como dependência
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!editingTransaction) return;
 
-    if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) { // Verificação para number | undefined
+    if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) {
       toast.error("Preencha todos os campos obrigatórios (Valor e Subcategoria).");
       return;
     }
@@ -226,7 +224,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     const updatedTransaction: Omit<Transaction, "id"> = {
       type,
-      amount: amount as number, // Usar o valor como number
+      amount: amount as number,
       date: formattedDate,
       category,
       description,
@@ -241,24 +239,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (isRecurringTransaction) {
         if (editOption === "thisMonth") {
             finalRecurringPayload = {
-                override_value: amount === undefined ? null : amount, // Explicitly null if undefined
+                override_value: amount === undefined ? null : amount,
                 override_category_id: category === UNSELECTED_VALUE ? null : category,
                 override_due_date: overrideDueDate ? format(overrideDueDate, "yyyy-MM-dd") : null,
                 note: note.trim() || null,
                 paid: isPaid,
-                canceled: false, // When editing, we assume it's not being canceled via this form
+                canceled: false,
             } as TablesUpdate<'recurring_entry_exceptions'>;
         } else { // thisMonthForward or all
             finalRecurringPayload = {
                 title: title.trim(),
-                value: amount === undefined ? null : amount, // Explicitly null if undefined
+                value: amount === undefined ? null : amount,
                 category_id: category === UNSELECTED_VALUE ? null : category,
                 due_day: parseInt(dueDay),
                 frequency,
                 start_date: startDate ? format(startDate, "yyyy-MM-dd") : null,
                 end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
                 status: recurringStatus,
-                // Preserve forma_pagamento and cartao_id from the original master entry if not explicitly editable in this form
                 forma_pagamento: recurringTransaction.forma_pagamento,
                 cartao_id: recurringTransaction.cartao_id,
             } as TablesUpdate<'recurring_entries'>;
@@ -271,7 +268,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       updatedTransaction,
       isRecurringTransaction ? editOption : undefined,
       isRecurringTransaction && editOption === "all" ? preserveExceptions : undefined,
-      finalRecurringPayload // Pass the correctly structured payload
+      finalRecurringPayload
     );
     setLoading(false);
     setShowGlobalConfirmDialog(false);
@@ -311,7 +308,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 setValue={setAmount}
                 categoryId={category}
                 setCategoryId={setCategory}
-                filteredCategories={filteredCategories}
+                filteredCategories={filteredCategories} // Já são subcategorias
                 getCategoryDisplayName={getCategoryDisplayName}
                 loading={loading}
                 isMobile={isMobile}
@@ -374,7 +371,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setStatus={setStatus}
             isCalendarOpen={isCalendarOpen}
             setIsCalendarOpen={setIsCalendarOpen}
-            filteredCategories={filteredCategories}
+            filteredCategories={filteredCategories} // Já são subcategorias
             isMobile={isMobile}
             isFixedLegacy={editingTransaction?.is_fixed}
             transactionType={type}
@@ -384,7 +381,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         <TransactionEditActions
           onDelete={handleDeleteClick}
-          onSave={handleSubmit} // Pass handleSubmit as onSave
+          onSave={handleSubmit}
           onCancel={onCancelEdit}
           loading={loading}
           isMobile={isMobile}

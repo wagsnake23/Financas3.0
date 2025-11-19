@@ -22,29 +22,29 @@ import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
 import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
-import { useRecurringEntries } from "@/hooks/useRecurringEntries"; // Importar o novo hook
-import { useTransactionsData } from "@/hooks/useTransactionsData"; // Importar useTransactionsData
+import { useRecurringEntries } from "@/hooks/useRecurringEntries";
+import { useTransactionsData } from "@/hooks/useTransactionsData";
 
 const Dashboard = () => {
-  const { user, loading: authLoading } = useAuth(); // Obter authLoading
+  const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
   const [showIncomeValue, setShowIncomeValue] = useState(true);
   const [showExpenseValue, setShowExpenseValue] = useState(true);
   const [showBalanceValue, setShowBalanceValue] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState(new Date()); // Novo estado para o mês selecionado no calendário
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   const {
     monthlyFilteredTransactions,
-    fetchedCategories: allCategories,
+    fetchedCategories: allSubcategories, // Renomeado para allSubcategories
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading }); // Passando enabled
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
 
   // Fetch revenues
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
-    queryKey: ["revenues", user?.id], // Unificado
+    queryKey: ["revenues", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
@@ -53,16 +53,16 @@ const Dashboard = () => {
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data.filter(r => !r.is_fixed); // Filter out legacy fixed revenues
+      return data.filter(r => !r.is_fixed);
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user && !authLoading,
   });
 
   // Fetch expense installments and join with expenses to get category_id
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
     (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[]
   >({
-    queryKey: ["expenseInstallments", user?.id], // Unificado
+    queryKey: ["expenseInstallments", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
@@ -71,9 +71,9 @@ const Dashboard = () => {
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
-      return data.filter(p => !p.despesas?.is_fixed); // Filter out legacy fixed expenses
+      return data.filter(p => !p.despesas?.is_fixed);
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user && !authLoading,
   });
 
   const stats = useMemo(() => {
@@ -90,7 +90,7 @@ const Dashboard = () => {
     return { totalIncome, totalExpenses, balance };
   }, [monthlyFilteredTransactions]);
 
-  const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories; // Incluindo authLoading
+  const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
 
   if (isLoading) {
     return (
@@ -235,7 +235,7 @@ const Dashboard = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-                <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allCategories} isMobile={isMobile} />
+                <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allSubcategories} isMobile={isMobile} />
 
                 <div className="flex flex-col gap-4">
                   <MonthlyExpenseSummary

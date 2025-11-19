@@ -13,7 +13,7 @@ interface CommonFieldsProps {
   setValue: (value: number | undefined) => void; // Alterado para number | undefined
   categoryId: string;
   setCategoryId: (id: string) => void;
-  filteredCategories: AppCategory[];
+  filteredCategories: AppCategory[]; // Agora contém apenas subcategorias
   getCategoryDisplayName: (id: string) => string;
   loading: boolean;
   isMobile: boolean;
@@ -30,12 +30,12 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
   setValue,
   categoryId,
   setCategoryId,
-  filteredCategories,
+  filteredCategories, // Usar filteredCategories diretamente (já são subcategorias)
   getCategoryDisplayName,
   loading,
   isMobile,
   hideTitle = false,
-  categoryLabel = "Categoria", // Valor padrão
+  categoryLabel = "Subcategoria", // Valor padrão alterado para Subcategoria
 }) => {
   return (
     <div className="space-y-4">
@@ -69,15 +69,15 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="category" className={cn(isMobile && "text-xs")}>{categoryLabel}</Label> {/* Usando a nova prop */}
+          <Label htmlFor="category" className={cn(isMobile && "text-xs")}>{categoryLabel}</Label>
           <Select value={categoryId} onValueChange={setCategoryId} disabled={loading}>
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione a categoria" />
+              <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a categoria</SelectItem>
+              {/* Removido o item "Selecione a categoria" */}
               {filteredCategories.length === 0 ? (
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma categoria disponível</SelectItem>
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
               ) : (
                 filteredCategories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>

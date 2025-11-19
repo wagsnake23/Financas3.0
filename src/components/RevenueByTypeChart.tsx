@@ -5,16 +5,16 @@ import { AppCategory } from "@/types/finance";
 
 interface RevenueByTypeChartProps {
   revenues: Tables<'receitas'>[];
-  revenueTypes: AppCategory[]; // Usando AppCategory para tipos de receita
+  revenueTypes: AppCategory[]; // Agora contém apenas subcategorias
 }
 
 export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChartProps) => {
   const incomeByType = revenues
-    .filter(r => !r.is_fixed) // Filter out legacy fixed revenues
+    .filter(r => !r.is_fixed)
     .reduce((acc, revenue) => {
       const type = revenueTypes.find(t => t.id === revenue.tipo_receita_id);
       const typeName = type?.nome || "Outros";
-      const typeColor = type?.cor || `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`; // Fallback random color
+      const typeColor = type?.cor || `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
 
       if (!acc[typeName]) {
         acc[typeName] = { value: 0, color: typeColor };
@@ -32,7 +32,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
   if (chartData.length === 0) {
     return (
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Receitas por Tipo</h2>
+        <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2> {/* Título atualizado */}
         <div className="h-60 flex items-center justify-center text-muted-foreground">
           Nenhuma receita registrada
         </div>
@@ -42,7 +42,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
 
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Receitas por Tipo</h2>
+      <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2> {/* Título atualizado */}
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie

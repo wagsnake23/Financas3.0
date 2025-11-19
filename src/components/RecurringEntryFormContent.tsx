@@ -24,7 +24,7 @@ import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle"
 interface RecurringEntryFormContentProps {
   isMobile: boolean;
   onSuccess?: () => void;
-  fetchedCategories: AppCategory[];
+  fetchedCategories: AppCategory[]; // Agora contém apenas subcategorias
   isLoadingCategories: boolean;
   initialType?: Enums<'recurring_type'>;
 }
@@ -43,15 +43,13 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
   const [value, setValue] = useState<number | undefined>(undefined);
-  const [selectedParentCategoryId, setSelectedParentCategoryId] = useState(UNSELECTED_VALUE);
+  // Removido selectedParentCategoryId
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(UNSELECTED_VALUE);
   const [dueDay, setDueDay] = useState("1");
   const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  // Removido o estado endDate e isEndDateCalendarOpen
   const [loading, setLoading] = useState(false);
   const [isStartDateCalendarOpen, setIsStartDateCalendarOpen] = useState(false);
-  // Removido o estado isEndDateCalendarOpen
   const [isPaid, setIsPaid] = useState(false);
 
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
@@ -60,13 +58,11 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   useEffect(() => {
     setType(initialType);
-    setSelectedParentCategoryId(UNSELECTED_VALUE);
+    // Removido setSelectedParentCategoryId(UNSELECTED_VALUE);
     setSelectedSubcategoryId(UNSELECTED_VALUE);
     setFormaPagamento("dinheiro");
     setCartaoId(UNSELECTED_VALUE);
     setIsPaid(false);
-    // Resetar endDate para undefined ao mudar o tipo inicial
-    // setEndDate(undefined); // Removido, pois o campo foi removido
   }, [initialType]);
 
   useEffect(() => {
@@ -89,20 +85,8 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
     }
   };
 
-  const rootCategories = useMemo(() => {
-    if (type === "receita") {
-      return fetchedCategories.filter(cat => cat.id === 'receitas_e_investimentos');
-    } else {
-      return fetchedCategories.filter(cat => cat.parent_id === null && cat.id !== 'receitas_e_investimentos');
-    }
-  }, [type, fetchedCategories]);
-
-  const subcategories = useMemo(() => {
-    if (selectedParentCategoryId === UNSELECTED_VALUE) {
-      return [];
-    }
-    return fetchedCategories.filter(cat => cat.parent_id === selectedParentCategoryId);
-  }, [fetchedCategories, selectedParentCategoryId]);
+  // `fetchedCategories` agora já são as subcategorias filtradas pelo hook `useRecurringEntries`
+  const subcategories = fetchedCategories;
 
   const getCategoryDisplayName = (catId: string) => {
     const category = fetchedCategories.find(cat => cat.id === catId);
@@ -118,7 +102,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    if (value === undefined || value <= 0 || selectedParentCategoryId === UNSELECTED_VALUE || selectedSubcategoryId === UNSELECTED_VALUE || !dueDay || !startDate) {
+    if (value === undefined || value <= 0 || selectedSubcategoryId === UNSELECTED_VALUE || !dueDay || !startDate) {
       toast.error("Preencha todos os campos obrigatórios.");
       setLoading(false);
       return;
@@ -128,12 +112,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    // Removida a validação de endDate, pois o campo foi removido
-    // if (endDate && startDate && endDate < startDate) {
-    //   toast.error("A data final não pode ser anterior à data inicial.");
-    //   setLoading(false);
-    //   return;
-    // }
     if (type === "despesa" && formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
       toast.error("Selecione um cartão para despesas com cartão de crédito.");
       setLoading(false);
@@ -149,7 +127,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       due_day: parseInt(dueDay),
       frequency,
       start_date: format(startDate, "yyyy-MM-dd"),
-      end_date: null, // Sempre null, pois o campo foi removido
+      end_date: null,
       status: 'active',
       forma_pagamento: formaPagamento,
       cartao_id: type === "despesa" && formaPagamento === "cartao" ? cartaoId : null,
@@ -183,11 +161,10 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       }
 
       setValue(undefined);
-      setSelectedParentCategoryId(UNSELECTED_VALUE);
+      // Removido setSelectedParentCategoryId(UNSELECTED_VALUE);
       setSelectedSubcategoryId(UNSELECTED_VALUE);
       setDueDay("1");
       setStartDate(new Date());
-      // setEndDate(undefined); // Removido
       setFormaPagamento("dinheiro");
       setCartaoId(UNSELECTED_VALUE);
       setIsPaid(false);
@@ -201,27 +178,23 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Categoria Principal e Subcategoria */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="parentCategory" className={cn(isMobile && "text-xs")}>Categoria Principal</Label>
-          <Select 
-            value={selectedParentCategoryId} 
-            onValueChange={(value) => {
-              setSelectedParentCategoryId(value);
-              setSelectedSubcategoryId(UNSELECTED_VALUE); // Reset subcategory when parent changes
-            }}
-            disabled={loading || isLoadingCategories}
-          >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione a categoria principal" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a categoria principal</SelectItem>
-              {rootCategories.length === 0 ? (
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma categoria principal disponível</SelectItem>
-              ) : (
-                rootCategories.map((cat) => (
+      {/* Campo de Subcategoria (antiga Categoria Principal e Subcategoria combinadas) */}
+      <div>
+        <Label htmlFor="subcategory" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
+        <Select 
+          value={selectedSubcategoryId} 
+          onValueChange={setSelectedSubcategoryId} 
+          disabled={loading || isLoadingCategories || subcategories.length === 0}
+        >
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectValue placeholder="Selecione a subcategoria" />
+          </SelectTrigger>
+          <SelectContent>
+            {/* Removido o item "Selecione a subcategoria" */}
+            {subcategories.length === 0 ? (
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
+            ) : (
+              subcategories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                     <span className="flex items-center gap-2">
                       <span>{cat.icone}</span>
@@ -229,38 +202,9 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
                     </span>
                   </SelectItem>
                 ))
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="subcategory" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
-          <Select 
-            value={selectedSubcategoryId} 
-            onValueChange={setSelectedSubcategoryId} 
-            disabled={loading || isLoadingCategories || selectedParentCategoryId === UNSELECTED_VALUE || subcategories.length === 0}
-          >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione a subcategoria" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
-              {subcategories.length === 0 ? (
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
-              ) : (
-                subcategories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                    <span className="flex items-center gap-2">
-                      <span>{cat.icone}</span>
-                      <span>{getCategoryDisplayName(cat.id)}</span>
-                    </span>
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
-        </div>
+            )}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Valor e Forma de Pagamento (lado a lado) */}
@@ -279,7 +223,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           />
         </div>
 
-        {/* Forma de Pagamento (AGORA SEM CONDICIONAL type === "despesa") */}
+        {/* Forma de Pagamento */}
         <div className="space-y-2">
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)} disabled={loading}>
@@ -325,8 +269,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4"> {/* Layout para Frequência e Vencimento */}
-        {/* Frequência */}
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
           <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
@@ -341,7 +284,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
           </Select>
         </div>
 
-        {/* Dia de Vencimento */}
         <div className="space-y-2">
           <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>Vencimento</Label>
           <Input
@@ -358,7 +300,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </div>
       </div>
 
-      {/* Data de Início */}
       <div className="space-y-2">
         <Label htmlFor="startDate" className={cn(isMobile && "text-xs")}>Data de Início</Label>
         <Popover open={isStartDateCalendarOpen} onOpenChange={setIsStartDateCalendarOpen}>
@@ -390,39 +331,6 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         </Popover>
       </div>
 
-      {/* Removido: Data de Fim (Opcional) */}
-      {/* <div className="space-y-2">
-        <Label htmlFor="endDate" className={cn(isMobile && "text-xs")}>Data de Fim (Opcional)</Label>
-        <Popover open={isEndDateCalendarOpen} onOpenChange={setIsEndDateCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
-                !endDate && "text-muted-foreground",
-                isMobile && "h-9 text-sm"
-              )}
-              disabled={loading}
-            >
-              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-              {endDate ? format(endDate, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={endDate}
-              onSelect={setEndDate}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
-      </div> */}
-
-      {/* Status de Pago/Pendente */}
       <TransactionStatusToggle
         isPaid={isPaid}
         setIsPaid={setIsPaid}
