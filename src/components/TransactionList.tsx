@@ -95,15 +95,16 @@ export const TransactionList = ({
         type: transaction.type,
         isRecurring: transaction.isRecurring,
         date: transaction.date,
-        matchesMonth,
         description: transaction.description,
+        forma_pagamento: transaction.forma_pagamento,
+        cartao_id: transaction.cartao_id,
+        // Individual filter results
+        matchesMonth,
         matchesSearch,
         matchesType,
         matchesCategory,
-        forma_pagamento: transaction.forma_pagamento,
-        cartao_id: transaction.cartao_id,
-        filterPaymentMethod,
         matchesPaymentMethod,
+        // Final result
         finalResult
       });
 
