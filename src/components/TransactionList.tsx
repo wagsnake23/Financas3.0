@@ -142,7 +142,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-6"> {/* Ajustado para 5 colunas em telas grandes */}
         {!isMobile && (
           <div className="relative">
             <DynamicIcon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -199,9 +199,25 @@ export const TransactionList = ({
             ))}
           </SelectContent>
         </Select>
+
+        {/* Campo Valor Total (movido para dentro do grid) */}
+        <div className={cn(
+          "p-2 rounded-xl border flex-1",
+          isMobile && "py-1.5 px-3",
+          accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
+        )}>
+          <p className="text-xs text-muted-foreground">Valor Total:</p> {/* Título alterado */}
+          <p className={cn(
+            "text-lg font-bold",
+            accumulatedValue >= 0 ? "text-success" : "text-destructive"
+          )}>
+            R$ {accumulatedValue.toFixed(2)}
+          </p>
+        </div>
       </div>
 
-      <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
+      {/* Removido o div anterior que continha o Valor Acumulado */}
+      {/* <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
         <div className={cn(
           "p-2 rounded-xl border flex-1",
           isMobile && "py-1.5 px-3",
@@ -215,7 +231,7 @@ export const TransactionList = ({
             R$ {accumulatedValue.toFixed(2)}
           </p>
         </div>
-      </div>
+      </div> */}
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm",
