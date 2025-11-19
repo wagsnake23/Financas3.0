@@ -271,30 +271,38 @@ export default function Receitas() {
                 <RadioGroup
                   value={formMode}
                   onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="grid grid-cols-2 gap-4 mb-4" // Ajustado para grid e gap-4
+                  className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
                 >
-                  <Label
-                    htmlFor="one-off-revenue"
-                    className={cn(
-                      "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success shadow-sm", // Estilo de card
-                      isMobile && "p-3 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="one-off" id="one-off-revenue" className="sr-only" />
-                    <DynamicIcon name="DollarSign" className={cn("mb-3 h-6 w-6 text-success", isMobile && "mb-1 h-5 w-5")} />
-                    <span className={cn("block w-full text-center font-normal", isMobile && "text-xs")}>Avulsa</span>
-                  </Label>
-                  <Label
-                    htmlFor="recurring-revenue"
-                    className={cn(
-                      "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Estilo de card
-                      isMobile && "p-3 text-sm"
-                    )}
-                  >
-                    <RadioGroupItem value="recurring" id="recurring-revenue" className="sr-only" />
-                    <DynamicIcon name="Repeat" className={cn("mb-3 h-6 w-6 text-primary", isMobile && "mb-1 h-5 w-5")} />
-                    <span className={cn("block w-full text-center font-normal", isMobile && "text-xs")}>Recorrente</span>
-                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="one-off" id="one-off-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+                    <Label
+                      htmlFor="one-off-revenue"
+                      className={cn(
+                        "text-sm font-normal text-muted-foreground",
+                        isMobile && "text-xs",
+                        "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Avulsa
+                        "flex items-center" // Adicionado para alinhar ícone e texto
+                      )}
+                    >
+                      <span>Avulsa</span>
+                      <DynamicIcon name="⚡" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--success))" />
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="recurring" id="recurring-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+                    <Label
+                      htmlFor="recurring-revenue"
+                      className={cn(
+                        "text-sm font-normal text-muted-foreground",
+                        isMobile && "text-xs",
+                        "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Recorrente
+                        "flex items-center" // Adicionado para alinhar ícone e texto
+                      )}
+                    >
+                      <span>Recorrente</span>
+                      <DynamicIcon name="Repeat" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} color="hsl(var(--primary))" />
+                    </Label>
+                  </div>
                 </RadioGroup>
                 {formMode === 'one-off' ? (
                   oneOffFormContent
@@ -315,28 +323,36 @@ export default function Receitas() {
                 <RadioGroup
                   value={formMode}
                   onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="grid grid-cols-2 gap-4 mb-4" // Ajustado para grid e gap-4
+                  className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
                 >
-                  <Label
-                    htmlFor="one-off-revenue-desktop"
-                    className={cn(
-                      "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success shadow-sm" // Estilo de card
-                    )}
-                  >
+                  <div className="flex items-center space-x-2">
                     <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="sr-only peer" />
-                    <DynamicIcon name="DollarSign" className="mb-3 h-6 w-6 text-success" />
-                    <span className="block w-full text-center font-normal">Receita Avulsa</span>
-                  </Label>
-                  <Label
-                    htmlFor="recurring-revenue-desktop"
-                    className={cn(
-                      "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm" // Estilo de card
-                    )}
-                  >
+                    <Label
+                      htmlFor="one-off-revenue-desktop"
+                      className={cn(
+                        "text-sm font-normal text-muted-foreground",
+                        "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Avulsa
+                        "flex items-center" // Adicionado para alinhar ícone e texto
+                      )}
+                    >
+                      <span>Receita Avulsa</span>
+                      <DynamicIcon name="⚡" className="ml-1 h-5 w-5" color="hsl(var(--success))" />
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
                     <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="sr-only peer" />
-                    <DynamicIcon name="Repeat" className="mb-3 h-6 w-6 text-primary" />
-                    <span className="block w-full text-center font-normal">Receita Recorrente</span>
-                  </Label>
+                    <Label
+                      htmlFor="recurring-revenue-desktop"
+                      className={cn(
+                        "text-sm font-normal text-muted-foreground",
+                        "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Recorrente
+                        "flex items-center" // Adicionado para alinhar ícone e texto
+                      )}
+                    >
+                      <span>Receita Recorrente</span>
+                      <DynamicIcon name="Repeat" className="ml-1 h-5 w-5 bg-transparent" color="hsl(var(--primary))" />
+                    </Label>
+                  </div>
                 </RadioGroup>
                 {formMode === 'one-off' ? (
                   oneOffFormContent
