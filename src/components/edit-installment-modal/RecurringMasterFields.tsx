@@ -112,7 +112,16 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                 <Calendar
                   mode="single"
                   selected={startDate}
-                  onSelect={setStartDate}
+                  onSelect={(date) => {
+                    if (!date) return;
+                    const fixedDate = new Date(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    );
+                    setStartDate(fixedDate);
+                    setIsStartDateCalendarOpen(false);
+                  }}
                   initialFocus
                   locale={ptBR}
                   showOutsideDays={false}
@@ -142,7 +151,16 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                 <Calendar
                   mode="single"
                   selected={endDate}
-                  onSelect={setEndDate}
+                  onSelect={(date) => {
+                    if (!date) return;
+                    const fixedDate = new Date(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    );
+                    setEndDate(fixedDate);
+                    setIsEndDateCalendarOpen(false);
+                  }}
                   initialFocus
                   locale={ptBR}
                   showOutsideDays={false}

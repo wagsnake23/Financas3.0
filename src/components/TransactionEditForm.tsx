@@ -47,6 +47,13 @@ interface TransactionEditFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 
+// Helper function to create a local Date object from a YYYY-MM-DD string
+const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
+  if (!dateString) return undefined;
+  const [y, m, d] = dateString.split("-").map(Number);
+  return new Date(y, m - 1, d);
+};
+
 export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   editingTransaction,
   onUpdateTransaction,
@@ -163,7 +170,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         // Initialize with materialized/exception values (for 'thisMonth' default)
         setAmount(recurringTrans.amount);
         setCategory(recurringTrans.category || UNSELECTED_VALUE);
-        setOverrideDueDate(parseISO(recurringTrans.date));
+        setOverrideDueDate(createSafeDate(recurringTrans.date)); // Use createSafeDate
         setIsPaid(recurringTrans.status === "Recebida");
         
         // Extract note from description if it's an exception
@@ -174,10 +181,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         setTitle(recurringTrans.recurringMasterTitle);
         setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1"); // Use recurringMasterDueDay
         setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
-        setStartDate(parseISO(recurringTrans.recurringMasterStartDate));
+        setStartDate(createSafeDate(recurringTrans.recurringMasterStartDate)); // Use createSafeDate
         setEndDate(
           recurringTrans.recurringMasterEndDate
-            ? parseISO(recurringTrans.recurringMasterEndDate)
+            ? createSafeDate(recurringTrans.recurringMasterEndDate) // Use createSafeDate
             : undefined
         );
         setRecurringStatus(recurringTrans.recurringMasterStatus || "active");
@@ -185,8 +192,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       } else {
         // One-off transaction initialization
         setAmount(editingTransaction.amount);
-        const [year, month, day] = editingTransaction.date.split("-").map(Number);
-        setDate(new Date(year, month - 1, day));
+        setDate(createSafeDate(editingTransaction.date)); // Use createSafeDate
         setCategory(editingTransaction.category || UNSELECTED_VALUE);
         setIsPaid(editingTransaction.status === "Recebida");
       }
@@ -221,7 +227,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         // Use materialized/exception values
         setAmount(recurringTrans.amount);
         setCategory(recurringTrans.category || UNSELECTED_VALUE);
-        setOverrideDueDate(parseISO(recurringTrans.date));
+        setOverrideDueDate(createSafeDate(recurringTrans.date)); // Use createSafeDate
         setIsPaid(recurringTrans.status === "Recebida");
         const match = recurringTrans.description.match(/\(([^)]+)\)$/);
         setNote(match ? match[1] : "");
@@ -233,10 +239,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         setTitle(recurringTrans.recurringMasterTitle);
         setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1");
         setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
-        setStartDate(parseISO(recurringTrans.recurringMasterStartDate));
+        setStartDate(createSafeDate(recurringTrans.recurringMasterStartDate)); // Use createSafeDate
         setEndDate(
           recurringTrans.recurringMasterEndDate
-            ? parseISO(recurringTrans.recurringMasterEndDate)
+            ? createSafeDate(recurringTrans.recurringMasterEndDate) // Use createSafeDate
             : undefined
         );
         setRecurringStatus(recurringTrans.recurringMasterStatus || "active");
@@ -292,10 +298,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (!editingTransaction) return;
     setLoading(true);
 
+    // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
-      ? `${date.getFullYear()}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
       : "";
 
     let finalStatus: ReceitaStatus = isPaid
@@ -326,23 +331,25 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     if (isRecurringTransaction) {
       if (editOption === "thisMonth") {
+        const formattedOverrideDueDate = overrideDueDate
+          ? `${overrideDueDate.getFullYear()}-${String(overrideDueDate.getMonth() + 1).padStart(2, "0")}-${String(overrideDueDate.getDate()).padStart(2, "0")}`
+          : null;
+
         finalRecurringPayload = {
           override_value: amount === undefined ? null : amount,
           override_category_id: category === UNSELECTED_VALUE ? null : category,
-          override_due_date: overrideDueDate
-            ? format(overrideDueDate, "yyyy-MM-dd")
-            : null,
+          override_due_date: formattedOverrideDueDate, // Usar a string formatada
           note: note.trim() || null,
           paid: isPaid,
           canceled: false,
         } as TablesUpdate<"recurring_entry_exceptions">;
       } else {
-        if (editOption === "thisMonthForward") {
-          const year = date!.getFullYear();
-          const month = date!.getMonth() + 1;
-          const newStart = new Date(year, month - 1, 1);
-          setStartDate(newStart);
-        }
+        const formattedStartDateForMaster = startDate
+          ? `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, "0")}-${String(startDate.getDate()).padStart(2, "0")}`
+          : null;
+        const formattedEndDateForMaster = endDate
+          ? `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, "0")}-${String(endDate.getDate()).padStart(2, "0")}`
+          : null;
 
         finalRecurringPayload = {
           title: title.trim(),
@@ -350,8 +357,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           category_id: category === UNSELECTED_VALUE ? null : category,
           due_day: parseInt(dueDay),
           frequency,
-          start_date: startDate ? format(startDate, "yyyy-MM-dd") : null,
-          end_date: endDate ? format(endDate, "yyyy-MM-dd") : null,
+          start_date: formattedStartDateForMaster, // Usar a string formatada
+          end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
           forma_pagamento: recurringTransaction.forma_pagamento,
           cartao_id: recurringTransaction.cartao_id,
@@ -430,7 +437,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               {editOption === "thisMonth" && (
                 <ThisMonthFields
                   overrideDueDate={overrideDueDate}
-                  setOverrideDueDate={setOverrideDueDate}
+                  setOverrideDueDate={(date) => {
+                    if (!date) return;
+                    const fixedDate = new Date(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    );
+                    setOverrideDueDate(fixedDate);
+                  }}
                   isOverrideDueDateCalendarOpen={isOverrideDueDateCalendarOpen}
                   setIsOverrideDueDateCalendarOpen={
                     setIsOverrideDueDateCalendarOpen
@@ -455,11 +470,27 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                   frequency={frequency}
                   setFrequency={setFrequency}
                   startDate={startDate}
-                  setStartDate={setStartDate}
+                  setStartDate={(date) => {
+                    if (!date) return;
+                    const fixedDate = new Date(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    );
+                    setStartDate(fixedDate);
+                  }}
                   isStartDateCalendarOpen={isStartDateCalendarOpen}
                   setIsStartDateCalendarOpen={setIsStartDateCalendarOpen}
                   endDate={endDate}
-                  setEndDate={setEndDate}
+                  setEndDate={(date) => {
+                    if (!date) return;
+                    const fixedDate = new Date(
+                      date.getFullYear(),
+                      date.getMonth(),
+                      date.getDate()
+                    );
+                    setEndDate(fixedDate);
+                  }}
                   isEndDateCalendarOpen={isEndDateCalendarOpen}
                   setIsEndDateCalendarOpen={setIsEndDateCalendarOpen}
                   status={recurringStatus}
@@ -479,7 +510,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             amount={amount}
             setAmount={setAmount}
             date={date}
-            setDate={setDate}
+            setDate={(date) => {
+              if (!date) return;
+              const fixedDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()
+              );
+              setDate(fixedDate);
+            }}
             category={category}
             setCategory={setCategory}
             description={description}

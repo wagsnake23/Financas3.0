@@ -66,7 +66,16 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
             <Calendar
               mode="single"
               selected={overrideDueDate}
-              onSelect={setOverrideDueDate}
+              onSelect={(date) => {
+                if (!date) return;
+                const fixedDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate()
+                );
+                setOverrideDueDate(fixedDate);
+                setIsOverrideDueDateCalendarOpen(false);
+              }}
               initialFocus
               locale={ptBR}
               showOutsideDays={false}
