@@ -157,6 +157,11 @@ export const useTransactionsData = ({ user, selectedMonth }: UseTransactionsData
       const isWithin = isWithinInterval(transactionDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
       return isWithin;
     });
+    // Log para a transação específica
+    const specificTransaction = filtered.find(t => t.id === 'c563ab68-47fd-4c7e-9988-cab53dd28abf-2025-11');
+    if (specificTransaction) {
+      console.log("useTransactionsData: Specific transaction (c563ab68-47fd-4c7e-9988-cab53dd28abf-2025-11) status in monthlyFilteredTransactions:", specificTransaction.status);
+    }
     console.log("useTransactionsData: monthlyFilteredTransactions (after date filter) count:", filtered.length);
     return filtered;
   }, [allRawTransactions, selectedMonth]);

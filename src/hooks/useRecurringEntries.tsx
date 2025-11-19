@@ -126,6 +126,11 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const isPaid = exception?.paid ?? false;
       const note = exception?.note ?? null;
 
+      console.log(`  Exception details for entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}):`);
+      console.log(`    exception?.paid: ${exception?.paid}`);
+      console.log(`    isPaid (derived from exception): ${isPaid}`);
+
+
       if (isCanceled) {
         console.log(`  Skipping entry: Canceled by exception for this month`);
         return; // Skip if this month is canceled by an exception
@@ -133,13 +138,14 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
 
       // Determine status for display
       let status: Enums<'receita_status'> = 'Pendente';
-      if (isPaid) {
+      if (isPaid) { // <--- This condition uses the isPaid from the exception
         status = 'Recebida'; // For both income/expense, 'paid' means 'Recebida'
       } else if (isPast(finalDueDate) && !isPaid) {
         status = 'Pendente';
       } else {
         status = 'Prevista';
       }
+      console.log(`    Final status assigned to materialized transaction: ${status}`);
       
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
@@ -186,7 +192,9 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     console.log("invalidateQueries: Invalidating recurringEntries and recurringExceptions.");
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-    // Removido: queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Esta linha não é mais necessária
+    // Invalida também as queries que useTransactionsData depende para garantir que a lista seja re-renderizada
+    queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
   }, [queryClient, user?.id]);
 
   const createRecurringEntryMutation = useMutation({
