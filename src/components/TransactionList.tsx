@@ -143,7 +143,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6"> {/* Ajustado para 4 colunas em telas grandes */}
+      <div className={cn("grid mb-6", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4 gap-4")}> {/* Ajustado para 2 colunas em mobile, 4 em desktop */}
         {/* Campo de busca por descrição removido */}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
@@ -177,7 +177,8 @@ export const TransactionList = ({
         </Select>
 
         {/* Filtro de Forma de Pagamento/Cartão Combinado */}
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}>
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                className={cn(isMobile && "col-span-2")}> {/* Ocupa 2 colunas em mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -192,12 +193,12 @@ export const TransactionList = ({
 
         {/* Campo Valor Total (movido para dentro do grid) */}
         <div className={cn(
-          "p-2 rounded-xl flex-1 text-right", // Removido 'border' e classes de fundo condicionais
-          isMobile && "py-1.5 px-3"
+          "p-2 rounded-xl text-right", // Removido 'flex-1'
+          isMobile && "py-1.5 px-3 col-span-2" // Ocupa 2 colunas em mobile
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p> {/* Título alterado */}
           <p className={cn(
-            "text-base font-bold", // Alterado de text-lg para text-base
+            "text-base font-bold",
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
             R$ {accumulatedValue.toFixed(2)}
