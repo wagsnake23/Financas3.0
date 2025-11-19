@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom"; // Importar useSearchParams
 import { useQueryClient } from "@tanstack/react-query";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
@@ -18,6 +18,8 @@ const isValidUuid = (uuid: string) => {
 export const useLancamentosLogic = (user: User | null) => {
   const queryClient = useQueryClient();
   console.log("useLancamentosLogic: User received as prop:", user?.id);
+
+  const [searchParams] = useSearchParams(); // Chamar o hook useSearchParams aqui
 
   const initialMonth = useMemo(() => {
     const monthParam = searchParams.get("month");
