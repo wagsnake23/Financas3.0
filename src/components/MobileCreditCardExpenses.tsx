@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react"; // Importar useEffect
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// Removido: import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
@@ -27,6 +26,16 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   selectedMonth,
 }) => {
   const [selectedCardId, setSelectedCardId] = useState<string>(UNSELECTED_VALUE);
+
+  // Efeito para definir o primeiro cartão como selecionado quando os cartões são carregados
+  useEffect(() => {
+    if (cartoes.length > 0 && selectedCardId === UNSELECTED_VALUE) {
+      setSelectedCardId(cartoes[0].id);
+    } else if (cartoes.length === 0 && selectedCardId !== UNSELECTED_VALUE) {
+      // Se todos os cartões forem removidos, resetar a seleção
+      setSelectedCardId(UNSELECTED_VALUE);
+    }
+  }, [cartoes, selectedCardId]);
 
   const filteredExpenses = useMemo(() => {
     if (selectedCardId === UNSELECTED_VALUE) return [];
@@ -107,7 +116,6 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
           </div>
         </div>
       )}
-      {/* Removido o bloco da tabela de lançamentos detalhados */}
       {selectedCardId !== UNSELECTED_VALUE && filteredExpenses.length === 0 && (
         <p className="text-muted-foreground text-center py-4 text-sm">Nenhuma despesa encontrada para este cartão no mês selecionado.</p>
       )}
