@@ -4,7 +4,13 @@ import {
   Wallet, TrendingUp, MoreHorizontal, Plus, Trash2, Search, Pencil, DollarSign,
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
-  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown
+  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown,
+  Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, GasStation,
+  CarService, Shield, ParkingSquare, Bus, CarTaxi, Road, ShoppingCart, Croissant, Restaurant,
+  Package, Burger, Stethoscope, Pill, UserMd, TestTube, Dumbbell, Brain, School, Laptop,
+  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt, Tshirt,
+  Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Bank, Handshake,
+  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle
 } from 'lucide-react';
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
@@ -14,7 +20,13 @@ const iconMap: { [key: string]: React.ElementType } = {
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
   ChevronLeft, ChevronRight,
-  CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown
+  CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown,
+  Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, GasStation,
+  CarService, Shield, ParkingSquare, Bus, CarTaxi, Road, ShoppingCart, Croissant, Restaurant,
+  Package, Burger, Stethoscope, Pill, UserMd, TestTube, Dumbbell, Brain, School, Laptop,
+  Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt, Tshirt,
+  Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Bank, Handshake,
+  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {

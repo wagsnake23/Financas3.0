@@ -89,10 +89,12 @@ export const TransactionList = ({
         }
       }
 
+      const finalResult = matchesMonth && matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
+
       // Log detalhado para cada transação
       console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesMonth: ${matchesMonth}, MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentMethod: ${matchesPaymentMethod}, FINAL: ${finalResult}`);
 
-      return matchesMonth && matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
+      return finalResult;
     });
   }, [transactions, searchTerm, filterType, filterCategory, filterPaymentMethod, isMobile, selectedMonth]); // selectedMonth adicionado às dependências
 
