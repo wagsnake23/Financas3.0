@@ -7,10 +7,11 @@ import ManageCardsDialog from "@/components/ManageCardsDialog";
 import { cn } from "@/lib/utils";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 interface PaymentDetailsProps {
-  valor: string;
-  setValor: (value: string) => void;
+  valor: number | undefined; // Alterado para number | undefined
+  setValor: (value: number | undefined) => void; // Alterado para number | undefined
   formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
   setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
   cartaoId: string;
@@ -43,17 +44,15 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}> {/* Alterado para grid-cols-2 em mobile, com gap menor */}
       <div>
         <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-        <Input
+        <CurrencyInput
           id="valor"
-          type="number"
-          step="0.01"
           value={valor}
-          onChange={(e) => {
-            setValor(e.target.value);
+          onValueChange={(values) => {
+            setValor(values.floatValue);
             setValidationErrors(prev => ({ ...prev, valor: false }));
           }}
-          required
           placeholder="0,00"
+          required
           className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
         />
       </div>

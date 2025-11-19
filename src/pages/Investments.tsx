@@ -24,6 +24,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"; // Importar Popover components
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
 
 export default function Investments() { // Alterado para export default function
   const { user } = useAuth();
@@ -33,9 +35,9 @@ export default function Investments() { // Alterado para export default function
   // Form states
   const [name, setName] = useState("");
   const [type, setType] = useState("fixed");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [date, setDate] = useState<Date | undefined>(new Date()); // Alterado para Date | undefined
-  const [profitability, setProfitability] = useState("");
+  const [profitability, setProfitability] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
 
@@ -81,8 +83,8 @@ export default function Investments() { // Alterado para export default function
       });
       // Reset form
       setName("");
-      setAmount("");
-      setProfitability("");
+      setAmount(undefined); // Reset para undefined
+      setProfitability(undefined); // Reset para undefined
       setDate(new Date()); // Reset para Date
       setType("fixed");
     },
@@ -127,7 +129,7 @@ export default function Investments() { // Alterado para export default function
       return;
     }
     
-    if (!name || !amount || !profitability || !date) { // Adicionado validação para 'date'
+    if (!name || amount === undefined || profitability === undefined || !date) { // Adicionado validação para 'date' e valores numéricos
       toast.error("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
@@ -142,9 +144,9 @@ export default function Investments() { // Alterado para export default function
       user_id: user.id,
       nome: name,
       tipo: type,
-      valor: parseFloat(amount),
+      valor: amount, // Usar o valor como number
       data: formattedDate, // Usar a data formatada
-      rentabilidade: parseFloat(profitability),
+      rentabilidade: profitability, // Usar o valor como number
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -242,12 +244,10 @@ export default function Investments() { // Alterado para export default function
                 <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
                   <div className="space-y-2">
                     <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                    <Input
+                    <CurrencyInput
                       id="amount"
-                      type="number"
-                      step="0.01"
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      onValueChange={(values) => setAmount(values.floatValue)}
                       placeholder="0,00"
                       required
                       disabled={loadingForm}
@@ -257,13 +257,11 @@ export default function Investments() { // Alterado para export default function
 
                   <div className="space-y-2">
                     <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
-                    <Input
+                    <NumericInput
                       id="profitability"
-                      type="number"
-                      step="0.01"
                       value={profitability}
-                      onChange={(e) => setProfitability(e.target.value)}
-                      placeholder="Ex: 13.75"
+                      onValueChange={(values) => setProfitability(values.floatValue)}
+                      placeholder="0,00"
                       required
                       disabled={loadingForm}
                       className={cn("rounded-xl", isMobile && "h-9 text-sm")}

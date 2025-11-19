@@ -12,12 +12,13 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface TransactionOneOffFieldsProps {
-  amount: string;
-  setAmount: (amount: string) => void;
+  amount: number | undefined; // Alterado para number | undefined
+  setAmount: (amount: number | undefined) => void; // Alterado para number | undefined
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   category: string;
@@ -86,12 +87,10 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         {/* Valor */}
         <div className="space-y-2">
           <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <Input
+          <CurrencyInput
             id="amount"
-            type="number"
-            step="0.01"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onValueChange={(values) => setAmount(values.floatValue)}
             placeholder="0,00"
             required
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}

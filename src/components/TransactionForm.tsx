@@ -11,6 +11,7 @@ import DynamicIcon from "./DynamicIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
@@ -21,7 +22,7 @@ const UNSELECTED_VALUE = "unselected"; // Valor único para representar 'não se
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
   const [type, setType] = useState<TransactionType>("expense");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState(UNSELECTED_VALUE); // Inicializado com UNSELECTED_VALUE
   const [description, setDescription] = useState("");
@@ -57,21 +58,21 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!amount || category === UNSELECTED_VALUE) { // Verificação com UNSELECTED_VALUE
+    if (amount === undefined || category === UNSELECTED_VALUE) { // Verificação com UNSELECTED_VALUE e amount
       toast.error("Preencha todos os campos obrigatórios");
       return;
     }
 
     onAddTransaction({
       type,
-      amount: parseFloat(amount),
+      amount: amount as number, // Usar o valor como number
       date,
       category,
       description,
     });
 
     // Reset form
-    setAmount("");
+    setAmount(undefined); // Reset para undefined
     setCategory(UNSELECTED_VALUE); // Reset para UNSELECTED_VALUE
     setDescription("");
     
@@ -103,12 +104,10 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="amount">Valor (R$)</Label>
-            <Input
+            <CurrencyInput
               id="amount"
-              type="number"
-              step="0.01"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onValueChange={(values) => setAmount(values.floatValue)}
               placeholder="0,00"
               required
               className="rounded-xl"

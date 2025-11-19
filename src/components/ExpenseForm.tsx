@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 // Importar os novos componentes modulares
 import { CategorySelector } from "./expense-form/CategorySelector";
@@ -63,7 +64,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
   const [tipoPagamento, setTipoPagamento] = useState<"avista" | "parcelado">("avista"); // Movido para cá
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
-  const [valor, setValor] = useState("");
+  const [valor, setValor] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [descricao, setDescricao] = useState("");
   const [dataVencimento, setDataVencimento] = useState<Date | undefined>(new Date());
   const [numeroParcelas, setNumeroParcelas] = useState("1"); // Movido para cá
@@ -104,7 +105,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       return;
     }
     
-    if (!valor || parseFloat(valor) <= 0) {
+    if (valor === undefined || valor <= 0) { // Verificação para number | undefined
       newErrors.valor = true;
       hasError = true;
     }
@@ -133,8 +134,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       return;
     }
 
-    const valorTotal = parseFloat(valor);
-    
+    const valorTotal = valor as number; // Usar o valor como number
+
     // Correção: Formatar a data usando os componentes locais para evitar problemas de fuso horário
     const formattedDate = dataVencimento 
       ? `${dataVencimento.getFullYear()}-${(dataVencimento.getMonth() + 1).toString().padStart(2, '0')}-${dataVencimento.getDate().toString().padStart(2, '0')}` 
@@ -225,7 +226,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setFormaPagamento("dinheiro");
     setTipoPagamento("avista");
     setCartaoId(UNSELECTED_VALUE);
-    setValor("");
+    setValor(undefined); // Reset para undefined
     setDescricao("");
     setDataVencimento(new Date());
     setNumeroParcelas("1");
@@ -331,11 +332,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         isMobile={isMobile}
       />
 
-      {tipoPagamento === "parcelado" && valor && numeroParcelas && (
+      {tipoPagamento === "parcelado" && valor !== undefined && numeroParcelas && (
         <div className={cn("p-4 bg-secondary/20 rounded-xl", isMobile && "p-3")}>
           <p className={cn("font-medium mb-2", isMobile && "text-sm")}>Pré-visualização das Parcelas:</p>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>
-            {numeroParcelas}x de R$ {(parseFloat(valor) / parseInt(numeroParcelas)).toFixed(2)}
+            {numeroParcelas}x de R$ {(valor / parseInt(numeroParcelas)).toFixed(2)}
           </p>
         </div>
       )}

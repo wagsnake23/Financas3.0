@@ -18,6 +18,7 @@ import { TablesInsert, Enums, Tables } from "@/integrations/supabase/types"; // 
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { AddCardDialog } from "./AddCardDialog"; // Importar AddCardDialog
 import ManageCardsDialog from "./ManageCardsDialog"; // Importar ManageCardsDialog
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 interface RecurringEntryFormContentProps {
   isMobile: boolean;
@@ -40,7 +41,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
   const { createRecurringEntry } = useRecurringEntries(user, new Date(), fetchedCategories);
   
   const [type, setType] = useState<Enums<'recurring_type'>>(initialType);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [categoryId, setCategoryId] = useState(UNSELECTED_VALUE);
   const [dueDay, setDueDay] = useState("1");
   const [frequency, setFrequency] = useState<Enums<'recurring_frequency'>>("monthly");
@@ -119,7 +120,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       setLoading(false);
       return;
     }
-    if (!value || parseFloat(value) <= 0 || categoryId === UNSELECTED_VALUE || !dueDay || !startDate) {
+    if (value === undefined || value <= 0 || categoryId === UNSELECTED_VALUE || !dueDay || !startDate) { // Verificação para number | undefined
       toast.error("Preencha todos os campos obrigatórios.");
       setLoading(false);
       return;
@@ -145,7 +146,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
       user_id: user.id,
       type,
       title: "Lançamento Recorrente", // Título padrão
-      value: parseFloat(value),
+      value: value as number, // Usar o valor como number
       category_id: categoryId,
       due_day: parseInt(dueDay),
       frequency,
@@ -159,7 +160,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
 
     try {
       await createRecurringEntry(newRecurringEntry);
-      setValue("");
+      setValue(undefined); // Reset para undefined
       setCategoryId(UNSELECTED_VALUE);
       setDueDay("1");
       setStartDate(new Date());
@@ -206,12 +207,10 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
         {/* Valor */}
         <div className="space-y-2">
           <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <Input
+          <CurrencyInput
             id="value"
-            type="number"
-            step="0.01"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onValueChange={(values) => setValue(values.floatValue)}
             placeholder="0,00"
             required
             disabled={loading}

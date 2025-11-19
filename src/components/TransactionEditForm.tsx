@@ -10,6 +10,7 @@ import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Enums } from "@/integrations/supabase/types";
 import { MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 // Importar os novos componentes modulares
 import { EditOptionSelector } from "./edit-installment-modal/EditOptionSelector";
@@ -65,7 +66,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   // Form states
   const [type, setType] = useState<TransactionType>("expense");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
@@ -113,7 +114,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   useEffect(() => {
     if (editingTransaction) {
       setType(editingTransaction.type);
-      setAmount(editingTransaction.amount.toFixed(2));
+      setAmount(editingTransaction.amount); // Definir como number
       
       const [year, month, day] = editingTransaction.date.split('-').map(Number);
       setDate(new Date(year, month - 1, day));
@@ -133,7 +134,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       
       if (isRecurringTransaction) {
         setTitle(recurringTransaction.recurringMasterTitle);
-        setAmount(recurringTransaction.originalValue.toFixed(2));
+        setAmount(recurringTransaction.originalValue); // Definir como number
         setCategory(recurringTransaction.originalCategory || UNSELECTED_VALUE);
         setDueDay(recurringTransaction.originalDueDate?.toString() || "1");
         setFrequency(recurringTransaction.recurringMasterFrequency || "monthly");
@@ -146,7 +147,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           setNote(match ? match[1] : "");
           setOverrideDueDate(parseISO(recurringTransaction.date));
           setIsPaid(recurringTransaction.status === 'Recebida');
-          setAmount(recurringTransaction.amount.toFixed(2));
+          setAmount(recurringTransaction.amount); // Definir como number
           setCategory(recurringTransaction.category || UNSELECTED_VALUE);
         } else {
           setNote("");
@@ -170,7 +171,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       }
     } else {
       setType("expense");
-      setAmount("");
+      setAmount(undefined); // Reset para undefined
       setDate(new Date());
       setCategory(UNSELECTED_VALUE);
       setDescription("");
@@ -194,7 +195,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     if (!editingTransaction) return;
 
-    if (!amount || parseFloat(amount) <= 0 || category === UNSELECTED_VALUE) {
+    if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) { // Verificação para number | undefined
       toast.error("Preencha todos os campos obrigatórios (Valor e Subcategoria).");
       return;
     }
@@ -232,7 +233,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     const updatedTransaction: Omit<Transaction, "id"> = {
       type,
-      amount: parseFloat(amount),
+      amount: amount as number, // Usar o valor como number
       date: formattedDate,
       category,
       description,
@@ -250,7 +251,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       isRecurringTransaction && editOption === "all" ? preserveExceptions : undefined,
       {
         title: title.trim(),
-        value: parseFloat(amount),
+        value: amount as number, // Usar o valor como number
         categoryId: category === UNSELECTED_VALUE ? null : category,
         dueDay: parseInt(dueDay),
         frequency,

@@ -30,6 +30,7 @@ import {
 import { Footer } from "@/components/Footer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 import { Database, Enums } from "@/integrations/supabase/types";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
@@ -45,7 +46,7 @@ export default function Receitas() {
   const [formMode, setFormMode] = useState<FormMode>('one-off');
 
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
-  const [valor, setValor] = useState("");
+  const [valor, setValor] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [data, setData] = useState<Date | undefined>(new Date());
   const [descricao, setDescricao] = useState("");
   const [status, setStatus] = useState<ReceitaStatus>('Pendente');
@@ -90,7 +91,7 @@ export default function Receitas() {
     e.preventDefault();
     setLoading(true);
 
-    if (!valor || !data || tipoReceitaId === UNSELECTED_VALUE) {
+    if (valor === undefined || !data || tipoReceitaId === UNSELECTED_VALUE) { // Verificação para number | undefined
       toast.error("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
@@ -103,7 +104,7 @@ export default function Receitas() {
     const newRevenueData = {
       user_id: user?.id,
       tipo_receita_id: tipoReceitaId,
-      valor: parseFloat(valor),
+      valor: valor as number, // Usar o valor como number
       data: formattedDate,
       descricao,
       status,
@@ -122,7 +123,7 @@ export default function Receitas() {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
       });
       setTipoReceitaId(UNSELECTED_VALUE);
-      setValor("");
+      setValor(undefined); // Reset para undefined
       setData(new Date());
       setDescricao("");
       setStatus('Pendente');
@@ -202,14 +203,12 @@ export default function Receitas() {
 
       <div>
         <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-        <Input
+        <CurrencyInput
           id="valor"
-          type="number"
-          step="0.01"
           value={valor}
-          onChange={(e) => setValor(e.target.value)}
-          required
+          onValueChange={(values) => setValor(values.floatValue)}
           placeholder="0,00"
+          required
           className={cn("rounded-xl", isMobile && "h-9 text-sm")}
         />
       </div>

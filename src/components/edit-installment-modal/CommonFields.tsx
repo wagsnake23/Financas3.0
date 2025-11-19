@@ -4,12 +4,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AppCategory } from "@/types/finance";
 import { cn } from "@/lib/utils";
+import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 interface CommonFieldsProps {
   title: string;
   setTitle: (title: string) => void;
-  value: string;
-  setValue: (value: string) => void;
+  value: number | undefined; // Alterado para number | undefined
+  setValue: (value: number | undefined) => void; // Alterado para number | undefined
   categoryId: string;
   setCategoryId: (id: string) => void;
   filteredCategories: AppCategory[];
@@ -56,12 +57,11 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <Input
+          <CurrencyInput
             id="value"
-            type="number"
-            step="0.01"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onValueChange={(values) => setValue(values.floatValue)}
+            placeholder="0,00"
             required
             disabled={loading}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
