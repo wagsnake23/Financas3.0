@@ -20,11 +20,13 @@ export const SegmentedReceitaType: React.FC<SegmentedReceitaTypeProps> = ({
       label: "Avulsa",
       value: "avulsa",
       iconName: "DollarSign",
+      iconColor: "hsl(var(--success))", // Cor verde para receita avulsa
     },
     {
       label: "Recorrente",
       value: "recorrente",
       iconName: "Calendar",
+      iconColor: "hsl(var(--secondary))", // Cor secundária para receita recorrente
     },
   ];
 

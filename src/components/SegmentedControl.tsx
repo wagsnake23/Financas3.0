@@ -6,6 +6,7 @@ interface SegmentedControlOption<T extends string> {
   label: string;
   value: T;
   iconName?: string; // Nome do ícone para DynamicIcon
+  iconColor?: string; // Adicionada a propriedade iconColor
 }
 
 interface SegmentedControlProps<T extends string> {
@@ -42,14 +43,18 @@ export const SegmentedControl = <T extends string>({
           onClick={() => onSelect(option.value)}
           className={cn(
             "flex-1 text-center py-2 rounded-full font-medium transition-all relative z-10 flex items-center justify-center gap-2",
-            isMobile && "py-1.5 text-xs",
+            isMobile && "py-1.5 text-xs"
+            // Removidas as classes de cor de texto daqui para permitir que o ícone tenha sua própria cor
+          )}
+        >
+          {option.iconName && <DynamicIcon name={option.iconName} className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} color={option.iconColor} />}
+          <span className={cn( // A cor do texto é aplicada diretamente ao span do label
             selectedOption === option.value
               ? "text-primary-foreground font-semibold"
               : "text-muted-foreground"
-          )}
-        >
-          {option.iconName && <DynamicIcon name={option.iconName} className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} />}
-          <span>{option.label}</span>
+          )}>
+            {option.label}
+          </span>
         </button>
       ))}
     </div>

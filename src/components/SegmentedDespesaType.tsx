@@ -19,12 +19,14 @@ export const SegmentedDespesaType: React.FC<SegmentedDespesaTypeProps> = ({
     {
       label: "Avulsa",
       value: "avulsa",
-      iconName: "Zap", // Alterado de CreditCard para Zap
+      iconName: "Zap",
+      iconColor: "hsl(var(--destructive))", // Cor vermelha para despesa avulsa
     },
     {
       label: "Recorrente",
       value: "recorrente",
       iconName: "Repeat",
+      iconColor: "hsl(var(--secondary))", // Cor secundária para despesa recorrente
     },
   ];
 
