@@ -65,7 +65,7 @@ export const TransactionList = ({
   setFilterPaymentOptionId, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // Manter searchTerm para a lógica de filtro, mas o input será removido
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   // Removido o estado local filterPaymentOptionId, agora ele vem das props
@@ -89,6 +89,7 @@ export const TransactionList = ({
     console.log("TransactionList: filteredTransactions useMemo re-running...");
     
     return transactions.filter(transaction => {
+      // A busca por descrição só será aplicada se não for mobile, já que o campo será removido em desktop
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
@@ -142,19 +143,8 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-6"> {/* Ajustado para 5 colunas em telas grandes */}
-        {!isMobile && (
-          <div className="relative">
-            <DynamicIcon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Buscar por descrição..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-xl"
-              disabled={disableFilters}
-            />
-          </div>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6"> {/* Ajustado para 4 colunas em telas grandes */}
+        {/* Campo de busca por descrição removido */}
 
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
@@ -215,23 +205,6 @@ export const TransactionList = ({
           </p>
         </div>
       </div>
-
-      {/* Removido o div anterior que continha o Valor Acumulado */}
-      {/* <div className={cn("mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4", isMobile && "flex-col items-stretch mb-0")}>
-        <div className={cn(
-          "p-2 rounded-xl border flex-1",
-          isMobile && "py-1.5 px-3",
-          accumulatedValue >= 0 ? "bg-success/10 border-success/20" : "bg-destructive/10 border-destructive/20"
-        )}>
-          <p className="text-xs text-muted-foreground">Valor Acumulado (Filtro Atual):</p>
-          <p className={cn(
-            "text-lg font-bold",
-            accumulatedValue >= 0 ? "text-success" : "text-destructive"
-          )}>
-            R$ {accumulatedValue.toFixed(2)}
-          </p>
-        </div>
-      </div> */}
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm",
