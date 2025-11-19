@@ -130,24 +130,26 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const finalValue = exception?.override_value ?? entry.value;
       const finalCategory = exception?.override_category_id ?? entry.category_id;
       const finalDueDate = exception?.override_due_date ? new Date(exception.override_due_date) : baseDueDate;
-      const isCanceled = exception?.canceled ?? false;
-      const isPaid = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
+      const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
+      const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
 
-      if (isCanceled) {
+      if (isCanceledByException) {
         console.log(`useRecurringEntries:   Skipping entry ${entry.id}: Canceled by exception for this month`);
         return; // Skip if this month is canceled by an exception
       }
 
-      // Determine status for display
-      let status: Enums<'receita_status'> = 'Pendente';
-      if (isPaid) {
+      // Determine status for display (prioridade: Cancelada > Recebida > Pendente > Prevista)
+      let status: Enums<'receita_status'>;
+      if (isCanceledByException) { // Se a exceção marcou como cancelado
+        status = 'Cancelada';
+      } else if (isPaidByException) { // Se a exceção marcou como pago
         status = 'Recebida';
-      } else if (isPast(finalDueDate) && !isPaid) {
+      } else if (isPast(finalDueDate)) { // Se a data já passou e não foi pago
         status = 'Pendente';
-      } else {
+      } else { // Se a data está no futuro e não foi pago
         status = 'Prevista';
       }
-      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final isPaid: ${isPaid}, Final status: ${status}`);
+      console.log(`useRecurringEntries:   Entry ${entry.id} (Month: ${currentMonthIndex}, Year: ${currentYear}) - Final isPaid: ${isPaidByException}, Final status: ${status}`);
       
       const materializedTransaction: MaterializedRecurringTransaction = {
         id: generateOccurrenceId(entry.id, currentYear, currentMonthIndex),
