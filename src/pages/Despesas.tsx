@@ -41,6 +41,7 @@ export default function Despesas() {
   const isMobile = useIsMobile();
 
   const [formMode, setFormMode] = useState<FormMode>('one-off');
+  const [cartoes, setCartoes] = useState<Cartao[]>([]); // Adicionado: Declaração de cartoes como estado
 
   const {
     allSubcategories, // Renomeado de fetchedCategories para allSubcategories
