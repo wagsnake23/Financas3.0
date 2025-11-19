@@ -554,7 +554,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       {formContent}
     </div>
   ) : (
-    <Card className={cn("p-6 animate-fade-in")}>
+    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm")}>
       {formContent}
     </Card>
   );

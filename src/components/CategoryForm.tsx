@@ -115,7 +115,7 @@ export const CategoryForm = ({
   }, [allCategories]);
 
   return (
-    <Card className="p-6 animate-fade-in">
+    <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}

@@ -81,7 +81,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   };
 
   return (
-    <Card className="p-6 animate-slide-up">
+    <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
       <h2 className="text-2xl font-bold mb-6">Novo Lançamento</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

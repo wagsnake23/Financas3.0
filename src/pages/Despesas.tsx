@@ -129,7 +129,7 @@ export default function Despesas() {
                   <Label
                     htmlFor="one-off-expense"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-destructive",
                       isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
                     )}
                   >
@@ -140,7 +140,7 @@ export default function Despesas() {
                   <Label
                     htmlFor="recurring-expense"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
                       isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm" // Menor padding
                     )}
                   >

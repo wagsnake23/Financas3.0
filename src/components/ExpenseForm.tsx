@@ -354,7 +354,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {formContent}
     </div>
   ) : (
-    <Card className="p-6">
+    <Card className="p-6 rounded-xl shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Nova Despesa</h2>
       {formContent}
     </Card>

@@ -72,7 +72,7 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
   };
 
   return (
-    <Card className={cn("p-4 animate-fade-in space-y-4 bg-soft-yellow/20 border border-soft-yellow rounded-xl", isMobile && "p-3 space-y-3")}> {/* Adicionado rounded-xl e ajustado padding/spacing */}
+    <Card className={cn("p-4 animate-fade-in space-y-4 bg-soft-yellow/20 border border-soft-yellow rounded-xl shadow-sm", isMobile && "p-3 space-y-3")}> {/* Adicionado rounded-xl e ajustado padding/spacing */}
       {/* Shared Month Navigation */}
       <div className={cn("flex items-center justify-between mb-2", isMobile && "mb-1")}> {/* Ajustado mb */}
         <Button variant="outline" size="icon" onClick={handlePreviousMonth} className={cn(isMobile && "h-6 w-6")}>

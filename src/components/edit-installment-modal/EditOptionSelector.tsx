@@ -22,7 +22,7 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
       <Label
         htmlFor="r1"
         className={cn(
-          "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
           isMobile && "p-2 text-sm"
         )}
       >
@@ -33,7 +33,7 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
       <Label
         htmlFor="r2"
         className={cn(
-          "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
           isMobile && "p-2 text-sm"
         )}
       >
@@ -44,7 +44,7 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
       <Label
         htmlFor="r3"
         className={cn(
-          "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+          "flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary shadow-sm", // Adicionado rounded-xl e shadow-sm
           isMobile && "p-2 text-sm"
         )}
       >

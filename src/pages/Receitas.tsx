@@ -13,7 +13,7 @@ import { Navigation } from "@/components/Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
-import { TotalRevenueCard } from "@/components/TotalRevenueCard"; // Linha corrigida
+import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
@@ -281,7 +281,7 @@ export default function Receitas() {
                   <Label
                     htmlFor="one-off-revenue"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
                       isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
                     )}
                   >
@@ -292,7 +292,7 @@ export default function Receitas() {
                   <Label
                     htmlFor="recurring-revenue"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
                       isMobile ? "py-1.5 px-3 text-xs" : "py-2 px-4 text-sm"
                     )}
                   >
@@ -315,7 +315,7 @@ export default function Receitas() {
                 <Footer isMobile={isMobile} />
               </div>
             ) : (
-              <Card className="p-6">
+              <Card className="p-6 rounded-xl shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
                 <RadioGroup
                   value={formMode}
@@ -325,7 +325,7 @@ export default function Receitas() {
                   <Label
                     htmlFor="one-off-revenue-desktop"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-success",
                       "py-2 px-4 text-sm"
                     )}
                   >
@@ -336,7 +336,7 @@ export default function Receitas() {
                   <Label
                     htmlFor="recurring-revenue-desktop"
                     className={cn(
-                      "flex items-center justify-center rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
+                      "flex items-center justify-center rounded-xl border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary",
                       "py-2 px-4 text-sm"
                     )}
                   >

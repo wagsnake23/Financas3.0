@@ -12,7 +12,7 @@ export const TotalRevenueCard = ({ revenues }: TotalRevenueCardProps) => {
     .reduce((sum, r) => sum + r.valor, 0);
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 animate-fade-in">
+    <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 animate-fade-in rounded-xl shadow-sm">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground mb-1">Total de Receitas</p>

@@ -312,7 +312,7 @@ const Dashboard = () => {
               </div>
 
               {/* Placeholder for other dashboard content - Renderizado apenas em desktop */}
-              <Card className="p-6 animate-slide-up">
+              <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
             </>

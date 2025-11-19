@@ -11,6 +11,7 @@ import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import Loading from "@/components/Loading";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar o hook useIsMobile
+import { Card } from "@/components/ui/card"; // Importar Card para CategoriesList fallback
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -228,7 +229,14 @@ const Categories = () => {
           </div>
 
           <div>
-            <React.Suspense fallback={<div className="p-6 text-center text-muted-foreground">Carregando lista de categorias...</div>}>
+            <React.Suspense fallback={
+              <Card className="p-6 flex flex-col rounded-xl shadow-sm">
+                <div className="flex-shrink-0 mb-4">
+                  <h2 className="text-2xl font-bold">Categorias Cadastradas</h2>
+                </div>
+                <div className="p-6 text-center text-muted-foreground">Carregando lista de categorias...</div>
+              </Card>
+            }>
               <CategoriesList 
                 categories={hierarchicalCategories} // Pass hierarchical categories
                 onDeleteCategory={handleDeleteCategory}

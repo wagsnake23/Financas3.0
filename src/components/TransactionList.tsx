@@ -323,7 +323,7 @@ export const TransactionList = ({
       </div>
 
       <div className={cn(
-        "rounded-lg border overflow-hidden",
+        "rounded-xl border overflow-hidden shadow-sm", // Adicionado rounded-xl e shadow-sm
         isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
       )}>
         <Table>

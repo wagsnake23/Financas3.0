@@ -194,7 +194,7 @@ const CategoriesList = ({
   }, [categories, searchTerm, flatCategories]);
 
   return (
-    <Card className="p-6 flex flex-col" style={{ height: maxHeight }}>
+    <Card className="p-6 flex flex-col rounded-xl shadow-sm" style={{ height: maxHeight }}>
       <div className="flex-shrink-0 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <h2 className="text-2xl font-bold">Categorias Cadastradas</h2>

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { Card } from "@/components/ui/card"; // Importar Card
 
 interface AddCardDialogProps {
   user: User | null;

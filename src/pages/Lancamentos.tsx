@@ -10,6 +10,7 @@ import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query"; // Importar useQueryClient
+import { Card } from "@/components/ui/card"; // Importar Card para o fallback
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();

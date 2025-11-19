@@ -14,7 +14,7 @@ export const TotalExpensesCard = ({ expenseInstallments, isMobile }: TotalExpens
     .reduce((sum, p) => sum + p.valor_parcela, 0);
 
   return (
-    <Card className={cn("p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in", isMobile && "p-4")}> {/* Ajustar padding */}
+    <Card className={cn("p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
       <div className="flex items-center justify-between">
         <div>
           <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs")}>Total Geral de Despesas</p> {/* Ajustar tamanho da fonte */}

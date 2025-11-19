@@ -55,5 +55,5 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
     />
   );
 
-  return isMobile ? content : <Card className="p-6 animate-slide-up">{content}</Card>;
+  return isMobile ? content : <Card className="p-6 animate-slide-up rounded-xl shadow-sm">{content}</Card>;
 };

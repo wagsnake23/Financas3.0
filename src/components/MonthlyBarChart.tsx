@@ -39,7 +39,7 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
 
   if (chartData.length === 0) {
     return (
-      <Card className={cn("p-6 animate-slide-up", isMobile && "p-4")}> {/* Ajustar padding */}
+      <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
         <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Receitas vs Despesas Mensais</h2>
         <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}> {/* Ajustar altura */}
           Nenhum dado disponível
@@ -49,7 +49,7 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
   }
 
   return (
-    <Card className={cn("p-6 animate-slide-up", isMobile && "p-4")}> {/* Ajustar padding */}
+    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Receitas vs Despesas Mensais</h2>
       <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}> {/* Altura condicional */}
         <BarChart data={chartData}>

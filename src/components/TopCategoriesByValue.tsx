@@ -60,7 +60,7 @@ export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByVa
     .slice(0, 5);
 
   return (
-    <Card className="p-6 animate-fade-in">
+    <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Top 5 Categorias por Valor</h2>
       {topCategories.length === 0 ? (
         <div className="h-60 flex items-center justify-center text-muted-foreground">

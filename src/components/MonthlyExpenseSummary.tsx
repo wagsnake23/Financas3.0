@@ -63,7 +63,7 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn("p-6 animate-fade-in", isMobile ? "h-48" : "h-60 flex items-center justify-center")}>
+      <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile ? "h-48" : "h-60 flex items-center justify-center")}>
         <div className="animate-pulse text-muted-foreground">Carregando resumo mensal...</div>
       </Card>
     );
@@ -106,5 +106,5 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
     </div>
   );
 
-  return isMobile ? content : <Card>{content}</Card>;
+  return isMobile ? content : <Card className="rounded-xl shadow-sm">{content}</Card>;
 };

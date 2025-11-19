@@ -439,7 +439,7 @@ export default function Auth() {
           {formContent}
         </div>
       ) : (
-        <Card className="w-full max-w-md p-8 shadow-xl">
+        <Card className="w-full max-w-md p-8 shadow-xl rounded-xl">
           {formContent}
         </Card>
       )}

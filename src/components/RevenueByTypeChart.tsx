@@ -31,7 +31,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
 
   if (chartData.length === 0) {
     return (
-      <Card className="p-6 animate-fade-in">
+      <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Receitas por Tipo</h2>
         <div className="h-60 flex items-center justify-center text-muted-foreground">
           Nenhuma receita registrada
@@ -41,7 +41,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
   }
 
   return (
-    <Card className="p-6 animate-fade-in">
+    <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Receitas por Tipo</h2>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>

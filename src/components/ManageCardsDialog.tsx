@@ -26,6 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Card } from "@/components/ui/card"; // Importar Card
 
 interface Cartao {
   id: string;
@@ -147,9 +148,9 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 <p className="text-muted-foreground text-center py-8">Nenhum cartão cadastrado.</p>
               ) : (
                 cards.map((card) => (
-                  <div
+                  <Card
                     key={card.id}
-                    className="flex items-center justify-between p-3 border rounded-lg bg-card"
+                    className="flex items-center justify-between p-3 border rounded-lg bg-card shadow-sm" // Adicionado shadow-sm
                   >
                     <div>
                       <p className="font-medium">{card.nome}</p>
@@ -175,7 +176,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                         <DynamicIcon name="Trash2" className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
+                  </Card>
                 ))
               )}
             </div>

@@ -21,7 +21,7 @@ export const CreateRecurrenceForm: React.FC<CreateRecurrenceFormProps> = ({
   initialType
 }) => {
   return (
-    <Card className={cn("p-6 animate-fade-in", isMobile && "p-4")}>
+    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Lançamento Recorrente</h2>
       <RecurringEntryFormContent
         isMobile={isMobile}

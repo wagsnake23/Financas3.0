@@ -46,7 +46,7 @@ export const CategoryDistributionSummary = ({ expenses, categories }: CategoryDi
     .slice(0, 1); // Get only the leader
 
   return (
-    <Card className="p-6 animate-fade-in">
+    <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Resumo da Distribuição</h2>
       {Object.keys(categoryUsage).length === 0 ? (
         <div className="h-32 flex items-center justify-center text-muted-foreground">

@@ -70,5 +70,5 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
     </div>
   );
 
-  return isMobile ? content : <Card>{content}</Card>;
+  return isMobile ? content : <Card className="rounded-xl shadow-sm">{content}</Card>;
 };

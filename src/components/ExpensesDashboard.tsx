@@ -38,7 +38,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-8">
-      <Card className="p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in">
+      <Card className="p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Total de Despesas</p>
@@ -48,7 +48,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
         </div>
       </Card>
 
-      <Card className="p-6 animate-fade-in">
+      <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Despesas por Categoria</h2>
         {chartData.length === 0 ? (
           <div className="h-60 flex items-center justify-center text-muted-foreground">
