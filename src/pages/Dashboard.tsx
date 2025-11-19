@@ -24,6 +24,7 @@ import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
+import { NewExpenseSelectionDialog } from "@/components/NewExpenseSelectionDialog"; // Importar o novo componente
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -127,14 +128,7 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
-                  <Button 
-                    variant="destructive" 
-                    className="w-2/5 h-8 px-3 text-xs rounded-xl" 
-                    onClick={() => navigate("/despesas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Despesa
-                  </Button>
+                  <NewExpenseSelectionDialog isMobile={isMobile} /> {/* Usar o novo componente */}
                 </div>
               </StatCard>
 
@@ -222,14 +216,7 @@ const Dashboard = () => {
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 >
                   <div className="flex justify-end mt-4">
-                    <Button 
-                      variant="destructive" 
-                      className="w-2/5 h-8 px-3 text-xs rounded-xl" 
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
+                    <NewExpenseSelectionDialog isMobile={isMobile} /> {/* Usar o novo componente */}
                   </div>
                 </StatCard>
               </div>

@@ -20,6 +20,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
+import { useSearchParams } from "react-router-dom"; // Importar useSearchParams
 
 interface Cartao {
   id: string;
@@ -37,21 +38,20 @@ const UNSELECTED_VALUE = "unselected";
 export default function Despesas() {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
-  // Removido selectedParentCategoryId, pois não é mais necessário para a seleção
   const isMobile = useIsMobile();
+  const [searchParams] = useSearchParams(); // Hook para ler parâmetros da URL
 
-  const [formMode, setFormMode] = useState<FormMode>('one-off');
-  const [cartoes, setCartoes] = useState<Cartao[]>([]); // Adicionado: Declaração de cartoes como estado
+  const initialFormMode: FormMode = (searchParams.get('mode') as FormMode) || 'one-off';
+  const [formMode, setFormMode] = useState<FormMode>(initialFormMode);
+  const [cartoes, setCartoes] = useState<Cartao[]>([]);
 
   const {
-    allSubcategories, // Renomeado de fetchedCategories para allSubcategories
+    allSubcategories,
     expenses,
     expenseInstallments,
     isLoading: isLoadingExpenseData,
-  } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading); // Passando UNSELECTED_VALUE para selectedParentCategoryId, pois não é mais usado para filtrar
+  } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading);
 
-  // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
-  // Este hook agora busca APENAS SUBCATEGORIAS
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -60,7 +60,7 @@ export default function Despesas() {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
-        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
+        .not("parent_id", "is", null)
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -139,7 +139,7 @@ export default function Despesas() {
           user={user}
           cartoes={cartoes}
           loadCartoes={loadCartoes}
-          allSubcategories={allSubcategories} // Passando allSubcategories
+          allSubcategories={allSubcategories}
           queryClient={queryClient}
           isMobile={isMobile}
         />
@@ -147,7 +147,7 @@ export default function Despesas() {
         <RecurringEntryFormContent
           isMobile={isMobile}
           onSuccess={handleRecurringFormSuccess}
-          fetchedCategories={allCategories} // allCategories agora são as subcategorias
+          fetchedCategories={allCategories}
           isLoadingCategories={isLoadingCategories}
           initialType="despesa"
         />
@@ -188,7 +188,7 @@ export default function Despesas() {
                   <ExpensesDashboard 
                     expenses={expenses} 
                     expenseInstallments={expenseInstallments} 
-                    categories={allSubcategories} // Passando allSubcategories
+                    categories={allSubcategories}
                     isMobile={isMobile}
                   />
                 </>
@@ -199,10 +199,10 @@ export default function Despesas() {
           {!isMobile && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
-                <MostUsedCategories expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
+                <TopCategoriesByValue expenses={expenses} categories={allSubcategories} />
+                <MostUsedCategories expenses={expenses} categories={allSubcategories} />
               </div>
-              <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} /> {/* Passando allSubcategories */}
+              <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
             </>
           )}
         </div>
