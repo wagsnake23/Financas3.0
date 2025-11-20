@@ -61,9 +61,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
   // Ajustado para incluir "all" na condição de layout inline para mobile
   const showValueAndDueDayInline = isMobile && (editOption === "thisMonthForward" || editOption === "all");
 
-  const dueDayLabel = isMobile && editOption === "thisMonthForward" 
-    ? "Data de vencimento Deste Mês em diante" 
-    : "Dia do Venc.";
+  const dueDayLabel = "Dia do Venc."; // Revertido para o rótulo padrão
 
   return (
     <div className="space-y-4">
@@ -123,7 +121,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>{dueDayLabel}</Label> {/* Usando o rótulo condicional */}
+            <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>{dueDayLabel}</Label> {/* Usando o rótulo padrão */}
             <Input
               id="dueDay"
               type="number"
