@@ -53,11 +53,11 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
           <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
           Excluir
         </Button>
-        <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
+        <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
           <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
           {loading ? "Salvando..." : "Salvar"}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
+        <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
           <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
           Cancelar
         </Button>
