@@ -370,11 +370,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           start_date: formattedStartDateForMaster, // Usar a string formatada
           end_date: formattedEndDateForMaster, // Usar a string formatada
           status: recurringStatus,
-          // REMOVIDO: forma_pagamento e cartao_id para edição da recorrência mestra
-          // forma_pagamento: recurringTransaction.forma_pagamento,
-          // cartao_id: (recurringTransaction.forma_pagamento === "cartao" && isValidUuid(recurringTransaction.cartao_id))
-          //   ? recurringTransaction.cartao_id
-          //   : null,
+          // Reintroduzindo forma_pagamento e cartao_id com os valores originais da recorrência mestra
+          forma_pagamento: recurringTransaction.forma_pagamento,
+          cartao_id: (recurringTransaction.forma_pagamento === "cartao" && isValidUuid(recurringTransaction.cartao_id))
+            ? recurringTransaction.cartao_id
+            : null,
         } as TablesUpdate<"recurring_entries">;
       }
     }
