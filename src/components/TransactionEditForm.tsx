@@ -256,6 +256,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           UNSELECTED_VALUE={UNSELECTED_VALUE}
           isPaid={isPaid}
           setIsPaid={setIsPaid}
+          installmentNumber={editingTransaction?.installmentNumber} {/* NEW */}
+          totalInstallments={editingTransaction?.totalInstallments} {/* NEW */}
         />
 
         <TransactionEditActions

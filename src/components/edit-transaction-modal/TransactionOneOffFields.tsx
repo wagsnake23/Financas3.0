@@ -36,6 +36,8 @@ interface TransactionOneOffFieldsProps {
   UNSELECTED_VALUE: string;
   isPaid: boolean;
   setIsPaid: (paid: boolean) => void;
+  installmentNumber?: number; // NEW: installmentNumber
+  totalInstallments?: number; // NEW: totalInstallments
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -57,7 +59,11 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   UNSELECTED_VALUE,
   isPaid,
   setIsPaid,
+  installmentNumber, // NEW
+  totalInstallments, // NEW
 }) => {
+  const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
+
   return (
     <>
       {/* Subcategoria */}
@@ -134,6 +140,18 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           </Popover>
         </div>
       </div>
+
+      {isExpenseInstallment && (
+        <div className="space-y-2">
+          <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
+          <Input
+            value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
+            readOnly
+            disabled
+            className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+          />
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
