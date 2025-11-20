@@ -143,8 +143,9 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
+                childrenAlignment="start" // Alinha os filhos à esquerda para mobile
               >
-                <div className={cn("flex flex-col items-end mt-2 space-y-1")}> {/* Ajustado para flex-col e space-y-1 */}
+                <div className={cn("flex flex-col items-start mt-2 space-y-1")}> {/* Alinha o conteúdo interno à esquerda */}
                   <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
                   <Button
                     variant="destructive"

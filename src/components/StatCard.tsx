@@ -13,9 +13,21 @@ interface StatCardProps {
   isMobile?: boolean; // Adicionado a prop isMobile
   showValue?: boolean; // Nova prop para controlar a visibilidade do valor
   onToggleVisibility?: () => void; // Nova prop para a função de alternância
+  childrenAlignment?: "start" | "end" | "center"; // Nova prop para alinhamento dos filhos
 }
 
-export const StatCard = ({ title, value, icon, trend, variant, children, isMobile, showValue = true, onToggleVisibility }: StatCardProps) => {
+export const StatCard = ({ 
+  title, 
+  value, 
+  icon, 
+  trend, 
+  variant, 
+  children, 
+  isMobile, 
+  showValue = true, 
+  onToggleVisibility,
+  childrenAlignment = "end" // Padrão para 'end'
+}: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
     expense: "bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20",
@@ -74,7 +86,13 @@ export const StatCard = ({ title, value, icon, trend, variant, children, isMobil
         </div>
       </div>
       {children && (
-        <div className={cn("flex justify-end mt-1", isMobile && "mt-1")}> {/* Reduzido mt-2 para mt-1 em mobile */}
+        <div className={cn(
+          "flex mt-1", 
+          childrenAlignment === "start" && "justify-start",
+          childrenAlignment === "end" && "justify-end",
+          childrenAlignment === "center" && "justify-center",
+          isMobile && "mt-1"
+        )}>
           {children}
         </div>
       )}
