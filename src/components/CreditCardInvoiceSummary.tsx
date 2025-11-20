@@ -37,7 +37,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       isMobile && "p-3 space-y-2"
     )}>
       {/* Título mais ao topo */}
-      <h3 className={cn("text-lg font-bold", isMobile && "text-sm")}>Resumo da Fatura</h3>
+      <h3 className={cn("text-lg font-bold mt-0", isMobile && "text-sm")}>Resumo da Fatura</h3>
       
       <div className={cn("flex items-start justify-between gap-4", isMobile && "flex-col items-center text-center gap-2")}>
         {/* Detalhes do Cartão (Esquerda) */}
@@ -47,13 +47,10 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               Mês da Fatura: <span className={cn("font-semibold text-sm", isMobile && "text-xs capitalize")}>{invoiceMonth}</span>
             </p>
           )}
-          {cardLastDigits && (
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
-              Cartão: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>**** {cardLastDigits}</span>
-            </p>
-          )}
+          {/* Removido: cardLastDigits */}
+          
           {/* Fechamento e Vencimento na mesma linha */}
-          <div className={cn("flex gap-2", isMobile && "flex-col gap-0.5")}>
+          <div className={cn("flex gap-2", isMobile && "gap-1")}> {/* Removido 'flex-col' para mobile */}
             {formattedClosingDate && (
               <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
                 Fechamento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedClosingDate}</span>
