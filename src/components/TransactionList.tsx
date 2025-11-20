@@ -41,6 +41,7 @@ interface TransactionListProps {
   selectedMonth: Date;
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
+  setSelectedMonth: (month: Date) => void; // Adicionado
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -60,6 +61,7 @@ export const TransactionList = ({
   selectedMonth,
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
+  setSelectedMonth, // Adicionado
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
@@ -216,6 +218,9 @@ export const TransactionList = ({
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       
+      // NOVO: Avançar para o próximo mês após o pagamento da fatura
+      setSelectedMonth(addMonths(selectedMonth, 1));
+
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
       toast.error("Erro ao pagar fatura.", { description: error.message });

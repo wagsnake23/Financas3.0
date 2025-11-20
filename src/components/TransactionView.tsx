@@ -22,6 +22,7 @@ interface TransactionViewProps {
   setFilterPaymentOptionId: (cardId: string) => void;
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
+  setSelectedMonth: (month: Date) => void; // Adicionado
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -39,6 +40,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   setFilterPaymentOptionId,
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
+  setSelectedMonth, // Adicionado
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -58,6 +60,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice} // NOVO
       setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
+      setSelectedMonth={setSelectedMonth} // Adicionado
     />
   );
 

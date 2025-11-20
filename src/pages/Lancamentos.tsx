@@ -25,7 +25,7 @@ const Lancamentos = () => {
 
   const {
     selectedMonth,
-    setSelectedMonth,
+    setSelectedMonth, // Adicionado
     handlePreviousMonth,
     handleNextMonth,
     setEditingTransaction,
@@ -92,6 +92,8 @@ const Lancamentos = () => {
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
+            selectedMonth={selectedMonth} // Adicionado
+            setSelectedMonth={setSelectedMonth} // Adicionado
           />
         </main>
         <Footer isMobile={isMobile} />

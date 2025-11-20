@@ -109,7 +109,7 @@ export const useLancamentosLogic = (
 
   return {
     selectedMonth,
-    setSelectedMonth,
+    setSelectedMonth, // Adicionado
     handlePreviousMonth,
     handleNextMonth,
     editingTransaction,
