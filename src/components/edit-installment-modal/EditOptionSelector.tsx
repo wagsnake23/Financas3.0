@@ -26,7 +26,7 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
     : "";
 
   return (
-    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-3 gap-2">
+    <RadioGroup value={editOption} onValueChange={setEditOption} className="grid grid-cols-2 gap-2"> {/* Alterado para grid-cols-2 */}
       {/* Option 1: Somente este mês */}
       <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
         <RadioGroupItem value="thisMonth" id="r1" disabled={loading} />
@@ -36,14 +36,16 @@ export const EditOptionSelector: React.FC<EditOptionSelectorProps> = ({
         </Label>
       </div>
 
-      {/* Option 2: Deste mês em diante */}
+      {/* REMOVIDO: Option 2: Deste mês em diante */}
+      {/*
       <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
         <RadioGroupItem value="thisMonthForward" id="r2" disabled={loading} />
         <Label htmlFor="r2" className={cn("flex items-center gap-1 cursor-pointer", isMobile && "text-xs")}>
           <DynamicIcon name="ArrowUp" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-          <span>Deste mês em diante {isMobile && formattedMonth && `(${formattedMonth})`}</span> {/* NEW: Adiciona o mês para mobile */}
+          <span>Deste mês em diante {isMobile && formattedMonth && `(${formattedMonth})`}</span>
         </Label>
       </div>
+      */}
 
       {/* Option 3: Toda a recorrência */}
       <div className="flex items-center space-x-2 p-2 border border-transparent rounded-md [&:has([data-state=checked])]:border-primary">
