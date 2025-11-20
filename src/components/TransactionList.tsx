@@ -364,6 +364,7 @@ export const TransactionList = ({
             totalPending={totalPendingCard}
             totalCardExpenses={totalCardExpenses}
             isMobile={!!isMobile}
+            formattedDueDate={cardDetails?.formattedDueDate || null} {/* Passando a data de vencimento */}
           />
         </div>
       )}
