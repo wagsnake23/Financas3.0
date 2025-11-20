@@ -10,6 +10,7 @@ import {
   useRecurringEntries,
 } from "@/hooks/useRecurringEntries";
 import { startOfMonth, subMonths } from "date-fns";
+import { createSafeDate } from "@/lib/utils"; // Importar createSafeDate
 
 // Helper function to validate if a string is a UUID
 const isValidUuid = (value: string | null | undefined): boolean => {
@@ -79,7 +80,12 @@ export const useTransactionMutations = ({
       try {
         if (transaction.isRecurring && transaction.recurringEntryId) {
           const recurringTrans = transaction as MaterializedRecurringTransaction;
-          const transactionDate = new Date(recurringTrans.date);
+          const transactionDate = createSafeDate(recurringTrans.date); // Usar createSafeDate
+          if (!transactionDate) {
+            toast.error("Data da transação inválida para exclusão.");
+            setLoadingEditData(false);
+            return;
+          }
           const year = transactionDate.getFullYear();
           const month = transactionDate.getMonth() + 1;
 
@@ -90,7 +96,7 @@ export const useTransactionMutations = ({
               month,
             });
           } else if (deleteOption === "thisMonthForward") {
-            const previousMonthDate = subMonths(new Date(recurringTrans.date), 1);
+            const previousMonthDate = subMonths(transactionDate, 1); // Usar transactionDate
             await endRecurringAt({
               recurring_id: recurringTrans.recurringEntryId,
               end_year: previousMonthDate.getFullYear(),
@@ -265,8 +271,12 @@ export const useTransactionMutations = ({
       try {
         if (isRecurring && recurringData) {
           const recurringTrans = originalTransaction as MaterializedRecurringTransaction;
-          const currentYear = new Date(recurringTrans.date).getFullYear();
-          const currentMonth = new Date(recurringTrans.date).getMonth() + 1;
+          const currentTransactionDate = createSafeDate(recurringTrans.date); // Usar createSafeDate
+          if (!currentTransactionDate) {
+            throw new Error("Data da transação recorrente inválida.");
+          }
+          const currentYear = currentTransactionDate.getFullYear();
+          const currentMonth = currentTransactionDate.getMonth() + 1;
 
           if (editOption === "thisMonth") {
             const payload = recurringData as TablesUpdate<"recurring_entry_exceptions">;
@@ -280,8 +290,9 @@ export const useTransactionMutations = ({
             const payload = recurringData as TablesUpdate<"recurring_entries">;
             await updateRecurringMasterFuture({
               recurring_id: recurringTrans.recurringEntryId,
-              start_date: startOfMonth(new Date(recurringTrans.date)),
+              start_date: startOfMonth(currentTransactionDate), // Usar currentTransactionDate
               payload,
+              preserve_exceptions: preserveExceptions,
             });
           } else if (editOption === "all") {
             const payload = recurringData as TablesUpdate<"recurring_entries">;
