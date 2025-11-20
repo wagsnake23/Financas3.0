@@ -194,7 +194,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
 
       {/* SUBCATEGORIA */}
-      <TableCell className={cn("py-2 px-2 text-xs flex items-center gap-1", isMobile ? "min-w-[55px]" : "min-w-[80px]")}>
+      <TableCell className={cn("py-2 px-2 text-xs flex items-center gap-1", isMobile ? "min-w-[50px]" : "min-w-[80px]")}>
         {categoryIcon && (
           <DynamicIcon name={categoryIcon} className="h-4 w-4" />
         )}
@@ -231,7 +231,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       </TableCell>
 
       {/* TOGGLE */}
-      <TableCell className={cn("py-2 px-2 text-center", isMobile ? "min-w-[40px]" : "min-w-[50px]")}>
+      <TableCell className={cn("py-2 px-2 text-center", isMobile ? "min-w-[35px]" : "min-w-[50px]")}>
         <Button
           variant="ghost"
           size="icon"
