@@ -42,6 +42,8 @@ interface TransactionListProps {
   selectedMonth: Date;
   loadingPayInvoice: boolean;
   setLoadingPayInvoice: (loading: boolean) => void;
+  filterType: string; // NOVO: Receber filterType
+  setFilterType: (type: string) => void; // NOVO: Receber setFilterType
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -69,11 +71,13 @@ export const TransactionList = ({
   selectedMonth,
   loadingPayInvoice,
   setLoadingPayInvoice,
+  filterType, // NOVO
+  setFilterType, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<string>("all");
+  // const [filterType, setFilterType] = useState<string>("all"); // REMOVIDO: Estado movido para useLancamentosLogic
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const paymentFilterOptions = useMemo(() => {
@@ -241,19 +245,10 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}>
-        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os tipos</SelectItem>
-            <SelectItem value="income">Receita</SelectItem>
-            <SelectItem value="expense">Despesa</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-3")}> {/* Alterado para grid-cols-3 em desktop */}
+        {/* REMOVIDO: Select para filterType */}
 
-        {/* Payment Option Select - MOVED HERE */}
+        {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
                 className="rounded-xl">
           <SelectTrigger className="rounded-xl">
@@ -268,6 +263,7 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
+        {/* Category Filter */}
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />

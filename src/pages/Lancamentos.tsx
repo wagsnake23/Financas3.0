@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog"; // Importar componentes do Dialog
 import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
 import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Importar Select
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -35,8 +36,8 @@ const Lancamentos = () => {
     loadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen, // NOVO: Receber isEditModalOpen
-    setIsEditModalOpen, // NOVO: Receber setIsEditModalOpen
+    isEditModalOpen,
+    setIsEditModalOpen,
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction,
@@ -47,7 +48,7 @@ const Lancamentos = () => {
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
-    handleCancelEdit, // NOVO: Receber handleCancelEdit
+    handleCancelEdit,
     editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
@@ -56,6 +57,8 @@ const Lancamentos = () => {
     markMonthPaid,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    filterType, // NOVO: Obter filterType
+    setFilterType, // NOVO: Obter setFilterType
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -73,16 +76,27 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          {/* Layout de empilhamento vertical para MonthNavigator e LancamentosContent */}
           <div className="space-y-8"> 
-            <div className="max-w-xs mx-auto lg:mx-0"> {/* Limita a largura e centraliza em mobile, alinha à esquerda em desktop */}
+            {/* Top row of controls: Month Navigator and Type Filter */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-start gap-4 mb-8">
               <MonthNavigator
                 selectedMonth={selectedMonth}
                 onPreviousMonth={handlePreviousMonth}
                 onNextMonth={handleNextMonth}
                 isMobile={isMobile}
               />
+              <Select value={filterType} onValueChange={setFilterType} disabled={isLoading}>
+                <SelectTrigger className="rounded-xl lg:w-[150px]"> {/* Adicionado largura para desktop */}
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  <SelectItem value="income">Receita</SelectItem>
+                  <SelectItem value="expense">Despesa</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
             {/* LancamentosContent agora ocupará a largura total do contêiner principal */}
             <LancamentosContent
               editingTransaction={editingTransaction}
@@ -104,6 +118,8 @@ const Lancamentos = () => {
               setFilterPaymentOptionId={setFilterPaymentOptionId}
               loadingPayInvoice={loadingPayInvoice}
               setLoadingPayInvoice={setLoadingPayInvoice}
+              filterType={filterType} // NOVO: Passar filterType
+              setFilterType={setFilterType} // NOVO: Passar setFilterType
             />
           </div>
         </main>

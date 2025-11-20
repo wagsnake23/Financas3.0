@@ -47,6 +47,8 @@ interface LancamentosContentProps {
   setFilterPaymentOptionId: (cardId: string) => void;
   loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
   setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
+  filterType: string; // NOVO: Receber filterType
+  setFilterType: (type: string) => void; // NOVO: Receber setFilterType
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -69,6 +71,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   setFilterPaymentOptionId,
   loadingPayInvoice,
   setLoadingPayInvoice,
+  filterType, // NOVO
+  setFilterType, // NOVO
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -93,6 +97,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice}
       setLoadingPayInvoice={setLoadingPayInvoice}
+      filterType={filterType} // NOVO: Passar filterType
+      setFilterType={setFilterType} // NOVO: Passar setFilterType
     />
   );
 };

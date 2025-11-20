@@ -24,6 +24,8 @@ interface TransactionViewProps {
   setFilterPaymentOptionId: (cardId: string) => void;
   loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
   setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
+  filterType: string; // NOVO: Receber filterType
+  setFilterType: (type: string) => void; // NOVO: Receber setFilterType
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -42,6 +44,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   setFilterPaymentOptionId,
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
+  filterType, // NOVO
+  setFilterType, // NOVO
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -62,6 +66,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice}
       setLoadingPayInvoice={setLoadingPayInvoice}
+      filterType={filterType} // NOVO: Passar filterType
+      setFilterType={setFilterType} // NOVO: Passar setFilterType
     />
   );
 
