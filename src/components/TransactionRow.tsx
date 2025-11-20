@@ -5,7 +5,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns"; // Adicionado isValid
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
@@ -40,6 +40,14 @@ const isValidUuid = (uuid: string) => {
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);
+};
+
+// Helper function to create a local Date object from a YYYY-MM-DD string
+const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
+  if (!dateString) return undefined;
+  const [y, m, d] = dateString.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return isValid(date) ? date : undefined;
 };
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
@@ -173,8 +181,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* DATA */}
       <TableCell className="py-2 px-2 text-xs min-w-[70px]">
         {(() => {
-          const [y, m, d] = transaction.date.split("-").map(Number);
-          return new Date(y, m - 1, d).toLocaleDateString("pt-BR");
+          const safeDate = createSafeDate(transaction.date);
+          return safeDate ? safeDate.toLocaleDateString("pt-BR") : "Data Inválida";
         })()}
       </TableCell>
 
