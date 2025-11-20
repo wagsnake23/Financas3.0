@@ -218,8 +218,7 @@ export const TransactionList = ({
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       
-      // NOVO: Avançar para o próximo mês após o pagamento da fatura
-      setSelectedMonth(addMonths(selectedMonth, 1));
+      // REMOVIDO: setSelectedMonth(addMonths(selectedMonth, 1));
 
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
