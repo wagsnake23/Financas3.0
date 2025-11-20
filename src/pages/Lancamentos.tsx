@@ -47,6 +47,7 @@ const Lancamentos = () => {
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransactionForDelete,
+    setSelectedRecurringTransactionForDelete, // Adicionado aqui
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     filterType,
