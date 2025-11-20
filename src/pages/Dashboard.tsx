@@ -149,7 +149,7 @@ const Dashboard = () => {
                   <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
                   <Button
                     variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} {/* Removido w-full */}
+                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
