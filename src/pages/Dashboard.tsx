@@ -153,7 +153,7 @@ const Dashboard = () => {
                   </div>
                   <Button
                     variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} {/* Alterado para w-[130px] */}
+                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} /* Alterado para w-[130px] */
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -183,7 +183,7 @@ const Dashboard = () => {
                   </div>
                   <Button 
                     variant="success" 
-                    className="w-[130px] h-8 px-3 text-xs rounded-xl" {/* Alterado para w-[130px] */}
+                    className="w-[130px] h-8 px-3 text-xs rounded-xl" /* Alterado para w-[130px] */
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
