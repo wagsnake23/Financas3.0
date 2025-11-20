@@ -247,54 +247,50 @@ export const useTransactionMutations = ({
             if (updateParcelaError) throw updateParcelaError;
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+            // 1. Update the current installment individually with all its specific fields
+            const { error: updateCurrentInstallmentError } = await supabase
+              .from("despesas_parcelas")
+              .update({
+                valor_parcela: newValorParcela,
+                vencimento: newVencimento,
+                pago: newPagoStatus,
+                data_pagamento: newPagoDate,
+              })
+              .eq("id", id);
+            if (updateCurrentInstallmentError) throw updateCurrentInstallmentError;
+
+            // 2. Fetch all affected installments (excluding the current one, which is already updated)
             let query = supabase
               .from("despesas_parcelas")
-              .select("id, numero_parcela, vencimento, valor_parcela, pago, data_pagamento")
-              .eq("despesa_id", parentDespesaId);
+              .select("id, valor_parcela") // Only need id and current valor_parcela for recalculation
+              .eq("despesa_id", parentDespesaId)
+              .neq("id", id); // Exclude the current installment
 
             if (saveScope === "thisMonthForward") {
-              // For "thisMonthForward", start from the current installment's original date
+              // For "thisMonthForward", filter from the current installment's original date onwards
               query = query.gte("vencimento", format(parseISO(originalTransaction.date), 'yyyy-MM-dd'));
-            } else if (saveScope === "all") {
-              // For "all", no date filter needed, get all installments
-              // The query already filters by despesa_id, so it gets all for that parent.
             }
-            query = query.order("vencimento", { ascending: true });
+            // For "all", no additional date filter needed, as it already gets all for the parent_id excluding the current one.
 
-            const { data: affectedInstallments, error: fetchAffectedError } = await query;
+            const { data: remainingAffectedInstallments, error: fetchRemainingError } = await query;
 
-            if (fetchAffectedError) throw fetchAffectedError;
+            if (fetchRemainingError) throw fetchRemainingError;
 
-            if (!affectedInstallments || affectedInstallments.length === 0) {
-                toast.info("Nenhuma parcela encontrada para atualização no escopo selecionado.");
-                // No installments to update, but parent description/category already updated.
-                setLoadingEditData(false);
-                setEditingTransaction(null);
-                setIsEditModalOpen(false);
-                invalidateAllTransactionQueries();
-                return;
-            }
+            // 3. Prepare batch update for remaining affected installments, only updating valor_parcela
+            if (remainingAffectedInstallments && remainingAffectedInstallments.length > 0) {
+              const batchUpdates = remainingAffectedInstallments.map(inst => ({
+                id: inst.id,
+                valor_parcela: newValorParcela, // Apply new value to all remaining affected
+              }));
 
-            // Prepare batch update for installments
-            const updates = affectedInstallments.map(inst => {
-                const isCurrentInstallment = inst.id === id;
-                return {
-                    id: inst.id,
-                    valor_parcela: newValorParcela, // Apply new value to all affected
-                    // Only update date, paid status, and paid date for the *current* installment
-                    vencimento: isCurrentInstallment ? newVencimento : inst.vencimento,
-                    pago: isCurrentInstallment ? newPagoStatus : inst.pago,
-                    data_pagamento: isCurrentInstallment ? newPagoDate : inst.data_pagamento,
-                };
-            });
-
-            const { error: batchUpdateError } = await supabase
+              const { error: batchUpdateRemainingError } = await supabase
                 .from("despesas_parcelas")
-                .upsert(updates, { onConflict: 'id' }); // Use upsert with onConflict: 'id' for batch update
+                .upsert(batchUpdates, { onConflict: 'id' }); // Use upsert for batch update
 
-            if (batchUpdateError) throw batchUpdateError;
+              if (batchUpdateRemainingError) throw batchUpdateRemainingError;
+            }
 
-            // Recalculate parent despesa's valor_total and numero_parcelas based on all current installments
+            // 4. Recalculate parent despesa's valor_total and numero_parcelas based on all current installments
             const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
                 .from("despesas_parcelas")
                 .select("valor_parcela")
