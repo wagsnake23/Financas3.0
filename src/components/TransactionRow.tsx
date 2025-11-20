@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale"; // Importar ptBR para formatar a data
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { User } from "@supabase/supabase-js";
+import { User } = "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Cartao {
@@ -177,7 +177,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
     >
       {/* DATA */}
-      <TableCell className="py-2 px-2 text-xs min-w-[70px]">
+      <TableCell className={cn("py-2 px-2 text-xs", isMobile ? "min-w-[60px]" : "min-w-[70px]")}>
         {isMobile
           ? format(transactionDate, "dd/MMM", { locale: ptBR })
           : transactionDate.toLocaleDateString("pt-BR")}
