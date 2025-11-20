@@ -226,7 +226,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid mb-0", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}> {/* Alterado mb-2 para mb-0 */}
+      <div className={cn("grid mb-0", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}>
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
@@ -306,7 +306,7 @@ export const TransactionList = ({
         )}>
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
-            "text-base font-bold",
+            "text-sm font-bold", // Alterado de text-base para text-sm
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
             R$ {accumulatedValue.toFixed(2)}
