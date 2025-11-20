@@ -406,9 +406,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const formContent = (
     <>
-      {/* Removido o div que continha o h2 e o botão X */}
       {isRecurringTransaction && (
-        <div className="mb-4"> {/* Removido space-y-4 e py-4, adicionado mb-4 para espaçamento com o formulário */}
+        <div className="mb-4">
           <EditOptionSelector
             editOption={editOption}
             setEditOption={setEditOption}
@@ -420,7 +419,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {isRecurringTransaction ? (
-          <div className="space-y-4"> {/* Removido o mt-4 */}
+          <div className="space-y-4">
             <CommonFields
               title={title}
               setTitle={setTitle}
@@ -439,6 +438,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               setIsPaid={setIsPaid}
               transactionType={type}
               editOption={editOption}
+              // NEW PROPS FOR DUE DAY
+              dueDay={dueDay}
+              setDueDay={setDueDay}
             />
             {editOption === "thisMonth" && (
               <ThisMonthFields
@@ -468,8 +470,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
             {editOption !== "thisMonth" && (
               <RecurringMasterFields
-                dueDay={dueDay}
-                setDueDay={setDueDay}
+                // dueDay e setDueDay são agora passados para CommonFields quando editOption é "thisMonthForward"
+                dueDay={dueDay} // Still pass to RecurringMasterFields for "all" option
+                setDueDay={setDueDay} // Still pass to RecurringMasterFields for "all" option
                 frequency={frequency}
                 setFrequency={setFrequency}
                 startDate={startDate}
@@ -504,6 +507,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 showPreserveExceptions={editOption === "all" || editOption === "thisMonthForward"} // Show for both "all" and "thisMonthForward"
                 preserveExceptions={preserveExceptions}
                 setPreserveExceptions={setPreserveExceptions}
+                editOption={editOption} // Pass editOption
               />
             )}
           </div>

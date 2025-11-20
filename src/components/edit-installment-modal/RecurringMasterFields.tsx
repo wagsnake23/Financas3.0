@@ -33,6 +33,7 @@ interface RecurringMasterFieldsProps {
   showPreserveExceptions?: boolean; // Para a opção "Toda a recorrência"
   preserveExceptions?: boolean;
   setPreserveExceptions?: (checked: boolean) => void;
+  editOption: "thisMonth" | "thisMonthForward" | "all"; // NEW: Add editOption
 }
 
 export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
@@ -56,38 +57,44 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
   showPreserveExceptions = false,
   preserveExceptions,
   setPreserveExceptions,
+  editOption, // NEW
 }) => {
+  // Conditionally hide dueDay and frequency for mobile when editOption is "thisMonthForward"
+  const hideDueDayAndFrequency = isMobile && editOption === "thisMonthForward";
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>Dia de Vencimento</Label>
-          <Input
-            id="dueDay"
-            type="number"
-            min="1"
-            max="31"
-            value={dueDay}
-            onChange={(e) => setDueDay(e.target.value)}
-            required
-            disabled={loading}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
-          />
+      {!hideDueDayAndFrequency && ( // Conditionally render this block
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>Dia de Vencimento</Label>
+            <Input
+              id="dueDay"
+              type="number"
+              min="1"
+              max="31"
+              value={dueDay}
+              onChange={(e) => setDueDay(e.target.value)}
+              required
+              disabled={loading}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
+            <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="monthly" className={cn(isMobile && "text-sm")}>Mensal</SelectItem>
+                <SelectItem value="quarterly" className={cn(isMobile && "text-sm")}>Trimestral</SelectItem>
+                <SelectItem value="annually" className={cn(isMobile && "text-sm")}>Anual</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="frequency" className={cn(isMobile && "text-xs")}>Frequência</Label>
-          <Select value={frequency} onValueChange={(value: Enums<'recurring_frequency'>) => setFrequency(value)} disabled={loading}>
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="monthly" className={cn(isMobile && "text-sm")}>Mensal</SelectItem>
-              <SelectItem value="quarterly" className={cn(isMobile && "text-sm")}>Trimestral</SelectItem>
-              <SelectItem value="annually" className={cn(isMobile && "text-sm")}>Anual</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      )}
 
       {showStartDate && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
