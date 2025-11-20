@@ -300,8 +300,13 @@ export const TransactionList = ({
               disabled={loadingPayInvoice || disableFilters}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              {loadingPayInvoice ? "Pagando..." : `Pagar Fatura ${cardDetails?.formattedDueDate ? `(${cardDetails.formattedDueDate})` : ''}`}
+              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
             </Button>
+            {cardDetails?.formattedDueDate && (
+              <p className={cn("text-xs text-muted-foreground mt-1", isMobile && "text-[0.6rem]")}>
+                Vencimento: {cardDetails.formattedDueDate}
+              </p>
+            )}
           </div>
         ) : (
           // Se nenhum cartão de crédito for selecionado, este slot permanece vazio no desktop
