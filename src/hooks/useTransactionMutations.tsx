@@ -208,43 +208,122 @@ export const useTransactionMutations = ({
 
           const parentDespesaId = originalTransaction?.despesa_id;
 
-          // Always update the current installment
-          const { error: updateParcelaError } = await supabase
-            .from("despesas_parcelas")
-            .update({
-              valor_parcela: updatedTransaction.amount,
-              vencimento: updatedTransaction.date,
-              pago: updatedTransaction.status === "Recebida",
-              data_pagamento: updatedTransaction.status === "Recebida" ? new Date().toISOString() : null,
-            })
-            .eq("id", id);
-
-          if (updateParcelaError) {
-            throw updateParcelaError;
+          if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
+            toast.error("Erro (UPD-EXP-PARENT-1): ID da despesa principal inválido.");
+            setLoadingEditData(false);
+            return;
           }
+
+          const newValorParcela = updatedTransaction.amount;
+          const newVencimento = updatedTransaction.date;
+          const newPagoStatus = updatedTransaction.status === "Recebida";
+          const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
 
           // Always update parent despesas description and category
-          if (parentDespesaId && isValidUuid(parentDespesaId)) {
-            const { error: updateDespesaParentError } = await supabase
-              .from("despesas")
+          const { error: updateDespesaParentError } = await supabase
+            .from("despesas")
+            .update({
+              categoria_id: updatedTransaction.category,
+              descricao: updatedTransaction.description,
+            })
+            .eq("id", parentDespesaId)
+            .eq("user_id", user.id);
+
+          if (updateDespesaParentError) throw updateDespesaParentError;
+
+
+          if (saveScope === "thisMonth" || saveScope === "oneOff") { // oneOff is essentially thisMonth for single installment
+            // Update only the specific installment
+            const { error: updateParcelaError } = await supabase
+              .from("despesas_parcelas")
               .update({
-                categoria_id: updatedTransaction.category,
-                descricao: updatedTransaction.description,
+                valor_parcela: newValorParcela,
+                vencimento: newVencimento,
+                pago: newPagoStatus,
+                data_pagamento: newPagoDate,
               })
-              .eq("id", parentDespesaId)
-              .eq("user_id", user.id);
+              .eq("id", id);
 
-            if (updateDespesaParentError) {
-              throw updateDespesaParentError;
+            if (updateParcelaError) throw updateParcelaError;
+
+          } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+            let query = supabase
+              .from("despesas_parcelas")
+              .select("id, numero_parcela, vencimento, valor_parcela, pago, data_pagamento")
+              .eq("despesa_id", parentDespesaId);
+
+            if (saveScope === "thisMonthForward") {
+              // For "thisMonthForward", start from the current installment's original date
+              query = query.gte("vencimento", format(parseISO(originalTransaction.date), 'yyyy-MM-dd'));
+            } else if (saveScope === "all") {
+              // For "all", no date filter needed, get all installments
+              // The query already filters by despesa_id, so it gets all for that parent.
             }
-          } else {
-            console.warn("handleUpdateTransaction: Parent despesa_id not found or invalid for installment update:", parentDespesaId);
-          }
+            query = query.order("vencimento", { ascending: true });
 
-          // Handle different save scopes for recurring expenses
-          if (saveScope === "thisMonthForward" || saveScope === "all") {
-            toast.info("A atualização de valores para múltiplas parcelas (deste mês em diante ou todo o período) não está totalmente implementada. Apenas a parcela atual e a descrição/categoria da despesa principal foram atualizadas.", { duration: 5000 });
-            // TODO: Implement full logic for updating future/all installments and recalculating parent's valor_total
+            const { data: affectedInstallments, error: fetchAffectedError } = await query;
+
+            if (fetchAffectedError) throw fetchAffectedError;
+
+            if (!affectedInstallments || affectedInstallments.length === 0) {
+                toast.info("Nenhuma parcela encontrada para atualização no escopo selecionado.");
+                // No installments to update, but parent description/category already updated.
+                setLoadingEditData(false);
+                setEditingTransaction(null);
+                setIsEditModalOpen(false);
+                invalidateAllTransactionQueries();
+                return;
+            }
+
+            // Prepare batch update for installments
+            const updates = affectedInstallments.map(inst => {
+                const isCurrentInstallment = inst.id === id;
+                return {
+                    id: inst.id,
+                    valor_parcela: newValorParcela, // Apply new value to all affected
+                    // Only update date, paid status, and paid date for the *current* installment
+                    vencimento: isCurrentInstallment ? newVencimento : inst.vencimento,
+                    pago: isCurrentInstallment ? newPagoStatus : inst.pago,
+                    data_pagamento: isCurrentInstallment ? newPagoDate : inst.data_pagamento,
+                };
+            });
+
+            const { error: batchUpdateError } = await supabase
+                .from("despesas_parcelas")
+                .upsert(updates, { onConflict: 'id' }); // Use upsert with onConflict: 'id' for batch update
+
+            if (batchUpdateError) throw batchUpdateError;
+
+            // Recalculate parent despesa's valor_total and numero_parcelas based on all current installments
+            const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
+                .from("despesas_parcelas")
+                .select("valor_parcela")
+                .eq("despesa_id", parentDespesaId);
+
+            if (fetchAllInstallmentsError) throw fetchAllInstallmentsError;
+
+            const newParentValorTotal = allInstallments.reduce((sum, inst) => sum + inst.valor_parcela, 0);
+            const newParentNumeroParcelas = allInstallments.length;
+
+            const { error: updateParentDespesaTotalError } = await supabase
+                .from("despesas")
+                .update({
+                    valor_total: newParentValorTotal,
+                    numero_parcelas: newParentNumeroParcelas,
+                })
+                .eq("id", parentDespesaId)
+                .eq("user_id", user.id);
+
+            if (updateParentDespesaTotalError) throw updateParentDespesaTotalError;
+
+            toast.success("Lançamento e parcelas futuras atualizadas!", {
+                style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
+            });
+
+          } else {
+            // This case should not be reached if saveScope is properly handled
+            console.warn("handleUpdateTransaction: Unknown saveScope:", saveScope);
+            toast.error("Escopo de atualização desconhecido.");
           }
         }
 
