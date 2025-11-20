@@ -413,6 +413,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setEditOption={setEditOption}
             isMobile={isMobile}
             loading={loading}
+            currentOccurrenceDate={createSafeDate(editingTransaction?.date)} // NEW: Pass the current occurrence date
           />
         </div>
       )}
