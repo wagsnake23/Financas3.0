@@ -307,31 +307,8 @@ export const TransactionList = ({
         </Select>
 
         {/* Conditional Button and Due Date for Credit Card */}
-        {isValidUuid(filterPaymentOptionId) ? (
-          <div className={cn(
-            "flex flex-col items-center justify-center",
-            isMobile ? "col-span-1" : "col-span-1" // Always 1 col for this block
-          )}>
-            <Button
-              variant="secondary"
-              onClick={handlePayInvoice}
-              className="w-full rounded-xl"
-              disabled={loadingPayInvoice || disableFilters}
-            >
-              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-            </Button>
-            {cardDetails?.formattedDueDate && (
-              <p className={cn("text-xs text-muted-foreground mt-1", isMobile && "text-[0.6rem]")}>
-                Vencimento: {cardDetails.formattedDueDate}
-              </p>
-            )}
-          </div>
-        ) : (
-          // Se nenhum cartão de crédito for selecionado, este slot permanece vazio no desktop
-          // para manter a estrutura da grade.
-          <div className={cn("hidden", !isMobile && "block")}></div> 
-        )}
+        {/* REMOVIDO: Botão Pagar Fatura e texto de vencimento */}
+        <div className={cn("hidden", !isMobile && "block")}></div> 
       </div>
 
       {/* NEW: Card Details Display */}
