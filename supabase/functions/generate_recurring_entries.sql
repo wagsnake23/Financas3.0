@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION public.generate_recurring_entries(
     p_forma_pagamento TEXT DEFAULT NULL, -- for expense
     p_cartao_id UUID DEFAULT NULL, -- for expense
     p_tipo_pagamento TEXT DEFAULT NULL, -- for expense
-    p_recurrence_day INTEGER, -- Day of month for recurrence
+    p_recurrence_day INTEGER DEFAULT 1, -- CORRIGIDO: Adicionado valor padrão
     p_total_installments INTEGER DEFAULT 120 -- Total number of installments including the first
 )
 RETURNS VOID AS $$
