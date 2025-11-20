@@ -299,7 +299,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </AlertDialogTitle>
             <AlertDialogDescription>
               Esta despesa faz parte de um lançamento parcelado. Como você gostaria de excluí-la?
-            </Description>
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
             <RadioGroup
