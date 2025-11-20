@@ -53,6 +53,9 @@ export const StatCard = ({
         : "text-secondary" // Cor secundária para saldo em mobile
     : "text-foreground"; // Cor padrão para desktop
 
+  // NEW: Conditional spacing for mobile
+  const contentSpacingClass = isMobile ? "space-y-0.5" : "space-y-1"; // Reduced spacing for mobile
+
   return (
     <Card className={cn(
       cardPaddingClass, // Aplica o padding condicional
@@ -60,7 +63,7 @@ export const StatCard = ({
       variantStyles[variant]
     )}>
       <div className="flex items-start justify-between">
-        <div className="space-y-1">
+        <div className={cn(contentSpacingClass)}> {/* Apply conditional spacing here */}
           <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
           <div className="flex items-center gap-2">
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
