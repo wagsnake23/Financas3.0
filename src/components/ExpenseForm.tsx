@@ -80,6 +80,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [formaPagamento, tipoPagamento]);
 
+  // NOVO EFEITO: Definir forma de pagamento como "cartao" se tipoPagamento for "parcelado"
+  useEffect(() => {
+    if (tipoPagamento === "parcelado") {
+      setFormaPagamento("cartao");
+    }
+  }, [tipoPagamento]);
+
   // Reset numeroParcelas if tipoPagamento changes to "avista"
   useEffect(() => {
     if (tipoPagamento === "avista") {
@@ -265,8 +272,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setValidationErrors={setValidationErrors}
         isMobile={isMobile}
         tipoPagamento={tipoPagamento} // Passar o tipo de pagamento
-        // Removido: numeroParcelas={numeroParcelas}
-        // Removido: setNumeroParcelas={setNumeroParcelas}
       />
 
       <div>
