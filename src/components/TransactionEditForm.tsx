@@ -446,6 +446,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile={isMobile}
                 hideTitle={editOption === "thisMonth"}
                 categoryLabel="Subcategoria"
+                // NEW PROPS FOR STATUS TOGGLE
+                isPaid={isPaid}
+                setIsPaid={setIsPaid}
+                transactionType={type}
+                editOption={editOption}
               />
               {editOption === "thisMonth" && (
                 <ThisMonthFields
@@ -465,11 +470,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                   }
                   note={note}
                   setNote={setNote}
-                  isPaid={isPaid}
-                  setIsPaid={setIsPaid}
                   loading={loading}
                   isMobile={isMobile}
-                  transactionType={type}
                   currentTransactionStatus={
                     editingTransaction?.status || "Pendente"
                   }

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
 import { Database } from "@/integrations/supabase/types"; // NEW IMPORT for ReceitaStatus
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
@@ -21,12 +20,12 @@ interface ThisMonthFieldsProps {
   setIsOverrideDueDateCalendarOpen: (open: boolean) => void;
   note: string;
   setNote: (note: string) => void;
-  isPaid: boolean;
-  setIsPaid: (paid: boolean) => void;
+  // isPaid: boolean; // REMOVIDO
+  // setIsPaid: (paid: boolean) => void; // REMOVIDO
   loading: boolean;
   isMobile: boolean;
-  transactionType: "income" | "expense"; // NEW PROP
-  currentTransactionStatus: ReceitaStatus; // NEW PROP to pass original status for disabled state
+  // transactionType: "income" | "expense"; // REMOVIDO
+  currentTransactionStatus: ReceitaStatus; // Mantido para desabilitar o campo se for 'Cancelada'
 }
 
 export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
@@ -36,12 +35,12 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
   setIsOverrideDueDateCalendarOpen,
   note,
   setNote,
-  isPaid,
-  setIsPaid,
+  // isPaid, // REMOVIDO
+  // setIsPaid, // REMOVIDO
   loading,
   isMobile,
-  transactionType, // NEW
-  currentTransactionStatus, // NEW
+  // transactionType, // REMOVIDO
+  currentTransactionStatus, // Mantido
 }) => {
   return (
     <>
@@ -95,17 +94,7 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
           className={cn("rounded-xl", isMobile && "h-9 text-sm")}
         />
       </div>
-      {/* Replaced Checkbox with StatusToggleButton */}
-      <div className="flex flex-col items-start space-y-2"> {/* Adicionado flex-col items-start e space-y-2 */}
-        <Label className={cn(isMobile && "text-xs")}>Status</Label>
-        <StatusToggleButton
-          currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
-          transactionType={transactionType}
-          onToggle={() => setIsPaid(!isPaid)}
-          isMobile={isMobile}
-          disabled={loading || currentTransactionStatus === "Cancelada"} // Disable if loading or already canceled
-        />
-      </div>
+      {/* REMOVIDO: StatusToggleButton */}
     </>
   );
 };

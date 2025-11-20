@@ -5,6 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AppCategory } from "@/types/finance";
 import { cn } from "@/lib/utils";
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
+import { Database } from "@/integrations/supabase/types"; // NEW IMPORT for ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface CommonFieldsProps {
   title: string;
@@ -19,6 +23,11 @@ interface CommonFieldsProps {
   isMobile: boolean;
   hideTitle?: boolean; // Para esconder o título na opção "Somente este mês"
   categoryLabel?: string; // Nova prop para personalizar a label da categoria
+  // NEW PROPS FOR STATUS TOGGLE
+  isPaid: boolean;
+  setIsPaid: (paid: boolean) => void;
+  transactionType: "income" | "expense";
+  editOption: "thisMonth" | "thisMonthForward" | "all";
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -36,7 +45,14 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
   isMobile,
   hideTitle = false,
   categoryLabel = "Subcategoria", // Valor padrão alterado para Subcategoria
+  // NEW PROPS FOR STATUS TOGGLE
+  isPaid,
+  setIsPaid,
+  transactionType,
+  editOption,
 }) => {
+  const showStatusToggleNextToValue = isMobile && editOption === "thisMonth";
+
   return (
     <div className="space-y-4">
       {!hideTitle && (
@@ -54,18 +70,29 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={cn("grid gap-4", showStatusToggleNextToValue ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2")}>
         <div className="space-y-2">
           <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <CurrencyInput
-            id="value"
-            value={value}
-            onValueChange={(values) => setValue(values.floatValue)}
-            placeholder="0,00"
-            required
-            disabled={loading}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
-          />
+          <div className={cn("flex items-end gap-2", showStatusToggleNextToValue && "flex-row")}> {/* Flex container for value and status */}
+            <CurrencyInput
+              id="value"
+              value={value}
+              onValueChange={(values) => setValue(values.floatValue)}
+              placeholder="0,00"
+              required
+              disabled={loading}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", showStatusToggleNextToValue && "flex-1")}
+            />
+            {showStatusToggleNextToValue && (
+              <StatusToggleButton
+                currentStatus={isPaid ? "Recebida" : "Pendente"}
+                transactionType={transactionType}
+                onToggle={() => setIsPaid(!isPaid)}
+                isMobile={isMobile}
+                disabled={loading}
+              />
+            )}
+          </div>
         </div>
 
         <div className="space-y-2">

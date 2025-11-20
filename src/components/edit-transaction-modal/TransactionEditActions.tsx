@@ -42,23 +42,23 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
 }) => {
   return (
     <>
-      <div className={cn("flex flex-col gap-4", !isMobile && "md:flex-row")}>
+      <div className={cn("flex gap-2", isMobile ? "flex-row" : "md:flex-row")}> {/* Alterado para flex-row em mobile */}
         <Button
           type="button"
           variant="destructive"
           onClick={onDelete}
-          className={cn("w-full", !isMobile && "md:flex-1", isMobile && "h-9 text-sm")}
+          className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} // Adicionado flex-1 e ajustado tamanho para mobile
           disabled={loading}
         >
-          <DynamicIcon name="Trash2" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-          Excluir Lançamento
+          <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
+          Excluir
         </Button>
-        <Button type="submit" className={cn("w-full", !isMobile && "md:flex-1", isMobile && "h-9 text-sm")} disabled={loading} onClick={onSave}>
-          <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-          {loading ? "Salvando..." : "Salvar Alterações"}
+        <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
+          <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
+          {loading ? "Salvando..." : "Salvar"}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel} className={cn("w-full", !isMobile && "md:flex-1", isMobile && "h-9 text-sm")} disabled={loading}>
-          <DynamicIcon name="XCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+        <Button type="button" variant="outline" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}> {/* Adicionado flex-1 e ajustado tamanho para mobile */}
+          <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> {/* Ajustado ícone para mobile */}
           Cancelar
         </Button>
       </div>
