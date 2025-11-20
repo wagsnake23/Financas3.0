@@ -226,7 +226,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid mb-0", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}>
+      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}> {/* Removido mb-4 para mobile */}
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
@@ -298,15 +298,14 @@ export const TransactionList = ({
           // para manter a estrutura da grade.
           <div className={cn("hidden", !isMobile && "block")}></div> 
         )}
+      </div>
 
-        {/* Accumulated Value */}
-        <div className={cn(
-          "p-2 rounded-xl text-right",
-          isMobile ? "py-1.5 px-3 col-span-full" : "col-span-1" // Sempre 1 coluna no desktop, largura total no mobile
-        )}>
+      {/* Accumulated Value - Reposicionado e estilizado como label */}
+      <div className="flex justify-end mb-0"> {/* mb-0 para colar na tabela */}
+        <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
-            "text-sm font-bold", // Alterado de text-base para text-sm
+            "text-sm font-bold",
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
             R$ {accumulatedValue.toFixed(2)}
