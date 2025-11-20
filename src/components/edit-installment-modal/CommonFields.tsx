@@ -58,7 +58,8 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
   setDueDay,
 }) => {
   const showStatusToggleNextToValue = isMobile && editOption === "thisMonth";
-  const showValueAndDueDayInline = isMobile && editOption === "thisMonthForward";
+  // Ajustado para incluir "all" na condição de layout inline para mobile
+  const showValueAndDueDayInline = isMobile && (editOption === "thisMonthForward" || editOption === "all");
 
   return (
     <div className="space-y-4">
@@ -133,7 +134,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
           </div>
         </div>
       ) : (
-        // Default layout for value (not mobile or not thisMonthForward)
+        // Default layout for value (not mobile or not thisMonthForward/all)
         <div className="space-y-2">
           <Label htmlFor="value" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <div className={cn("flex items-end gap-2", showStatusToggleNextToValue && "flex-row")}>
