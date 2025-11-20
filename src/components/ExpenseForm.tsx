@@ -23,6 +23,7 @@ import { CurrencyInput } from "@/components/ui/currency-input";
 import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";
 import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle";
+import { InstallmentPreview } from "./expense-form/InstallmentPreview"; // NOVO: Importar InstallmentPreview
 
 interface Cartao {
   id: string;
@@ -294,6 +295,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <TransactionStatusToggle
           isPaid={isPaid}
           setIsPaid={setIsPaid}
+          isMobile={isMobile}
+        />
+      )}
+
+      {/* NOVO: Pré-visualização das Parcelas */}
+      {tipoPagamento === "parcelado" && numeroParcelas > 1 && (
+        <InstallmentPreview
+          valor={valor}
+          numeroParcelas={numeroParcelas}
+          dataVencimento={dataVencimento}
           isMobile={isMobile}
         />
       )}
