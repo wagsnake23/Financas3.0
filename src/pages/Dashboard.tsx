@@ -143,13 +143,13 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
-                childrenAlignment="start" // Alinha os filhos à esquerda para mobile
+                childrenAlignment="start" 
               >
-                <div className={cn("flex flex-col items-start mt-2 space-y-1")}> {/* Alinha o conteúdo interno à esquerda */}
+                <div className={cn("flex items-end justify-between w-full mt-2")}> {/* Ajustado para flex items-end justify-between */}
                   <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
                   <Button
                     variant="destructive"
-                    className={cn("w-full h-8 px-3 text-xs rounded-xl")} 
+                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} {/* Removido w-full */}
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
