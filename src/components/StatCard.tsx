@@ -88,9 +88,9 @@ export const StatCard = ({
           )}
         </div>
         {/* NEW: Container for header content and main icon */}
-        <div className="flex items-center gap-2"> {/* Added gap-2 for spacing between badge and icon */}
+        <div className={cn("flex items-center gap-2", isMobile && "flex-row-reverse")}> {/* Added flex-row-reverse for mobile */}
           {headerContent && (
-            <div className={cn(isMobile ? "mt-0.5" : "mt-0")}> {/* Adjust margin for mobile if needed */}
+            <div className={cn(isMobile && "mt-0.5 mr-1")}> {/* Adjust margin for mobile if needed, add mr-1 */}
               {headerContent}
             </div>
           )}

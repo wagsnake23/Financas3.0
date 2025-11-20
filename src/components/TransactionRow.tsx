@@ -147,7 +147,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
     >
       {/* DATA */}
-      <TableCell className={cn("py-2 px-2 text-xs", isMobile ? "min-w-[60px]" : "min-w-[70px]")}>
+      <TableCell className={cn("py-2 px-2 text-xs", isMobile ? "min-w-[55px]" : "min-w-[70px]")}>
         {isMobile
           ? format(transactionDate, "dd/MMM", { locale: ptBR })
           : transactionDate.toLocaleDateString("pt-BR")}
@@ -231,7 +231,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       </TableCell>
 
       {/* AÇÕES */}
-      <TableCell className={cn("py-2 px-2 text-right", isMobile ? "min-w-[45px]" : "min-w-[50px]")}>
+      <TableCell className={cn("py-2 px-2 text-right", isMobile ? "min-w-[40px]" : "min-w-[50px]")}>
         <div className="flex justify-end gap-1">
           <Button
             variant="ghost"
