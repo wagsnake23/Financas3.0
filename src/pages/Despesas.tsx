@@ -123,6 +123,7 @@ export default function Despesas() {
               {isMobile ? (
                 <div className="px-4 pt-0">
                   {formContent}
+                  <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
                 </div>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
@@ -156,7 +157,7 @@ export default function Despesas() {
           )}
         </div>
       </div>
-      <Footer isMobile={isMobile} />
+      {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop, na parte inferior da página */}
     </ProtectedRoute>
   );
 }
