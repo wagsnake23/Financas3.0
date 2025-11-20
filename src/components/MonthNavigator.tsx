@@ -19,7 +19,7 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   isMobile,
 }) => {
   return (
-    <div className={cn("flex items-center justify-center mb-6", isMobile ? "gap-2" : "gap-4")}> {/* Alterado para justify-center e adicionado gap responsivo */}
+    <div className={cn("flex items-center justify-center", isMobile ? "gap-2 mb-4" : "gap-4 mb-6")}> {/* Alterado para justify-center e adicionado gap responsivo */}
       <Button variant="outline" size="icon" onClick={onPreviousMonth} className={cn(isMobile && "h-8 w-8")}> {/* Ajustado tamanho do botão para mobile */}
         <DynamicIcon name="ChevronLeft" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ajustado tamanho do ícone para mobile */}
       </Button>

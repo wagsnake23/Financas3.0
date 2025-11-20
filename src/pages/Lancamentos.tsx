@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"; // Importar componentes do Dialog
 import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
+import { cn } from "@/lib/utils"; // Importar cn
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -75,7 +76,7 @@ const Lancamentos = () => {
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
         <Navigation />
-        <main className="container mx-auto px-4 py-8">
+        <main className={cn("container mx-auto", isMobile ? "px-0 py-4" : "px-4 py-8")}>
           {!isMobile && (
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
