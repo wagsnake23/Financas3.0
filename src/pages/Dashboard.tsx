@@ -93,6 +93,21 @@ const Dashboard = () => {
     return { totalIncome, totalExpenses, balance };
   }, [monthlyFilteredTransactions]);
 
+  // Calculate total paid expenses for the current month
+  const totalPaidMonthlyExpenses = useMemo(() => {
+    const startOfCurrentMonth = startOfMonth(selectedMonth);
+    const endOfCurrentMonth = endOfMonth(selectedMonth);
+
+    return expenseInstallments
+      .filter(p => !p.despesas?.is_fixed) // Filter out legacy fixed expenses
+      .filter(p => p.pago) // Only paid installments
+      .filter(p => {
+        const installmentDate = new Date(p.vencimento);
+        return isWithinInterval(installmentDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
+      })
+      .reduce((sum, p) => sum + p.valor_parcela, 0);
+  }, [expenseInstallments, selectedMonth]);
+
   const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
 
   if (isLoading) {
@@ -129,7 +144,8 @@ const Dashboard = () => {
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
               >
-                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
+                <div className={cn("flex flex-col items-end mt-2 space-y-1")}> {/* Ajustado para flex-col e space-y-1 */}
+                  <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
                   <Button
                     variant="destructive"
                     className={cn("w-full h-8 px-3 text-xs rounded-xl")} 
