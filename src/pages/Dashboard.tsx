@@ -176,8 +176,7 @@ const Dashboard = () => {
                   <div className="flex flex-col items-start"> {/* NOVO: Container para o Saldo Atual */}
                     <p className="text-xs text-muted-foreground">Saldo Atual:</p>
                     <p className={cn(
-                      "font-semibold text-sm",
-                      stats.balance >= 0 ? "text-success" : "text-destructive"
+                      "font-semibold text-sm text-primary" // Alterado para text-primary
                     )}>
                       {showBalanceValue ? `R$ ${stats.balance.toFixed(2)}` : "R$ *****"}
                     </p>
