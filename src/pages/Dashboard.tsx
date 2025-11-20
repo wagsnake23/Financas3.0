@@ -199,8 +199,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-
-              {/* REMOVED: MonthlyExpensesCombinedMobile from mobile view */}
+              {isMobile && <Footer isMobile={isMobile} />} {/* Footer para mobile */}
             </div>
           ) : (
             <>
@@ -281,10 +280,8 @@ const Dashboard = () => {
               </Card>
             </>
           )}
-          {isMobile && <Footer isMobile={isMobile} />}
-
         </main>
-        {!isMobile && <Footer isMobile={isMobile} />}
+        {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop */}
       </div>
     </ProtectedRoute>
   );
