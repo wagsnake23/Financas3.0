@@ -23,6 +23,9 @@ interface PaymentDetailsProps {
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
   UNSELECTED_VALUE: string;
+  // NOVAS PROPS PARA TIPO DE PAGAMENTO
+  tipoPagamento: "avista" | "parcelado";
+  setTipoPagamento: (value: "avista" | "parcelado") => void;
 }
 
 export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -39,9 +42,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setValidationErrors,
   isMobile,
   UNSELECTED_VALUE,
+  tipoPagamento, // NOVA PROP
+  setTipoPagamento, // NOVA PROP
 }) => {
   return (
-    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}> {/* Alterado para grid-cols-2 em mobile, com gap menor */}
+    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
+      {/* Valor */}
       <div>
         <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
         <CurrencyInput
@@ -57,7 +63,22 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         />
       </div>
 
+      {/* Tipo de Pagamento (À vista / Parcelado) - NOVA POSIÇÃO */}
       <div>
+        <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
+        <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
+            <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Forma de Pagamento - NOVA POSIÇÃO */}
+      <div className="col-span-full"> {/* Ocupa a largura total */}
         <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
         <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
@@ -73,7 +94,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {formaPagamento === "cartao" && (
-        <div className="col-span-full"> {/* Este ainda ocupará a largura total */}
+        <div className="col-span-full">
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select value={cartaoId} onValueChange={(v: any) => {

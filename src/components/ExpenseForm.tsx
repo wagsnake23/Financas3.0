@@ -250,21 +250,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setValidationErrors={setValidationErrors}
         isMobile={isMobile}
         UNSELECTED_VALUE={UNSELECTED_VALUE}
+        tipoPagamento={tipoPagamento} // Passar o tipo de pagamento
+        setTipoPagamento={setTipoPagamento} // Passar a função para atualizar o tipo de pagamento
       />
-
-      {/* Tipo de Pagamento (À vista / Parcelado) */}
-      <div>
-        <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
-        <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
-            <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
       <DateAndInstallmentFields
         dataVencimento={dataVencimento}
