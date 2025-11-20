@@ -263,6 +263,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setNumeroParcelas={setNumeroParcelas} // Passar a função para atualizar o número de parcelas
       />
 
+      {/* NOVO: Pré-visualização das Parcelas - MOVIDO PARA CIMA */}
+      {tipoPagamento === "parcelado" && numeroParcelas > 1 && (
+        <InstallmentPreview
+          valor={valor}
+          numeroParcelas={numeroParcelas}
+          dataVencimento={dataVencimento}
+          isMobile={isMobile}
+        />
+      )}
+
       <DateAndInstallmentFields
         dataVencimento={dataVencimento}
         setDataVencimento={setDataVencimento}
@@ -290,16 +300,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <TransactionStatusToggle
           isPaid={isPaid}
           setIsPaid={setIsPaid}
-          isMobile={isMobile}
-        />
-      )}
-
-      {/* NOVO: Pré-visualização das Parcelas */}
-      {tipoPagamento === "parcelado" && numeroParcelas > 1 && (
-        <InstallmentPreview
-          valor={valor}
-          numeroParcelas={numeroParcelas}
-          dataVencimento={dataVencimento}
           isMobile={isMobile}
         />
       )}
