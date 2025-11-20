@@ -125,7 +125,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       }
 
       // --- START: Adjusted logic for baseDueDate calculation ---
-      let baseDueDate = setDate(startOfMonth(currentMonth), entry.due_day);
+      const safeDueDay = typeof entry.due_day === 'number' && !isNaN(entry.due_day) ? entry.due_day : 1; // Ensure due_day is a valid number
+      let baseDueDate = setDate(startOfMonth(currentMonth), safeDueDay);
       
       // If the entry's start_date is in the current month, and the due_day is before the start_date's day,
       // then this occurrence should be considered from the start_date itself, not the due_day.
@@ -133,7 +134,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       if (isSameMonth(entryStartDate, currentMonth) && isBefore(baseDueDate, entryStartDate)) {
         baseDueDate = entryStartDate;
         console.log(`[DEBUG]   Adjusted baseDueDate to entryStartDate: ${format(baseDueDate, 'yyyy-MM-dd')} because entry starts mid-month.`);
-      } else if (getDate(baseDueDate) !== entry.due_day) {
+      } else if (getDate(baseDueDate) !== safeDueDay) { // Use safeDueDay here
         // Adjust if due_day is greater than days in current month (e.g., day 31 in February)
         baseDueDate = endOfMonth(currentMonth); // Set to last day of month if due_day is too high
         console.log(`[DEBUG]   Adjusted baseDueDate to endOfMonth: ${format(baseDueDate, 'yyyy-MM-dd')} due to month end clamp.`);
