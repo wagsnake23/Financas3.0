@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid, setDate, getMonth, getYear, addMonths } from "date-fns"; // Adicionado addMonths
+import { format, isValid, setDate, getMonth, getYear, addMonths, subMonths } from "date-fns"; // Adicionado subMonths
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,7 +15,7 @@ import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 
 interface Cartao {
   id: string;
@@ -197,8 +197,8 @@ export const TransactionList = ({
     }
   };
 
-  // Calcular a data de vencimento da fatura
-  const invoiceDueDate = useMemo(() => {
+  // Calcular a data de vencimento da fatura e o dia de fechamento
+  const cardDetails = useMemo(() => {
     if (!isValidUuid(filterPaymentOptionId) || !isValid(selectedMonth)) {
       return null;
     }
@@ -210,13 +210,38 @@ export const TransactionList = ({
     const currentYear = getYear(selectedMonth);
     const currentMonthIndex = getMonth(selectedMonth); // 0-indexed
 
+    // Dia de fechamento da fatura (no mês selecionado)
+    let closingDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_fechamento);
+    // Se o dia de fechamento já passou no mês atual, a fatura é do próximo mês.
+    // Para exibir o fechamento do mês *anterior* que gerou a fatura atual,
+    // precisamos ajustar a data de fechamento para o mês anterior.
+    // Ex: Se selectedMonth é Dezembro, e fechamento é dia 25, a fatura de Dezembro fecha em 25/Dez.
+    // Mas as despesas de Dezembro vencem em Janeiro.
+    // A fatura que vence em `selectedMonth` (ex: Dezembro) é referente ao fechamento do mês anterior (ex: Novembro).
+    let displayClosingDate = setDate(subMonths(new Date(currentYear, currentMonthIndex), 1), selectedCard.dia_fechamento);
+    if (!isValid(displayClosingDate)) {
+      displayClosingDate = setDate(endOfMonth(subMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_fechamento);
+    }
+    const formattedClosingDate = isValid(displayClosingDate) ? format(displayClosingDate, "dd/MM", { locale: ptBR }) : null;
+
+
+    // Data de vencimento da fatura (no mês seguinte ao fechamento)
     let dueDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
-
-    // Para simplificar, vamos exibir a data de vencimento no mês seguinte ao `selectedMonth`
-    // porque as despesas do `selectedMonth` geralmente vencem no mês seguinte.
+    // A fatura referente ao mês selecionado (selectedMonth) geralmente vence no mês seguinte.
+    // Ex: Despesas de Novembro (selectedMonth) fecham em 25/Nov e vencem em 15/Dez.
+    // Se selectedMonth é Novembro, a fatura que vence em Dezembro é a relevante.
+    // Então, a data de vencimento deve ser no mês seguinte ao selectedMonth.
     dueDate = addMonths(dueDate, 1); // Adiciona 1 mês para refletir o vencimento da fatura do mês selecionado
+    if (!isValid(dueDate)) {
+      dueDate = setDate(endOfMonth(addMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_vencimento);
+    }
+    const formattedDueDate = isValid(dueDate) ? format(dueDate, "dd/MM", { locale: ptBR }) : null;
 
-    return isValid(dueDate) ? format(dueDate, "dd/MM", { locale: ptBR }) : null; // Formatado para dd/MM
+    return {
+      closingDay: selectedCard.dia_fechamento,
+      formattedClosingDate,
+      formattedDueDate,
+    };
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
@@ -284,9 +309,8 @@ export const TransactionList = ({
               disabled={loadingPayInvoice || disableFilters}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              {loadingPayInvoice ? "Pagando..." : `Pagar Fatura ${invoiceDueDate ? `(${invoiceDueDate})` : ''}`}
+              {loadingPayInvoice ? "Pagando..." : `Pagar Fatura ${cardDetails?.formattedDueDate ? `(${cardDetails.formattedDueDate})` : ''}`}
             </Button>
-            {/* REMOVIDO: O span de vencimento foi movido para dentro do botão */}
           </div>
         ) : (
           // Se nenhum cartão de crédito for selecionado, este slot permanece vazio no desktop
@@ -295,8 +319,31 @@ export const TransactionList = ({
         )}
       </div>
 
+      {/* NEW: Card Details Display */}
+      {isValidUuid(filterPaymentOptionId) && cardDetails && (
+        <div className={cn(
+          "grid grid-cols-2 gap-4 mt-4 p-4 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm",
+          isMobile && "gap-2 mt-3 p-3 text-sm"
+        )}>
+          <div className="flex items-center gap-2">
+            <DynamicIcon name="CalendarOff" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
+            <div>
+              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Fechamento:</p>
+              <p className={cn("font-semibold", isMobile && "text-xs")}>{cardDetails.formattedClosingDate || 'N/A'}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
+            <div>
+              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento:</p>
+              <p className={cn("font-semibold", isMobile && "text-xs")}>{cardDetails.formattedDueDate || 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Accumulated Value - Reposicionado e estilizado como label */}
-      <div className="flex justify-end mb-0"> {/* mb-0 para colar na tabela */}
+      <div className="flex justify-end mb-0 mt-4"> {/* Adicionado mt-4 para espaçamento */}
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
