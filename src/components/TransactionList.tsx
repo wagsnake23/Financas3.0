@@ -339,7 +339,7 @@ export const TransactionList = ({
       )}
 
       <div className={cn(
-        "rounded-xl border overflow-hidden shadow-sm",
+        "rounded-xl border overflow-hidden shadow-sm mt-4", // Adicionado mt-4 aqui
         isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
       )}>
         <Table>
