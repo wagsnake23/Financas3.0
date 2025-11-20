@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns"; // Adicionado endOfMonth
+import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useNavigate } from "react-router-dom";
-import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary"; // NOVO: Importar CreditCardInvoiceSummary
+import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
 
 interface Cartao {
   id: string;
@@ -364,7 +364,7 @@ export const TransactionList = ({
             totalPending={totalPendingCard}
             totalCardExpenses={totalCardExpenses}
             isMobile={!!isMobile}
-            formattedDueDate={cardDetails?.formattedDueDate || null} {/* Passando a data de vencimento */}
+            formattedDueDate={cardDetails?.formattedDueDate || null}
           />
         </div>
       )}
