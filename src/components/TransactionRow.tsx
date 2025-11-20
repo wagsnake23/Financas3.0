@@ -6,6 +6,7 @@ import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale"; // Importar ptBR para formatar a data
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
@@ -157,6 +158,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     }
   };
 
+  const transactionDate = (() => {
+    const [y, m, d] = transaction.date.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  })();
+
   return (
     <TableRow
       key={transaction.id}
@@ -172,10 +178,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     >
       {/* DATA */}
       <TableCell className="py-2 px-2 text-xs min-w-[70px]">
-        {(() => {
-          const [y, m, d] = transaction.date.split("-").map(Number);
-          return new Date(y, m - 1, d).toLocaleDateString("pt-BR");
-        })()}
+        {isMobile
+          ? format(transactionDate, "dd/MMM", { locale: ptBR })
+          : transactionDate.toLocaleDateString("pt-BR")}
       </TableCell>
 
       {/* TIPO */}
