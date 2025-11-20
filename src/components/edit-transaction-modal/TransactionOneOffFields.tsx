@@ -92,6 +92,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         </Select>
       </div>
 
+      {/* Valor e Parcela (lado a lado) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Valor */}
         <div className="space-y-2">
@@ -106,52 +107,53 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           />
         </div>
 
-        {/* Data */}
-        <div className="space-y-2">
-          <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
-          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal h-10 rounded-xl",
-                  !date && "text-muted-foreground",
-                  isMobile && "h-9 text-sm"
-                )}
-              >
-                <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-                {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  setIsCalendarOpen(false);
-                }}
-                initialFocus
-                locale={ptBR}
-                showOutsideDays={false}
-                className={cn(isMobile && "text-sm")}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+        {/* Parcela (condicional) */}
+        {isExpenseInstallment && (
+          <div className="space-y-2">
+            <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
+            <Input
+              value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
+              readOnly
+              disabled
+              className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+            />
+          </div>
+        )}
       </div>
 
-      {isExpenseInstallment && (
-        <div className="space-y-2">
-          <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
-          <Input
-            value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
-            readOnly
-            disabled
-            className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
-          />
-        </div>
-      )}
+      {/* Data (abaixo de Valor e Parcela) */}
+      <div className="space-y-2">
+        <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
+        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
+                !date && "text-muted-foreground",
+                isMobile && "h-9 text-sm"
+              )}
+            >
+              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
+                setIsCalendarOpen(false);
+              }}
+              initialFocus
+              locale={ptBR}
+              showOutsideDays={false}
+              className={cn(isMobile && "text-sm")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
