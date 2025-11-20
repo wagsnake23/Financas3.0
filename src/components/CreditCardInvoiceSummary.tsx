@@ -44,17 +44,11 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       <div className={cn("flex items-start justify-between gap-4", isMobile && "flex-col items-center text-center gap-2")}>
         {/* Detalhes do Cartão (Esquerda) */}
         <div className={cn("flex flex-col items-start", isMobile && "items-center")}>
-          {invoiceMonth && (
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
-              Mês da Fatura: <span className={cn("font-semibold text-sm", isMobile && "text-xs capitalize")}>{invoiceMonth}</span>
-            </p>
-          )}
-          
-          {/* Fechamento e Vencimento na mesma linha */}
-          <div className={cn("flex gap-2", isMobile && "gap-1")}>
-            {formattedClosingDate && (
+          {/* Fatura e Vencimento na mesma linha para mobile */}
+          <div className={cn("flex items-center gap-2", isMobile && "flex-row justify-center gap-2")}>
+            {invoiceMonth && (
               <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
-                Fechamento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedClosingDate}</span>
+                Fatura: <span className={cn("font-semibold text-sm", isMobile && "text-xs capitalize")}>{invoiceMonth}</span>
               </p>
             )}
             {formattedDueDate && (
@@ -66,7 +60,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         </div>
 
         {/* Valores (Centro, em uma linha) */}
-        <div className={cn("flex items-center justify-center gap-4", isMobile && "gap-2 w-full")}>
+        <div className={cn("flex items-center justify-center gap-4", isMobile && "gap-4 w-full")}> {/* Aumentado o gap para mobile */}
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
