@@ -13,13 +13,13 @@ export const MonthBadge: React.FC<MonthBadgeProps> = ({ selectedMonth, isMobile 
   return (
     <div className={cn(
       "flex flex-col items-center justify-center rounded-md",
-      isMobile ? "p-1 bg-success/10 text-success" : "p-2 bg-success/10 text-success" // Aplicando cores para mobile e desktop
+      isMobile ? "p-1" : "p-2" // Keep padding, remove background color
     )}>
       <DynamicIcon name="Calendar" className={cn("text-success", isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} />
-      <span className={cn("font-bold uppercase leading-none", isMobile ? "text-xs" : "text-sm")}>
+      <span className={cn("font-bold uppercase leading-none text-success", isMobile ? "text-xs" : "text-sm")}>
         {format(selectedMonth, "MMM", { locale: ptBR })}
       </span>
-      <span className={cn("leading-none", isMobile ? "text-[0.6rem]" : "text-xs")}>
+      <span className={cn("leading-none text-success", isMobile ? "text-[0.6rem]" : "text-xs")}>
         {format(selectedMonth, "yyyy")}
       </span>
     </div>
