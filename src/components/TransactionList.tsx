@@ -329,7 +329,7 @@ export const TransactionList = ({
 
         {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className="rounded-xl">
+                className={cn("rounded-xl", isMobile && "col-span-2")}> {/* Adicionado col-span-2 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -345,29 +345,6 @@ export const TransactionList = ({
         {/* Este slot agora está vazio, pois o botão foi movido */}
         <div className={cn("hidden", !isMobile && "block")}></div> 
       </div>
-
-      {/* REMOVIDO: NEW: Card Details Display (Fechamento e Vencimento) */}
-      {/* {isValidUuid(filterPaymentOptionId) && cardDetails && (
-        <div className={cn(
-          "grid grid-cols-2 gap-4 mt-4 p-4 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm",
-          isMobile && "gap-2 mt-3 p-3 text-sm"
-        )}>
-          <div className="flex items-center gap-2">
-            <DynamicIcon name="CalendarOff" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
-            <div>
-              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Fechamento:</p>
-              <p className={cn("font-semibold", isMobile && "text-xs")}>{cardDetails.formattedClosingDate || 'N/A'}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
-            <div>
-              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento:</p>
-              <p className={cn("font-semibold", isMobile && "text-xs")}>{cardDetails.formattedDueDate || 'N/A'}</p>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       {/* Resumo da Fatura do Cartão (agora com o botão Pagar Fatura dentro) */}
       {isValidUuid(filterPaymentOptionId) && (
