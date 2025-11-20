@@ -114,6 +114,31 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     if (!cardToDelete) return;
 
     setLoading(true);
+
+    // NEW: Check for associated expenses before deleting the card
+    const { count: expenseCount, error: countError } = await supabase
+      .from("despesas")
+      .select("id", { count: 'exact' })
+      .eq("cartao_id", cardToDelete);
+
+    if (countError) {
+      toast.error("Erro ao verificar despesas associadas", { description: countError.message });
+      console.error(countError);
+      setLoading(false);
+      setIsConfirmDeleteOpen(false);
+      return;
+    }
+
+    if (expenseCount && expenseCount > 0) {
+      toast.error("Não é possível excluir o cartão", {
+        description: "Existem despesas associadas a este cartão. Remova-as ou edite-as primeiro.",
+      });
+      setLoading(false);
+      setIsConfirmDeleteOpen(false);
+      return;
+    }
+    // END NEW
+
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
     if (error) {
