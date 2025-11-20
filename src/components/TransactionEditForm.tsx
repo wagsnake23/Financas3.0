@@ -19,6 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
@@ -73,6 +74,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   // Estados para o diálogo de exclusão
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
   const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] = useState(false);
+  const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth"); // Novo estado para o radio button
 
   const isRecurringTransaction = useMemo(() => {
     return editingTransaction?.type === "expense" && 
@@ -270,7 +272,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Confirmar Exclusão
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
@@ -288,39 +293,47 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Despesa Parcelada</AlertDialogTitle>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Excluir Despesa Parcelada
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Esta despesa faz parte de um lançamento parcelado. Como você gostaria de excluí-la?
-            </AlertDialogDescription>
+            </Description>
           </AlertDialogHeader>
+          <div className="py-4">
+            <RadioGroup
+              value={selectedDeleteScope}
+              onValueChange={(value: DeleteScope) => setSelectedDeleteScope(value)}
+              className="space-y-3"
+            >
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="thisMonth" id="delete-this-month" />
+                <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Apenas este mês
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="thisMonthForward" id="delete-this-month-forward" />
+                <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Deste mês em diante
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="all" id="delete-all" />
+                <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Todo o período
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handleConfirmDelete("thisMonth")}
-              disabled={loading}
-              className="w-full sm:w-auto"
-            >
-              Apenas este mês
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleConfirmDelete("thisMonthForward")}
-              disabled={loading}
-              className="w-full sm:w-auto"
-            >
-              Deste mês em diante
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleConfirmDelete("all")}
-              disabled={loading}
-              className="w-full sm:w-auto"
-            >
-              Todo o período
-            </Button>
             <AlertDialogCancel disabled={loading} className="w-full sm:w-auto mt-2 sm:mt-0">
               Cancelar
             </AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading} className="w-full sm:w-auto">
+              {loading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
