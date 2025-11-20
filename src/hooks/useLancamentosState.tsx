@@ -10,21 +10,25 @@ export const useLancamentosState = () => {
 
   const initialMonth = useMemo(() => {
     const monthParam = searchParams.get("month");
+    let dateToReturn: Date;
     if (monthParam) {
       try {
         const parsedDate = parseISO(monthParam);
         if (isValid(parsedDate)) {
-          return parsedDate;
+          dateToReturn = parsedDate;
         } else {
-          console.error("Invalid date parsed from URL parameter:", monthParam);
-          return new Date();
+          console.error("useLancamentosState: Invalid date parsed from URL parameter, defaulting to new Date():", monthParam);
+          dateToReturn = new Date();
         }
       } catch (e) {
-        console.error("Error parsing month parameter from URL:", monthParam, e);
-        return new Date();
+        console.error("useLancamentosState: Error parsing month parameter from URL, defaulting to new Date():", monthParam, e);
+        dateToReturn = new Date();
       }
+    } else {
+      dateToReturn = new Date();
     }
-    return new Date();
+    console.log("useLancamentosState: Initial selectedMonth:", dateToReturn, "isValid:", isValid(dateToReturn));
+    return dateToReturn;
   }, [searchParams]);
 
   const initialFilterPaymentOption = useMemo(() => {

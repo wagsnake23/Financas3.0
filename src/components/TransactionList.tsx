@@ -62,6 +62,8 @@ export const TransactionList = ({
   setLoadingPayInvoice, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
+  console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
+
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
@@ -161,6 +163,12 @@ export const TransactionList = ({
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
+    // Create a new Date object from the current selectedMonth to ensure it's a valid Date instance
+    const monthToValidate = new Date(selectedMonth); 
+
+    console.log("handlePayInvoice: monthToValidate:", monthToValidate);
+    console.log("handlePayInvoice: isValid(monthToValidate):", isValid(monthToValidate));
+
     if (!user) {
       toast.error("Usuário não autenticado. Por favor, faça login novamente.");
       return;
@@ -169,9 +177,9 @@ export const TransactionList = ({
       toast.error("Selecione um cartão de crédito válido para pagar a fatura.");
       return;
     }
-    if (!isValid(selectedMonth)) {
+    if (!isValid(monthToValidate)) { // Use the new Date object for validation
       toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
-      console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth);
+      console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth, "Validated object:", monthToValidate);
       return;
     }
 
@@ -218,7 +226,11 @@ export const TransactionList = ({
 
   // Calcular a data de vencimento da fatura e o dia de fechamento
   const cardDetails = useMemo(() => {
-    if (!isValidUuid(filterPaymentOptionId) || !isValid(selectedMonth)) {
+    const monthForCardDetails = new Date(selectedMonth); // Ensure a fresh Date object
+    console.log("cardDetails useMemo: monthForCardDetails:", monthForCardDetails);
+    console.log("cardDetails useMemo: isValid(monthForCardDetails):", isValid(monthForCardDetails));
+
+    if (!isValidUuid(filterPaymentOptionId) || !isValid(monthForCardDetails)) {
       return null;
     }
     const selectedCard = cartoes.find(card => card.id === filterPaymentOptionId);
@@ -226,8 +238,8 @@ export const TransactionList = ({
       return null;
     }
 
-    const currentYear = getYear(selectedMonth);
-    const currentMonthIndex = getMonth(selectedMonth); // 0-indexed
+    const currentYear = getYear(monthForCardDetails);
+    const currentMonthIndex = getMonth(monthForCardDetails); // 0-indexed
 
     // Calculate the closing date for the invoice that *covers* transactions up to the selected month's closing day.
     // This means the closing date is in the `selectedMonth`.
