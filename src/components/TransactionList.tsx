@@ -338,19 +338,6 @@ export const TransactionList = ({
         </div>
       )}
 
-      {/* Accumulated Value - Reposicionado e estilizado como label */}
-      <div className="flex justify-end mb-0 mt-4"> {/* Adicionado mt-4 para espaçamento */}
-        <div className="text-right">
-          <p className="text-xs text-muted-foreground">Valor Total:</p>
-          <p className={cn(
-            "text-sm font-bold",
-            accumulatedValue >= 0 ? "text-success" : "text-destructive"
-          )}>
-            R$ {accumulatedValue.toFixed(2)}
-          </p>
-        </div>
-      </div>
-
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm",
         isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
@@ -382,6 +369,19 @@ export const TransactionList = ({
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Accumulated Value - Reposicionado e estilizado como label */}
+      <div className="flex justify-end mb-0 mt-4"> {/* Adicionado mt-4 para espaçamento */}
+        <div className="text-right">
+          <p className="text-xs text-muted-foreground">Valor Total:</p>
+          <p className={cn(
+            "text-sm font-bold",
+            accumulatedValue >= 0 ? "text-success" : "text-destructive"
+          )}>
+            R$ {accumulatedValue.toFixed(2)}
+          </p>
+        </div>
       </div>
     </div>
   );
