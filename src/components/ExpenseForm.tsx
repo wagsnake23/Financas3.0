@@ -69,6 +69,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Validation errors state
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
+  // Filtrar as subcategorias para exibir apenas as de despesa
+  const expenseSubcategories = React.useMemo(() => {
+    return allSubcategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
+  }, [allSubcategories]);
+
   // Efeito para definir o status de pago/pendente automaticamente
   useEffect(() => {
     if (tipoPagamento === "parcelado") {
@@ -226,10 +231,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
-            {allSubcategories.length === 0 ? (
+            {expenseSubcategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
             ) : (
-              allSubcategories
+              expenseSubcategories
                 .map((cat) => (
                   <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                     <span className="flex items-center gap-2">
