@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale"; // Importar ptBR para formatar a data
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { User } = "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js"; // Corrigido: de '=' para 'from'
 import { supabase } from "@/integrations/supabase/client";
 
 interface Cartao {
