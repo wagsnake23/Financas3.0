@@ -121,6 +121,8 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       .select("id", { count: 'exact' })
       .eq("cartao_id", cardToDelete);
 
+    console.log(`[DEBUG] Card ${cardToDelete}: Found ${expenseCount} associated 'despesas' records.`); // DEBUG LOG
+
     if (countError) {
       toast.error("Erro ao verificar despesas associadas", { description: countError.message });
       console.error(countError);
@@ -143,6 +145,8 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       .from("recurring_entries")
       .select("id", { count: 'exact' })
       .eq("cartao_id", cardToDelete);
+
+    console.log(`[DEBUG] Card ${cardToDelete}: Found ${recurringCount} associated 'recurring_entries' records.`); // DEBUG LOG
 
     if (recurringCountError) {
       toast.error("Erro ao verificar lançamentos recorrentes associados", { description: recurringCountError.message });
