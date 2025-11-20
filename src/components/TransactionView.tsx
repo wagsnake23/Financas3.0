@@ -60,10 +60,12 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       markMonthPaid={markMonthPaid}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
-      loadingPayInvoice={loadingPayInvoice} // NOVO
-      setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
+      loadingPayInvoice={loadingPayInvoice}
+      setLoadingPayInvoice={setLoadingPayInvoice}
     />
   );
 
-  return isMobile ? content : <Card className="p-6 animate-slide-up rounded-xl shadow-sm">{content}</Card>;
+  // Se for mobile, retorna o conteúdo diretamente.
+  // Se não for mobile, retorna o conteúdo diretamente (removendo o Card).
+  return content;
 };
