@@ -63,8 +63,8 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
   const hideDueDayAndFrequency = isMobile && (editOption === "thisMonthForward" || editOption === "all");
   // Conditionally hide endDate for mobile when editOption is "all"
   const hideEndDate = isMobile && editOption === "all";
-  // NEW: Conditionally hide status for mobile when editOption is "thisMonthForward"
-  const hideStatus = isMobile && editOption === "thisMonthForward";
+  // NEW: Conditionally hide status for mobile when editOption is "thisMonthForward" or "all"
+  const hideStatus = isMobile && (editOption === "thisMonthForward" || editOption === "all");
 
   return (
     <div className="space-y-4">
