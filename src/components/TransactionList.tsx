@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react"; // Importar useEffect
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -91,6 +91,19 @@ export const TransactionList = ({
     });
     return options;
   }, [cartoes]);
+
+  // NEW: Effect to reset filterPaymentOptionId if the selected card is not found in cartoes
+  useEffect(() => {
+    if (isValidUuid(filterPaymentOptionId) && cartoes.length > 0) {
+      const cardExists = cartoes.some(card => card.id === filterPaymentOptionId);
+      if (!cardExists) {
+        console.warn(`TransactionList: Selected card ID ${filterPaymentOptionId} not found in loaded cards. Resetting filter.`);
+        setFilterPaymentOptionId("all");
+        // Optionally, if the filter came from the URL, you might want to clear it from the URL too.
+        // navigate('/lancamentos', { replace: true });
+      }
+    }
+  }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]); // Added setFilterPaymentOptionId to dependencies
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
