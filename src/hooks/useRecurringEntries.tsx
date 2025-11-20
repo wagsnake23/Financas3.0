@@ -41,14 +41,6 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
   return `${recurringId}-${year}-${month}`;
 };
 
-// Removido: Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
-// function parseDateOnly(dateString: string | null | undefined): Date | null {
-//   if (!dateString) return null;
-//   const [year, month, day] = dateString.split("-").map(Number);
-//   const date = new Date(year, month - 1, day);
-//   return isValid(date) ? date : null;
-// }
-
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
   const queryClient = useQueryClient();
   console.log("useRecurringEntries: Initializing for month:", format(currentMonth, 'yyyy-MM-dd'), "Enabled:", enabled); // Log atualizado
@@ -398,7 +390,12 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     mutationFn: async ({ recurring_id, end_year, end_month }: { recurring_id: string; end_year: number; end_month: number }) => {
       if (!user?.id) throw new Error("User not authenticated.");
 
-      const endDate = format(endOfMonth(new Date(end_year, end_month - 1)), "yyyy-MM-dd");
+      const dateForEndDate = new Date(end_year, end_month - 1);
+      if (!isValid(dateForEndDate)) { // Defensive check
+        console.error("Invalid date created for end_date in endRecurringAtMutation:", { end_year, end_month });
+        throw new Error("Invalid end date provided for recurring entry.");
+      }
+      const endDate = format(endOfMonth(dateForEndDate), "yyyy-MM-dd");
 
       const { data, error } = await supabase
         .from("recurring_entries")
