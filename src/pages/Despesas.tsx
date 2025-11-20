@@ -108,7 +108,7 @@ export default function Despesas() {
       <RadioGroup
         value={formMode}
         onValueChange={(value: FormMode) => setFormMode(value)}
-        className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
+        className="flex items-center justify-center gap-8 mb-2" // Aumentado o gap para mais espaço, reduzido mb
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="one-off" id="one-off-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
@@ -141,6 +141,11 @@ export default function Despesas() {
           </Label>
         </div>
       </RadioGroup>
+      <p className="text-xs text-muted-foreground text-center mb-4">
+        {formMode === 'one-off' ? 
+          "Para despesas únicas ou parceladas com número fixo de parcelas." : 
+          "Para despesas que se repetem mensalmente, trimestralmente ou anualmente."}
+      </p>
 
       {formMode === 'one-off' ? (
         <ExpenseForm
