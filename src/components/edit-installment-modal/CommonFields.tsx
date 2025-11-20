@@ -61,6 +61,10 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
   // Ajustado para incluir "all" na condição de layout inline para mobile
   const showValueAndDueDayInline = isMobile && (editOption === "thisMonthForward" || editOption === "all");
 
+  const dueDayLabel = isMobile && editOption === "thisMonthForward" 
+    ? "Data de vencimento Deste Mês em diante" 
+    : "Dia do Venc.";
+
   return (
     <div className="space-y-4">
       {/* Subcategoria - FIRST FIELD */}
@@ -119,7 +123,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>Dia do Venc.</Label> {/* Renamed label */}
+            <Label htmlFor="dueDay" className={cn(isMobile && "text-xs")}>{dueDayLabel}</Label> {/* Usando o rótulo condicional */}
             <Input
               id="dueDay"
               type="number"
