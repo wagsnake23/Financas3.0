@@ -406,107 +406,106 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const formContent = (
     <>
-      <div className="flex items-center justify-end mb-6"> {/* Alterado para justify-end e removido h2 */}
-        {/* REMOVIDO: Botão X */}
-      </div>
+      {/* Removido o div que continha o h2 e o botão X */}
+      {isRecurringTransaction && (
+        <div className="space-y-4 py-4">
+          <EditOptionSelector
+            editOption={editOption}
+            setEditOption={setEditOption}
+            isMobile={isMobile}
+            loading={loading}
+          />
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {isRecurringTransaction ? (
-          <div className="space-y-4 py-4">
-            <EditOptionSelector
-              editOption={editOption}
-              setEditOption={setEditOption}
-              isMobile={isMobile}
+          <div className="space-y-4 mt-4"> {/* Removido o py-4 e o EditOptionSelector daqui */}
+            <CommonFields
+              title={title}
+              setTitle={setTitle}
+              value={amount}
+              setValue={setAmount}
+              categoryId={category}
+              setCategoryId={setCategory}
+              filteredCategories={filteredCategories}
+              getCategoryDisplayName={getCategoryDisplayName}
               loading={loading}
+              isMobile={isMobile}
+              hideTitle={editOption === "thisMonth"}
+              categoryLabel="Subcategoria"
+              // NEW PROPS FOR STATUS TOGGLE
+              isPaid={isPaid}
+              setIsPaid={setIsPaid}
+              transactionType={type}
+              editOption={editOption}
             />
-
-            <div className="space-y-4 mt-4">
-              <CommonFields
-                title={title}
-                setTitle={setTitle}
-                value={amount}
-                setValue={setAmount}
-                categoryId={category}
-                setCategoryId={setCategory}
-                filteredCategories={filteredCategories}
-                getCategoryDisplayName={getCategoryDisplayName}
+            {editOption === "thisMonth" && (
+              <ThisMonthFields
+                overrideDueDate={overrideDueDate}
+                setOverrideDueDate={(date) => {
+                  if (!date) return;
+                  const fixedDate = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate()
+                  );
+                  setOverrideDueDate(fixedDate);
+                }}
+                isOverrideDueDateCalendarOpen={isOverrideDueDateCalendarOpen}
+                setIsOverrideDueDateCalendarOpen={
+                  setIsOverrideDueDateCalendarOpen
+                }
+                note={note}
+                setNote={setNote}
                 loading={loading}
                 isMobile={isMobile}
-                hideTitle={editOption === "thisMonth"}
-                categoryLabel="Subcategoria"
-                // NEW PROPS FOR STATUS TOGGLE
-                isPaid={isPaid}
-                setIsPaid={setIsPaid}
-                transactionType={type}
-                editOption={editOption}
+                currentTransactionStatus={
+                  editingTransaction?.status || "Pendente"
+                }
               />
-              {editOption === "thisMonth" && (
-                <ThisMonthFields
-                  overrideDueDate={overrideDueDate}
-                  setOverrideDueDate={(date) => {
-                    if (!date) return;
-                    const fixedDate = new Date(
-                      date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate()
-                    );
-                    setOverrideDueDate(fixedDate);
-                  }}
-                  isOverrideDueDateCalendarOpen={isOverrideDueDateCalendarOpen}
-                  setIsOverrideDueDateCalendarOpen={
-                    setIsOverrideDueDateCalendarOpen
-                  }
-                  note={note}
-                  setNote={setNote}
-                  loading={loading}
-                  isMobile={isMobile}
-                  currentTransactionStatus={
-                    editingTransaction?.status || "Pendente"
-                  }
-                />
-              )}
+            )}
 
-              {editOption !== "thisMonth" && (
-                <RecurringMasterFields
-                  dueDay={dueDay}
-                  setDueDay={setDueDay}
-                  frequency={frequency}
-                  setFrequency={setFrequency}
-                  startDate={startDate}
-                  setStartDate={(date) => {
-                    if (!date) return;
-                    const fixedDate = new Date(
-                      date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate()
-                    );
-                    setStartDate(fixedDate);
-                  }}
-                  isStartDateCalendarOpen={isStartDateCalendarOpen}
-                  setIsStartDateCalendarOpen={setIsStartDateCalendarOpen}
-                  endDate={endDate}
-                  setEndDate={(date) => {
-                    if (!date) return;
-                    const fixedDate = new Date(
-                      date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate()
-                    );
-                    setEndDate(fixedDate);
-                  }}
-                  isEndDateCalendarOpen={isEndDateCalendarOpen}
-                  setIsEndDateCalendarOpen={setIsEndDateCalendarOpen}
-                  status={recurringStatus}
-                  setStatus={setRecurringStatus}
-                  loading={loading}
-                  isMobile={isMobile}
-                  showStartDate={editOption === "all"}
-                  showPreserveExceptions={editOption === "all" || editOption === "thisMonthForward"} // Show for both "all" and "thisMonthForward"
-                  preserveExceptions={preserveExceptions}
-                  setPreserveExceptions={setPreserveExceptions}
-                />
-              )}
-            </div>
+            {editOption !== "thisMonth" && (
+              <RecurringMasterFields
+                dueDay={dueDay}
+                setDueDay={setDueDay}
+                frequency={frequency}
+                setFrequency={setFrequency}
+                startDate={startDate}
+                setStartDate={(date) => {
+                  if (!date) return;
+                  const fixedDate = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate()
+                  );
+                  setStartDate(fixedDate);
+                }}
+                isStartDateCalendarOpen={isStartDateCalendarOpen}
+                setIsStartDateCalendarOpen={setIsStartDateCalendarOpen}
+                endDate={endDate}
+                setEndDate={(date) => {
+                  if (!date) return;
+                  const fixedDate = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate()
+                  );
+                  setEndDate(fixedDate);
+                }}
+                isEndDateCalendarOpen={isEndDateCalendarOpen}
+                setIsEndDateCalendarOpen={setIsEndDateCalendarOpen}
+                status={recurringStatus}
+                setStatus={setRecurringStatus}
+                loading={loading}
+                isMobile={isMobile}
+                showStartDate={editOption === "all"}
+                showPreserveExceptions={editOption === "all" || editOption === "thisMonthForward"} // Show for both "all" and "thisMonthForward"
+                preserveExceptions={preserveExceptions}
+                setPreserveExceptions={setPreserveExceptions}
+              />
+            )}
           </div>
         ) : (
           <TransactionOneOffFields
