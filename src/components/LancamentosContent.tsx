@@ -12,10 +12,11 @@ interface LancamentosContentProps {
   onUpdateTransaction: (
     id: string,
     type: TransactionType,
-    updatedTransaction: Omit<Transaction, "id">
+    updatedTransaction: Omit<Transaction, "id">,
+    saveScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff" // Adicionado saveScope
   ) => void;
   onCancelEdit: () => void;
-  onDeleteTransaction: (id: string, type: TransactionType) => void;
+  onDeleteTransaction: (id: string, type: TransactionType, deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado
   allCategories: AppCategory[];
   isMobile: boolean;
   monthlyFilteredTransactions: Transaction[];

@@ -28,7 +28,7 @@ interface Cartao {
 
 interface TransactionListProps {
   transactions: Transaction[];
-  onDeleteTransaction: (id: string, type: "income" | "expense") => void;
+  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];

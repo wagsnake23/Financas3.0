@@ -165,7 +165,8 @@ export type Database = {
           descricao: string | null
           forma_pagamento: string
           id: string
-          numero_parcelas: number // Adicionado
+          is_recurring_master: boolean // NOVA COLUNA
+          numero_parcelas: number
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -177,7 +178,8 @@ export type Database = {
           descricao?: string | null
           forma_pagamento: string
           id?: string
-          numero_parcelas?: number // Adicionado
+          is_recurring_master?: boolean // NOVA COLUNA
+          numero_parcelas?: number
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -189,7 +191,8 @@ export type Database = {
           descricao?: string | null
           forma_pagamento?: string
           id?: string
-          numero_parcelas?: number // Adicionado
+          is_recurring_master?: boolean // NOVA COLUNA
+          numero_parcelas?: number
           tipo_pagamento?: string
           user_id?: string
           valor_total?: number
@@ -339,6 +342,9 @@ export type Database = {
           data: string
           descricao: string | null
           id: string
+          is_recurring_master: boolean // NOVA COLUNA
+          recurrence_id: string | null // NOVA COLUNA
+          recurrence_day: number | null // NOVA COLUNA
           status: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id: string | null
           user_id: string
@@ -349,6 +355,9 @@ export type Database = {
           data: string
           descricao?: string | null
           id?: string
+          is_recurring_master?: boolean // NOVA COLUNA
+          recurrence_id?: string | null // NOVA COLUNA
+          recurrence_day?: number | null // NOVA COLUNA
           status?: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id?: string | null
           user_id: string
@@ -359,12 +368,22 @@ export type Database = {
           data?: string
           descricao?: string | null
           id?: string
+          is_recurring_master?: boolean // NOVA COLUNA
+          recurrence_id?: string | null // NOVA COLUNA
+          recurrence_day?: number | null // NOVA COLUNA
           status?: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id?: string | null
           user_id?: string
           valor?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_receitas_recurrence_id"
+            columns: ["recurrence_id"]
+            isOneToOne: false
+            referencedRelation: "receitas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "receitas_tipo_receita_id_fkey"
             columns: ["tipo_receita_id"]

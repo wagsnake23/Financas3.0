@@ -16,6 +16,9 @@ import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
+import { Label } from "@/components/ui/label"; // Importar Label
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 
 interface Cartao {
   id: string;
@@ -34,6 +37,7 @@ export default function Despesas() {
   const isMobile = useIsMobile();
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
+  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
 
   const {
     allSubcategories,
@@ -89,9 +93,24 @@ export default function Despesas() {
   const formContent = (
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
-      {/* Removido: <p className="text-xs text-muted-foreground text-center mb-4">
-        Para despesas únicas ou parceladas com número fixo de parcelas.
-      </p> */}
+      
+      {/* Toggle Avulsa / Recorrente */}
+      <div className="space-y-2 mb-4">
+        <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
+        <ToggleGroup 
+          type="single" 
+          value={isRecurring ? "recorrente" : "avulsa"} 
+          onValueChange={(value) => setIsRecurring(value === "recorrente")}
+          className="w-full justify-center"
+        >
+          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
+            <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+          </ToggleGroupItem>
+          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
+            <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
 
       <ExpenseForm
         user={user}
@@ -100,6 +119,7 @@ export default function Despesas() {
         allSubcategories={allSubcategories}
         queryClient={queryClient}
         isMobile={isMobile}
+        isRecurring={isRecurring} // Passar o estado isRecurring
       />
     </>
   );

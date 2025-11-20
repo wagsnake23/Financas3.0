@@ -36,7 +36,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("receitas")
-        .select("*, status")
+        .select("*, status, is_recurring_master, recurrence_id, recurrence_day") // Incluir novas colunas
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
@@ -46,14 +46,14 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id'> | null })[]
+    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] // Incluir is_recurring_master
   >({
     queryKey: ["expenseInstallments", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("despesas_parcelas")
-        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id)")
+        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master)") // Incluir is_recurring_master
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
@@ -111,6 +111,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         status: r.status,
         forma_pagamento: null,
         cartao_id: null,
+        is_recurring_master: r.is_recurring_master, // Incluir
+        recurrence_id: r.recurrence_id, // Incluir
+        recurrence_day: r.recurrence_day, // Incluir
       }));
 
     // 2. Filter one-off expense installments for the selected month
@@ -133,6 +136,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           forma_pagamento: parentDespesa?.forma_pagamento,
           cartao_id: parentDespesa?.cartao_id,
           despesa_id: parentDespesa?.id,
+          is_recurring_master: parentDespesa?.is_recurring_master, // Incluir
+          recurrence_id: parentDespesa?.id, // Para despesas, o recurrence_id é o id da despesa mestra
+          recurrence_day: null, // Não aplicável diretamente aqui, mas pode ser derivado de vencimento
         };
         console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id });
         return transaction;

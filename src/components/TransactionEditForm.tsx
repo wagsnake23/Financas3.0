@@ -82,9 +82,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
 
   const isRecurringTransaction = useMemo(() => {
-    return editingTransaction?.type === "expense" && 
+    return (editingTransaction?.type === "expense" && 
            !!editingTransaction.despesa_id && 
-           (editingTransaction.totalInstallments || 0) > 1;
+           (editingTransaction.totalInstallments || 0) > 1) ||
+           (editingTransaction?.type === "income" && 
+           (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id));
   }, [editingTransaction]);
 
   const filteredCategories = useMemo(() => {
@@ -208,6 +210,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       forma_pagamento: editingTransaction.forma_pagamento,
       cartao_id: editingTransaction.cartao_id,
       despesa_id: editingTransaction.despesa_id,
+      // Include recurrence fields
+      is_recurring_master: editingTransaction.is_recurring_master,
+      recurrence_id: editingTransaction.recurrence_id,
+      recurrence_day: editingTransaction.recurrence_day,
     };
 
     onUpdateTransaction(
@@ -307,16 +313,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada */}
+      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
       <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-              Excluir Despesa Parcelada
+              Excluir Lançamento Recorrente
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Esta despesa faz parte de um lançamento parcelado. Como você gostaria de excluí-la?
+              Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -354,16 +360,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada */}
+      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente */}
       <AlertDialog open={showSaveOptionsDialog} onOpenChange={setShowSaveOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Pencil" className="h-6 w-6 text-primary" />
-              Atualizar Despesa Parcelada
+              Atualizar Lançamento Recorrente
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Esta despesa faz parte de um lançamento parcelado. Como você gostaria de aplicar as alterações?
+              Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">

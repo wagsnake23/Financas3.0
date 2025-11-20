@@ -95,13 +95,24 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
     try {
       if (transaction.type === "income") {
-        const { error } = await supabase
-          .from("receitas")
-          .update({ status: newStatus })
-          .eq("id", transaction.id)
-          .eq("user_id", user.id);
+        // For recurring income, only update the status of this specific occurrence
+        if (transaction.recurrence_id && !transaction.is_recurring_master) {
+          const { error } = await supabase
+            .from("receitas")
+            .update({ status: newStatus })
+            .eq("id", transaction.id)
+            .eq("user_id", user.id);
 
-        if (error) throw error;
+          if (error) throw error;
+        } else { // One-off income or master recurring income (shouldn't be toggled directly)
+          const { error } = await supabase
+            .from("receitas")
+            .update({ status: newStatus })
+            .eq("id", transaction.id)
+            .eq("user_id", user.id);
+
+          if (error) throw error;
+        }
         queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       } else { // expense
         const pago = newStatus === "Recebida";

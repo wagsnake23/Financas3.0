@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 interface TransactionViewProps {
   transactions: Transaction[];
-  onDeleteTransaction: (id: string, type: TransactionType) => void;
+  onDeleteTransaction: (id: string, type: TransactionType, deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];

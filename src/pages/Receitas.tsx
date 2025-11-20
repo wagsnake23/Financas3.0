@@ -17,7 +17,7 @@ import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
-import { format } from "date-fns";
+import { format, getDate } from "date-fns"; // Importar getDate
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,9 +32,11 @@ import { CurrencyInput } from "@/components/ui/currency-input";
 
 import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
+const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
 
 export default function Receitas() {
   const { user, loading: authLoading } = useAuth();
@@ -48,6 +50,7 @@ export default function Receitas() {
   const [status, setStatus] = useState<ReceitaStatus>('Pendente');
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
@@ -55,7 +58,7 @@ export default function Receitas() {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("receitas")
-        .select("*, status")
+        .select("*, status, is_recurring_master, recurrence_id, recurrence_day") // Incluir novas colunas
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
@@ -101,37 +104,112 @@ export default function Receitas() {
       ? `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}-${data.getDate().toString().padStart(2, '0')}` 
       : "";
 
-    const newRevenueData = {
-      user_id: user?.id,
-      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
-      valor: valor as number,
-      data: formattedDate,
-      descricao,
-      status,
-    };
+    let masterRevenueId: string | null = null;
 
-    const { error } = await supabase.from("receitas").insert(newRevenueData);
+    try {
+      if (isRecurring) {
+        // 1. Create the master recurring revenue entry
+        const recurrenceDay = getDate(data); // Get day of month from selected date
+        const { data: masterData, error: masterError } = await supabase
+          .from("receitas")
+          .insert({
+            user_id: user?.id,
+            tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
+            valor: valor as number,
+            data: formattedDate,
+            descricao,
+            status: 'Prevista', // Master is always 'Prevista'
+            is_recurring_master: true,
+            recurrence_day: recurrenceDay,
+          })
+          .select()
+          .single();
 
-    if (error) {
-      toast.error("Erro ao adicionar receita", { description: error.message });
-      console.error("Supabase error adding revenue:", error);
-    } else {
+        if (masterError) throw masterError;
+        masterRevenueId = masterData.id;
+
+        // Update the master record itself to point its recurrence_id to its own id
+        const { error: updateMasterError } = await supabase
+          .from("receitas")
+          .update({ recurrence_id: masterRevenueId })
+          .eq("id", masterRevenueId);
+        
+        if (updateMasterError) throw updateMasterError;
+
+        // 2. Call RPC to generate future occurrences in background
+        const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
+          p_user_id: user?.id,
+          p_transaction_type: 'income',
+          p_master_id: masterRevenueId,
+          p_first_occurrence_date: formattedDate,
+          p_monthly_amount: valor as number,
+          p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
+          p_description: descricao,
+          p_status: 'Prevista',
+          p_recurrence_day: recurrenceDay,
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+        });
+
+        if (rpcError) throw rpcError;
+
+      } else {
+        // Create a one-off revenue entry (as before)
+        const newRevenueData = {
+          user_id: user?.id,
+          tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
+          valor: valor as number,
+          data: formattedDate,
+          descricao,
+          status,
+          is_recurring_master: false, // Explicitly not recurring
+          recurrence_id: null,
+          recurrence_day: null,
+        };
+
+        const { error } = await supabase.from("receitas").insert(newRevenueData);
+        if (error) throw error;
+      }
+
       toast.success("Receita adicionada com sucesso!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
+      // Reset form
       setTipoReceitaId(UNSELECTED_VALUE);
       setValor(undefined);
       setData(new Date());
       setDescricao("");
       setStatus('Pendente');
+      setIsRecurring(false); // Reset toggle
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-    }
 
-    setLoading(false);
+    } catch (error: any) {
+      toast.error("Erro ao adicionar receita", { description: error.message });
+      console.error("Supabase error adding revenue:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
+      {/* Toggle Avulsa / Recorrente */}
+      <div className="space-y-2">
+        <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
+        <ToggleGroup 
+          type="single" 
+          value={isRecurring ? "recorrente" : "avulsa"} 
+          onValueChange={(value) => setIsRecurring(value === "recorrente")}
+          className="w-full justify-center"
+        >
+          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
+            <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+          </ToggleGroupItem>
+          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
+            <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+
       <div>
         <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
         <div className="flex gap-2">
@@ -216,11 +294,13 @@ export default function Receitas() {
         />
       </div>
 
-      <RevenueStatusToggle
-        status={status}
-        setStatus={setStatus}
-        isMobile={isMobile}
-      />
+      {!isRecurring && ( // Status toggle only for one-off revenues
+        <RevenueStatusToggle
+          status={status}
+          setStatus={setStatus}
+          isMobile={isMobile}
+        />
+      )}
 
       <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         {loading ? "Salvando..." : "Salvar Receita"}

@@ -89,11 +89,49 @@ export const useLancamentosLogic = (
       }
 
       if (transaction.type === "income") {
-        const fullRevenue = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id])?.find((r) => r.id === transaction.id);
-        setFullEditingRevenue(fullRevenue || null);
+        // For recurring income, we need to fetch the master if this is an occurrence
+        const masterId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
+        if (masterId) {
+          const { data: masterRevenue, error } = await supabase
+            .from("receitas")
+            .select("*, status, is_recurring_master, recurrence_id, recurrence_day")
+            .eq("id", masterId)
+            .eq("user_id", user.id)
+            .single();
+          if (error) {
+            console.error("Error fetching master revenue for editing:", error);
+            toast.error("Erro ao carregar receita recorrente.");
+            setLoadingEditData(false);
+            return;
+          }
+          setFullEditingRevenue(masterRevenue || null);
+        } else {
+          // For one-off income, just use the transaction data
+          const fullRevenue = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id])?.find((r) => r.id === transaction.id);
+          setFullEditingRevenue(fullRevenue || null);
+        }
         setFullEditingExpense(null);
-      } else {
-        setFullEditingExpense(null); // No full expense data needed for one-off
+      } else { // Expense
+        // For expenses, the 'despesas' record is the master, and 'despesas_parcelas' are occurrences.
+        // We need to fetch the 'despesas' master record for editing.
+        const despesaId = transaction.despesa_id;
+        if (despesaId) {
+          const { data: masterExpense, error } = await supabase
+            .from("despesas")
+            .select("*, is_recurring_master") // Include is_recurring_master
+            .eq("id", despesaId)
+            .eq("user_id", user.id)
+            .single();
+          if (error) {
+            console.error("Error fetching master expense for editing:", error);
+            toast.error("Erro ao carregar despesa recorrente.");
+            setLoadingEditData(false);
+            return;
+          }
+          setFullEditingExpense(masterExpense || null);
+        } else {
+          setFullEditingExpense(null); // Should not happen for valid expense installments
+        }
         setFullEditingRevenue(null);
       }
       setLoadingEditData(false);

@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
-import { format, addMonths } from "date-fns";
+import { format, addMonths, getDate } from "date-fns"; // Importar getDate
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -41,9 +41,11 @@ interface ExpenseFormProps {
   allSubcategories: AppCategory[];
   queryClient: ReturnType<typeof useQueryClient>;
   isMobile: boolean;
+  isRecurring: boolean; // NOVA PROP
 }
 
 const UNSELECTED_VALUE = "unselected";
+const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   user,
@@ -52,6 +54,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   allSubcategories,
   queryClient,
   isMobile,
+  isRecurring, // NOVA PROP
 }) => {
   // Form states
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>(UNSELECTED_VALUE);
@@ -99,6 +102,18 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [tipoPagamento]);
 
+  // Efeito para ajustar tipoPagamento e numeroParcelas se for recorrente
+  useEffect(() => {
+    if (isRecurring) {
+      setTipoPagamento("parcelado");
+      setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
+      setIsPaid(false); // Recorrente é sempre pendente inicialmente
+    } else {
+      setTipoPagamento("avista"); // Volta para avista se não for recorrente
+      setNumeroParcelas(1); // Volta para 1 parcela
+    }
+  }, [isRecurring]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -143,75 +158,110 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     const valorTotal = valor as number;
     const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+    const recurrenceDay = getDate(dataVencimento as Date); // Get day of month from selected date
 
-    // Insert despesa principal
-    const { data: despesaData, error: despesaError } = await supabase
-      .from("despesas")
-      .insert({
-        user_id: user.id,
-        categoria_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
-        forma_pagamento: formaPagamento,
-        tipo_pagamento: tipoPagamento,
-        cartao_id: formaPagamento === "cartao" ? cartaoId : null,
-        valor_total: valorTotal,
-        descricao,
-        numero_parcelas: tipoPagamento === "parcelado" ? numeroParcelas : 1, // Salvar o número de parcelas
-      })
-      .select()
-      .single();
+    try {
+      // Insert despesa principal
+      const { data: despesaData, error: despesaError } = await supabase
+        .from("despesas")
+        .insert({
+          user_id: user.id,
+          categoria_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
+          forma_pagamento: formaPagamento,
+          tipo_pagamento: tipoPagamento,
+          cartao_id: formaPagamento === "cartao" ? cartaoId : null,
+          valor_total: isRecurring ? valorTotal * RECURRING_INSTALLMENTS_COUNT : valorTotal, // Total value for recurring
+          descricao,
+          numero_parcelas: isRecurring ? RECURRING_INSTALLMENTS_COUNT : numeroParcelas, // Set 120 for recurring
+          is_recurring_master: isRecurring, // Mark as recurring master
+        })
+        .select()
+        .single();
 
-    if (despesaError) {
-      toast.error("Erro ao adicionar despesa", { description: despesaError.message });
-      console.error("Supabase error adding expense:", despesaError);
-      setLoading(false);
-      return;
-    }
+      if (despesaError) throw despesaError;
 
-    // Generate parcelas
-    const installmentsToInsert = [];
-    const valorParcela = tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal;
+      // Generate parcelas
+      const installmentsToInsert = [];
+      const valorParcela = isRecurring ? valorTotal : (tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal);
 
-    for (let i = 0; i < numeroParcelas; i++) {
-      const installmentDate = addMonths(dataVencimento as Date, i);
-      const formattedInstallmentDate = `${installmentDate.getFullYear()}-${(installmentDate.getMonth() + 1).toString().padStart(2, '0')}-${installmentDate.getDate().toString().padStart(2, '0')}`;
-      
+      // Always insert the first installment
+      const firstInstallmentDate = dataVencimento as Date;
+      const formattedFirstInstallmentDate = `${firstInstallmentDate.getFullYear()}-${(firstInstallmentDate.getMonth() + 1).toString().padStart(2, '0')}-${firstInstallmentDate.getDate().toString().padStart(2, '0')}`;
+
       installmentsToInsert.push({
         despesa_id: despesaData.id,
-        numero_parcela: i + 1,
+        numero_parcela: 1,
         valor_parcela: valorParcela,
-        vencimento: formattedInstallmentDate,
-        pago: tipoPagamento === "avista" ? isPaid : false, // Apenas à vista pode ser pago no momento da criação
-        data_pagamento: tipoPagamento === "avista" && isPaid ? currentTimestamp : null,
+        vencimento: formattedFirstInstallmentDate,
+        pago: !isRecurring && tipoPagamento === "avista" ? isPaid : false, // Only avista and not recurring can be paid initially
+        data_pagamento: !isRecurring && tipoPagamento === "avista" && isPaid ? currentTimestamp : null,
       });
+
+      // If recurring, call RPC to generate remaining 119 occurrences
+      if (isRecurring) {
+        const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
+          p_user_id: user.id,
+          p_transaction_type: 'expense',
+          p_master_id: despesaData.id,
+          p_first_occurrence_date: formattedFirstInstallmentDate,
+          p_monthly_amount: valorParcela, // Monthly amount for expense installments
+          p_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
+          p_description: descricao,
+          p_forma_pagamento: formaPagamento,
+          p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
+          p_tipo_pagamento: tipoPagamento,
+          p_recurrence_day: recurrenceDay,
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+        });
+
+        if (rpcError) throw rpcError;
+
+      } else {
+        // If not recurring, generate remaining installments if tipoPagamento is "parcelado"
+        for (let i = 1; i < numeroParcelas; i++) {
+          const installmentDate = addMonths(dataVencimento as Date, i);
+          const formattedInstallmentDate = `${installmentDate.getFullYear()}-${(installmentDate.getMonth() + 1).toString().padStart(2, '0')}-${installmentDate.getDate().toString().padStart(2, '0')}`;
+          
+          installmentsToInsert.push({
+            despesa_id: despesaData.id,
+            numero_parcela: i + 1,
+            valor_parcela: valorParcela,
+            vencimento: formattedInstallmentDate,
+            pago: false,
+            data_pagamento: null,
+          });
+        }
+        const { error: parcelaError } = await supabase
+          .from("despesas_parcelas")
+          .insert(installmentsToInsert);
+
+        if (parcelaError) throw parcelaError;
+      }
+
+      toast.success("Despesa adicionada com sucesso!", {
+        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+      });
+      
+      // Reset form
+      setSelectedSubcategoryId(UNSELECTED_VALUE);
+      setFormaPagamento("dinheiro");
+      setTipoPagamento("avista");
+      setCartaoId(UNSELECTED_VALUE);
+      setValor(undefined);
+      setDescricao("");
+      setDataVencimento(new Date());
+      setNumeroParcelas(1);
+      setIsPaid(false);
+      setValidationErrors({});
+      queryClient.invalidateQueries({ queryKey: ["expenses", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+
+    } catch (error: any) {
+      toast.error("Erro ao adicionar despesa", { description: error.message });
+      console.error("Supabase error adding expense:", error);
+    } finally {
+      setLoading(false);
     }
-
-    const { error: parcelaError } = await supabase
-      .from("despesas_parcelas")
-      .insert(installmentsToInsert);
-
-    if (parcelaError) {
-      toast.error("Erro ao criar parcela(s)", { description: parcelaError.message });
-      console.error("Supabase error creating installment(s):", parcelaError);
-    }
-
-    toast.success("Despesa adicionada com sucesso!", {
-      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
-    });
-    
-    // Reset form
-    setSelectedSubcategoryId(UNSELECTED_VALUE);
-    setFormaPagamento("dinheiro");
-    setTipoPagamento("avista");
-    setCartaoId(UNSELECTED_VALUE);
-    setValor(undefined);
-    setDescricao("");
-    setDataVencimento(new Date());
-    setNumeroParcelas(1);
-    setIsPaid(false);
-    setLoading(false);
-    setValidationErrors({});
-    queryClient.invalidateQueries({ queryKey: ["expenses", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
   };
 
   return (
@@ -301,7 +351,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         />
       </div>
 
-      {tipoPagamento === "avista" && ( // Ocultar o toggle para parcelado, pois é sempre pendente
+      {!isRecurring && tipoPagamento === "avista" && ( // Ocultar o toggle para parcelado e recorrente, pois é sempre pendente
         <TransactionStatusToggle
           isPaid={isPaid}
           setIsPaid={setIsPaid}
