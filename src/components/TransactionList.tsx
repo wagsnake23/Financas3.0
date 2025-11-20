@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useNavigate } from "react-router-dom";
+import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary"; // NOVO: Importar CreditCardInvoiceSummary
 
 interface Cartao {
   id: string;
@@ -125,6 +126,23 @@ export const TransactionList = ({
       return sum + (transaction.type === "income" ? transaction.amount : -transaction.amount);
     }, 0);
   }, [filteredTransactions]);
+
+  // NOVO: Calcular totais para o resumo da fatura do cartão
+  const { totalPaidCard, totalPendingCard, totalCardExpenses } = useMemo(() => {
+    let paid = 0;
+    let pending = 0;
+    filteredTransactions
+      .filter(t => t.type === "expense") // Apenas despesas
+      .forEach(transaction => {
+        if (transaction.status === "Recebida") { // "Recebida" para despesas significa "paga"
+          paid += transaction.amount;
+        } else {
+          pending += transaction.amount;
+        }
+      });
+    return { totalPaidCard: paid, totalPendingCard: pending, totalCardExpenses: paid + pending };
+  }, [filteredTransactions]);
+
 
   const getCategoryDisplayName = (categoryId: string) => {
     const category = allCategories.find(cat => cat.id === categoryId);
@@ -335,6 +353,18 @@ export const TransactionList = ({
               <p className={cn("font-semibold", isMobile && "text-xs")}>{cardDetails.formattedDueDate || 'N/A'}</p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* NOVO: Resumo da Fatura do Cartão */}
+      {isValidUuid(filterPaymentOptionId) && (
+        <div className="mt-4"> {/* Adicionado margem superior */}
+          <CreditCardInvoiceSummary
+            totalPaid={totalPaidCard}
+            totalPending={totalPendingCard}
+            totalCardExpenses={totalCardExpenses}
+            isMobile={!!isMobile}
+          />
         </div>
       )}
 
