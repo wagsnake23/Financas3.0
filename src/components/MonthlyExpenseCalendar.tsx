@@ -10,14 +10,14 @@ import { cn } from "@/lib/utils";
 interface MonthlyExpenseCalendarProps {
   transactions: Transaction[];
   isMobile?: boolean;
-  currentMonth?: Date; // Agora é opcional
-  hideNavigation?: boolean; // Nova prop para esconder a navegação interna
+  currentMonth?: Date;
+  hideNavigation?: boolean;
 }
 
 export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({ 
   transactions, 
   isMobile, 
-  currentMonth: propCurrentMonth, // Renomeado para evitar conflito
+  currentMonth: propCurrentMonth,
   hideNavigation = false,
 }) => {
   const [internalCurrentMonth, setInternalCurrentMonth] = useState(new Date());
@@ -29,7 +29,6 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
 
     return transactions
       .filter(t => t.type === "expense")
-      .filter(t => !t.is_fixed || t.isRecurring) // Filter out legacy fixed transactions
       .filter(t => {
         const transactionDate = new Date(t.date);
         return isWithinInterval(transactionDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
@@ -47,7 +46,7 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
 
   const content = (
     <div className={cn("p-6 animate-fade-in", isMobile && "p-0")}>
-      {!isMobile && ( // Renderiza o título apenas se NÃO for mobile
+      {!isMobile && (
         <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-sm mb-2")}>Despesas por Mês</h2>
       )}
       {!hideNavigation && (

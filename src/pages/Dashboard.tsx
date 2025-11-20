@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { MonthlyBarChart } from "@/components/MonthlyBarChart";
 import { ExpensesPieChart } from "@/components/ExpensesPieChart";
-import { MonthlyExpensesCombinedMobile } from "@/components/MonthlyExpensesCombinedMobile";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,11 +21,9 @@ import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
 import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn } from "@/lib/utils";
-import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
-import { NewExpenseSelectionDialog } from "@/components/NewExpenseSelectionDialog";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
-import { MonthBadge } from "@/components/MonthBadge"; // NEW IMPORT
+import { MonthBadge } from "@/components/MonthBadge";
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -57,25 +54,25 @@ const Dashboard = () => {
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data.filter(r => !r.is_fixed);
+      return data;
     },
     enabled: !!user && !authLoading,
   });
 
   // Fetch expense installments and join with expenses to get category_id
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[]
+    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]
   >({
     queryKey: ["expenseInstallments", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("despesas_parcelas")
-        .select("*, despesas(categoria_id, user_id, is_fixed)")
+        .select("*, despesas(categoria_id, user_id)")
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
-      return data.filter(p => !p.despesas?.is_fixed);
+      return data;
     },
     enabled: !!user && !authLoading,
   });
@@ -138,15 +135,15 @@ const Dashboard = () => {
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null}
               >
-                <div className={cn("flex justify-between items-end w-full")}> {/* Ajustado para flex justify-between items-end */}
-                  <div className="flex flex-col items-start"> {/* Container para "Pago este mês" e valor */}
+                <div className={cn("flex justify-between items-end w-full")}>
+                  <div className="flex flex-col items-start">
                     <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                    <p className="font-semibold text-base text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p> {/* Alterado de text-sm para text-base */}
+                    <p className="font-semibold text-base text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p>
                   </div>
                   <Button
                     variant="destructive"
                     className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} 
-                    onClick={() => navigate("/despesas?mode=one-off")}
+                    onClick={() => navigate("/despesas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
                     Nova Despesa
@@ -164,11 +161,11 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null}
               >
-                <div className={cn("flex justify-between items-end w-full")}> {/* Alterado para justify-between */}
-                  <div className="flex flex-col items-start"> {/* NOVO: Container para o Saldo Atual */}
+                <div className={cn("flex justify-between items-end w-full")}>
+                  <div className="flex flex-col items-start">
                     <p className="text-xs text-muted-foreground">Saldo Atual:</p>
                     <p className={cn(
-                      "font-semibold text-base text-primary" // Alterado de text-sm para text-base
+                      "font-semibold text-base text-primary"
                     )}>
                       {showBalanceValue ? `R$ ${stats.balance.toFixed(2)}` : "R$ *****"}
                     </p>
@@ -184,7 +181,6 @@ const Dashboard = () => {
                 </div>
               </StatCard>
 
-              {/* NEW: Mobile Credit Card Expenses Dashboard */}
               <MobileCreditCardExpenses
                 cartoes={cartoes}
                 expenseInstallments={expenseInstallments}
@@ -236,7 +232,14 @@ const Dashboard = () => {
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 >
                   <div className="flex justify-end mt-4">
-                    <NewExpenseSelectionDialog isMobile={isMobile} />
+                    <Button
+                      variant="destructive"
+                      className={cn("h-8 px-3 text-xs rounded-xl w-auto px-4")}
+                      onClick={() => navigate("/despesas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Despesa
+                    </Button>
                   </div>
                 </StatCard>
               </div>

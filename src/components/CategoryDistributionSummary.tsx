@@ -4,7 +4,7 @@ import { AppCategory } from "@/types/finance";
 
 interface CategoryDistributionSummaryProps {
   expenses: Tables<'despesas'>[];
-  categories: AppCategory[]; // Agora contém apenas subcategorias
+  categories: AppCategory[];
 }
 
 interface CategoryUsage {
@@ -15,13 +15,12 @@ interface CategoryUsage {
 }
 
 export const CategoryDistributionSummary = ({ expenses, categories }: CategoryDistributionSummaryProps) => {
-  const allSubcategories: AppCategory[] = categories; // Renomeado para clareza
+  const allSubcategories: AppCategory[] = categories;
 
   const categoryUsage: Record<string, CategoryUsage> = {};
   let totalExpenses = 0;
 
   expenses
-    .filter(d => !d.is_fixed) // Filter out legacy fixed expenses
     .forEach(expense => {
       const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryId = expense.categoria_id || "outros_diversos";
@@ -43,7 +42,7 @@ export const CategoryDistributionSummary = ({ expenses, categories }: CategoryDi
 
   const topCategories = Object.values(categoryUsage)
     .sort((a, b) => b.totalAmount - a.totalAmount)
-    .slice(0, 1); // Get only the leader
+    .slice(0, 1);
 
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
@@ -55,15 +54,15 @@ export const CategoryDistributionSummary = ({ expenses, categories }: CategoryDi
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-4 border border-border rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Total de Subcategorias</p> {/* Texto atualizado */}
+            <p className="text-sm text-muted-foreground mb-1">Total de Subcategorias</p>
             <p className="text-2xl font-bold">{Object.keys(categoryUsage).length}</p>
           </div>
           <div className="p-4 border border-border rounded-lg">
             <p className="text-sm text-muted-foreground mb-1">Total de Transações</p>
-            <p className="text-2xl font-bold">{expenses.filter(d => !d.is_fixed).length}</p>
+            <p className="text-2xl font-bold">{expenses.length}</p>
           </div>
           <div className="p-4 border border-border rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Média por Subcategoria</p> {/* Texto atualizado */}
+            <p className="text-sm text-muted-foreground mb-1">Média por Subcategoria</p>
             <p className="text-2xl font-bold">
               R$ {Object.keys(categoryUsage).length > 0 
                 ? (totalExpenses / Object.keys(categoryUsage).length).toFixed(2)
@@ -71,7 +70,7 @@ export const CategoryDistributionSummary = ({ expenses, categories }: CategoryDi
             </p>
           </div>
           <div className="p-4 border border-border rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Subcategoria Líder</p> {/* Texto atualizado */}
+            <p className="text-sm text-muted-foreground mb-1">Subcategoria Líder</p>
             <div className="flex items-center gap-2">
               {topCategories[0] && (
                 <>

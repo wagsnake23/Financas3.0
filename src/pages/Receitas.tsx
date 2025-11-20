@@ -28,14 +28,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
 import { CurrencyInput } from "@/components/ui/currency-input";
 
-import { Database, Enums } from "@/integrations/supabase/types";
+import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
-type FormMode = 'one-off' | 'recurring';
 
 const UNSELECTED_VALUE = "unselected";
 
@@ -43,8 +40,6 @@ export default function Receitas() {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
-
-  const [formMode, setFormMode] = useState<FormMode>('one-off');
 
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
@@ -60,11 +55,11 @@ export default function Receitas() {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("receitas")
-        .select("*, is_fixed, recurrence_frequency, recurrence_installments_count, status")
+        .select("*, status")
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data.filter(r => !r.is_fixed);
+      return data;
     },
     enabled: !!user && !authLoading,
   });
@@ -108,14 +103,11 @@ export default function Receitas() {
 
     const newRevenueData = {
       user_id: user?.id,
-      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId, // Convert UNSELECTED_VALUE to null
+      tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
       valor: valor as number,
       data: formattedDate,
       descricao,
       status,
-      is_fixed: false,
-      recurrence_frequency: null,
-      recurrence_installments_count: null,
     };
 
     const { error } = await supabase.from("receitas").insert(newRevenueData);
@@ -138,16 +130,10 @@ export default function Receitas() {
     setLoading(false);
   };
 
-  const handleRecurringFormSuccess = () => {
-    setFormMode('one-off');
-    queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] });
-  };
-
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
       <div>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label> {/* Label atualizada */}
+        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
         <div className="flex gap-2">
           <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
@@ -268,103 +254,13 @@ export default function Receitas() {
             {isMobile ? (
               <div className="px-4 pt-0">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <RadioGroup
-                  value={formMode}
-                  onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="one-off" id="one-off-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
-                    <Label
-                      htmlFor="one-off-revenue"
-                      className={cn(
-                        "text-sm font-normal text-muted-foreground",
-                        isMobile && "text-xs",
-                        "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Avulsa
-                        "flex items-center" // Adicionado para alinhar ícone e texto
-                      )}
-                    >
-                      <span>Avulsa</span>
-                      <DynamicIcon name="💰" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} />
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="recurring" id="recurring-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
-                    <Label
-                      htmlFor="recurring-revenue"
-                      className={cn(
-                        "text-sm font-normal text-muted-foreground",
-                        isMobile && "text-xs",
-                        "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Recorrente
-                        "flex items-center" // Adicionado para alinhar ícone e texto
-                      )}
-                    >
-                      <span>Recorrente</span>
-                      <DynamicIcon name="📆" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} />
-                    </Label>
-                  </div>
-                </RadioGroup>
-                {formMode === 'one-off' ? (
-                  oneOffFormContent
-                ) : (
-                  <RecurringEntryFormContent
-                    isMobile={isMobile}
-                    onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
-                    isLoadingCategories={isLoadingCategories}
-                    initialType="receita"
-                  />
-                )}
+                {oneOffFormContent}
                 <Footer isMobile={isMobile} />
               </div>
             ) : (
               <Card className="p-6 rounded-xl shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                <RadioGroup
-                  value={formMode}
-                  onValueChange={(value: FormMode) => setFormMode(value)}
-                  className="flex items-center justify-center gap-8 mb-4" // Aumentado o gap para mais espaço
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="one-off" id="one-off-revenue-desktop" className="peer" />
-                    <Label
-                      htmlFor="one-off-revenue-desktop"
-                      className={cn(
-                        "text-sm font-normal text-muted-foreground",
-                        "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Avulsa
-                        "flex items-center" // Adicionado para alinhar ícone e texto
-                      )}
-                    >
-                      <span>Receita Avulsa</span>
-                      <DynamicIcon name="💰" className="ml-1 h-5 w-5" />
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="recurring" id="recurring-revenue-desktop" className="peer" />
-                    <Label
-                      htmlFor="recurring-revenue-desktop"
-                      className={cn(
-                        "text-sm font-normal text-muted-foreground",
-                        "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Recorrente
-                        "flex items-center" // Adicionado para alinhar ícone e texto
-                      )}
-                    >
-                      <span>Receita Recorrente</span>
-                      <DynamicIcon name="📆" className="ml-1 h-5 w-5 bg-transparent" />
-                    </Label>
-                  </div>
-                </RadioGroup>
-                {formMode === 'one-off' ? (
-                  oneOffFormContent
-                ) : (
-                  <RecurringEntryFormContent
-                    isMobile={isMobile}
-                    onSuccess={handleRecurringFormSuccess}
-                    fetchedCategories={incomeSubcategories} // Alterado para incomeSubcategories
-                    isLoadingCategories={isLoadingCategories}
-                    initialType="receita"
-                  />
-                )}
+                {oneOffFormContent}
               </Card>
             )}
 

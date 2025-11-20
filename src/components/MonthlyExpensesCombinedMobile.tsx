@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
-import { MobileExpenseSummaryRow } from "./MobileExpenseSummaryRow"; // Nova importação
+import { MobileExpenseSummaryRow } from "./MobileExpenseSummaryRow";
 import { Transaction } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 interface MonthlyExpensesCombinedMobileProps {
   transactions: Transaction[];
-  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[];
+  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
   isMobile: boolean;
 }
 
@@ -34,9 +34,6 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
     let pending = 0;
 
     expenseInstallments.forEach(installment => {
-      // Filter out legacy fixed expenses
-      if (installment.despesas?.is_fixed) return;
-
       const installmentDate = new Date(installment.vencimento);
       if (isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
         if (installment.pago) {
@@ -72,9 +69,8 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
   };
 
   return (
-    <Card className={cn("p-4 animate-fade-in space-y-4 bg-soft-yellow/20 border border-soft-yellow rounded-xl shadow-sm", isMobile && "p-3 space-y-3")}> {/* Adicionado rounded-xl e ajustado padding/spacing */}
-      {/* Shared Month Navigation */}
-      <div className={cn("flex items-center justify-between mb-2", isMobile && "mb-1")}> {/* Ajustado mb */}
+    <Card className={cn("p-4 animate-fade-in space-y-4 bg-soft-yellow/20 border border-soft-yellow rounded-xl shadow-sm", isMobile && "p-3 space-y-3")}>
+      <div className={cn("flex items-center justify-between mb-2", isMobile && "mb-1")}>
         <Button variant="outline" size="icon" onClick={handlePreviousMonth} className={cn(isMobile && "h-6 w-6")}>
           <DynamicIcon name="ChevronLeft" className={cn("h-4 w-4", isMobile && "h-2.5 w-2.5")} />
         </Button>
@@ -86,7 +82,6 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
         </Button>
       </div>
 
-      {/* Combined Mobile Expense Summary Row */}
       <MobileExpenseSummaryRow
         totalPaid={totalPaid}
         totalPending={totalPending}

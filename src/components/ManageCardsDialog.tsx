@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Card } from "@/components/ui/card"; // Importar Card
+import { Card } from "@/components/ui/card";
 
 interface Cartao {
   id: string;
@@ -121,7 +121,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       .select("id", { count: 'exact' })
       .eq("cartao_id", cardToDelete);
 
-    console.log(`[DEBUG] Card ${cardToDelete}: Found ${expenseCount} associated 'despesas' records.`); // DEBUG LOG
+    console.log(`[DEBUG] Card ${cardToDelete}: Found ${expenseCount} associated 'despesas' records.`);
 
     if (countError) {
       toast.error("Erro ao verificar despesas associadas", { description: countError.message });
@@ -139,33 +139,8 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       setIsConfirmDeleteOpen(false);
       return;
     }
-
-    // 2. Check for associated recurring entries
-    const { count: recurringCount, error: recurringCountError } = await supabase
-      .from("recurring_entries")
-      .select("id", { count: 'exact' })
-      .eq("cartao_id", cardToDelete);
-
-    console.log(`[DEBUG] Card ${cardToDelete}: Found ${recurringCount} associated 'recurring_entries' records.`); // DEBUG LOG
-
-    if (recurringCountError) {
-      toast.error("Erro ao verificar lançamentos recorrentes associados", { description: recurringCountError.message });
-      console.error(recurringCountError);
-      setLoading(false);
-      setIsConfirmDeleteOpen(false);
-      return;
-    }
-
-    if (recurringCount && recurringCount > 0) {
-      toast.error("Não é possível excluir o cartão", {
-        description: "Existem lançamentos recorrentes associados a este cartão. Remova-os ou edite-os primeiro.",
-      });
-      setLoading(false);
-      setIsConfirmDeleteOpen(false);
-      return;
-    }
     
-    // If no associated expenses or recurring entries, proceed with deletion
+    // If no associated expenses, proceed with deletion
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
     if (error) {
@@ -202,7 +177,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 cards.map((card) => (
                   <Card
                     key={card.id}
-                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm" // Adicionado shadow-sm e rounded-xl
+                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm"
                   >
                     <div>
                       <p className="font-medium">{card.nome}</p>

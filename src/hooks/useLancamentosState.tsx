@@ -3,13 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { addMonths, subMonths, parseISO, isValid } from "date-fns";
 import { Transaction } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
-
-// Helper function to validate if a string is a UUID
-const isValidUuid = (value: string | null | undefined): boolean => {
-  if (!value) return false;
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(value);
-};
+import { isValidUuid } from "@/lib/utils"; // Importar isValidUuid
 
 export const useLancamentosState = () => {
   const [searchParams] = useSearchParams();
@@ -45,8 +39,6 @@ export const useLancamentosState = () => {
   const [loadingEditData, setLoadingEditData] = useState(false);
   const [loadingPayInvoice, setLoadingPayInvoice] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteRecurrenceModalOpen, setIsDeleteRecurrenceModalOpen] = useState(false);
-  const [selectedRecurringTransactionForDelete, setSelectedRecurringTransactionForDelete] = useState<Transaction | null>(null);
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
 
   const handlePreviousMonth = useCallback(() => {
@@ -81,13 +73,9 @@ export const useLancamentosState = () => {
     setLoadingPayInvoice,
     isEditModalOpen,
     setIsEditModalOpen,
-    isDeleteRecurrenceModalOpen,
-    setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransactionForDelete,
-    setSelectedRecurringTransactionForDelete,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     handleCancelEdit,
-    isValidUuid, // Exportar para uso em useTransactionMutations
+    isValidUuid,
   };
 };

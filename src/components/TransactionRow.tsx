@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, isValidUuid } from "@/lib/utils"; // Importar isValidUuid
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale"; // Importar ptBR para formatar a data
+import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
@@ -25,8 +25,7 @@ interface TransactionRowProps {
   transaction: Transaction;
   onDeleteTransaction: (
     id: string,
-    type: "income" | "expense",
-    isFixed?: boolean
+    type: "income" | "expense"
   ) => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
@@ -34,14 +33,7 @@ interface TransactionRowProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  markMonthPaid: any;
 }
-
-const isValidUuid = (uuid: string) => {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-};
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
@@ -51,7 +43,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
-  markMonthPaid,
 }) => {
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
@@ -103,27 +94,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
 
     try {
-      // ---------------------------------------------
-      // 🔁 RECORRENTE
-      // ---------------------------------------------
-      if (transaction.isRecurring && transaction.recurringEntryId) {
-        const d = new Date(transaction.date);
-        const year = d.getFullYear();
-        const month = d.getMonth() + 1;
-
-        await markMonthPaid({
-          recurring_id: transaction.recurringEntryId,
-          year,
-          month,
-          is_paid: newStatus === "Recebida",
-        });
-        toast.success("Status atualizado!");
-        return; // Exit after successful recurring update
-      }
-
-      // ---------------------------------------------
-      // 💸 AVULSA / PARCELADA
-      // ---------------------------------------------
       if (transaction.type === "income") {
         const { error } = await supabase
           .from("receitas")
@@ -131,7 +101,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .eq("id", transaction.id)
           .eq("user_id", user.id);
 
-        if (error) throw error; // Throw Supabase error
+        if (error) throw error;
         queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       } else { // expense
         const pago = newStatus === "Recebida";
@@ -147,14 +117,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           })
           .eq("id", transaction.id);
 
-        if (error) throw error; // Throw Supabase error
+        if (error) throw error;
         queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       }
 
-      toast.success("Status atualizado!"); // Only show success if no error was thrown
+      toast.success("Status atualizado!");
     } catch (error: any) {
       console.error("Erro ao atualizar status:", error);
-      toast.error("Erro ao atualizar status.", { description: error.message }); // More specific error toast
+      toast.error("Erro ao atualizar status.", { description: error.message });
     }
   };
 

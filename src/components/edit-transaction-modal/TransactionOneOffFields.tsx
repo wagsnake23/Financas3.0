@@ -12,8 +12,8 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
-import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
+import { CurrencyInput } from "@/components/ui/currency-input";
+import { StatusToggleButton } from "@/components/StatusToggleButton";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -30,13 +30,12 @@ interface TransactionOneOffFieldsProps {
   setStatus: (status: ReceitaStatus) => void; // Kept for consistency, but derived from isPaid
   isCalendarOpen: boolean;
   setIsCalendarOpen: (open: boolean) => void;
-  filteredCategories: AppCategory[]; // Agora contém apenas subcategorias
+  filteredCategories: AppCategory[];
   isMobile: boolean;
-  isFixedLegacy?: boolean;
   transactionType: "income" | "expense";
   UNSELECTED_VALUE: string;
-  isPaid: boolean; // NEW PROP
-  setIsPaid: (paid: boolean) => void; // NEW PROP
+  isPaid: boolean;
+  setIsPaid: (paid: boolean) => void;
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -52,13 +51,12 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   setStatus, // Still passed, but its function will be replaced by setIsPaid
   isCalendarOpen,
   setIsCalendarOpen,
-  filteredCategories, // Usar filteredCategories diretamente (já são subcategorias)
+  filteredCategories,
   isMobile,
-  isFixedLegacy,
   transactionType,
   UNSELECTED_VALUE,
-  isPaid, // NEW
-  setIsPaid, // NEW
+  isPaid,
+  setIsPaid,
 }) => {
   return (
     <>
@@ -67,7 +65,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
+            <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
@@ -114,7 +112,6 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                   !date && "text-muted-foreground",
                   isMobile && "h-9 text-sm"
                 )}
-                disabled={isFixedLegacy}
               >
                 <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
                 {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
@@ -150,15 +147,13 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         />
       </div>
 
-      {/* Replaced RevenueStatusToggle with StatusToggleButton */}
       <div className="flex flex-col items-start space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
         <StatusToggleButton
-          currentStatus={isPaid ? "Recebida" : "Pendente"} // Map isPaid to ReceitaStatus
+          currentStatus={isPaid ? "Recebida" : "Pendente"}
           transactionType={transactionType}
           onToggle={() => setIsPaid(!isPaid)}
           isMobile={isMobile}
-          disabled={isFixedLegacy} // Disable if legacy fixed, as status is not directly editable
         />
       </div>
     </>

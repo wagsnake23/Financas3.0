@@ -4,13 +4,13 @@ import {
   Wallet, TrendingUp, MoreHorizontal, Plus, Trash2, Search, Pencil, DollarSign,
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
-  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown,
+  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle,
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, TestTube, Dumbbell, Brain, School, Laptop,
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
-  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
+  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
   Building2, Sandwich
 } from 'lucide-react';
 
@@ -21,13 +21,13 @@ const iconMap: { [key: string]: React.ElementType } = {
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
   ChevronLeft, ChevronRight,
-  CheckCircle, Circle, XCircle, Repeat, CalendarOff, ArrowDown,
+  CheckCircle, Circle, XCircle,
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, TestTube, Dumbbell, Brain, School, Laptop,
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
-  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank, PlusCircle,
+  Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
   Building2, Sandwich
 };
 

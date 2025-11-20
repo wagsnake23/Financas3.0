@@ -6,18 +6,17 @@ import { AppCategory } from "@/types/finance";
 
 interface ExpensesDashboardProps {
   expenses: Tables<'despesas'>[];
-  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[];
-  categories: AppCategory[]; // Agora contém apenas subcategorias
+  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
+  categories: AppCategory[];
   isMobile: boolean;
 }
 
 export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, isMobile }: ExpensesDashboardProps) => {
-  const filteredExpenseInstallments = expenseInstallments.filter(p => !p.despesas?.is_fixed);
+  const filteredExpenseInstallments = expenseInstallments;
   const totalExpenses = filteredExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
-  const allSubcategories: AppCategory[] = categories; // Renomeado para clareza
+  const allSubcategories: AppCategory[] = categories;
 
   const expensesByCategory = expenses
-    .filter(d => !d.is_fixed)
     .reduce((acc, expense) => {
       const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryNome = category?.nome || "Outros";
@@ -49,7 +48,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
       </Card>
 
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Despesas por Subcategoria</h2> {/* Título atualizado */}
+        <h2 className="text-xl font-semibold mb-4">Despesas por Subcategoria</h2>
         {chartData.length === 0 ? (
           <div className="h-60 flex items-center justify-center text-muted-foreground">
             Nenhuma despesa registrada

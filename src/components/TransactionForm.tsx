@@ -11,13 +11,13 @@ import DynamicIcon from "./DynamicIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
 }
 
-const UNSELECTED_VALUE = "unselected"; // Valor único para representar 'não selecionado'
+const UNSELECTED_VALUE = "unselected";
 
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
@@ -127,10 +127,10 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Subcategoria</Label> {/* Label atualizada */}
+            <Label htmlFor="category">Subcategoria</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="rounded-xl">
-                <SelectValue placeholder="Selecione a subcategoria" /> {/* Placeholder atualizado */}
+                <SelectValue placeholder="Selecione a subcategoria" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={UNSELECTED_VALUE} disabled>Selecione a subcategoria</SelectItem>
@@ -140,7 +140,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
                   filteredSubcategories
                     .map((cat) => (
                       <SelectItem key={cat.id} value={cat.id}>
-                        {cat.nome} {/* Exibir apenas o nome da subcategoria */}
+                        {cat.nome}
                       </SelectItem>
                     ))
                 )}

@@ -10,8 +10,6 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 interface DateAndInstallmentFieldsProps {
-  tipoPagamento: "avista" | "parcelado";
-  // numeroParcelas e setNumeroParcelas removidos daqui
   dataVencimento: Date | undefined;
   setDataVencimento: (date: Date | undefined) => void;
   isCalendarOpen: boolean;
@@ -22,8 +20,6 @@ interface DateAndInstallmentFieldsProps {
 }
 
 export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> = ({
-  tipoPagamento,
-  // numeroParcelas e setNumeroParcelas removidos daqui
   dataVencimento,
   setDataVencimento,
   isCalendarOpen,
@@ -34,10 +30,9 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
 }) => {
   return (
     <>
-      {/* O campo Número de Parcelas foi movido para ExpenseForm.tsx */}
       <div>
         <Label htmlFor="dataVencimento" className={cn(isMobile && "text-xs")}>
-          {tipoPagamento === "parcelado" ? "Data do Primeiro Vencimento" : "Data"}
+          Data
         </Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>

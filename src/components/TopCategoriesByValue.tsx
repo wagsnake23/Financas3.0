@@ -6,7 +6,7 @@ import DynamicIcon from "./DynamicIcon";
 
 interface TopCategoriesByValueProps {
   expenses: Tables<'despesas'>[];
-  categories: AppCategory[]; // Agora contém apenas subcategorias
+  categories: AppCategory[];
 }
 
 interface CategoryUsage {
@@ -20,13 +20,12 @@ interface CategoryUsage {
 }
 
 export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByValueProps) => {
-  const allSubcategories: AppCategory[] = categories; // Renomeado para clareza
+  const allSubcategories: AppCategory[] = categories;
 
   const categoryUsage: Record<string, CategoryUsage> = {};
   let totalExpenses = 0;
 
   expenses
-    .filter(d => !d.is_fixed)
     .forEach(expense => {
       const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryId = expense.categoria_id || "outros_diversos";
@@ -61,7 +60,7 @@ export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByVa
 
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Top 5 Subcategorias por Valor</h2> {/* Título atualizado */}
+      <h2 className="text-xl font-semibold mb-4">Top 5 Subcategorias por Valor</h2>
       {topCategories.length === 0 ? (
         <div className="h-60 flex items-center justify-center text-muted-foreground">
           Nenhuma despesa registrada

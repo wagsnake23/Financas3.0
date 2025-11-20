@@ -5,12 +5,11 @@ import { AppCategory } from "@/types/finance";
 
 interface RevenueByTypeChartProps {
   revenues: Tables<'receitas'>[];
-  revenueTypes: AppCategory[]; // Agora contém apenas subcategorias
+  revenueTypes: AppCategory[];
 }
 
 export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChartProps) => {
   const incomeByType = revenues
-    .filter(r => !r.is_fixed)
     .reduce((acc, revenue) => {
       const type = revenueTypes.find(t => t.id === revenue.tipo_receita_id);
       const typeName = type?.nome || "Outros";
@@ -32,7 +31,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
   if (chartData.length === 0) {
     return (
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2> {/* Título atualizado */}
+        <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2>
         <div className="h-60 flex items-center justify-center text-muted-foreground">
           Nenhuma receita registrada
         </div>
@@ -42,7 +41,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
 
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2> {/* Título atualizado */}
+      <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie

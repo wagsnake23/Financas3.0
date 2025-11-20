@@ -1,18 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Transaction } from "@/types/finance";
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn } from "@/lib/utils";
 
 interface MonthlyBarChartProps {
   transactions: Transaction[];
-  isMobile?: boolean; // Adicionar prop isMobile
+  isMobile?: boolean;
 }
 
 export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps) => {
   const monthlyData = transactions.reduce((acc, transaction) => {
-    // Filter out legacy fixed transactions, as they are now handled by recurring_entries
-    if (transaction.is_fixed && !transaction.isRecurring) return acc;
-
     const date = new Date(transaction.date);
     const monthYear = date.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
     
@@ -39,9 +36,9 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
 
   if (chartData.length === 0) {
     return (
-      <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
+      <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
         <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Receitas vs Despesas Mensais</h2>
-        <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}> {/* Ajustar altura */}
+        <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
           Nenhum dado disponível
         </div>
       </Card>
@@ -49,19 +46,19 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
   }
 
   return (
-    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}> {/* Ajustar padding */}
+    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Receitas vs Despesas Mensais</h2>
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}> {/* Altura condicional */}
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis 
             dataKey="month" 
             stroke="hsl(var(--muted-foreground))"
-            style={{ fontSize: isMobile ? "10px" : "12px" }} // Tamanho da fonte condicional
+            style={{ fontSize: isMobile ? "10px" : "12px" }}
           />
           <YAxis 
             stroke="hsl(var(--muted-foreground))"
-            style={{ fontSize: isMobile ? "10px" : "12px" }} // Tamanho da fonte condicional
+            style={{ fontSize: isMobile ? "10px" : "12px" }}
           />
           <Tooltip 
             formatter={(value: number) => `R$ ${value.toFixed(2)}`}
@@ -71,7 +68,7 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
               borderRadius: "var(--radius)",
             }}
           />
-          <Legend wrapperStyle={{ fontSize: isMobile ? "10px" : "12px" }} /> {/* Tamanho da fonte da legenda condicional */}
+          <Legend wrapperStyle={{ fontSize: isMobile ? "10px" : "12px" }} />
           <Bar dataKey="income" fill="hsl(var(--success))" name="Receitas" radius={[8, 8, 0, 0]} />
           <Bar dataKey="expenses" fill="hsl(var(--destructive))" name="Despesas" radius={[8, 8, 0, 0]} />
         </BarChart>

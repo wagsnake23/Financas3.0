@@ -26,7 +26,7 @@ export const COLOR_PALETTE = [
 ];
 
 export const PAYMENT_METHODS = [
-  { value: "none", label: "Nenhuma" }, // Changed from "" to "none"
+  { value: "none", label: "Nenhuma" },
   { value: "pix", label: "PIX" },
   { value: "credit", label: "Cartão de Crédito" },
   { value: "debit", label: "Cartão de Débito" },

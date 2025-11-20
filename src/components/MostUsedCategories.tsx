@@ -5,7 +5,7 @@ import DynamicIcon from "./DynamicIcon";
 
 interface MostUsedCategoriesProps {
   expenses: Tables<'despesas'>[];
-  categories: AppCategory[]; // Agora contém apenas subcategorias
+  categories: AppCategory[];
 }
 
 interface CategoryUsage {
@@ -18,12 +18,11 @@ interface CategoryUsage {
 }
 
 export const MostUsedCategories = ({ expenses, categories }: MostUsedCategoriesProps) => {
-  const allSubcategories: AppCategory[] = categories; // Renomeado para clareza
+  const allSubcategories: AppCategory[] = categories;
 
   const categoryUsage: Record<string, CategoryUsage> = {};
 
   expenses
-    .filter(d => !d.is_fixed)
     .forEach(expense => {
       const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryId = expense.categoria_id || "outros_diversos";
@@ -52,7 +51,7 @@ export const MostUsedCategories = ({ expenses, categories }: MostUsedCategoriesP
 
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Subcategorias Mais Utilizadas</h2> {/* Título atualizado */}
+      <h2 className="text-xl font-semibold mb-4">Subcategorias Mais Utilizadas</h2>
       {mostUsedCategories.length === 0 ? (
         <div className="h-60 flex items-center justify-center text-muted-foreground">
           Nenhuma despesa registrada

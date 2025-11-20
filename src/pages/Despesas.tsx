@@ -14,13 +14,8 @@ import { MostUsedCategories } from "@/components/MostUsedCategories";
 import { CategoryDistributionSummary } from "@/components/CategoryDistributionSummary";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import DynamicIcon from "@/components/DynamicIcon";
-import { RecurringEntryFormContent } from "@/components/RecurringEntryFormContent";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom"; // Importar useSearchParams
 
 interface Cartao {
   id: string;
@@ -31,18 +26,13 @@ interface Cartao {
   dia_vencimento: number;
 }
 
-type FormMode = 'one-off' | 'recurring';
-
 const UNSELECTED_VALUE = "unselected";
 
 export default function Despesas() {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
-  const [searchParams] = useSearchParams(); // Hook para ler parâmetros da URL
 
-  const initialFormMode: FormMode = (searchParams.get('mode') as FormMode) || 'one-off';
-  const [formMode, setFormMode] = useState<FormMode>(initialFormMode);
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
 
   const {
@@ -88,12 +78,6 @@ export default function Despesas() {
     }
   };
 
-  const handleRecurringFormSuccess = () => {
-    setFormMode('one-off');
-    queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] });
-  };
-
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -105,66 +89,18 @@ export default function Despesas() {
   const formContent = (
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
-      <RadioGroup
-        value={formMode}
-        onValueChange={(value: FormMode) => setFormMode(value)}
-        className="flex items-center justify-center gap-8 mb-2" // Aumentado o gap para mais espaço, reduzido mb
-      >
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="one-off" id="one-off-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
-          <Label
-            htmlFor="one-off-expense"
-            className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold", // Azul para Avulsa
-              "flex items-center" // Adicionado para alinhar ícone e texto
-            )}
-          >
-            <span>Avulsa</span>
-            <DynamicIcon name="⚡" className={cn("ml-1", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Movido para a direita */}
-          </Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="recurring" id="recurring-expense" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
-          <Label
-            htmlFor="recurring-expense"
-            className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold", // Verde para Recorrente
-              "flex items-center" // Adicionado para alinhar ícone e texto
-            )}
-          >
-            <span>Recorrente</span>
-            <DynamicIcon name="Repeat" className={cn("ml-1 bg-transparent", isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Alterado para 'Repeat' */}
-          </Label>
-        </div>
-      </RadioGroup>
       <p className="text-xs text-muted-foreground text-center mb-4">
-        {formMode === 'one-off' ? 
-          "Para despesas únicas ou parceladas com número fixo de parcelas." : 
-          "Para despesas que se repetem mensalmente, trimestralmente ou anualmente."}
+        Para despesas únicas ou parceladas com número fixo de parcelas.
       </p>
 
-      {formMode === 'one-off' ? (
-        <ExpenseForm
-          user={user}
-          cartoes={cartoes}
-          loadCartoes={loadCartoes}
-          allSubcategories={allSubcategories}
-          queryClient={queryClient}
-          isMobile={isMobile}
-        />
-      ) : (
-        <RecurringEntryFormContent
-          isMobile={isMobile}
-          onSuccess={handleRecurringFormSuccess}
-          fetchedCategories={allCategories}
-          isLoadingCategories={isLoadingCategories}
-          initialType="despesa"
-        />
-      )}
+      <ExpenseForm
+        user={user}
+        cartoes={cartoes}
+        loadCartoes={loadCartoes}
+        allSubcategories={allSubcategories}
+        queryClient={queryClient}
+        isMobile={isMobile}
+      />
     </>
   );
 

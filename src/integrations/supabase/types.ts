@@ -165,9 +165,6 @@ export type Database = {
           descricao: string | null
           forma_pagamento: string
           id: string
-          is_fixed: boolean | null
-          recurrence_frequency: string | null
-          recurrence_installments_count: number | null
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -179,9 +176,6 @@ export type Database = {
           descricao?: string | null
           forma_pagamento: string
           id?: string
-          is_fixed?: boolean | null
-          recurrence_frequency?: string | null
-          recurrence_installments_count?: number | null
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -193,9 +187,6 @@ export type Database = {
           descricao?: string | null
           forma_pagamento?: string
           id?: string
-          is_fixed?: boolean | null
-          recurrence_frequency?: string | null
-          recurrence_installments_count?: number | null
           tipo_pagamento?: string
           user_id?: string
           valor_total?: number
@@ -345,9 +336,6 @@ export type Database = {
           data: string
           descricao: string | null
           id: string
-          is_fixed: boolean | null
-          recurrence_frequency: string | null
-          recurrence_installments_count: number | null
           status: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id: string | null
           user_id: string
@@ -358,9 +346,6 @@ export type Database = {
           data: string
           descricao?: string | null
           id?: string
-          is_fixed?: boolean | null
-          recurrence_frequency?: string | null
-          recurrence_installments_count?: number | null
           status?: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id?: string | null
           user_id: string
@@ -371,9 +356,6 @@ export type Database = {
           data?: string
           descricao?: string | null
           id?: string
-          is_fixed?: boolean | null
-          recurrence_frequency?: string | null
-          recurrence_installments_count?: number | null
           status?: Database["public"]["Enums"]["receita_status"]
           tipo_receita_id?: string | null
           user_id?: string
@@ -385,135 +367,6 @@ export type Database = {
             columns: ["tipo_receita_id"]
             isOneToOne: false
             referencedRelation: "categorias"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      recurring_entries: {
-        Row: {
-          category_id: string | null
-          cartao_id: string | null // Adicionado
-          created_at: string
-          due_day: number
-          end_date: string | null
-          forma_pagamento: string | null // Adicionado
-          frequency: Database["public"]["Enums"]["recurring_frequency"]
-          id: string
-          start_date: string
-          status: Database["public"]["Enums"]["recurring_status"]
-          title: string
-          type: Database["public"]["Enums"]["recurring_type"]
-          updated_at: string
-          user_id: string
-          value: number
-        }
-        Insert: {
-          category_id?: string | null
-          cartao_id?: string | null // Adicionado
-          created_at?: string
-          due_day: number
-          end_date?: string | null
-          forma_pagamento?: string | null // Adicionado
-          frequency: Database["public"]["Enums"]["recurring_frequency"]
-          id?: string
-          start_date: string
-          status?: Database["public"]["Enums"]["recurring_status"]
-          title: string
-          type: Database["public"]["Enums"]["recurring_type"]
-          updated_at?: string
-          user_id: string
-          value: number
-        }
-        Update: {
-          category_id?: string | null
-          cartao_id?: string | null // Adicionado
-          created_at?: string
-          due_day?: number
-          end_date?: string | null
-          forma_pagamento?: string | null // Adicionado
-          frequency?: Database["public"]["Enums"]["recurring_frequency"]
-          id?: string
-          start_date?: string
-          status?: Database["public"]["Enums"]["recurring_status"]
-          title?: string
-          type?: Database["public"]["Enums"]["recurring_type"]
-          updated_at?: string
-          user_id?: string
-          value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recurring_entries_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categorias"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recurring_entries_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      recurring_entry_exceptions: {
-        Row: {
-          canceled: boolean
-          created_at: string
-          id: string
-          month: number
-          note: string | null
-          override_category_id: string | null
-          override_due_date: string | null
-          override_value: number | null
-          paid: boolean
-          recurring_id: string
-          updated_at: string
-          year: number
-        }
-        Insert: {
-          canceled?: boolean
-          created_at?: string
-          id?: string
-          month: number
-          note?: string | null
-          override_category_id?: string | null
-          override_due_date?: string | null
-          override_value?: number | null
-          paid?: boolean
-          recurring_id: string
-          updated_at?: string
-          year: number
-        }
-        Update: {
-          canceled?: boolean
-          created_at?: string
-          id?: string
-          month?: number
-          note?: string | null
-          override_category_id?: string | null
-          override_due_date?: string | null
-          override_value?: number | null
-          paid?: boolean
-          recurring_id?: string
-          updated_at?: string
-          year?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recurring_entry_exceptions_override_category_id_fkey"
-            columns: ["override_category_id"]
-            isOneToOne: false
-            referencedRelation: "categorias"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recurring_entry_exceptions_recurring_id_fkey"
-            columns: ["recurring_id"]
-            isOneToOne: false
-            referencedRelation: "recurring_entries"
             referencedColumns: ["id"]
           },
         ]
@@ -560,38 +413,10 @@ export type Database = {
         }
         Returns: void
       }
-      rpc_create_or_update_recurring_exception: {
-        Args: {
-          p_recurring_id: string
-          p_year: number
-          p_month: number
-          p_payload: Json
-        }
-        Returns: Tables<"recurring_entry_exceptions">
-      }
-      rpc_update_recurring_master_future: {
-        Args: {
-          p_recurring_id: string
-          p_start_date: string
-          p_payload: Json
-        }
-        Returns: Tables<"recurring_entries">
-      }
-      rpc_update_recurring_master_global: {
-        Args: {
-          p_recurring_id: string
-          p_payload: Json
-          p_preserve_exceptions?: boolean
-        }
-        Returns: Tables<"recurring_entries">
-      }
     }
     Enums: {
       app_role: "admin" | "conferente"
       receita_status: "Prevista" | "Pendente" | "Recebida" | "Cancelada"
-      recurring_frequency: "monthly" | "quarterly" | "annually"
-      recurring_status: "active" | "canceled"
-      recurring_type: "despesa" | "receita"
     }
     CompositeTypes: {
       [_ in never]: never

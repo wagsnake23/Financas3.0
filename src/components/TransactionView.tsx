@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { TransactionList } from "@/components/TransactionList";
 import { AppCategory, TransactionType } from "@/types/finance";
@@ -6,11 +6,10 @@ import { Tables } from "@/integrations/supabase/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
-import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 
 interface TransactionViewProps {
   transactions: Transaction[];
-  onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
+  onDeleteTransaction: (id: string, type: TransactionType) => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
@@ -19,11 +18,10 @@ interface TransactionViewProps {
   user: User | null;
   selectedMonth: Date;
   disableFilters?: boolean;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
-  setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
+  loadingPayInvoice: boolean;
+  setLoadingPayInvoice: (loading: boolean) => void;
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -37,11 +35,10 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   user,
   selectedMonth,
   disableFilters = false,
-  markMonthPaid,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
-  loadingPayInvoice, // NOVO
-  setLoadingPayInvoice, // NOVO
+  loadingPayInvoice,
+  setLoadingPayInvoice,
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -57,7 +54,6 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       user={user}
       selectedMonth={selectedMonth}
       disableFilters={disableFilters}
-      markMonthPaid={markMonthPaid}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice}
@@ -65,7 +61,5 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
     />
   );
 
-  // Se for mobile, retorna o conteúdo diretamente.
-  // Se não for mobile, retorna o conteúdo diretamente (removendo o Card).
   return content;
 };

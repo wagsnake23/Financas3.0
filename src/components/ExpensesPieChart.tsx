@@ -6,14 +6,13 @@ import { cn } from "@/lib/utils";
 
 interface ExpensesPieChartProps {
   transactions: Transaction[];
-  allCategories: AppCategory[]; // Agora contém apenas subcategorias
+  allCategories: AppCategory[];
   isMobile?: boolean;
 }
 
 export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: ExpensesPieChartProps) => {
   const expensesByCategory = transactions
     .filter(t => t.type === "expense")
-    .filter(t => !t.is_fixed || t.isRecurring)
     .reduce((acc, transaction) => {
       const category = allCategories.find(c => c.id === transaction.category);
       const categoryName = category?.nome || "Outros";
@@ -35,7 +34,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   if (chartData.length === 0) {
     return (
       <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2> {/* Título atualizado */}
+        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2>
         <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
           Nenhuma despesa registrada
         </div>
@@ -45,7 +44,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
 
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2> {/* Título atualizado */}
+      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2>
       <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
         <PieChart>
           <Pie

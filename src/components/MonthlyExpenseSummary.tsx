@@ -8,18 +8,18 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 interface MonthlyExpenseSummaryProps {
-  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[];
+  expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
   isLoading: boolean;
   isMobile: boolean;
-  currentMonth?: Date; // Agora é opcional
-  hideNavigation?: boolean; // Nova prop para esconder a navegação interna
+  currentMonth?: Date;
+  hideNavigation?: boolean;
 }
 
 export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
   expenseInstallments,
   isLoading,
   isMobile,
-  currentMonth: propCurrentMonth, // Renomeado para evitar conflito
+  currentMonth: propCurrentMonth,
   hideNavigation = false,
 }) => {
   const [internalCurrentMonth, setInternalCurrentMonth] = useState(new Date());
@@ -37,9 +37,6 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
     let pending = 0;
 
     expenseInstallments.forEach(installment => {
-      // Filter out legacy fixed expenses
-      if (installment.despesas?.is_fixed) return;
-
       const installmentDate = new Date(installment.vencimento);
       if (isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
         if (installment.pago) {
@@ -71,7 +68,7 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
 
   const content = (
     <div className={cn("p-6 animate-fade-in", isMobile && "p-0")}>
-      {!isMobile && ( // Renderiza o título apenas se NÃO for mobile
+      {!isMobile && (
         <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-sm mb-2")}>Resumo Mensal de Despesas</h2>
       )}
       {!hideNavigation && (
@@ -90,14 +87,14 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
       <div className="grid grid-cols-2 gap-4 text-center">
         <div className={cn(
           "p-3 border rounded-lg", 
-          isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20" // Condicional para mobile
+          isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pago</p>
           <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>R$ {totalPaid.toFixed(2)}</p>
         </div>
         <div className={cn(
           "p-3 border rounded-lg", 
-          isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20" // Condicional para mobile
+          isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pendente</p>
           <p className={cn("text-xl font-bold text-destructive", isMobile && "text-base")}>R$ {totalPending.toFixed(2)}</p>

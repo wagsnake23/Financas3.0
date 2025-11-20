@@ -4,7 +4,6 @@ import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
-import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,9 +14,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"; // Importar componentes do Dialog
-import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
-import { cn } from "@/lib/utils"; // Importar cn
+} from "@/components/ui/dialog";
+import { TransactionEditForm } from "@/components/TransactionEditForm";
+import { cn } from "@/lib/utils";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -35,11 +34,8 @@ const Lancamentos = () => {
     loadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen, // NOVO: Receber isEditModalOpen
-    setIsEditModalOpen, // NOVO: Receber setIsEditModalOpen
-    isDeleteRecurrenceModalOpen,
-    setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransaction,
+    isEditModalOpen,
+    setIsEditModalOpen,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
@@ -47,26 +43,16 @@ const Lancamentos = () => {
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
-    handleCancelEdit, // NOVO: Receber handleCancelEdit
+    handleCancelEdit,
     editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient,
-    confirmDeleteWithOptions,
-    markMonthPaid,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
-
-  // A função handleCancelEdit já está sendo retornada pelo hook, então não precisamos redefini-la aqui.
-  // const handleCancelEdit = () => {
-  //   setEditingTransaction(null);
-  //   setFullEditingRevenue(null);
-  //   setFullEditingExpense(null);
-  //   setIsEditModalOpen(false); // Fechar o modal ao cancelar
-  // };
   
   if (authLoading || isLoading || loadingEditData) {
     return <Loading />;
@@ -88,13 +74,12 @@ const Lancamentos = () => {
             isMobile={isMobile}
           />
 
-          {/* A LancamentosContent agora sempre renderiza a TransactionView */}
           <LancamentosContent
-            editingTransaction={editingTransaction} // Ainda passa para TransactionView para contexto, se necessário
+            editingTransaction={editingTransaction}
             fullEditingRevenue={fullEditingRevenue}
             fullEditingExpense={fullEditingExpense}
             onUpdateTransaction={handleUpdateTransaction}
-            onCancelEdit={handleCancelEdit} // Passa a função de cancelamento
+            onCancelEdit={handleCancelEdit}
             onDeleteTransaction={handleDeleteTransaction}
             allCategories={fetchedCategories}
             isMobile={isMobile}
@@ -103,8 +88,6 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient} 
-            confirmDeleteWithOptions={confirmDeleteWithOptions}
-            markMonthPaid={markMonthPaid}
             filterPaymentOptionId={filterPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
@@ -118,7 +101,7 @@ const Lancamentos = () => {
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>
-                {editingTransaction?.isRecurring ? "Editar Lançamento Recorrente" : "Editar Lançamento"}
+                Editar Lançamento
               </DialogTitle>
             </DialogHeader>
             {editingTransaction && (
@@ -133,17 +116,6 @@ const Lancamentos = () => {
             )}
           </DialogContent>
         </Dialog>
-
-        <DeleteRecurrenceModal
-          isOpen={isDeleteRecurrenceModalOpen}
-          onClose={() => {
-            setIsDeleteRecurrenceModalOpen(false);
-            handleCancelEdit(); // Garante que o modal de edição também feche se estiver aberto
-          }}
-          transaction={selectedRecurringTransaction}
-          isMobile={isMobile}
-          onConfirmDeleteWithOptions={confirmDeleteWithOptions}
-        />
       </div>
     </ProtectedRoute>
   );

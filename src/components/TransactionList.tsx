@@ -1,11 +1,11 @@
-import { useState, useMemo, useEffect } from "react"; // Importar useEffect
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, isValidUuid } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -14,7 +14,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
-import { MaterializedRecurringTransaction, useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
 
@@ -29,7 +28,7 @@ interface Cartao {
 
 interface TransactionListProps {
   transactions: Transaction[];
-  onDeleteTransaction: (id: string, type: "income" | "expense", isFixed?: boolean) => void;
+  onDeleteTransaction: (id: string, type: "income" | "expense") => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
@@ -37,7 +36,6 @@ interface TransactionListProps {
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
   disableFilters?: boolean;
-  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
   selectedMonth: Date;
@@ -46,13 +44,6 @@ interface TransactionListProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
-
-// Helper function to validate if a string is a UUID
-const isValidUuid = (value: string | null | undefined): boolean => {
-  if (!value) return false;
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(value);
-};
 
 export const TransactionList = ({
   transactions, 
@@ -64,7 +55,6 @@ export const TransactionList = ({
   queryClient,
   user,
   disableFilters = false,
-  markMonthPaid,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   selectedMonth,
@@ -103,7 +93,7 @@ export const TransactionList = ({
         // navigate('/lancamentos', { replace: true });
       }
     }
-  }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]); // Added setFilterPaymentOptionId to dependencies
+  }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]);
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
@@ -128,7 +118,7 @@ export const TransactionList = ({
 
       const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentOption;
 
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, IsRecurring: ${transaction.isRecurring}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentOption: ${matchesPaymentOption}, FINAL: ${finalResult}`);
+      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentOption: ${matchesPaymentOption}, FINAL: ${finalResult}`);
 
       return finalResult;
     });
@@ -216,9 +206,7 @@ export const TransactionList = ({
 
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["recurringExceptions", user?.id] });
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
       
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
@@ -371,9 +359,9 @@ export const TransactionList = ({
             isMobile={!!isMobile}
             formattedDueDate={cardDetails?.formattedDueDate || null}
             cardLastDigits={cardDetails?.cardLastDigits || null}
-            onPayInvoice={handlePayInvoice} // Passando a função de pagamento
-            loadingPayInvoice={loadingPayInvoice} // Passando o estado de carregamento
-            disablePayInvoiceButton={disablePayInvoiceButton} // Passando o estado de desabilitação
+            onPayInvoice={handlePayInvoice}
+            loadingPayInvoice={loadingPayInvoice}
+            disablePayInvoiceButton={disablePayInvoiceButton}
           />
         </div>
       )}
@@ -402,7 +390,6 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
-                  markMonthPaid={markMonthPaid}
                 />
               ))
             )}
