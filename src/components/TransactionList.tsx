@@ -372,8 +372,8 @@ export const TransactionList = ({
       </div>
 
       {/* Accumulated Value - Reposicionado e estilizado como label */}
-      <div className="flex justify-start mb-0 mt-4 pr-5"> {/* Alterado para justify-start e adicionado pr-5 */}
-        <div> {/* Removido text-right daqui */}
+      <div className="flex justify-end mb-0 mt-4 pr-5"> {/* Alterado para justify-end e adicionado pr-5 */}
+        <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
             "text-sm font-bold",
