@@ -407,14 +407,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const formContent = (
     <>
       <div className="flex items-center justify-end mb-6"> {/* Alterado para justify-end e removido h2 */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onCancelEdit}
-          className={cn(isMobile && "h-8 w-8")}
-        >
-          <X className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-        </Button>
+        {/* REMOVIDO: Botão X */}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
