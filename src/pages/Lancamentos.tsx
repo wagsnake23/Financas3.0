@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
-import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
+import { useLancamentosState } from "@/hooks/useLancamentosLogic"; // CORRIGIDO: Alterado para useLancamentosState
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -40,7 +40,7 @@ const Lancamentos = () => {
     setIsEditModalOpen,
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransaction,
+    selectedRecurringTransactionForDelete, // CORRIGIDO: Nome da variável
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
@@ -57,9 +57,9 @@ const Lancamentos = () => {
     markMonthPaid,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
-    filterType, // NOVO: Obter filterType
-    setFilterType, // NOVO: Obter setFilterType
-  } = useLancamentosLogic(user, authLoading);
+    filterType,
+    setFilterType,
+  } = useLancamentosState(user, authLoading); // CORRIGIDO: Alterado para useLancamentosState
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
 
@@ -86,7 +86,7 @@ const Lancamentos = () => {
                 isMobile={isMobile}
               />
               <Select value={filterType} onValueChange={setFilterType} disabled={isLoading}>
-                <SelectTrigger className="rounded-xl lg:w-[150px]"> {/* Adicionado largura para desktop */}
+                <SelectTrigger className="rounded-xl lg:w-[150px]">
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -118,8 +118,8 @@ const Lancamentos = () => {
               setFilterPaymentOptionId={setFilterPaymentOptionId}
               loadingPayInvoice={loadingPayInvoice}
               setLoadingPayInvoice={setLoadingPayInvoice}
-              filterType={filterType} // NOVO: Passar filterType
-              setFilterType={setFilterType} // NOVO: Passar setFilterType
+              filterType={filterType}
+              setFilterType={setFilterType}
             />
           </div>
         </main>
@@ -152,7 +152,7 @@ const Lancamentos = () => {
             setIsDeleteRecurrenceModalOpen(false);
             handleCancelEdit();
           }}
-          transaction={selectedRecurringTransaction}
+          transaction={selectedRecurringTransactionForDelete} // CORRIGIDO: Nome da variável
           isMobile={isMobile}
           onConfirmDeleteWithOptions={confirmDeleteWithOptions}
         />
