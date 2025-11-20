@@ -165,6 +165,7 @@ export type Database = {
           descricao: string | null
           forma_pagamento: string
           id: string
+          numero_parcelas: number // Adicionado
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -176,6 +177,7 @@ export type Database = {
           descricao?: string | null
           forma_pagamento: string
           id?: string
+          numero_parcelas?: number // Adicionado
           tipo_pagamento: string
           user_id: string
           valor_total: number
@@ -187,6 +189,7 @@ export type Database = {
           descricao?: string | null
           forma_pagamento?: string
           id?: string
+          numero_parcelas?: number // Adicionado
           tipo_pagamento?: string
           user_id?: string
           valor_total?: number

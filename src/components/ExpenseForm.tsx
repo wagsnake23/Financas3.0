@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
-import { format } from "date-fns";
+import { format, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -55,10 +55,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Form states
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
+  const [tipoPagamento, setTipoPagamento] = useState<"avista" | "parcelado">("avista"); // Novo estado
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [descricao, setDescricao] = useState("");
   const [dataVencimento, setDataVencimento] = useState<Date | undefined>(new Date());
+  const [numeroParcelas, setNumeroParcelas] = useState(1); // Novo estado
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
@@ -68,12 +70,21 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // Efeito para definir o status de pago/pendente automaticamente
   useEffect(() => {
-    if (formaPagamento === "cartao") {
-      setIsPaid(false); // Cartão sempre pendente inicialmente
+    if (tipoPagamento === "parcelado") {
+      setIsPaid(false); // Parcelado é sempre pendente inicialmente
+    } else if (formaPagamento === "cartao") {
+      setIsPaid(false); // Cartão à vista também é pendente
     } else {
       setIsPaid(true); // Dinheiro/Pix/Boleto à vista é pago
     }
-  }, [formaPagamento]);
+  }, [formaPagamento, tipoPagamento]);
+
+  // Reset numeroParcelas if tipoPagamento changes to "avista"
+  useEffect(() => {
+    if (tipoPagamento === "avista") {
+      setNumeroParcelas(1);
+    }
+  }, [tipoPagamento]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,6 +115,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.cartaoId = true;
       hasError = true;
     }
+    if (tipoPagamento === "parcelado" && (numeroParcelas <= 1 || !Number.isInteger(numeroParcelas))) {
+      newErrors.numeroParcelas = true;
+      hasError = true;
+    }
 
     setValidationErrors(newErrors);
 
@@ -114,24 +129,20 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
 
     const valorTotal = valor as number;
-
-    const formattedDate = dataVencimento 
-      ? `${dataVencimento.getFullYear()}-${(dataVencimento.getMonth() + 1).toString().padStart(2, '0')}-${dataVencimento.getDate().toString().padStart(2, '0')}` 
-      : "";
-      
     const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
-    // Insert despesa
+    // Insert despesa principal
     const { data: despesaData, error: despesaError } = await supabase
       .from("despesas")
       .insert({
         user_id: user.id,
         categoria_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
         forma_pagamento: formaPagamento,
-        tipo_pagamento: "avista", // Always "avista" now
+        tipo_pagamento: tipoPagamento,
         cartao_id: formaPagamento === "cartao" ? cartaoId : null,
         valor_total: valorTotal,
         descricao,
+        numero_parcelas: tipoPagamento === "parcelado" ? numeroParcelas : 1, // Salvar o número de parcelas
       })
       .select()
       .single();
@@ -143,21 +154,31 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       return;
     }
 
-    // Generate single parcela for "avista"
+    // Generate parcelas
+    const installmentsToInsert = [];
+    const valorParcela = tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal;
+
+    for (let i = 0; i < numeroParcelas; i++) {
+      const installmentDate = addMonths(dataVencimento as Date, i);
+      const formattedInstallmentDate = `${installmentDate.getFullYear()}-${(installmentDate.getMonth() + 1).toString().padStart(2, '0')}-${installmentDate.getDate().toString().padStart(2, '0')}`;
+      
+      installmentsToInsert.push({
+        despesa_id: despesaData.id,
+        numero_parcela: i + 1,
+        valor_parcela: valorParcela,
+        vencimento: formattedInstallmentDate,
+        pago: tipoPagamento === "avista" ? isPaid : false, // Apenas à vista pode ser pago no momento da criação
+        data_pagamento: tipoPagamento === "avista" && isPaid ? currentTimestamp : null,
+      });
+    }
+
     const { error: parcelaError } = await supabase
       .from("despesas_parcelas")
-      .insert({
-        despesa_id: despesaData.id,
-        numero_parcela: 1,
-        valor_parcela: valorTotal,
-        vencimento: formattedDate,
-        pago: isPaid,
-        data_pagamento: isPaid ? currentTimestamp : null,
-      });
+      .insert(installmentsToInsert);
 
     if (parcelaError) {
-      toast.error("Erro ao criar parcela", { description: parcelaError.message });
-      console.error("Supabase error creating installment:", parcelaError);
+      toast.error("Erro ao criar parcela(s)", { description: parcelaError.message });
+      console.error("Supabase error creating installment(s):", parcelaError);
     }
 
     toast.success("Despesa adicionada com sucesso!", {
@@ -167,10 +188,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     // Reset form
     setSelectedSubcategoryId(UNSELECTED_VALUE);
     setFormaPagamento("dinheiro");
+    setTipoPagamento("avista");
     setCartaoId(UNSELECTED_VALUE);
     setValor(undefined);
     setDescricao("");
     setDataVencimento(new Date());
+    setNumeroParcelas(1);
     setIsPaid(false);
     setLoading(false);
     setValidationErrors({});
@@ -228,8 +251,20 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         UNSELECTED_VALUE={UNSELECTED_VALUE}
       />
 
-      {/* Tipo de Pagamento e Número de Parcelas removidos */}
-      {/* Apenas o campo de data de vencimento permanece */}
+      {/* Tipo de Pagamento (À vista / Parcelado) */}
+      <div>
+        <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
+        <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
+            <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <DateAndInstallmentFields
         dataVencimento={dataVencimento}
         setDataVencimento={setDataVencimento}
@@ -238,6 +273,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         validationErrors={validationErrors}
         setValidationErrors={setValidationErrors}
         isMobile={isMobile}
+        tipoPagamento={tipoPagamento} // Passar o tipo de pagamento
+        numeroParcelas={numeroParcelas} // Passar o número de parcelas
+        setNumeroParcelas={setNumeroParcelas} // Passar a função para atualizar o número de parcelas
       />
 
       <div>
@@ -252,11 +290,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         />
       </div>
 
-      <TransactionStatusToggle
-        isPaid={isPaid}
-        setIsPaid={setIsPaid}
-        isMobile={isMobile}
-      />
+      {tipoPagamento === "avista" && ( // Ocultar o toggle para parcelado, pois é sempre pendente
+        <TransactionStatusToggle
+          isPaid={isPaid}
+          setIsPaid={setIsPaid}
+          isMobile={isMobile}
+        />
+      )}
 
       <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
         {loading ? "Salvando..." : "Salvar Despesa"}

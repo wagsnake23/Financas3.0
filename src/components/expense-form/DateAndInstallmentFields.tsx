@@ -17,6 +17,9 @@ interface DateAndInstallmentFieldsProps {
   validationErrors: Record<string, boolean>;
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
+  tipoPagamento: "avista" | "parcelado"; // Nova prop
+  numeroParcelas: number; // Nova prop
+  setNumeroParcelas: (value: number) => void; // Nova prop
 }
 
 export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> = ({
@@ -27,12 +30,17 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   validationErrors,
   setValidationErrors,
   isMobile,
+  tipoPagamento,
+  numeroParcelas,
+  setNumeroParcelas,
 }) => {
+  const dateLabel = tipoPagamento === "parcelado" ? "Data da Primeira Parcela" : "Data de Vencimento";
+
   return (
-    <>
+    <div className={cn("grid gap-4", tipoPagamento === "parcelado" ? "grid-cols-2" : "grid-cols-1")}>
       <div>
         <Label htmlFor="dataVencimento" className={cn(isMobile && "text-xs")}>
-          Data
+          {dateLabel}
         </Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
@@ -66,6 +74,28 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
           </PopoverContent>
         </Popover>
       </div>
-    </>
+
+      {tipoPagamento === "parcelado" && (
+        <div>
+          <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
+            Número de Parcelas
+          </Label>
+          <Input
+            id="numeroParcelas"
+            type="number"
+            min="2"
+            value={numeroParcelas}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              setNumeroParcelas(isNaN(value) ? 1 : value);
+              setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
+            }}
+            placeholder="Ex: 3"
+            required
+            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
+          />
+        </div>
+      )}
+    </div>
   );
 };
