@@ -61,7 +61,8 @@ export const StatCard = ({
   return (
     <Card className={cn(
       cardPaddingClass, // Aplica o padding condicional
-      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl", // Adicionado rounded-xl
+      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl flex flex-col h-full", // Adicionado flex flex-col h-full
+      isMobile && "min-h-[140px]", // Altura mínima para mobile
       variantStyles[variant]
     )}>
       <div className="flex items-start justify-between">
@@ -100,11 +101,11 @@ export const StatCard = ({
       </div>
       {children && (
         <div className={cn(
-          "flex mt-1", 
+          "flex mt-auto", // Usar mt-auto para empurrar para o final
           childrenAlignment === "start" && "justify-start",
           childrenAlignment === "end" && "justify-end",
           childrenAlignment === "center" && "justify-center",
-          isMobile && "mt-1"
+          isMobile && "mt-2" // Ajustar margem superior para mobile
         )}>
           {children}
         </div>

@@ -140,28 +140,25 @@ const Dashboard = () => {
                 value={`R$ ${stats.totalExpenses.toFixed(2)}`}
                 icon="TrendingDown"
                 variant="expense"
-                // trend="Este mês" // REMOVIDO
                 isMobile={isMobile}
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null}
               >
-                <div className={cn("flex flex-col w-full mt-2")}> {/* Main container for children */}
-                  <div className="flex flex-col items-start mb-2"> {/* Container for "Pago este mês" and value, left-aligned */}
+                <div className={cn("flex justify-between items-end w-full")}> {/* Ajustado para flex justify-between items-end */}
+                  <div className="flex flex-col items-start"> {/* Container para "Pago este mês" e valor */}
                     <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                    <p className="font-semibold text-success text-sm">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p> {/* Added text-sm for consistency */}
+                    <p className="font-semibold text-success text-sm">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p>
                   </div>
-                  <div className="flex justify-end w-full"> {/* Container for the button, right-aligned */}
-                    <Button
-                      variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
-                      onClick={() => navigate("/despesas?mode=one-off")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
+                  <Button
+                    variant="destructive"
+                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
+                    onClick={() => navigate("/despesas?mode=one-off")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Despesa
+                  </Button>
                 </div>
               </StatCard>
 
@@ -170,13 +167,12 @@ const Dashboard = () => {
                 value={`R$ ${stats.totalIncome.toFixed(2)}`}
                 icon="TrendingUp"
                 variant="income"
-                // trend="Este mês" // REMOVIDO
                 isMobile={isMobile}
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null}
               >
-                <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
+                <div className={cn("flex justify-end w-full")}> {/* Ajustado para flex justify-end w-full */}
                   <Button 
                     variant="success" 
                     className="w-full h-8 px-3 text-xs rounded-xl" 
@@ -226,7 +222,6 @@ const Dashboard = () => {
                   value={`R$ ${stats.totalIncome.toFixed(2)}`}
                   icon="TrendingUp"
                   variant="income"
-                  // trend="Este mês" // REMOVIDO
                   isMobile={isMobile}
                   showValue={showIncomeValue}
                   onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
@@ -247,7 +242,6 @@ const Dashboard = () => {
                   value={`R$ ${stats.totalExpenses.toFixed(2)}`}
                   icon="TrendingDown"
                   variant="expense"
-                  // trend="Este mês" // REMOVIDO
                   isMobile={isMobile}
                   showValue={showExpenseValue}
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
