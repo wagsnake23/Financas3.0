@@ -140,7 +140,7 @@ const Dashboard = () => {
                 value={`R$ ${stats.totalExpenses.toFixed(2)}`}
                 icon="TrendingDown"
                 variant="expense"
-                trend="Este mês"
+                // trend="Este mês" // REMOVIDO
                 isMobile={isMobile}
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
@@ -165,7 +165,7 @@ const Dashboard = () => {
                 value={`R$ ${stats.totalIncome.toFixed(2)}`}
                 icon="TrendingUp"
                 variant="income"
-                trend="Este mês"
+                // trend="Este mês" // REMOVIDO
                 isMobile={isMobile}
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
@@ -221,7 +221,7 @@ const Dashboard = () => {
                   value={`R$ ${stats.totalIncome.toFixed(2)}`}
                   icon="TrendingUp"
                   variant="income"
-                  trend="Este mês"
+                  // trend="Este mês" // REMOVIDO
                   isMobile={isMobile}
                   showValue={showIncomeValue}
                   onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
@@ -242,7 +242,7 @@ const Dashboard = () => {
                   value={`R$ ${stats.totalExpenses.toFixed(2)}`}
                   icon="TrendingDown"
                   variant="expense"
-                  trend="Este mês"
+                  // trend="Este mês" // REMOVIDO
                   isMobile={isMobile}
                   showValue={showExpenseValue}
                   onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
