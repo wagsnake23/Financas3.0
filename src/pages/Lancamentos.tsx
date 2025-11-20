@@ -73,40 +73,38 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"> {/* Adicionado items-start aqui */}
-            <div className="lg:col-span-1"> {/* Coluna da esquerda para o MonthNavigator */}
-              <div className="max-w-xs mx-auto lg:mx-0"> {/* Limita a largura e centraliza em mobile, alinha à esquerda em desktop */}
-                <MonthNavigator
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                />
-              </div>
-            </div>
-            <div className="lg:col-span-2"> {/* Coluna da direita para o conteúdo principal, ocupando 2/3 */}
-              <LancamentosContent
-                editingTransaction={editingTransaction}
-                fullEditingRevenue={fullEditingRevenue}
-                fullEditingExpense={fullEditingExpense}
-                onUpdateTransaction={handleUpdateTransaction}
-                onCancelEdit={handleCancelEdit}
-                onDeleteTransaction={handleDeleteTransaction}
-                allCategories={fetchedCategories}
+          {/* Layout de empilhamento vertical para MonthNavigator e LancamentosContent */}
+          <div className="space-y-8"> 
+            <div className="max-w-xs mx-auto lg:mx-0"> {/* Limita a largura e centraliza em mobile, alinha à esquerda em desktop */}
+              <MonthNavigator
+                selectedMonth={selectedMonth}
+                onPreviousMonth={handlePreviousMonth}
+                onNextMonth={handleNextMonth}
                 isMobile={isMobile}
-                monthlyFilteredTransactions={monthlyFilteredTransactions}
-                cartoes={cartoes}
-                user={user}
-                onEditTransaction={handleEditTransaction}
-                queryClient={logicQueryClient} 
-                confirmDeleteWithOptions={confirmDeleteWithOptions}
-                markMonthPaid={markMonthPaid}
-                filterPaymentOptionId={filterPaymentOptionId}
-                setFilterPaymentOptionId={setFilterPaymentOptionId}
-                loadingPayInvoice={loadingPayInvoice}
-                setLoadingPayInvoice={setLoadingPayInvoice}
               />
             </div>
+            {/* LancamentosContent agora ocupará a largura total do contêiner principal */}
+            <LancamentosContent
+              editingTransaction={editingTransaction}
+              fullEditingRevenue={fullEditingRevenue}
+              fullEditingExpense={fullEditingExpense}
+              onUpdateTransaction={handleUpdateTransaction}
+              onCancelEdit={handleCancelEdit}
+              onDeleteTransaction={handleDeleteTransaction}
+              allCategories={fetchedCategories}
+              isMobile={isMobile}
+              monthlyFilteredTransactions={monthlyFilteredTransactions}
+              cartoes={cartoes}
+              user={user}
+              onEditTransaction={handleEditTransaction}
+              queryClient={logicQueryClient} 
+              confirmDeleteWithOptions={confirmDeleteWithOptions}
+              markMonthPaid={markMonthPaid}
+              filterPaymentOptionId={filterPaymentOptionId}
+              setFilterPaymentOptionId={setFilterPaymentOptionId}
+              loadingPayInvoice={loadingPayInvoice}
+              setLoadingPayInvoice={setLoadingPayInvoice}
+            />
           </div>
         </main>
         <Footer isMobile={isMobile} />
