@@ -37,7 +37,7 @@ export const useLancamentosState = () => {
   const [fullEditingRevenue, setFullEditingRevenue] = useState<Tables<"receitas"> | null>(null);
   const [fullEditingExpense, setFullEditingExpense] = useState<Tables<"despesas"> | null>(null);
   const [loadingEditData, setLoadingEditData] = useState(false);
-  const [loadingPayInvoice, setLoadingPayInvoice] = useState(false);
+  const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // NOVO ESTADO
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
 
@@ -69,8 +69,8 @@ export const useLancamentosState = () => {
     setFullEditingExpense,
     loadingEditData,
     setLoadingEditData,
-    loadingPayInvoice,
-    setLoadingPayInvoice,
+    loadingPayInvoice, // NOVO RETORNO
+    setLoadingPayInvoice, // NOVO RETORNO
     isEditModalOpen,
     setIsEditModalOpen,
     filterPaymentOptionId,

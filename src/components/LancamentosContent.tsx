@@ -26,8 +26,8 @@ interface LancamentosContentProps {
   onEditTransaction: (transaction: Transaction) => void;
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  loadingPayInvoice: boolean;
-  setLoadingPayInvoice: (loading: boolean) => void;
+  loadingPayInvoice: boolean; // NOVA PROP
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -47,8 +47,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   onEditTransaction,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
-  loadingPayInvoice,
-  setLoadingPayInvoice,
+  loadingPayInvoice, // NOVO
+  setLoadingPayInvoice, // NOVO
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -68,8 +68,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       disableFilters={disableFilters}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
-      loadingPayInvoice={loadingPayInvoice}
-      setLoadingPayInvoice={setLoadingPayInvoice}
+      loadingPayInvoice={loadingPayInvoice} // NOVO
+      setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
     />
   );
 };

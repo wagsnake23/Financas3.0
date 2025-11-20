@@ -39,8 +39,8 @@ interface TransactionListProps {
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
   selectedMonth: Date;
-  loadingPayInvoice: boolean;
-  setLoadingPayInvoice: (loading: boolean) => void;
+  loadingPayInvoice: boolean; // NOVA PROP
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -58,8 +58,8 @@ export const TransactionList = ({
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   selectedMonth,
-  loadingPayInvoice,
-  setLoadingPayInvoice,
+  loadingPayInvoice, // NOVO
+  setLoadingPayInvoice, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const navigate = useNavigate();

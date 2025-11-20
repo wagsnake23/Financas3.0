@@ -38,8 +38,8 @@ export const useLancamentosLogic = (
     setFullEditingExpense,
     loadingEditData,
     setLoadingEditData,
-    loadingPayInvoice,
-    setLoadingPayInvoice,
+    loadingPayInvoice, // NOVO
+    setLoadingPayInvoice, // NOVO
     isEditModalOpen,
     setIsEditModalOpen,
     filterPaymentOptionId,
@@ -120,8 +120,8 @@ export const useLancamentosLogic = (
     setFullEditingExpense,
     loadingEditData,
     setLoadingEditData,
-    loadingPayInvoice,
-    setLoadingPayInvoice,
+    loadingPayInvoice, // NOVO RETORNO
+    setLoadingPayInvoice, // NOVO RETORNO
     isEditModalOpen,
     setIsEditModalOpen,
     monthlyFilteredTransactions,

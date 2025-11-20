@@ -20,8 +20,8 @@ interface TransactionViewProps {
   disableFilters?: boolean;
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  loadingPayInvoice: boolean;
-  setLoadingPayInvoice: (loading: boolean) => void;
+  loadingPayInvoice: boolean; // NOVA PROP
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -37,8 +37,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   disableFilters = false,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
-  loadingPayInvoice,
-  setLoadingPayInvoice,
+  loadingPayInvoice, // NOVO
+  setLoadingPayInvoice, // NOVO
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -56,8 +56,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       disableFilters={disableFilters}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
-      loadingPayInvoice={loadingPayInvoice}
-      setLoadingPayInvoice={setLoadingPayInvoice}
+      loadingPayInvoice={loadingPayInvoice} // NOVO
+      setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
     />
   );
 
