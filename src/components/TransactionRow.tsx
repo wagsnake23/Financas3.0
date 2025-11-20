@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale"; // Importar ptBR para formatar a data
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { User } from "@supabase/supabase-js"; // Corrigido: de '=' para 'from'
+import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Cartao {
@@ -199,7 +199,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
 
       {/* SUBCATEGORIA */}
-      <TableCell className={cn("py-2 px-2 text-xs flex items-center gap-1", isMobile ? "min-w-[50px]" : "min-w-[80px]")}>
+      <TableCell className={cn("py-2 px-2 text-xs flex items-center gap-1", isMobile ? "min-w-[45px]" : "min-w-[80px]")}>
         {categoryIcon && (
           <DynamicIcon name={categoryIcon} className="h-4 w-4" />
         )}
