@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { addMonths, subMonths, startOfMonth } from "date-fns";
+import { addMonths, subMonths, startOfMonth, parseISO, isValid } from "date-fns"; // Adicionado parseISO e isValid
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -25,7 +25,6 @@ export const useLancamentosLogic = (
   user: User | null,
   authLoading: boolean
 ) => {
-  const queryClient = useQueryClient();
   console.log(
     "useLancamentosLogic: User received as prop:",
     user?.id,
@@ -33,19 +32,20 @@ export const useLancamentosLogic = (
     authLoading
   );
 
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
 
   const initialMonth = useMemo(() => {
     const monthParam = searchParams.get("month");
     if (monthParam) {
       try {
-        const [year, month, day] = monthParam.split("-").map(Number);
-        const date = new Date(year, month - 1, day);
-        if (isNaN(date.getTime())) {
-          console.error("Invalid date created from URL parameter:", monthParam);
-          return new Date();
+        const parsedDate = parseISO(monthParam); // Usar parseISO para strings ISO 8601
+        if (isValid(parsedDate)) { // Verificar se a data é válida
+          return parsedDate;
+        } else {
+          console.error("Invalid date parsed from URL parameter:", monthParam);
+          return new Date(); // Fallback para a data atual
         }
-        return date;
       } catch (e) {
         console.error("Error parsing month parameter from URL:", monthParam, e);
         return new Date();
