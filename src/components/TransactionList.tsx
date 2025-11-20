@@ -7,7 +7,7 @@ import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid, setDate, getMonth, getYear, addMonths, subMonths } from "date-fns"; // Adicionado subMonths
+import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns"; // Adicionado endOfMonth
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -210,32 +210,23 @@ export const TransactionList = ({
     const currentYear = getYear(selectedMonth);
     const currentMonthIndex = getMonth(selectedMonth); // 0-indexed
 
-    // Dia de fechamento da fatura (no mês selecionado)
-    let closingDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_fechamento);
-    // Se o dia de fechamento já passou no mês atual, a fatura é do próximo mês.
-    // Para exibir o fechamento do mês *anterior* que gerou a fatura atual,
-    // precisamos ajustar a data de fechamento para o mês anterior.
-    // Ex: Se selectedMonth é Dezembro, e fechamento é dia 25, a fatura de Dezembro fecha em 25/Dez.
-    // Mas as despesas de Dezembro vencem em Janeiro.
-    // A fatura que vence em `selectedMonth` (ex: Dezembro) é referente ao fechamento do mês anterior (ex: Novembro).
-    let displayClosingDate = setDate(subMonths(new Date(currentYear, currentMonthIndex), 1), selectedCard.dia_fechamento);
-    if (!isValid(displayClosingDate)) {
-      displayClosingDate = setDate(endOfMonth(subMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_fechamento);
+    // Calculate the closing date for the invoice that *covers* transactions up to the selected month's closing day.
+    // This means the closing date is in the `selectedMonth`.
+    let closingDateForDisplay = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_fechamento);
+    // Handle cases where dia_fechamento is greater than days in month (e.g., 31 in Feb)
+    if (!isValid(closingDateForDisplay)) {
+      closingDateForDisplay = setDate(endOfMonth(new Date(currentYear, currentMonthIndex)), selectedCard.dia_fechamento);
     }
-    const formattedClosingDate = isValid(displayClosingDate) ? format(displayClosingDate, "dd/MM", { locale: ptBR }) : null;
+    const formattedClosingDate = isValid(closingDateForDisplay) ? format(closingDateForDisplay, "dd/MM", { locale: ptBR }) : null;
 
-
-    // Data de vencimento da fatura (no mês seguinte ao fechamento)
-    let dueDate = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
-    // A fatura referente ao mês selecionado (selectedMonth) geralmente vence no mês seguinte.
-    // Ex: Despesas de Novembro (selectedMonth) fecham em 25/Nov e vencem em 15/Dez.
-    // Se selectedMonth é Novembro, a fatura que vence em Dezembro é a relevante.
-    // Então, a data de vencimento deve ser no mês seguinte ao selectedMonth.
-    dueDate = addMonths(dueDate, 1); // Adiciona 1 mês para refletir o vencimento da fatura do mês selecionado
-    if (!isValid(dueDate)) {
-      dueDate = setDate(endOfMonth(addMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_vencimento);
+    // Calculate the due date for this invoice. It will be in the *next* month.
+    let dueDateForDisplay = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
+    dueDateForDisplay = addMonths(dueDateForDisplay, 1); // Add 1 month for the due date
+    // Handle cases where dia_vencimento is greater than days in next month
+    if (!isValid(dueDateForDisplay)) {
+      dueDateForDisplay = setDate(endOfMonth(addMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_vencimento);
     }
-    const formattedDueDate = isValid(dueDate) ? format(dueDate, "dd/MM", { locale: ptBR }) : null;
+    const formattedDueDate = isValid(dueDateForDisplay) ? format(dueDateForDisplay, "dd/MM", { locale: ptBR }) : null;
 
     return {
       closingDay: selectedCard.dia_fechamento,
