@@ -11,6 +11,7 @@ interface CreditCardInvoiceSummaryProps {
   isMobile: boolean;
   formattedDueDate: string | null;
   cardLastDigits: string | null;
+  invoiceMonth: string | null; // NOVA PROP
   onPayInvoice: () => void; // NOVA PROP: Função para pagar a fatura
   loadingPayInvoice: boolean; // NOVA PROP: Estado de carregamento do pagamento
   disablePayInvoiceButton: boolean; // NOVA PROP: Para desabilitar o botão
@@ -23,6 +24,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   isMobile,
   formattedDueDate,
   cardLastDigits,
+  invoiceMonth, // Usar a nova prop
   onPayInvoice, // Usar a nova prop
   loadingPayInvoice, // Usar a nova prop
   disablePayInvoiceButton, // Usar a nova prop
@@ -50,17 +52,23 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>R$ {totalCardExpenses.toFixed(2)}</p>
         </div>
       </div>
-      {(cardLastDigits || formattedDueDate) && (
-        <div className={cn("text-center mt-2", isMobile && "mt-1")}>
-          {cardLastDigits && (
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Cartão: **** {cardLastDigits}</p>
-          )}
-          {formattedDueDate && (
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</span></p>
-          )}
-        </div>
-      )}
-      {/* O botão agora é renderizado se o componente CreditCardInvoiceSummary for renderizado, o que já é condicional à seleção de um cartão. */}
+      <div className={cn("text-center mt-2 space-y-0.5", isMobile && "mt-1 space-y-0")}>
+        {invoiceMonth && (
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
+            Mês da Fatura: <span className={cn("font-semibold text-sm", isMobile && "text-xs capitalize")}>{invoiceMonth}</span>
+          </p>
+        )}
+        {cardLastDigits && (
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
+            Cartão: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>**** {cardLastDigits}</span>
+          </p>
+        )}
+        {formattedDueDate && (
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
+            Vencimento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</span>
+          </p>
+        )}
+      </div>
       <div className={cn("mt-4", isMobile && "mt-3")}>
         <Button
           variant="secondary"
