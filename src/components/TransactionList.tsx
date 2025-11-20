@@ -319,17 +319,7 @@ export const TransactionList = ({
         isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
       )}>
         <Table>
-          <TableHeader className="sticky top-0 bg-soft-blue z-10">
-            <TableRow>
-              <TableHead className="py-1 px-2 text-left min-w-[70px]">Data</TableHead> {/* Alinhado à esquerda */}
-              {!isMobile && <TableHead className="py-1 px-2 text-left min-w-[60px]">Tipo</TableHead>} {/* Alinhado à esquerda */}
-              <TableHead className="py-1 px-2 text-left min-w-[80px]">Subcategoria</TableHead> {/* Alinhado à esquerda */}
-              {!isMobile && <TableHead className="py-1 px-2 text-left min-w-[100px]">Descrição</TableHead>} {/* Alinhado à esquerda */}
-              <TableHead className="py-1 px-2 text-right min-w-[80px]">Valor</TableHead> {/* Alinhado à direita */}
-              <TableHead className="py-1 px-2 text-center min-w-[50px]">Status</TableHead> {/* Alinhado ao centro */}
-              <TableHead className="py-1 px-2 text-right min-w-[50px]">Ações</TableHead> {/* Alinhado à direita */}
-            </TableRow>
-          </TableHeader>
+          {/* REMOVIDO: TableHeader */}
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
