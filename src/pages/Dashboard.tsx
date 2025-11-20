@@ -149,11 +149,11 @@ const Dashboard = () => {
                 <div className={cn("flex justify-between items-end w-full")}> {/* Ajustado para flex justify-between items-end */}
                   <div className="flex flex-col items-start"> {/* Container para "Pago este mês" e valor */}
                     <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                    <p className="font-semibold text-success text-sm">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p>
+                    <p className="font-semibold text-base text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p> {/* Alterado de text-sm para text-base */}
                   </div>
                   <Button
                     variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} /* Alterado para w-[130px] */
+                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} 
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -176,14 +176,14 @@ const Dashboard = () => {
                   <div className="flex flex-col items-start"> {/* NOVO: Container para o Saldo Atual */}
                     <p className="text-xs text-muted-foreground">Saldo Atual:</p>
                     <p className={cn(
-                      "font-semibold text-sm text-primary" // Alterado para text-primary
+                      "font-semibold text-base text-primary" // Alterado de text-sm para text-base
                     )}>
                       {showBalanceValue ? `R$ ${stats.balance.toFixed(2)}` : "R$ *****"}
                     </p>
                   </div>
                   <Button 
                     variant="success" 
-                    className="w-[130px] h-8 px-3 text-xs rounded-xl" /* Alterado para w-[130px] */
+                    className="w-[130px] h-8 px-3 text-xs rounded-xl" 
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
