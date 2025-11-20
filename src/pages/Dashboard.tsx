@@ -147,16 +147,21 @@ const Dashboard = () => {
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null}
               >
-                <div className={cn("flex items-end justify-between w-full mt-2")}>
-                  <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
-                  <Button
-                    variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
-                    onClick={() => navigate("/despesas?mode=one-off")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Despesa
-                  </Button>
+                <div className={cn("flex flex-col w-full mt-2")}> {/* Main container for children */}
+                  <div className="flex flex-col items-start mb-2"> {/* Container for "Pago este mês" and value, left-aligned */}
+                    <p className="text-xs text-muted-foreground">Pago este mês:</p>
+                    <p className="font-semibold text-success text-sm">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p> {/* Added text-sm for consistency */}
+                  </div>
+                  <div className="flex justify-end w-full"> {/* Container for the button, right-aligned */}
+                    <Button
+                      variant="destructive"
+                      className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
+                      onClick={() => navigate("/despesas?mode=one-off")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Despesa
+                    </Button>
+                  </div>
                 </div>
               </StatCard>
 
