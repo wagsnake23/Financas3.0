@@ -8,7 +8,8 @@ interface CreditCardInvoiceSummaryProps {
   totalPending: number;
   totalCardExpenses: number;
   isMobile: boolean;
-  formattedDueDate: string | null; // NOVA PROP: Data de vencimento formatada
+  formattedDueDate: string | null;
+  cardLastDigits: string | null; // NOVA PROP: Últimos 4 dígitos do cartão
 }
 
 export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> = ({
@@ -16,7 +17,8 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   totalPending,
   totalCardExpenses,
   isMobile,
-  formattedDueDate, // Usar a nova prop
+  formattedDueDate,
+  cardLastDigits, // Usar a nova prop
 }) => {
   return (
     <Card className={cn(
@@ -41,10 +43,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>R$ {totalCardExpenses.toFixed(2)}</p>
         </div>
       </div>
-      {formattedDueDate && (
+      {(cardLastDigits || formattedDueDate) && (
         <div className={cn("text-center mt-2", isMobile && "mt-1")}>
-          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento:</p>
-          <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</p>
+          {cardLastDigits && (
+            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Cartão: **** {cardLastDigits}</p>
+          )}
+          {formattedDueDate && (
+            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</span></p>
+          )}
         </div>
       )}
     </Card>

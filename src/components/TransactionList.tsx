@@ -250,6 +250,7 @@ export const TransactionList = ({
       closingDay: selectedCard.dia_fechamento,
       formattedClosingDate,
       formattedDueDate,
+      cardLastDigits: selectedCard.ultimos_digitos, // NOVO: Adicionar últimos dígitos do cartão
     };
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
@@ -365,6 +366,7 @@ export const TransactionList = ({
             totalCardExpenses={totalCardExpenses}
             isMobile={!!isMobile}
             formattedDueDate={cardDetails?.formattedDueDate || null}
+            cardLastDigits={cardDetails?.cardLastDigits || null} {/* Passando os últimos 4 dígitos */}
           />
         </div>
       )}
