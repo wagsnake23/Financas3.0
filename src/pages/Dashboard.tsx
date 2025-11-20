@@ -183,11 +183,7 @@ const Dashboard = () => {
                 selectedMonth={selectedMonth}
               />
 
-              <MonthlyExpensesCombinedMobile
-                transactions={monthlyFilteredTransactions}
-                expenseInstallments={expenseInstallments}
-                isMobile={isMobile}
-              />
+              {/* REMOVED: MonthlyExpensesCombinedMobile from mobile view */}
             </div>
           ) : (
             <>
