@@ -25,7 +25,8 @@ import { cn } from "@/lib/utils";
 import { useRecurringEntries } from "@/hooks/useRecurringEntries";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { NewExpenseSelectionDialog } from "@/components/NewExpenseSelectionDialog";
-import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses"; // NEW IMPORT
+import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
+import { MonthBadge } from "@/components/MonthBadge"; // NEW IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -39,8 +40,8 @@ const Dashboard = () => {
 
   const {
     monthlyFilteredTransactions,
-    fetchedCategories: allSubcategories, // Renomeado para allSubcategories
-    cartoes, // Destructure cartoes from useTransactionsData
+    fetchedCategories: allSubcategories,
+    cartoes,
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
   } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
@@ -145,7 +146,7 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
               >
-                <div className={cn("flex items-end justify-between w-full mt-2")}> {/* Ajustado para flex items-end justify-between */}
+                <div className={cn("flex items-end justify-between w-full mt-2")}>
                   <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
                   <Button
                     variant="destructive"
@@ -167,6 +168,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
+                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} /> : null}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 
@@ -199,7 +201,6 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              {isMobile && <Footer isMobile={isMobile} />} {/* Footer para mobile */}
             </div>
           ) : (
             <>
@@ -281,7 +282,7 @@ const Dashboard = () => {
             </>
           )}
         </main>
-        {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop */}
+        <Footer isMobile={isMobile} />
       </div>
     </ProtectedRoute>
   );

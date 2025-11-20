@@ -14,6 +14,7 @@ interface StatCardProps {
   showValue?: boolean; // Nova prop para controlar a visibilidade do valor
   onToggleVisibility?: () => void; // Nova prop para a função de alternância
   childrenAlignment?: "start" | "end" | "center"; // Nova prop para alinhamento dos filhos
+  headerContent?: React.ReactNode; // NOVA PROP: Conteúdo para o cabeçalho (top-right)
 }
 
 export const StatCard = ({ 
@@ -26,7 +27,8 @@ export const StatCard = ({
   isMobile, 
   showValue = true, 
   onToggleVisibility,
-  childrenAlignment = "end" // Padrão para 'end'
+  childrenAlignment = "end", // Padrão para 'end'
+  headerContent // NOVA PROP
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -84,8 +86,16 @@ export const StatCard = ({
             <p className="text-xs text-muted-foreground">{trend}</p>
           )}
         </div>
-        <div className={`p-1 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-1.5 para p-1 */}
-          <DynamicIcon name={icon} className={iconSizeClass} /> {/* Aplica o tamanho do ícone condicional */}
+        {/* NEW: Container for header content and main icon */}
+        <div className="flex items-center gap-2"> {/* Added gap-2 for spacing between badge and icon */}
+          {headerContent && (
+            <div className={cn(isMobile ? "mt-0.5" : "mt-0")}> {/* Adjust margin for mobile if needed */}
+              {headerContent}
+            </div>
+          )}
+          <div className={`p-1 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-1.5 para p-1 */}
+            <DynamicIcon name={icon} className={iconSizeClass} /> {/* Aplica o tamanho do ícone condicional */}
+          </div>
         </div>
       </div>
       {children && (
