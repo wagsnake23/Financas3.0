@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { cn } from "@/lib/utils";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, getDate, setDate } from "date-fns"; // Adicionado getDate e setDate
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types";
@@ -86,7 +86,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const [editOption, setEditOption] = useState<EditOption>("thisMonth");
   const [title, setTitle] = useState("");
-  const [dueDay, setDueDay] = useState("1");
+  const [dueDay, setDueDay] = useState<Date | undefined>(undefined); // Changed to Date | undefined
+  const [isDueDayCalendarOpen, setIsDueDayCalendarOpen] = useState(false); // NEW
   const [frequency, setFrequency] =
     useState<Enums<"recurring_frequency">>("monthly");
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
@@ -187,7 +188,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
         // Also initialize master values (for when editOption changes later)
         setTitle(recurringTrans.recurringMasterTitle);
-        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1"); // Use recurringMasterDueDay
+        // Initialize dueDay as a Date object
+        const transactionDate = createSafeDate(recurringTrans.date);
+        if (transactionDate && recurringTrans.recurringMasterDueDay) {
+          setDueDay(setDate(transactionDate, recurringTrans.recurringMasterDueDay));
+        } else {
+          setDueDay(undefined);
+        }
         setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
         setStartDate(createSafeDate(recurringTrans.recurringMasterStartDate)); // Use createSafeDate
         setEndDate(
@@ -213,7 +220,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDescription("");
       setStatus("Pendente");
       setTitle("");
-      setDueDay("1");
+      setDueDay(undefined); // Reset to undefined
       setFrequency("monthly");
       setStartDate(new Date());
       setEndDate(undefined);
@@ -245,7 +252,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         setAmount(recurringTrans.originalValue);
         setCategory(recurringTrans.originalCategory || UNSELECTED_VALUE);
         setTitle(recurringTrans.recurringMasterTitle);
-        setDueDay(recurringTrans.recurringMasterDueDay?.toString() || "1");
+        // Re-initialize dueDay as a Date object
+        const transactionDate = createSafeDate(recurringTrans.date);
+        if (transactionDate && recurringTrans.recurringMasterDueDay) {
+          setDueDay(setDate(transactionDate, recurringTrans.recurringMasterDueDay));
+        } else {
+          setDueDay(undefined);
+        }
         setFrequency(recurringTrans.recurringMasterFrequency || "monthly");
         setStartDate(createSafeDate(recurringTrans.recurringMasterStartDate)); // Use createSafeDate
         setEndDate(
@@ -279,7 +292,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         return;
       }
 
-      if (parseInt(dueDay) < 1 || parseInt(dueDay) > 31) {
+      if (editOption !== "thisMonth" && (!dueDay || getDate(dueDay) < 1 || getDate(dueDay) > 31)) { // Validate dueDay as a Date
         toast.error("O dia de vencimento deve ser entre 1 e 31.");
         return;
       }
@@ -365,7 +378,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           value: amount === undefined ? null : amount,
           // category_id é TEXT, então não precisa de isValidUuid
           category_id: (category === UNSELECTED_VALUE || category === "") ? null : category,
-          due_day: parseInt(dueDay),
+          due_day: dueDay ? getDate(dueDay) : null, // Extract day from Date object
           frequency,
           start_date: formattedStartDateForMaster, // Usar a string formatada
           end_date: formattedEndDateForMaster, // Usar a string formatada
@@ -439,9 +452,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               setIsPaid={setIsPaid}
               transactionType={type}
               editOption={editOption}
-              // NEW PROPS FOR DUE DAY
+              // UPDATED PROPS FOR DUE DAY
               dueDay={dueDay}
               setDueDay={setDueDay}
+              isDueDayCalendarOpen={isDueDayCalendarOpen}
+              setIsDueDayCalendarOpen={setIsDueDayCalendarOpen}
             />
             {editOption === "thisMonth" && (
               <ThisMonthFields
