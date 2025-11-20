@@ -218,8 +218,6 @@ export const TransactionList = ({
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       
-      // REMOVIDO: setSelectedMonth(addMonths(selectedMonth, 1));
-
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
       toast.error("Erro ao pagar fatura.", { description: error.message });
@@ -348,8 +346,8 @@ export const TransactionList = ({
         <div className={cn("hidden", !isMobile && "block")}></div> 
       </div>
 
-      {/* NEW: Card Details Display (Fechamento e Vencimento) */}
-      {isValidUuid(filterPaymentOptionId) && cardDetails && (
+      {/* REMOVIDO: NEW: Card Details Display (Fechamento e Vencimento) */}
+      {/* {isValidUuid(filterPaymentOptionId) && cardDetails && (
         <div className={cn(
           "grid grid-cols-2 gap-4 mt-4 p-4 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm",
           isMobile && "gap-2 mt-3 p-3 text-sm"
@@ -369,7 +367,7 @@ export const TransactionList = ({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Resumo da Fatura do Cartão (agora com o botão Pagar Fatura dentro) */}
       {isValidUuid(filterPaymentOptionId) && (
@@ -380,6 +378,7 @@ export const TransactionList = ({
             totalCardExpenses={totalCardExpenses}
             isMobile={!!isMobile}
             formattedDueDate={cardDetails?.formattedDueDate || null}
+            formattedClosingDate={cardDetails?.formattedClosingDate || null} // Passando a nova prop
             cardLastDigits={cardDetails?.cardLastDigits || null}
             invoiceMonth={formattedInvoiceMonth} 
             onPayInvoice={handlePayInvoice}

@@ -10,11 +10,12 @@ interface CreditCardInvoiceSummaryProps {
   totalCardExpenses: number;
   isMobile: boolean;
   formattedDueDate: string | null;
+  formattedClosingDate: string | null; // NOVA PROP
   cardLastDigits: string | null;
-  invoiceMonth: string | null; // NOVA PROP
-  onPayInvoice: () => void; // NOVA PROP: Função para pagar a fatura
-  loadingPayInvoice: boolean; // NOVA PROP: Estado de carregamento do pagamento
-  disablePayInvoiceButton: boolean; // NOVA PROP: Para desabilitar o botão
+  invoiceMonth: string | null;
+  onPayInvoice: () => void;
+  loadingPayInvoice: boolean;
+  disablePayInvoiceButton: boolean;
 }
 
 export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> = ({
@@ -23,11 +24,12 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   totalCardExpenses,
   isMobile,
   formattedDueDate,
+  formattedClosingDate, // Usar a nova prop
   cardLastDigits,
-  invoiceMonth, // Usar a nova prop
-  onPayInvoice, // Usar a nova prop
-  loadingPayInvoice, // Usar a nova prop
-  disablePayInvoiceButton, // Usar a nova prop
+  invoiceMonth,
+  onPayInvoice,
+  loadingPayInvoice,
+  disablePayInvoiceButton,
 }) => {
   return (
     <Card className={cn(
@@ -61,6 +63,11 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         {cardLastDigits && (
           <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
             Cartão: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>**** {cardLastDigits}</span>
+          </p>
+        )}
+        {formattedClosingDate && ( // Exibir a data de fechamento
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
+            Fechamento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedClosingDate}</span>
           </p>
         )}
         {formattedDueDate && (
