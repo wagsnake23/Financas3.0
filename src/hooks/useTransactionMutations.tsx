@@ -9,6 +9,7 @@ import { isValidUuid } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // NOVO TIPO
 
 interface UseTransactionMutationsProps {
   user: User | null;
@@ -165,7 +166,8 @@ export const useTransactionMutations = ({
     async (
       id: string,
       type: TransactionType,
-      updatedTransaction: Omit<Transaction, "id">
+      updatedTransaction: Omit<Transaction, "id">,
+      saveScope: SaveScope // NOVO PARÂMETRO
     ) => {
       setLoadingEditData(true);
 
@@ -204,6 +206,9 @@ export const useTransactionMutations = ({
             return;
           }
 
+          const parentDespesaId = originalTransaction?.despesa_id;
+
+          // Always update the current installment
           const { error: updateParcelaError } = await supabase
             .from("despesas_parcelas")
             .update({
@@ -218,7 +223,7 @@ export const useTransactionMutations = ({
             throw updateParcelaError;
           }
 
-          const parentDespesaId = originalTransaction?.despesa_id;
+          // Always update parent despesas description and category
           if (parentDespesaId && isValidUuid(parentDespesaId)) {
             const { error: updateDespesaParentError } = await supabase
               .from("despesas")
@@ -234,6 +239,12 @@ export const useTransactionMutations = ({
             }
           } else {
             console.warn("handleUpdateTransaction: Parent despesa_id not found or invalid for installment update:", parentDespesaId);
+          }
+
+          // Handle different save scopes for recurring expenses
+          if (saveScope === "thisMonthForward" || saveScope === "all") {
+            toast.info("A atualização de valores para múltiplas parcelas (deste mês em diante ou todo o período) não está totalmente implementada. Apenas a parcela atual e a descrição/categoria da despesa principal foram atualizadas.", { duration: 5000 });
+            // TODO: Implement full logic for updating future/all installments and recalculating parent's valor_total
           }
         }
 

@@ -19,26 +19,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
+type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
 
 interface TransactionEditFormProps {
   editingTransaction: Transaction | null;
   onUpdateTransaction: (
     id: string,
     type: TransactionType,
-    updatedTransaction: Omit<Transaction, "id">
+    updatedTransaction: Omit<Transaction, "id">,
+    saveScope: SaveScope // Adicionado saveScope
   ) => void;
   onCancelEdit: () => void;
   onDeleteTransaction: (
     id: string,
     type: TransactionType,
-    deleteScope: DeleteScope // Adicionado deleteScope
+    deleteScope: DeleteScope
   ) => void;
   allCategories: AppCategory[];
   isMobile: boolean;
@@ -71,10 +73,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
 
-  // Estados para o diálogo de exclusão
+  // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
   const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] = useState(false);
-  const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth"); // Novo estado para o radio button
+  const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
+
+  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false); // NOVO ESTADO
+  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
 
   const isRecurringTransaction = useMemo(() => {
     return editingTransaction?.type === "expense" && 
@@ -135,7 +140,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setStatus(initialStatus);
       
       setAmount(editingTransaction.amount);
-      setDate(createSafeDate(editingTransaction.date)); // Use createSafeDate
+      setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
     } else {
@@ -152,20 +157,30 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    performUpdate();
-  };
-
-  const performUpdate = () => {
     if (!editingTransaction) return;
-    setLoading(true);
 
     if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) {
       toast.error(
         "Preencha todos os campos obrigatórios (Valor e Subcategoria)."
       );
-      setLoading(false);
       return;
     }
+
+    if (isRecurringTransaction) {
+      setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
+    } else {
+      performUpdate("oneOff"); // Salva diretamente para transações avulsas
+    }
+  };
+
+  const handleConfirmSave = (saveScope: SaveScope) => {
+    performUpdate(saveScope);
+    setShowSaveOptionsDialog(false);
+  };
+
+  const performUpdate = (saveScope: SaveScope) => {
+    if (!editingTransaction) return;
+    setLoading(true);
 
     // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
@@ -198,7 +213,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     onUpdateTransaction(
       editingTransaction.id,
       type,
-      updatedTransaction
+      updatedTransaction,
+      saveScope // Passa o saveScope
     );
 
     setLoading(false);
@@ -261,12 +277,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         />
 
         <TransactionEditActions
-          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation} // Novo prop
-          onSave={handleSubmit}
+          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
           onCancel={onCancelEdit}
           loading={loading}
           isMobile={isMobile}
-          isRecurringTransaction={isRecurringTransaction} // Passar para o componente de ações
+          isRecurringTransaction={isRecurringTransaction}
         />
       </form>
 
@@ -330,11 +346,56 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading} className="w-full sm:w-auto mt-2 sm:mt-0">
-              Cancelar
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading} className="w-full sm:w-auto">
               {loading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada */}
+      <AlertDialog open={showSaveOptionsDialog} onOpenChange={setShowSaveOptionsDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Pencil" className="h-6 w-6 text-primary" />
+              Atualizar Despesa Parcelada
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta despesa faz parte de um lançamento parcelado. Como você gostaria de aplicar as alterações?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <RadioGroup
+              value={selectedSaveScope}
+              onValueChange={(value: SaveScope) => setSelectedSaveScope(value)}
+              className="space-y-3"
+            >
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="thisMonth" id="save-this-month" />
+                <label htmlFor="save-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Apenas este mês
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="thisMonthForward" id="save-this-month-forward" />
+                <label htmlFor="save-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Deste mês em diante
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="all" id="save-all" />
+                <label htmlFor="save-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Todo o período
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+          <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
+            <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading}>
+              {loading ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
