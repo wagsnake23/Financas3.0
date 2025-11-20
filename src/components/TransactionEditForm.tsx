@@ -406,12 +406,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const formContent = (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-          {isRecurringTransaction
-            ? "Editar Lançamento Recorrente"
-            : "Editar Lançamento"}
-        </h2>
+      <div className="flex items-center justify-end mb-6"> {/* Alterado para justify-end e removido h2 */}
         <Button
           variant="ghost"
           size="icon"
