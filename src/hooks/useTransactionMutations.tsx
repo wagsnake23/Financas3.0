@@ -58,6 +58,8 @@ export const useTransactionMutations = ({
     queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Invalida a query geral de transações
+    queryClient.invalidateQueries({ queryKey: ["despesas", user?.id] }); // NOVO: Invalida a query de despesas diretamente
+    queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] }); // NOVO: Invalida a query de cartões para garantir que a lista de cartões seja atualizada
   }, [queryClient, user?.id]);
 
   const confirmDeleteWithOptions = useCallback(
@@ -202,7 +204,7 @@ export const useTransactionMutations = ({
         if (isFixed) {
           const lastHyphenIndex = revenueIdToUse.lastIndexOf("-");
           if (lastHyphenIndex !== -1) {
-            revenueIdToUse = revenueIdTo, revenueIdToUse.substring(0, lastHyphenIndex);
+            revenueIdToUse = revenueIdToUse.substring(0, lastHyphenIndex);
           }
         }
         if (!isValidUuid(revenueIdToUse)) {
@@ -218,8 +220,28 @@ export const useTransactionMutations = ({
           setLoadingEditData(false);
           return;
         }
+
+        // Get the parent despesa_id before deleting the installment
+        const parentDespesaId = transactionToDelete.despesa_id;
+
         const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
-        error = deleteParcelaError;
+        if (deleteParcelaError) throw deleteParcelaError;
+
+        // If it was an installment, check if the parent despesa should be deleted
+        if (parentDespesaId && isValidUuid(parentDespesaId)) {
+          const { data: remainingParcelas, error: checkError } = await supabase
+            .from("despesas_parcelas")
+            .select("id")
+            .eq("despesa_id", parentDespesaId);
+
+          if (checkError) console.error("Error checking remaining installments after single installment deletion:", checkError);
+
+          if (remainingParcelas && remainingParcelas.length === 0) {
+            // No more installments for this parent despesa, delete the parent
+            const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
+            if (deleteParentError) throw deleteParentError;
+          }
+        }
       }
 
       if (error) {
@@ -347,9 +369,6 @@ export const useTransactionMutations = ({
                   valor_total: updatedTransaction.amount,
                   categoria_id: updatedTransaction.category,
                   descricao: updatedTransaction.description,
-                  is_fixed: is_fixed_to_use,
-                  recurrence_frequency: recurrence_frequency_to_use,
-                  recurrence_installments_count: recurrence_installments_count_to_use,
                 })
                 .eq("id", parentDespesaId)
                 .eq("user_id", user.id);
