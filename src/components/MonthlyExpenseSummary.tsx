@@ -5,7 +5,7 @@ import DynamicIcon from "./DynamicIcon";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
 
 interface MonthlyExpenseSummaryProps {
   expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'is_fixed'> | null })[];
@@ -40,8 +40,8 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
       // Filter out legacy fixed expenses
       if (installment.despesas?.is_fixed) return;
 
-      const installmentDate = new Date(installment.vencimento);
-      if (isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
+      const installmentDate = createSafeDate(installment.vencimento); // Usar createSafeDate
+      if (installmentDate && isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
         if (installment.pago) {
           paid += installment.valor_parcela;
         } else {

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react"; // Importar useEffe
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import { format, isWithinInterval, startOfMonth, endOfMonth } from "date-fns";
@@ -55,8 +55,16 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
     return expenseInstallments
       .filter(p => !p.despesas?.is_fixed) // Filter out legacy fixed expenses
       .filter(p => p.despesas?.forma_pagamento === "cartao" && p.despesas.cartao_id === selectedCardId)
-      .filter(p => isWithinInterval(new Date(p.vencimento), { start: monthStart, end: monthEnd }))
-      .sort((a, b) => new Date(a.vencimento).getTime() - new Date(b.vencimento).getTime());
+      .filter(p => {
+        const installmentDate = createSafeDate(p.vencimento); // Usar createSafeDate
+        return installmentDate && isWithinInterval(installmentDate, { start: monthStart, end: monthEnd });
+      })
+      .sort((a, b) => {
+        const dateA = createSafeDate(a.vencimento);
+        const dateB = createSafeDate(b.vencimento);
+        if (!dateA || !dateB) return 0; // Handle invalid dates for sorting
+        return dateA.getTime() - dateB.getTime();
+      });
   }, [expenseInstallments, selectedCardId, selectedMonth]);
 
   const { totalPaid, totalPending, totalCardExpenses } = useMemo(() => {

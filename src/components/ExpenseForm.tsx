@@ -16,7 +16,7 @@ import { AppCategory } from "@/types/finance";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, createSafeDate } from "@/lib/utils"; // Importando createSafeDate
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 
 // Importar os novos componentes modulares
@@ -60,7 +60,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [descricao, setDescricao] = useState("");
-  const [dataVencimento, setDataVencimento] = useState<Date | undefined>(new Date());
+  const [dataVencimento, setDataVencimento] = useState<Date>(new Date()); // Alterado para Date, sempre válido
   const [numeroParcelas, setNumeroParcelas] = useState("1");
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -103,7 +103,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.valor = true;
       hasError = true;
     }
-    if (!dataVencimento) {
+    if (!dataVencimento) { // dataVencimento agora é sempre Date, então esta validação é menos provável de falhar
       newErrors.dataVencimento = true;
       hasError = true;
     }
@@ -183,7 +183,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     } else if (tipoPagamento === "parcelado") {
       const parcelas = [];
       const valorParcela = valorTotal / parseInt(numeroParcelas);
-      const dataBase = new Date(dataVencimento);
+      const dataBase = dataVencimento; // dataVencimento já é um Date válido
 
       for (let i = 0; i < parseInt(numeroParcelas); i++) {
         const dataParc = new Date(dataBase);
@@ -220,7 +220,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setCartaoId(UNSELECTED_VALUE);
     setValor(undefined);
     setDescricao("");
-    setDataVencimento(new Date());
+    setDataVencimento(new Date()); // Reset para um Date válido
     setNumeroParcelas("1");
     setIsPaid(false);
     setLoading(false);

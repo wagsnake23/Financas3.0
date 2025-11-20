@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, createSafeDate } from "@/lib/utils"; // Importando createSafeDate
 import { Tables } from "@/integrations/supabase/types";
-import { format, isValid } from "date-fns"; // Adicionado isValid
+import { format, isValid } from "date-fns";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
@@ -42,13 +42,13 @@ const isValidUuid = (uuid: string) => {
   return uuidRegex.test(uuid);
 };
 
-// Helper function to create a local Date object from a YYYY-MM-DD string
-const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
-  if (!dateString) return undefined;
-  const [y, m, d] = dateString.split("-").map(Number);
-  const date = new Date(y, m - 1, d);
-  return isValid(date) ? date : undefined;
-};
+// Removido: Helper function to create a local Date object from a YYYY-MM-DD string
+// const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
+//   if (!dateString) return undefined;
+//   const [y, m, d] = dateString.split("-").map(Number);
+//   const date = new Date(y, m - 1, d);
+//   return isValid(date) ? date : undefined;
+// };
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
@@ -114,7 +114,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       // 🔁 RECORRENTE
       // ---------------------------------------------
       if (transaction.isRecurring && transaction.recurringEntryId) {
-        const d = new Date(transaction.date);
+        const d = createSafeDate(transaction.date); // Usar createSafeDate
+        if (!d) {
+          toast.error("Data da transação inválida.");
+          return;
+        }
         const year = d.getFullYear();
         const month = d.getMonth() + 1;
 

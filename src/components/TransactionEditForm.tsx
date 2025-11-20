@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
-import { cn } from "@/lib/utils";
-import { format, parseISO, isValid } from "date-fns"; // Adicionado isValid
+import { cn, createSafeDate } from "@/lib/utils"; // Importando createSafeDate
+import { format, parseISO, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types";
@@ -47,13 +47,13 @@ interface TransactionEditFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 
-// Helper function to create a local Date object from a YYYY-MM-DD string
-const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
-  if (!dateString) return undefined;
-  const [y, m, d] = dateString.split("-").map(Number);
-  const date = new Date(y, m - 1, d);
-  return isValid(date) ? date : undefined; // Verifica a validade da data
-};
+// Removido: Helper function to create a local Date object from a YYYY-MM-DD string
+// const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
+//   if (!dateString) return undefined;
+//   const [y, m, d] = dateString.split("-").map(Number);
+//   const date = new Date(y, m - 1, d);
+//   return isValid(date) ? date : undefined; // Verifica a validade da data
+// };
 
 // Helper function to validate if a string is a UUID
 const isValidUuid = (value: string | null | undefined): boolean => {

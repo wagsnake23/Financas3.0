@@ -7,6 +7,7 @@ import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isW
 import { toast } from "sonner";
 import { ptBR } from "date-fns/locale";
 import { AppCategory, Transaction } from "@/types/finance";
+import { createSafeDate } from "@/lib/utils"; // Importar createSafeDate
 
 type RecurringEntry = Tables<'recurring_entries'>;
 type RecurringException = Tables<'recurring_entry_exceptions'>;
@@ -40,13 +41,13 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
   return `${recurringId}-${year}-${month}`;
 };
 
-// Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
-function parseDateOnly(dateString: string | null | undefined): Date | null {
-  if (!dateString) return null;
-  const [year, month, day] = dateString.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-  return isValid(date) ? date : null;
-}
+// Removido: Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
+// function parseDateOnly(dateString: string | null | undefined): Date | null {
+//   if (!dateString) return null;
+//   const [year, month, day] = dateString.split("-").map(Number);
+//   const date = new Date(year, month - 1, day);
+//   return isValid(date) ? date : null;
+// }
 
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
   const queryClient = useQueryClient();
@@ -113,8 +114,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log(`[DEBUG]   Current Month (start): ${format(startOfMonth(currentMonth), 'yyyy-MM-dd')}`);
 
       // Check if the entry is active and within its date range
-      const entryStartDate = parseDateOnly(entry.start_date); // Usar parseDateOnly
-      const entryEndDate = entry.end_date ? parseDateOnly(entry.end_date) : null; // Usar parseDateOnly
+      const entryStartDate = createSafeDate(entry.start_date); // Usar createSafeDate
+      const entryEndDate = entry.end_date ? createSafeDate(entry.end_date) : null; // Usar createSafeDate
 
       // Se a data de início for inválida, pula esta entrada
       if (!entryStartDate) {
@@ -162,7 +163,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
       const finalCategory = exception?.override_category_id ?? entry.category_id;
-      const finalDueDate = exception?.override_due_date ? parseDateOnly(exception.override_due_date) : baseDueDate; // Usar parseDateOnly
+      const finalDueDate = exception?.override_due_date ? createSafeDate(exception.override_due_date) : baseDueDate; // Usar createSafeDate
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
       

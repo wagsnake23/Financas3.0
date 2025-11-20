@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment } from "@/types/finance"; // Importar a interface Investment
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
 import { format, isValid } from "date-fns"; // Importar format e isValid
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
@@ -27,13 +27,13 @@ import {
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
 
-// Helper function to create a local Date object from a YYYY-MM-DD string
-const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
-  if (!dateString) return undefined;
-  const [y, m, d] = dateString.split("-").map(Number);
-  const date = new Date(y, m - 1, d);
-  return isValid(date) ? date : undefined;
-};
+// Removido: Helper function to create a local Date object from a YYYY-MM-DD string
+// const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
+//   if (!dateString) return undefined;
+//   const [y, m, d] = dateString.split("-").map(Number);
+//   const date = new Date(y, m - 1, d);
+//   return isValid(date) ? date : undefined;
+// };
 
 export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
