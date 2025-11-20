@@ -96,18 +96,10 @@ const Dashboard = () => {
 
   // Calculate total paid expenses for the current month
   const totalPaidMonthlyExpenses = useMemo(() => {
-    const startOfCurrentMonth = startOfMonth(selectedMonth);
-    const endOfCurrentMonth = endOfMonth(selectedMonth);
-
-    return expenseInstallments
-      .filter(p => !p.despesas?.is_fixed) // Filter out legacy fixed expenses
-      .filter(p => p.pago) // Only paid installments
-      .filter(p => {
-        const installmentDate = new Date(p.vencimento);
-        return isWithinInterval(installmentDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
-      })
-      .reduce((sum, p) => sum + p.valor_parcela, 0);
-  }, [expenseInstallments, selectedMonth]);
+    return monthlyFilteredTransactions
+      .filter(t => t.type === "expense" && t.status === "Recebida")
+      .reduce((sum, t) => sum + t.amount, 0);
+  }, [monthlyFilteredTransactions]);
 
   const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
 
