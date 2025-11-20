@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
-import { useLancamentosState } from "@/hooks/useLancamentosLogic"; // CORRIGIDO: Alterado para useLancamentosState
+import { useLancamentosState } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,10 +15,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"; // Importar componentes do Dialog
-import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
-import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Importar Select
+} from "@/components/ui/dialog";
+import { TransactionEditForm } from "@/components/TransactionEditForm";
+import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTransactionsData } from "@/hooks/useTransactionsData"; // Importar useTransactionsData
+import { useTransactionMutations } from "@/hooks/useTransactionMutations"; // Importar useTransactionMutations
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -30,40 +32,60 @@ const Lancamentos = () => {
     setSelectedMonth,
     handlePreviousMonth,
     handleNextMonth,
+    editingTransaction,
     setEditingTransaction,
+    fullEditingRevenue,
     setFullEditingRevenue,
+    fullEditingExpense,
     setFullEditingExpense,
     loadingEditData,
+    setLoadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
     isEditModalOpen,
     setIsEditModalOpen,
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransactionForDelete, // CORRIGIDO: Nome da variável
-    monthlyFilteredTransactions,
-    fetchedCategories,
-    cartoes,
-    isLoading,
-    handleDeleteTransaction,
-    handleEditTransaction,
-    handleUpdateTransaction,
-    handleCancelEdit,
-    editingTransaction,
-    fullEditingRevenue,
-    fullEditingExpense,
-    queryClient: logicQueryClient,
-    confirmDeleteWithOptions,
-    markMonthPaid,
+    selectedRecurringTransactionForDelete,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     filterType,
     setFilterType,
-  } = useLancamentosState(user, authLoading); // CORRIGIDO: Alterado para useLancamentosState
+    handleCancelEdit,
+  } = useLancamentosState(); // Não precisa de user e authLoading aqui
 
-  console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
+  const {
+    monthlyFilteredTransactions,
+    fetchedCategories,
+    cartoes,
+    isLoading: isLoadingTransactionsData,
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
 
-  if (authLoading || isLoading || loadingEditData) {
+  const {
+    confirmDeleteWithOptions,
+    handleDeleteTransaction,
+    handleUpdateTransaction,
+  } = useTransactionMutations({
+    user,
+    queryClient,
+    monthlyFilteredTransactions,
+    setLoadingEditData,
+    setIsDeleteRecurrenceModalOpen,
+    setEditingTransaction,
+    setIsEditModalOpen,
+    setSelectedRecurringTransactionForDelete,
+    selectedMonth,
+    fetchedCategories, // Passar fetchedCategories
+    cartoes, // Passar cartoes
+  });
+
+  // Função para abrir o modal de edição
+  const handleEditTransaction = (transaction: any) => {
+    setEditingTransaction(transaction);
+    setIsEditModalOpen(true);
+  };
+
+  if (authLoading || isLoadingTransactionsData || loadingEditData) {
     return <Loading />;
   }
 
@@ -85,7 +107,7 @@ const Lancamentos = () => {
                 onNextMonth={handleNextMonth}
                 isMobile={isMobile}
               />
-              <Select value={filterType} onValueChange={setFilterType} disabled={isLoading}>
+              <Select value={filterType} onValueChange={setFilterType} disabled={isLoadingTransactionsData}>
                 <SelectTrigger className="rounded-xl lg:w-[150px]">
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
@@ -105,15 +127,15 @@ const Lancamentos = () => {
               onUpdateTransaction={handleUpdateTransaction}
               onCancelEdit={handleCancelEdit}
               onDeleteTransaction={handleDeleteTransaction}
-              allCategories={fetchedCategories}
+              allCategories={fetchedCategories} // Passar fetchedCategories do useTransactionsData
               isMobile={isMobile}
-              monthlyFilteredTransactions={monthlyFilteredTransactions}
-              cartoes={cartoes}
+              monthlyFilteredTransactions={monthlyFilteredTransactions} // Passar monthlyFilteredTransactions do useTransactionsData
+              cartoes={cartoes} // Passar cartoes do useTransactionsData
               user={user}
               onEditTransaction={handleEditTransaction}
-              queryClient={logicQueryClient} 
+              queryClient={queryClient} // Usar o queryClient principal
               confirmDeleteWithOptions={confirmDeleteWithOptions}
-              markMonthPaid={markMonthPaid}
+              // markMonthPaid={markMonthPaid} // markMonthPaid vem do useRecurringEntries, que é usado dentro de useTransactionMutations
               filterPaymentOptionId={filterPaymentOptionId}
               setFilterPaymentOptionId={setFilterPaymentOptionId}
               loadingPayInvoice={loadingPayInvoice}
@@ -152,7 +174,7 @@ const Lancamentos = () => {
             setIsDeleteRecurrenceModalOpen(false);
             handleCancelEdit();
           }}
-          transaction={selectedRecurringTransactionForDelete} // CORRIGIDO: Nome da variável
+          transaction={selectedRecurringTransactionForDelete}
           isMobile={isMobile}
           onConfirmDeleteWithOptions={confirmDeleteWithOptions}
         />

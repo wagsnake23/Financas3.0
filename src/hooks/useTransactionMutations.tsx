@@ -3,8 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Transaction, TransactionType } from "@/types/finance";
-import { TablesUpdate } from "@/integrations/supabase/types";
+import { Transaction, TransactionType, AppCategory } from "@/types/finance"; // Adicionado AppCategory
+import { TablesUpdate, Tables } from "@/integrations/supabase/types"; // Adicionado Tables
 import {
   MaterializedRecurringTransaction,
   useRecurringEntries,
@@ -29,7 +29,9 @@ interface UseTransactionMutationsProps {
   setEditingTransaction: (transaction: Transaction | null) => void;
   setIsEditModalOpen: (open: boolean) => void;
   setSelectedRecurringTransactionForDelete: (transaction: Transaction | null) => void;
-  selectedMonth: Date; // Adicionado selectedMonth
+  selectedMonth: Date;
+  fetchedCategories: AppCategory[]; // NOVO: Adicionado fetchedCategories
+  cartoes: Tables<'cartoes'>[]; // NOVO: Adicionado cartoes
 }
 
 export const useTransactionMutations = ({
@@ -41,7 +43,9 @@ export const useTransactionMutations = ({
   setEditingTransaction,
   setIsEditModalOpen,
   setSelectedRecurringTransactionForDelete,
-  selectedMonth, // Usar selectedMonth
+  selectedMonth,
+  fetchedCategories, // NOVO
+  cartoes, // NOVO
 }: UseTransactionMutationsProps) => {
   const {
     createOrUpdateException,
@@ -50,7 +54,7 @@ export const useTransactionMutations = ({
     deleteRecurringEntry,
     cancelMonth,
     endRecurringAt,
-  } = useRecurringEntries(user, selectedMonth, [], !!user); // Passar selectedMonth e allCategories vazias, pois não são usadas aqui
+  } = useRecurringEntries(user, selectedMonth, fetchedCategories, !!user); // Passar fetchedCategories
 
   const invalidateAllTransactionQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["recurringEntries", user?.id] });
@@ -202,7 +206,7 @@ export const useTransactionMutations = ({
         if (isFixed) {
           const lastHyphenIndex = revenueIdToUse.lastIndexOf("-");
           if (lastHyphenIndex !== -1) {
-            revenueIdToUse = revenueIdTo, revenueIdToUse.substring(0, lastHyphenIndex);
+            revenueIdToUse = revenueIdToUse.substring(0, lastHyphenIndex);
           }
         }
         if (!isValidUuid(revenueIdToUse)) {
