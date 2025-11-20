@@ -73,7 +73,7 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> {/* Layout de grade */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> {/* Alterado para 3 colunas */}
             <div className="lg:col-span-1"> {/* Coluna da esquerda para o MonthNavigator */}
               <div className="max-w-xs mx-auto lg:mx-0"> {/* Limita a largura e centraliza em mobile, alinha à esquerda em desktop */}
                 <MonthNavigator
@@ -84,7 +84,7 @@ const Lancamentos = () => {
                 />
               </div>
             </div>
-            <div className="lg:col-span-1"> {/* Coluna da direita para o conteúdo principal */}
+            <div className="lg:col-span-2"> {/* Coluna da direita para o conteúdo principal, ocupando 2/3 */}
               <LancamentosContent
                 editingTransaction={editingTransaction}
                 fullEditingRevenue={fullEditingRevenue}
