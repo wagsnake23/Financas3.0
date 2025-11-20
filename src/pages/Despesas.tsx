@@ -89,9 +89,9 @@ export default function Despesas() {
   const formContent = (
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
-      <p className="text-xs text-muted-foreground text-center mb-4">
+      {/* Removido: <p className="text-xs text-muted-foreground text-center mb-4">
         Para despesas únicas ou parceladas com número fixo de parcelas.
-      </p>
+      </p> */}
 
       <ExpenseForm
         user={user}
