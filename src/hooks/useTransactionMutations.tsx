@@ -295,15 +295,23 @@ export const useTransactionMutations = ({
       try {
         if (isRecurring && recurringData) {
           const recurringTrans = originalTransaction as MaterializedRecurringTransaction;
-          const currentYear = new Date(recurringTrans.date).getFullYear();
-          const currentMonth = new Date(recurringTrans.date).getMonth() + 1;
+          const transactionDate = new Date(recurringTrans.date);
+          const year = transactionDate.getFullYear();
+          const month = transactionDate.getMonth() + 1; // Month is 1-indexed for Supabase RPC
 
           if (editOption === "thisMonth") {
             const payload = recurringData as TablesUpdate<"recurring_entry_exceptions">;
+            console.log(`[DEBUG] handleUpdateTransaction (thisMonth):
+              Recurring ID: ${recurringTrans.recurringEntryId}
+              Transaction Date: ${recurringTrans.date}
+              Calculated Year: ${year}
+              Calculated Month: ${month}
+              Payload: ${JSON.stringify(payload)}
+            `);
             await createOrUpdateException({
               recurring_id: recurringTrans.recurringEntryId,
-              year: currentYear,
-              month: currentMonth,
+              year: year,
+              month: month,
               payload,
             });
           } else if (editOption === "thisMonthForward") {

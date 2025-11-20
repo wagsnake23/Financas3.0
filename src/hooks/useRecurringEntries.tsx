@@ -254,6 +254,12 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
   const createOrUpdateExceptionMutation = useMutation({
     mutationFn: async ({ recurring_id, year, month, payload }: { recurring_id: string; year: number; month: number; payload: TablesUpdate<'recurring_entry_exceptions'> }) => {
       if (!user?.id) throw new Error("User not authenticated.");
+      console.log(`[DEBUG] createOrUpdateExceptionMutation (RPC call):
+        Recurring ID: ${recurring_id}
+        Year: ${year}
+        Month: ${month}
+        Payload: ${JSON.stringify(payload)}
+      `);
       const { data, error } = await supabase.rpc('rpc_create_or_update_recurring_exception', {
         p_recurring_id: recurring_id,
         p_year: year,
