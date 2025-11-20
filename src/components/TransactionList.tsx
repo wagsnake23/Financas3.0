@@ -340,7 +340,7 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm mt-4", // Adicionado mt-4 aqui
-        isMobile ? "max-h-[50vh] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
+        isMobile ? "max-h-[320px] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Ajustado para 320px em mobile
       )}>
         <Table>
           {/* REMOVIDO: TableHeader */}
