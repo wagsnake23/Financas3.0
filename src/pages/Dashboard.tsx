@@ -153,7 +153,7 @@ const Dashboard = () => {
                   </div>
                   <Button
                     variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-auto")} 
+                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} {/* Alterado para w-[130px] */}
                     onClick={() => navigate("/despesas?mode=one-off")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -183,7 +183,7 @@ const Dashboard = () => {
                   </div>
                   <Button 
                     variant="success" 
-                    className="w-auto h-8 px-3 text-xs rounded-xl" 
+                    className="w-[130px] h-8 px-3 text-xs rounded-xl" {/* Alterado para w-[130px] */}
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -191,18 +191,6 @@ const Dashboard = () => {
                   </Button>
                 </div>
               </StatCard>
-
-              {/* REMOVIDO: StatCard de Saldo Atual para mobile */}
-              {/* <StatCard
-                title="Saldo Atual"
-                value={`R$ ${stats.balance.toFixed(2)}`}
-                icon="Wallet"
-                variant="balance"
-                trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
-                isMobile={isMobile}
-                showValue={showBalanceValue}
-                onToggleVisibility={() => setShowBalanceValue(!showBalanceValue)}
-              /> */}
 
               {/* NEW: Mobile Credit Card Expenses Dashboard */}
               <MobileCreditCardExpenses
