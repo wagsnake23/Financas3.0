@@ -60,19 +60,18 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           )}
         </div>
       )}
-      {cardLastDigits && ( // Renderiza o botão apenas se um cartão estiver selecionado
-        <div className={cn("mt-4", isMobile && "mt-3")}>
-          <Button
-            variant="secondary"
-            onClick={onPayInvoice}
-            className="w-full rounded-xl"
-            disabled={loadingPayInvoice || disablePayInvoiceButton}
-          >
-            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-            {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-          </Button>
-        </div>
-      )}
+      {/* O botão agora é renderizado se o componente CreditCardInvoiceSummary for renderizado, o que já é condicional à seleção de um cartão. */}
+      <div className={cn("mt-4", isMobile && "mt-3")}>
+        <Button
+          variant="secondary"
+          onClick={onPayInvoice}
+          className="w-full rounded-xl"
+          disabled={loadingPayInvoice || disablePayInvoiceButton}
+        >
+          <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+          {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+        </Button>
+      </div>
     </Card>
   );
 };
