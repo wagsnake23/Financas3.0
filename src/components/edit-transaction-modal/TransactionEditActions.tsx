@@ -4,20 +4,21 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
 
 interface TransactionEditActionsProps {
-  onDelete: () => void;
+  onTriggerDeleteConfirmation: () => void; // Nova prop para acionar o diálogo
   onSave: () => void;
   onCancel: () => void;
   loading: boolean;
   isMobile: boolean;
-  // Props de recorrência removidas
+  isRecurringTransaction: boolean; // Nova prop para indicar se é transação recorrente
 }
 
 export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
-  onDelete,
+  onTriggerDeleteConfirmation,
   onSave,
   onCancel,
   loading,
   isMobile,
+  isRecurringTransaction,
 }) => {
   return (
     <>
@@ -25,7 +26,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         <Button
           type="button"
           variant="destructive"
-          onClick={onDelete}
+          onClick={onTriggerDeleteConfirmation} // Chama a nova prop
           className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
           disabled={loading}
         >

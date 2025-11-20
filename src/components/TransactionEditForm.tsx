@@ -9,11 +9,22 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database } from "@/integrations/supabase/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
+type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
 
 interface TransactionEditFormProps {
   editingTransaction: Transaction | null;
@@ -25,7 +36,8 @@ interface TransactionEditFormProps {
   onCancelEdit: () => void;
   onDeleteTransaction: (
     id: string,
-    type: TransactionType
+    type: TransactionType,
+    deleteScope: DeleteScope // Adicionado deleteScope
   ) => void;
   allCategories: AppCategory[];
   isMobile: boolean;
@@ -57,6 +69,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+
+  // Estados para o diálogo de exclusão
+  const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
+  const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] = useState(false);
+
+  const isRecurringTransaction = useMemo(() => {
+    return editingTransaction?.type === "expense" && 
+           !!editingTransaction.despesa_id && 
+           (editingTransaction.totalInstallments || 0) > 1;
+  }, [editingTransaction]);
 
   const filteredCategories = useMemo(() => {
     let baseCategories: AppCategory[] = [];
@@ -180,13 +202,26 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setLoading(false);
   };
 
-  const handleDeleteClick = () => {
+  const handleTriggerDeleteConfirmation = () => {
+    if (!editingTransaction) return;
+
+    if (isRecurringTransaction) {
+      setShowDeleteOptionsDialog(true);
+    } else {
+      setShowSimpleDeleteDialog(true);
+    }
+  };
+
+  const handleConfirmDelete = (deleteScope: DeleteScope) => {
     if (editingTransaction) {
       onDeleteTransaction(
         editingTransaction.id,
-        editingTransaction.type
+        editingTransaction.type,
+        deleteScope
       );
     }
+    setShowDeleteOptionsDialog(false);
+    setShowSimpleDeleteDialog(false);
   };
 
   const formContent = (
@@ -222,19 +257,73 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         />
 
         <TransactionEditActions
-          onDelete={handleDeleteClick}
+          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation} // Novo prop
           onSave={handleSubmit}
           onCancel={onCancelEdit}
           loading={loading}
           isMobile={isMobile}
-          showGlobalConfirmDialog={false} // Always false now
-          setShowGlobalConfirmDialog={() => {}} // No-op
-          performUpdate={performUpdate}
-          isRecurringTransaction={false} // Always false now
-          editOption="thisMonth" // Default, not used
-          preserveExceptions={false} // Default, not used
+          isRecurringTransaction={isRecurringTransaction} // Passar para o componente de ações
         />
       </form>
+
+      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
+      <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading}>
+              {loading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada */}
+      <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Despesa Parcelada</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta despesa faz parte de um lançamento parcelado. Como você gostaria de excluí-la?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handleConfirmDelete("thisMonth")}
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
+              Apenas este mês
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleConfirmDelete("thisMonthForward")}
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
+              Deste mês em diante
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleConfirmDelete("all")}
+              disabled={loading}
+              className="w-full sm:w-auto"
+            >
+              Todo o período
+            </Button>
+            <AlertDialogCancel disabled={loading} className="w-full sm:w-auto mt-2 sm:mt-0">
+              Cancelar
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 

@@ -6,6 +6,9 @@ import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate } from "@/integrations/supabase/types";
 import { isValidUuid } from "@/lib/utils";
+import { format, parseISO } from "date-fns";
+
+type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 
 interface UseTransactionMutationsProps {
   user: User | null;
@@ -35,9 +38,9 @@ export const useTransactionMutations = ({
   }, [queryClient, user?.id]);
 
   const handleDeleteTransaction = useCallback(
-    async (id: string, type: "income" | "expense") => {
+    async (id: string, type: "income" | "expense", deleteScope: DeleteScope) => {
       setLoadingEditData(true);
-      console.log(`[DEBUG] handleDeleteTransaction called for ID: ${id}, Type: ${type}`);
+      console.log(`[DEBUG] handleDeleteTransaction called for ID: ${id}, Type: ${type}, Scope: ${deleteScope}`);
 
       if (!user) {
         toast.error("Usuário não autenticado. Por favor, faça login novamente.");
@@ -54,62 +57,106 @@ export const useTransactionMutations = ({
 
       let error = null;
 
-      if (type === "income") {
-        if (!isValidUuid(id)) {
-          toast.error("Erro (DEL-INC-1): ID de receita inválido.");
-          setLoadingEditData(false);
-          return;
-        }
-        console.log(`[DEBUG] Deleting income from 'receitas' table with ID: ${id}`);
-        const { error: deleteError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
-        error = deleteError;
-      } else if (type === "expense") {
-        // First, delete the installment from 'despesas_parcelas'
-        if (!isValidUuid(id)) {
-          toast.error("Erro (DEL-EXP-1): ID de parcela de despesa inválido.");
-          setLoadingEditData(false);
-          return;
-        }
-        console.log(`[DEBUG] Deleting expense installment from 'despesas_parcelas' table with ID: ${id}`);
-        const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
-        if (deleteParcelaError) throw deleteParcelaError;
+      try {
+        if (type === "income") {
+          if (!isValidUuid(id)) {
+            throw new Error("Erro (DEL-INC-1): ID de receita inválido.");
+          }
+          console.log(`[DEBUG] Deleting income from 'receitas' table with ID: ${id}`);
+          const { error: deleteError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
+          error = deleteError;
+        } else if (type === "expense") {
+          const parentDespesaId = transactionToDelete.despesa_id;
 
-        // Then, check if the parent 'despesas' record should be deleted
-        const parentDespesaId = transactionToDelete.despesa_id;
-        if (parentDespesaId && isValidUuid(parentDespesaId)) {
-          console.log(`[DEBUG] Checking if parent 'despesas' record ${parentDespesaId} should be deleted.`);
-          const { data: remainingParcelas, error: checkError } = await supabase
-            .from("despesas_parcelas")
-            .select("id")
-            .eq("despesa_id", parentDespesaId);
+          if (!isValidUuid(id)) {
+            throw new Error("Erro (DEL-EXP-1): ID de parcela de despesa inválido.");
+          }
 
-          if (checkError) console.error("Error checking remaining installments after single installment deletion:", checkError);
+          if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
+            // Delete only the specific installment
+            console.log(`[DEBUG] Deleting single expense installment from 'despesas_parcelas' table with ID: ${id}`);
+            const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
+            if (deleteParcelaError) throw deleteParcelaError;
 
-          if (remainingParcelas && remainingParcelas.length === 0) {
-            // No more installments for this parent despesa, delete the parent
-            console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
+            // Check if parent 'despesas' record should be deleted if no more installments
+            if (parentDespesaId && isValidUuid(parentDespesaId)) {
+              const { data: remainingParcelas, error: checkError } = await supabase
+                .from("despesas_parcelas")
+                .select("id")
+                .eq("despesa_id", parentDespesaId);
+
+              if (checkError) console.error("Error checking remaining installments after single installment deletion:", checkError);
+
+              if (remainingParcelas && remainingParcelas.length === 0) {
+                console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
+                const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
+                if (deleteParentError) throw deleteParentError;
+              }
+            }
+          } else if (deleteScope === "thisMonthForward") {
+            // Delete current and all future installments
+            if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
+              throw new Error("Erro (DEL-EXP-2): ID da despesa principal inválido para exclusão 'deste mês em diante'.");
+            }
+            const currentInstallmentDate = parseISO(transactionToDelete.date);
+            console.log(`[DEBUG] Deleting expense installments from 'despesas_parcelas' for parent ${parentDespesaId} from ${format(currentInstallmentDate, 'yyyy-MM-dd')} onwards.`);
+            
+            const { error: deleteFutureParcelasError } = await supabase
+              .from("despesas_parcelas")
+              .delete()
+              .eq("despesa_id", parentDespesaId)
+              .gte("vencimento", format(currentInstallmentDate, 'yyyy-MM-dd')); // Delete from current month's date onwards
+
+            if (deleteFutureParcelasError) throw deleteFutureParcelasError;
+
+            // Check if parent 'despesas' record should be deleted if no more installments
+            const { data: remainingParcelas, error: checkError } = await supabase
+              .from("despesas_parcelas")
+              .select("id")
+              .eq("despesa_id", parentDespesaId);
+
+            if (checkError) console.error("Error checking remaining installments after 'thisMonthForward' deletion:", checkError);
+
+            if (remainingParcelas && remainingParcelas.length === 0) {
+              console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
+              const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
+              if (deleteParentError) throw deleteParentError;
+            } else {
+              // Update numero_parcelas in parent despesas if some installments remain
+              const { error: updateParentError } = await supabase
+                .from("despesas")
+                .update({ numero_parcelas: remainingParcelas?.length || 0 })
+                .eq("id", parentDespesaId);
+              if (updateParentError) console.error("Error updating parent despesas numero_parcelas:", updateParentError);
+            }
+
+          } else if (deleteScope === "all") {
+            // Delete all installments and the parent expense
+            if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
+              throw new Error("Erro (DEL-EXP-3): ID da despesa principal inválido para exclusão 'todo o período'.");
+            }
+            console.log(`[DEBUG] Deleting all expense installments for parent ${parentDespesaId}.`);
+            const { error: deleteAllParcelasError } = await supabase.from("despesas_parcelas").delete().eq("despesa_id", parentDespesaId);
+            if (deleteAllParcelasError) throw deleteAllParcelasError;
+
+            console.log(`[DEBUG] Deleting parent 'despesas' record with ID: ${parentDespesaId}`);
             const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
             if (deleteParentError) throw deleteParentError;
-          } else {
-            console.log(`[DEBUG] Remaining installments found for ${parentDespesaId}. Not deleting parent 'despesas' record.`);
           }
-        } else {
-          console.warn(`[DEBUG] Parent despesa_id not found or invalid for installment deletion: ${parentDespesaId}. Skipping parent deletion check.`);
         }
-      }
 
-      if (error) {
-        toast.error("Erro ao excluir lançamento", { description: error.message });
-        console.error("handleDeleteTransaction: Deletion error:", error);
-      } else {
         toast.success("Lançamento excluído!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
         invalidateAllTransactionQueries();
+      } catch (err: any) {
+        toast.error("Erro ao excluir lançamento", { description: err.message });
+        console.error("handleDeleteTransaction: Deletion error:", err);
+      } finally {
+        setLoadingEditData(false);
       }
-      setLoadingEditData(false);
     },
     [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, invalidateAllTransactionQueries]
   );
