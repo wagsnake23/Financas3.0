@@ -63,6 +63,8 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
   const hideDueDayAndFrequency = isMobile && (editOption === "thisMonthForward" || editOption === "all");
   // Conditionally hide endDate for mobile when editOption is "all"
   const hideEndDate = isMobile && editOption === "all";
+  // NEW: Conditionally hide status for mobile when editOption is "thisMonthForward"
+  const hideStatus = isMobile && editOption === "thisMonthForward";
 
   return (
     <div className="space-y-4">
@@ -183,18 +185,20 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
         </div>
       )}
 
-      <div className="space-y-2">
-        <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Recorrência</Label>
-        <Select value={status} onValueChange={(value: Enums<'recurring_status'>) => setStatus(value)} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="active" className={cn(isMobile && "text-sm")}>Ativa</SelectItem>
-            <SelectItem value="canceled" className={cn(isMobile && "text-sm")}>Cancelada</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {!hideStatus && ( // NEW: Conditionally render status
+        <div className="space-y-2">
+          <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status da Recorrência</Label>
+          <Select value={status} onValueChange={(value: Enums<'recurring_status'>) => setStatus(value)} disabled={loading}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active" className={cn(isMobile && "text-sm")}>Ativa</SelectItem>
+              <SelectItem value="canceled" className={cn(isMobile && "text-sm")}>Cancelada</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {showPreserveExceptions && setPreserveExceptions && (
         <div className="flex items-center space-x-2">
