@@ -10,6 +10,13 @@ import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"; // Importar componentes do Dialog
+import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -25,8 +32,10 @@ const Lancamentos = () => {
     setFullEditingRevenue,
     setFullEditingExpense,
     loadingEditData,
-    loadingPayInvoice, // NOVO: Receber loadingPayInvoice
-    setLoadingPayInvoice, // NOVO: Receber setter
+    loadingPayInvoice,
+    setLoadingPayInvoice,
+    isEditModalOpen, // NOVO: Receber isEditModalOpen
+    setIsEditModalOpen, // NOVO: Receber setIsEditModalOpen
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction,
@@ -37,6 +46,7 @@ const Lancamentos = () => {
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
+    handleCancelEdit, // NOVO: Receber handleCancelEdit
     editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
@@ -49,11 +59,13 @@ const Lancamentos = () => {
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
 
-  const handleCancelEdit = () => {
-    setEditingTransaction(null);
-    setFullEditingRevenue(null);
-    setFullEditingExpense(null);
-  };
+  // A função handleCancelEdit já está sendo retornada pelo hook, então não precisamos redefini-la aqui.
+  // const handleCancelEdit = () => {
+  //   setEditingTransaction(null);
+  //   setFullEditingRevenue(null);
+  //   setFullEditingExpense(null);
+  //   setIsEditModalOpen(false); // Fechar o modal ao cancelar
+  // };
   
   if (authLoading || isLoading || loadingEditData) {
     return <Loading />;
@@ -75,12 +87,13 @@ const Lancamentos = () => {
             isMobile={isMobile}
           />
 
+          {/* A LancamentosContent agora sempre renderiza a TransactionView */}
           <LancamentosContent
-            editingTransaction={editingTransaction}
+            editingTransaction={editingTransaction} // Ainda passa para TransactionView para contexto, se necessário
             fullEditingRevenue={fullEditingRevenue}
             fullEditingExpense={fullEditingExpense}
             onUpdateTransaction={handleUpdateTransaction}
-            onCancelEdit={handleCancelEdit}
+            onCancelEdit={handleCancelEdit} // Passa a função de cancelamento
             onDeleteTransaction={handleDeleteTransaction}
             allCategories={fetchedCategories}
             isMobile={isMobile}
@@ -93,17 +106,38 @@ const Lancamentos = () => {
             markMonthPaid={markMonthPaid}
             filterPaymentOptionId={filterPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
-            loadingPayInvoice={loadingPayInvoice} // NOVO
-            setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
+            loadingPayInvoice={loadingPayInvoice}
+            setLoadingPayInvoice={setLoadingPayInvoice}
           />
         </main>
         <Footer isMobile={isMobile} />
+
+        {/* Modal de Edição de Transação */}
+        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>
+                {editingTransaction?.isRecurring ? "Editar Lançamento Recorrente" : "Editar Lançamento"}
+              </DialogTitle>
+            </DialogHeader>
+            {editingTransaction && (
+              <TransactionEditForm
+                editingTransaction={editingTransaction}
+                onUpdateTransaction={handleUpdateTransaction}
+                onCancelEdit={handleCancelEdit}
+                onDeleteTransaction={handleDeleteTransaction}
+                allCategories={fetchedCategories}
+                isMobile={isMobile}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
 
         <DeleteRecurrenceModal
           isOpen={isDeleteRecurrenceModalOpen}
           onClose={() => {
             setIsDeleteRecurrenceModalOpen(false);
-            handleCancelEdit();
+            handleCancelEdit(); // Garante que o modal de edição também feche se estiver aberto
           }}
           transaction={selectedRecurringTransaction}
           isMobile={isMobile}

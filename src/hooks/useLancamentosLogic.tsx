@@ -68,6 +68,7 @@ export const useLancamentosLogic = (
     useState<Tables<"despesas"> | null>(null);
   const [loadingEditData, setLoadingEditData] = useState(false);
   const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // NOVO: Estado de carregamento para pagar fatura
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // NOVO: Estado para controlar o modal de edição
 
   const [isDeleteRecurrenceModalOpen, setIsDeleteRecurrenceModalOpen] =
     useState(false);
@@ -272,6 +273,7 @@ export const useLancamentosLogic = (
         setLoadingEditData(false);
         setIsDeleteRecurrenceModalOpen(false);
         setEditingTransaction(null);
+        setIsEditModalOpen(false); // Fechar modal de edição
       }
     },
     [user, queryClient, cancelMonth, endRecurringAt, deleteRecurringEntry]
@@ -360,6 +362,7 @@ export const useLancamentosLogic = (
         setEditingTransaction(null);
         setFullEditingRevenue(null);
         setFullEditingExpense(null);
+        setIsEditModalOpen(false); // Fechar modal de edição
         queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
         queryClient.invalidateQueries({
           queryKey: ["expenseInstallments", user?.id],
@@ -380,6 +383,7 @@ export const useLancamentosLogic = (
     async (transaction: Transaction) => {
       setEditingTransaction(transaction);
       setLoadingEditData(true);
+      setIsEditModalOpen(true); // Abrir modal de edição
 
       if (!user) {
         toast.error(
@@ -470,6 +474,13 @@ export const useLancamentosLogic = (
     },
     [user, queryClient, monthlyFilteredTransactions]
   );
+
+  const handleCancelEdit = useCallback(() => {
+    setEditingTransaction(null);
+    setFullEditingRevenue(null);
+    setFullEditingExpense(null);
+    setIsEditModalOpen(false); // Fechar modal de edição
+  }, []);
 
   const handleUpdateTransaction = useCallback(
     async (
@@ -723,6 +734,7 @@ export const useLancamentosLogic = (
         setFullEditingRevenue(null);
         setFullEditingExpense(null);
         setLoadingEditData(false);
+        setIsEditModalOpen(false); // Fechar modal de edição
       }
     },
     [
@@ -750,6 +762,8 @@ export const useLancamentosLogic = (
     setLoadingEditData,
     loadingPayInvoice, // NOVO
     setLoadingPayInvoice, // NOVO
+    isEditModalOpen, // NOVO
+    setIsEditModalOpen, // NOVO
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
     selectedRecurringTransaction: selectedRecurringTransactionForDelete,
@@ -762,6 +776,7 @@ export const useLancamentosLogic = (
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
+    handleCancelEdit, // NOVO: Retornar handleCancelEdit
     user,
     queryClient,
     confirmDeleteWithOptions,
