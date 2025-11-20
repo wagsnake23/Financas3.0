@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button"; // Importar Button
 
 interface CreditCardInvoiceSummaryProps {
   totalPaid: number;
@@ -9,7 +10,10 @@ interface CreditCardInvoiceSummaryProps {
   totalCardExpenses: number;
   isMobile: boolean;
   formattedDueDate: string | null;
-  cardLastDigits: string | null; // NOVA PROP: Últimos 4 dígitos do cartão
+  cardLastDigits: string | null;
+  onPayInvoice: () => void; // NOVA PROP: Função para pagar a fatura
+  loadingPayInvoice: boolean; // NOVA PROP: Estado de carregamento do pagamento
+  disablePayInvoiceButton: boolean; // NOVA PROP: Para desabilitar o botão
 }
 
 export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> = ({
@@ -18,7 +22,10 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   totalCardExpenses,
   isMobile,
   formattedDueDate,
-  cardLastDigits, // Usar a nova prop
+  cardLastDigits,
+  onPayInvoice, // Usar a nova prop
+  loadingPayInvoice, // Usar a nova prop
+  disablePayInvoiceButton, // Usar a nova prop
 }) => {
   return (
     <Card className={cn(
@@ -51,6 +58,19 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           {formattedDueDate && (
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Vencimento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</span></p>
           )}
+        </div>
+      )}
+      {cardLastDigits && ( // Renderiza o botão apenas se um cartão estiver selecionado
+        <div className={cn("mt-4", isMobile && "mt-3")}>
+          <Button
+            variant="secondary"
+            onClick={onPayInvoice}
+            className="w-full rounded-xl"
+            disabled={loadingPayInvoice || disablePayInvoiceButton}
+          >
+            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+            {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+          </Button>
         </div>
       )}
     </Card>

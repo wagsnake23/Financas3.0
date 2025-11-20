@@ -257,6 +257,21 @@ export const TransactionList = ({
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
 
+  // Determine if the pay invoice button should be disabled
+  const disablePayInvoiceButton = useMemo(() => {
+    if (!isValidUuid(filterPaymentOptionId)) return true; // No card selected
+    if (loadingPayInvoice) return true; // Already loading
+    // Check if there are any pending expenses for the selected card
+    const hasPendingExpenses = filteredTransactions.some(t => 
+      t.type === "expense" && 
+      t.status !== "Recebida" && 
+      t.forma_pagamento === "cartao" && 
+      t.cartao_id === filterPaymentOptionId
+    );
+    return !hasPendingExpenses;
+  }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
+
+
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
@@ -306,12 +321,11 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Conditional Button and Due Date for Credit Card */}
-        {/* REMOVIDO: Botão Pagar Fatura e texto de vencimento */}
+        {/* Este slot agora está vazio, pois o botão foi movido */}
         <div className={cn("hidden", !isMobile && "block")}></div> 
       </div>
 
-      {/* NEW: Card Details Display */}
+      {/* NEW: Card Details Display (Fechamento e Vencimento) */}
       {isValidUuid(filterPaymentOptionId) && cardDetails && (
         <div className={cn(
           "grid grid-cols-2 gap-4 mt-4 p-4 bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm",
@@ -334,9 +348,9 @@ export const TransactionList = ({
         </div>
       )}
 
-      {/* NOVO: Resumo da Fatura do Cartão */}
+      {/* Resumo da Fatura do Cartão (agora com o botão Pagar Fatura dentro) */}
       {isValidUuid(filterPaymentOptionId) && (
-        <div className="mt-4"> {/* Adicionado margem superior */}
+        <div className="mt-4">
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
@@ -344,16 +358,18 @@ export const TransactionList = ({
             isMobile={!!isMobile}
             formattedDueDate={cardDetails?.formattedDueDate || null}
             cardLastDigits={cardDetails?.cardLastDigits || null}
+            onPayInvoice={handlePayInvoice} // Passando a função de pagamento
+            loadingPayInvoice={loadingPayInvoice} // Passando o estado de carregamento
+            disablePayInvoiceButton={disablePayInvoiceButton} // Passando o estado de desabilitação
           />
         </div>
       )}
 
       <div className={cn(
-        "rounded-xl border overflow-hidden shadow-sm mt-4", // Adicionado mt-4 aqui
-        isMobile ? "max-h-[320px] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Ajustado para 320px em mobile
+        "rounded-xl border overflow-hidden shadow-sm mt-4",
+        isMobile ? "max-h-[320px] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
       )}>
         <Table>
-          {/* REMOVIDO: TableHeader */}
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
@@ -381,8 +397,7 @@ export const TransactionList = ({
         </Table>
       </div>
 
-      {/* Accumulated Value - Reposicionado e estilizado como label */}
-      <div className="flex justify-end mb-0 mt-4 pr-5"> {/* Alterado para justify-end e adicionado pr-5 */}
+      <div className="flex justify-end mb-0 mt-4 pr-5">
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
