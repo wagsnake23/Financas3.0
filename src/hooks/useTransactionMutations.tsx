@@ -248,6 +248,7 @@ export const useTransactionMutations = ({
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
             // 1. Update the current installment individually with all its specific fields
+            console.log(`[DEBUG] Updating current installment (ID: ${id}) with new values.`);
             const { error: updateCurrentInstallmentError } = await supabase
               .from("despesas_parcelas")
               .update({
@@ -262,7 +263,7 @@ export const useTransactionMutations = ({
             // 2. Fetch all affected installments (excluding the current one, which is already updated)
             let query = supabase
               .from("despesas_parcelas")
-              .select("id, valor_parcela") // Only need id and current valor_parcela for recalculation
+              .select("id") // Only need id for batch update
               .eq("despesa_id", parentDespesaId)
               .neq("id", id); // Exclude the current installment
 
@@ -276,16 +277,15 @@ export const useTransactionMutations = ({
 
             if (fetchRemainingError) throw fetchRemainingError;
 
-            // 3. Prepare batch update for remaining affected installments, only updating valor_parcela
+            // 3. Perform batch update for remaining affected installments, only updating valor_parcela
             if (remainingAffectedInstallments && remainingAffectedInstallments.length > 0) {
-              const batchUpdates = remainingAffectedInstallments.map(inst => ({
-                id: inst.id,
-                valor_parcela: newValorParcela, // Apply new value to all remaining affected
-              }));
+              const installmentIdsToUpdate = remainingAffectedInstallments.map(inst => inst.id);
+              console.log(`[DEBUG] Batch updating ${installmentIdsToUpdate.length} remaining installments with new valor_parcela.`);
 
               const { error: batchUpdateRemainingError } = await supabase
                 .from("despesas_parcelas")
-                .upsert(batchUpdates, { onConflict: 'id' }); // Use upsert for batch update
+                .update({ valor_parcela: newValorParcela }) // Only update valor_parcela
+                .in("id", installmentIdsToUpdate); // Update all at once
 
               if (batchUpdateRemainingError) throw batchUpdateRemainingError;
             }
@@ -301,6 +301,7 @@ export const useTransactionMutations = ({
             const newParentValorTotal = allInstallments.reduce((sum, inst) => sum + inst.valor_parcela, 0);
             const newParentNumeroParcelas = allInstallments.length;
 
+            console.log(`[DEBUG] Recalculating parent despesa (ID: ${parentDespesaId}): newValorTotal=${newParentValorTotal}, newNumeroParcelas=${newParentNumeroParcelas}`);
             const { error: updateParentDespesaTotalError } = await supabase
                 .from("despesas")
                 .update({
