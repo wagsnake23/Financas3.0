@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { format, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils"; // Importar cn
 
 interface MonthNavigatorProps {
   selectedMonth: Date;
@@ -18,15 +19,15 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   isMobile,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-6">
-      <Button variant="outline" size="icon" onClick={onPreviousMonth}>
-        <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
+    <div className={cn("flex items-center justify-center mb-6", isMobile ? "gap-2" : "gap-4")}> {/* Alterado para justify-center e adicionado gap responsivo */}
+      <Button variant="outline" size="icon" onClick={onPreviousMonth} className={cn(isMobile && "h-8 w-8")}> {/* Ajustado tamanho do botão para mobile */}
+        <DynamicIcon name="ChevronLeft" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ajustado tamanho do ícone para mobile */}
       </Button>
-      <h2 className="text-xl font-bold capitalize">
+      <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg")}> {/* Adicionado tamanho de fonte responsivo */}
         {format(selectedMonth, "MMMM yyyy", { locale: ptBR })}
       </h2>
-      <Button variant="outline" size="icon" onClick={onNextMonth}>
-        <DynamicIcon name="ChevronRight" className="h-4 w-4" />
+      <Button variant="outline" size="icon" onClick={onNextMonth} className={cn(isMobile && "h-8 w-8")}> {/* Ajustado tamanho do botão para mobile */}
+        <DynamicIcon name="ChevronRight" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ajustado tamanho do ícone para mobile */}
       </Button>
     </div>
   );
