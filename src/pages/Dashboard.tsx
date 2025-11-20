@@ -192,7 +192,8 @@ const Dashboard = () => {
                 </div>
               </StatCard>
 
-              <StatCard
+              {/* REMOVIDO: StatCard de Saldo Atual para mobile */}
+              {/* <StatCard
                 title="Saldo Atual"
                 value={`R$ ${stats.balance.toFixed(2)}`}
                 icon="Wallet"
@@ -201,7 +202,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showBalanceValue}
                 onToggleVisibility={() => setShowBalanceValue(!showBalanceValue)}
-              />
+              /> */}
 
               {/* NEW: Mobile Credit Card Expenses Dashboard */}
               <MobileCreditCardExpenses
