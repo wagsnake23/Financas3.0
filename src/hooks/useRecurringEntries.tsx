@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables, TablesInsert, TablesUpdate, Enums } from "@/integrations/supabase/types";
-import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths, isSameMonth, isBefore } from "date-fns";
+import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths, isSameMonth, isBefore, isValid } from "date-fns";
 import { toast } from "sonner";
 import { ptBR } from "date-fns/locale";
 import { AppCategory, Transaction } from "@/types/finance";
@@ -41,9 +41,11 @@ const generateOccurrenceId = (recurringId: string, year: number, month: number) 
 };
 
 // Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
-function parseDateOnly(dateString: string): Date {
+function parseDateOnly(dateString: string | null | undefined): Date | null {
+  if (!dateString) return null;
   const [year, month, day] = dateString.split("-").map(Number);
-  return new Date(year, month - 1, day);
+  const date = new Date(year, month - 1, day);
+  return isValid(date) ? date : null;
 }
 
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
@@ -114,6 +116,12 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const entryStartDate = parseDateOnly(entry.start_date); // Usar parseDateOnly
       const entryEndDate = entry.end_date ? parseDateOnly(entry.end_date) : null; // Usar parseDateOnly
 
+      // Se a data de início for inválida, pula esta entrada
+      if (!entryStartDate) {
+        console.log(`[DEBUG]   Skipping entry ${entry.id}: Invalid start_date.`);
+        return;
+      }
+
       // Check if the recurring entry is relevant for the current month
       const isRelevantForMonth = isWithinInterval(currentMonth, { start: entryStartDate, end: entryEndDate || new Date(9999, 11, 31) });
       console.log(`[DEBUG]   isRelevantForMonth: ${isRelevantForMonth} (Current Month: ${format(currentMonth, 'yyyy-MM-dd')}, Start: ${format(entryStartDate, 'yyyy-MM-dd')}, End: ${entryEndDate ? format(entryEndDate, 'yyyy-MM-dd') : 'N/A'})`);
@@ -157,7 +165,10 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       const finalDueDate = exception?.override_due_date ? parseDateOnly(exception.override_due_date) : baseDueDate; // Usar parseDateOnly
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
-      console.log(`[DEBUG]   Final Due Date for transaction: ${format(finalDueDate, 'yyyy-MM-dd')}`);
+      
+      // Se finalDueDate for null, usa a data atual como fallback para evitar erro de formatação
+      const dateToFormat = finalDueDate || new Date(); 
+      console.log(`[DEBUG]   Final Due Date for transaction: ${format(dateToFormat, 'yyyy-MM-dd')}`);
       console.log(`[DEBUG]   Final isPaidByException: ${isPaidByException}`); // LOG ADICIONADO
 
       if (isCanceledByException) {
@@ -171,7 +182,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         status = 'Cancelada';
       } else if (isPaidByException) { // Se a exceção marcou como pago
         status = 'Recebida';
-      } else if (isPast(finalDueDate)) { // Se a data já passou e não foi pago
+      } else if (isPast(dateToFormat)) { // Se a data já passou e não foi pago
         status = 'Pendente';
       } else { // Se a data está no futuro e não foi pago
         status = 'Prevista';
@@ -186,7 +197,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         exceptionId: exception?.id,
         type: entry.type === 'receita' ? 'income' : 'expense',
         amount: finalValue,
-        date: format(finalDueDate, "yyyy-MM-dd"),
+        date: format(dateToFormat, "yyyy-MM-dd"), // Usar dateToFormat
         category: finalCategory || "outros_diversos", // Fallback category ID
         description: entry.title + (exception?.note ? ` (${exception.note})` : ''), // Corrigido: usando exception?.note
         status: status,

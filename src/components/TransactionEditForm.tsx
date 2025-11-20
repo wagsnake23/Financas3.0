@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { cn } from "@/lib/utils";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns"; // Adicionado isValid
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Enums, TablesUpdate } from "@/integrations/supabase/types";
@@ -51,7 +51,8 @@ const UNSELECTED_VALUE = "unselected";
 const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
   if (!dateString) return undefined;
   const [y, m, d] = dateString.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  const date = new Date(y, m - 1, d);
+  return isValid(date) ? date : undefined; // Verifica a validade da data
 };
 
 // Helper function to validate if a string is a UUID
