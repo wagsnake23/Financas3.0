@@ -93,7 +93,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {/* Valor e Parcela (lado a lado) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div className="space-y-2">
           <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
