@@ -226,7 +226,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid mb-2", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}> {/* Alterado mb-6 para mb-2 */}
+      <div className={cn("grid mb-0", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-4 gap-4")}> {/* Alterado mb-2 para mb-0 */}
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
