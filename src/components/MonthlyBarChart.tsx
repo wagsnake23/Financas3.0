@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Transaction } from "@/types/finance";
-import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
+import { cn } from "@/lib/utils"; // Importar cn
 
 interface MonthlyBarChartProps {
   transactions: Transaction[];
@@ -13,10 +13,8 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
     // Filter out legacy fixed transactions, as they are now handled by recurring_entries
     if (transaction.is_fixed && !transaction.isRecurring) return acc;
 
-    const safeDate = createSafeDate(transaction.date); // Usar createSafeDate
-    if (!safeDate) return acc; // Pular transações com datas inválidas
-    
-    const monthYear = safeDate.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+    const date = new Date(transaction.date);
+    const monthYear = date.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
     
     if (!acc[monthYear]) {
       acc[monthYear] = { month: monthYear, income: 0, expenses: 0 };
@@ -32,15 +30,10 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
   }, {} as Record<string, { month: string; income: number; expenses: number }>);
 
   const chartData = Object.values(monthlyData).sort((a, b) => {
-    // Para ordenar, precisamos de objetos Date válidos.
-    // createSafeDate retorna undefined para datas inválidas, então precisamos lidar com isso.
     const [monthA, yearA] = a.month.split(" ");
     const [monthB, yearB] = b.month.split(" ");
-    const dateA = createSafeDate(`1 ${monthA} ${yearA}`); // Criar data segura para comparação
-    const dateB = createSafeDate(`1 ${monthB} ${yearB}`); // Criar data segura para comparação
-
-    if (!dateA || !dateB) return 0; // Se alguma data for inválida, não altera a ordem
-
+    const dateA = new Date(`${monthA} 1, ${yearA}`);
+    const dateB = new Date(`${monthB} 1, ${yearB}`);
     return dateA.getTime() - dateB.getTime();
   });
 

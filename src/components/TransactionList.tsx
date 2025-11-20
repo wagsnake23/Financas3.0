@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, createSafeDate } from "@/lib/utils"; // Importando createSafeDate
+import { cn } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns"; // Adicionado endOfMonth
 import { ptBR } from "date-fns/locale";
@@ -42,8 +42,6 @@ interface TransactionListProps {
   selectedMonth: Date;
   loadingPayInvoice: boolean;
   setLoadingPayInvoice: (loading: boolean) => void;
-  filterType: string; // NOVO: Receber filterType
-  setFilterType: (type: string) => void; // NOVO: Receber setFilterType
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -71,13 +69,11 @@ export const TransactionList = ({
   selectedMonth,
   loadingPayInvoice,
   setLoadingPayInvoice,
-  filterType, // NOVO
-  setFilterType, // NOVO
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  // const [filterType, setFilterType] = useState<string>("all"); // REMOVIDO: Estado movido para useLancamentosLogic
+  const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const paymentFilterOptions = useMemo(() => {
@@ -245,25 +241,18 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-3")}> {/* Alterado para grid-cols-3 em desktop */}
-        {/* REMOVIDO: Select para filterType */}
-
-        {/* Payment Option Select */}
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className="rounded-xl">
+      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}>
+        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Forma de Pagamento" />
+            <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
-            {paymentFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
+            <SelectItem value="all">Todos os tipos</SelectItem>
+            <SelectItem value="income">Receita</SelectItem>
+            <SelectItem value="expense">Despesa</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Category Filter */}
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
@@ -280,6 +269,21 @@ export const TransactionList = ({
                   </span>
                 </SelectItem>
               ))}
+          </SelectContent>
+        </Select>
+
+        {/* Payment Option Select */}
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                className="rounded-xl">
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Forma de Pagamento" />
+          </SelectTrigger>
+          <SelectContent>
+            {paymentFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 

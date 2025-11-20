@@ -14,8 +14,8 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment } from "@/types/finance"; // Importar a interface Investment
-import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
-import { format, isValid } from "date-fns"; // Importar format e isValid
+import { cn } from "@/lib/utils"; // Importar cn
+import { format } from "date-fns"; // Importar format
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
@@ -26,14 +26,6 @@ import {
 } from "@/components/ui/popover"; // Importar Popover components
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
-
-// Removido: Helper function to create a local Date object from a YYYY-MM-DD string
-// const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
-//   if (!dateString) return undefined;
-//   const [y, m, d] = dateString.split("-").map(Number);
-//   const date = new Date(y, m - 1, d);
-//   return isValid(date) ? date : undefined;
-// };
 
 export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
@@ -303,18 +295,7 @@ export default function Investments() { // Alterado para export default function
                         mode="single"
                         selected={date}
                         onSelect={(selectedDate) => {
-                          if (!selectedDate) return;
-                          const fixedDate = new Date(
-                            selectedDate.getFullYear(),
-                            selectedDate.getMonth(),
-                            selectedDate.getDate()
-                          );
-                          if (isValid(fixedDate)) { // Add isValid check
-                            setDate(fixedDate);
-                          } else {
-                            console.error("Invalid date created from calendar selection in Investments:", selectedDate);
-                            toast.error("Data selecionada é inválida.");
-                          }
+                          setDate(selectedDate);
                           setIsCalendarOpen(false);
                         }}
                         initialFocus
@@ -388,8 +369,9 @@ export default function Investments() { // Alterado para export default function
                             </p>
                             <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
                               {(() => {
-                                const safeDate = createSafeDate(investment.data);
-                                return safeDate ? safeDate.toLocaleDateString('pt-BR') : 'Data Inválida';
+                                const [year, month, day] = investment.data.split('-').map(Number);
+                                const localDate = new Date(year, month - 1, day);
+                                return localDate.toLocaleDateString('pt-BR');
                               })()}
                             </p>
                           </div>

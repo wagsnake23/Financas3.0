@@ -3,11 +3,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables, TablesInsert, TablesUpdate, Enums } from "@/integrations/supabase/types";
-import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths, isSameMonth, isBefore, isValid } from "date-fns";
+import { format, addMonths, addQuarters, addYears, startOfMonth, endOfMonth, isWithinInterval, getDate, setDate, isPast, subMonths, isSameMonth, isBefore } from "date-fns";
 import { toast } from "sonner";
 import { ptBR } from "date-fns/locale";
 import { AppCategory, Transaction } from "@/types/finance";
-import { createSafeDate } from "@/lib/utils"; // Importar createSafeDate
 
 type RecurringEntry = Tables<'recurring_entries'>;
 type RecurringException = Tables<'recurring_entry_exceptions'>;
@@ -40,6 +39,12 @@ export interface MaterializedRecurringTransaction extends Transaction {
 const generateOccurrenceId = (recurringId: string, year: number, month: number) => {
   return `${recurringId}-${year}-${month}`;
 };
+
+// Helper function to parse a "yyyy-MM-dd" string into a local Date object without timezone issues
+function parseDateOnly(dateString: string): Date {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
 export const useRecurringEntries = (user: User | null, currentMonth: Date, allCategories: AppCategory[], enabled: boolean) => { // Adicionado 'enabled'
   const queryClient = useQueryClient();
@@ -106,14 +111,8 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       console.log(`[DEBUG]   Current Month (start): ${format(startOfMonth(currentMonth), 'yyyy-MM-dd')}`);
 
       // Check if the entry is active and within its date range
-      const entryStartDate = createSafeDate(entry.start_date); // Usar createSafeDate
-      const entryEndDate = entry.end_date ? createSafeDate(entry.end_date) : null; // Usar createSafeDate
-
-      // Se a data de início for inválida, pula esta entrada
-      if (!entryStartDate) {
-        console.log(`[DEBUG]   Skipping entry ${entry.id}: Invalid start_date.`);
-        return;
-      }
+      const entryStartDate = parseDateOnly(entry.start_date); // Usar parseDateOnly
+      const entryEndDate = entry.end_date ? parseDateOnly(entry.end_date) : null; // Usar parseDateOnly
 
       // Check if the recurring entry is relevant for the current month
       const isRelevantForMonth = isWithinInterval(currentMonth, { start: entryStartDate, end: entryEndDate || new Date(9999, 11, 31) });
@@ -125,8 +124,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       }
 
       // --- START: Adjusted logic for baseDueDate calculation ---
-      const safeDueDay = typeof entry.due_day === 'number' && !isNaN(entry.due_day) ? entry.due_day : 1; // Ensure due_day is a valid number
-      let baseDueDate = setDate(startOfMonth(currentMonth), safeDueDay);
+      let baseDueDate = setDate(startOfMonth(currentMonth), entry.due_day);
       
       // If the entry's start_date is in the current month, and the due_day is before the start_date's day,
       // then this occurrence should be considered from the start_date itself, not the due_day.
@@ -134,7 +132,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       if (isSameMonth(entryStartDate, currentMonth) && isBefore(baseDueDate, entryStartDate)) {
         baseDueDate = entryStartDate;
         console.log(`[DEBUG]   Adjusted baseDueDate to entryStartDate: ${format(baseDueDate, 'yyyy-MM-dd')} because entry starts mid-month.`);
-      } else if (getDate(baseDueDate) !== safeDueDay) { // Use safeDueDay here
+      } else if (getDate(baseDueDate) !== entry.due_day) {
         // Adjust if due_day is greater than days in current month (e.g., day 31 in February)
         baseDueDate = endOfMonth(currentMonth); // Set to last day of month if due_day is too high
         console.log(`[DEBUG]   Adjusted baseDueDate to endOfMonth: ${format(baseDueDate, 'yyyy-MM-dd')} due to month end clamp.`);
@@ -156,13 +154,10 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
       // Apply overrides from exception
       const finalValue = exception?.override_value ?? entry.value;
       const finalCategory = exception?.override_category_id ?? entry.category_id;
-      const finalDueDate = exception?.override_due_date ? createSafeDate(exception.override_due_date) : baseDueDate; // Usar createSafeDate
+      const finalDueDate = exception?.override_due_date ? parseDateOnly(exception.override_due_date) : baseDueDate; // Usar parseDateOnly
       const isCanceledByException = exception?.canceled ?? false; // Renomeado para evitar conflito com entry.status
       const isPaidByException = exception?.paid ?? false; // <--- Valor de 'paid' da exceção
-      
-      // Se finalDueDate for null, usa a data atual como fallback para evitar erro de formatação
-      const dateToFormat = finalDueDate || new Date(); 
-      console.log(`[DEBUG]   Final Due Date for transaction: ${format(dateToFormat, 'yyyy-MM-dd')}`);
+      console.log(`[DEBUG]   Final Due Date for transaction: ${format(finalDueDate, 'yyyy-MM-dd')}`);
       console.log(`[DEBUG]   Final isPaidByException: ${isPaidByException}`); // LOG ADICIONADO
 
       if (isCanceledByException) {
@@ -176,7 +171,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         status = 'Cancelada';
       } else if (isPaidByException) { // Se a exceção marcou como pago
         status = 'Recebida';
-      } else if (isPast(dateToFormat)) { // Se a data já passou e não foi pago
+      } else if (isPast(finalDueDate)) { // Se a data já passou e não foi pago
         status = 'Pendente';
       } else { // Se a data está no futuro e não foi pago
         status = 'Prevista';
@@ -191,7 +186,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
         exceptionId: exception?.id,
         type: entry.type === 'receita' ? 'income' : 'expense',
         amount: finalValue,
-        date: format(dateToFormat, "yyyy-MM-dd"), // Usar dateToFormat
+        date: format(finalDueDate, "yyyy-MM-dd"),
         category: finalCategory || "outros_diversos", // Fallback category ID
         description: entry.title + (exception?.note ? ` (${exception.note})` : ''), // Corrigido: usando exception?.note
         status: status,
@@ -391,12 +386,7 @@ export const useRecurringEntries = (user: User | null, currentMonth: Date, allCa
     mutationFn: async ({ recurring_id, end_year, end_month }: { recurring_id: string; end_year: number; end_month: number }) => {
       if (!user?.id) throw new Error("User not authenticated.");
 
-      const dateForEndDate = new Date(end_year, end_month - 1);
-      if (!isValid(dateForEndDate)) { // Defensive check
-        console.error("Invalid date created for end_date in endRecurringAtMutation:", { end_year, end_month });
-        throw new Error("Invalid end date provided for recurring entry.");
-      }
-      const endDate = format(endOfMonth(dateForEndDate), "yyyy-MM-dd");
+      const endDate = format(endOfMonth(new Date(end_year, end_month - 1)), "yyyy-MM-dd");
 
       const { data, error } = await supabase
         .from("recurring_entries")

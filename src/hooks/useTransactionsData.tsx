@@ -6,7 +6,6 @@ import { Tables } from "@/integrations/supabase/types";
 import { AppCategory, Transaction } from "@/types/finance";
 import { useRecurringEntries, MaterializedRecurringTransaction } from "@/hooks/useRecurringEntries";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
-import { createSafeDate } from "@/lib/utils"; // Importar createSafeDate
 
 const isValidUuid = (uuid: string) => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -110,10 +109,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
     // 1. Filter one-off revenues for the selected month
     const monthlyIncomeTransactions: Transaction[] = revenues
-      .filter(r => {
-        const revenueDate = createSafeDate(r.data); // Usar createSafeDate
-        return revenueDate && isWithinInterval(revenueDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
-      })
+      .filter(r => isWithinInterval(new Date(r.data), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
       .map(r => ({
         id: r.id,
         type: "income",
@@ -131,10 +127,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
     // 2. Filter one-off expense installments for the selected month
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
-      .filter(p => {
-        const installmentDate = createSafeDate(p.vencimento); // Usar createSafeDate
-        return installmentDate && isWithinInterval(installmentDate, { start: startOfSelectedMonth, end: endOfSelectedMonth });
-      })
+      .filter(p => isWithinInterval(new Date(p.vencimento), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
       .map(p => {
         const parentDespesa = p.despesas;
         const despesaId = parentDespesa?.id;
@@ -163,13 +156,11 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     // 3. Combine month-specific one-off transactions with already month-specific recurring transactions
     //    materializedRecurringTransactions from useRecurringEntries is already filtered for `selectedMonth`
     const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions, ...materializedRecurringTransactions].sort((a, b) => {
-      const dateA = createSafeDate(a.date); // Usar createSafeDate
-      const dateB = createSafeDate(b.date); // Usar createSafeDate
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
 
-      if (!dateA || !dateB) return 0; // Handle invalid dates for sorting
-
-      if (dateA.getTime() !== dateB.getTime()) {
-        return dateB.getTime() - dateA.getTime(); // Descending date
+      if (dateA !== dateB) {
+        return dateB - dateA; // Descending date
       }
       // If dates are the same, sort by ID to ensure stable order
       return a.id.localeCompare(b.id);

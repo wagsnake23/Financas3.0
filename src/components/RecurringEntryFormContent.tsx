@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { cn } from "@/lib/utils";
-import { format, isValid } from "date-fns"; // Mantido para formatar a exibição da data no botão
+import { format } from "date-fns"; // Mantido para formatar a exibição da data no botão
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -338,12 +338,7 @@ export const RecurringEntryFormContent: React.FC<RecurringEntryFormContentProps>
                   date.getMonth(),
                   date.getDate()
                 );
-                if (isValid(fixedDate)) { // Add isValid check
-                  setStartDate(fixedDate);
-                } else {
-                  console.error("Invalid date created from calendar selection in RecurringEntryFormContent:", date);
-                  toast.error("Data selecionada é inválida.");
-                }
+                setStartDate(fixedDate);
                 setIsStartDateCalendarOpen(false);
               }}
               initialFocus

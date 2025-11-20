@@ -36,60 +36,45 @@ interface LancamentosContentProps {
   onDeleteTransaction: (id: string, type: TransactionType, isFixed?: boolean) => void;
   allCategories: AppCategory[];
   isMobile: boolean;
-  monthlyFilteredTransactions: Transaction[]; // NOVO: Receber monthlyFilteredTransactions
-  cartoes: Tables<'cartoes'>[]; // NOVO: Receber cartoes
+  monthlyFilteredTransactions: Transaction[];
+  cartoes: Tables<'cartoes'>[];
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
   selectedMonth: Date;
   onEditTransaction: (transaction: Transaction) => void;
-  // markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid']; // REMOVIDO: markMonthPaid será passado via useTransactionMutations
+  markMonthPaid: ReturnType<typeof useRecurringEntries>['markMonthPaid'];
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  loadingPayInvoice: boolean;
-  setLoadingPayInvoice: (loading: boolean) => void;
-  filterType: string;
-  setFilterType: (type: string) => void;
+  loadingPayInvoice: boolean; // NOVO: Receber loadingPayInvoice
+  setLoadingPayInvoice: (loading: boolean) => void; // NOVO: Receber setter
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
-  editingTransaction,
-  fullEditingRevenue,
-  fullEditingExpense,
-  onUpdateTransaction,
-  onCancelEdit,
+  editingTransaction, // Mantido para contexto, mas não usado para renderização condicional
+  fullEditingRevenue, // Mantido para contexto
+  fullEditingExpense, // Mantido para contexto
+  onUpdateTransaction, // Mantido para contexto
+  onCancelEdit, // Mantido para contexto
   onDeleteTransaction,
   allCategories,
   isMobile,
-  monthlyFilteredTransactions, // NOVO
-  cartoes, // NOVO
+  monthlyFilteredTransactions,
+  cartoes,
   queryClient,
   user,
   selectedMonth,
   onEditTransaction,
-  // markMonthPaid, // REMOVIDO
+  markMonthPaid,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   loadingPayInvoice,
   setLoadingPayInvoice,
-  filterType,
-  setFilterType,
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
-  const disableFilters = !!editingTransaction;
-
-  // markMonthPaid agora precisa ser obtido de useRecurringEntries aqui, se for usado diretamente.
-  // No entanto, como ele é uma função de mutação, é melhor que seja passado de useTransactionMutations.
-  // Por enquanto, vamos mockar ou garantir que ele não seja usado diretamente aqui.
-  // Para o contexto atual, ele é usado em TransactionRow, que recebe de TransactionList, que por sua vez recebe de LancamentosContent.
-  // Então, precisamos passá-lo de Lancamentos.tsx -> LancamentosContent.tsx -> TransactionView.tsx -> TransactionList.tsx -> TransactionRow.tsx.
-  // Como useTransactionMutations já o encapsula, vamos passá-lo de lá.
-
-  // Temporariamente, para evitar erro de tipo, vamos criar um mock ou garantir que não seja usado diretamente aqui.
-  // A melhor abordagem é que Lancamentos.tsx passe a função `markMonthPaid` do `useTransactionMutations` para cá.
-  // Por enquanto, vou deixar um placeholder para `markMonthPaid` para que o código compile.
-  const { markMonthPaid } = useRecurringEntries(user, selectedMonth, allCategories, !!user);
-
+  // A lógica de `transactionToEdit` e renderização condicional foi movida para Lancamentos.tsx
+  // Este componente agora sempre renderiza a TransactionView.
+  const disableFilters = !!editingTransaction; // Desabilita filtros se houver uma transação em edição (no modal)
 
   return (
     <TransactionView
@@ -103,13 +88,11 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       user={user}
       selectedMonth={selectedMonth}
       disableFilters={disableFilters}
-      markMonthPaid={markMonthPaid} // Passando markMonthPaid
+      markMonthPaid={markMonthPaid}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice}
       setLoadingPayInvoice={setLoadingPayInvoice}
-      filterType={filterType}
-      setFilterType={setFilterType}
     />
   );
 };

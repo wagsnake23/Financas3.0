@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { addMonths, subMonths, parseISO, isValid } from "date-fns";
 import { Transaction } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
-import { createSafeDate } from "@/lib/utils"; // Importar createSafeDate
 
 // Helper function to validate if a string is a UUID
 const isValidUuid = (value: string | null | undefined): boolean => {
@@ -19,8 +18,8 @@ export const useLancamentosState = () => {
     const monthParam = searchParams.get("month");
     if (monthParam) {
       try {
-        const parsedDate = createSafeDate(monthParam); // Usar createSafeDate
-        if (parsedDate) { // Verificar se a data é válida
+        const parsedDate = parseISO(monthParam);
+        if (isValid(parsedDate)) {
           return parsedDate;
         } else {
           console.error("Invalid date parsed from URL parameter:", monthParam);

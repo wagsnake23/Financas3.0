@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { DeleteRecurrenceModal } from "@/components/DeleteRecurrenceModal";
-import { useLancamentosState } from "@/hooks/useLancamentosLogic";
+import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,12 +15,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { TransactionEditForm } from "@/components/TransactionEditForm";
-import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTransactionsData } from "@/hooks/useTransactionsData"; // Importar useTransactionsData
-import { useTransactionMutations } from "@/hooks/useTransactionMutations"; // Importar useTransactionMutations
+} from "@/components/ui/dialog"; // Importar componentes do Dialog
+import { TransactionEditForm } from "@/components/TransactionEditForm"; // Importar TransactionEditForm
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -32,61 +28,46 @@ const Lancamentos = () => {
     setSelectedMonth,
     handlePreviousMonth,
     handleNextMonth,
-    editingTransaction,
     setEditingTransaction,
-    fullEditingRevenue,
     setFullEditingRevenue,
-    fullEditingExpense,
     setFullEditingExpense,
     loadingEditData,
-    setLoadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen,
-    setIsEditModalOpen,
+    isEditModalOpen, // NOVO: Receber isEditModalOpen
+    setIsEditModalOpen, // NOVO: Receber setIsEditModalOpen
     isDeleteRecurrenceModalOpen,
     setIsDeleteRecurrenceModalOpen,
-    selectedRecurringTransactionForDelete,
-    setSelectedRecurringTransactionForDelete, // Adicionado aqui
-    filterPaymentOptionId,
-    setFilterPaymentOptionId,
-    filterType,
-    setFilterType,
-    handleCancelEdit,
-  } = useLancamentosState(); // Não precisa de user e authLoading aqui
-
-  const {
+    selectedRecurringTransaction,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    isLoading: isLoadingTransactionsData,
-  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
-
-  const {
-    confirmDeleteWithOptions,
+    isLoading,
     handleDeleteTransaction,
+    handleEditTransaction,
     handleUpdateTransaction,
-  } = useTransactionMutations({
-    user,
-    queryClient,
-    monthlyFilteredTransactions,
-    setLoadingEditData,
-    setIsDeleteRecurrenceModalOpen,
-    setEditingTransaction,
-    setIsEditModalOpen,
-    setSelectedRecurringTransactionForDelete,
-    selectedMonth,
-    fetchedCategories, // Passar fetchedCategories
-    cartoes, // Passar cartoes
-  });
+    handleCancelEdit, // NOVO: Receber handleCancelEdit
+    editingTransaction,
+    fullEditingRevenue,
+    fullEditingExpense,
+    queryClient: logicQueryClient,
+    confirmDeleteWithOptions,
+    markMonthPaid,
+    filterPaymentOptionId,
+    setFilterPaymentOptionId,
+  } = useLancamentosLogic(user, authLoading);
 
-  // Função para abrir o modal de edição
-  const handleEditTransaction = (transaction: any) => {
-    setEditingTransaction(transaction);
-    setIsEditModalOpen(true);
-  };
+  console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
 
-  if (authLoading || isLoadingTransactionsData || loadingEditData) {
+  // A função handleCancelEdit já está sendo retornada pelo hook, então não precisamos redefini-la aqui.
+  // const handleCancelEdit = () => {
+  //   setEditingTransaction(null);
+  //   setFullEditingRevenue(null);
+  //   setFullEditingExpense(null);
+  //   setIsEditModalOpen(false); // Fechar o modal ao cancelar
+  // };
+  
+  if (authLoading || isLoading || loadingEditData) {
     return <Loading />;
   }
 
@@ -99,52 +80,35 @@ const Lancamentos = () => {
             <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
           )}
           
-          <div className="space-y-8"> 
-            {/* Top row of controls: Month Navigator and Type Filter */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-start gap-4 mb-8">
-              <MonthNavigator
-                selectedMonth={selectedMonth}
-                onPreviousMonth={handlePreviousMonth}
-                onNextMonth={handleNextMonth}
-                isMobile={isMobile}
-              />
-              <Select value={filterType} onValueChange={setFilterType} disabled={isLoadingTransactionsData}>
-                <SelectTrigger className="rounded-xl lg:w-[150px]">
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os tipos</SelectItem>
-                  <SelectItem value="income">Receita</SelectItem>
-                  <SelectItem value="expense">Despesa</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <MonthNavigator
+            selectedMonth={selectedMonth}
+            onPreviousMonth={handlePreviousMonth}
+            onNextMonth={handleNextMonth}
+            isMobile={isMobile}
+          />
 
-            {/* LancamentosContent agora ocupará a largura total do contêiner principal */}
-            <LancamentosContent
-              editingTransaction={editingTransaction}
-              fullEditingRevenue={fullEditingRevenue}
-              fullEditingExpense={fullEditingExpense}
-              onUpdateTransaction={handleUpdateTransaction}
-              onCancelEdit={handleCancelEdit}
-              onDeleteTransaction={handleDeleteTransaction}
-              allCategories={fetchedCategories} // Passar fetchedCategories do useTransactionsData
-              isMobile={isMobile}
-              monthlyFilteredTransactions={monthlyFilteredTransactions} // Passar monthlyFilteredTransactions do useTransactionsData
-              cartoes={cartoes} // Passar cartoes do useTransactionsData
-              user={user}
-              onEditTransaction={handleEditTransaction}
-              queryClient={queryClient} // Usar o queryClient principal
-              confirmDeleteWithOptions={confirmDeleteWithOptions}
-              // markMonthPaid={markMonthPaid} // markMonthPaid vem do useRecurringEntries, que é usado dentro de useTransactionMutations
-              filterPaymentOptionId={filterPaymentOptionId}
-              setFilterPaymentOptionId={setFilterPaymentOptionId}
-              loadingPayInvoice={loadingPayInvoice}
-              setLoadingPayInvoice={setLoadingPayInvoice}
-              filterType={filterType}
-              setFilterType={setFilterType}
-            />
-          </div>
+          {/* A LancamentosContent agora sempre renderiza a TransactionView */}
+          <LancamentosContent
+            editingTransaction={editingTransaction} // Ainda passa para TransactionView para contexto, se necessário
+            fullEditingRevenue={fullEditingRevenue}
+            fullEditingExpense={fullEditingExpense}
+            onUpdateTransaction={handleUpdateTransaction}
+            onCancelEdit={handleCancelEdit} // Passa a função de cancelamento
+            onDeleteTransaction={handleDeleteTransaction}
+            allCategories={fetchedCategories}
+            isMobile={isMobile}
+            monthlyFilteredTransactions={monthlyFilteredTransactions}
+            cartoes={cartoes}
+            user={user}
+            onEditTransaction={handleEditTransaction}
+            queryClient={logicQueryClient} 
+            confirmDeleteWithOptions={confirmDeleteWithOptions}
+            markMonthPaid={markMonthPaid}
+            filterPaymentOptionId={filterPaymentOptionId}
+            setFilterPaymentOptionId={setFilterPaymentOptionId}
+            loadingPayInvoice={loadingPayInvoice}
+            setLoadingPayInvoice={setLoadingPayInvoice}
+          />
         </main>
         <Footer isMobile={isMobile} />
 
@@ -173,9 +137,9 @@ const Lancamentos = () => {
           isOpen={isDeleteRecurrenceModalOpen}
           onClose={() => {
             setIsDeleteRecurrenceModalOpen(false);
-            handleCancelEdit();
+            handleCancelEdit(); // Garante que o modal de edição também feche se estiver aberto
           }}
-          transaction={selectedRecurringTransactionForDelete}
+          transaction={selectedRecurringTransaction}
           isMobile={isMobile}
           onConfirmDeleteWithOptions={confirmDeleteWithOptions}
         />

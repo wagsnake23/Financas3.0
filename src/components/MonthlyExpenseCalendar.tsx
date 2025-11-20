@@ -5,7 +5,7 @@ import DynamicIcon from "./DynamicIcon";
 import type { Transaction } from "@/types/finance";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, createSafeDate } from "@/lib/utils"; // Importar cn e createSafeDate
+import { cn } from "@/lib/utils";
 
 interface MonthlyExpenseCalendarProps {
   transactions: Transaction[];
@@ -31,8 +31,8 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
       .filter(t => t.type === "expense")
       .filter(t => !t.is_fixed || t.isRecurring) // Filter out legacy fixed transactions
       .filter(t => {
-        const transactionDate = createSafeDate(t.date); // Usar createSafeDate
-        return transactionDate && isWithinInterval(transactionDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
+        const transactionDate = new Date(t.date);
+        return isWithinInterval(transactionDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
       })
       .reduce((sum, t) => sum + t.amount, 0);
   }, [transactions, displayMonth]);

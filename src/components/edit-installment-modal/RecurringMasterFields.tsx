@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Enums } from "@/integrations/supabase/types";
@@ -130,12 +130,7 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                       date.getMonth(),
                       date.getDate()
                     );
-                    if (isValid(fixedDate)) { // Add isValid check
-                      setStartDate(fixedDate);
-                    } else {
-                      console.error("Invalid date created from calendar selection for StartDate in RecurringMasterFields:", date);
-                      toast.error("Data de início selecionada é inválida.");
-                    }
+                    setStartDate(fixedDate);
                     setIsStartDateCalendarOpen(false);
                   }}
                   initialFocus
@@ -175,12 +170,7 @@ export const RecurringMasterFields: React.FC<RecurringMasterFieldsProps> = ({
                         date.getMonth(),
                         date.getDate()
                       );
-                      if (isValid(fixedDate)) { // Add isValid check
-                        setEndDate(fixedDate);
-                      } else {
-                        console.error("Invalid date created from calendar selection for EndDate in RecurringMasterFields:", date);
-                        toast.error("Data de fim selecionada é inválida.");
-                      }
+                      setEndDate(fixedDate);
                       setIsEndDateCalendarOpen(false);
                     }}
                     initialFocus
