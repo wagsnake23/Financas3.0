@@ -134,10 +134,9 @@ export const TransactionList = ({
   const selectableCategories = useMemo(() => {
     if (filterType === "income") {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
-    } else if (filterType === "expense") {
+    } else { // This covers "expense" and "all"
       return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
-    return allCategories;
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
@@ -226,7 +225,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}> {/* Removido mb-4 para mobile */}
+      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}>
         <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
