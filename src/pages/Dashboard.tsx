@@ -172,10 +172,10 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null}
               >
-                <div className={cn("flex justify-start w-full")}> {/* Ajustado para flex justify-start w-full */}
+                <div className={cn("flex justify-end w-full")}> {/* Alterado de justify-start para justify-end */}
                   <Button 
                     variant="success" 
-                    className="w-auto h-8 px-3 text-xs rounded-xl" // Removido w-full, adicionado w-auto
+                    className="w-auto h-8 px-3 text-xs rounded-xl" 
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
