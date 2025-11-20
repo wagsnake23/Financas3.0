@@ -296,8 +296,9 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-2 gap-2" : "grid-cols-4")}>
-        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}>
+      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-1 gap-2" : "grid-cols-4")}> {/* Alterado para grid-cols-1 em mobile */}
+        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}
+                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -308,7 +309,8 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
+        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}
+                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
@@ -329,7 +331,7 @@ export const TransactionList = ({
 
         {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className={cn("rounded-xl", isMobile && "col-span-2")}> {/* Adicionado col-span-2 para mobile */}
+                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Alterado para col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
