@@ -43,7 +43,7 @@ export const InstallmentPreview: React.FC<InstallmentPreviewProps> = ({
         Pré-visualização das Parcelas
       </h3>
       <div className="flex items-center justify-center gap-1"> {/* Conteúdo original centralizado, gap menor */}
-        <DynamicIcon name="💳" className={cn("h-6 w-6", isMobile && "h-5 w-5")} /> {/* Aumentado o tamanho do ícone */}
+        <DynamicIcon name="CreditCard" className={cn("h-6 w-6 text-primary", isMobile && "h-5 w-5")} /> {/* Usando o ícone CreditCard da Lucide React */}
         <p className={cn("font-semibold text-primary", isMobile && "text-sm")}>
           {summary.totalInstallments}x de R$ {summary.valuePerInstallment.toFixed(2)}
         </p>
