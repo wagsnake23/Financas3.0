@@ -18,8 +18,8 @@ interface DateAndInstallmentFieldsProps {
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
   tipoPagamento: "avista" | "parcelado"; // Nova prop
-  numeroParcelas: number; // Nova prop
-  setNumeroParcelas: (value: number) => void; // Nova prop
+  // Removido: numeroParcelas: number;
+  // Removido: setNumeroParcelas: (value: number) => void;
 }
 
 export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> = ({
@@ -31,13 +31,13 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   setValidationErrors,
   isMobile,
   tipoPagamento,
-  numeroParcelas,
-  setNumeroParcelas,
+  // Removido: numeroParcelas,
+  // Removido: setNumeroParcelas,
 }) => {
   const dateLabel = tipoPagamento === "parcelado" ? "Data da Primeira Parcela" : "Data de Vencimento";
 
   return (
-    <div className={cn("grid gap-4", tipoPagamento === "parcelado" ? "grid-cols-2" : "grid-cols-1")}>
+    <div className={cn("grid gap-4", "grid-cols-1")}> {/* Ajustado para sempre 1 coluna */}
       <div>
         <Label htmlFor="dataVencimento" className={cn(isMobile && "text-xs")}>
           {dateLabel}
@@ -75,27 +75,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
         </Popover>
       </div>
 
-      {tipoPagamento === "parcelado" && (
-        <div>
-          <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
-            Número de Parcelas
-          </Label>
-          <Input
-            id="numeroParcelas"
-            type="number"
-            min="2"
-            value={numeroParcelas}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              setNumeroParcelas(isNaN(value) ? 1 : value);
-              setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
-            }}
-            placeholder="Ex: 3"
-            required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
-          />
-        </div>
-      )}
+      {/* Removido o bloco de Número de Parcelas */}
     </div>
   );
 };

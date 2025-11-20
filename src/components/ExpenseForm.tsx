@@ -252,6 +252,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         UNSELECTED_VALUE={UNSELECTED_VALUE}
         tipoPagamento={tipoPagamento} // Passar o tipo de pagamento
         setTipoPagamento={setTipoPagamento} // Passar a função para atualizar o tipo de pagamento
+        numeroParcelas={numeroParcelas} // Passar o número de parcelas
+        setNumeroParcelas={setNumeroParcelas} // Passar a função para atualizar o número de parcelas
       />
 
       <DateAndInstallmentFields
@@ -263,8 +265,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setValidationErrors={setValidationErrors}
         isMobile={isMobile}
         tipoPagamento={tipoPagamento} // Passar o tipo de pagamento
-        numeroParcelas={numeroParcelas} // Passar o número de parcelas
-        setNumeroParcelas={setNumeroParcelas} // Passar a função para atualizar o número de parcelas
+        // Removido: numeroParcelas={numeroParcelas}
+        // Removido: setNumeroParcelas={setNumeroParcelas}
       />
 
       <div>

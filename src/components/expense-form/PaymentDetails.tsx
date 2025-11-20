@@ -23,9 +23,12 @@ interface PaymentDetailsProps {
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
   UNSELECTED_VALUE: string;
-  // NOVAS PROPS PARA TIPO DE PAGAMENTO
+  // PROPS PARA TIPO DE PAGAMENTO
   tipoPagamento: "avista" | "parcelado";
   setTipoPagamento: (value: "avista" | "parcelado") => void;
+  // NOVAS PROPS PARA NÚMERO DE PARCELAS
+  numeroParcelas: number;
+  setNumeroParcelas: (value: number) => void;
 }
 
 export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -42,55 +45,85 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setValidationErrors,
   isMobile,
   UNSELECTED_VALUE,
-  tipoPagamento, // NOVA PROP
-  setTipoPagamento, // NOVA PROP
+  tipoPagamento,
+  setTipoPagamento,
+  numeroParcelas, // NOVA PROP
+  setNumeroParcelas, // NOVA PROP
 }) => {
   return (
-    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
-      {/* Valor */}
-      <div>
-        <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-        <CurrencyInput
-          id="valor"
-          value={valor}
-          onValueChange={(values) => {
-            setValor(values.floatValue);
-            setValidationErrors(prev => ({ ...prev, valor: false }));
-          }}
-          placeholder="0,00"
-          required
-          className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
-        />
+    <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
+      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
+        {/* Valor */}
+        <div>
+          <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+          <CurrencyInput
+            id="valor"
+            value={valor}
+            onValueChange={(values) => {
+              setValor(values.floatValue);
+              setValidationErrors(prev => ({ ...prev, valor: false }));
+            }}
+            placeholder="0,00"
+            required
+            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
+          />
+        </div>
+
+        {/* Tipo de Pagamento (À vista / Parcelado) */}
+        <div>
+          <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
+          <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
+              <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Tipo de Pagamento (À vista / Parcelado) - NOVA POSIÇÃO */}
-      <div>
-        <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
-        <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
-            <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {/* Forma de Pagamento e Número de Parcelas (condicional) */}
+      <div className={cn("grid gap-4", tipoPagamento === "parcelado" ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
+        {/* Forma de Pagamento */}
+        <div>
+          <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
+            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
+              <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
+              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
+              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Forma de Pagamento - NOVA POSIÇÃO */}
-      <div className="col-span-full"> {/* Ocupa a largura total */}
-        <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-        <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
-            <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
-            <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
-            <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado") */}
+        {tipoPagamento === "parcelado" && (
+          <div>
+            <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
+              Número de Parcelas
+            </Label>
+            <Input
+              id="numeroParcelas"
+              type="number"
+              min="2"
+              value={numeroParcelas}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setNumeroParcelas(isNaN(value) ? 1 : value);
+                setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
+              }}
+              placeholder="Ex: 3"
+              required
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
+            />
+          </div>
+        )}
       </div>
 
       {formaPagamento === "cartao" && (
