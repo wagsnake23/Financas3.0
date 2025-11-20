@@ -216,7 +216,7 @@ export const TransactionList = ({
     // porque as despesas do `selectedMonth` geralmente vencem no mês seguinte.
     dueDate = addMonths(dueDate, 1); // Adiciona 1 mês para refletir o vencimento da fatura do mês selecionado
 
-    return isValid(dueDate) ? format(dueDate, "dd/MM/yyyy", { locale: ptBR }) : null;
+    return isValid(dueDate) ? format(dueDate, "dd/MM", { locale: ptBR }) : null; // Formatado para dd/MM
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
@@ -284,13 +284,9 @@ export const TransactionList = ({
               disabled={loadingPayInvoice || disableFilters}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-              {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+              {loadingPayInvoice ? "Pagando..." : `Pagar Fatura ${invoiceDueDate ? `(${invoiceDueDate})` : ''}`}
             </Button>
-            {invoiceDueDate && (
-              <span className="text-xs text-muted-foreground mt-1">
-                Vencimento: {invoiceDueDate}
-              </span>
-            )}
+            {/* REMOVIDO: O span de vencimento foi movido para dentro do botão */}
           </div>
         ) : (
           // Se nenhum cartão de crédito for selecionado, este slot permanece vazio no desktop
