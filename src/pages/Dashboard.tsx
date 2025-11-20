@@ -133,11 +133,14 @@ const Dashboard = () => {
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
-                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null}
+                headerContent={null} // Removido o MonthBadge daqui
               >
                 <div className={cn("flex justify-between items-end w-full")}>
                   <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Pago este mês:</p>
+                    <div className="flex items-center gap-2"> {/* Novo: Flex container para texto e badge */}
+                      <p className="text-xs text-muted-foreground">Pago este mês:</p>
+                      {isMobile && <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" />} {/* Movido para cá */}
+                    </div>
                     <p className="font-semibold text-base text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p>
                   </div>
                   <Button
@@ -159,11 +162,14 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
-                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null}
+                headerContent={null} // Removido o MonthBadge daqui
               >
                 <div className={cn("flex justify-between items-end w-full")}>
                   <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Saldo Atual:</p>
+                    <div className="flex items-center gap-2"> {/* Novo: Flex container para texto e badge */}
+                      <p className="text-xs text-muted-foreground">Saldo Atual:</p>
+                      {isMobile && <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" />} {/* Movido para cá */}
+                    </div>
                     <p className={cn(
                       "font-semibold text-base text-primary"
                     )}>
