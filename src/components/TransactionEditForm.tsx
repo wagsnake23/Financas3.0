@@ -408,7 +408,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       {/* Removido o div que continha o h2 e o botão X */}
       {isRecurringTransaction && (
-        <div className="space-y-4 py-4">
+        <div className="mb-4"> {/* Removido space-y-4 e py-4, adicionado mb-4 para espaçamento com o formulário */}
           <EditOptionSelector
             editOption={editOption}
             setEditOption={setEditOption}
@@ -420,7 +420,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {isRecurringTransaction ? (
-          <div className="space-y-4 mt-4"> {/* Removido o py-4 e o EditOptionSelector daqui */}
+          <div className="space-y-4"> {/* Removido o mt-4 */}
             <CommonFields
               title={title}
               setTitle={setTitle}
