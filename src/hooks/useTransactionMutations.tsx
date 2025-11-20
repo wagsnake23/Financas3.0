@@ -170,6 +170,7 @@ export const useTransactionMutations = ({
   const handleDeleteTransaction = useCallback(
     async (id: string, type: "income" | "expense", isFixed?: boolean) => {
       setLoadingEditData(true);
+      console.log(`[DEBUG] handleDeleteTransaction called for ID: ${id}, Type: ${type}, IsFixed: ${isFixed}`);
 
       if (!user) {
         toast.error("Usuário não autenticado. Por favor, faça login novamente.");
@@ -184,6 +185,7 @@ export const useTransactionMutations = ({
         return;
       }
 
+      // If it's a recurring transaction or a multi-installment expense, open the advanced delete modal
       if (
         transactionToDelete.isRecurring ||
         (transactionToDelete.type === "expense" &&
@@ -212,23 +214,28 @@ export const useTransactionMutations = ({
           setLoadingEditData(false);
           return;
         }
+        console.log(`[DEBUG] Deleting income from 'receitas' table with ID: ${revenueIdToUse}`);
         const { error: deleteError } = await supabase.from("receitas").delete().eq("id", revenueIdToUse).eq("user_id", user.id);
         error = deleteError;
       } else if (type === "expense") {
+        // This block handles one-off expenses that are NOT part of a multi-installment series.
+        // These are typically expenses that were inserted directly into 'despesas' as 'avista'
+        // and have only one corresponding entry in 'despesas_parcelas'.
+        
+        // First, delete the installment from 'despesas_parcelas'
         if (!isValidUuid(id)) {
-          toast.error("Erro (DEL-NF-1): ID de parcela de despesa inválido.");
+          toast.error("Erro (DEL-EXP-1): ID de parcela de despesa inválido.");
           setLoadingEditData(false);
           return;
         }
-
-        // Get the parent despesa_id before deleting the installment
-        const parentDespesaId = transactionToDelete.despesa_id;
-
+        console.log(`[DEBUG] Deleting expense installment from 'despesas_parcelas' table with ID: ${id}`);
         const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
         if (deleteParcelaError) throw deleteParcelaError;
 
-        // If it was an installment, check if the parent despesa should be deleted
+        // Then, check if the parent 'despesas' record should be deleted
+        const parentDespesaId = transactionToDelete.despesa_id;
         if (parentDespesaId && isValidUuid(parentDespesaId)) {
+          console.log(`[DEBUG] Checking if parent 'despesas' record ${parentDespesaId} should be deleted.`);
           const { data: remainingParcelas, error: checkError } = await supabase
             .from("despesas_parcelas")
             .select("id")
@@ -238,9 +245,14 @@ export const useTransactionMutations = ({
 
           if (remainingParcelas && remainingParcelas.length === 0) {
             // No more installments for this parent despesa, delete the parent
+            console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
             const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
             if (deleteParentError) throw deleteParentError;
+          } else {
+            console.log(`[DEBUG] Remaining installments found for ${parentDespesaId}. Not deleting parent 'despesas' record.`);
           }
+        } else {
+          console.warn(`[DEBUG] Parent despesa_id not found or invalid for installment deletion: ${parentDespesaId}. Skipping parent deletion check.`);
         }
       }
 
