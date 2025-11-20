@@ -17,7 +17,7 @@ import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -105,6 +105,12 @@ export default function Receitas() {
     const formattedDate = data 
       ? `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}-${data.getDate().toString().padStart(2, '0')}` 
       : "";
+      
+    if (!isValid(data)) { // Adicionado verificação de validade da data
+      toast.error("Data selecionada é inválida.");
+      setLoading(false);
+      return;
+    }
 
     const newRevenueData = {
       user_id: user?.id,
@@ -194,7 +200,18 @@ export default function Receitas() {
               mode="single"
               selected={data}
               onSelect={(date) => {
-                setData(date);
+                if (!date) return;
+                const fixedDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate()
+                );
+                if (isValid(fixedDate)) { // Add isValid check
+                  setData(fixedDate);
+                } else {
+                  console.error("Invalid date created from calendar selection in Receitas:", date);
+                  toast.error("Data selecionada é inválida.");
+                }
                 setIsCalendarOpen(false);
               }}
               initialFocus

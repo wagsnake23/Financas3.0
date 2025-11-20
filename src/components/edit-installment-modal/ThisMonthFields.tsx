@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Database } from "@/integrations/supabase/types"; // NEW IMPORT for ReceitaStatus
@@ -72,7 +72,12 @@ export const ThisMonthFields: React.FC<ThisMonthFieldsProps> = ({
                   date.getMonth(),
                   date.getDate()
                 );
-                setOverrideDueDate(fixedDate);
+                if (isValid(fixedDate)) { // Add isValid check
+                  setOverrideDueDate(fixedDate);
+                } else {
+                  console.error("Invalid date created from calendar selection in ThisMonthFields:", date);
+                  toast.error("Data selecionada é inválida.");
+                }
                 setIsOverrideDueDateCalendarOpen(false);
               }}
               initialFocus

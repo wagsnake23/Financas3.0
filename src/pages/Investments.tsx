@@ -303,7 +303,18 @@ export default function Investments() { // Alterado para export default function
                         mode="single"
                         selected={date}
                         onSelect={(selectedDate) => {
-                          setDate(selectedDate);
+                          if (!selectedDate) return;
+                          const fixedDate = new Date(
+                            selectedDate.getFullYear(),
+                            selectedDate.getMonth(),
+                            selectedDate.getDate()
+                          );
+                          if (isValid(fixedDate)) { // Add isValid check
+                            setDate(fixedDate);
+                          } else {
+                            console.error("Invalid date created from calendar selection in Investments:", selectedDate);
+                            toast.error("Data selecionada é inválida.");
+                          }
                           setIsCalendarOpen(false);
                         }}
                         initialFocus
