@@ -43,7 +43,7 @@ export const InstallmentPreview: React.FC<InstallmentPreviewProps> = ({
         Pré-visualização das Parcelas
       </h3>
       <div className="flex items-center justify-center gap-1"> {/* Conteúdo original centralizado, gap menor */}
-        <DynamicIcon name="💳" className={cn("h-5 w-5", isMobile && "h-4 w-4")} /> {/* Ícone de emoji de cartão de crédito */}
+        <DynamicIcon name="💳" className={cn("h-6 w-6", isMobile && "h-5 w-5")} /> {/* Aumentado o tamanho do ícone */}
         <p className={cn("font-semibold text-primary", isMobile && "text-sm")}>
           {summary.totalInstallments}x de R$ {summary.valuePerInstallment.toFixed(2)}
         </p>
