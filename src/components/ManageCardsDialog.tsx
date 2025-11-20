@@ -115,7 +115,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
     setLoading(true);
 
-    // NEW: Check for associated expenses before deleting the card
+    // 1. Check for associated one-off expenses
     const { count: expenseCount, error: countError } = await supabase
       .from("despesas")
       .select("id", { count: 'exact' })
@@ -131,14 +131,37 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
     if (expenseCount && expenseCount > 0) {
       toast.error("Não é possível excluir o cartão", {
-        description: "Existem despesas associadas a este cartão. Remova-as ou edite-as primeiro.",
+        description: "Existem despesas avulsas associadas a este cartão. Remova-as ou edite-as primeiro.",
       });
       setLoading(false);
       setIsConfirmDeleteOpen(false);
       return;
     }
-    // END NEW
 
+    // 2. Check for associated recurring entries
+    const { count: recurringCount, error: recurringCountError } = await supabase
+      .from("recurring_entries")
+      .select("id", { count: 'exact' })
+      .eq("cartao_id", cardToDelete);
+
+    if (recurringCountError) {
+      toast.error("Erro ao verificar lançamentos recorrentes associados", { description: recurringCountError.message });
+      console.error(recurringCountError);
+      setLoading(false);
+      setIsConfirmDeleteOpen(false);
+      return;
+    }
+
+    if (recurringCount && recurringCount > 0) {
+      toast.error("Não é possível excluir o cartão", {
+        description: "Existem lançamentos recorrentes associados a este cartão. Remova-os ou edite-os primeiro.",
+      });
+      setLoading(false);
+      setIsConfirmDeleteOpen(false);
+      return;
+    }
+    
+    // If no associated expenses or recurring entries, proceed with deletion
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
     if (error) {
