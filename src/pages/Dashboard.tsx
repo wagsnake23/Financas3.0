@@ -145,6 +145,7 @@ const Dashboard = () => {
                 showValue={showExpenseValue}
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
+                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null}
               >
                 <div className={cn("flex items-end justify-between w-full mt-2")}>
                   <p className="text-xs text-muted-foreground">Pago este mês: <span className="font-semibold text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</span></p>
@@ -168,7 +169,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 showValue={showIncomeValue}
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
-                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} /> : null}
+                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null}
               >
                 <div className={cn("flex justify-end mt-4", isMobile && "mt-2")}>
                   <Button 

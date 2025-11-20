@@ -7,19 +7,22 @@ import { cn } from '@/lib/utils';
 interface MonthBadgeProps {
   selectedMonth: Date;
   isMobile: boolean;
+  variant: "income" | "expense"; // NEW: Add variant prop
 }
 
-export const MonthBadge: React.FC<MonthBadgeProps> = ({ selectedMonth, isMobile }) => {
+export const MonthBadge: React.FC<MonthBadgeProps> = ({ selectedMonth, isMobile, variant }) => {
+  const textColorClass = variant === "income" ? "text-success" : "text-destructive"; // Determine text color based on variant
+
   return (
     <div className={cn(
       "flex flex-col items-center justify-center rounded-md",
-      isMobile ? "p-1" : "p-2" // Keep padding, remove background color
+      isMobile ? "p-1" : "p-2" // Keep padding, no background color
     )}>
-      <DynamicIcon name="Calendar" className={cn("text-success", isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} />
-      <span className={cn("font-bold uppercase leading-none text-success", isMobile ? "text-xs" : "text-sm")}>
+      <DynamicIcon name="Calendar" className={cn(textColorClass, isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} />
+      <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-xs" : "text-sm")}>
         {format(selectedMonth, "MMM", { locale: ptBR })}
       </span>
-      <span className={cn("leading-none text-success", isMobile ? "text-[0.6rem]" : "text-xs")}>
+      <span className={cn("leading-none", textColorClass, isMobile ? "text-[0.6rem]" : "text-xs")}>
         {format(selectedMonth, "yyyy")}
       </span>
     </div>
