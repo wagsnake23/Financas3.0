@@ -253,6 +253,21 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
+        {/* Payment Option Select - MOVED HERE */}
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+                className="rounded-xl">
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Forma de Pagamento" />
+          </SelectTrigger>
+          <SelectContent>
+            {paymentFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
@@ -269,21 +284,6 @@ export const TransactionList = ({
                   </span>
                 </SelectItem>
               ))}
-          </SelectContent>
-        </Select>
-
-        {/* Payment Option Select */}
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
-                className="rounded-xl">
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Forma de Pagamento" />
-          </SelectTrigger>
-          <SelectContent>
-            {paymentFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
           </SelectContent>
         </Select>
 
