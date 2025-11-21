@@ -24,7 +24,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"; // Importar Popover components
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
 import {
   Dialog,
@@ -277,9 +277,9 @@ export default function Investments() { // Alterado para export default function
                 <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
                   <div className="space-y-2">
                     <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                    <CurrencyInput
+                    <CurrencyBR
                       value={amount}
-                      onValueChange={(values) => setAmount(values.floatValue)}
+                      onChange={(v) => setAmount(v)}
                       disabled={loadingForm}
                       className={cn("rounded-xl", isMobile && "h-9 text-sm")}
                     />

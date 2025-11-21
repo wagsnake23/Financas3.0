@@ -17,7 +17,7 @@ import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";

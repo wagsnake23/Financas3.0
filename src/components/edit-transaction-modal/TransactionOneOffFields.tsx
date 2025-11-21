@@ -12,7 +12,7 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { StatusToggleButton } from "@/components/StatusToggleButton";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
@@ -97,9 +97,9 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         {/* Valor */}
         <div className="space-y-2">
           <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <CurrencyInput
+          <CurrencyBR
             value={amount}
-            onValueChange={(values) => setAmount(values.floatValue)}
+            onChange={(v) => setAmount(v)}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>

@@ -7,7 +7,7 @@ import ManageCardsDialog from "@/components/ManageCardsDialog";
 import { cn } from "@/lib/utils";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 interface PaymentDetailsProps {
   valor: number | undefined; // Alterado para number | undefined
@@ -111,14 +111,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Valor */}
         <div>
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <CurrencyInput
-            id="valor"
+          <CurrencyBR
             value={valor}
-            onValueChange={(values) => {
-              setValor(values.floatValue);
+            onChange={(v) => {
+              setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            placeholder="0,00"
             className={cn(isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
           />
         </div>

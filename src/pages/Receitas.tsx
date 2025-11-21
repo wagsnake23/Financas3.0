@@ -28,7 +28,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
@@ -304,9 +304,9 @@ export default function Receitas() {
 
         <div>
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-          <CurrencyInput
+          <CurrencyBR
             value={valor}
-            onValueChange={(values) => setValor(values.floatValue)}
+            onChange={(v) => setValor(v)}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>

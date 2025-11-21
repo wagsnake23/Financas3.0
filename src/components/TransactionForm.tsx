@@ -11,7 +11,7 @@ import DynamicIcon from "./DynamicIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getDate, format } from "date-fns"; // Importar format
 
@@ -269,9 +269,9 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="amount">Valor (R$)</Label>
-            <CurrencyInput
+            <CurrencyBR
               value={amount}
-              onValueChange={(values) => setAmount(values.floatValue)}
+              onChange={(v) => setAmount(v)}
               className="rounded-xl"
             />
           </div>

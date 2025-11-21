@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { NumericInput } from "@/components/ui/numeric-input";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
@@ -68,7 +68,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           rentabilidade: updatedInvestment.rentabilidade,
         })
         .eq("id", updatedInvestment.id)
-        .eq("user_id", user.id)
+        .eq("user.id", user.id) // Corrigido para user.id
         .select()
         .single();
       if (error) throw error;
@@ -155,9 +155,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
         <div className="space-y-2">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-          <CurrencyInput
+          <CurrencyBR
             value={amount}
-            onValueChange={(values) => setAmount(values.floatValue)}
+            onChange={(v) => setAmount(v)}
             disabled={loading}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
