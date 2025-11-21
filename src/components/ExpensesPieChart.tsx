@@ -14,14 +14,21 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   const expensesByCategory = transactions
     .filter(t => t.type === "expense")
     .reduce((acc, transaction) => {
-      const category = allCategories.find(c => c.id === transaction.category);
-      const categoryName = category?.nome || "Outros";
-      const categoryColor = category?.cor || "hsl(215, 15%, 50%)";
-      
-      if (!acc[categoryName]) {
-        acc[categoryName] = { value: 0, color: categoryColor };
+      const subcategory = allCategories.find(c => c.id === transaction.category); // Esta é a subcategoria
+      let parentCategory: AppCategory | undefined;
+
+      if (subcategory && subcategory.parent_id) {
+        parentCategory = allCategories.find(c => c.id === subcategory.parent_id);
       }
-      acc[categoryName].value += transaction.amount;
+
+      // Usar o nome e a cor da categoria pai, se existir, caso contrário, usar a subcategoria ou um fallback
+      const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
+      const displayCategoryColor = parentCategory?.cor || subcategory?.cor || "hsl(215, 15%, 50%)";
+      
+      if (!acc[displayCategoryName]) {
+        acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
+      }
+      acc[displayCategoryName].value += transaction.amount;
       return acc;
     }, {} as Record<string, { value: number; color: string }>);
 
@@ -34,7 +41,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   if (chartData.length === 0) {
     return (
       <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2>
+        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
         <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
           Nenhuma despesa registrada
         </div>
@@ -44,7 +51,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
 
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Subcategoria</h2>
+      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
       <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
         <PieChart>
           <Pie
