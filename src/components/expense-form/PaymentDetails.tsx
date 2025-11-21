@@ -113,7 +113,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyInput
             id="valor"
-            value={valor}
+            value={valor !== undefined ? String(Math.round(valor * 100)) : ""}
             placeholder="R$ 0,00"
             required
             className={cn(
