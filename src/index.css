@@ -143,3 +143,12 @@ All colors MUST be HSL.
     vertical-align: middle;
   }
 }
+
+/* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */
+.radio-fix-click [role="radio"] {
+  pointer-events: auto; /* Garante que o botão de rádio seja clicável */
+}
+
+.radio-fix-click [role="radio"]::after {
+  pointer-events: none; /* Impede que o pseudo-elemento bloqueie os cliques */
+}
