@@ -114,8 +114,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <CurrencyInput
             id="valor"
             value={valor}
-            onValueChange={(values) => {
-              setValor(values.floatValue);
+            decimalsLimit={2}
+            decimalSeparator=","
+            groupSeparator="."
+            allowNegativeValue={false}
+            onValueChange={(value, name, values) => {
+              setValor(values.numberValue ?? 0);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             placeholder="0,00"
