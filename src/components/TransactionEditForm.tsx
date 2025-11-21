@@ -285,7 +285,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       if (shouldShowRecurringOptions) {
         setShowDeleteOptionsDialog(true);
       } else {
-        setShowSimpleDeleteOptionsDialog(true); // Corrigido o nome da função aqui
+        setShowSimpleDeleteOptionsDialog(true);
       }
     }
   };
@@ -299,7 +299,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
     setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteDialog(false);
+    setShowSimpleDeleteOptionsDialog(false); // Corrigido o nome da função aqui
   };
 
   const formContent = (
