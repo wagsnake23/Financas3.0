@@ -69,6 +69,7 @@ All colors MUST be HSL.
     --soft-green: 150 60% 90%; /* Nova cor verde suave */
     --soft-red: 0 70% 90%; /* Nova cor vermelho suave */
     --soft-purple: 280 60% 90%; /* Nova cor roxo suave */
+    --app-purple: 270 70% 40%; /* NOVO: Roxo mais forte para botões */
   }
 
   .dark {
@@ -124,6 +125,7 @@ All colors MUST be HSL.
     --soft-green: 150 60% 20%; /* Darker soft green for dark mode */
     --soft-red: 0 70% 20%; /* Darker soft red for dark mode */
     --soft-purple: 280 60% 20%; /* Darker soft purple for dark mode */
+    --app-purple: 270 70% 60%; /* NOVO: Roxo mais forte para botões em dark mode */
   }
 }
 

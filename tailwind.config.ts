@@ -88,6 +88,9 @@ export default {
         "soft-purple": { // Nova cor: roxo suave
           DEFAULT: "hsl(var(--soft-purple))",
         },
+        "app-purple": { // NOVO: Roxo mais forte para botões
+          DEFAULT: "hsl(var(--app-purple))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',

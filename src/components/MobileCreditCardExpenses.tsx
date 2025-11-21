@@ -104,7 +104,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
             disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
             className={cn(
               "rounded-xl w-full",
-              isMobile ? "h-9 text-sm bg-soft-purple text-primary-foreground hover:bg-soft-purple/80" : "w-auto px-4 h-9 text-xs"
+              isMobile ? "h-9 text-sm bg-app-purple text-primary-foreground hover:bg-app-purple/80" : "w-auto px-4 h-9 text-xs"
             )}
           >
             <>
