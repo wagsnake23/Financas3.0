@@ -109,7 +109,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         status: r.status,
         forma_pagamento: null,
         cartao_id: null,
-        is_recurring_master: r.is_recurring_master ?? false, // Garante que seja boolean
+        is_recurring_master: Boolean(r.is_recurring_master), // Garante que seja boolean
         recurrence_id: r.recurrence_id ?? null, // Garante que seja string | null
         recurrence_day: r.recurrence_day ?? null, // Garante que seja number | null
       }));
@@ -133,7 +133,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           forma_pagamento: parentDespesa?.forma_pagamento,
           cartao_id: parentDespesa?.cartao_id,
           despesa_id: parentDespesa?.id,
-          is_recurring_master: parentDespesa?.is_recurring_master ?? false, // Garante que seja boolean
+          is_recurring_master: Boolean(parentDespesa?.is_recurring_master), // Garante que seja boolean
           recurrence_id: parentDespesa?.id ?? null, // Para despesas, o recurrence_id é o id da despesa mestra, garante null se parentDespesa.id for null
           recurrence_day: null,
         };

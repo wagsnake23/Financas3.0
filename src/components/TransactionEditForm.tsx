@@ -82,11 +82,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
 
   const isRecurringTransaction = useMemo(() => {
-    return (editingTransaction?.type === "expense" && 
-           !!editingTransaction.despesa_id && 
-           (editingTransaction.totalInstallments || 0) > 1) ||
-           (editingTransaction?.type === "income" && 
-           (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id));
+    // Uma transação é recorrente SE:
+    // - is_recurring_master === true
+    // OU
+    // - recurrence_id != null
+    return (editingTransaction?.is_recurring_master === true || !!editingTransaction?.recurrence_id);
   }, [editingTransaction]);
 
   const filteredCategories = useMemo(() => {
@@ -324,7 +324,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedDeleteScope}
