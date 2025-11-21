@@ -43,7 +43,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           )}
         >
           <DynamicIcon 
-            name="Zap" 
+            name="⚡" 
             className={cn(
               "mr-2 h-4 w-4",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
@@ -59,7 +59,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           )}
         >
           <DynamicIcon 
-            name="Repeat" 
+            name="🔁" 
             className={cn(
               "mr-2 h-4 w-4",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
