@@ -113,7 +113,7 @@ export default function Despesas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
               !isRecurring 
-                ? "bg-soft-blue border-soft-blue text-primary font-bold" // Active styling
+                ? "bg-primary border-primary text-primary-foreground font-bold" // Active styling
                 : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
@@ -121,7 +121,7 @@ export default function Despesas() {
               name="Zap" 
               className={cn(
                 "mr-2 h-4 w-4",
-                !isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+                !isRecurring ? "text-primary-foreground" : "text-muted-foreground" // Icon color
               )} 
             /> Avulsa
           </ToggleGroupItem>
@@ -130,7 +130,7 @@ export default function Despesas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
               isRecurring 
-                ? "bg-soft-blue border-soft-blue text-primary font-bold" // Active styling
+                ? "bg-primary border-primary text-primary-foreground font-bold" // Active styling
                 : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
@@ -138,7 +138,7 @@ export default function Despesas() {
               name="Repeat" 
               className={cn(
                 "mr-2 h-4 w-4",
-                isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+                isRecurring ? "text-primary-foreground" : "text-muted-foreground" // Icon color
               )} 
             /> Recorrente
           </ToggleGroupItem>
