@@ -102,7 +102,10 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
             size="default"
             onClick={handlePayMonthlyBill}
             disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
-            className={cn("rounded-xl w-full", isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs")}
+            className={cn(
+              "rounded-xl w-full",
+              isMobile ? "h-9 text-sm bg-soft-purple text-primary-foreground hover:bg-soft-purple/80" : "w-auto px-4 h-9 text-xs"
+            )}
           >
             <>
               <DynamicIcon name="CreditCard" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
