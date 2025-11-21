@@ -50,7 +50,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
       if (!acc[displayCategoryName]) {
         acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
       }
-      acc[displayCategoryName].value += transaction.amount;
+      acc[displayCategoryName].value += Math.abs(transaction.amount); // Usar Math.abs() para garantir valor absoluto
       return acc;
     }, {} as Record<string, { value: number; color: string }>);
 
