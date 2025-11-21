@@ -41,6 +41,7 @@ interface ExpenseFormProps {
   queryClient: ReturnType<typeof useQueryClient>;
   isMobile: boolean;
   isRecurring: boolean;
+  setIsRecurring: (value: boolean) => void; // NOVA PROP
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -54,6 +55,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   queryClient,
   isMobile,
   isRecurring,
+  setIsRecurring, // NOVA PROP
 }) => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
@@ -88,21 +90,23 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Effect for handling recurrence logic
   useEffect(() => {
     if (isRecurring) {
-      setTipoPagamento("fixo");
+      setTipoPagamento("fixo"); // Force tipoPagamento to "fixo" if recurring
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
       setIsPaid(false); // Recurring expenses are initially pending
     } else {
-      // When not recurring, reset tipoPagamento and numeroParcelas based on current tipoPagamento
-      if (tipoPagamento === "fixo") { // If it was 'fixo' due to recurrence, reset it
+      // If not recurring, and tipoPagamento was "fixo" (because it was forced by isRecurring),
+      // reset it to "avista" and numeroParcelas to 1.
+      // Otherwise, maintain current tipoPagamento and adjust numeroParcelas.
+      if (tipoPagamento === "fixo") {
         setTipoPagamento("avista");
         setNumeroParcelas(1);
       } else if (tipoPagamento === "parcelado") {
-        setNumeroParcelas(2); // Default to 2 for parcelado when not recurring
+        setNumeroParcelas(2);
       } else { // avista
         setNumeroParcelas(1);
       }
     }
-  }, [isRecurring, tipoPagamento]); // Added tipoPagamento to dependencies
+  }, [isRecurring]); // Only depend on isRecurring to avoid loops with tipoPagamento
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
@@ -113,14 +117,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       setNumeroParcelas(2); // Default to 2 for parcelado
     } else if (tipoPagamento === "avista") {
       setNumeroParcelas(1); // Default to 1 for avista
-    } else if (tipoPagamento === "fixo") {
-      // This case should ideally only be reached if isRecurring is true,
-      // but as a fallback, if it's somehow set to fixo while not recurring,
-      // we can treat it as avista for non-recurring context.
-      setTipoPagamento("avista");
-      setNumeroParcelas(1);
     }
-  }, [tipoPagamento, isRecurring]); // Depends on tipoPagamento and isRecurring
+    // No need for 'fixo' case here, as it's handled by the isRecurring effect
+  }, [tipoPagamento, isRecurring]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -321,6 +320,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         numeroParcelas={numeroParcelas}
         setNumeroParcelas={setNumeroParcelas}
         isRecurring={isRecurring}
+        setIsRecurring={setIsRecurring} // NOVA PROP
       />
 
       {tipoPagamento === "parcelado" && numeroParcelas > 1 && !isRecurring && (

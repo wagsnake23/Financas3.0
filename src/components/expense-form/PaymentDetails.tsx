@@ -30,6 +30,7 @@ interface PaymentDetailsProps {
   numeroParcelas: number;
   setNumeroParcelas: (value: number) => void;
   isRecurring: boolean; // NOVA PROP
+  setIsRecurring: (value: boolean) => void; // NOVA PROP
 }
 
 export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -51,6 +52,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   numeroParcelas, // NOVA PROP
   setNumeroParcelas, // NOVA PROP
   isRecurring, // NOVA PROP
+  setIsRecurring, // NOVA PROP
 }) => {
   const [showCustomInstallmentInput, setShowCustomInstallmentInput] = useState(false);
   const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 12 ? String(numeroParcelas) : "");
@@ -121,8 +123,14 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
           <Select 
             value={tipoPagamento} 
-            onValueChange={(v: "avista" | "parcelado" | "fixo") => setTipoPagamento(v)} // Tipo atualizado
-            disabled={isRecurring} // Desabilitar se for recorrente
+            onValueChange={(v: "avista" | "parcelado" | "fixo") => {
+              setTipoPagamento(v);
+              if (v === "fixo") {
+                setIsRecurring(true);
+              } else {
+                setIsRecurring(false);
+              }
+            }}
           >
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
