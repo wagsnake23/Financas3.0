@@ -102,7 +102,7 @@ export default function Investments() { // Alterado para export default function
   // Mutation for adding a new investment
   const addInvestmentMutation = useMutation({
     mutationFn: async (newInvestment: TablesInsert<'investimentos'>) => {
-      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
+      if (!user?.id) throw new Error("Usuário não autenticado."); // Adicionado verificação
       const { data, error } = await supabase
         .from("investimentos")
         .insert(newInvestment)
@@ -136,7 +136,7 @@ export default function Investments() { // Alterado para export default function
   // Mutation for deleting an investment
   const deleteInvestmentMutation = useMutation({
     mutationFn: async (id: string) => {
-      if (!user?.id) throw new Error("User not authenticated."); // Adicionado verificação
+      if (!user?.id) throw new Error("Usuário não autenticado."); // Adicionado verificação
       const { error } = await supabase
         .from("investimentos")
         .delete()
@@ -465,7 +465,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Editar Investimento</DialogTitle>
           </DialogHeader>
