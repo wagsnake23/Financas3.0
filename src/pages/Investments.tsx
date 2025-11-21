@@ -387,6 +387,7 @@ export default function Investments() { // Alterado para export default function
                     const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                     const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                     const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
+                    const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
                     
                     return (
                       <div
@@ -394,9 +395,12 @@ export default function Investments() { // Alterado para export default function
                         className={cn("p-4 border border-border rounded-lg hover:border-primary/50 transition-all", isMobile && "p-3")}
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
-                            <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
+                          <div className="flex items-center gap-2"> {/* Added flex container for icon and name */}
+                            <DynamicIcon name={investmentIcon} className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} /> {/* Display icon */}
+                            <div>
+                              <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
+                              <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
+                            </div>
                           </div>
                           <div className="flex gap-1"> {/* Container para os botões de ação */}
                             <Button
