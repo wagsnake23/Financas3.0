@@ -13,7 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { getDate } from "date-fns";
+import { getDate, format } from "date-fns"; // Importar format
+
 import { cn } from "@/lib/utils";
 
 interface TransactionFormProps {
@@ -27,7 +28,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd')); // Usar format do date-fns
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
   const [isRecurring, setIsRecurring] = useState(false); // State for the toggle

@@ -110,7 +110,7 @@ export default function Receitas() {
     }
 
     const formattedDate = data 
-      ? `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, '0')}-${data.getDate().toString().padStart(2, '0')}` 
+      ? format(data, 'yyyy-MM-dd') // Usar format do date-fns
       : "";
 
     let masterRevenueId: string | null = null;

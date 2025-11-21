@@ -186,7 +186,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
-      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+      ? format(date, 'yyyy-MM-dd') // Usar format do date-fns
       : "";
 
     let finalStatus: ReceitaStatus = isPaid

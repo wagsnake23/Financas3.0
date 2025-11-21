@@ -189,7 +189,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       // Always insert the first installment
       const firstInstallmentDate = dataVencimento as Date;
-      const formattedFirstInstallmentDate = `${firstInstallmentDate.getFullYear()}-${(firstInstallmentDate.getMonth() + 1).toString().padStart(2, '0')}-${firstInstallmentDate.getDate().toString().padStart(2, '0')}`;
+      const formattedFirstInstallmentDate = format(firstInstallmentDate, 'yyyy-MM-dd'); // Usar format do date-fns
 
       installmentsToInsert.push({
         despesa_id: despesaData.id,
@@ -223,7 +223,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         // If not recurring, generate remaining installments if tipoPagamento is "parcelado"
         for (let i = 1; i < numeroParcelas; i++) {
           const installmentDate = addMonths(dataVencimento as Date, i);
-          const formattedInstallmentDate = `${installmentDate.getFullYear()}-${(installmentDate.getMonth() + 1).toString().padStart(2, '0')}-${installmentDate.getDate().toString().padStart(2, '0')}`;
+          const formattedInstallmentDate = format(installmentDate, 'yyyy-MM-dd'); // Usar format do date-fns
           
           installmentsToInsert.push({
             despesa_id: despesaData.id,
