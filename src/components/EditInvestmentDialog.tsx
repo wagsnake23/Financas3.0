@@ -126,14 +126,14 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "p-3")}> {/* Removido Card, ajustado padding para mobile */}
+    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "p-3")}> {/* Mantido p-3 para padding interno do formulário */}
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
       <div className="space-y-2">
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loading}>
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -157,7 +157,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <div className="space-y-2">
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -177,7 +177,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             value={amount}
             onChange={(v) => setAmount(v)}
             disabled={loading}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
           />
         </div>
 
@@ -189,7 +189,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             onValueChange={(values) => setProfitability(values.floatValue)}
             required
             disabled={loading}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
           />
         </div>
       </div>
