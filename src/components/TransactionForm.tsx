@@ -269,8 +269,8 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* NEW: Apply responsive height and font size */}
-            />
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            /> {/* NEW: Apply responsive height and font size */}
           </div>
 
           <div className="space-y-2">
