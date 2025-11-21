@@ -30,7 +30,8 @@ const RadioGroupItem = React.forwardRef<
       className={cn(
         "aspect-square h-4 w-4 rounded-full border border-input text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         // Estilos para o pseudo-elemento ::after criar a bolinha sólida
-        "relative after:content-[''] after:absolute after:inset-[4px] after:rounded-full after:scale-0 after:opacity-0 after:transition-all after:duration-100 after:ease-in-out",
+        // ALTERADO: inset de 4px para 2px para uma bolinha interna maior
+        "relative after:content-[''] after:absolute after:inset-[2px] after:rounded-full after:scale-0 after:opacity-0 after:transition-all after:duration-100 after:ease-in-out",
         "data-[state=checked]:after:scale-100 data-[state=checked]:after:opacity-100", // Escala e opacidade base para o ::after
         className
       )}
