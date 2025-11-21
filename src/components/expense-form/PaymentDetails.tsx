@@ -54,50 +54,44 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   isRecurring, // NOVA PROP
   setIsRecurring, // NOVA PROP
 }) => {
-  const [showCustomInstallmentInput, setShowCustomInstallmentInput] = useState(false);
-  const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 5 ? String(numeroParcelas) : ""); // Alterado para 5
+  // Removido: const [showCustomInstallmentInput, setShowCustomInstallmentInput] = useState(false);
+  // Removido: const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 5 ? String(numeroParcelas) : "");
 
-  // Effect to reset custom input visibility when numeroParcelas changes from outside
-  // or when tipoPagamento/isRecurring changes
-  useEffect(() => {
-    if (tipoPagamento !== "parcelado" || isRecurring) {
-      setShowCustomInstallmentInput(false);
-      setCustomNumeroParcelas("");
-    } else if (numeroParcelas > 5) { // Alterado para 5
-      setShowCustomInstallmentInput(true);
-      setCustomNumeroParcelas(String(numeroParcelas));
-    } else {
-      setShowCustomInstallmentInput(false);
-      setCustomNumeroParcelas("");
-    }
-  }, [numeroParcelas, tipoPagamento, isRecurring]);
+  // Removido: Effect to reset custom input visibility
+  // useEffect(() => {
+  //   if (tipoPagamento !== "parcelado" || isRecurring) {
+  //     setShowCustomInstallmentInput(false);
+  //     setCustomNumeroParcelas("");
+  //   } else if (numeroParcelas > 5) {
+  //     setShowCustomInstallmentInput(true);
+  //     setCustomNumeroParcelas(String(numeroParcelas));
+  //   } else {
+  //     setShowCustomInstallmentInput(false);
+  //     setCustomNumeroParcelas("");
+  //   }
+  // }, [numeroParcelas, tipoPagamento, isRecurring]);
 
 
-  const handleNumeroParcelasChange = (value: string) => {
-    if (value === "custom") {
-      setShowCustomInstallmentInput(true);
-      setNumeroParcelas(1); // Reset to 1 or previous valid number
-      setCustomNumeroParcelas(""); // Clear custom input
-    } else {
-      setShowCustomInstallmentInput(false);
-      const numValue = parseInt(value);
-      setNumeroParcelas(isNaN(numValue) ? 1 : numValue);
-      setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
-    }
-  };
-
-  const handleCustomNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setCustomNumeroParcelas(value);
     const numValue = parseInt(value);
-    setNumeroParcelas(isNaN(numValue) ? 1 : numValue);
+    setNumeroParcelas(isNaN(numValue) || numValue < 1 ? 1 : numValue); // Garante que seja no mínimo 1
     setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
   };
 
-  // Determine the selected value for the Select component
-  const selectValue = showCustomInstallmentInput 
-    ? "custom" 
-    : (numeroParcelas >= 1 && numeroParcelas <= 5 ? String(numeroParcelas) : "custom"); // Alterado para 1 a 5
+  // Removido: handleCustomNumeroParcelasChange
+  // Removido: const handleCustomNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Removido:   const value = e.target.value;
+  // Removido:   setCustomNumeroParcelas(value);
+  // Removido:   const numValue = parseInt(value);
+  // Removido:   setNumeroParcelas(isNaN(numValue) ? 1 : numValue);
+  // Removido:   setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
+  // Removido: };
+
+  // Removido: selectValue
+  // Removido: const selectValue = showCustomInstallmentInput
+  // Removido:   ? "custom"
+  // Removido:   : (numeroParcelas >= 1 && numeroParcelas <= 5 ? String(numeroParcelas) : "custom");
 
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
@@ -164,35 +158,16 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
               Número de Parcelas
             </Label>
-            <Select
-              value={selectValue}
-              onValueChange={handleNumeroParcelasChange}
-              disabled={isRecurring}
-            >
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}>
-                <SelectValue placeholder="Selecione ou digite" />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 5 }, (_, i) => i + 1).map(num => ( // 1 to 5
-                  <SelectItem key={num} value={String(num)} className={cn(isMobile && "text-sm")}>
-                    {num}
-                  </SelectItem>
-                ))}
-                <SelectItem value="custom" className={cn(isMobile && "text-sm")}>Outro...</SelectItem>
-              </SelectContent>
-            </Select>
-            {showCustomInstallmentInput && (
-              <Input
-                id="customNumeroParcelas"
-                type="number"
-                min="1" // Alterado para 1
-                value={customNumeroParcelas}
-                onChange={handleCustomNumeroParcelasChange}
-                placeholder="Digite o número de parcelas"
-                required
-                className={cn("rounded-xl mt-2", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
-              />
-            )}
+            <Input
+              id="numeroParcelas"
+              type="number"
+              min="1" // Garante que não seja negativo
+              value={numeroParcelas}
+              onChange={handleNumeroParcelasChange}
+              placeholder="Digite o número de parcelas"
+              required
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
+            />
           </div>
         )}
       </div>
