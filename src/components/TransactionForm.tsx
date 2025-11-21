@@ -16,7 +16,7 @@ import { getDate } from "date-fns";
 import { StatusToggleButton } from "./StatusToggleButton";
 import { Database } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -206,29 +206,45 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
             className="flex items-center justify-center gap-6"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="avulsa" id="type-avulsa" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+              <RadioGroupItem 
+                value="avulsa" 
+                id="type-avulsa" 
+                className={cn(
+                  "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                  isMobile && "h-3.5 w-3.5",
+                  "peer"
+                )} 
+              />
               <Label
                 htmlFor="type-avulsa"
                 className={cn(
-                  "flex items-center text-sm font-normal text-muted-foreground", // Adicionado flex items-center
+                  "flex items-center text-sm font-normal text-muted-foreground",
                   isMobile && "text-xs",
                   "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
                 )}
               >
-                Avulsa <DynamicIcon name="Zap" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ícone à direita */}
+                Avulsa <DynamicIcon name="Zap" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
               </Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="recorrente" id="type-recorrente" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+              <RadioGroupItem 
+                value="recorrente" 
+                id="type-recorrente" 
+                className={cn(
+                  "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                  isMobile && "h-3.5 w-3.5",
+                  "peer"
+                )} 
+              />
               <Label
                 htmlFor="type-recorrente"
                 className={cn(
-                  "flex items-center text-sm font-normal text-muted-foreground", // Adicionado flex items-center
+                  "flex items-center text-sm font-normal text-muted-foreground",
                   isMobile && "text-xs",
                   "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
                 )}
               >
-                Recorrente <DynamicIcon name="Repeat" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ícone à direita */}
+                Recorrente <DynamicIcon name="Repeat" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
               </Label>
             </div>
           </RadioGroup>
