@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Investment } from "@/types/finance";
+import { Investment, AppCategory } from "@/types/finance"; // Importar AppCategory
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
@@ -28,7 +28,11 @@ interface EditInvestmentDialogProps {
   user: User | null;
   investmentTypes: { value: string; label: string }[];
   isMobile: boolean;
+  allSubcategories: AppCategory[]; // Nova prop
+  incomeInvestmentSubcategories: AppCategory[]; // Nova prop
 }
+
+const UNSELECTED_VALUE = "unselected";
 
 export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   investmentToEdit,
@@ -37,8 +41,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   user,
   investmentTypes,
   isMobile,
+  allSubcategories, // Usar nova prop
+  incomeInvestmentSubcategories, // Usar nova prop
 }) => {
-  const [name, setName] = useState(investmentToEdit.nome);
+  const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(investmentToEdit.nome); // Changed from 'name'
   const [type, setType] = useState(investmentToEdit.tipo);
   const [amount, setAmount] = useState<number | undefined>(investmentToEdit.valor);
   const [date, setDate] = useState<Date | undefined>(parseISO(investmentToEdit.data));
@@ -48,7 +54,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
-    setName(investmentToEdit.nome);
+    setSelectedInvestmentCategoryId(investmentToEdit.nome); // Update
     setType(investmentToEdit.tipo);
     setAmount(investmentToEdit.valor);
     setDate(parseISO(investmentToEdit.data));
@@ -61,14 +67,14 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       const { data, error } = await supabase
         .from("investimentos")
         .update({
-          nome: updatedInvestment.nome,
+          nome: updatedInvestment.nome, // This will be the category ID
           tipo: updatedInvestment.tipo,
           valor: updatedInvestment.valor,
           data: updatedInvestment.data,
           rentabilidade: updatedInvestment.rentabilidade,
         })
         .eq("id", updatedInvestment.id)
-        .eq("user.id", user.id) // Corrigido para user.id
+        .eq("user_id", user.id) // Corrigido para user_id
         .select()
         .single();
       if (error) throw error;
@@ -96,7 +102,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       return;
     }
 
-    if (!name || amount === undefined || profitability === undefined || !date) {
+    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || amount === undefined || profitability === undefined || !date) {
       toast.error("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
@@ -108,7 +114,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
     const updatedInvestment: Investment = {
       ...investmentToEdit,
-      nome: name,
+      nome: selectedInvestmentCategoryId, // Store category ID
       tipo: type,
       valor: amount,
       data: formattedDate,
@@ -124,16 +130,27 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
       <div className="space-y-2">
-        <Label htmlFor="edit-name" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-        <Input
-          id="edit-name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          disabled={loading}
-          className={cn("rounded-xl", isMobile && "h-9 text-sm")}
-        />
+        <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+        <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loading}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectValue placeholder="Selecione o tipo de investimento" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+            {incomeInvestmentSubcategories.length === 0 ? (
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+            ) : (
+              incomeInvestmentSubcategories.map(cat => (
+                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                  <span className="flex items-center gap-2">
+                    <span>{cat.icone}</span>
+                    <span>{cat.nome}</span>
+                  </span>
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">

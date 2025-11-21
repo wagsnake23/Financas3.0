@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
-import { Investment } from "@/types/finance"; // Importar a interface Investment
+import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
 import { cn } from "@/lib/utils"; // Importar cn
 import { format } from "date-fns"; // Importar format
 import { ptBR } from "date-fns/locale"; // Importar ptBR
@@ -34,13 +34,36 @@ import {
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 
+const UNSELECTED_VALUE = "unselected";
+
 export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
 
+  // Fetch all subcategories
+  const { data: allSubcategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
+    queryKey: ["categories", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("categorias")
+        .select("*")
+        .or(`user_id.eq.${user.id},user_id.is.null`)
+        .not("parent_id", "is", null) // Only subcategories
+        .order("nome");
+      if (error) throw error;
+      return data as AppCategory[];
+    },
+    enabled: !!user && !authLoading,
+  });
+
+  const incomeInvestmentSubcategories = useMemo(() => {
+    return allSubcategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
+  }, [allSubcategories]);
+
   // Form states for adding new investment
-  const [name, setName] = useState("");
+  const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(UNSELECTED_VALUE); // Changed from 'name'
   const [type, setType] = useState("fixed");
   const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [date, setDate] = useState<Date | undefined>(new Date()); // Alterado para Date | undefined
@@ -94,7 +117,7 @@ export default function Investments() { // Alterado para export default function
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
       // Reset form
-      setName("");
+      setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
       setAmount(undefined); // Reset para undefined
       setProfitability(undefined); // Reset para undefined
       setDate(new Date()); // Reset para Date
@@ -144,7 +167,7 @@ export default function Investments() { // Alterado para export default function
       return;
     }
     
-    if (!name || amount === undefined || profitability === undefined || !date) { // Adicionado validação para 'date' e valores numéricos
+    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || amount === undefined || profitability === undefined || !date) { // Adicionado validação para 'date' e valores numéricos
       toast.error("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
@@ -157,7 +180,7 @@ export default function Investments() { // Alterado para export default function
 
     const newInvestmentData: TablesInsert<'investimentos'> = {
       user_id: user.id,
-      nome: name,
+      nome: selectedInvestmentCategoryId, // Store category ID
       tipo: type,
       valor: amount, // Usar o valor como number
       data: formattedDate, // Usar a data formatada
@@ -172,7 +195,7 @@ export default function Investments() { // Alterado para export default function
   };
 
   const handleEditClick = (investment: Investment) => {
-    setEditingInvestment(investment);
+    setEditingInvestment(investment); // investment.nome will be the category ID
     setIsEditModalOpen(true);
   };
 
@@ -198,7 +221,7 @@ export default function Investments() { // Alterado para export default function
     return { totalInvested, avgProfitability };
   }, [investments]);
 
-  if (authLoading || isLoadingInvestments) { // Incluindo authLoading
+  if (authLoading || isLoadingInvestments || isLoadingCategories) { // Incluindo isLoadingCategories
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
@@ -244,17 +267,27 @@ export default function Investments() { // Alterado para export default function
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Ex: Tesouro Direto"
-                    required
-                    disabled={loadingForm}
-                    className={cn("rounded-xl", isMobile && "h-9 text-sm")}
-                  />
+                  <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+                  <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loadingForm}>
+                    <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                      <SelectValue placeholder="Selecione o tipo de investimento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+                      {incomeInvestmentSubcategories.length === 0 ? (
+                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+                      ) : (
+                        incomeInvestmentSubcategories.map(cat => (
+                          <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                            <span className="flex items-center gap-2">
+                              <span>{cat.icone}</span>
+                              <span>{cat.nome}</span>
+                            </span>
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">
@@ -352,6 +385,8 @@ export default function Investments() { // Alterado para export default function
                 ) : (
                   investments.map((investment) => {
                     const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
+                    const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
+                    const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
                     
                     return (
                       <div
@@ -360,7 +395,7 @@ export default function Investments() { // Alterado para export default function
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investment.nome}</h3>
+                            <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
                             <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
                           </div>
                           <div className="flex gap-1"> {/* Container para os botões de ação */}
@@ -438,6 +473,8 @@ export default function Investments() { // Alterado para export default function
               user={user}
               investmentTypes={investmentTypes}
               isMobile={isMobile}
+              allSubcategories={allSubcategories}
+              incomeInvestmentSubcategories={incomeInvestmentSubcategories}
             />
           )}
         </DialogContent>
