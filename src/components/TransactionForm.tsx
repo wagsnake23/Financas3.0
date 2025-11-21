@@ -210,8 +210,9 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
                 value="avulsa" 
                 id="type-avulsa" 
                 className={cn(
-                  "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                  isMobile && "h-3.5 w-3.5",
+                  "h-5 w-5 rounded-full border-2 border-blue-500 bg-white", // Estilos explícitos e maiores
+                  "aspect-square text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                  isMobile && "h-4 w-4", // Ajuste para mobile
                   "peer"
                 )} 
               />
@@ -231,8 +232,9 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
                 value="recorrente" 
                 id="type-recorrente" 
                 className={cn(
-                  "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                  isMobile && "h-3.5 w-3.5",
+                  "h-5 w-5 rounded-full border-2 border-blue-500 bg-white", // Estilos explícitos e maiores
+                  "aspect-square text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                  isMobile && "h-4 w-4", // Ajuste para mobile
                   "peer"
                 )} 
               />
