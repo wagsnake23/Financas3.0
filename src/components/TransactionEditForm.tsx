@@ -447,19 +447,31 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               className="space-y-3 radio-fix-click"
             >
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="thisMonth" id="delete-this-month" />
+                <RadioGroupItem 
+                  value="thisMonth" 
+                  id="delete-this-month" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Apenas este mês
                 </label>
               </div>
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="thisMonthForward" id="delete-this-month-forward" />
+                <RadioGroupItem 
+                  value="thisMonthForward" 
+                  id="delete-this-month-forward" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Deste mês em diante
                 </label>
               </div>
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="all" id="delete-all" />
+                <RadioGroupItem 
+                  value="all" 
+                  id="delete-all" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Todo o período
                 </label>
@@ -494,19 +506,31 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               className="space-y-3 radio-fix-click"
             >
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="thisMonth" id="save-this-month" />
+                <RadioGroupItem 
+                  value="thisMonth" 
+                  id="save-this-month" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="save-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Apenas este mês
                 </label>
               </div>
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="thisMonthForward" id="save-this-month-forward" />
+                <RadioGroupItem 
+                  value="thisMonthForward" 
+                  id="save-this-month-forward" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="save-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Deste mês em diante
                 </label>
               </div>
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="all" id="save-all" />
+                <RadioGroupItem 
+                  value="all" 
+                  id="save-all" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
                 <label htmlFor="save-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Todo o período
                 </label>
