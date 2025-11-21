@@ -1,91 +1,116 @@
 CREATE OR REPLACE FUNCTION public.generate_recurring_entries(
-    p_user_id UUID,
-    p_transaction_type TEXT, -- 'income' or 'expense'
-    p_master_id UUID, -- ID of the master record (already created by frontend)
-    p_first_occurrence_date DATE, -- Date of the first occurrence (from master)
-    p_monthly_amount NUMERIC, -- Monthly amount for income, or value per installment for expense
-    p_category_id UUID,
-    p_description TEXT,
-    p_status public.receita_status DEFAULT 'Prevista', -- for income
-    p_forma_pagamento TEXT DEFAULT NULL, -- for expense
-    p_cartao_id UUID DEFAULT NULL, -- for expense
-    p_tipo_pagamento TEXT DEFAULT NULL, -- for expense
-    p_recurrence_day INTEGER DEFAULT 1, -- CORRIGIDO: Adicionado valor padrão
-    p_total_installments INTEGER DEFAULT 120 -- Total number of installments including the first
+    p_user_id uuid,
+    p_transaction_type text,
+    p_master_id uuid,
+    p_first_occurrence_date date,
+    p_monthly_amount numeric,
+    p_category_id text,
+    p_description text,
+    p_status public.receita_status, -- Only relevant for income
+    p_recurrence_day integer,
+    p_total_installments integer,
+    p_forma_pagamento text DEFAULT NULL, -- Only relevant for expenses
+    p_cartao_id uuid DEFAULT NULL,       -- Only relevant for expenses
+    p_tipo_pagamento text DEFAULT NULL   -- Only relevant for expenses
 )
-RETURNS VOID AS $$
+RETURNS void
+LANGUAGE plpgsql
+AS $$
 DECLARE
-    v_installment_date DATE;
-    v_existing_id UUID;
-    v_start_index INTEGER := 1; -- Start from the second occurrence (index 1, installment 2)
+    v_day_to_use integer;
+    v_installment_date date;
+    v_current_month_start date;
+    v_current_month_end date;
+    v_existing_id uuid;
+    v_is_master_updated boolean := FALSE;
 BEGIN
-    -- Ensure the user is authenticated
-    IF auth.uid() IS NULL OR auth.uid() != p_user_id THEN
-        RAISE EXCEPTION 'Unauthorized: User ID mismatch or not authenticated.';
+    -- Determine the day to use for recurrence
+    IF p_recurrence_day IS NOT NULL THEN
+        v_day_to_use := p_recurrence_day;
+    ELSE
+        v_day_to_use := EXTRACT(DAY FROM p_first_occurrence_date)::integer;
     END IF;
 
-    IF p_transaction_type = 'income' THEN
-        -- For income, insert (p_total_installments - 1) records into 'receitas' (from 2nd to p_total_installments)
-        FOR i IN v_start_index..(p_total_installments - 1) LOOP
-            v_installment_date := (p_first_occurrence_date + (i || ' months')::INTERVAL);
-            -- Adjust to the specific recurrence day, handling month-end overflows
-            v_installment_date := LEAST(
-                make_date(EXTRACT(YEAR FROM v_installment_date)::INTEGER, EXTRACT(MONTH FROM v_installment_date)::INTEGER, p_recurrence_day),
-                (date_trunc('month', v_installment_date) + INTERVAL '1 month - 1 day')::DATE -- Last day of the month
-            );
+    -- Loop to generate occurrences
+    FOR i IN 0..(p_total_installments - 1) LOOP
+        -- Calculate installment date safely (including February edge cases)
+        v_installment_date := (p_first_occurrence_date + (i || ' months')::INTERVAL)::date;
 
-            -- Idempotency check for receitas
-            SELECT id INTO v_existing_id
-            FROM public.receitas
-            WHERE user_id = p_user_id
-              AND recurrence_id = p_master_id
-              AND EXTRACT(YEAR FROM data) = EXTRACT(YEAR FROM v_installment_date)
-              AND EXTRACT(MONTH FROM data) = EXTRACT(MONTH FROM v_installment_date)
-              AND is_recurring_master = FALSE; -- Only check for occurrences
+        -- Start at day 1 to avoid invalid dates like 30/02 or 31/04
+        v_installment_date := make_date(
+            EXTRACT(YEAR FROM v_installment_date)::integer,
+            EXTRACT(MONTH FROM v_installment_date)::integer,
+            1
+        );
 
-            IF v_existing_id IS NULL THEN
-                INSERT INTO public.receitas (
-                    user_id,
-                    tipo_receita_id,
-                    valor,
-                    data,
-                    descricao,
-                    status,
-                    is_recurring_master,
-                    recurrence_id,
-                    recurrence_day
-                ) VALUES (
-                    p_user_id,
-                    p_category_id,
-                    p_monthly_amount,
-                    v_installment_date,
-                    p_description,
-                    p_status,
-                    FALSE, -- Occurrences are not masters
-                    p_master_id,
-                    p_recurrence_day
-                );
+        -- Apply desired day
+        v_installment_date := v_installment_date + (v_day_to_use - 1) * INTERVAL '1 day';
+
+        -- Clamp to last day of month (handles Feb 28/29 automatically)
+        v_installment_date := LEAST(
+            v_installment_date,
+            (date_trunc('month', v_installment_date) + INTERVAL '1 month - 1 day')::date
+        );
+
+        -- Handle income transactions
+        IF p_transaction_type = 'income' THEN
+            -- Check if this is the master record itself (i=0)
+            IF i = 0 THEN
+                -- Update the master record with recurrence details if it hasn't been updated yet
+                IF NOT v_is_master_updated THEN
+                    UPDATE public.receitas
+                    SET
+                        data = v_installment_date,
+                        valor = p_monthly_amount,
+                        tipo_receita_id = p_category_id,
+                        descricao = p_description,
+                        status = p_status,
+                        is_recurring_master = TRUE,
+                        recurrence_id = p_master_id,
+                        recurrence_day = v_day_to_use
+                    WHERE id = p_master_id AND user_id = p_user_id;
+                    v_is_master_updated := TRUE;
+                END IF;
+            ELSE
+                -- Check for existing occurrence to prevent duplicates (idempotency)
+                SELECT id INTO v_existing_id
+                FROM public.receitas
+                WHERE recurrence_id = p_master_id
+                  AND data = v_installment_date
+                  AND user_id = p_user_id;
+
+                IF v_existing_id IS NULL THEN
+                    INSERT INTO public.receitas (
+                        user_id,
+                        tipo_receita_id,
+                        valor,
+                        data,
+                        descricao,
+                        status,
+                        is_recurring_master,
+                        recurrence_id,
+                        recurrence_day
+                    ) VALUES (
+                        p_user_id,
+                        p_category_id,
+                        p_monthly_amount,
+                        v_installment_date,
+                        p_description,
+                        p_status,
+                        FALSE, -- Not the master itself
+                        p_master_id,
+                        v_day_to_use
+                    );
+                END IF;
             END IF;
-        END LOOP;
 
-    ELSIF p_transaction_type = 'expense' THEN
-        -- For expense, insert (p_total_installments - 1) records into 'despesas_parcelas' (from 2nd to p_total_installments)
-        -- The p_master_id here refers to the 'despesas' master record
-        -- p_monthly_amount for expenses is the value per installment
-        
-        FOR i IN v_start_index..(p_total_installments - 1) LOOP
-            v_installment_date := (p_first_occurrence_date + (i || ' months')::INTERVAL);
-            -- Adjust to the specific recurrence day, handling month-end overflows
-            v_installment_date := LEAST(
-                make_date(EXTRACT(YEAR FROM v_installment_date)::INTEGER, EXTRACT(MONTH FROM v_installment_date)::INTEGER, p_recurrence_day),
-                (date_trunc('month', v_installment_date) + INTERVAL '1 month - 1 day')::DATE -- Last day of the month
-            );
-
-            -- Idempotency check for despesas_parcelas
+        -- Handle expense transactions
+        ELSIF p_transaction_type = 'expense' THEN
+            -- Check for existing installment to prevent duplicates (idempotency)
             SELECT id INTO v_existing_id
             FROM public.despesas_parcelas
             WHERE despesa_id = p_master_id
-              AND numero_parcela = (i + 1); -- Check by installment number
+              AND vencimento = v_installment_date;
 
             IF v_existing_id IS NULL THEN
                 INSERT INTO public.despesas_parcelas (
@@ -97,27 +122,28 @@ BEGIN
                     data_pagamento
                 ) VALUES (
                     p_master_id,
-                    (i + 1),
-                    p_monthly_amount, -- Use p_monthly_amount as valor_parcela
+                    i + 1, -- Installment number
+                    p_monthly_amount,
                     v_installment_date,
-                    FALSE, -- Recurring expenses are initially pending
+                    FALSE, -- Expenses are initially pending
                     NULL
                 );
             END IF;
-        END LOOP;
 
-        -- Update the master despesas record with the total number of installments and total value
-        UPDATE public.despesas
-        SET numero_parcelas = p_total_installments,
-            valor_total = p_monthly_amount * p_total_installments, -- Total value is monthly amount * total installments
-            is_recurring_master = TRUE -- Mark as recurring master
-        WHERE id = p_master_id;
-
-    ELSE
-        RAISE EXCEPTION 'Invalid transaction type: %', p_transaction_type;
-    END IF;
+            -- Update the master 'despesas' record with total value and number of installments
+            -- This ensures the master record reflects the sum of all generated installments
+            UPDATE public.despesas
+            SET
+                valor_total = (SELECT SUM(valor_parcela) FROM public.despesas_parcelas WHERE despesa_id = p_master_id),
+                numero_parcelas = (SELECT COUNT(id) FROM public.despesas_parcelas WHERE despesa_id = p_master_id),
+                categoria_id = p_category_id,
+                descricao = p_description,
+                forma_pagamento = p_forma_pagamento,
+                cartao_id = p_cartao_id,
+                tipo_pagamento = p_tipo_pagamento,
+                is_recurring_master = TRUE -- Ensure master flag is set
+            WHERE id = p_master_id AND user_id = p_user_id;
+        END IF;
+    END LOOP;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Grant execution to authenticated users
-GRANT EXECUTE ON FUNCTION public.generate_recurring_entries TO authenticated;
+$$;
