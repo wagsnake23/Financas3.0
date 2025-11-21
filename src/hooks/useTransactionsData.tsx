@@ -46,7 +46,16 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[]
+    (Tables<'despesas_parcelas'> & {
+      despesas: (Tables<'despesas'> & {
+        categoria: {
+          id: string;
+          nome: string;
+          cor: string;
+          parent_id: string | null;
+        } | null;
+      }) | null;
+    })[]
   >({
     queryKey: ["expenseInstallments", user?.id],
     queryFn: async () => {
