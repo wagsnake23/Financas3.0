@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
-import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
+import { cn, formatCurrency } from "@/lib/utils"; // Importar cn e formatCurrency
 import { Button } from "@/components/ui/button"; // Importar Button para o toggle
 
 interface StatCardProps {
   title: string;
-  value: string;
+  value: number; // Alterado para number
   icon: string; // Alterado para string para usar DynamicIcon
   trend?: string;
   variant: "income" | "expense" | "balance";
@@ -19,7 +19,7 @@ interface StatCardProps {
 
 export const StatCard = ({ 
   title, 
-  value, 
+  value, // Agora é um número
   icon, 
   trend, 
   variant, 
@@ -70,7 +70,7 @@ export const StatCard = ({
           <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
           <div className="flex items-center gap-2">
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
-              {showValue ? value : "R$ *****"}
+              {showValue ? formatCurrency(value) : "R$ *****"}
             </p>
             {isMobile && onToggleVisibility && (
               <Button

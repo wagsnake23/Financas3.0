@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Transaction } from "@/types/finance";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 
 interface MonthlyBarChartProps {
   transactions: Transaction[];
@@ -59,9 +59,10 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
           <YAxis 
             stroke="hsl(var(--muted-foreground))"
             style={{ fontSize: isMobile ? "10px" : "12px" }}
+            tickFormatter={(value: number) => formatCurrency(value)} // Formatar YAxis
           />
           <Tooltip 
-            formatter={(value: number) => `R$ ${value.toFixed(2)}`}
+            formatter={(value: number) => formatCurrency(value)} // Formatar Tooltip
             contentStyle={{ 
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",

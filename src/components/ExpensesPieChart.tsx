@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Transaction } from "@/types/finance";
 import { AppCategory } from "@/types/finance";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 
 interface ExpensesPieChartProps {
   transactions: Transaction[];
@@ -62,7 +62,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
             ))}
           </Pie>
           <Tooltip 
-            formatter={(value: number) => `R$ ${value.toFixed(2)}`}
+            formatter={(value: number) => formatCurrency(value)} // Formatar Tooltip
             contentStyle={{ 
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",

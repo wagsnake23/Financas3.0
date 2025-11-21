@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
 import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
@@ -126,7 +126,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 gap-4 mb-4">
               <StatCard
                 title="Total de Despesas"
-                value={`R$ ${stats.totalExpenses.toFixed(2)}`}
+                value={stats.totalExpenses} // Passando valor numérico
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
@@ -138,7 +138,7 @@ const Dashboard = () => {
                 <div className={cn("flex justify-between items-end w-full")}>
                   <div className="flex flex-col items-start">
                     <p className="text-xs text-muted-foreground">Pago este mês:</p> {/* MonthBadge removed from here */}
-                    <p className="font-semibold text-base text-success">R$ {totalPaidMonthlyExpenses.toFixed(2)}</p>
+                    <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
                   </div>
                   <Button
                     variant="destructive"
@@ -153,7 +153,7 @@ const Dashboard = () => {
 
               <StatCard
                 title="Total de Receitas"
-                value={`R$ ${stats.totalIncome.toFixed(2)}`}
+                value={stats.totalIncome} // Passando valor numérico
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
@@ -167,7 +167,7 @@ const Dashboard = () => {
                     <p className={cn(
                       "font-semibold text-base text-primary"
                     )}>
-                      {showBalanceValue ? `R$ ${stats.balance.toFixed(2)}` : "R$ *****"}
+                      {showBalanceValue ? formatCurrency(stats.balance) : "R$ *****"}
                     </p>
                   </div>
                   <Button 
@@ -194,7 +194,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <StatCard
                   title="Saldo Atual"
-                  value={`R$ ${stats.balance.toFixed(2)}`}
+                  value={stats.balance} // Passando valor numérico
                   icon="Wallet"
                   variant="balance"
                   trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
@@ -204,7 +204,7 @@ const Dashboard = () => {
                 />
                 <StatCard
                   title="Total de Receitas"
-                  value={`R$ ${stats.totalIncome.toFixed(2)}`}
+                  value={stats.totalIncome} // Passando valor numérico
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
@@ -224,7 +224,7 @@ const Dashboard = () => {
                 </StatCard>
                 <StatCard
                   title="Total de Despesas"
-                  value={`R$ ${stats.totalExpenses.toFixed(2)}`}
+                  value={stats.totalExpenses} // Passando valor numérico
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}

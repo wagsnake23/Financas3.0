@@ -5,7 +5,7 @@ import DynamicIcon from "./DynamicIcon";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 
 interface MonthlyExpenseSummaryProps {
   expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
@@ -90,14 +90,14 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pago</p>
-          <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>R$ {totalPaid.toFixed(2)}</p>
+          <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>{formatCurrency(totalPaid)}</p>
         </div>
         <div className={cn(
           "p-3 border rounded-lg", 
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pendente</p>
-          <p className={cn("text-xl font-bold text-destructive", isMobile && "text-base")}>R$ {totalPending.toFixed(2)}</p>
+          <p className={cn("text-xl font-bold text-destructive", isMobile && "text-base")}>{formatCurrency(totalPending)}</p>
         </div>
       </div>
     </div>

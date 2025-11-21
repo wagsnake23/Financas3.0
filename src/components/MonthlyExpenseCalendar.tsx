@@ -5,7 +5,7 @@ import DynamicIcon from "./DynamicIcon";
 import type { Transaction } from "@/types/finance";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 
 interface MonthlyExpenseCalendarProps {
   transactions: Transaction[];
@@ -64,7 +64,7 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
       )}
       <div className="text-center">
         <p className={cn("text-muted-foreground text-sm", isMobile && "text-xs")}>Total de Despesas:</p>
-        <p className={cn("text-3xl font-bold text-destructive", isMobile && "text-base")}>R$ {totalMonthlyExpenses.toFixed(2)}</p>
+        <p className={cn("text-3xl font-bold text-destructive", isMobile && "text-base")}>{formatCurrency(totalMonthlyExpenses)}</p>
       </div>
     </div>
   );

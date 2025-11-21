@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Tables } from "@/integrations/supabase/types";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 
 interface TotalRevenueCardProps {
   revenues: Tables<'receitas'>[];
@@ -20,7 +20,7 @@ export const TotalRevenueCard = ({ revenues, isMobile }: TotalRevenueCardProps) 
       <div className="flex items-center justify-between">
         <div>
           <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs")}>Total de Receitas</p>
-          <p className={cn("text-3xl font-bold text-foreground", isMobile && "text-xl")}>R$ {totalIncome.toFixed(2)}</p>
+          <p className={cn("text-3xl font-bold text-foreground", isMobile && "text-xl")}>{formatCurrency(totalIncome)}</p>
         </div>
         <DynamicIcon name="DollarSign" className={cn("h-12 w-12 text-success", isMobile && "h-8 w-8")} />
       </div>
