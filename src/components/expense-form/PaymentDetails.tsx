@@ -142,7 +142,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 <span className="flex items-center gap-2"><span className="emoji">➗</span> Parcelado</span>
               </SelectItem>
               <SelectItem value="fixo" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📆</span> Fixo</span>
+                <span className="flex items-center gap-2"><span className="emoji">🔁</span> Fixo</span>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -199,10 +199,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div className="col-span-full">
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
-            <Select value={cartaoId} onValueChange={(v: any) => {
-              setCartaoId(v);
-              setValidationErrors(prev => ({ ...prev, cartaoId: false }));
-            }}>
+            <Select value={cartaoId} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
               <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
