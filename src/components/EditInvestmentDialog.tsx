@@ -126,7 +126,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "p-0")}> {/* Removido Card, ajustado padding para mobile */}
+    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "p-3")}> {/* Removido Card, ajustado padding para mobile */}
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
