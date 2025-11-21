@@ -101,24 +101,25 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [tipoPagamento, setIsRecurring]);
 
-  // Effect for handling recurrence logic (now only reacts to isRecurring, not setting tipoPagamento)
+  // Effect for handling recurrence logic and setting numeroParcelas
   useEffect(() => {
-    if (isRecurring) {
-      // When isRecurring becomes true (driven by tipoPagamento === "fixo")
-      // We set numeroParcelas and isPaid.
+    if (isRecurring) { // If "Recorrente" is selected (tipoPagamento === "fixo")
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
       setIsPaid(false); // Recurring expenses are initially pending
-    } else {
-      // When isRecurring becomes false (driven by tipoPagamento === "avista" or "parcelado")
-      // We reset numeroParcelas based on the current tipoPagamento.
-      if (tipoPagamento === "parcelado") {
-        setNumeroParcelas(1); // Alterado para 1
-      } else { // avista
-        setNumeroParcelas(1);
+    } else { // If "Avulsa" is selected (tipoPagamento === "avista" or "parcelado")
+      if (tipoPagamento === "avista") {
+        setNumeroParcelas(1); // Avista always has 1 installment
+        setIsPaid(true); // Avista is usually paid immediately
+      } else if (tipoPagamento === "parcelado") {
+        // When switching to "parcelado" from "fixo", reset to 1.
+        // Otherwise, if it was "avista" (numeroParcelas was 1) or user input, keep it.
+        if (numeroParcelas === RECURRING_INSTALLMENTS_COUNT) {
+          setNumeroParcelas(1);
+        }
+        setIsPaid(false); // Parcelado is initially pending
       }
-      // isPaid is handled by the other useEffect based on formaPagamento/tipoPagamento/isRecurring
     }
-  }, [isRecurring, tipoPagamento, setNumeroParcelas, setIsPaid]);
+  }, [isRecurring, tipoPagamento, setNumeroParcelas, setIsPaid, numeroParcelas]); // Removido numeroParcelas das dependências para evitar loop
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
@@ -129,12 +130,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     if (tipoPagamento === "parcelado") {
       setFormaPagamento("cartao");
-      setNumeroParcelas(1); // Alterado para 1
+      // setNumeroParcelas(1); // Removido para permitir que o usuário defina o número de parcelas
     } else if (tipoPagamento === "avista") {
-      setNumeroParcelas(1); // Default para 1 para avista
+      // setNumeroParcelas(1); // Removido para permitir que o usuário defina o número de parcelas
     }
     // Não há necessidade de um caso 'fixo' aqui, pois ele é tratado pelo efeito isRecurring
-  }, [tipoPagamento, isRecurring, setFormaPagamento, setNumeroParcelas]);
+  }, [tipoPagamento, isRecurring, setFormaPagamento]); // Removido setNumeroParcelas das dependências
 
   // Funções para sincronização inversa (botão -> tipoPagamento)
   const handleSelectAvulsa = () => {
