@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
+import { TransactionForm } from "@/components/TransactionForm"; // NEW: Import TransactionForm
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -58,6 +59,18 @@ const Lancamentos = () => {
     return <Loading />;
   }
 
+  // NEW: Function to handle adding a new transaction from TransactionForm
+  const handleAddTransaction = async (newTransaction: Omit<any, "id">) => {
+    // This function is a placeholder. The actual logic for adding one-off income/expense
+    // is now handled directly within TransactionForm's handleSubmit.
+    // This prop is still required by TransactionForm, but its implementation is simplified.
+    console.log("Transaction added via TransactionForm:", newTransaction);
+    // Invalidate queries to refresh the list
+    queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["transactions"] });
+  };
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
@@ -73,6 +86,11 @@ const Lancamentos = () => {
             onNextMonth={handleNextMonth}
             isMobile={isMobile}
           />
+
+          {/* NEW: Add TransactionForm for creating new transactions */}
+          <div className={cn("mb-8", isMobile ? "px-4" : "")}>
+            <TransactionForm onAddTransaction={handleAddTransaction} isMobile={isMobile} />
+          </div>
 
           <LancamentosContent
             editingTransaction={editingTransaction}

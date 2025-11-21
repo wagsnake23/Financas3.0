@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,24 +12,40 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CurrencyInput } from "@/components/ui/currency-input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
-import { getDate } from "date-fns"; // Importar getDate
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { getDate } from "date-fns";
+import { StatusToggleButton } from "./StatusToggleButton"; // NEW: Import StatusToggleButton
+import { Database } from "@/integrations/supabase/types"; // NEW: Import Database type for ReceitaStatus
+import { cn } from "@/lib/utils"; // NEW: Import cn for conditional classes
+
+type ReceitaStatus = Database['public']['Enums']['receita_status']; // Define ReceitaStatus type
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
+  isMobile?: boolean; // NEW: Add isMobile prop
 }
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
 
-export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
+export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormProps) => { // NEW: Add isMobile prop
   const { user } = useAuth();
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [status, setStatus] = useState<ReceitaStatus>("Pendente"); // NEW: Add status state
+
+  // Effect to reset status when type or recurring changes
+  useEffect(() => {
+    if (isRecurring) {
+      setStatus("Prevista"); // Recurring transactions are 'Prevista' by default
+    } else {
+      setStatus("Pendente"); // One-off transactions are 'Pendente' by default
+    }
+  }, [isRecurring, type]);
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
   // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
@@ -128,7 +144,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             date,
             category: category === UNSELECTED_VALUE ? null : category,
             description,
-            status: "Pendente", // Default for one-off income
+            status: status, // NEW: Use the selected status
             is_recurring_master: false,
             recurrence_id: null,
             recurrence_day: null,
@@ -138,8 +154,44 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         // For expenses, the ExpenseForm component handles the recurring logic
         // This TransactionForm is for simple one-off transactions.
         // If recurring expense is selected here, it's an error or not intended.
-        toast.error("Para despesas recorrentes, use o formulário de Despesas.");
-        return;
+        // For one-off expenses, we need to create a single expense and installment.
+        if (isRecurring) {
+          toast.error("Para despesas recorrentes, use o formulário de Despesas.");
+          return;
+        }
+
+        // Create a one-off expense entry
+        // This form doesn't have payment details, so we'll default to 'dinheiro' and 1 installment
+        const { data: despesaData, error: despesaError } = await supabase
+          .from("despesas")
+          .insert({
+            user_id: user.id,
+            categoria_id: category === UNSELECTED_VALUE ? null : category,
+            forma_pagamento: "dinheiro", // Default for simple form
+            tipo_pagamento: "avista", // Default for simple form
+            cartao_id: null,
+            valor_total: amount as number,
+            descricao,
+            numero_parcelas: 1,
+            is_recurring_master: false,
+          })
+          .select()
+          .single();
+
+        if (despesaError) throw despesaError;
+
+        const { error: parcelaError } = await supabase
+          .from("despesas_parcelas")
+          .insert({
+            despesa_id: despesaData.id,
+            numero_parcela: 1,
+            valor_parcela: amount as number,
+            vencimento: date,
+            pago: status === "Recebida", // Use the selected status
+            data_pagamento: status === "Recebida" ? new Date().toISOString() : null,
+          });
+
+        if (parcelaError) throw parcelaError;
       }
 
       // Reset form
@@ -147,6 +199,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       setCategory(UNSELECTED_VALUE);
       setDescription("");
       setIsRecurring(false);
+      setStatus("Pendente"); // Reset status
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
@@ -158,82 +211,82 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   };
 
   return (
-    <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-      <h2 className="text-2xl font-bold mb-6">Novo Lançamento</h2>
+    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}> {/* NEW: Apply responsive padding */}
+      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Lançamento</h2> {/* NEW: Apply responsive font size */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Toggle Avulsa / Recorrente */}
         <div className="space-y-2">
-          <Label>Tipo de Lançamento</Label>
+          <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label> {/* NEW: Apply responsive font size */}
           <ToggleGroup 
             type="single" 
             value={isRecurring ? "recorrente" : "avulsa"} 
             onValueChange={(value) => setIsRecurring(value === "recorrente")}
             className="w-full justify-center"
           >
-            <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
-              <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+            <ToggleGroupItem value="avulsa" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}> {/* NEW: Apply responsive height and font size */}
+              <DynamicIcon name="Zap" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Avulsa
             </ToggleGroupItem>
-            <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
-              <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+            <ToggleGroupItem value="recorrente" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}> {/* NEW: Apply responsive height and font size */}
+              <DynamicIcon name="Repeat" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Recorrente
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-2")}> {/* NEW: Apply responsive grid */}
           <div className="space-y-2">
-            <Label htmlFor="type">Tipo</Label>
+            <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label> {/* NEW: Apply responsive font size */}
             <Select value={type} onValueChange={(value) => {
               setType(value as TransactionType);
               setCategory(UNSELECTED_VALUE); // Reset category when type changes
             }}>
-              <SelectTrigger className="rounded-xl">
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}> {/* NEW: Apply responsive height and font size */}
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="income">Receita</SelectItem>
-                <SelectItem value="expense" disabled={isRecurring}>Despesa</SelectItem> {/* Disable expense if recurring is selected */}
+                <SelectItem value="income" className={cn(isMobile && "text-sm")}>Receita</SelectItem> {/* NEW: Apply responsive font size */}
+                <SelectItem value="expense" disabled={isRecurring} className={cn(isMobile && "text-sm")}>Despesa</SelectItem> {/* Disable expense if recurring is selected */}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount">Valor (R$)</Label>
+            <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label> {/* NEW: Apply responsive font size */}
             <CurrencyInput
               id="amount"
               value={amount}
               onValueChange={(values) => setAmount(values.floatValue)}
               placeholder="0,00"
               required
-              className="rounded-xl"
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* NEW: Apply responsive height and font size */}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Data</Label>
+            <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label> {/* NEW: Apply responsive font size */}
             <Input
               id="date"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className="rounded-xl"
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* NEW: Apply responsive height and font size */}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Subcategoria</Label>
+            <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label> {/* NEW: Apply responsive font size */}
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="rounded-xl">
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}> {/* NEW: Apply responsive height and font size */}
                 <SelectValue placeholder="Selecione a subcategoria" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={UNSELECTED_VALUE} disabled>Selecione a subcategoria</SelectItem>
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem> {/* NEW: Apply responsive font size */}
                 {filteredSubcategories.length === 0 ? (
-                  <SelectItem value={UNSELECTED_VALUE} disabled>Nenhuma subcategoria disponível</SelectItem>
+                  <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem> {/* NEW: Apply responsive font size */}
                 ) : (
                   filteredSubcategories
                     .map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
+                      <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}> {/* NEW: Apply responsive font size */}
                         {cat.nome}
                       </SelectItem>
                     ))
@@ -244,19 +297,31 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description">Descrição</Label>
+          <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label> {/* NEW: Apply responsive font size */}
           <Textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Adicione uma descrição..."
             rows={3}
-            className="rounded-xl"
+            className={cn("rounded-xl", isMobile && "text-sm")} {/* NEW: Apply responsive font size */}
           />
         </div>
 
-        <Button type="submit" className="w-full rounded-xl" size="lg">
-          <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+        {!isRecurring && ( // NEW: Conditionally render status toggle for one-off transactions
+          <div className="flex flex-col items-start space-y-2">
+            <Label className={cn(isMobile && "text-xs")}>Status</Label> {/* NEW: Apply responsive font size */}
+            <StatusToggleButton
+              currentStatus={status}
+              transactionType={type}
+              onToggle={() => setStatus(status === "Recebida" ? "Pendente" : "Recebida")}
+              isMobile={isMobile}
+            />
+          </div>
+        )}
+
+        <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg"> {/* NEW: Apply responsive height and font size */}
+          <DynamicIcon name="Plus" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* NEW: Apply responsive icon size */}
           Adicionar Lançamento
         </Button>
       </form>
