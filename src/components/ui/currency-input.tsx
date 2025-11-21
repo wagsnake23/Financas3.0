@@ -26,7 +26,7 @@ export const CurrencyInput = ({
       decimalScale={2}
       disableGroupSeparators={false}
       allowNegativeValue={false}
-      value={value}
+      value={value !== undefined ? value.toFixed(2) : ""}
       onValueChange={(val) => onChange(Number(val) || 0)}
       inputMode="numeric"
       placeholder={placeholder}
