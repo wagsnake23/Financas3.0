@@ -248,17 +248,7 @@ const Dashboard = () => {
                 <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allSubcategories} isMobile={isMobile} />
 
                 <div className="flex flex-col gap-4">
-                  {/* <MonthlyExpenseSummary
-                    expenseInstallments={expenseInstallments}
-                    isLoading={isLoading}
-                    isMobile={isMobile}
-                    currentMonth={selectedMonth}
-                  /> */}
-                  <MonthlyExpenseCalendar 
-                    transactions={monthlyFilteredTransactions}
-                    isMobile={isMobile} 
-                    currentMonth={selectedMonth}
-                  />
+                  {/* MonthlyExpenseCalendar removido daqui */}
                 </div>
 
                 <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
