@@ -112,7 +112,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       // When isRecurring becomes false (driven by tipoPagamento === "avista" or "parcelado")
       // We reset numeroParcelas based on the current tipoPagamento.
       if (tipoPagamento === "parcelado") {
-        setNumeroParcelas(2);
+        setNumeroParcelas(1); // Alterado para 1
       } else { // avista
         setNumeroParcelas(1);
       }
@@ -129,7 +129,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
     if (tipoPagamento === "parcelado") {
       setFormaPagamento("cartao");
-      setNumeroParcelas(2); // Default para 2 para parcelado
+      setNumeroParcelas(1); // Alterado para 1
     } else if (tipoPagamento === "avista") {
       setNumeroParcelas(1); // Default para 1 para avista
     }
@@ -176,7 +176,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.cartaoId = true;
       hasError = true;
     }
-    if (!isRecurring && tipoPagamento === "parcelado" && (numeroParcelas <= 1 || !Number.isInteger(numeroParcelas))) {
+    if (!isRecurring && tipoPagamento === "parcelado" && (numeroParcelas <= 0 || !Number.isInteger(numeroParcelas))) { // Alterado para numeroParcelas <= 0
       newErrors.numeroParcelas = true;
       hasError = true;
     }

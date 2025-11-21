@@ -55,7 +55,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setIsRecurring, // NOVA PROP
 }) => {
   const [showCustomInstallmentInput, setShowCustomInstallmentInput] = useState(false);
-  const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 12 ? String(numeroParcelas) : "");
+  const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 5 ? String(numeroParcelas) : ""); // Alterado para 5
 
   // Effect to reset custom input visibility when numeroParcelas changes from outside
   // or when tipoPagamento/isRecurring changes
@@ -63,7 +63,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     if (tipoPagamento !== "parcelado" || isRecurring) {
       setShowCustomInstallmentInput(false);
       setCustomNumeroParcelas("");
-    } else if (numeroParcelas > 12) {
+    } else if (numeroParcelas > 5) { // Alterado para 5
       setShowCustomInstallmentInput(true);
       setCustomNumeroParcelas(String(numeroParcelas));
     } else {
@@ -97,7 +97,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   // Determine the selected value for the Select component
   const selectValue = showCustomInstallmentInput 
     ? "custom" 
-    : (numeroParcelas >= 2 && numeroParcelas <= 12 ? String(numeroParcelas) : "custom"); // If it's >12, treat as custom
+    : (numeroParcelas >= 1 && numeroParcelas <= 5 ? String(numeroParcelas) : "custom"); // Alterado para 1 a 5
 
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
@@ -173,7 +173,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 <SelectValue placeholder="Selecione ou digite" />
               </SelectTrigger>
               <SelectContent>
-                {Array.from({ length: 11 }, (_, i) => i + 2).map(num => ( // 2 to 12
+                {Array.from({ length: 5 }, (_, i) => i + 1).map(num => ( // 1 to 5
                   <SelectItem key={num} value={String(num)} className={cn(isMobile && "text-sm")}>
                     {num}
                   </SelectItem>
@@ -185,7 +185,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               <Input
                 id="customNumeroParcelas"
                 type="number"
-                min="2"
+                min="1" // Alterado para 1
                 value={customNumeroParcelas}
                 onChange={handleCustomNumeroParcelasChange}
                 placeholder="Digite o número de parcelas"
