@@ -12,11 +12,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CurrencyInput } from "@/components/ui/currency-input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getDate } from "date-fns";
 import { StatusToggleButton } from "./StatusToggleButton";
 import { Database } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -200,19 +200,38 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
-          <ToggleGroup 
-            type="single" 
+          <RadioGroup 
             value={isRecurring ? "recorrente" : "avulsa"} 
             onValueChange={(value) => setIsRecurring(value === "recorrente")}
-            className="w-full justify-center"
+            className="flex items-center justify-center gap-6"
           >
-            <ToggleGroupItem value="avulsa" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}>
-              <DynamicIcon name="Zap" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Avulsa
-            </ToggleGroupItem>
-            <ToggleGroupItem value="recorrente" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}>
-              <DynamicIcon name="Repeat" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Recorrente
-            </ToggleGroupItem>
-          </ToggleGroup>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="avulsa" id="type-avulsa" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+              <Label
+                htmlFor="type-avulsa"
+                className={cn(
+                  "text-sm font-normal text-muted-foreground",
+                  isMobile && "text-xs",
+                  "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
+                )}
+              >
+                <DynamicIcon name="Zap" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Avulsa
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="recorrente" id="type-recorrente" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+              <Label
+                htmlFor="type-recorrente"
+                className={cn(
+                  "text-sm font-normal text-muted-foreground",
+                  isMobile && "text-xs",
+                  "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
+                )}
+              >
+                <DynamicIcon name="Repeat" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Recorrente
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-2")}>
