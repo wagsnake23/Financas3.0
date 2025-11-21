@@ -166,6 +166,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => {
     let count = 0;
     try {
+      const formattedTransactionDate = format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd');
+
       if (transaction.type === "expense") {
         const parentDespesaId = transaction.despesa_id;
         if (parentDespesaId && isValidUuid(parentDespesaId)) {
@@ -173,8 +175,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             .from("despesas_parcelas")
             .select("id", { count: 'exact' })
             .eq("despesa_id", parentDespesaId)
-            .eq("pago", false)
-            .gte("vencimento", format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd'));
+            .eq("pago", false) // Apenas parcelas não pagas
+            .gte("vencimento", formattedTransactionDate);
           
           if (error) throw error;
           count = futureInstallmentsCount || 0;
@@ -186,8 +188,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             .from("receitas")
             .select("id", { count: 'exact' })
             .eq("recurrence_id", masterRecurrenceId)
-            .in("status", ["Pendente", "Prevista"])
-            .gte("data", format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd'));
+            .in("status", ["Pendente", "Prevista"]) // Apenas ocorrências pendentes ou previstas
+            .gte("data", formattedTransactionDate);
           
           if (error) throw error;
           count = futureOccurrencesCount || 0;
@@ -211,37 +213,37 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return;
     }
 
-    // Check if it's part of any recurring/installment series
-    if (isRecurringTransaction || (editingTransaction.type === "expense" && (editingTransaction.totalInstallments || 0) > 1)) {
-      setLoading(true); // Start loading for the pre-check
-      setIsFetchingOptions(true);
-      const futureItems = await fetchPendingFutureItems(editingTransaction);
-      setPendingFutureItemsCount(futureItems);
-      setIsFetchingOptions(false);
-      setLoading(false); // Stop loading after pre-check
+    setLoading(true); // Start loading for the pre-check
+    setIsFetchingOptions(true);
+    const futureItems = await fetchPendingFutureItems(editingTransaction);
+    setPendingFutureItemsCount(futureItems);
+    setIsFetchingOptions(false);
+    setLoading(false); // Stop loading after pre-check
 
-      const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
-      // NEW LOGIC FOR SAVE OPTIONS
-      const isFixedRecurringSeries =
-        editingTransaction.tipo_pagamento === "fixo" &&
-        editingTransaction.is_recurring_master;
+    // Lógica unificada para determinar se deve mostrar as opções de série
+    const isFixedRecurringSeries =
+      editingTransaction.tipo_pagamento === "fixo" &&
+      editingTransaction.is_recurring_master;
 
-      const isInstallmentExpenseSeries =
-        editingTransaction.type === "expense" &&
-        editingTransaction.tipo_pagamento === "parcelado" &&
-        totalItemsInSeries > 1 &&
-        futureItems > 0;
+    const isInstallmentSeries =
+      editingTransaction.type === "expense" && // Apenas despesas podem ser parceladas no modelo atual
+      editingTransaction.tipo_pagamento === "parcelado" &&
+      totalItemsInSeries > 1 &&
+      futureItems > 0; // Verifica se há parcelas futuras pendentes
 
-      const shouldShowRecurringSaveOptions = isFixedRecurringSeries || isInstallmentExpenseSeries;
+    const isIncomeRecurringSeries = 
+      editingTransaction.type === "income" &&
+      editingTransaction.is_recurring_master &&
+      futureItems > 0; // Verifica se há ocorrências futuras pendentes
 
-      if (shouldShowRecurringSaveOptions) {
-        setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
-      } else {
-        performUpdate("oneOff"); // Salva diretamente para transações avulsas ou recorrentes sem futuras pendências
-      }
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries || isIncomeRecurringSeries;
+
+    if (shouldShowSeriesOptions) {
+      setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
     } else {
-      performUpdate("oneOff"); // Salva diretamente para transações avulsas
+      performUpdate("oneOff"); // Salva diretamente para transações avulsas ou séries sem futuras pendências
     }
   };
 
@@ -307,18 +309,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
-    // NEW LOGIC FOR DELETE OPTIONS
+    // Lógica unificada para determinar se deve mostrar as opções de série
     const isFixedRecurringSeries =
       editingTransaction.tipo_pagamento === "fixo" &&
       editingTransaction.is_recurring_master;
 
-    const isInstallmentExpenseSeries =
-      editingTransaction.type === "expense" &&
+    const isInstallmentSeries =
+      editingTransaction.type === "expense" && // Apenas despesas podem ser parceladas no modelo atual
       editingTransaction.tipo_pagamento === "parcelado" &&
       totalItemsInSeries > 1 &&
-      futureItems > 0;
+      futureItems > 0; // Verifica se há parcelas futuras pendentes
 
-    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentExpenseSeries;
+    const isIncomeRecurringSeries = 
+      editingTransaction.type === "income" &&
+      editingTransaction.is_recurring_master &&
+      futureItems > 0; // Verifica se há ocorrências futuras pendentes
+
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries || isIncomeRecurringSeries;
 
     if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
