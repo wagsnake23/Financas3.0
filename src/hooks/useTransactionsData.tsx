@@ -55,7 +55,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .from("despesas_parcelas")
         .select(`
           *,
-          despesas (
+          despesas:despesa_id (
             id,
             categoria_id,
             descricao,
@@ -63,7 +63,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
             tipo_pagamento,
             cartao_id,
             is_recurring_master,
-            categorias:categoria_id (
+            categoria:categoria_id (
               id,
               nome,
               cor,
