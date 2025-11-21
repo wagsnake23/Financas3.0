@@ -112,19 +112,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div>
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyInput
-            id="valor"
-            value={valor !== undefined ? String(Math.round(valor * 100)) : ""}
-            placeholder="R$ 0,00"
-            required
-            className={cn(
-              "rounded-xl",
-              isMobile && "h-9 text-sm",
-              validationErrors.valor && "border-destructive"
-            )}
-            onValueChange={({ floatValue }) => {
-              setValor(floatValue ?? 0);
+            value={valor}
+            onChange={(v) => {
+              setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
+            className={cn(isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
           />
         </div>
 

@@ -270,11 +270,8 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           <div className="space-y-2">
             <Label htmlFor="amount">Valor (R$)</Label>
             <CurrencyInput
-              id="amount"
               value={amount}
-              onValueChange={(values) => setAmount(values.floatValue)}
-              placeholder="0,00"
-              required
+              onChange={(v) => setAmount(v)}
               className="rounded-xl"
             />
           </div>

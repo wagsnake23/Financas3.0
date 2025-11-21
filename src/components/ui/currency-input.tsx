@@ -1,50 +1,37 @@
-import * as React from "react";
-import { NumericFormat, NumericFormatProps } from "react-number-format";
+import React from "react";
+import CurrencyInputField from "react-currency-input-field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface CurrencyInputProps
-  extends Omit<NumericFormatProps, "customInput" | "onValueChange"> {
+interface Props {
+  value: number | undefined;
+  onChange: (value: number) => void;
   className?: string;
-  onValueChange?: (values: {
-    floatValue: number;
-    formattedValue: string;
-    rawValue: string;
-  }) => void;
+  placeholder?: string;
+  disabled?: boolean;
 }
 
-const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ className, onValueChange, value, ...props }, ref) => {
-    return (
-      <NumericFormat
-        {...props}
-        getInputRef={ref}
-        value={value ?? ""}          // evita travar quando valor é undefined
-        thousandSeparator="."
-        decimalSeparator=","
-        prefix="R$ "
-        decimalScale={2}
-        fixedDecimalScale
-        allowNegative={false}
-        inputMode="numeric"          // <-- ADICIONADO
-        valueIsNumericString={true}         // <-- ADICIONADO
-        customInput={Input}
-        className={cn(className)}
-        onValueChange={(values) => {
-          const raw = values.value;          // "1234"
-          const floatValue = Number(raw) / 100; // 12.34
-
-          onValueChange?.({
-            floatValue,
-            formattedValue: values.formattedValue,
-            rawValue: raw,
-          });
-        }}
-      />
-    );
-  }
-);
-
-CurrencyInput.displayName = "CurrencyInput";
-
-export { CurrencyInput };
+export const CurrencyInput = ({
+  value,
+  onChange,
+  className,
+  placeholder = "R$ 0,00",
+  disabled
+}: Props) => {
+  return (
+    <CurrencyInputField
+      customInput={Input}
+      intlConfig={{ locale: "pt-BR", currency: "BRL" }}
+      decimalsLimit={2}
+      decimalScale={2}
+      disableGroupSeparators={false}
+      allowNegativeValue={false}
+      value={value}
+      onValueChange={(val) => onChange(Number(val) || 0)}
+      inputMode="numeric"
+      placeholder={placeholder}
+      disabled={disabled}
+      className={cn("rounded-xl", className)}
+    />
+  );
+};

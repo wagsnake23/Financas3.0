@@ -98,11 +98,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         <div className="space-y-2">
           <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyInput
-            id="amount"
             value={amount}
-            onValueChange={(values) => setAmount(values.floatValue)}
-            placeholder="0,00"
-            required
+            onChange={(v) => setAmount(v)}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
