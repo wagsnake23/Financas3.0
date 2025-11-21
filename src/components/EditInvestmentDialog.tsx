@@ -230,6 +230,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
       <div className={cn("flex gap-2 justify-center")}>
         <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loading}>
+          <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
         <Button
