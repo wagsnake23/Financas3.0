@@ -125,10 +125,15 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             value={tipoPagamento} 
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
               setTipoPagamento(v);
-              if (v === "fixo") {
-                setIsRecurring(true);
+              // Adiciona verificação de tipo antes de chamar setIsRecurring
+              if (typeof setIsRecurring === 'function') {
+                if (v === "fixo") {
+                  setIsRecurring(true);
+                } else {
+                  setIsRecurring(false);
+                }
               } else {
-                setIsRecurring(false);
+                console.error("PaymentDetails: setIsRecurring não é uma função.", setIsRecurring);
               }
             }}
           >
