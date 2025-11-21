@@ -144,7 +144,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           type: "expense",
           amount: p.valor_parcela,
           date: p.vencimento,
-          category: parentDespesa?.categoria_id || "outros_diversos",
           description: parentDespesa?.descricao || "Despesa",
           status: p.pago ? 'Recebida' : 'Pendente',
           installmentNumber: p.numero_parcela,
@@ -156,6 +155,10 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_id: parentDespesa?.id ?? null, // Para despesas, o recurrence_id é o id da despesa mestra, garante null se parentDespesa.id for null
           recurrence_day: null,
           tipo_pagamento: parentDespesa?.tipo_pagamento, // NOVO: Incluído tipo_pagamento
+          category:
+            parentDespesa?.categoria?.parent_id ||   // usar categoria principal, se existir
+            parentDespesa?.categoria_id ||           // fallback: subcategoria
+            "outros_diversos",
         };
         console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id });
         return transaction;
