@@ -117,9 +117,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             decimalsLimit={2}
             decimalSeparator=","
             groupSeparator="."
+            valueAsInteger     // ATIVA CENTAVOS AUTOMATICAMENTE
             allowNegativeValue={false}
             onValueChange={(value, name, values) => {
-              setValor(values?.floatValue ?? 0); 
+              // values.valueAsInteger vem como centavos (ex: 1234 → 12.34)
+              setValor((values?.valueAsInteger ?? 0) / 100);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             placeholder="0,00"
