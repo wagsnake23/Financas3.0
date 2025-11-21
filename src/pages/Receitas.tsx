@@ -109,12 +109,10 @@ export default function Receitas() {
       ? format(data, 'yyyy-MM-dd')
       : "";
 
-    let masterRevenueId: string | null = null;
-
     try {
       if (isRecurring) {
         const recurrenceDay = getDate(data);
-        // 1. Create the master recurring revenue entry (this will be the first occurrence)
+        // 1. Create the master recurring revenue entry
         const { data: masterData, error: masterError } = await supabase
           .from("receitas")
           .insert({
@@ -131,7 +129,7 @@ export default function Receitas() {
           .single();
 
         if (masterError) throw masterError;
-        masterRevenueId = masterData.id;
+        const masterRevenueId = masterData.id;
 
         // Atualiza o registro mestre para referenciar a si mesmo como recurrence_id
         const { error: updateMasterError } = await supabase
