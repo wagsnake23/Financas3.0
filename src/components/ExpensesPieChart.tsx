@@ -11,19 +11,41 @@ interface ExpensesPieChartProps {
 }
 
 export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: ExpensesPieChartProps) => {
+
+  // Função auxiliar para encontrar a categoria principal de uma subcategoria
+  const getMainCategory = (subcategoryId: string): AppCategory => {
+    let currentCategory = allCategories.find(cat => cat.id === subcategoryId);
+
+    // Se a subcategoria não for encontrada, ou se for uma categoria principal (parent_id é null), retorna ela mesma.
+    // Caso contrário, procura recursivamente a categoria pai até encontrar a principal.
+    while (currentCategory && currentCategory.parent_id !== null) {
+      const parent = allCategories.find(cat => cat.id === currentCategory?.parent_id);
+      if (parent) {
+        currentCategory = parent;
+      } else {
+        // Se o pai não for encontrado, a categoria atual é a mais alta que podemos identificar.
+        break;
+      }
+    }
+
+    // Retorna a categoria principal encontrada ou um objeto "Outros" se nada for identificado
+    return currentCategory || {
+      id: "outros",
+      nome: "Outros",
+      icone: "MoreHorizontal",
+      cor: "hsl(215, 15%, 50%)", // Cor padrão para 'Outros'
+      parent_id: null,
+    };
+  };
+
   const expensesByCategory = transactions
     .filter(t => t.type === "expense")
     .reduce((acc, transaction) => {
-      const subcategory = allCategories.find(c => c.id === transaction.category); // Esta é a subcategoria
-      let parentCategory: AppCategory | undefined;
-
-      if (subcategory && subcategory.parent_id) {
-        parentCategory = allCategories.find(c => c.id === subcategory.parent_id);
-      }
-
-      // Usar estritamente o nome e a cor da categoria pai. Se não houver pai, usar "Outros".
-      const displayCategoryName = parentCategory?.nome || "Outros";
-      const displayCategoryColor = parentCategory?.cor || "hsl(215, 15%, 50%)"; // Cor padrão para 'Outros'
+      // Obtém a categoria principal para a transação
+      const mainCategory = getMainCategory(transaction.category);
+      
+      const displayCategoryName = mainCategory.nome;
+      const displayCategoryColor = mainCategory.cor;
       
       if (!acc[displayCategoryName]) {
         acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
