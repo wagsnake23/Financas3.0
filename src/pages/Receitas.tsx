@@ -153,6 +153,9 @@ export default function Receitas() {
           p_status: 'Prevista',
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 ocorrências
+          p_forma_pagamento: null, // Adicionado
+          p_cartao_id: null,       // Adicionado
+          p_tipo_pagamento: null,  // Adicionado
         });
 
         if (rpcError) throw rpcError;

@@ -143,6 +143,9 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             p_status: 'Prevista',
             p_recurrence_day: recurrenceDay,
             p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+            p_forma_pagamento: null, // Adicionado
+            p_cartao_id: null,       // Adicionado
+            p_tipo_pagamento: null,  // Adicionado
           });
 
           if (rpcError) throw rpcError;

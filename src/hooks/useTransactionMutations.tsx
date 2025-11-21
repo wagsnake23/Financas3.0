@@ -306,6 +306,9 @@ export const useTransactionMutations = ({
                 p_status: 'Prevista',
                 p_recurrence_day: newRecurrenceDay,
                 p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
+                p_forma_pagamento: null, // Adicionado
+                p_cartao_id: null,       // Adicionado
+                p_tipo_pagamento: null,  // Adicionado
               });
               if (rpcError) throw rpcError;
 
@@ -397,11 +400,12 @@ export const useTransactionMutations = ({
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
+              p_status: null, // Adicionado para despesa
+              p_recurrence_day: newRecurrenceDay,
+              p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
               p_tipo_pagamento: originalTransaction.tipo_pagamento,
-              p_recurrence_day: newRecurrenceDay,
-              p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
             });
             if (rpcError) throw rpcError;
 

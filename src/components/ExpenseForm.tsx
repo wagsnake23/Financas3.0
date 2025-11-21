@@ -188,11 +188,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           p_monthly_amount: valorParcela,
           p_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
           p_description: descricao,
-          p_forma_pagamento: formaPagamento,
-          p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
-          p_tipo_pagamento: "fixo",
+          p_status: null, // Adicionado para despesa
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 parcelas
+          p_forma_pagamento: formaPagamento,
+          p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
+          p_tipo_pagamento: tipoPagamento,
         });
 
         if (rpcError) throw rpcError;
