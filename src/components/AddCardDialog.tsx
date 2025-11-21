@@ -14,6 +14,8 @@ import DynamicIcon from "./DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Card } from "@/components/ui/card"; // Importar Card
+import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
+import { cn } from "@/lib/utils"; // Importar cn
 
 interface AddCardDialogProps {
   user: User | null;
@@ -28,6 +30,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   const [newCardDiaFechamento, setNewCardDiaFechamento] = useState("");
   const [newCardDiaVencimento, setNewCardDiaVencimento] = useState("");
   const [loading, setLoading] = useState(false);
+  const isMobile = useIsMobile(); // Usar o hook
 
   const handleAddNewCartao = async () => {
     if (!user) {
@@ -75,7 +78,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           <DynamicIcon name="Plus" className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Cartão</DialogTitle>
         </DialogHeader>

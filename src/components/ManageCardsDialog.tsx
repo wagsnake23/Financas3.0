@@ -27,6 +27,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
+import { cn } from "@/lib/utils"; // Importar cn
 
 interface Cartao {
   id: string;
@@ -54,6 +56,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [editingCard, setEditingCard] = useState<Cartao | null>(null);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
+  const isMobile = useIsMobile(); // Usar o hook
 
   // Edit form states
   const [nomeCartao, setNomeCartao] = useState("");
@@ -165,7 +168,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <DynamicIcon name="Pencil" className="w-4 h-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Gerenciar Cartões</DialogTitle>
           </DialogHeader>
@@ -216,7 +219,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
-        <DialogContent>
+        <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Editar Cartão</DialogTitle>
           </DialogHeader>
@@ -271,7 +274,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>
