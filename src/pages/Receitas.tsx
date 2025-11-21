@@ -215,7 +215,7 @@ export default function Receitas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
               !isRecurring 
-                ? "bg-soft-blue/20 border-soft-blue text-primary font-bold" // Active styling
+                ? "bg-soft-blue border-soft-blue text-primary font-bold" // Active styling
                 : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
@@ -232,7 +232,7 @@ export default function Receitas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
               isRecurring 
-                ? "bg-soft-blue/20 border-soft-blue text-primary font-bold" // Active styling
+                ? "bg-soft-blue border-soft-blue text-primary font-bold" // Active styling
                 : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
