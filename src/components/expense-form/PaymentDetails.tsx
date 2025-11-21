@@ -114,21 +114,17 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <CurrencyInput
             id="valor"
             value={valor}
-            prefix="R$ "
-            decimalsLimit={2}
-            decimalSeparator=","
-            groupSeparator="."
-            valueAsInteger={true}   // importante
-            allowNegativeValue={false}
-            onValueChange={(value, name, values) => {
-              // valueAsInteger retorna o valor em centavos
-              // Exemplo: 123456 → R$ 1.234,56
-              setValor((values?.valueAsInteger ?? 0) / 100);
-              setValidationErrors(prev => ({ ...prev, valor: false }));
-            }}
             placeholder="R$ 0,00"
             required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
+            className={cn(
+              "rounded-xl",
+              isMobile && "h-9 text-sm",
+              validationErrors.valor && "border-destructive"
+            )}
+            onValueChange={({ floatValue }) => {
+              setValor(floatValue ?? 0);
+              setValidationErrors(prev => ({ ...prev, valor: false }));
+            }}
           />
         </div>
 
