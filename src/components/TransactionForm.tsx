@@ -12,11 +12,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CurrencyInput } from "@/components/ui/currency-input";
-import { getDate } from "date-fns";
+// Removed: import { getDate } from "date-fns";
 import { StatusToggleButton } from "./StatusToggleButton";
 import { Database } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+// Removed: import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -26,7 +26,7 @@ interface TransactionFormProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
-const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
+// Removed: const RECURRING_INSTALLMENTS_COUNT = 120; // No longer needed as this form is for one-off
 
 export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormProps) => {
   const { user } = useAuth();
@@ -35,16 +35,14 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false);
+  // Removed: const [isRecurring, setIsRecurring] = useState(false);
   const [status, setStatus] = useState<ReceitaStatus>("Pendente");
 
+  // Set status to 'Pendente' by default for new one-off transactions
   useEffect(() => {
-    if (isRecurring) {
-      setStatus("Prevista");
-    } else {
-      setStatus("Pendente");
-    }
-  }, [isRecurring, type]);
+    setStatus("Pendente");
+  }, [type]);
+
 
   const { data: fetchedCategories = [] } = useQuery<AppCategory[]>({
     queryKey: ["transactionFormCategories", user?.id],
@@ -83,77 +81,29 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
       return;
     }
 
-    const recurrenceDay = getDate(new Date(date));
-
     try {
       if (type === "income") {
-        if (isRecurring) {
-          const { data: masterData, error: masterError } = await supabase
-            .from("receitas")
-            .insert({
-              user_id: user.id,
-              tipo_receita_id: category === UNSELECTED_VALUE ? null : category,
-              valor: amount as number,
-              data: date,
-              descricao,
-              status: 'Prevista',
-              is_recurring_master: true,
-              recurrence_day: recurrenceDay,
-            })
-            .select()
-            .single();
-
-          if (masterError) throw masterError;
-          const masterRevenueId = masterData.id;
-
-          const { error: updateMasterError } = await supabase
-            .from("receitas")
-            .update({ recurrence_id: masterRevenueId })
-            .eq("id", masterRevenueId);
-          
-          if (updateMasterError) throw updateMasterError;
-
-          const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
-            p_user_id: user.id,
-            p_transaction_type: 'income',
-            p_master_id: masterRevenueId,
-            p_first_occurrence_date: date,
-            p_monthly_amount: amount as number,
-            p_category_id: category === UNSELECTED_VALUE ? null : category,
-            p_description: description,
-            p_status: 'Prevista',
-            p_recurrence_day: recurrenceDay,
-            p_total_installments: RECURRING_INSTALLMENTS_COUNT,
-          });
-
-          if (rpcError) throw rpcError;
-
-        } else {
-          await onAddTransaction({
-            type,
-            amount: amount as number,
-            date,
-            category: category === UNSELECTED_VALUE ? null : category,
-            description,
-            status: status,
-            is_recurring_master: false,
-            recurrence_id: null,
-            recurrence_day: null,
-          });
-        }
-      } else {
-        if (isRecurring) {
-          toast.error("Para despesas recorrentes, use o formulário de Despesas.");
-          return;
-        }
-
+        // Always one-off income from this form
+        await onAddTransaction({
+          type,
+          amount: amount as number,
+          date,
+          category: category === UNSELECTED_VALUE ? null : category,
+          description,
+          status: status,
+          is_recurring_master: false,
+          recurrence_id: null,
+          recurrence_day: null,
+        });
+      } else { // type === "expense"
+        // Always one-off expense from this form
         const { data: despesaData, error: despesaError } = await supabase
           .from("despesas")
           .insert({
             user_id: user.id,
             categoria_id: category === UNSELECTED_VALUE ? null : category,
-            forma_pagamento: "dinheiro",
-            tipo_pagamento: "avista",
+            forma_pagamento: "dinheiro", // Default to dinheiro for one-off expense
+            tipo_pagamento: "avista", // Default to avista for one-off expense
             cartao_id: null,
             valor_total: amount as number,
             descricao,
@@ -182,7 +132,7 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
       setAmount(undefined);
       setCategory(UNSELECTED_VALUE);
       setDescription("");
-      setIsRecurring(false);
+      // Removed: setIsRecurring(false);
       setStatus("Pendente");
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
@@ -198,42 +148,7 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Lançamento</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
-          <RadioGroup
-            value={isRecurring ? "recorrente" : "avulsa"}
-            onValueChange={(value) => setIsRecurring(value === "recorrente")}
-            className="flex items-center justify-center gap-6"
-          >
-            <div className="flex items-center gap-2">
-              <RadioGroupItem
-                value="avulsa"
-                id="type-avulsa"
-                className="peer h-5 w-5 rounded-full border border-primary data-[state=checked]:bg-primary"
-              />
-              <Label
-                htmlFor="type-avulsa"
-                className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
-              >
-                Avulsa
-              </Label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <RadioGroupItem
-                value="recorrente"
-                id="type-recorrente"
-                className="peer h-5 w-5 rounded-full border border-primary data-[state=checked]:bg-primary"
-              />
-              <Label
-                htmlFor="type-recorrente"
-                className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
-              >
-                Recorrente
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+        {/* Removed: Tipo de Lançamento RadioGroup */}
 
         <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-2")}>
           <div className="space-y-2">
@@ -247,7 +162,7 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="income" className={cn(isMobile && "text-sm")}>Receita</SelectItem>
-                <SelectItem value="expense" disabled={isRecurring} className={cn(isMobile && "text-sm")}>Despesa</SelectItem>
+                <SelectItem value="expense" className={cn(isMobile && "text-sm")}>Despesa</SelectItem> {/* Removed disabled={isRecurring} */}
               </SelectContent>
             </Select>
           </div>
@@ -311,17 +226,16 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
           />
         </div>
 
-        {!isRecurring && (
-          <div className="flex flex-col items-start space-y-2">
-            <Label className={cn(isMobile && "text-xs")}>Status</Label>
-            <StatusToggleButton
-              currentStatus={status}
-              transactionType={type}
-              onToggle={() => setStatus(status === "Recebida" ? "Pendente" : "Recebida")}
-              isMobile={isMobile}
-            />
-          </div>
-        )}
+        {/* StatusToggleButton is always shown now */}
+        <div className="flex flex-col items-start space-y-2">
+          <Label className={cn(isMobile && "text-xs")}>Status</Label>
+          <StatusToggleButton
+            currentStatus={status}
+            transactionType={type}
+            onToggle={() => setStatus(status === "Recebida" ? "Pendente" : "Recebida")}
+            isMobile={isMobile}
+          />
+        </div>
 
         <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg">
           <DynamicIcon name="Plus" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
