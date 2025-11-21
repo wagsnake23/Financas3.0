@@ -6,10 +6,10 @@ import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate } from "@/integrations/supabase/types";
 import { isValidUuid } from "@/lib/utils";
-import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns"; // Importar getDate, addMonths, endOfMonth
+import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
-type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // NOVO TIPO
+type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 
 interface UseTransactionMutationsProps {
   user: User | null;
@@ -65,7 +65,6 @@ export const useTransactionMutations = ({
           }
 
           if (transactionToDelete.is_recurring_master || transactionToDelete.recurrence_id) {
-            // Handle recurring income deletion
             const masterRecurrenceId = transactionToDelete.is_recurring_master ? transactionToDelete.id : transactionToDelete.recurrence_id;
             if (!masterRecurrenceId) throw new Error("Erro (DEL-INC-REC-1): ID de recorrência mestre não encontrado.");
 
@@ -73,12 +72,10 @@ export const useTransactionMutations = ({
             const formattedCurrentOccurrenceDate = format(currentOccurrenceDate, 'yyyy-MM-dd');
 
             if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
-              // Delete only this specific occurrence
               console.log(`[DEBUG] Deleting single income occurrence from 'receitas' table with ID: ${id}`);
               const { error: deleteOccurrenceError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
               if (deleteOccurrenceError) throw deleteOccurrenceError;
 
-              // If the master itself was deleted, ensure its recurrence_id is nullified for other occurrences
               if (transactionToDelete.is_recurring_master) {
                 const { error: updateOccurrencesError } = await supabase
                   .from("receitas")
@@ -88,7 +85,6 @@ export const useTransactionMutations = ({
               }
 
             } else if (deleteScope === "thisMonthForward") {
-              // Delete current and all future occurrences
               console.log(`[DEBUG] Deleting income occurrences from 'receitas' for master ${masterRecurrenceId} from ${formattedCurrentOccurrenceDate} onwards.`);
               const { error: deleteFutureOccurrencesError } = await supabase
                 .from("receitas")
@@ -98,7 +94,6 @@ export const useTransactionMutations = ({
                 .eq("user_id", user.id);
               if (deleteFutureOccurrencesError) throw deleteFutureOccurrencesError;
 
-              // If the master itself was part of the deleted range, update it
               if (transactionToDelete.is_recurring_master && currentOccurrenceDate <= parseISO(transactionToDelete.date)) {
                  const { error: updateMasterError } = await supabase
                   .from("receitas")
@@ -108,19 +103,16 @@ export const useTransactionMutations = ({
               }
 
             } else if (deleteScope === "all") {
-              // Delete all occurrences and the master
               console.log(`[DEBUG] Deleting all income occurrences for master ${masterRecurrenceId}.`);
               const { error: deleteAllOccurrencesError } = await supabase.from("receitas").delete().eq("recurrence_id", masterRecurrenceId).eq("user_id", user.id);
               if (deleteAllOccurrencesError) throw deleteAllOccurrencesError;
 
-              // Also delete the master record itself if it's not already deleted (e.g., if it was an occurrence)
               if (transactionToDelete.is_recurring_master) {
                 const { error: deleteMasterError } = await supabase.from("receitas").delete().eq("id", masterRecurrenceId).eq("user_id", user.id);
                 if (deleteMasterError) throw deleteMasterError;
               }
             }
           } else {
-            // Handle one-off income deletion (as before)
             console.log(`[DEBUG] Deleting one-off income from 'receitas' table with ID: ${id}`);
             const { error: deleteError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
             error = deleteError;
@@ -133,12 +125,10 @@ export const useTransactionMutations = ({
           }
 
           if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
-            // Delete only the specific installment
             console.log(`[DEBUG] Deleting single expense installment from 'despesas_parcelas' table with ID: ${id}`);
             const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
             if (deleteParcelaError) throw deleteParcelaError;
 
-            // Check if parent 'despesas' record should be deleted if no more installments
             if (parentDespesaId && isValidUuid(parentDespesaId)) {
               const { data: remainingParcelas, error: checkError } = await supabase
                 .from("despesas_parcelas")
@@ -152,7 +142,6 @@ export const useTransactionMutations = ({
                 const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
                 if (deleteParentError) throw deleteParentError;
               } else {
-                // Update numero_parcelas in parent despesas if some installments remain
                 const { error: updateParentError } = await supabase
                   .from("despesas")
                   .update({ numero_parcelas: remainingParcelas?.length || 0 })
@@ -161,7 +150,6 @@ export const useTransactionMutations = ({
               }
             }
           } else if (deleteScope === "thisMonthForward") {
-            // Delete current and all future installments
             if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
               throw new Error("Erro (DEL-EXP-2): ID da despesa principal inválido para exclusão 'deste mês em diante'.");
             }
@@ -172,11 +160,10 @@ export const useTransactionMutations = ({
               .from("despesas_parcelas")
               .delete()
               .eq("despesa_id", parentDespesaId)
-              .gte("vencimento", format(currentInstallmentDate, 'yyyy-MM-dd')); // Delete from current month's date onwards
+              .gte("vencimento", format(currentInstallmentDate, 'yyyy-MM-dd'));
 
             if (deleteFutureParcelasError) throw deleteFutureParcelasError;
 
-            // Check if parent 'despesas' record should be deleted if no more installments
             const { data: remainingParcelas, error: checkError } = await supabase
               .from("despesas_parcelas")
               .select("id")
@@ -189,7 +176,6 @@ export const useTransactionMutations = ({
               const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
               if (deleteParentError) throw deleteParentError;
             } else {
-              // Update numero_parcelas in parent despesas if some installments remain
               const { error: updateParentError } = await supabase
                 .from("despesas")
                 .update({ numero_parcelas: remainingParcelas?.length || 0 })
@@ -198,7 +184,6 @@ export const useTransactionMutations = ({
             }
 
           } else if (deleteScope === "all") {
-            // Delete all installments and the parent expense
             if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
               throw new Error("Erro (DEL-EXP-3): ID da despesa principal inválido para exclusão 'todo o período'.");
             }
@@ -233,7 +218,7 @@ export const useTransactionMutations = ({
       id: string,
       type: TransactionType,
       updatedTransaction: Omit<Transaction, "id">,
-      saveScope: SaveScope // NOVO PARÂMETRO
+      saveScope: SaveScope
     ) => {
       setLoadingEditData(true);
 
@@ -254,7 +239,6 @@ export const useTransactionMutations = ({
           }
 
           if (originalTransaction?.is_recurring_master || originalTransaction?.recurrence_id) {
-            // Handle recurring income update
             const masterRecurrenceId = originalTransaction.is_recurring_master ? originalTransaction.id : originalTransaction.recurrence_id;
             if (!masterRecurrenceId) throw new Error("Erro (UPD-INC-REC-1): ID de recorrência mestre não encontrado.");
 
@@ -262,13 +246,12 @@ export const useTransactionMutations = ({
             const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
             if (saveScope === "thisMonth" || saveScope === "oneOff") {
-              // Update only the specific occurrence
               const { error: updateOccurrenceError } = await supabase
                 .from("receitas")
                 .update({
                   valor: updatedTransaction.amount,
                   data: updatedTransaction.date,
-                  tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+                  tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                   descricao: updatedTransaction.description,
                   status: updatedTransaction.status,
                 })
@@ -277,14 +260,12 @@ export const useTransactionMutations = ({
               if (updateOccurrenceError) throw updateOccurrenceError;
 
             } else if (saveScope === "thisMonthForward" || saveScope === "all") {
-              // Update master and all future occurrences
-              // 1. Update the master record (if this is the master or if we're updating all)
               if (originalTransaction.is_recurring_master || saveScope === "all") {
                 const { error: updateMasterError } = await supabase
                   .from("receitas")
                   .update({
                     valor: updatedTransaction.amount,
-                    tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+                    tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
                   })
@@ -293,31 +274,30 @@ export const useTransactionMutations = ({
                 if (updateMasterError) throw updateMasterError;
               }
 
-              // 2. Delete all future occurrences (including the current one if it's not the master)
-              const deleteFromDate = saveScope === "thisMonthForward" ? format(currentOccurrenceDate, 'yyyy-MM-dd') : format(parseISO(originalTransaction.date), 'yyyy-MM-dd');
+              const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
+              
+              console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
               
               const { error: deleteFutureError } = await supabase
                 .from("receitas")
                 .delete()
                 .eq("recurrence_id", masterRecurrenceId)
                 .gte("data", deleteFromDate)
-                .eq("user_id", user.id)
-                .neq("id", masterRecurrenceId); // Do not delete the master if it's still active
+                .eq("user_id", user.id);
 
               if (deleteFutureError) throw deleteFutureError;
 
-              // 3. Re-generate future occurrences from the current month onwards
               const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: updatedTransaction.date, // Start from the updated date
+                p_first_occurrence_date: format(addMonths(parseISO(updatedTransaction.date), 1), 'yyyy-MM-dd'), // Start from NEXT month
                 p_monthly_amount: updatedTransaction.amount,
-                p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+                p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
-                p_status: 'Prevista', // New occurrences are always 'Prevista'
+                p_status: 'Prevista',
                 p_recurrence_day: newRecurrenceDay,
-                p_total_installments: 120, // Re-generate 120 months
+                p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Re-generate remaining
               });
               if (rpcError) throw rpcError;
 
@@ -327,13 +307,12 @@ export const useTransactionMutations = ({
             }
 
           } else {
-            // Handle one-off income update (as before)
             const { error: updateError } = await supabase
               .from("receitas")
               .update({
                 valor: updatedTransaction.amount,
                 data: updatedTransaction.date,
-                tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+                tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 descricao: updatedTransaction.description,
                 status: updatedTransaction.status,
               })
@@ -362,14 +341,12 @@ export const useTransactionMutations = ({
           const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
-          // Always update parent despesas description and category
           const { error: updateDespesaParentError } = await supabase
             .from("despesas")
             .update({
-              categoria_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+              categoria_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               descricao: updatedTransaction.description,
-              // If it's a recurring master, update its recurrence_day
-              is_recurring_master: originalTransaction?.is_recurring_master, // Keep original master status
+              is_recurring_master: originalTransaction?.is_recurring_master,
             })
             .eq("id", parentDespesaId)
             .eq("user_id", user.id);
@@ -377,8 +354,7 @@ export const useTransactionMutations = ({
           if (updateDespesaParentError) throw updateDespesaParentError;
 
 
-          if (saveScope === "thisMonth" || saveScope === "oneOff") { // oneOff is essentially thisMonth for single installment
-            // Update only the specific installment
+          if (saveScope === "thisMonth" || saveScope === "oneOff") {
             const { error: updateParcelaError } = await supabase
               .from("despesas_parcelas")
               .update({
@@ -392,7 +368,6 @@ export const useTransactionMutations = ({
             if (updateParcelaError) throw updateParcelaError;
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
-            // 1. Update the current installment individually with all its specific fields
             console.log(`[DEBUG] Updating current installment (ID: ${id}) with new values.`);
             const { error: updateCurrentInstallmentError } = await supabase
               .from("despesas_parcelas")
@@ -405,36 +380,33 @@ export const useTransactionMutations = ({
               .eq("id", id);
             if (updateCurrentInstallmentError) throw updateCurrentInstallmentError;
 
-            // 2. Delete all future occurrences (excluding the current one, which is already updated)
-            const deleteFromDate = saveScope === "thisMonthForward" ? format(parseISO(originalTransaction.date), 'yyyy-MM-dd') : format(parseISO(originalTransaction.date), 'yyyy-MM-dd');
+            const deleteFromDate = format(parseISO(originalTransaction.date), 'yyyy-MM-dd');
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
               .delete()
               .eq("despesa_id", parentDespesaId)
               .gte("vencimento", deleteFromDate)
-              .neq("id", id); // Do not delete the current installment
+              .neq("id", id);
 
             if (deleteFutureParcelasError) throw deleteFutureParcelasError;
 
-            // 3. Re-generate future occurrences from the current month onwards
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: updatedTransaction.date, // Start from the updated date
+              p_first_occurrence_date: format(addMonths(parseISO(updatedTransaction.date), 1), 'yyyy-MM-dd'), // Start from NEXT month
               p_monthly_amount: newValorParcela,
-              p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
+              p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
               p_tipo_pagamento: originalTransaction.tipo_pagamento,
               p_recurrence_day: newRecurrenceDay,
-              p_total_installments: 120, // Re-generate 120 months
+              p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Re-generate remaining
             });
             if (rpcError) throw rpcError;
 
-            // 4. Recalculate parent despesa's valor_total and numero_parcelas based on all current installments
             const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
                 .from("despesas_parcelas")
                 .select("valor_parcela")
@@ -462,7 +434,6 @@ export const useTransactionMutations = ({
             });
 
           } else {
-            // This case should not be reached if saveScope is properly handled
             console.warn("handleUpdateTransaction: Unknown saveScope:", saveScope);
             toast.error("Escopo de atualização desconhecido.");
           }

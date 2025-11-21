@@ -17,7 +17,7 @@ import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
-import { format, getDate } from "date-fns";
+import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
-const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
+const RECURRING_INSTALLMENTS_COUNT = 120;
 
 export default function Receitas() {
   const { user, loading: authLoading } = useAuth();
@@ -50,7 +50,7 @@ export default function Receitas() {
   const [status, setStatus] = useState<ReceitaStatus>('Pendente');
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
+  const [isRecurring, setIsRecurring] = useState(false);
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
@@ -58,7 +58,7 @@ export default function Receitas() {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("receitas")
-        .select("*, status, is_recurring_master, recurrence_id, recurrence_day") // Incluir novas colunas
+        .select("*, status, is_recurring_master, recurrence_id, recurrence_day")
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
@@ -67,7 +67,6 @@ export default function Receitas() {
     enabled: !!user && !authLoading,
   });
 
-  // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -76,7 +75,7 @@ export default function Receitas() {
         .from("categorias")
         .select("*")
         .or(`user_id.eq.${user.id},user_id.is.null`)
-        .not("parent_id", "is", null) // APENAS SUBCATEGORIAS
+        .not("parent_id", "is", null)
         .order("nome");
       if (error) throw error;
       return data as AppCategory[];
@@ -84,13 +83,10 @@ export default function Receitas() {
     enabled: !!user && !authLoading,
   });
 
-  // `fetchedCategories` agora já são as subcategorias.
-  // Filtrar para obter apenas as subcategorias de 'receitas_e_investimentos'.
   const incomeSubcategories = useMemo(() => {
     return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
   }, [fetchedCategories]);
 
-  // Effect to handle recurrence logic and status for income
   useEffect(() => {
     setStatus(isRecurring ? "Prevista" : "Pendente");
   }, [isRecurring]);
@@ -110,15 +106,14 @@ export default function Receitas() {
     }
 
     const formattedDate = data 
-      ? format(data, 'yyyy-MM-dd') // Usar format do date-fns
+      ? format(data, 'yyyy-MM-dd')
       : "";
 
     let masterRevenueId: string | null = null;
 
     try {
       if (isRecurring) {
-        // 1. Create the master recurring revenue entry
-        const recurrenceDay = getDate(data); // Get day of month from selected date
+        const recurrenceDay = getDate(data);
         const { data: masterData, error: masterError } = await supabase
           .from("receitas")
           .insert({
@@ -127,7 +122,7 @@ export default function Receitas() {
             valor: valor as number,
             data: formattedDate,
             descricao,
-            status: 'Prevista', // Master is always 'Prevista'
+            status: 'Prevista',
             is_recurring_master: true,
             recurrence_day: recurrenceDay,
           })
@@ -137,7 +132,6 @@ export default function Receitas() {
         if (masterError) throw masterError;
         masterRevenueId = masterData.id;
 
-        // Update the master record itself to point its recurrence_id to its own id
         const { error: updateMasterError } = await supabase
           .from("receitas")
           .update({ recurrence_id: masterRevenueId })
@@ -145,32 +139,31 @@ export default function Receitas() {
         
         if (updateMasterError) throw updateMasterError;
 
-        // 2. Call RPC to generate future occurrences in background
+        // Call RPC to generate future occurrences starting from the NEXT month
         const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
           p_user_id: user?.id,
           p_transaction_type: 'income',
           p_master_id: masterRevenueId,
-          p_first_occurrence_date: formattedDate,
+          p_first_occurrence_date: format(addMonths(data, 1), 'yyyy-MM-dd'), // Start from NEXT month
           p_monthly_amount: valor as number,
-          p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId, // Pass as string | null
+          p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           p_description: descricao,
           p_status: 'Prevista',
           p_recurrence_day: recurrenceDay,
-          p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Generate remaining 119
         });
 
         if (rpcError) throw rpcError;
 
       } else {
-        // Create a one-off revenue entry (as before)
         const newRevenueData = {
           user_id: user?.id,
           tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           valor: valor as number,
           data: formattedDate,
           descricao,
-          status, // Use the status state
-          is_recurring_master: false, // Explicitly not recurring
+          status,
+          is_recurring_master: false,
           recurrence_id: null,
           recurrence_day: null,
         };
@@ -182,13 +175,12 @@ export default function Receitas() {
       toast.success("Receita adicionada com sucesso!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
       });
-      // Reset form
       setTipoReceitaId(UNSELECTED_VALUE);
       setValor(undefined);
       setData(new Date());
       setDescricao("");
       setStatus('Pendente');
-      setIsRecurring(false); // Reset toggle
+      setIsRecurring(false);
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
 
     } catch (error: any) {
@@ -201,7 +193,6 @@ export default function Receitas() {
 
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
-      {/* Toggle Avulsa / Recorrente */}
       <div className="space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
         <ToggleGroup 
@@ -329,7 +320,7 @@ export default function Receitas() {
           />
         </div>
 
-        {!isRecurring && ( // Status toggle only for one-off revenues
+        {!isRecurring && (
           <RevenueStatusToggle
             status={status}
             setStatus={setStatus}
@@ -370,7 +361,7 @@ export default function Receitas() {
                 <div className="px-4 pt-0">
                   <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
                   {oneOffFormContent}
-                  <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
+                  <Footer isMobile={isMobile} />
                 </div>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
