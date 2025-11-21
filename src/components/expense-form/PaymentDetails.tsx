@@ -136,13 +136,13 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="avista" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">⚡ À Vista</span>
+                <span className="flex items-center gap-2"><span className="emoji">⚡</span> À Vista</span>
               </SelectItem>
               <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">➗ Parcelado</span>
+                <span className="flex items-center gap-2"><span className="emoji">➗</span> Parcelado</span>
               </SelectItem>
               <SelectItem value="fixo" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">📆 Fixo</span>
+                <span className="flex items-center gap-2"><span className="emoji">📆</span> Fixo</span>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -160,16 +160,16 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">💰 Dinheiro</span>
+                <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
               <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">📲 Pix</span>
+                <span className="flex items-center gap-2"><span className="emoji">📲</span> Pix</span>
               </SelectItem>
               <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">💳 Cartão</span>
+                <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>
               </SelectItem>
               <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">📑 Boleto</span>
+                <span className="flex items-center gap-2"><span className="emoji">📑</span> Boleto</span>
               </SelectItem>
             </SelectContent>
           </Select>

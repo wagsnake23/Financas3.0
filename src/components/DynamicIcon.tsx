@@ -41,9 +41,6 @@ interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
 const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...props }) => {
   const safeName = typeof name === "string" ? name.trim() : "";
 
-  // DEBUG: Log the icon name being passed
-  console.log(`DynamicIcon: Attempting to render icon with name: '${safeName}'`);
-
   // Tenta encontrar um componente Lucide com o nome fornecido
   const IconComponent = iconMap[safeName];
 
@@ -54,7 +51,7 @@ const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...pr
     // Se não for um ícone Lucide, mas não for vazio, assume que é um emoji ou texto
     // Renderiza o texto diretamente dentro de um span, aplicando as classes e cores
     return (
-      <span className={cn(className, "flex items-center justify-center")} style={{ color: color }} {...props}>
+      <span className={cn("emoji", className, "flex items-center justify-center")} style={{ color: color }} {...props}>
         {safeName}
       </span>
     );

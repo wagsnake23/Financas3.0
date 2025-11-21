@@ -137,4 +137,9 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Classe global para alinhar emojis */
+  .emoji {
+    vertical-align: middle;
+  }
 }
