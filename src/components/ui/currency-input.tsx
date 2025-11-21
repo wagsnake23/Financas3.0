@@ -27,7 +27,7 @@ export const CurrencyInput = ({
       disableGroupSeparators={false}
       allowNegativeValue={false}
       value={value !== undefined ? value.toFixed(2) : ""}
-      onValueChange={(val) => onChange(Number(val) || 0)}
+      onValueChange={(val) => onChange(Number(val.replace(",", ".")) || 0)}
       inputMode="numeric"
       placeholder={placeholder}
       disabled={disabled}
