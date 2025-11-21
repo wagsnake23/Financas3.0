@@ -75,7 +75,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Filtrar as subcategorias para exibir apenas as de despesa
   const expenseSubcategories = React.useMemo(() => {
     return allSubcategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
-  }, [allCategories]); // Depende de allCategories, não allSubcategories
+  }, [allSubcategories]); // Depende de allSubcategories
 
   // Efeito para definir o status de pago/pendente automaticamente
   useEffect(() => {
