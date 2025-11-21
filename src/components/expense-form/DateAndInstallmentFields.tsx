@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
@@ -53,7 +53,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
                 getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
               )}
             >
-              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
               {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
