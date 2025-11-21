@@ -87,67 +87,45 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [formaPagamento, tipoPagamento, isRecurring]);
 
-  // NOVO useEffect para sincronizar tipoPagamento com isRecurring
+  // NOVO useEffect isolado para sincronizar isRecurring com tipoPagamento
   useEffect(() => {
-    if (typeof setIsRecurring === 'function') {
-      if (tipoPagamento === "fixo") {
-        setIsRecurring(true);
-      } else {
-        setIsRecurring(false);
-      }
+    if (tipoPagamento === "fixo") {
+      setIsRecurring(true);
     } else {
-      console.error("ExpenseForm: setIsRecurring não é uma função no novo useEffect de tipoPagamento.", setIsRecurring);
+      setIsRecurring(false);
     }
   }, [tipoPagamento, setIsRecurring]);
 
-  // Effect for handling recurrence logic
+  // Effect for handling recurrence logic (now only reacts to isRecurring, not setting tipoPagamento)
   useEffect(() => {
-    if (typeof setIsRecurring === 'function') {
-      if (isRecurring) {
-        setTipoPagamento("fixo"); // Force tipoPagamento to "fixo" if recurring
-        setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
-        setIsPaid(false); // Recurring expenses are initially pending
-      } else {
-        // If not recurring, and tipoPagamento was "fixo" (because it was forced by isRecurring),
-        // reset it to "avista" and numeroParcelas to 1.
-        // Otherwise, maintain current tipoPagamento and adjust numeroParcelas.
-        if (tipoPagamento === "fixo") {
-          setTipoPagamento("avista");
-          setNumeroParcelas(1);
-        } else if (tipoPagamento === "parcelado") {
-          setNumeroParcelas(2);
-        } else { // avista
-          setNumeroParcelas(1);
-        }
-      }
+    if (isRecurring) {
+      setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
+      setIsPaid(false); // Recurring expenses are initially pending
     } else {
-      console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de isRecurring.", setIsRecurring);
+      // If not recurring, reset numeroParcelas based on tipoPagamento
+      if (tipoPagamento === "parcelado") {
+        setNumeroParcelas(2);
+      } else { // avista or was 'fixo' and now not recurring
+        setNumeroParcelas(1);
+      }
     }
-  }, [isRecurring]); // Only depend on isRecurring to avoid loops with tipoPagamento
+  }, [isRecurring, tipoPagamento, setNumeroParcelas]); // Adicionado setNumeroParcelas como dependência
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
-    // REMOVIDO: Lógica duplicada de sincronização de isRecurring com tipoPagamento
-    // if (typeof setIsRecurring === 'function') {
-    //   if (tipoPagamento === "fixo") {
-    //     setIsRecurring(true);
-    //   } else {
-    //     setIsRecurring(false);
-    //   }
-    // } else {
-    //   console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de tipoPagamento.", setIsRecurring);
-    // }
-
-    if (isRecurring) return; // If recurring, this effect should not override
+    // A lógica para definir setIsRecurring com base em tipoPagamento está agora em seu useEffect dedicado.
+    // Este useEffect deve apenas lidar com efeitos colaterais de tipoPagamento em outros campos,
+    // mas apenas se isRecurring NÃO estiver controlando tipoPagamento (o que não deve mais acontecer).
+    if (isRecurring) return; // Se for recorrente, este efeito não deve sobrescrever
 
     if (tipoPagamento === "parcelado") {
       setFormaPagamento("cartao");
-      setNumeroParcelas(2); // Default to 2 for parcelado
+      setNumeroParcelas(2); // Default para 2 para parcelado
     } else if (tipoPagamento === "avista") {
-      setNumeroParcelas(1); // Default to 1 for avista
+      setNumeroParcelas(1); // Default para 1 para avista
     }
-    // No need for 'fixo' case here, as it's handled by the isRecurring effect
-  }, [tipoPagamento, isRecurring, setIsRecurring]); // Adicionado setIsRecurring como dependência
+    // Não há necessidade de um caso 'fixo' aqui, pois ele é tratado pelo efeito isRecurring
+  }, [tipoPagamento, isRecurring, setFormaPagamento, setNumeroParcelas]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

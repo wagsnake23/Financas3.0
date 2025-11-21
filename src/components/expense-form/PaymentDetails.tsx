@@ -125,16 +125,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             value={tipoPagamento} 
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
               setTipoPagamento(v);
-              // Adiciona verificação de tipo antes de chamar setIsRecurring
-              if (typeof setIsRecurring === 'function') {
-                if (v === "fixo") {
-                  setIsRecurring(true);
-                } else {
-                  setIsRecurring(false);
-                }
-              } else {
-                console.error("PaymentDetails: setIsRecurring não é uma função.", setIsRecurring);
-              }
+              // REMOVIDO: A lógica de setIsRecurring foi movida para o ExpenseForm.tsx
             }}
           >
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
