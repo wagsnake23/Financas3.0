@@ -285,7 +285,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       if (shouldShowRecurringOptions) {
         setShowDeleteOptionsDialog(true);
       } else {
-        setShowSimpleDeleteDialog(true);
+        setShowSimpleDeleteOptionsDialog(true); // Corrigido o nome da função aqui
       }
     }
   };
@@ -454,7 +454,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
             <AlertDialogCancel disabled={loading || isFetchingDeleteOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingDeleteOptions}>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingDeleteOptions} className="w-full sm:w-auto">
               {loading || isFetchingDeleteOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
