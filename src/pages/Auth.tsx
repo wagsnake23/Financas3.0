@@ -280,24 +280,28 @@ export default function Auth() {
       {viewMode === "login" && (
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email ou Usuário</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setValidationErrors(prev => ({ ...prev, email: false }));
-              }}
-              required
-              disabled={loading}
-              placeholder="seu@email.com"
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
-            />
+            <Label htmlFor="email">Email</Label> {/* Alterado para "Email" */}
+            <div className="relative">
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /> {/* Ícone de email */}
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, email: false }));
+                }}
+                required
+                disabled={loading}
+                placeholder="seu@email.com"
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))} {/* Adicionado pl-9 */}
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="password">Senha</Label>
             <div className="relative">
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /> {/* Ícone de cadeado */}
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -309,7 +313,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))} {/* Adicionado pl-9 */}
               />
               <button
                 type="button"
@@ -371,23 +375,27 @@ export default function Auth() {
           </div>
           <div>
             <Label htmlFor="signup-email">Email</Label>
-            <Input
-              id="signup-email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setValidationErrors(prev => ({ ...prev, email: false }));
-              }}
-              required
-              disabled={loading}
-              placeholder="seu@email.com"
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
-            />
+            <div className="relative">
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="signup-email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, email: false }));
+                }}
+                required
+                disabled={loading}
+                placeholder="seu@email.com"
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="signup-password">Senha</Label>
             <div className="relative">
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
@@ -399,7 +407,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -413,6 +421,7 @@ export default function Auth() {
           <div>
             <Label htmlFor="confirm-password">Confirmar Senha</Label>
             <div className="relative">
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
@@ -424,7 +433,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -457,19 +466,22 @@ export default function Auth() {
         <form onSubmit={handleForgotPassword} className="space-y-4">
           <div>
             <Label htmlFor="forgot-email">Email</Label>
-            <Input
-              id="forgot-email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setValidationErrors(prev => ({ ...prev, email: false }));
-              }}
-              required
-              disabled={loading}
-              placeholder="seu@email.com"
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
-            />
+            <div className="relative">
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="forgot-email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, email: false }));
+                }}
+                required
+                disabled={loading}
+                placeholder="seu@email.com"
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+              />
+            </div>
           </div>
           <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
             {loading ? "Enviando..." : "Enviar link de recuperação"}
@@ -494,6 +506,7 @@ export default function Auth() {
           <div>
             <Label htmlFor="new-password">Nova Senha</Label>
             <div className="relative">
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="new-password"
                 type={showPassword ? "text" : "password"}
@@ -505,7 +518,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -519,6 +532,7 @@ export default function Auth() {
           <div>
             <Label htmlFor="new-confirm-password">Confirmar Nova Senha</Label>
             <div className="relative">
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="new-confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
@@ -530,7 +544,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
