@@ -200,53 +200,38 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
-          <RadioGroup 
-            value={isRecurring ? "recorrente" : "avulsa"} 
+          <RadioGroup
+            value={isRecurring ? "recorrente" : "avulsa"}
             onValueChange={(value) => setIsRecurring(value === "recorrente")}
             className="flex items-center justify-center gap-6"
           >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem 
-                value="avulsa" 
-                id="type-avulsa" 
-                className={cn(
-                  "h-5 w-5 rounded-full border-2 border-blue-500 bg-white", // Estilos explícitos e maiores
-                  "aspect-square text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                  isMobile && "h-4 w-4", // Ajuste para mobile
-                  "peer"
-                )} 
+            <div className="flex items-center gap-2">
+              <RadioGroupItem
+                value="avulsa"
+                id="type-avulsa"
+                className="peer h-5 w-5 rounded-full border border-primary data-[state=checked]:bg-primary"
               />
               <Label
                 htmlFor="type-avulsa"
-                className={cn(
-                  "flex items-center text-sm font-normal text-muted-foreground",
-                  isMobile && "text-xs",
-                  "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
-                )}
+                className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
               >
-                Avulsa <DynamicIcon name="Zap" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                Avulsa
+                <DynamicIcon name="Zap" className="ml-2 h-4 w-4" />
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem 
-                value="recorrente" 
-                id="type-recorrente" 
-                className={cn(
-                  "h-5 w-5 rounded-full border-2 border-blue-500 bg-white", // Estilos explícitos e maiores
-                  "aspect-square text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                  isMobile && "h-4 w-4", // Ajuste para mobile
-                  "peer"
-                )} 
+
+            <div className="flex items-center gap-2">
+              <RadioGroupItem
+                value="recorrente"
+                id="type-recorrente"
+                className="peer h-5 w-5 rounded-full border border-primary data-[state=checked]:bg-primary"
               />
               <Label
                 htmlFor="type-recorrente"
-                className={cn(
-                  "flex items-center text-sm font-normal text-muted-foreground",
-                  isMobile && "text-xs",
-                  "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
-                )}
+                className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
               >
-                Recorrente <DynamicIcon name="Repeat" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                Recorrente
+                <DynamicIcon name="Repeat" className="ml-2 h-4 w-4" />
               </Label>
             </div>
           </RadioGroup>
