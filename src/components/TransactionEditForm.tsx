@@ -211,7 +211,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return;
     }
 
-    if (isRecurringTransaction) {
+    // Check if it's part of any recurring/installment series
+    if (isRecurringTransaction || (editingTransaction.type === "expense" && (editingTransaction.totalInstallments || 0) > 1)) {
       setLoading(true); // Start loading for the pre-check
       setIsFetchingOptions(true);
       const futureItems = await fetchPendingFutureItems(editingTransaction);
@@ -219,12 +220,20 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setIsFetchingOptions(false);
       setLoading(false); // Stop loading after pre-check
 
-      const totalItemsInSeries = editingTransaction.totalInstallments || 1; // For expenses, use totalInstallments. For income, if master, it implies >1.
+      const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
-      const shouldShowRecurringSaveOptions = 
-        editingTransaction.is_recurring_master && // Must be the master
-        (editingTransaction.type === "expense" ? totalItemsInSeries > 1 : true) && // For expense, check total installments. For income, if master, it's implicitly >1.
-        futureItems > 0; // Check if there are pending future items
+      // NEW LOGIC FOR SAVE OPTIONS
+      const isFixedRecurringSeries =
+        editingTransaction.tipo_pagamento === "fixo" &&
+        editingTransaction.is_recurring_master;
+
+      const isInstallmentExpenseSeries =
+        editingTransaction.type === "expense" &&
+        editingTransaction.tipo_pagamento === "parcelado" &&
+        totalItemsInSeries > 1 &&
+        futureItems > 0;
+
+      const shouldShowRecurringSaveOptions = isFixedRecurringSeries || isInstallmentExpenseSeries;
 
       if (shouldShowRecurringSaveOptions) {
         setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
@@ -296,16 +305,22 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
 
-    // Now, decide which dialog to show based on the rules
-    // Rule: "o lançamento for o master recorrente, e houver mais de 1 parcela no total, e existirem parcelas futuras pendentes."
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1; // For expenses, use totalInstallments. For income, if master, it implies >1.
+    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
-    const shouldShowRecurringOptions = 
-      editingTransaction.is_recurring_master && // Must be the master
-      (editingTransaction.type === "expense" ? totalItemsInSeries > 1 : true) && // For expense, check total installments. For income, if master, it's implicitly >1.
+    // NEW LOGIC FOR DELETE OPTIONS
+    const isFixedRecurringSeries =
+      editingTransaction.tipo_pagamento === "fixo" &&
+      editingTransaction.is_recurring_master;
+
+    const isInstallmentExpenseSeries =
+      editingTransaction.type === "expense" &&
+      editingTransaction.tipo_pagamento === "parcelado" &&
+      totalItemsInSeries > 1 &&
       futureItems > 0;
 
-    if (shouldShowRecurringOptions) {
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentExpenseSeries;
+
+    if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
     } else {
       setShowSimpleDeleteOptionsDialog(true);
