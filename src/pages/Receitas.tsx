@@ -17,7 +17,7 @@ import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
-import { format, getDate } from "date-fns"; // Importar getDate
+import { format, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ import { CurrencyInput } from "@/components/ui/currency-input";
 
 import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
@@ -89,6 +89,15 @@ export default function Receitas() {
   const incomeSubcategories = useMemo(() => {
     return fetchedCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
   }, [fetchedCategories]);
+
+  // Effect to handle recurrence logic and status for income
+  useEffect(() => {
+    setStatus(isRecurring ? "Prevista" : "Pendente");
+  }, [isRecurring]);
+
+  const handleToggleChange = (value: string) => {
+    setIsRecurring(value === "recorrente");
+  };
 
   const handleSubmitOneOff = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,7 +169,7 @@ export default function Receitas() {
           valor: valor as number,
           data: formattedDate,
           descricao,
-          status,
+          status, // Use the status state
           is_recurring_master: false, // Explicitly not recurring
           recurrence_id: null,
           recurrence_day: null,
@@ -198,14 +207,38 @@ export default function Receitas() {
         <ToggleGroup 
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
-          onValueChange={(value) => setIsRecurring(value === "recorrente")}
+          onValueChange={handleToggleChange} // Use the new handler
           className="w-full justify-center"
         >
-          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
-            <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+          <ToggleGroupItem 
+            value="avulsa" 
+            className={cn(
+              "flex-1 rounded-xl flex items-center justify-center",
+              !isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+            )}
+          >
+            <DynamicIcon 
+              name="Zap" 
+              className={cn(
+                "mr-2 h-4 w-4",
+                !isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+              )} 
+            /> Avulsa
           </ToggleGroupItem>
-          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
-            <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+          <ToggleGroupItem 
+            value="recorrente" 
+            className={cn(
+              "flex-1 rounded-xl flex items-center justify-center",
+              isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+            )}
+          >
+            <DynamicIcon 
+              name="Repeat" 
+              className={cn(
+                "mr-2 h-4 w-4",
+                isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+              )} 
+            /> Recorrente
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
@@ -335,7 +368,7 @@ export default function Receitas() {
               <div className="px-4 pt-0">
                 <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
                 {oneOffFormContent}
-                <Footer isMobile={isMobile} />
+                <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
               </div>
             ) : (
               <Card className="p-6 rounded-xl shadow-sm">

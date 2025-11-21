@@ -16,9 +16,10 @@ import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
-import { Label } from "@/components/ui/label"; // Importar Label
-import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Label } from "@/components/ui/label";
+import DynamicIcon from "@/components/DynamicIcon";
+import { toast } from "sonner";
 
 interface Cartao {
   id: string;
@@ -82,6 +83,10 @@ export default function Despesas() {
     }
   };
 
+  const handleToggleChange = (value: string) => {
+    setIsRecurring(value === "recorrente");
+  };
+
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -94,25 +99,44 @@ export default function Despesas() {
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
       
-      {/* Removed: Temporary Debug Message */}
-      {/* <div className="bg-yellow-200 text-yellow-800 p-2 mb-2 rounded-md">
-        DEBUG: O seletor de tipo de lançamento deve aparecer abaixo desta linha.
-      </div> */}
-
       {/* Toggle Avulsa / Recorrente */}
       <div className="space-y-2 mb-4">
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
         <ToggleGroup 
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
-          onValueChange={(value) => setIsRecurring(value === "recorrente")}
-          className="w-full justify-center" // Removed bg-blue-100 and p-2
+          onValueChange={handleToggleChange}
+          className="w-full justify-center"
         >
-          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl flex items-center justify-center"> {/* Added flex items-center justify-center, removed bg-green-200 */}
-            <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+          <ToggleGroupItem 
+            value="avulsa" 
+            className={cn(
+              "flex-1 rounded-xl flex items-center justify-center",
+              !isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+            )}
+          >
+            <DynamicIcon 
+              name="Zap" 
+              className={cn(
+                "mr-2 h-4 w-4",
+                !isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+              )} 
+            /> Avulsa
           </ToggleGroupItem>
-          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl flex items-center justify-center"> {/* Added flex items-center justify-center, removed bg-red-200 */}
-            <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+          <ToggleGroupItem 
+            value="recorrente" 
+            className={cn(
+              "flex-1 rounded-xl flex items-center justify-center",
+              isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+            )}
+          >
+            <DynamicIcon 
+              name="Repeat" 
+              className={cn(
+                "mr-2 h-4 w-4",
+                isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+              )} 
+            /> Recorrente
           </ToggleGroupItem>
         </ToggleGroup>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,8 +12,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CurrencyInput } from "@/components/ui/currency-input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
-import { getDate } from "date-fns"; // Importar getDate
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { getDate } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
@@ -29,7 +30,8 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
+  const [isRecurring, setIsRecurring] = useState(false); // State for the toggle
+  const [status, setStatus] = useState<"Prevista" | "Pendente">("Pendente"); // New state for income status
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
   // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
@@ -58,6 +60,30 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       return fetchedCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
   }, [type, fetchedCategories]);
+
+  // Effect to handle recurrence logic and status for income
+  useEffect(() => {
+    if (type === "income") {
+      setStatus(isRecurring ? "Prevista" : "Pendente");
+    } else {
+      // For expenses, always force to Avulsa and set status to Pendente
+      setIsRecurring(false);
+      setStatus("Pendente"); // Expenses are always 'Pendente' initially
+    }
+  }, [type, isRecurring]);
+
+  const handleToggleChange = (value: string) => {
+    if (value === "recorrente") {
+      if (type === "expense") {
+        toast.error("Despesas recorrentes devem ser criadas no módulo de Despesas.");
+        setIsRecurring(false); // Force back to Avulsa
+        return;
+      }
+      setIsRecurring(true);
+    } else {
+      setIsRecurring(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,15 +164,26 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         // For expenses, the ExpenseForm component handles the recurring logic
         // This TransactionForm is for simple one-off transactions.
         // If recurring expense is selected here, it's an error or not intended.
-        toast.error("Para despesas recorrentes, use o formulário de Despesas.");
-        return;
+        // The toggle should have already forced it to "Avulsa"
+        await onAddTransaction({
+          type,
+          amount: amount as number,
+          date,
+          category: category === UNSELECTED_VALUE ? null : category,
+          description,
+          status: "Pendente", // Default for one-off expense
+          is_recurring_master: false,
+          recurrence_id: null,
+          recurrence_day: null,
+        });
       }
 
       // Reset form
       setAmount(undefined);
       setCategory(UNSELECTED_VALUE);
       setDescription("");
-      setIsRecurring(false);
+      setIsRecurring(false); // Reset toggle
+      setStatus("Pendente"); // Reset status
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
@@ -167,14 +204,38 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           <ToggleGroup 
             type="single" 
             value={isRecurring ? "recorrente" : "avulsa"} 
-            onValueChange={(value) => setIsRecurring(value === "recorrente")}
+            onValueChange={handleToggleChange} // Use the new handler
             className="w-full justify-center"
           >
-            <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
-              <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+            <ToggleGroupItem 
+              value="avulsa" 
+              className={cn(
+                "flex-1 rounded-xl flex items-center justify-center",
+                !isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+              )}
+            >
+              <DynamicIcon 
+                name="Zap" 
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  !isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+                )} 
+              /> Avulsa
             </ToggleGroupItem>
-            <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
-              <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+            <ToggleGroupItem 
+              value="recorrente" 
+              className={cn(
+                "flex-1 rounded-xl flex items-center justify-center",
+                isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+              )}
+            >
+              <DynamicIcon 
+                name="Repeat" 
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  isRecurring ? "text-primary" : "text-muted-foreground" // Icon color
+                )} 
+              /> Recorrente
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
@@ -185,13 +246,17 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             <Select value={type} onValueChange={(value) => {
               setType(value as TransactionType);
               setCategory(UNSELECTED_VALUE); // Reset category when type changes
+              // If changing to expense, force isRecurring to false
+              if (value === "expense") {
+                setIsRecurring(false);
+              }
             }}>
               <SelectTrigger className="rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="income">Receita</SelectItem>
-                <SelectItem value="expense" disabled={isRecurring}>Despesa</SelectItem> {/* Disable expense if recurring is selected */}
+                <SelectItem value="expense">Despesa</SelectItem> {/* Removed disabled, logic is in handleToggleChange */}
               </SelectContent>
             </Select>
           </div>
