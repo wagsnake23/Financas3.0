@@ -89,32 +89,40 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // Effect for handling recurrence logic
   useEffect(() => {
-    if (isRecurring) {
-      setTipoPagamento("fixo"); // Force tipoPagamento to "fixo" if recurring
-      setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
-      setIsPaid(false); // Recurring expenses are initially pending
-    } else {
-      // If not recurring, and tipoPagamento was "fixo" (because it was forced by isRecurring),
-      // reset it to "avista" and numeroParcelas to 1.
-      // Otherwise, maintain current tipoPagamento and adjust numeroParcelas.
-      if (tipoPagamento === "fixo") {
-        setTipoPagamento("avista");
-        setNumeroParcelas(1);
-      } else if (tipoPagamento === "parcelado") {
-        setNumeroParcelas(2);
-      } else { // avista
-        setNumeroParcelas(1);
+    if (typeof setIsRecurring === 'function') { // Added check here
+      if (isRecurring) {
+        setTipoPagamento("fixo"); // Force tipoPagamento to "fixo" if recurring
+        setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
+        setIsPaid(false); // Recurring expenses are initially pending
+      } else {
+        // If not recurring, and tipoPagamento was "fixo" (because it was forced by isRecurring),
+        // reset it to "avista" and numeroParcelas to 1.
+        // Otherwise, maintain current tipoPagamento and adjust numeroParcelas.
+        if (tipoPagamento === "fixo") {
+          setTipoPagamento("avista");
+          setNumeroParcelas(1);
+        } else if (tipoPagamento === "parcelado") {
+          setNumeroParcelas(2);
+        } else { // avista
+          setNumeroParcelas(1);
+        }
       }
+    } else {
+      console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de isRecurring.", setIsRecurring);
     }
   }, [isRecurring]); // Only depend on isRecurring to avoid loops with tipoPagamento
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
     // Sincronizar o toggle de recorrência com o tipo de pagamento
-    if (tipoPagamento === "fixo") {
-      setIsRecurring(true);
+    if (typeof setIsRecurring === 'function') { // Added check here
+      if (tipoPagamento === "fixo") {
+        setIsRecurring(true);
+      } else {
+        setIsRecurring(false);
+      }
     } else {
-      setIsRecurring(false);
+      console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de tipoPagamento.", setIsRecurring);
     }
 
     if (isRecurring) return; // If recurring, this effect should not override
