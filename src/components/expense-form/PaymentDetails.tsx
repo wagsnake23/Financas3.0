@@ -119,7 +119,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             groupSeparator="."
             allowNegativeValue={false}
             onValueChange={(value, name, values) => {
-              setValor(values.floatValue ?? 0); 
+              setValor(values?.floatValue ?? 0); 
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             placeholder="0,00"
