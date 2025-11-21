@@ -36,14 +36,7 @@ BEGIN
         -- Calculate installment date safely (including February edge cases)
         v_installment_date := (p_first_occurrence_date + (i || ' months')::INTERVAL)::date;
 
-        -- Start at day 1 to avoid invalid dates like 30/02 or 31/04
-        v_installment_date := make_date(
-            EXTRACT(YEAR FROM v_installment_date)::integer,
-            EXTRACT(MONTH FROM v_installment_date)::integer,
-            1
-        );
-
-        -- Apply desired day
+        -- Compute the target day directly, falling back to the last valid day of the month
         BEGIN
             v_installment_date := make_date(
                 EXTRACT(YEAR FROM v_installment_date)::int,
@@ -51,18 +44,12 @@ BEGIN
                 v_day_to_use
             );
         EXCEPTION WHEN OTHERS THEN
-            -- fallback para meses com menos dias (ex.: fevereiro)
+            -- If the day does not exist (ex.: 30 in February), fallback to the last day
             v_installment_date := (
-                date_trunc('month', v_installment_date) 
+                date_trunc('month', v_installment_date)
                 + interval '1 month - 1 day'
             )::date;
         END;
-
-        -- Clamp to last day of month (handles Feb 28/29 automatically)
-        v_installment_date := LEAST(
-            v_installment_date,
-            (date_trunc('month', v_installment_date) + INTERVAL '1 month - 1 day')::date
-        );
 
         -- Handle income transactions
         IF p_transaction_type = 'income' THEN
