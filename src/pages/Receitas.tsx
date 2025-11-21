@@ -152,7 +152,7 @@ export default function Receitas() {
           p_master_id: masterRevenueId,
           p_first_occurrence_date: formattedDate,
           p_monthly_amount: valor as number,
-          p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
+          p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId, // Pass as string | null
           p_description: descricao,
           p_status: 'Prevista',
           p_recurrence_day: recurrenceDay,
@@ -229,168 +229,168 @@ export default function Receitas() {
           <ToggleGroupItem 
             value="recorrente" 
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border",
-              "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
-            )}
-          >
-            <DynamicIcon 
-              name="Repeat" 
-              className={cn(
-                "mr-2 h-4 w-4",
-                "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
-              )} 
-            /> Recorrente
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-
-      <div>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
-        <div className="flex gap-2">
-          <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-              <SelectValue placeholder="Selecione a subcategoria de receita" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
-              {incomeSubcategories.length === 0 ? (
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
-              ) : (
-                incomeSubcategories
-                  .map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id} className={cn(isMobile && "text-sm")}>
-                      <span className="flex items-center gap-2">
-                        <span>{tipo.icone}</span>
-                        <span>{tipo.nome}</span>
-                      </span>
-                    </SelectItem>
-                  ))
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div>
-        <Label htmlFor="data" className={cn(isMobile && "text-xs")}>Data</Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
-                !data && "text-muted-foreground",
-                isMobile && "h-9 text-sm"
+                "flex-1 rounded-xl flex items-center justify-center border",
+                "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
               )}
             >
-              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-              {data ? format(data, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={data}
-              onSelect={(date) => {
-                setData(date);
-                setIsCalendarOpen(false);
-              }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+              <DynamicIcon 
+                name="Repeat" 
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
+                )} 
+              /> Recorrente
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
 
-      <div>
-        <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
-        <CurrencyInput
-          id="valor"
-          value={valor}
-          onValueChange={(values) => setValor(values.floatValue)}
-          placeholder="0,00"
-          required
-          className={cn("rounded-xl", isMobile && "h-9 text-sm")}
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="descricao" className={cn(isMobile && "text-xs")}>Descrição</Label>
-        <Textarea
-          id="descricao"
-          value={descricao}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Detalhes sobre a receita..."
-          rows={3}
-          className={cn("rounded-xl", isMobile && "text-sm")}
-        />
-      </div>
-
-      {!isRecurring && ( // Status toggle only for one-off revenues
-        <RevenueStatusToggle
-          status={status}
-          setStatus={setStatus}
-          isMobile={isMobile}
-        />
-      )}
-
-      <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
-        {loading ? "Salvando..." : "Salvar Receita"}
-      </Button>
-    </form>
-  );
-
-  if (authLoading || isLoadingRevenues || isLoadingCategories) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando Receitas...</div>
-      </div>
-    );
-  }
-
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-success/5 pt-16">
-        <Navigation />
-        <div className="max-w-4xl mx-auto p-6 space-y-6">
-          {!isMobile && (
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold">Receitas</h1>
-                <p className="text-muted-foreground">Registre suas entradas financeiras</p>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-            {isMobile ? (
-              <div className="px-4 pt-0">
-                <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                {oneOffFormContent}
-                <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
-              </div>
-            ) : (
-              <Card className="p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
-                {oneOffFormContent}
-              </Card>
-            )}
-
-            {!isMobile && (
-              <div className="flex flex-col h-full">
-                <TotalRevenueCard revenues={revenues} />
-                <div className="h-6" />
-                <div className="flex-grow" />
-                <RevenueByTypeChart revenues={revenues} revenueTypes={incomeSubcategories} />
-              </div>
-            )}
+        <div>
+          <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
+          <div className="flex gap-2">
+            <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                <SelectValue placeholder="Selecione a subcategoria de receita" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
+                {incomeSubcategories.length === 0 ? (
+                  <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
+                ) : (
+                  incomeSubcategories
+                    .map((tipo) => (
+                      <SelectItem key={tipo.id} value={tipo.id} className={cn(isMobile && "text-sm")}>
+                        <span className="flex items-center gap-2">
+                          <span>{tipo.icone}</span>
+                          <span>{tipo.nome}</span>
+                        </span>
+                      </SelectItem>
+                    ))
+                )}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-      </div>
-      {!isMobile && <Footer isMobile={isMobile} />}
-    </ProtectedRoute>
-  );
-}
+
+        <div>
+          <Label htmlFor="data" className={cn(isMobile && "text-xs")}>Data</Label>
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal h-10 rounded-xl",
+                  !data && "text-muted-foreground",
+                  isMobile && "h-9 text-sm"
+                )}
+              >
+                <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                {data ? format(data, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+              <Calendar
+                mode="single"
+                selected={data}
+                onSelect={(date) => {
+                  setData(date);
+                  setIsCalendarOpen(false);
+                }}
+                initialFocus
+                locale={ptBR}
+                showOutsideDays={false}
+                className={cn(isMobile && "text-sm")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div>
+          <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+          <CurrencyInput
+            id="valor"
+            value={valor}
+            onValueChange={(values) => setValor(values.floatValue)}
+            placeholder="0,00"
+            required
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="descricao" className={cn(isMobile && "text-xs")}>Descrição</Label>
+          <Textarea
+            id="descricao"
+            value={descricao}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Detalhes sobre a receita..."
+            rows={3}
+            className={cn("rounded-xl", isMobile && "text-sm")}
+          />
+        </div>
+
+        {!isRecurring && ( // Status toggle only for one-off revenues
+          <RevenueStatusToggle
+            status={status}
+            setStatus={setStatus}
+            isMobile={isMobile}
+          />
+        )}
+
+        <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
+          {loading ? "Salvando..." : "Salvar Receita"}
+        </Button>
+      </form>
+    );
+
+    if (authLoading || isLoadingRevenues || isLoadingCategories) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-pulse text-muted-foreground">Carregando Receitas...</div>
+        </div>
+      );
+    }
+
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-success/5 pt-16">
+          <Navigation />
+          <div className="max-w-4xl mx-auto p-6 space-y-6">
+            {!isMobile && (
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold">Receitas</h1>
+                  <p className="text-muted-foreground">Registre suas entradas financeiras</p>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+              {isMobile ? (
+                <div className="px-4 pt-0">
+                  <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
+                  {oneOffFormContent}
+                  <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
+                </div>
+              ) : (
+                <Card className="p-6 rounded-xl shadow-sm">
+                  <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
+                  {oneOffFormContent}
+                </Card>
+              )}
+
+              {!isMobile && (
+                <div className="flex flex-col h-full">
+                  <TotalRevenueCard revenues={revenues} />
+                  <div className="h-6" />
+                  <div className="flex-grow" />
+                  <RevenueByTypeChart revenues={revenues} revenueTypes={incomeSubcategories} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        {!isMobile && <Footer isMobile={isMobile} />}
+      </ProtectedRoute>
+    );
+  }

@@ -137,7 +137,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             p_master_id: masterRevenueId,
             p_first_occurrence_date: date,
             p_monthly_amount: amount as number,
-            p_category_id: category === UNSELECTED_VALUE ? null : category,
+            p_category_id: category === UNSELECTED_VALUE ? null : category, // Pass as string | null
             p_description: description,
             p_status: 'Prevista',
             p_recurrence_day: recurrenceDay,

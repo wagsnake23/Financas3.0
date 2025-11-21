@@ -268,7 +268,7 @@ export const useTransactionMutations = ({
                 .update({
                   valor: updatedTransaction.amount,
                   data: updatedTransaction.date,
-                  tipo_receita_id: updatedTransaction.category,
+                  tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
                   descricao: updatedTransaction.description,
                   status: updatedTransaction.status,
                 })
@@ -284,7 +284,7 @@ export const useTransactionMutations = ({
                   .from("receitas")
                   .update({
                     valor: updatedTransaction.amount,
-                    tipo_receita_id: updatedTransaction.category,
+                    tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
                   })
@@ -313,7 +313,7 @@ export const useTransactionMutations = ({
                 p_master_id: masterRecurrenceId,
                 p_first_occurrence_date: updatedTransaction.date, // Start from the updated date
                 p_monthly_amount: updatedTransaction.amount,
-                p_category_id: updatedTransaction.category,
+                p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
                 p_description: updatedTransaction.description,
                 p_status: 'Prevista', // New occurrences are always 'Prevista'
                 p_recurrence_day: newRecurrenceDay,
@@ -333,7 +333,7 @@ export const useTransactionMutations = ({
               .update({
                 valor: updatedTransaction.amount,
                 data: updatedTransaction.date,
-                tipo_receita_id: updatedTransaction.category,
+                tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
                 descricao: updatedTransaction.description,
                 status: updatedTransaction.status,
               })
@@ -366,7 +366,7 @@ export const useTransactionMutations = ({
           const { error: updateDespesaParentError } = await supabase
             .from("despesas")
             .update({
-              categoria_id: updatedTransaction.category,
+              categoria_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
               descricao: updatedTransaction.description,
               // If it's a recurring master, update its recurrence_day
               is_recurring_master: originalTransaction?.is_recurring_master, // Keep original master status
@@ -424,7 +424,7 @@ export const useTransactionMutations = ({
               p_master_id: parentDespesaId,
               p_first_occurrence_date: updatedTransaction.date, // Start from the updated date
               p_monthly_amount: newValorParcela,
-              p_category_id: updatedTransaction.category,
+              p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category, // Pass as string | null
               p_description: updatedTransaction.description,
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,

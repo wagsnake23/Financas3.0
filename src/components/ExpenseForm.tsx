@@ -208,7 +208,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           p_master_id: despesaData.id,
           p_first_occurrence_date: formattedFirstInstallmentDate,
           p_monthly_amount: valorParcela, // Monthly amount for expense installments
-          p_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
+          p_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId, // Pass as string | null
           p_description: descricao,
           p_forma_pagamento: formaPagamento,
           p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
