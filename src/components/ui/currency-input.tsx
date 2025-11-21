@@ -1,37 +1,38 @@
-import React from "react";
-import CurrencyInputField from "react-currency-input-field";
+import * as React from "react";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface Props {
-  value: number | undefined;
-  onChange: (value: number) => void;
+interface CurrencyInputProps
+  extends Omit<NumericFormatProps, "customInput" | "onValueChange"> {
   className?: string;
-  placeholder?: string;
-  disabled?: boolean;
+  onValueChange?: (values: {
+    floatValue: number | undefined;
+    formattedValue: string;
+    value: string;
+  }) => void;
 }
 
-export const CurrencyInput = ({
-  value,
-  onChange,
-  className,
-  placeholder = "R$ 0,00",
-  disabled
-}: Props) => {
-  return (
-    <CurrencyInputField
-      customInput={Input}
-      intlConfig={{ locale: "pt-BR", currency: "BRL" }}
-      decimalsLimit={2}
-      decimalScale={2}
-      disableGroupSeparators={false}
-      allowNegativeValue={false}
-      value={value !== undefined ? value.toFixed(2) : ""}
-      onValueChange={(val) => onChange(Number(val.replace(",", ".")) || 0)}
-      inputMode="numeric"
-      placeholder={placeholder}
-      disabled={disabled}
-      className={cn("rounded-xl", className)}
-    />
-  );
-};
+const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
+  ({ className, onValueChange, ...props }, ref) => {
+    return (
+      <NumericFormat
+        {...props}
+        getInputRef={ref}
+        onValueChange={onValueChange}
+        thousandSeparator="."
+        decimalSeparator=","
+        prefix="R$ "
+        decimalScale={2}
+        fixedDecimalScale
+        allowNegative={false}
+        customInput={Input}
+        className={cn(className)}
+      />
+    );
+  }
+);
+
+CurrencyInput.displayName = "CurrencyInput";
+
+export { CurrencyInput };

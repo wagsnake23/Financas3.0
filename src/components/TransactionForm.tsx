@@ -271,7 +271,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             <Label htmlFor="amount">Valor (R$)</Label>
             <CurrencyInput
               value={amount}
-              onChange={(v) => setAmount(v)}
+              onValueChange={(values) => setAmount(values.floatValue)}
               className="rounded-xl"
             />
           </div>

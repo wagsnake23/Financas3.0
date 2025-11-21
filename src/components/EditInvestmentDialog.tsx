@@ -157,7 +157,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyInput
             value={amount}
-            onChange={(v) => setAmount(v)}
+            onValueChange={(values) => setAmount(values.floatValue)}
             disabled={loading}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />

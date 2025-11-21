@@ -279,7 +279,7 @@ export default function Investments() { // Alterado para export default function
                     <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
                     <CurrencyInput
                       value={amount}
-                      onChange={(v) => setAmount(v)}
+                      onValueChange={(values) => setAmount(values.floatValue)}
                       disabled={loadingForm}
                       className={cn("rounded-xl", isMobile && "h-9 text-sm")}
                     />

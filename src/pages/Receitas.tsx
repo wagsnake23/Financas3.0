@@ -306,7 +306,7 @@ export default function Receitas() {
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyInput
             value={valor}
-            onChange={(v) => setValor(v)}
+            onValueChange={(values) => setValor(values.floatValue)}
             className={cn("rounded-xl", isMobile && "h-9 text-sm")}
           />
         </div>
