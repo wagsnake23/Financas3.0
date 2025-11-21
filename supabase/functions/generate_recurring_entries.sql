@@ -36,7 +36,7 @@ BEGIN
         -- Calculate installment date safely (including February edge cases)
         v_installment_date := (p_first_occurrence_date + (i || ' months')::INTERVAL)::date;
 
-        -- Compute the target day directly, falling back to the last valid day of the month
+        -- Compute the target day directly and fall back to the last day of the month
         BEGIN
             v_installment_date := make_date(
                 EXTRACT(YEAR FROM v_installment_date)::int,
@@ -44,7 +44,7 @@ BEGIN
                 v_day_to_use
             );
         EXCEPTION WHEN OTHERS THEN
-            -- If the day does not exist (ex.: 30 in February), fallback to the last day
+            -- Fallback when the day doesn't exist (ex.: 30 in February)
             v_installment_date := (
                 date_trunc('month', v_installment_date)
                 + interval '1 month - 1 day'
