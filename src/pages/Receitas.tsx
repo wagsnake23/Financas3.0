@@ -146,16 +146,16 @@ export default function Receitas() {
           p_user_id: user?.id,
           p_transaction_type: 'income',
           p_master_id: masterRevenueId,
-          p_first_occurrence_date: formattedDate, // Data da primeira ocorrência
+          p_first_occurrence_date: formattedDate, // Already a 'YYYY-MM-DD' string
           p_monthly_amount: valor as number,
           p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           p_description: descricao,
-          p_status: 'Prevista',
+          p_status: 'Prevista', // Required enum value
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 ocorrências
-          p_forma_pagamento: null, // Adicionado
-          p_cartao_id: null,       // Adicionado
-          p_tipo_pagamento: null,  // Adicionado
+          p_forma_pagamento: null,
+          p_cartao_id: null,
+          p_tipo_pagamento: null,
         });
 
         if (rpcError) throw rpcError;

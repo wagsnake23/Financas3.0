@@ -188,7 +188,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           p_monthly_amount: valorParcela,
           p_category_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
           p_description: descricao,
-          p_status: null, // Adicionado para despesa
+          p_status: 'Pendente', // Default status for expenses, as it's a required enum
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 parcelas
           p_forma_pagamento: formaPagamento,

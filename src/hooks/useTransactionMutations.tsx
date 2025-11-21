@@ -299,16 +299,16 @@ export const useTransactionMutations = ({
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: parseISO(updatedTransaction.date), // Começa da data de atualização
+                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // Format Date object to string
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
-                p_status: 'Prevista',
+                p_status: 'Prevista', // Required enum value
                 p_recurrence_day: newRecurrenceDay,
-                p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
-                p_forma_pagamento: null, // Adicionado
-                p_cartao_id: null,       // Adicionado
-                p_tipo_pagamento: null,  // Adicionado
+                p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+                p_forma_pagamento: null,
+                p_cartao_id: null,
+                p_tipo_pagamento: null,
               });
               if (rpcError) throw rpcError;
 
@@ -396,11 +396,11 @@ export const useTransactionMutations = ({
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: parseISO(updatedTransaction.date), // Começa da data de atualização
+              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // Format Date object to string
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
-              p_status: null, // Adicionado para despesa
+              p_status: 'Pendente', // Default status for expenses, as it's a required enum
               p_recurrence_day: newRecurrenceDay,
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,

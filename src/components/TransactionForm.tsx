@@ -136,16 +136,16 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             p_user_id: user.id,
             p_transaction_type: 'income',
             p_master_id: masterRevenueId,
-            p_first_occurrence_date: date,
+            p_first_occurrence_date: date, // Already a 'YYYY-MM-DD' string
             p_monthly_amount: amount as number,
-            p_category_id: category === UNSELECTED_VALUE ? null : category, // Pass as string | null
+            p_category_id: category === UNSELECTED_VALUE ? null : category,
             p_description: description,
-            p_status: 'Prevista',
+            p_status: 'Prevista', // Required enum value
             p_recurrence_day: recurrenceDay,
             p_total_installments: RECURRING_INSTALLMENTS_COUNT,
-            p_forma_pagamento: null, // Adicionado
-            p_cartao_id: null,       // Adicionado
-            p_tipo_pagamento: null,  // Adicionado
+            p_forma_pagamento: null,
+            p_cartao_id: null,
+            p_tipo_pagamento: null,
           });
 
           if (rpcError) throw rpcError;
