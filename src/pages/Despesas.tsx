@@ -16,9 +16,6 @@ import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
-// Removido: import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-// Removido: import { Label } from "@/components/ui/label";
-// Removido: import DynamicIcon from "@/components/DynamicIcon";
 import { toast } from "sonner";
 
 interface Cartao {
@@ -83,10 +80,6 @@ export default function Despesas() {
     }
   };
 
-  // Removido: const handleToggleChange = (value: string) => {
-  // Removido:   setIsRecurring(value === "recorrente");
-  // Removido: };
-
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -97,52 +90,8 @@ export default function Despesas() {
 
   const formContent = (
     <>
-      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
+      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-0")}>Nova Despesa</h2> {/* Alterado mb-3 para mb-0 */}
       
-      {/* Removido: Toggle Avulsa / Recorrente */}
-      {/* Removido: <div className="space-y-2 mb-4"> */}
-      {/* Removido:   <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label> */}
-      {/* Removido:   <ToggleGroup  */}
-      {/* Removido:     type="single"  */}
-      {/* Removido:     value={isRecurring ? "recorrente" : "avulsa"}  */}
-      {/* Removido:     onValueChange={handleToggleChange} */}
-      {/* Removido:     className="w-full justify-center" */}
-      {/* Removido:   > */}
-      {/* Removido:     <ToggleGroupItem  */}
-      {/* Removido:       value="avulsa"  */}
-      {/* Removido:       className={cn( */}
-      {/* Removido:         "flex-1 rounded-xl flex items-center justify-center border", */}
-      {/* Removido:         "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold", */}
-      {/* Removido:         "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground" */}
-      {/* Removido:       )} */}
-      {/* Removido:     > */}
-      {/* Removido:       <DynamicIcon  */}
-      {/* Removido:         name="Zap"  */}
-      {/* Removido:         className={cn( */}
-      {/* Removido:           "mr-2 h-4 w-4", */}
-      {/* Removido:           "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground" */}
-      {/* Removido:         )}  */}
-      {/* Removido:       /> Avulsa */}
-      {/* Removido:     </ToggleGroupItem> */}
-      {/* Removido:     <ToggleGroupItem  */}
-      {/* Removido:       value="recorrente"  */}
-      {/* Removido:       className={cn( */}
-      {/* Removido:         "flex-1 rounded-xl flex items-center justify-center border", */}
-      {/* Removido:         "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold", */}
-      {/* Removido:         "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground" */}
-      {/* Removido:       )} */}
-      {/* Removido:     > */}
-      {/* Removido:       <DynamicIcon  */}
-      {/* Removido:         name="Repeat"  */}
-      {/* Removido:         className={cn( */}
-      {/* Removido:           "mr-2 h-4 w-4", */}
-      {/* Removido:           "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground" */}
-      {/* Removido:         )}  */}
-      {/* Removido:       /> Recorrente */}
-      {/* Removido:     </ToggleGroupItem> */}
-      {/* Removido:   </ToggleGroup> */}
-      {/* Removido: </div> */}
-
       <ExpenseForm
         user={user}
         cartoes={cartoes}
@@ -150,8 +99,8 @@ export default function Despesas() {
         allSubcategories={allSubcategories}
         queryClient={queryClient}
         isMobile={isMobile}
-        isRecurring={isRecurring} // Passar o estado isRecurring
-        setIsRecurring={setIsRecurring} // Passar a função setIsRecurring
+        isRecurring={isRecurring}
+        setIsRecurring={setIsRecurring}
       />
     </>
   );
@@ -175,7 +124,7 @@ export default function Despesas() {
               {isMobile ? (
                 <div className="px-4 pt-0">
                   {formContent}
-                  <Footer isMobile={isMobile} /> {/* Footer para mobile, logo abaixo do formulário */}
+                  <Footer isMobile={isMobile} />
                 </div>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
@@ -209,7 +158,7 @@ export default function Despesas() {
           )}
         </div>
       </div>
-      {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop, na parte inferior da página */}
+      {!isMobile && <Footer isMobile={isMobile} />}
     </ProtectedRoute>
   );
 }
