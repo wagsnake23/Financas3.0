@@ -26,13 +26,20 @@ import {
 } from "@/components/ui/popover"; // Importar Popover components
 import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"; // Importar Dialog components
+import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 
 export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
 
-  // Form states
+  // Form states for adding new investment
   const [name, setName] = useState("");
   const [type, setType] = useState("fixed");
   const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
@@ -40,6 +47,10 @@ export default function Investments() { // Alterado para export default function
   const [profitability, setProfitability] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
+
+  // States for editing investment
+  const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const investmentTypes = [
     { value: "fixed", label: "Renda Fixa" },
@@ -158,6 +169,24 @@ export default function Investments() { // Alterado para export default function
 
   const handleDelete = (id: string) => {
     deleteInvestmentMutation.mutate(id);
+  };
+
+  const handleEditClick = (investment: Investment) => {
+    setEditingInvestment(investment);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingInvestment(null);
+    setIsEditModalOpen(false);
+  };
+
+  const handleUpdateSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
+    toast.success("Investimento atualizado!", {
+      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+    });
+    handleCancelEdit();
   };
 
   const stats = useMemo(() => {
@@ -337,14 +366,24 @@ export default function Investments() { // Alterado para export default function
                             <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investment.nome}</h3>
                             <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(investment.id)}
-                            className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-7 w-7")}
-                          >
-                            <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-                          </Button>
+                          <div className="flex gap-1"> {/* Container para os botões de ação */}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEditClick(investment)}
+                              className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-7 w-7")}
+                            >
+                              <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(investment.id)}
+                              className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-7 w-7")}
+                            >
+                              <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                            </Button>
+                          </div>
                         </div>
                         
                         <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
@@ -387,6 +426,25 @@ export default function Investments() { // Alterado para export default function
       </main>
 
       <Footer isMobile={isMobile} />
+
+      {/* Edit Investment Dialog */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Editar Investimento</DialogTitle>
+          </DialogHeader>
+          {editingInvestment && (
+            <EditInvestmentDialog
+              investmentToEdit={editingInvestment}
+              onUpdateSuccess={handleUpdateSuccess}
+              onCancelEdit={handleCancelEdit}
+              user={user}
+              investmentTypes={investmentTypes}
+              isMobile={isMobile}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
