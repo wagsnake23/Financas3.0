@@ -10,7 +10,7 @@ import { z } from "zod";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DynamicIcon from "@/components/DynamicIcon";
 import { cn, getBorderClass } from "@/lib/utils";
-import { Footer } from "@/components/Footer"; // Importar o componente Footer
+import { Footer } from "@/components/Footer";
 
 // Validation schemas
 const emailSchema = z.string().trim().email("Email inválido").max(255, "Email muito longo");
@@ -497,6 +497,7 @@ export default function Auth() {
               className="text-primary hover:underline"
             >
               Voltar para login
+
             </button>
           </div>
         </form>
@@ -569,12 +570,12 @@ export default function Auth() {
       {isMobile ? (
         <div className="w-full max-w-md p-6">
           {formContent}
-          <Footer isMobile={isMobile} /> {/* Footer para mobile, dentro do div */}
+          <Footer isMobile={isMobile} className="mt-8" /> {/* Adicionado mt-8 para mobile */}
         </div>
       ) : (
         <Card className="w-full max-w-md p-8 shadow-xl rounded-xl">
           {formContent}
-          <Footer isMobile={isMobile} /> {/* Footer para desktop, dentro do Card */}
+          <Footer isMobile={isMobile} />
         </Card>
       )}
     </div>
