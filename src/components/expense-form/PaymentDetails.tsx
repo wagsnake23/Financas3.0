@@ -118,10 +118,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             decimalsLimit={2}
             decimalSeparator=","
             groupSeparator="."
-            valueAsInteger
+            valueAsInteger={true}   // importante
             allowNegativeValue={false}
             onValueChange={(value, name, values) => {
-              // valueAsInteger retorna centavos: 123456 → representa R$ 1.234,56
+              // valueAsInteger retorna o valor em centavos
+              // Exemplo: 123456 → R$ 1.234,56
               setValor((values?.valueAsInteger ?? 0) / 100);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
