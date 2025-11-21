@@ -51,6 +51,7 @@ export default function Receitas() {
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
@@ -99,7 +100,31 @@ export default function Receitas() {
     e.preventDefault();
     setLoading(true);
 
-    if (valor === undefined || !data || tipoReceitaId === UNSELECTED_VALUE) {
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
+    if (!user) {
+      toast.error("Usuário não autenticado.");
+      setLoading(false);
+      return;
+    }
+    
+    if (valor === undefined || valor <= 0) { // Adicionado validação para valor > 0
+      newErrors.valor = true;
+      hasError = true;
+    }
+    if (!data) {
+      newErrors.data = true;
+      hasError = true;
+    }
+    if (tipoReceitaId === UNSELECTED_VALUE) {
+      newErrors.tipoReceitaId = true;
+      hasError = true;
+    }
+
+    setValidationErrors(newErrors); // Atualiza os erros de validação
+
+    if (hasError) {
       toast.error("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
@@ -187,6 +212,7 @@ export default function Receitas() {
       setDescricao("");
       setStatus('Pendente');
       setIsRecurring(false);
+      setValidationErrors({}); // Limpa os erros após o sucesso
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
 
     } catch (error: any) {
@@ -245,8 +271,14 @@ export default function Receitas() {
         <div>
           <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
           <div className="flex gap-2">
-            <Select value={tipoReceitaId} onValueChange={setTipoReceitaId}>
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <Select 
+              value={tipoReceitaId} 
+              onValueChange={(value) => {
+                setTipoReceitaId(value);
+                setValidationErrors(prev => ({ ...prev, tipoReceitaId: false })); // Limpa erro ao mudar
+              }}
+            >
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.tipoReceitaId && "border-destructive")}>
                 <SelectValue placeholder="Selecione a subcategoria de receita" />
               </SelectTrigger>
               <SelectContent>
@@ -278,7 +310,8 @@ export default function Receitas() {
                 className={cn(
                   "w-full justify-start text-left font-normal h-10 rounded-xl",
                   !data && "text-muted-foreground",
-                  isMobile && "h-9 text-sm"
+                  isMobile && "h-9 text-sm",
+                  validationErrors.data && "border-destructive" // Aplica borda vermelha
                 )}
               >
                 <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
@@ -292,6 +325,7 @@ export default function Receitas() {
                 onSelect={(date) => {
                   setData(date);
                   setIsCalendarOpen(false);
+                  setValidationErrors(prev => ({ ...prev, data: false })); // Limpa erro ao selecionar
                 }}
                 initialFocus
                 locale={ptBR}
@@ -306,8 +340,11 @@ export default function Receitas() {
           <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={valor}
-            onChange={(v) => setValor(v)}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            onChange={(v) => {
+              setValor(v);
+              setValidationErrors(prev => ({ ...prev, valor: false })); // Limpa erro ao digitar
+            }}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")} // Aplica borda vermelha
           />
         </div>
 
