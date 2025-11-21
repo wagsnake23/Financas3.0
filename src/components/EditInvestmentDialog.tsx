@@ -229,15 +229,26 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       <div className={cn("flex gap-2 justify-center")}>
-        <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loading}>
+        <Button 
+          type="submit" 
+          className={cn(
+            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground", 
+            isMobile && "h-9 text-sm"
+          )} 
+          size="lg" 
+          disabled={loading}
+        >
           <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
         <Button
           type="button"
-          variant="outline"
+          // Removido: variant="outline"
           onClick={onCancelEdit}
-          className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}
+          className={cn(
+            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground", 
+            isMobile && "h-9 text-sm"
+          )}
           size="lg"
           disabled={loading}
         >
