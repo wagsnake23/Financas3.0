@@ -5,7 +5,7 @@ export interface Transaction {
   type: TransactionType;
   amount: number;
   date: string;
-  category: string | null; // ID da categoria ou subcategoria (pode ser null)
+  category: string; // ID da categoria ou subcategoria
   description: string;
   // Campos para suportar edição de receitas e status
   status?: "Prevista" | "Pendente" | "Recebida" | "Cancelada";
