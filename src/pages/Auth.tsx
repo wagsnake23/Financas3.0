@@ -24,7 +24,7 @@ export default function Auth() {
   const [viewMode, setViewMode] = useState<ViewMode>("login");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirm] = useState(false);
   const isMobile = useIsMobile();
 
   // Form states
@@ -568,9 +568,9 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4">
       {isMobile ? (
-        <div className="w-full max-w-md p-6">
+        <div className="w-full max-w-md p-4"> {/* Alterado de p-6 para p-4 */}
           {formContent}
-          <Footer isMobile={isMobile} className="mt-8" /> {/* Adicionado mt-8 para mobile */}
+          <Footer isMobile={isMobile} className="mt-8" />
         </div>
       ) : (
         <Card className="w-full max-w-md p-8 shadow-xl rounded-xl">
