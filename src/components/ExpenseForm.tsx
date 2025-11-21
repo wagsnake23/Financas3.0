@@ -75,7 +75,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Filtrar as subcategorias para exibir apenas as de despesa
   const expenseSubcategories = React.useMemo(() => {
     return allSubcategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
-  }, [allSubcategories]); // Depende de allSubcategories
+  }, [allSubcategories]);
 
   // Efeito para definir o status de pago/pendente automaticamente
   useEffect(() => {
@@ -102,7 +102,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [tipoPagamento]);
 
-  // Efeito para ajustar tipoPagamento e numeroParcelas se for recorrente (agora usando a prop isRecurring)
+  // Efeito para ajustar tipoPagamento e numeroParcelas se for recorrente
   useEffect(() => {
     if (isRecurring) {
       setTipoPagamento("parcelado");
@@ -112,7 +112,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       setTipoPagamento("avista"); // Volta para avista se não for recorrente
       setNumeroParcelas(1); // Volta para 1 parcela
     }
-  }, [isRecurring]); // Depende da prop isRecurring
+  }, [isRecurring]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

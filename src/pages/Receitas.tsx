@@ -32,8 +32,7 @@ import { CurrencyInput } from "@/components/ui/currency-input";
 
 import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Changed from ToggleGroup
-
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Importar ToggleGroup
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
@@ -196,39 +195,19 @@ export default function Receitas() {
       {/* Toggle Avulsa / Recorrente */}
       <div className="space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
-        <RadioGroup
-          value={isRecurring ? "recorrente" : "avulsa"}
+        <ToggleGroup 
+          type="single" 
+          value={isRecurring ? "recorrente" : "avulsa"} 
           onValueChange={(value) => setIsRecurring(value === "recorrente")}
-          className="flex items-center justify-center gap-6"
+          className="w-full justify-center"
         >
-          <div className="flex items-center gap-2">
-            <RadioGroupItem
-              value="avulsa"
-              id="type-avulsa"
-              className="peer h-5 w-5 rounded-full border border-primary peer-checked:bg-primary"
-            />
-            <Label
-              htmlFor="type-avulsa"
-              className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
-            >
-              Avulsa
-            </Label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <RadioGroupItem
-              value="recorrente"
-              id="type-recorrente"
-              className="peer h-5 w-5 rounded-full border border-primary peer-checked:bg-primary"
-            />
-            <Label
-              htmlFor="type-recorrente"
-              className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
-            >
-              Recorrente
-            </Label>
-          </div>
-        </RadioGroup>
+          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl">
+            <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
+          </ToggleGroupItem>
+          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl">
+            <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       <div>

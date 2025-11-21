@@ -136,27 +136,3 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
-
-/* Adicionado para garantir que o RadioGroupItem apareça */
-[data-radix-collection-item][data-state="unchecked"],
-[data-radix-collection-item][data-state="checked"] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Estilo para o indicador de seleção dentro do RadioGroupItem */
-[data-radix-collection-item][data-state="checked"]::after {
-  content: "";
-  display: block;
-  width: 0.5rem; /* Tamanho do ponto interno */
-  height: 0.5rem; /* Tamanho do ponto interno */
-  border-radius: 50%;
-  background-color: hsl(var(--primary-foreground)); /* Cor do ponto interno */
-}
