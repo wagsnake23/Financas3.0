@@ -565,17 +565,18 @@ export default function Auth() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4"> {/* Adicionado flex-col */}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4">
       {isMobile ? (
         <div className="w-full max-w-md p-6">
           {formContent}
+          <Footer isMobile={isMobile} /> {/* Footer para mobile, dentro do div */}
         </div>
       ) : (
         <Card className="w-full max-w-md p-8 shadow-xl rounded-xl">
           {formContent}
+          <Footer isMobile={isMobile} /> {/* Footer para desktop, dentro do Card */}
         </Card>
       )}
-      <Footer isMobile={isMobile} /> {/* Adicionado o Footer aqui */}
     </div>
   );
 }
