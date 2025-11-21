@@ -112,14 +112,20 @@ export default function Receitas() {
     if (valor === undefined || valor <= 0) { // Adicionado validação para valor > 0
       newErrors.valor = true;
       hasError = true;
+    } else {
+      newErrors.valor = false; // Mark as valid
     }
     if (!data) {
       newErrors.data = true;
       hasError = true;
+    } else {
+      newErrors.data = false; // Mark as valid
     }
     if (tipoReceitaId === UNSELECTED_VALUE) {
       newErrors.tipoReceitaId = true;
       hasError = true;
+    } else {
+      newErrors.tipoReceitaId = false; // Mark as valid
     }
 
     setValidationErrors(newErrors); // Atualiza os erros de validação
@@ -278,7 +284,12 @@ export default function Receitas() {
                 setValidationErrors(prev => ({ ...prev, tipoReceitaId: false })); // Limpa erro ao mudar
               }}
             >
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.tipoReceitaId && "border-destructive")}>
+              <SelectTrigger className={cn(
+                "rounded-xl", 
+                isMobile && "h-9 text-sm", 
+                validationErrors.tipoReceitaId === true && "border-destructive", // Aplica borda vermelha
+                validationErrors.tipoReceitaId === false && "border-success" // Aplica borda verde
+              )}>
                 <SelectValue placeholder="Selecione a subcategoria de receita" />
               </SelectTrigger>
               <SelectContent>
@@ -311,7 +322,8 @@ export default function Receitas() {
                   "w-full justify-start text-left font-normal h-10 rounded-xl",
                   !data && "text-muted-foreground",
                   isMobile && "h-9 text-sm",
-                  validationErrors.data && "border-destructive" // Aplica borda vermelha
+                  validationErrors.data === true && "border-destructive", // Aplica borda vermelha
+                  validationErrors.data === false && "border-success" // Aplica borda verde
                 )}
               >
                 <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
@@ -344,7 +356,12 @@ export default function Receitas() {
               setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false })); // Limpa erro ao digitar
             }}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")} // Aplica borda vermelha
+            className={cn(
+              "rounded-xl", 
+              isMobile && "h-9 text-sm", 
+              validationErrors.valor === true && "border-destructive", // Aplica borda vermelha
+              validationErrors.valor === false && "border-success" // Aplica borda verde
+            )} 
           />
         </div>
 
