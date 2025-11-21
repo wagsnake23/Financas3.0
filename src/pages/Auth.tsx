@@ -280,9 +280,9 @@ export default function Auth() {
       {viewMode === "login" && (
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email</Label> {/* Alterado para "Email" */}
+            <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /> {/* Ícone de email */}
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
@@ -294,14 +294,14 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))} {/* Adicionado pl-9 */}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
           <div>
             <Label htmlFor="password">Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /> {/* Ícone de cadeado */}
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -313,7 +313,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))} {/* Adicionado pl-9 */}
+                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
