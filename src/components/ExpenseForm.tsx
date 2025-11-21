@@ -85,28 +85,42 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [formaPagamento, tipoPagamento, isRecurring]);
 
-  useEffect(() => {
-    if (tipoPagamento === "parcelado") {
-      setFormaPagamento("cartao");
-    }
-  }, [tipoPagamento]);
-
-  useEffect(() => {
-    if (tipoPagamento === "avista") {
-      setNumeroParcelas(1);
-    }
-  }, [tipoPagamento]);
-
+  // Effect for handling recurrence logic
   useEffect(() => {
     if (isRecurring) {
       setTipoPagamento("fixo");
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
-      setIsPaid(false);
+      setIsPaid(false); // Recurring expenses are initially pending
     } else {
+      // When not recurring, reset tipoPagamento and numeroParcelas based on current tipoPagamento
+      if (tipoPagamento === "fixo") { // If it was 'fixo' due to recurrence, reset it
+        setTipoPagamento("avista");
+        setNumeroParcelas(1);
+      } else if (tipoPagamento === "parcelado") {
+        setNumeroParcelas(2); // Default to 2 for parcelado when not recurring
+      } else { // avista
+        setNumeroParcelas(1);
+      }
+    }
+  }, [isRecurring, tipoPagamento]); // Added tipoPagamento to dependencies
+
+  // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
+  useEffect(() => {
+    if (isRecurring) return; // If recurring, this effect should not override
+
+    if (tipoPagamento === "parcelado") {
+      setFormaPagamento("cartao");
+      setNumeroParcelas(2); // Default to 2 for parcelado
+    } else if (tipoPagamento === "avista") {
+      setNumeroParcelas(1); // Default to 1 for avista
+    } else if (tipoPagamento === "fixo") {
+      // This case should ideally only be reached if isRecurring is true,
+      // but as a fallback, if it's somehow set to fixo while not recurring,
+      // we can treat it as avista for non-recurring context.
       setTipoPagamento("avista");
       setNumeroParcelas(1);
     }
-  }, [isRecurring]);
+  }, [tipoPagamento, isRecurring]); // Depends on tipoPagamento and isRecurring
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
