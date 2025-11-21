@@ -87,9 +87,22 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [formaPagamento, tipoPagamento, isRecurring]);
 
+  // NOVO useEffect para sincronizar tipoPagamento com isRecurring
+  useEffect(() => {
+    if (typeof setIsRecurring === 'function') {
+      if (tipoPagamento === "fixo") {
+        setIsRecurring(true);
+      } else {
+        setIsRecurring(false);
+      }
+    } else {
+      console.error("ExpenseForm: setIsRecurring não é uma função no novo useEffect de tipoPagamento.", setIsRecurring);
+    }
+  }, [tipoPagamento, setIsRecurring]);
+
   // Effect for handling recurrence logic
   useEffect(() => {
-    if (typeof setIsRecurring === 'function') { // Added check here
+    if (typeof setIsRecurring === 'function') {
       if (isRecurring) {
         setTipoPagamento("fixo"); // Force tipoPagamento to "fixo" if recurring
         setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
@@ -114,16 +127,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
-    // Sincronizar o toggle de recorrência com o tipo de pagamento
-    if (typeof setIsRecurring === 'function') { // Added check here
-      if (tipoPagamento === "fixo") {
-        setIsRecurring(true);
-      } else {
-        setIsRecurring(false);
-      }
-    } else {
-      console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de tipoPagamento.", setIsRecurring);
-    }
+    // REMOVIDO: Lógica duplicada de sincronização de isRecurring com tipoPagamento
+    // if (typeof setIsRecurring === 'function') {
+    //   if (tipoPagamento === "fixo") {
+    //     setIsRecurring(true);
+    //   } else {
+    //     setIsRecurring(false);
+    //   }
+    // } else {
+    //   console.error("ExpenseForm: setIsRecurring não é uma função no useEffect de tipoPagamento.", setIsRecurring);
+    // }
 
     if (isRecurring) return; // If recurring, this effect should not override
 
