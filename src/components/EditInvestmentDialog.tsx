@@ -228,9 +228,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Popover>
       </div>
 
-      <div className={cn("flex gap-2")}>
+      <div className={cn("flex gap-2 justify-center")}>
         <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loading}>
-          {loading ? "Atualizando..." : "Atualizar Investimento"}
+          {loading ? "Salvando..." : "Salvar"}
         </Button>
         <Button
           type="button"
