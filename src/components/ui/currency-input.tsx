@@ -26,9 +26,10 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
         decimalScale={2}
         fixedDecimalScale
         allowNegative={false}
+        inputMode="numeric"          // <-- ADICIONADO
+        valueIsNumericString         // <-- ADICIONADO
         customInput={Input}
         className={cn(className)}
-        valueIsNumericString
         onValueChange={(values) => {
           const raw = values.value;          // "1234"
           const floatValue = Number(raw) / 100; // 12.34
