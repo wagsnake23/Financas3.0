@@ -213,8 +213,10 @@ export default function Receitas() {
           <ToggleGroupItem 
             value="avulsa" 
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center",
-              !isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+              "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
+              !isRecurring 
+                ? "bg-soft-blue/20 border-soft-blue text-primary font-bold" // Active styling
+                : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
             <DynamicIcon 
@@ -228,8 +230,10 @@ export default function Receitas() {
           <ToggleGroupItem 
             value="recorrente" 
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center",
-              isRecurring && "bg-primary/10 text-primary font-bold" // Active styling
+              "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
+              isRecurring 
+                ? "bg-soft-blue/20 border-soft-blue text-primary font-bold" // Active styling
+                : "bg-transparent border-border text-muted-foreground" // Inactive styling
             )}
           >
             <DynamicIcon 
