@@ -13,6 +13,7 @@ import {
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
   Building2, Sandwich, Zap, Repeat // Adicionado Zap e Repeat
 } from 'lucide-react';
+import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
 const iconMap: { [key: string]: React.ElementType } = {
@@ -53,7 +54,7 @@ const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...pr
     // Se não for um ícone Lucide, mas não for vazio, assume que é um emoji ou texto
     // Renderiza o texto diretamente dentro de um span, aplicando as classes e cores
     return (
-      <span className={className} style={{ color: color }} {...props}>
+      <span className={cn(className, "flex items-center justify-center")} style={{ color: color }} {...props}>
         {safeName}
       </span>
     );
