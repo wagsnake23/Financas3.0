@@ -207,40 +207,38 @@ export default function Receitas() {
         <ToggleGroup 
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
-          onValueChange={handleToggleChange} // Use the new handler
+          onValueChange={handleToggleChange}
           className="w-full justify-center"
         >
           <ToggleGroupItem 
             value="avulsa" 
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
-              !isRecurring 
-                ? "bg-primary border-primary text-primary-foreground font-bold" // Active styling
-                : "bg-transparent border-border text-muted-foreground" // Inactive styling
+              "flex-1 rounded-xl flex items-center justify-center border",
+              "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
             )}
           >
             <DynamicIcon 
               name="Zap" 
               className={cn(
                 "mr-2 h-4 w-4",
-                !isRecurring ? "text-primary-foreground" : "text-muted-foreground" // Icon color
+                "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
               )} 
             /> Avulsa
           </ToggleGroupItem>
           <ToggleGroupItem 
             value="recorrente" 
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border", // Adicionado border
-              isRecurring 
-                ? "bg-primary border-primary text-primary-foreground font-bold" // Active styling
-                : "bg-transparent border-border text-muted-foreground" // Inactive styling
+              "flex-1 rounded-xl flex items-center justify-center border",
+              "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
             )}
           >
             <DynamicIcon 
               name="Repeat" 
               className={cn(
                 "mr-2 h-4 w-4",
-                isRecurring ? "text-primary-foreground" : "text-muted-foreground" // Icon color
+                "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
               )} 
             /> Recorrente
           </ToggleGroupItem>
@@ -324,7 +322,7 @@ export default function Receitas() {
         <Textarea
           id="descricao"
           value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn("rounded-xl", isMobile && "text-sm")}
