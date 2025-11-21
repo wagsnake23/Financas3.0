@@ -444,7 +444,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <RadioGroup
               value={selectedDeleteScope}
               onValueChange={(value: DeleteScope) => setSelectedDeleteScope(value)}
-              className="space-y-3 radio-fix-click" {/* Adicionado a classe aqui */}
+              className="space-y-3 radio-fix-click"
             >
               <div className="flex items-center space-x-3">
                 <RadioGroupItem value="thisMonth" id="delete-this-month" />
@@ -486,12 +486,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
               onValueChange={(value: SaveScope) => setSelectedSaveScope(value)}
-              className="space-y-3 radio-fix-click" {/* Adicionado a classe aqui */}
+              className="space-y-3 radio-fix-click"
             >
               <div className="flex items-center space-x-3">
                 <RadioGroupItem value="thisMonth" id="save-this-month" />
