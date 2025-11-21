@@ -87,7 +87,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   return (
     <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" size="icon">
+        <Button type="button" variant="outline" size="icon" className="rounded-xl">
           <DynamicIcon name="➕" className="w-4 h-4" /> {/* Ícone de emoji de adição */}
         </Button>
       </DialogTrigger>

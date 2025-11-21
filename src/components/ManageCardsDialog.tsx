@@ -180,7 +180,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     <>
       <Dialog open={isManageCardsOpen} onOpenChange={setIsManageCardsOpen}>
         <DialogTrigger asChild>
-          <Button type="button" variant="outline" size="icon">
+          <Button type="button" variant="outline" size="icon" className="rounded-xl">
             <DynamicIcon name="✏️" className="w-4 h-4" /> {/* Ícone de emoji de lápis */}
           </Button>
         </DialogTrigger>
