@@ -151,6 +151,7 @@ export default function Despesas() {
         queryClient={queryClient}
         isMobile={isMobile}
         isRecurring={isRecurring} // Passar o estado isRecurring
+        setIsRecurring={setIsRecurring} // Passar a função setIsRecurring
       />
     </>
   );

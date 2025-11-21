@@ -89,27 +89,35 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // NOVO useEffect isolado para sincronizar isRecurring com tipoPagamento
   useEffect(() => {
-    if (tipoPagamento === "fixo") {
-      setIsRecurring(true);
+    if (typeof setIsRecurring === 'function') {
+      if (tipoPagamento === "fixo") {
+        setIsRecurring(true);
+      } else {
+        setIsRecurring(false);
+      }
     } else {
-      setIsRecurring(false);
+      console.error("ExpenseForm: setIsRecurring não é uma função no novo useEffect de tipoPagamento.", setIsRecurring);
     }
   }, [tipoPagamento, setIsRecurring]);
 
   // Effect for handling recurrence logic (now only reacts to isRecurring, not setting tipoPagamento)
   useEffect(() => {
     if (isRecurring) {
+      // When isRecurring becomes true (driven by tipoPagamento === "fixo")
+      // We set numeroParcelas and isPaid.
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
       setIsPaid(false); // Recurring expenses are initially pending
     } else {
-      // If not recurring, reset numeroParcelas based on tipoPagamento
+      // When isRecurring becomes false (driven by tipoPagamento === "avista" or "parcelado")
+      // We reset numeroParcelas based on the current tipoPagamento.
       if (tipoPagamento === "parcelado") {
         setNumeroParcelas(2);
-      } else { // avista or was 'fixo' and now not recurring
+      } else { // avista
         setNumeroParcelas(1);
       }
+      // isPaid is handled by the other useEffect based on formaPagamento/tipoPagamento/isRecurring
     }
-  }, [isRecurring, tipoPagamento, setNumeroParcelas]); // Adicionado setNumeroParcelas como dependência
+  }, [isRecurring, tipoPagamento, setNumeroParcelas, setIsPaid]);
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
