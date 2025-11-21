@@ -23,6 +23,7 @@ import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";
 import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle";
 import { InstallmentPreview } from "./expense-form/InstallmentPreview";
+import { TransactionTypeToggle } from "./expense-form/TransactionTypeToggle"; // Importar o novo componente
 
 interface Cartao {
   id: string;
@@ -134,6 +135,17 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
     // Não há necessidade de um caso 'fixo' aqui, pois ele é tratado pelo efeito isRecurring
   }, [tipoPagamento, isRecurring, setFormaPagamento, setNumeroParcelas]);
+
+  // Funções para sincronização inversa (botão -> tipoPagamento)
+  const handleSelectAvulsa = () => {
+    setIsRecurring(false);
+    setTipoPagamento("avista");
+  };
+
+  const handleSelectRecorrente = () => {
+    setIsRecurring(true);
+    setTipoPagamento("fixo");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -284,6 +296,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Toggle Avulsa / Recorrente */}
+      <TransactionTypeToggle
+        isRecurring={isRecurring}
+        onSelectAvulsa={handleSelectAvulsa}
+        onSelectRecorrente={handleSelectRecorrente}
+        isMobile={isMobile}
+      />
+
       <div>
         <Label htmlFor="subcategoria" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select 
