@@ -114,17 +114,18 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <CurrencyInput
             id="valor"
             value={valor}
+            prefix="R$ "
             decimalsLimit={2}
             decimalSeparator=","
             groupSeparator="."
-            valueAsInteger     // ATIVA CENTAVOS AUTOMATICAMENTE
+            valueAsInteger
             allowNegativeValue={false}
             onValueChange={(value, name, values) => {
-              // values.valueAsInteger vem como centavos (ex: 1234 → 12.34)
+              // valueAsInteger retorna centavos: 123456 → representa R$ 1.234,56
               setValor((values?.valueAsInteger ?? 0) / 100);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            placeholder="0,00"
+            placeholder="R$ 0,00"
             required
             className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
           />
