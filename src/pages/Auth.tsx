@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useIsMobile } from "@/hooks/use-mobile"; // Importar o hook useIsMobile
-import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { useIsMobile } from "@/hooks/use-mobile";
+import DynamicIcon from "@/components/DynamicIcon";
+import { cn, getBorderClass } from "@/lib/utils";
+import { Footer } from "@/components/Footer"; // Importar o componente Footer
 
 // Validation schemas
 const emailSchema = z.string().trim().email("Email inválido").max(255, "Email muito longo");
@@ -24,14 +25,14 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const isMobile = useIsMobile(); // Usar o hook para detectar se é mobile
+  const isMobile = useIsMobile();
 
   // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nome, setNome] = useState("");
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +50,7 @@ export default function Auth() {
       newErrors.email = false;
     }
 
-    if (!password) { // Simple check for password presence
+    if (!password) {
       newErrors.password = true;
       hasError = true;
       toast.error("Senha é obrigatória");
@@ -332,7 +333,7 @@ export default function Auth() {
               type="button"
               onClick={() => {
                 setViewMode("forgot-password");
-                setValidationErrors({}); // Clear errors on view change
+                setValidationErrors({});
               }}
               className="text-destructive underline hover:text-destructive"
             >
@@ -344,7 +345,7 @@ export default function Auth() {
               type="button"
               onClick={() => {
                 setViewMode("signup");
-                setValidationErrors({}); // Clear errors on view change
+                setValidationErrors({});
               }}
               className="text-primary hover:underline block w-full"
             >
@@ -452,7 +453,7 @@ export default function Auth() {
               type="button"
               onClick={() => {
                 setViewMode("login");
-                setValidationErrors({}); // Clear errors on view change
+                setValidationErrors({});
               }}
               className="text-primary hover:underline"
             >
@@ -491,7 +492,7 @@ export default function Auth() {
               type="button"
               onClick={() => {
                 setViewMode("login");
-                setValidationErrors({}); // Clear errors on view change
+                setValidationErrors({});
               }}
               className="text-primary hover:underline"
             >
@@ -564,7 +565,7 @@ export default function Auth() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4"> {/* Adicionado flex-col */}
       {isMobile ? (
         <div className="w-full max-w-md p-6">
           {formContent}
@@ -574,6 +575,7 @@ export default function Auth() {
           {formContent}
         </Card>
       )}
+      <Footer isMobile={isMobile} /> {/* Adicionado o Footer aqui */}
     </div>
   );
 }
