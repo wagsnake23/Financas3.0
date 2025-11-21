@@ -110,6 +110,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
+    // Sincronizar o toggle de recorrência com o tipo de pagamento
+    if (tipoPagamento === "fixo") {
+      setIsRecurring(true);
+    } else {
+      setIsRecurring(false);
+    }
+
     if (isRecurring) return; // If recurring, this effect should not override
 
     if (tipoPagamento === "parcelado") {
@@ -119,7 +126,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       setNumeroParcelas(1); // Default to 1 for avista
     }
     // No need for 'fixo' case here, as it's handled by the isRecurring effect
-  }, [tipoPagamento, isRecurring]);
+  }, [tipoPagamento, isRecurring, setIsRecurring]); // Adicionado setIsRecurring como dependência
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
