@@ -216,7 +216,6 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
                 className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
               >
                 Avulsa
-                <DynamicIcon name="Zap" className="ml-2 h-4 w-4" />
               </Label>
             </div>
 
@@ -231,7 +230,6 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
                 className="text-sm font-normal peer-checked:font-bold peer-checked:text-primary"
               >
                 Recorrente
-                <DynamicIcon name="Repeat" className="ml-2 h-4 w-4" />
               </Label>
             </div>
           </RadioGroup>
