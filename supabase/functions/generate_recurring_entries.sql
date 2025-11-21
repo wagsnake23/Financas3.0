@@ -44,7 +44,19 @@ BEGIN
         );
 
         -- Apply desired day
-        v_installment_date := v_installment_date + (v_day_to_use - 1) * INTERVAL '1 day';
+        BEGIN
+            v_installment_date := make_date(
+                EXTRACT(YEAR FROM v_installment_date)::int,
+                EXTRACT(MONTH FROM v_installment_date)::int,
+                v_day_to_use
+            );
+        EXCEPTION WHEN OTHERS THEN
+            -- fallback para meses com menos dias (ex.: fevereiro)
+            v_installment_date := (
+                date_trunc('month', v_installment_date) 
+                + interval '1 month - 1 day'
+            )::date;
+        END;
 
         -- Clamp to last day of month (handles Feb 28/29 automatically)
         v_installment_date := LEAST(
