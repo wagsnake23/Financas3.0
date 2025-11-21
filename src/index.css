@@ -23,9 +23,9 @@ All colors MUST be HSL.
     --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 100% 58%; /* Cor atualizada para #FF2929 */
     --destructive-foreground: 0 0% 100%;
-    --destructive-darker: 0 70% 45%; /* Nova cor mais escura */
+    --destructive-darker: 0 100% 48%; /* Nova cor mais escura */
 
     --success: 150 65% 40%; /* Verde mais escuro */
     --success-foreground: 0 0% 100%;
@@ -94,9 +94,9 @@ All colors MUST be HSL.
     --accent: 150 65% 55%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 100% 58%; /* Cor atualizada para #FF2929 em dark mode */
     --destructive-foreground: 0 0% 100%;
-    --destructive-darker: 0 70% 45%; /* Nova cor mais escura */
+    --destructive-darker: 0 100% 48%; /* Nova cor mais escura em dark mode */
 
     --success: 150 65% 30%; /* Verde mais escuro para dark mode */
     --success-foreground: 0 0% 100%;
