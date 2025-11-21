@@ -27,7 +27,7 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
         fixedDecimalScale
         allowNegative={false}
         inputMode="numeric"          // <-- ADICIONADO
-        valueIsNumericString         // <-- ADICIONADO
+        valueIsNumericString={true}         // <-- ADICIONADO
         customInput={Input}
         className={cn(className)}
         onValueChange={(values) => {
