@@ -3,21 +3,23 @@ import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface CurrencyInputProps extends Omit<NumericFormatProps, 'customInput'> {
+interface CurrencyInputProps
+  extends Omit<NumericFormatProps, "customInput" | "onValueChange"> {
   className?: string;
   onValueChange?: (values: {
-    floatValue: number | undefined;
+    floatValue: number;
     formattedValue: string;
-    value: string;
+    rawValue: string;
   }) => void;
 }
 
 const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ className, onValueChange, ...props }, ref) => {
+  ({ className, onValueChange, value, ...props }, ref) => {
     return (
       <NumericFormat
         {...props}
         getInputRef={ref}
+        value={value ?? ""}          // evita travar quando valor é undefined
         thousandSeparator="."
         decimalSeparator=","
         prefix="R$ "
@@ -28,19 +30,14 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
         className={cn(className)}
         valueIsNumericString
         onValueChange={(values) => {
-          const raw = values.value; // string sem formatação
-          const float = raw ? Number(raw) / 100 : 0; // converte centavos em reais
+          const raw = values.value;          // "1234"
+          const floatValue = Number(raw) / 100; // 12.34
 
           onValueChange?.({
-            floatValue: float,
+            floatValue,
             formattedValue: values.formattedValue,
-            value: values.value
+            rawValue: raw,
           });
-        }}
-        isAllowed={(values) => {
-          // evita "0000000000000000..."
-          if (values.value.length > 12) return false;
-          return true;
         }}
       />
     );
