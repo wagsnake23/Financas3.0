@@ -19,7 +19,9 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
 }) => {
   return (
     <div className="space-y-2">
-      <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
+      {!isMobile && ( // Renderiza o Label apenas se NÃO for mobile
+        <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
+      )}
       <ToggleGroup 
         type="single" 
         value={isRecurring ? "recorrente" : "avulsa"} 
