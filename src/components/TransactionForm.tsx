@@ -210,12 +210,12 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
               <Label
                 htmlFor="type-avulsa"
                 className={cn(
-                  "text-sm font-normal text-muted-foreground",
+                  "flex items-center text-sm font-normal text-muted-foreground", // Adicionado flex items-center
                   isMobile && "text-xs",
                   "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
                 )}
               >
-                <DynamicIcon name="Zap" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Avulsa
+                Avulsa <DynamicIcon name="Zap" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ícone à direita */}
               </Label>
             </div>
             <div className="flex items-center space-x-2">
@@ -223,12 +223,12 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
               <Label
                 htmlFor="type-recorrente"
                 className={cn(
-                  "text-sm font-normal text-muted-foreground",
+                  "flex items-center text-sm font-normal text-muted-foreground", // Adicionado flex items-center
                   isMobile && "text-xs",
                   "peer-data-[state=checked]:text-primary peer-data-[state=checked]:font-bold"
                 )}
               >
-                <DynamicIcon name="Repeat" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> Recorrente
+                Recorrente <DynamicIcon name="Repeat" className={cn("ml-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ícone à direita */}
               </Label>
             </div>
           </RadioGroup>
