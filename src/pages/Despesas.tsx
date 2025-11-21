@@ -94,10 +94,10 @@ export default function Despesas() {
     <>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Nova Despesa</h2>
       
-      {/* Temporary Debug Message */}
-      <div className="bg-yellow-200 text-yellow-800 p-2 mb-2 rounded-md">
+      {/* Removed: Temporary Debug Message */}
+      {/* <div className="bg-yellow-200 text-yellow-800 p-2 mb-2 rounded-md">
         DEBUG: O seletor de tipo de lançamento deve aparecer abaixo desta linha.
-      </div>
+      </div> */}
 
       {/* Toggle Avulsa / Recorrente */}
       <div className="space-y-2 mb-4">
@@ -106,12 +106,12 @@ export default function Despesas() {
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
           onValueChange={(value) => setIsRecurring(value === "recorrente")}
-          className="w-full justify-center bg-blue-100 p-2 rounded-lg" // Added bg-blue-100 and p-2 for visibility
+          className="w-full justify-center" // Removed bg-blue-100 and p-2
         >
-          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl bg-green-200"> {/* Added bg-green-200 */}
+          <ToggleGroupItem value="avulsa" className="flex-1 rounded-xl flex items-center justify-center"> {/* Added flex items-center justify-center, removed bg-green-200 */}
             <DynamicIcon name="Zap" className="mr-2 h-4 w-4" /> Avulsa
           </ToggleGroupItem>
-          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl bg-red-200"> {/* Added bg-red-200 */}
+          <ToggleGroupItem value="recorrente" className="flex-1 rounded-xl flex items-center justify-center"> {/* Added flex items-center justify-center, removed bg-red-200 */}
             <DynamicIcon name="Repeat" className="mr-2 h-4 w-4" /> Recorrente
           </ToggleGroupItem>
         </ToggleGroup>
