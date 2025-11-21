@@ -100,9 +100,9 @@ const Lancamentos = () => {
 
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[600px] p-6")}>
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 Editar Lançamento
               </DialogTitle>
             </DialogHeader>
