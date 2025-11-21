@@ -180,7 +180,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       <Dialog open={isManageCardsOpen} onOpenChange={setIsManageCardsOpen}>
         <DialogTrigger asChild>
           <Button type="button" variant="outline" size="icon">
-            <DynamicIcon name="Pencil" className="w-4 h-4" />
+            <DynamicIcon name="⚙️" className="w-4 h-4" /> {/* Ícone de emoji de engrenagem */}
           </Button>
         </DialogTrigger>
         <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}

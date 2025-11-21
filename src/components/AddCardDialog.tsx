@@ -88,7 +88,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
     <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogTrigger asChild>
         <Button type="button" variant="outline" size="icon">
-          <DynamicIcon name="Plus" className="w-4 h-4" />
+          <DynamicIcon name="💳" className="w-4 h-4" /> {/* Ícone de emoji de cartão de crédito */}
         </Button>
       </DialogTrigger>
       <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
