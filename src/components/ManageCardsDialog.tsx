@@ -168,7 +168,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <DynamicIcon name="Pencil" className="w-4 h-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
+        <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
           <DialogHeader>
             <DialogTitle>Gerenciar Cartões</DialogTitle>
           </DialogHeader>
@@ -219,7 +219,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
-        <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
+        <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
           <DialogHeader>
             <DialogTitle>Editar Cartão</DialogTitle>
           </DialogHeader>
@@ -274,7 +274,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>

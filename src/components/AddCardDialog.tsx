@@ -78,7 +78,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           <DynamicIcon name="Plus" className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn("w-full", isMobile ? "max-w-[280px] p-2" : "sm:max-w-[425px]")}>
+      <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Cartão</DialogTitle>
         </DialogHeader>
