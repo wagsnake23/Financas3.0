@@ -257,7 +257,7 @@ export const TransactionForm = ({ onAddTransaction, isMobile }: TransactionFormP
               onValueChange={(values) => setAmount(values.floatValue)}
               placeholder="0,00"
               required
-              className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* NEW: Apply responsive height and font size */}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")}
             />
           </div>
 
