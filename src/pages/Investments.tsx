@@ -465,7 +465,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
+        <DialogContent className={cn("w-full", isMobile ? "max-w-xs p-3" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Editar Investimento</DialogTitle>
           </DialogHeader>
