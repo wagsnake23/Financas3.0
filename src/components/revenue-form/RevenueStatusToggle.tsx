@@ -36,7 +36,20 @@ export const RevenueStatusToggle: React.FC<RevenueStatusToggleProps> = ({
         className="flex items-center justify-center gap-6"
       >
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="paid" id="status-paid-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+          <RadioGroupItem
+            value="paid"
+            id="status-paid-revenue"
+            className={cn(
+              isMobile && "h-3.5 w-3.5",
+              "peer",
+              // Borda verde quando selecionado
+              "data-[state=checked]:border-success",
+              // Bolinha interna verde sólida
+              "data-[state=checked]:after:bg-success",
+              // Anel do foco também verde
+              "data-[state=checked]:ring-success"
+            )}
+          />
           <Label
             htmlFor="status-paid-revenue"
             className={cn(
@@ -49,7 +62,20 @@ export const RevenueStatusToggle: React.FC<RevenueStatusToggleProps> = ({
           </Label>
         </div>
         <div className="flex items-center space-x-2">
-          <RadioGroupItem value="pending" id="status-pending-revenue" className={cn(isMobile && "h-3.5 w-3.5", "peer")} />
+          <RadioGroupItem
+            value="pending"
+            id="status-pending-revenue"
+            className={cn(
+              isMobile && "h-3.5 w-3.5",
+              "peer",
+              // Borda vermelha quando selecionado
+              "data-[state=checked]:border-destructive",
+              // Bolinha interna vermelha sólida
+              "data-[state=checked]:after:bg-destructive",
+              // Anel do foco também vermelho
+              "data-[state=checked]:ring-destructive"
+            )}
+          />
           <Label
             htmlFor="status-pending-revenue"
             className={cn(

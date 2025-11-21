@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-// REMOVIDO: import { Circle } from "lucide-react";
+// REMOVIDO: import { Circle } from "lucide-react"; // Removido para evitar o ícone de check
 
 import { cn } from "@/lib/utils";
 
@@ -29,7 +29,7 @@ const RadioGroupItem = React.forwardRef<
       ref={ref}
       className={cn(
         "aspect-square h-4 w-4 rounded-full border border-input text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        // ADICIONADO: Estilos para o pseudo-elemento ::after criar a bolinha sólida
+        // Estilos para o pseudo-elemento ::after criar a bolinha sólida
         "relative after:content-[''] after:absolute after:inset-[4px] after:rounded-full after:scale-0 after:opacity-0 after:transition-all after:duration-100 after:ease-in-out",
         "data-[state=checked]:after:scale-100 data-[state=checked]:after:opacity-100", // Escala e opacidade base para o ::after
         className
