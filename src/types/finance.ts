@@ -18,6 +18,7 @@ export interface Transaction {
   is_recurring_master?: boolean; // Indica se é a transação mestra de uma série recorrente
   recurrence_id?: string | null; // ID da série recorrente
   recurrence_day?: number | null; // Dia do mês para recorrência
+  tipo_pagamento?: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento
 }
 
 // Interface principal para categorias, alinhada com a tabela 'categorias' do Supabase

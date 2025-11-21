@@ -75,7 +75,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] = useState(false);
+  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
 
   const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false); // NOVO ESTADO
@@ -214,6 +214,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       is_recurring_master: editingTransaction.is_recurring_master,
       recurrence_id: editingTransaction.recurrence_id,
       recurrence_day: editingTransaction.recurrence_day,
+      tipo_pagamento: editingTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
     };
 
     onUpdateTransaction(
@@ -232,7 +233,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (isRecurringTransaction) {
       setShowDeleteOptionsDialog(true);
     } else {
-      setShowSimpleDeleteDialog(true);
+      setShowSimpleDeleteOptionsDialog(true);
     }
   };
 
@@ -245,7 +246,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
     setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteDialog(false);
+    setShowSimpleDeleteOptionsDialog(false);
   };
 
   const formContent = (
@@ -293,7 +294,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
-      <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteDialog}>
+      <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">

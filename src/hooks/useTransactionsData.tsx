@@ -112,6 +112,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         is_recurring_master: Boolean(r.is_recurring_master), // Garante que seja boolean
         recurrence_id: r.recurrence_id ?? null, // Garante que seja string | null
         recurrence_day: r.recurrence_day ?? null, // Garante que seja number | null
+        tipo_pagamento: null, // Receitas não têm tipo_pagamento
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
@@ -136,6 +137,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           is_recurring_master: Boolean(parentDespesa?.is_recurring_master), // Garante que seja boolean
           recurrence_id: parentDespesa?.id ?? null, // Para despesas, o recurrence_id é o id da despesa mestra, garante null se parentDespesa.id for null
           recurrence_day: null,
+          tipo_pagamento: parentDespesa?.tipo_pagamento, // NOVO: Incluído tipo_pagamento
         };
         console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id });
         return transaction;

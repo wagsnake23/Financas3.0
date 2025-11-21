@@ -359,6 +359,7 @@ export const useTransactionMutations = ({
               categoria_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               descricao: updatedTransaction.description,
               is_recurring_master: originalTransaction?.is_recurring_master,
+              tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
             })
             .eq("id", parentDespesaId)
             .eq("user_id", user.id);
@@ -405,7 +406,7 @@ export const useTransactionMutations = ({
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
-              p_tipo_pagamento: originalTransaction.tipo_pagamento,
+              p_tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Passando tipo_pagamento
             });
             if (rpcError) throw rpcError;
 
