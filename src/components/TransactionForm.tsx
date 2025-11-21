@@ -15,7 +15,7 @@ import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getDate, format } from "date-fns"; // Importar format
 
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
@@ -33,6 +33,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const [description, setDescription] = useState("");
   const [isRecurring, setIsRecurring] = useState(false); // State for the toggle
   const [status, setStatus] = useState<"Prevista" | "Pendente">("Pendente"); // New state for income status
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // Fetch ALL categories from Supabase (user-specific and default ones with user_id: null)
   // Modificado para buscar APENAS SUBCATEGORIAS (parent_id IS NOT NULL)
@@ -89,8 +90,26 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (amount === undefined || category === UNSELECTED_VALUE) {
-      toast.error("Preencha todos os campos obrigatórios (Valor e Subcategoria).");
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
+    if (amount === undefined || amount <= 0) {
+      newErrors.amount = true;
+      hasError = true;
+    }
+    if (!date) {
+      newErrors.date = true;
+      hasError = true;
+    }
+    if (category === UNSELECTED_VALUE) {
+      newErrors.category = true;
+      hasError = true;
+    }
+
+    setValidationErrors(newErrors);
+
+    if (hasError) {
+      toast.error("Preencha todos os campos obrigatórios (Valor, Data e Subcategoria).");
       return;
     }
 
@@ -188,6 +207,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       setDescription("");
       setIsRecurring(false); // Reset toggle
       setStatus("Pendente"); // Reset status
+      setValidationErrors({}); // Clear errors on success
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
         style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
@@ -271,8 +291,11 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             <Label htmlFor="amount">Valor (R$)</Label>
             <CurrencyBR
               value={amount}
-              onChange={(v) => setAmount(v)}
-              className="rounded-xl"
+              onChange={(v) => {
+                setAmount(v);
+                setValidationErrors(prev => ({ ...prev, amount: false }));
+              }}
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
             />
           </div>
 
@@ -282,16 +305,22 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               id="date"
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => {
+                setDate(e.target.value);
+                setValidationErrors(prev => ({ ...prev, date: false }));
+              }}
               required
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false }))}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="category">Subcategoria</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="rounded-xl">
+            <Select value={category} onValueChange={(value) => {
+              setCategory(value);
+              setValidationErrors(prev => ({ ...prev, category: false }));
+            }}>
+              <SelectTrigger className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
                 <SelectValue placeholder="Selecione a subcategoria" />
               </SelectTrigger>
               <SelectContent>

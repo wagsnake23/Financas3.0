@@ -7,7 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 
 interface DateAndInstallmentFieldsProps {
   dataVencimento: Date | undefined;
@@ -50,7 +50,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
                 "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !dataVencimento && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
-                validationErrors.dataVencimento && "border-destructive"
+                getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
               )}
             >
               <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />

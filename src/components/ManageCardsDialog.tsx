@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
 
 interface Cartao {
   id: string;
@@ -65,6 +65,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [diaFechamento, setDiaFechamento] = useState("");
   const [diaVencimento, setDiaVencimento] = useState("");
   const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const handleEditClick = (card: Cartao) => {
     setEditingCard(card);
@@ -74,11 +75,24 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     setDiaFechamento(card.dia_fechamento.toString());
     setDiaVencimento(card.dia_vencimento.toString());
     setIsEditCardOpen(true);
+    setValidationErrors({}); // Clear errors on new edit
   };
 
   const handleUpdateCard = async () => {
-    if (!editingCard || !nomeCartao || !banco || !ultimosDigitos || !diaFechamento || !diaVencimento) {
-      toast.error("Preencha todos os campos do cartão");
+    if (!editingCard) return;
+
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
+    if (!nomeCartao) { newErrors.nomeCartao = true; hasError = true; }
+    if (!banco) { newErrors.banco = true; hasError = true; }
+    if (!ultimosDigitos || ultimosDigitos.length !== 4) { newErrors.ultimosDigitos = true; hasError = true; }
+    if (!diaFechamento || parseInt(diaFechamento) < 1 || parseInt(diaFechamento) > 31) { newErrors.diaFechamento = true; hasError = true; }
+    if (!diaVencimento || parseInt(diaVencimento) < 1 || parseInt(diaVencimento) > 31) { newErrors.diaVencimento = true; hasError = true; }
+
+    setValidationErrors(newErrors);
+    if (hasError) {
+      toast.error("Preencha todos os campos obrigatórios corretamente.");
       return;
     }
 
@@ -103,6 +117,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       });
       setIsEditCardOpen(false);
       setEditingCard(null);
+      setValidationErrors({}); // Clear errors on success
       onCardUpdated();
     }
     setLoading(false);
@@ -226,19 +241,36 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           <div className="space-y-4">
             <div>
               <Label>Nome do Cartão</Label>
-              <Input value={nomeCartao} onChange={(e) => setNomeCartao(e.target.value)} className="rounded-xl" />
+              <Input 
+                value={nomeCartao} 
+                onChange={(e) => {
+                  setNomeCartao(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
+                }} 
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))} 
+              />
             </div>
             <div>
               <Label>Banco</Label>
-              <Input value={banco} onChange={(e) => setBanco(e.target.value)} className="rounded-xl" />
+              <Input 
+                value={banco} 
+                onChange={(e) => {
+                  setBanco(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, banco: false }));
+                }} 
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))} 
+              />
             </div>
             <div>
               <Label>Últimos 4 Dígitos</Label>
               <Input
                 value={ultimosDigitos}
-                onChange={(e) => setUltimosDigitos(e.target.value)}
+                onChange={(e) => {
+                  setUltimosDigitos(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, ultimosDigitos: false }));
+                }}
                 maxLength={4}
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -249,8 +281,11 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   min="1"
                   max="31"
                   value={diaFechamento}
-                  onChange={(e) => setDiaFechamento(e.target.value)}
-                  className="rounded-xl"
+                  onChange={(e) => {
+                    setDiaFechamento(e.target.value);
+                    setValidationErrors(prev => ({ ...prev, diaFechamento: false }));
+                  }}
+                  className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
                 />
               </div>
               <div>
@@ -260,8 +295,11 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   min="1"
                   max="31"
                   value={diaVencimento}
-                  onChange={(e) => setDiaVencimento(e.target.value)}
-                  className="rounded-xl"
+                  onChange={(e) => {
+                    setDiaVencimento(e.target.value);
+                    setValidationErrors(prev => ({ ...prev, diaVencimento: false }));
+                  }}
+                  className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
                 />
               </div>
             </div>

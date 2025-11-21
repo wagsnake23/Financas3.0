@@ -1,38 +1,33 @@
+"use client";
+
 import * as React from "react";
-import { NumericFormat, NumericFormatProps } from "react-number-format";
-import { Input } from "@/components/ui/input";
+import CurrencyInput from "react-currency-input-field";
+
 import { cn } from "@/lib/utils";
 
-interface CurrencyInputProps
-  extends Omit<NumericFormatProps, "customInput" | "onValueChange"> {
-  className?: string;
-  onValueChange?: (values: {
-    floatValue: number | undefined;
-    formattedValue: string;
-    value: string;
-  }) => void;
-}
+export interface CurrencyInputFieldProps
+  extends React.ComponentPropsWithoutRef<typeof CurrencyInput> {}
 
-const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ className, onValueChange, ...props }, ref) => {
-    return (
-      <NumericFormat
-        {...props}
-        getInputRef={ref}
-        onValueChange={onValueChange}
-        thousandSeparator="."
-        decimalSeparator=","
-        prefix="R$ "
-        decimalScale={2}
-        fixedDecimalScale
-        allowNegative={false}
-        customInput={Input}
-        className={cn(className)}
-      />
-    );
-  }
-);
+const CurrencyInputField = React.forwardRef<
+  HTMLInputElement,
+  CurrencyInputFieldProps
+>(({ className, ...props }, ref) => {
+  return (
+    <CurrencyInput
+      className={cn(
+        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:outline-none focus-visible:border-success disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      ref={ref}
+      groupSeparator="."
+      decimalSeparator=","
+      decimalsLimit={2}
+      allowNegativeValue={false}
+      {...props}
+    />
+  );
+});
 
-CurrencyInput.displayName = "CurrencyInput";
+CurrencyInputField.displayName = "CurrencyInputField";
 
-export { CurrencyInput };
+export { CurrencyInputField };

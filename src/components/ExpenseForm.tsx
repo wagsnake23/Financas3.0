@@ -16,7 +16,7 @@ import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
@@ -314,7 +314,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             setValidationErrors(prev => ({ ...prev, selectedSubcategoryId: false }));
           }}
         >
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.selectedSubcategoryId && "border-destructive")}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedSubcategoryId, isValid: validationErrors.selectedSubcategoryId === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>

@@ -17,3 +17,23 @@ export const formatCurrency = (value: number) => {
     currency: "BRL",
   });
 };
+
+interface GetBorderClassProps {
+  isValid?: boolean;
+  isInvalid?: boolean;
+}
+
+export const getBorderClass = ({ isValid, isInvalid }: GetBorderClassProps): string => {
+  let borderClass = "";
+  if (isInvalid) {
+    borderClass = "border-destructive";
+  } else if (isValid) {
+    borderClass = "border-success";
+  }
+  // Always apply focus styles to override default blue rings/outlines
+  return cn(
+    borderClass,
+    "focus-visible:ring-0 focus-visible:outline-none focus-visible:border-success",
+    "focus:ring-0 focus:outline-none focus:border-success" // For non-focus-visible elements
+  );
+};

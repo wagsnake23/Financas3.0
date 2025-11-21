@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar o hook useIsMobile
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 
 // Validation schemas
 const emailSchema = z.string().trim().email("Email inválido").max(255, "Email muito longo");
@@ -30,16 +31,34 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nome, setNome] = useState("");
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     // Validate input
     const emailValidation = emailSchema.safeParse(email);
     if (!emailValidation.success) {
+      newErrors.email = true;
+      hasError = true;
       toast.error(emailValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.email = false;
     }
+
+    if (!password) { // Simple check for password presence
+      newErrors.password = true;
+      hasError = true;
+      toast.error("Senha é obrigatória");
+    } else {
+      newErrors.password = false;
+    }
+
+    setValidationErrors(newErrors);
+    if (hasError) return;
 
     setLoading(true);
 
@@ -67,30 +86,47 @@ export default function Auth() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     // Validate inputs
     const emailValidation = emailSchema.safeParse(email);
-    const passwordValidation = passwordSchema.safeParse(password);
-    const nameValidation = nameSchema.safeParse(nome);
-
     if (!emailValidation.success) {
+      newErrors.email = true;
+      hasError = true;
       toast.error(emailValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.email = false;
     }
 
+    const nameValidation = nameSchema.safeParse(nome);
     if (!nameValidation.success) {
+      newErrors.nome = true;
+      hasError = true;
       toast.error(nameValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.nome = false;
     }
 
+    const passwordValidation = passwordSchema.safeParse(password);
     if (!passwordValidation.success) {
+      newErrors.password = true;
+      hasError = true;
       toast.error(passwordValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.password = false;
     }
 
     if (password !== confirmPassword) {
+      newErrors.confirmPassword = true;
+      hasError = true;
       toast.error("As senhas não coincidem");
-      return;
+    } else {
+      newErrors.confirmPassword = false;
     }
+
+    setValidationErrors(newErrors);
+    if (hasError) return;
 
     setLoading(true);
 
@@ -131,12 +167,21 @@ export default function Auth() {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     // Validate email
     const emailValidation = emailSchema.safeParse(email);
     if (!emailValidation.success) {
+      newErrors.email = true;
+      hasError = true;
       toast.error(emailValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.email = false;
     }
+
+    setValidationErrors(newErrors);
+    if (hasError) return;
 
     setLoading(true);
 
@@ -161,17 +206,29 @@ export default function Auth() {
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     // Validate password
     const passwordValidation = passwordSchema.safeParse(password);
     if (!passwordValidation.success) {
+      newErrors.password = true;
+      hasError = true;
       toast.error(passwordValidation.error.errors[0].message);
-      return;
+    } else {
+      newErrors.password = false;
     }
 
     if (password !== confirmPassword) {
+      newErrors.confirmPassword = true;
+      hasError = true;
       toast.error("As senhas não coincidem");
-      return;
+    } else {
+      newErrors.confirmPassword = false;
     }
+
+    setValidationErrors(newErrors);
+    if (hasError) return;
 
     setLoading(true);
 
@@ -216,11 +273,14 @@ export default function Auth() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setValidationErrors(prev => ({ ...prev, email: false }));
+              }}
               required
               disabled={loading}
               placeholder="seu@email.com"
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
             />
           </div>
           <div>
@@ -230,11 +290,14 @@ export default function Auth() {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, password: false }));
+                }}
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -251,7 +314,10 @@ export default function Auth() {
           <div className="text-right text-sm mt-1">
             <button
               type="button"
-              onClick={() => setViewMode("forgot-password")}
+              onClick={() => {
+                setViewMode("forgot-password");
+                setValidationErrors({}); // Clear errors on view change
+              }}
               className="text-destructive underline hover:text-destructive"
             >
               Esqueci minha senha
@@ -260,7 +326,10 @@ export default function Auth() {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={() => setViewMode("signup")}
+              onClick={() => {
+                setViewMode("signup");
+                setValidationErrors({}); // Clear errors on view change
+              }}
               className="text-primary hover:underline block w-full"
             >
               Criar conta
@@ -277,12 +346,15 @@ export default function Auth() {
               id="nome"
               type="text"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(e) => {
+                setNome(e.target.value);
+                setValidationErrors(prev => ({ ...prev, nome: false }));
+              }}
               required
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
@@ -291,11 +363,14 @@ export default function Auth() {
               id="signup-email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setValidationErrors(prev => ({ ...prev, email: false }));
+              }}
               required
               disabled={loading}
               placeholder="seu@email.com"
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
             />
           </div>
           <div>
@@ -305,11 +380,14 @@ export default function Auth() {
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, password: false }));
+                }}
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -327,11 +405,14 @@ export default function Auth() {
                 id="confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, confirmPassword: false }));
+                }}
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -348,7 +429,10 @@ export default function Auth() {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={() => setViewMode("login")}
+              onClick={() => {
+                setViewMode("login");
+                setValidationErrors({}); // Clear errors on view change
+              }}
               className="text-primary hover:underline"
             >
               Já tenho conta
@@ -365,11 +449,14 @@ export default function Auth() {
               id="forgot-email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setValidationErrors(prev => ({ ...prev, email: false }));
+              }}
               required
               disabled={loading}
               placeholder="seu@email.com"
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
             />
           </div>
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
@@ -378,7 +465,10 @@ export default function Auth() {
           <div className="text-center text-sm">
             <button
               type="button"
-              onClick={() => setViewMode("login")}
+              onClick={() => {
+                setViewMode("login");
+                setValidationErrors({}); // Clear errors on view change
+              }}
               className="text-primary hover:underline"
             >
               Voltar para login
@@ -396,11 +486,14 @@ export default function Auth() {
                 id="new-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, password: false }));
+                }}
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -418,11 +511,14 @@ export default function Auth() {
                 id="new-confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, confirmPassword: false }));
+                }}
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className="rounded-xl"
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"

@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Card } from "@/components/ui/card"; // Importar Card
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
 
 interface AddCardDialogProps {
   user: User | null;
@@ -31,14 +31,26 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   const [newCardDiaVencimento, setNewCardDiaVencimento] = useState("");
   const [loading, setLoading] = useState(false);
   const isMobile = useIsMobile(); // Usar o hook
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const handleAddNewCartao = async () => {
     if (!user) {
       toast.error("Usuário não autenticado.");
       return;
     }
-    if (!newCardNome || !newCardBanco || !newCardUltimosDigitos || !newCardDiaFechamento || !newCardDiaVencimento) {
-      toast.error("Preencha todos os campos do cartão");
+
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
+    if (!newCardNome) { newErrors.newCardNome = true; hasError = true; }
+    if (!newCardBanco) { newErrors.newCardBanco = true; hasError = true; }
+    if (!newCardUltimosDigitos || newCardUltimosDigitos.length !== 4) { newErrors.newCardUltimosDigitos = true; hasError = true; }
+    if (!newCardDiaFechamento || parseInt(newCardDiaFechamento) < 1 || parseInt(newCardDiaFechamento) > 31) { newErrors.newCardDiaFechamento = true; hasError = true; }
+    if (!newCardDiaVencimento || parseInt(newCardDiaVencimento) < 1 || parseInt(newCardDiaVencimento) > 31) { newErrors.newCardDiaVencimento = true; hasError = true; }
+
+    setValidationErrors(newErrors);
+    if (hasError) {
+      toast.error("Preencha todos os campos obrigatórios corretamente.");
       return;
     }
 
@@ -66,6 +78,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
       setNewCardDiaFechamento("");
       setNewCardDiaVencimento("");
       setDialogAddCartaoOpen(false);
+      setValidationErrors({}); // Clear errors on success
       onCardAdded(); // Notify parent to reload cards
     }
     setLoading(false);
@@ -85,19 +98,36 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         <div className="space-y-4">
           <div>
             <Label>Nome do Cartão</Label>
-            <Input value={newCardNome} onChange={(e) => setNewCardNome(e.target.value)} className="rounded-xl" />
+            <Input 
+              value={newCardNome} 
+              onChange={(e) => {
+                setNewCardNome(e.target.value);
+                setValidationErrors(prev => ({ ...prev, newCardNome: false }));
+              }} 
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))} 
+            />
           </div>
           <div>
             <Label>Banco</Label>
-            <Input value={newCardBanco} onChange={(e) => setNewCardBanco(e.target.value)} className="rounded-xl" />
+            <Input 
+              value={newCardBanco} 
+              onChange={(e) => {
+                setNewCardBanco(e.target.value);
+                setValidationErrors(prev => ({ ...prev, newCardBanco: false }));
+              }} 
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))} 
+            />
           </div>
           <div>
             <Label>Últimos 4 Dígitos</Label>
             <Input 
               value={newCardUltimosDigitos} 
-              onChange={(e) => setNewCardUltimosDigitos(e.target.value)}
+              onChange={(e) => {
+                setNewCardUltimosDigitos(e.target.value);
+                setValidationErrors(prev => ({ ...prev, newCardUltimosDigitos: false }));
+              }}
               maxLength={4}
-              className="rounded-xl"
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false }))}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -108,8 +138,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 min="1" 
                 max="31"
                 value={newCardDiaFechamento} 
-                onChange={(e) => setNewCardDiaFechamento(e.target.value)}
-                className="rounded-xl"
+                onChange={(e) => {
+                  setNewCardDiaFechamento(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, newCardDiaFechamento: false }));
+                }}
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false }))}
               />
             </div>
             <div>
@@ -119,8 +152,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 min="1" 
                 max="31"
                 value={newCardDiaVencimento} 
-                onChange={(e) => setNewCardDiaVencimento(e.target.value)}
-                className="rounded-xl"
+                onChange={(e) => {
+                  setNewCardDiaVencimento(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, newCardDiaVencimento: false }));
+                }}
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false }))}
               />
             </div>
           </div>

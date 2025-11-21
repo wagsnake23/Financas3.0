@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AddCardDialog } from "@/components/AddCardDialog";
 import ManageCardsDialog from "@/components/ManageCardsDialog";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
@@ -117,7 +117,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            className={cn(isMobile && "h-9 text-sm", validationErrors.valor && "border-destructive")}
+            className={cn(isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
           />
         </div>
 
@@ -183,7 +183,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
-              className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
             />
           </div>
         )}
@@ -197,7 +197,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setCartaoId(v);
               setValidationErrors(prev => ({ ...prev, cartaoId: false }));
             }}>
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.cartaoId && "border-destructive")}>
+              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>

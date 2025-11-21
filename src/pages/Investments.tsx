@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
 import { format } from "date-fns"; // Importar format
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
@@ -70,6 +70,7 @@ export default function Investments() { // Alterado para export default function
   const [profitability, setProfitability] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -122,6 +123,7 @@ export default function Investments() { // Alterado para export default function
       setProfitability(undefined); // Reset para undefined
       setDate(new Date()); // Reset para Date
       setType("fixed");
+      setValidationErrors({}); // Clear errors on success
     },
     onError: (error) => {
       toast.error("Erro ao adicionar investimento", { description: error.message });
@@ -161,13 +163,34 @@ export default function Investments() { // Alterado para export default function
     e.preventDefault();
     setLoadingForm(true);
 
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     if (!user) {
       toast.error("Usuário não autenticado.");
       setLoadingForm(false);
       return;
     }
     
-    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || amount === undefined || profitability === undefined || !date) { // Adicionado validação para 'date' e valores numéricos
+    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE) {
+      newErrors.selectedInvestmentCategoryId = true;
+      hasError = true;
+    }
+    if (amount === undefined || amount <= 0) {
+      newErrors.amount = true;
+      hasError = true;
+    }
+    if (profitability === undefined || profitability < 0) { // Assuming profitability can be 0
+      newErrors.profitability = true;
+      hasError = true;
+    }
+    if (!date) {
+      newErrors.date = true;
+      hasError = true;
+    }
+
+    setValidationErrors(newErrors);
+    if (hasError) {
       toast.error("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
@@ -268,8 +291,15 @@ export default function Investments() { // Alterado para export default function
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                  <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loadingForm}>
-                    <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                  <Select 
+                    value={selectedInvestmentCategoryId} 
+                    onValueChange={(value) => {
+                      setSelectedInvestmentCategoryId(value);
+                      setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+                    }} 
+                    disabled={loadingForm}
+                  >
+                    <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
                       <SelectValue placeholder="Selecione o tipo de investimento" />
                     </SelectTrigger>
                     <SelectContent>
@@ -312,9 +342,12 @@ export default function Investments() { // Alterado para export default function
                     <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
                     <CurrencyBR
                       value={amount}
-                      onChange={(v) => setAmount(v)}
+                      onChange={(v) => {
+                        setAmount(v);
+                        setValidationErrors(prev => ({ ...prev, amount: false }));
+                      }}
                       disabled={loadingForm}
-                      className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
                     />
                   </div>
 
@@ -323,11 +356,14 @@ export default function Investments() { // Alterado para export default function
                     <NumericInput
                       id="profitability"
                       value={profitability}
-                      onValueChange={(values) => setProfitability(values.floatValue)}
+                      onValueChange={(values) => {
+                        setProfitability(values.floatValue);
+                        setValidationErrors(prev => ({ ...prev, profitability: false }));
+                      }}
                       placeholder="0,00"
                       required
                       disabled={loadingForm}
-                      className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
                     />
                   </div>
                 </div>
@@ -341,7 +377,8 @@ export default function Investments() { // Alterado para export default function
                         className={cn(
                           "w-full justify-start text-left font-normal h-10 rounded-xl",
                           !date && "text-muted-foreground",
-                          isMobile && "h-9 text-sm"
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
                         )}
                         disabled={loadingForm}
                       >
@@ -356,6 +393,7 @@ export default function Investments() { // Alterado para export default function
                         onSelect={(selectedDate) => {
                           setDate(selectedDate);
                           setIsCalendarOpen(false);
+                          setValidationErrors(prev => ({ ...prev, date: false }));
                         }}
                         initialFocus
                         locale={ptBR}

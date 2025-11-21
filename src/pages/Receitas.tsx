@@ -20,7 +20,7 @@ import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -287,8 +287,7 @@ export default function Receitas() {
               <SelectTrigger className={cn(
                 "rounded-xl", 
                 isMobile && "h-9 text-sm", 
-                validationErrors.tipoReceitaId === true && "border-destructive", // Aplica borda vermelha
-                validationErrors.tipoReceitaId === false && "border-success" // Aplica borda verde
+                getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
               )}>
                 <SelectValue placeholder="Selecione a subcategoria de receita" />
               </SelectTrigger>
@@ -322,8 +321,7 @@ export default function Receitas() {
                   "w-full justify-start text-left font-normal h-10 rounded-xl",
                   !data && "text-muted-foreground",
                   isMobile && "h-9 text-sm",
-                  validationErrors.data === true && "border-destructive", // Aplica borda vermelha
-                  validationErrors.data === false && "border-success" // Aplica borda verde
+                  getBorderClass({ isInvalid: validationErrors.data, isValid: validationErrors.data === false })
                 )}
               >
                 <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
@@ -359,8 +357,7 @@ export default function Receitas() {
             className={cn(
               "rounded-xl", 
               isMobile && "h-9 text-sm", 
-              validationErrors.valor === true && "border-destructive", // Aplica borda vermelha
-              validationErrors.valor === false && "border-success" // Aplica borda verde
+              getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )} 
           />
         </div>

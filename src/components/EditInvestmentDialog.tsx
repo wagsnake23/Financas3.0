@@ -18,7 +18,7 @@ import { Investment, AppCategory } from "@/types/finance"; // Importar AppCatego
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import DynamicIcon from "./DynamicIcon";
 // Removido: import { Card } from "@/components/ui/card"; // Importar Card
 
@@ -52,6 +52,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const [profitability, setProfitability] = useState<number | undefined>(investmentToEdit.rentabilidade);
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
@@ -60,6 +61,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     setAmount(investmentToEdit.valor);
     setDate(parseISO(investmentToEdit.data));
     setProfitability(investmentToEdit.rentabilidade);
+    setValidationErrors({}); // Clear errors on new edit
   }, [investmentToEdit]);
 
   const updateInvestmentMutation = useMutation({
@@ -97,13 +99,34 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     e.preventDefault();
     setLoading(true);
 
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
     if (!user) {
       toast.error("Usuário não autenticado.");
       setLoading(false);
       return;
     }
 
-    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || amount === undefined || profitability === undefined || !date) {
+    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE) {
+      newErrors.selectedInvestmentCategoryId = true;
+      hasError = true;
+    }
+    if (amount === undefined || amount <= 0) {
+      newErrors.amount = true;
+      hasError = true;
+    }
+    if (profitability === undefined || profitability < 0) {
+      newErrors.profitability = true;
+      hasError = true;
+    }
+    if (!date) {
+      newErrors.date = true;
+      hasError = true;
+    }
+
+    setValidationErrors(newErrors);
+    if (hasError) {
       toast.error("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
@@ -132,8 +155,15 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </DialogDescription>
       <div className={cn("space-y-2")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-        <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loading}>
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
+        <Select 
+          value={selectedInvestmentCategoryId} 
+          onValueChange={(value) => {
+            setSelectedInvestmentCategoryId(value);
+            setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+          }} 
+          disabled={loading}
+        >
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -175,9 +205,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
             value={amount}
-            onChange={(v) => setAmount(v)}
+            onChange={(v) => {
+              setAmount(v);
+              setValidationErrors(prev => ({ ...prev, amount: false }));
+            }}
             disabled={loading}
-            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -186,10 +219,13 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <NumericInput
             id="edit-profitability"
             value={profitability}
-            onValueChange={(values) => setProfitability(values.floatValue)}
+            onValueChange={(values) => {
+              setProfitability(values.floatValue);
+              setValidationErrors(prev => ({ ...prev, profitability: false }));
+            }}
             required
             disabled={loading}
-            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
           />
         </div>
       </div>
@@ -203,7 +239,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               className={cn(
                 "w-full justify-start text-left font-normal h-10 rounded-xl",
                 !date && "text-muted-foreground",
-                isMobile && "h-9 text-sm"
+                isMobile && "h-9 text-sm",
+                getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
               )}
               disabled={loading}
             >
@@ -218,6 +255,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               onSelect={(selectedDate) => {
                 setDate(selectedDate);
                 setIsCalendarOpen(false);
+                setValidationErrors(prev => ({ ...prev, date: false }));
               }}
               initialFocus
               locale={ptBR}

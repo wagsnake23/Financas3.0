@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
-import { cn, isValidUuid } from "@/lib/utils"; // Importar isValidUuid
+import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
@@ -73,6 +73,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
@@ -150,6 +151,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
+      setValidationErrors({}); // Clear errors when editing a new transaction
     } else {
       // Reset form when not editing
       setType("expense");
@@ -159,6 +161,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDescription("");
       setStatus("Pendente");
       setIsPaid(false);
+      setValidationErrors({});
     }
   }, [editingTransaction, allCategories]);
 
@@ -206,9 +209,27 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     e.preventDefault();
     if (!editingTransaction) return;
 
-    if (amount === undefined || amount <= 0 || category === UNSELECTED_VALUE) {
+    const newErrors: Record<string, boolean> = {};
+    let hasError = false;
+
+    if (amount === undefined || amount <= 0) {
+      newErrors.amount = true;
+      hasError = true;
+    }
+    if (!date) {
+      newErrors.date = true;
+      hasError = true;
+    }
+    if (category === UNSELECTED_VALUE) {
+      newErrors.category = true;
+      hasError = true;
+    }
+
+    setValidationErrors(newErrors);
+
+    if (hasError) {
       toast.error(
-        "Preencha todos os campos obrigatórios (Valor e Subcategoria)."
+        "Preencha todos os campos obrigatórios (Valor, Data e Subcategoria)."
       );
       return;
     }
@@ -339,7 +360,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-4">
         <TransactionOneOffFields
           amount={amount}
-          setAmount={setAmount}
+          setAmount={(v) => {
+            setAmount(v);
+            setValidationErrors(prev => ({ ...prev, amount: false }));
+          }}
           date={date}
           setDate={(date) => {
             if (!date) return;
@@ -349,9 +373,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               date.getDate()
             );
             setDate(fixedDate);
+            setValidationErrors(prev => ({ ...prev, date: false }));
           }}
           category={category}
-          setCategory={setCategory}
+          setCategory={(v) => {
+            setCategory(v);
+            setValidationErrors(prev => ({ ...prev, category: false }));
+          }}
           description={description}
           setDescription={setDescription}
           status={status}
@@ -366,6 +394,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           setIsPaid={setIsPaid}
           installmentNumber={editingTransaction?.installmentNumber}
           totalInstallments={editingTransaction?.totalInstallments}
+          validationErrors={validationErrors} // Pass validation errors
         />
 
         <TransactionEditActions
