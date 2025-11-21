@@ -114,15 +114,16 @@ export default function Receitas() {
     try {
       if (isRecurring) {
         const recurrenceDay = getDate(data);
+        // 1. Create the master recurring revenue entry (this will be the first occurrence)
         const { data: masterData, error: masterError } = await supabase
           .from("receitas")
           .insert({
             user_id: user?.id,
             tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
             valor: valor as number,
-            data: formattedDate,
+            data: formattedDate, // Data da primeira ocorrência
             descricao,
-            status: 'Prevista',
+            status: 'Prevista', // Master é sempre 'Prevista'
             is_recurring_master: true,
             recurrence_day: recurrenceDay,
           })
@@ -132,6 +133,7 @@ export default function Receitas() {
         if (masterError) throw masterError;
         masterRevenueId = masterData.id;
 
+        // Atualiza o registro mestre para referenciar a si mesmo como recurrence_id
         const { error: updateMasterError } = await supabase
           .from("receitas")
           .update({ recurrence_id: masterRevenueId })
@@ -139,23 +141,24 @@ export default function Receitas() {
         
         if (updateMasterError) throw updateMasterError;
 
-        // Call RPC to generate future occurrences starting from the NEXT month
+        // 2. Call RPC to generate ALL occurrences, including the first one (which is the master itself)
         const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
           p_user_id: user?.id,
           p_transaction_type: 'income',
           p_master_id: masterRevenueId,
-          p_first_occurrence_date: format(addMonths(data, 1), 'yyyy-MM-dd'), // Start from NEXT month
+          p_first_occurrence_date: formattedDate, // Data da primeira ocorrência
           p_monthly_amount: valor as number,
           p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           p_description: descricao,
           p_status: 'Prevista',
           p_recurrence_day: recurrenceDay,
-          p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Generate remaining 119
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 ocorrências
         });
 
         if (rpcError) throw rpcError;
 
       } else {
+        // Create a one-off revenue entry (as before)
         const newRevenueData = {
           user_id: user?.id,
           tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,

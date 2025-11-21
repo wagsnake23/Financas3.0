@@ -21,6 +21,8 @@ interface UseTransactionMutationsProps {
   selectedMonth: Date;
 }
 
+const RECURRING_INSTALLMENTS_COUNT = 120; // Definir aqui também para consistência
+
 export const useTransactionMutations = ({
   user,
   queryClient,
@@ -76,6 +78,7 @@ export const useTransactionMutations = ({
               const { error: deleteOccurrenceError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
               if (deleteOccurrenceError) throw deleteOccurrenceError;
 
+              // Se a ocorrência deletada era a mestra, precisamos desvincular as outras
               if (transactionToDelete.is_recurring_master) {
                 const { error: updateOccurrencesError } = await supabase
                   .from("receitas")
@@ -94,7 +97,9 @@ export const useTransactionMutations = ({
                 .eq("user_id", user.id);
               if (deleteFutureOccurrencesError) throw deleteFutureOccurrencesError;
 
-              if (transactionToDelete.is_recurring_master && currentOccurrenceDate <= parseISO(transactionToDelete.date)) {
+              // Se a transação original era a mestra e estamos deletando a partir dela,
+              // a mestra também deve ser desvinculada ou atualizada.
+              if (transactionToDelete.is_recurring_master) {
                  const { error: updateMasterError } = await supabase
                   .from("receitas")
                   .update({ is_recurring_master: false, recurrence_id: null, recurrence_day: null })
@@ -107,6 +112,7 @@ export const useTransactionMutations = ({
               const { error: deleteAllOccurrencesError } = await supabase.from("receitas").delete().eq("recurrence_id", masterRecurrenceId).eq("user_id", user.id);
               if (deleteAllOccurrencesError) throw deleteAllOccurrencesError;
 
+              // Se a transação original era a mestra, deletar a própria mestra
               if (transactionToDelete.is_recurring_master) {
                 const { error: deleteMasterError } = await supabase.from("receitas").delete().eq("id", masterRecurrenceId).eq("user_id", user.id);
                 if (deleteMasterError) throw deleteMasterError;
@@ -242,7 +248,6 @@ export const useTransactionMutations = ({
             const masterRecurrenceId = originalTransaction.is_recurring_master ? originalTransaction.id : originalTransaction.recurrence_id;
             if (!masterRecurrenceId) throw new Error("Erro (UPD-INC-REC-1): ID de recorrência mestre não encontrado.");
 
-            const currentOccurrenceDate = parseISO(originalTransaction.date);
             const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
             if (saveScope === "thisMonth" || saveScope === "oneOff") {
@@ -260,6 +265,7 @@ export const useTransactionMutations = ({
               if (updateOccurrenceError) throw updateOccurrenceError;
 
             } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+              // 1. Atualizar o registro mestre
               if (originalTransaction.is_recurring_master || saveScope === "all") {
                 const { error: updateMasterError } = await supabase
                   .from("receitas")
@@ -274,6 +280,7 @@ export const useTransactionMutations = ({
                 if (updateMasterError) throw updateMasterError;
               }
 
+              // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
               const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
               
               console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
@@ -287,17 +294,18 @@ export const useTransactionMutations = ({
 
               if (deleteFutureError) throw deleteFutureError;
 
+              // 3. Chamar RPC para regenerar TODAS as ocorrências a partir da data de atualização
               const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: format(addMonths(parseISO(updatedTransaction.date), 1), 'yyyy-MM-dd'), // Start from NEXT month
+                p_first_occurrence_date: parseISO(updatedTransaction.date), // Começa da data de atualização
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
                 p_status: 'Prevista',
                 p_recurrence_day: newRecurrenceDay,
-                p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Re-generate remaining
+                p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               });
               if (rpcError) throw rpcError;
 
@@ -341,6 +349,7 @@ export const useTransactionMutations = ({
           const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
+          // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
           const { error: updateDespesaParentError } = await supabase
             .from("despesas")
             .update({
@@ -368,34 +377,23 @@ export const useTransactionMutations = ({
             if (updateParcelaError) throw updateParcelaError;
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
-            console.log(`[DEBUG] Updating current installment (ID: ${id}) with new values.`);
-            const { error: updateCurrentInstallmentError } = await supabase
-              .from("despesas_parcelas")
-              .update({
-                valor_parcela: newValorParcela,
-                vencimento: newVencimento,
-                pago: newPagoStatus,
-                data_pagamento: newPagoDate,
-              })
-              .eq("id", id);
-            if (updateCurrentInstallmentError) throw updateCurrentInstallmentError;
-
-            const deleteFromDate = format(parseISO(originalTransaction.date), 'yyyy-MM-dd');
+            // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
+            const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
               .delete()
               .eq("despesa_id", parentDespesaId)
-              .gte("vencimento", deleteFromDate)
-              .neq("id", id);
+              .gte("vencimento", deleteFromDate);
 
             if (deleteFutureParcelasError) throw deleteFutureParcelasError;
 
+            // 2. Chamar RPC para regenerar TODAS as parcelas a partir da data de atualização
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: format(addMonths(parseISO(updatedTransaction.date), 1), 'yyyy-MM-dd'), // Start from NEXT month
+              p_first_occurrence_date: parseISO(updatedTransaction.date), // Começa da data de atualização
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
@@ -403,10 +401,11 @@ export const useTransactionMutations = ({
               p_cartao_id: originalTransaction.cartao_id,
               p_tipo_pagamento: originalTransaction.tipo_pagamento,
               p_recurrence_day: newRecurrenceDay,
-              p_total_installments: RECURRING_INSTALLMENTS_COUNT - 1, // Re-generate remaining
+              p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
             });
             if (rpcError) throw rpcError;
 
+            // 3. Recalcular valor_total e numero_parcelas para o registro mestre de despesa
             const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
                 .from("despesas_parcelas")
                 .select("valor_parcela")

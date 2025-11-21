@@ -163,8 +163,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           forma_pagamento: formaPagamento,
           tipo_pagamento: isRecurring ? "fixo" : tipoPagamento,
           cartao_id: formaPagamento === "cartao" ? cartaoId : null,
-          valor_total: isRecurring ? valorTotal * RECURRING_INSTALLMENTS_COUNT : valorTotal,
-          numero_parcelas: isRecurring ? RECURRING_INSTALLMENTS_COUNT : numeroParcelas,
+          // Para despesas recorrentes, o valor_total e numero_parcelas serão atualizados pela RPC
+          valor_total: isRecurring ? 0 : valorTotal, // Inicializa com 0, RPC irá somar
+          numero_parcelas: isRecurring ? 0 : numeroParcelas, // Inicializa com 0, RPC irá contar
           descricao,
           is_recurring_master: isRecurring,
         })
@@ -173,13 +174,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       if (despesaError) throw despesaError;
 
-      const installmentsToInsert = [];
       const valorParcela = isRecurring ? valorTotal : (tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal);
 
-      const firstInstallmentDate = dataVencimento as Date;
-      const formattedFirstInstallmentDate = format(firstInstallmentDate, 'yyyy-MM-dd');
+      const formattedFirstInstallmentDate = format(dataVencimento as Date, 'yyyy-MM-dd');
 
       if (isRecurring) {
+        // A RPC agora gera TODAS as parcelas, incluindo a primeira
         const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
           p_user_id: user.id,
           p_transaction_type: 'expense',
@@ -192,12 +192,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
           p_tipo_pagamento: "fixo",
           p_recurrence_day: recurrenceDay,
-          p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 parcelas
         });
 
         if (rpcError) throw rpcError;
 
       } else {
+        // Lógica para despesas avulsas e parceladas (não recorrentes) permanece a mesma
+        const installmentsToInsert = [];
         installmentsToInsert.push({
           despesa_id: despesaData.id,
           numero_parcela: 1,
