@@ -324,7 +324,7 @@ export default function Receitas() {
                   getBorderClass({ isInvalid: validationErrors.data, isValid: validationErrors.data === false })
                 )}
               >
-                <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
                 {data ? format(data, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
               </Button>
             </PopoverTrigger>
