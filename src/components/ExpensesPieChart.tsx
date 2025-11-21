@@ -21,9 +21,9 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
         parentCategory = allCategories.find(c => c.id === subcategory.parent_id);
       }
 
-      // Usar o nome e a cor da categoria pai, se existir, caso contrário, usar a subcategoria ou um fallback
-      const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
-      const displayCategoryColor = parentCategory?.cor || subcategory?.cor || "hsl(215, 15%, 50%)";
+      // Usar estritamente o nome e a cor da categoria pai. Se não houver pai, usar "Outros".
+      const displayCategoryName = parentCategory?.nome || "Outros";
+      const displayCategoryColor = parentCategory?.cor || "hsl(215, 15%, 50%)"; // Cor padrão para 'Outros'
       
       if (!acc[displayCategoryName]) {
         acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
@@ -41,7 +41,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   if (chartData.length === 0) {
     return (
       <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
+        <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2>
         <div className={cn("h-80 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
           Nenhuma despesa registrada
         </div>
@@ -51,7 +51,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
 
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
+      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2>
       <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
         <PieChart>
           <Pie
@@ -69,7 +69,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
             ))}
           </Pie>
           <Tooltip 
-            formatter={(value: number) => formatCurrency(value)} // Formatar Tooltip
+            formatter={(value: number) => formatCurrency(value)}
             contentStyle={{ 
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
