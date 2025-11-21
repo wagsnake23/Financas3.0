@@ -130,7 +130,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
-      <div className={cn("space-y-2", isMobile && "px-4")}>
+      <div className={cn("space-y-2")}> {/* Removido isMobile && "px-4" */}
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loading}>
           <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
@@ -154,7 +154,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn("space-y-2", isMobile && "px-4")}>
+      <div className={cn("space-y-2")}> {/* Removido isMobile && "px-4" */}
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
           <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
@@ -170,7 +170,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2 px-4" : "grid-cols-1")}> {/* Adicionado px-4 aqui */}
+      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}> {/* Removido px-4 aqui */}
         <div className="space-y-2">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
@@ -194,7 +194,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
       </div>
 
-      <div className={cn("space-y-2", isMobile && "px-4")}>
+      <div className={cn("space-y-2")}> {/* Removido isMobile && "px-4" */}
         <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
@@ -228,7 +228,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Popover>
       </div>
 
-      <div className={cn("flex gap-2", isMobile && "px-4")}> {/* Adicionado px-4 aqui */}
+      <div className={cn("flex gap-2")}> {/* Removido isMobile && "px-4" */}
         <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loading}>
           {loading ? "Atualizando..." : "Atualizar Investimento"}
         </Button>
