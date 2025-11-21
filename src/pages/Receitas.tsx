@@ -248,7 +248,7 @@ export default function Receitas() {
             )}
           >
             <DynamicIcon 
-              name="Zap" 
+              name="⚡" 
               className={cn(
                 "mr-2 h-4 w-4",
                 "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
@@ -264,7 +264,7 @@ export default function Receitas() {
               )}
             >
               <DynamicIcon 
-                name="Repeat" 
+                name="🔁" 
                 className={cn(
                   "mr-2 h-4 w-4",
                   "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
@@ -367,7 +367,7 @@ export default function Receitas() {
           <Textarea
             id="descricao"
             value={descricao}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setDescricao(e.target.value)}
             placeholder="Detalhes sobre a receita..."
             rows={3}
             className={cn("rounded-xl", isMobile && "text-sm")}
