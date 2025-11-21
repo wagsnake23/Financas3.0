@@ -5,7 +5,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } => from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
@@ -126,11 +126,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "p-3")}> {/* Mantido p-3 para padding interno do formulário */}
+    <form onSubmit={handleSubmit} className={cn("space-y-4")}> {/* Removido p-3 do form principal */}
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isMobile && "px-4")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select value={selectedInvestmentCategoryId} onValueChange={setSelectedInvestmentCategoryId} disabled={loading}>
           <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
@@ -154,7 +154,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isMobile && "px-4")}>
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
           <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
@@ -170,7 +170,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}> {/* Ajustado gap para mobile */}
+      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2 px-4" : "grid-cols-1")}> {/* Adicionado px-4 aqui */}
         <div className="space-y-2">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
@@ -194,7 +194,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isMobile && "px-4")}>
         <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
@@ -228,7 +228,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Popover>
       </div>
 
-      <div className="flex gap-2">
+      <div className={cn("flex gap-2", isMobile && "px-4")}> {/* Adicionado px-4 aqui */}
         <Button type="submit" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loading}>
           {loading ? "Atualizando..." : "Atualizar Investimento"}
         </Button>
