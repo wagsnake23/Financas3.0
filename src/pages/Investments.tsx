@@ -369,19 +369,19 @@ export default function Investments() { // Alterado para export default function
                           <div className="flex gap-1"> {/* Container para os botões de ação */}
                             <Button
                               variant="ghost"
-                              size="sm"
+                              size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
                               onClick={() => handleEditClick(investment)}
-                              className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-7 w-7")}
+                              className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
                             >
-                              <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                              <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
                             </Button>
                             <Button
                               variant="ghost"
-                              size="sm"
+                              size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
                               onClick={() => handleDelete(investment.id)}
-                              className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-7 w-7")}
+                              className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
                             >
-                              <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                              <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
                             </Button>
                           </div>
                         </div>
