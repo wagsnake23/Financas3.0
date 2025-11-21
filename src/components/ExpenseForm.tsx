@@ -59,7 +59,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Form states
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
-  const [tipoPagamento, setTipoPagamento] = useState<"avista" | "parcelado">("avista"); // Novo estado
+  const [tipoPagamento, setTipoPagamento] = useState<"avista" | "parcelado" | "fixo">("avista"); // Novo estado, tipo atualizado
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [descricao, setDescricao] = useState("");
@@ -79,14 +79,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   // Efeito para definir o status de pago/pendente automaticamente
   useEffect(() => {
-    if (tipoPagamento === "parcelado") {
+    if (isRecurring) { // Se for recorrente, é sempre pendente
+      setIsPaid(false);
+    } else if (tipoPagamento === "parcelado") {
       setIsPaid(false); // Parcelado é sempre pendente inicialmente
     } else if (formaPagamento === "cartao") {
       setIsPaid(false); // Cartão à vista também é pendente
     } else {
       setIsPaid(true); // Dinheiro/Pix/Boleto à vista é pago
     }
-  }, [formaPagamento, tipoPagamento]);
+  }, [formaPagamento, tipoPagamento, isRecurring]); // Adicionado isRecurring às dependências
 
   // NOVO EFEITO: Definir forma de pagamento como "cartao" se tipoPagamento for "parcelado"
   useEffect(() => {
@@ -105,14 +107,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   // Efeito para ajustar tipoPagamento e numeroParcelas se for recorrente
   useEffect(() => {
     if (isRecurring) {
-      setTipoPagamento("parcelado");
+      setTipoPagamento("fixo"); // Alterado para "fixo"
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
       setIsPaid(false); // Recorrente é sempre pendente inicialmente
     } else {
       setTipoPagamento("avista"); // Volta para avista se não for recorrente
       setNumeroParcelas(1); // Volta para 1 parcela
     }
-  }, [isRecurring]);
+  }, [isRecurring]); // Dependência em isRecurring
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +145,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.cartaoId = true;
       hasError = true;
     }
-    if (tipoPagamento === "parcelado" && (numeroParcelas <= 1 || !Number.isInteger(numeroParcelas))) {
+    // A validação de numeroParcelas só é relevante se não for recorrente e for parcelado
+    if (!isRecurring && tipoPagamento === "parcelado" && (numeroParcelas <= 1 || !Number.isInteger(numeroParcelas))) {
       newErrors.numeroParcelas = true;
       hasError = true;
     }
@@ -168,11 +171,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           user_id: user.id,
           categoria_id: selectedSubcategoryId === UNSELECTED_VALUE ? null : selectedSubcategoryId,
           forma_pagamento: formaPagamento,
-          tipo_pagamento: tipoPagamento,
+          tipo_pagamento: isRecurring ? "fixo" : tipoPagamento, // Definir como 'fixo' se for recorrente
           cartao_id: formaPagamento === "cartao" ? cartaoId : null,
           valor_total: isRecurring ? valorTotal * RECURRING_INSTALLMENTS_COUNT : valorTotal, // Total value for recurring
-          descricao,
           numero_parcelas: isRecurring ? RECURRING_INSTALLMENTS_COUNT : numeroParcelas, // Set 120 for recurring
+          descricao,
           is_recurring_master: isRecurring, // Mark as recurring master
         })
         .select()
@@ -209,7 +212,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           p_description: descricao,
           p_forma_pagamento: formaPagamento,
           p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
-          p_tipo_pagamento: tipoPagamento,
+          p_tipo_pagamento: "fixo", // Definir como 'fixo' para as parcelas recorrentes
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT,
         });
@@ -316,10 +319,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setTipoPagamento={setTipoPagamento} // Passar a função para atualizar o tipo de pagamento
         numeroParcelas={numeroParcelas} // Passar o número de parcelas
         setNumeroParcelas={setNumeroParcelas} // Passar a função para atualizar o número de parcelas
+        isRecurring={isRecurring} // NOVA PROP
       />
 
       {/* NOVO: Pré-visualização das Parcelas - MOVIDO PARA CIMA */}
-      {tipoPagamento === "parcelado" && numeroParcelas > 1 && (
+      {tipoPagamento === "parcelado" && numeroParcelas > 1 && !isRecurring && ( // Updated condition
         <InstallmentPreview
           valor={valor}
           numeroParcelas={numeroParcelas}

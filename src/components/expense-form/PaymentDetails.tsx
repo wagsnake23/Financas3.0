@@ -24,11 +24,12 @@ interface PaymentDetailsProps {
   isMobile: boolean;
   UNSELECTED_VALUE: string;
   // PROPS PARA TIPO DE PAGAMENTO
-  tipoPagamento: "avista" | "parcelado";
-  setTipoPagamento: (value: "avista" | "parcelado") => void;
+  tipoPagamento: "avista" | "parcelado" | "fixo"; // Tipo atualizado
+  setTipoPagamento: (value: "avista" | "parcelado" | "fixo") => void; // Tipo atualizado
   // NOVAS PROPS PARA NÚMERO DE PARCELAS
   numeroParcelas: number;
   setNumeroParcelas: (value: number) => void;
+  isRecurring: boolean; // NOVA PROP
 }
 
 export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -49,6 +50,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setTipoPagamento,
   numeroParcelas, // NOVA PROP
   setNumeroParcelas, // NOVA PROP
+  isRecurring, // NOVA PROP
 }) => {
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
@@ -69,23 +71,28 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           />
         </div>
 
-        {/* Tipo de Pagamento (À vista / Parcelado) */}
+        {/* Tipo de Pagamento (À vista / Parcelado / Fixo) */}
         <div>
           <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
-          <Select value={tipoPagamento} onValueChange={(v: "avista" | "parcelado") => setTipoPagamento(v)}>
+          <Select 
+            value={tipoPagamento} 
+            onValueChange={(v: "avista" | "parcelado" | "fixo") => setTipoPagamento(v)} // Tipo atualizado
+            disabled={isRecurring} // Desabilitar se for recorrente
+          >
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="avista" className={cn(isMobile && "text-sm")}>À Vista</SelectItem>
               <SelectItem value="parcelado" className={cn(isMobile && "text-sm")}>Parcelado</SelectItem>
+              <SelectItem value="fixo" className={cn(isMobile && "text-sm")}>Fixo</SelectItem> {/* NOVA OPÇÃO */}
             </SelectContent>
           </Select>
         </div>
       </div>
 
       {/* Forma de Pagamento e Número de Parcelas (condicional) */}
-      <div className={cn("grid gap-4", tipoPagamento === "parcelado" ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
+      <div className={cn("grid gap-4", tipoPagamento === "parcelado" && !isRecurring ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
         {/* Forma de Pagamento */}
         <div>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
@@ -102,8 +109,8 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           </Select>
         </div>
 
-        {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado") */}
-        {tipoPagamento === "parcelado" && (
+        {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado" E NÃO for recorrente) */}
+        {tipoPagamento === "parcelado" && !isRecurring && ( // Condição atualizada
           <div>
             <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
               Número de Parcelas
