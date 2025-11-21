@@ -18,7 +18,6 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
       <NumericFormat
         {...props}
         getInputRef={ref}
-        onValueChange={onValueChange}
         thousandSeparator="."
         decimalSeparator=","
         prefix="R$ "
@@ -27,6 +26,22 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
         allowNegative={false}
         customInput={Input}
         className={cn(className)}
+        valueIsNumericString
+        onValueChange={(values) => {
+          const raw = values.value; // string sem formatação
+          const float = raw ? Number(raw) / 100 : 0; // converte centavos em reais
+
+          onValueChange?.({
+            floatValue: float,
+            formattedValue: values.formattedValue,
+            value: values.value
+          });
+        }}
+        isAllowed={(values) => {
+          // evita "0000000000000000..."
+          if (values.value.length > 12) return false;
+          return true;
+        }}
       />
     );
   }
