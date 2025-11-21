@@ -35,7 +35,7 @@ interface TransactionListProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  disableFilters?: boolean;
+  // Removido: disableFilters?: boolean;
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
   selectedMonth: Date;
@@ -55,7 +55,7 @@ export const TransactionList = ({
   isMobile,
   queryClient,
   user,
-  disableFilters = false,
+  // Removido: disableFilters = false,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   selectedMonth,
@@ -297,7 +297,7 @@ export const TransactionList = ({
     <div className={cn("p-6", isMobile && "p-0")}>
       
       <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-1 gap-2" : "grid-cols-4")}> {/* Alterado para grid-cols-1 em mobile */}
-        <Select value={filterType} onValueChange={setFilterType} disabled={disableFilters}
+        <Select value={filterType} onValueChange={setFilterType} 
                 className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
@@ -309,7 +309,7 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterCategory} onValueChange={setFilterCategory} disabled={disableFilters}
+        <Select value={filterCategory} onValueChange={setFilterCategory} 
                 className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
@@ -330,7 +330,7 @@ export const TransactionList = ({
         </Select>
 
         {/* Payment Option Select */}
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} disabled={disableFilters}
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
                 className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Alterado para col-span-1 para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />

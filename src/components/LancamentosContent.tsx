@@ -55,7 +55,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
-  const disableFilters = !!editingTransaction;
+  // Removido: const disableFilters = !!editingTransaction;
 
   return (
     <TransactionView
@@ -68,7 +68,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       queryClient={queryClient}
       user={user}
       selectedMonth={selectedMonth}
-      disableFilters={disableFilters}
+      // Removido: disableFilters={disableFilters}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice} // NOVO
