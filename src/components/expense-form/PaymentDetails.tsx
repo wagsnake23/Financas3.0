@@ -74,8 +74,20 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
   const handleNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const numValue = parseInt(value);
-    setNumeroParcelas(isNaN(numValue) || numValue < 1 ? 1 : numValue); // Garante que seja no mínimo 1
+
+    // Permitir que o campo fique vazio temporariamente (necessário para mobile)
+    if (value === "") {
+      setNumeroParcelas(value as any);
+      return;
+    }
+
+    const numValue = Number(value);
+
+    // Só aceitar números positivos
+    if (!isNaN(numValue) && numValue >= 1) {
+      setNumeroParcelas(numValue);
+    }
+
     setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
   };
 
@@ -160,12 +172,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             </Label>
             <Input
               id="numeroParcelas"
-              type="number"
-              min="1" // Garante que não seja negativo
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
-              placeholder="Digite o número de parcelas"
-              required
+              placeholder="Número de parcelas"
               className={cn("rounded-xl", isMobile && "h-9 text-sm", validationErrors.numeroParcelas && "border-destructive")}
             />
           </div>
