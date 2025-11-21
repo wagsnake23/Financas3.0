@@ -225,20 +225,14 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     // Lógica unificada para determinar se deve mostrar as opções de série
     const isFixedRecurringSeries =
       editingTransaction.tipo_pagamento === "fixo" &&
-      editingTransaction.is_recurring_master;
+      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id); // Covers both master and occurrences of fixed/recurring income/expense
 
     const isInstallmentSeries =
-      editingTransaction.type === "expense" && // Apenas despesas podem ser parceladas no modelo atual
       editingTransaction.tipo_pagamento === "parcelado" &&
       totalItemsInSeries > 1 &&
-      futureItems > 0; // Verifica se há parcelas futuras pendentes
+      futureItems > 0; // futureItems already fetched
 
-    const isIncomeRecurringSeries = 
-      editingTransaction.type === "income" &&
-      editingTransaction.is_recurring_master &&
-      futureItems > 0; // Verifica se há ocorrências futuras pendentes
-
-    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries || isIncomeRecurringSeries;
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
 
     if (shouldShowSeriesOptions) {
       setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
@@ -312,20 +306,14 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     // Lógica unificada para determinar se deve mostrar as opções de série
     const isFixedRecurringSeries =
       editingTransaction.tipo_pagamento === "fixo" &&
-      editingTransaction.is_recurring_master;
+      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id); // Covers both master and occurrences of fixed/recurring income/expense
 
     const isInstallmentSeries =
-      editingTransaction.type === "expense" && // Apenas despesas podem ser parceladas no modelo atual
       editingTransaction.tipo_pagamento === "parcelado" &&
       totalItemsInSeries > 1 &&
-      futureItems > 0; // Verifica se há parcelas futuras pendentes
+      futureItems > 0; // futureItems already fetched
 
-    const isIncomeRecurringSeries = 
-      editingTransaction.type === "income" &&
-      editingTransaction.is_recurring_master &&
-      futureItems > 0; // Verifica se há ocorrências futuras pendentes
-
-    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries || isIncomeRecurringSeries;
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
 
     if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
@@ -343,7 +331,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
     setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteOptionsDialog(false);
+    setShowSimpleDeleteDialog(false);
   };
 
   const formContent = (

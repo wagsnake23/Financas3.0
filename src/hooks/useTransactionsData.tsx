@@ -112,7 +112,8 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         is_recurring_master: Boolean(r.is_recurring_master), // Garante que seja boolean
         recurrence_id: r.recurrence_id ?? null, // Garante que seja string | null
         recurrence_day: r.recurrence_day ?? null, // Garante que seja number | null
-        tipo_pagamento: null, // Receitas não têm tipo_pagamento
+        // Set tipo_pagamento based on recurrence status for income
+        tipo_pagamento: (r.is_recurring_master || !!r.recurrence_id) ? "fixo" : "avista",
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
