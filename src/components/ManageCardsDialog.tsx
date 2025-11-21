@@ -8,7 +8,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input }
+ from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
@@ -180,7 +181,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       <Dialog open={isManageCardsOpen} onOpenChange={setIsManageCardsOpen}>
         <DialogTrigger asChild>
           <Button type="button" variant="outline" size="icon">
-            <DynamicIcon name="⚙️" className="w-4 h-4" /> {/* Ícone de emoji de engrenagem */}
+            <DynamicIcon name="✏️" className="w-4 h-4" /> {/* Ícone de emoji de lápis */}
           </Button>
         </DialogTrigger>
         <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
