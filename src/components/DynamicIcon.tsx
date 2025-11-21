@@ -4,14 +4,16 @@ import {
   Wallet, TrendingUp, MoreHorizontal, Plus, Trash2, Search, Pencil, DollarSign,
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
-  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle, CalendarOff, // Adicionado CalendarOff
+  ChevronLeft, ChevronRight, CheckCircle, Circle, XCircle, CalendarOff,
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, TestTube, Dumbbell, Brain, School, Laptop,
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich
+  Building2, Sandwich,
+  Zap, // Adicionado Zap
+  Repeat // Adicionado Repeat
 } from 'lucide-react';
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
@@ -21,14 +23,16 @@ const iconMap: { [key: string]: React.ElementType } = {
   Percent, Calendar, TrendingDown, ArrowUp, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
   ChevronLeft, ChevronRight,
-  CheckCircle, Circle, XCircle, CalendarOff, // Adicionado CalendarOff
+  CheckCircle, Circle, XCircle, CalendarOff,
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, TestTube, Dumbbell, Brain, School, Laptop,
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich
+  Building2, Sandwich,
+  Zap, // Adicionado Zap
+  Repeat // Adicionado Repeat
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
