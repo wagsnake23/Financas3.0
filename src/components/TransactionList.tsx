@@ -398,7 +398,7 @@ export const TransactionList = ({
         </Table>
       </div>
 
-      <div className="flex justify-end mb-0 mt-4 pr-5">
+      <div className="flex justify-end mb-0 mt-0 pr-5">
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(
