@@ -29,7 +29,12 @@ export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = (
             className={cn(
               isMobile && "h-3.5 w-3.5",
               "peer",
-              "data-[state=checked]:text-success" // Faz a bolinha interna ser verde
+              // Borda verde quando selecionado
+              "data-[state=checked]:border-success",
+              // Bolinha interna verde sólida
+              "data-[state=checked]:after:bg-success",
+              // Anel do foco também verde
+              "data-[state=checked]:ring-success"
             )}
           />
           <Label
@@ -50,7 +55,12 @@ export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = (
             className={cn(
               isMobile && "h-3.5 w-3.5",
               "peer",
-              "data-[state=checked]:text-destructive" // Faz a bolinha interna ser vermelha
+              // Borda vermelha quando selecionado
+              "data-[state=checked]:border-destructive",
+              // Bolinha interna vermelha sólida
+              "data-[state=checked]:after:bg-destructive",
+              // Anel do foco também vermelho
+              "data-[state=checked]:ring-destructive"
             )}
           />
           <Label
