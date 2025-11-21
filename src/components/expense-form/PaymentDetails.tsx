@@ -153,10 +153,18 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>Dinheiro</SelectItem>
-              <SelectItem value="pix" className={cn(isMobile && "text-sm")}>Pix</SelectItem>
-              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>Cartão</SelectItem>
-              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>Boleto</SelectItem>
+              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2">💰 Dinheiro</span>
+              </SelectItem>
+              <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2">📲 Pix</span>
+              </SelectItem>
+              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2">💳 Cartão</span>
+              </SelectItem>
+              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2">📑 Boleto</span>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
