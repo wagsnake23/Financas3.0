@@ -83,8 +83,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
 
   // NOVOS ESTADOS PARA A LÓGICA DE EXCLUSÃO CONDICIONAL
-  const [pendingFutureInstallments, setPendingFutureInstallments] = useState(0);
-  const [isFetchingDeleteOptions, setIsFetchingDeleteOptions] = useState(false);
+  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0); // Renomeado para ser mais genérico
+  const [isFetchingOptions, setIsFetchingOptions] = useState(false); // Renomeado para ser mais genérico
 
   const isRecurringTransaction = useMemo(() => {
     // Uma transação é recorrente SE:
@@ -162,7 +162,45 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     }
   }, [editingTransaction, allCategories]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Helper function to fetch pending future items (installments or occurrences)
+  const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => {
+    let count = 0;
+    try {
+      if (transaction.type === "expense") {
+        const parentDespesaId = transaction.despesa_id;
+        if (parentDespesaId && isValidUuid(parentDespesaId)) {
+          const { count: futureInstallmentsCount, error } = await supabase
+            .from("despesas_parcelas")
+            .select("id", { count: 'exact' })
+            .eq("despesa_id", parentDespesaId)
+            .eq("pago", false)
+            .gte("vencimento", format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd'));
+          
+          if (error) throw error;
+          count = futureInstallmentsCount || 0;
+        }
+      } else if (transaction.type === "income") {
+        const masterRecurrenceId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
+        if (masterRecurrenceId && isValidUuid(masterRecurrenceId)) {
+          const { count: futureOccurrencesCount, error } = await supabase
+            .from("receitas")
+            .select("id", { count: 'exact' })
+            .eq("recurrence_id", masterRecurrenceId)
+            .in("status", ["Pendente", "Prevista"])
+            .gte("data", format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd'));
+          
+          if (error) throw error;
+          count = futureOccurrencesCount || 0;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching pending future items:", error);
+      toast.error("Erro ao verificar lançamentos futuros.");
+    }
+    return count;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingTransaction) return;
 
@@ -174,7 +212,25 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     }
 
     if (isRecurringTransaction) {
-      setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
+      setLoading(true); // Start loading for the pre-check
+      setIsFetchingOptions(true);
+      const futureItems = await fetchPendingFutureItems(editingTransaction);
+      setPendingFutureItemsCount(futureItems);
+      setIsFetchingOptions(false);
+      setLoading(false); // Stop loading after pre-check
+
+      const totalItemsInSeries = editingTransaction.totalInstallments || 1; // For expenses, use totalInstallments. For income, if master, it implies >1.
+
+      const shouldShowRecurringSaveOptions = 
+        editingTransaction.is_recurring_master && // Must be the master
+        (editingTransaction.type === "expense" ? totalItemsInSeries > 1 : true) && // For expense, check total installments. For income, if master, it's implicitly >1.
+        futureItems > 0; // Check if there are pending future items
+
+      if (shouldShowRecurringSaveOptions) {
+        setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
+      } else {
+        performUpdate("oneOff"); // Salva diretamente para transações avulsas ou recorrentes sem futuras pendências
+      }
     } else {
       performUpdate("oneOff"); // Salva diretamente para transações avulsas
     }
@@ -235,58 +291,24 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const handleTriggerDeleteConfirmation = async () => {
     if (!editingTransaction) return;
 
-    setIsFetchingDeleteOptions(true);
-    let hasPendingFuture = 0;
+    setIsFetchingOptions(true); // Use isFetchingOptions
+    const futureItems = await fetchPendingFutureItems(editingTransaction);
+    setPendingFutureItemsCount(futureItems);
+    setIsFetchingOptions(false);
 
-    try {
-      if (editingTransaction.type === "expense") {
-        const parentDespesaId = editingTransaction.despesa_id;
-        if (parentDespesaId && isValidUuid(parentDespesaId)) {
-          const { data: futureInstallments, error } = await supabase
-            .from("despesas_parcelas")
-            .select("id")
-            .eq("despesa_id", parentDespesaId)
-            .eq("pago", false)
-            .gte("vencimento", format(createSafeDate(editingTransaction.date) || new Date(), 'yyyy-MM-dd')); // Only count future/current pending
-          
-          if (error) throw error;
-          hasPendingFuture = futureInstallments?.length || 0;
-        }
-      } else if (editingTransaction.type === "income") {
-        const masterRecurrenceId = editingTransaction.is_recurring_master ? editingTransaction.id : editingTransaction.recurrence_id;
-        if (masterRecurrenceId && isValidUuid(masterRecurrenceId)) {
-          const { data: futureOccurrences, error } = await supabase
-            .from("receitas")
-            .select("id")
-            .eq("recurrence_id", masterRecurrenceId)
-            .in("status", ["Pendente", "Prevista"])
-            .gte("data", format(createSafeDate(editingTransaction.date) || new Date(), 'yyyy-MM-dd')); // Only count future/current pending
-          
-          if (error) throw error;
-          hasPendingFuture = futureOccurrences?.length || 0;
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching pending future installments:", error);
-      toast.error("Erro ao verificar lançamentos futuros.");
-    } finally {
-      setPendingFutureInstallments(hasPendingFuture);
-      setIsFetchingDeleteOptions(false);
+    // Now, decide which dialog to show based on the rules
+    // Rule: "o lançamento for o master recorrente, e houver mais de 1 parcela no total, e existirem parcelas futuras pendentes."
+    const totalItemsInSeries = editingTransaction.totalInstallments || 1; // For expenses, use totalInstallments. For income, if master, it implies >1.
 
-      // Now, decide which dialog to show based on the rules
-      // Rule: "o lançamento for o master recorrente, e houver mais de 1 parcela no total, e existirem parcelas futuras pendentes."
-      const totalItemsInSeries = editingTransaction.totalInstallments || 1; // For expenses, use totalInstallments. For income, if master, it implies >1.
+    const shouldShowRecurringOptions = 
+      editingTransaction.is_recurring_master && // Must be the master
+      (editingTransaction.type === "expense" ? totalItemsInSeries > 1 : true) && // For expense, check total installments. For income, if master, it's implicitly >1.
+      futureItems > 0;
 
-      const shouldShowRecurringOptions = 
-        editingTransaction.is_recurring_master && // Must be the master
-        (editingTransaction.type === "expense" ? totalItemsInSeries > 1 : true) && // For expense, check total installments. For income, if master, it's implicitly >1.
-        hasPendingFuture > 0;
-
-      if (shouldShowRecurringOptions) {
-        setShowDeleteOptionsDialog(true);
-      } else {
-        setShowSimpleDeleteOptionsDialog(true);
-      }
+    if (shouldShowRecurringOptions) {
+      setShowDeleteOptionsDialog(true);
+    } else {
+      setShowSimpleDeleteOptionsDialog(true);
     }
   };
 
@@ -299,7 +321,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
     setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteOptionsDialog(false); // Corrigido o nome da função aqui
+    setShowSimpleDeleteOptionsDialog(false);
   };
 
   const formContent = (
@@ -340,7 +362,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
           onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
           onCancel={onCancelEdit}
-          loading={loading || isFetchingDeleteOptions} // Desabilitar se estiver buscando opções de exclusão
+          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
@@ -359,9 +381,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading || isFetchingDeleteOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading || isFetchingDeleteOptions}>
-              {loading || isFetchingDeleteOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading || isFetchingOptions}>
+              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -406,9 +428,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingDeleteOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingDeleteOptions} className="w-full sm:w-auto">
-              {loading || isFetchingDeleteOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -453,9 +475,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingDeleteOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingDeleteOptions} className="w-full sm:w-auto">
-              {loading || isFetchingDeleteOptions ? "Salvando..." : "Salvar"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+              {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
