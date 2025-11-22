@@ -126,8 +126,9 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div className="order-2 lg:order-1 lg:col-span-2">
               {isMobile ? (
-                <> {/* Removido o div wrapper */}
+                <>
                   {formContent}
+                  <Footer isMobile={isMobile} /> {/* Footer inserido aqui para mobile */}
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]">
@@ -160,8 +161,7 @@ export default function Despesas() {
             </>
           )}
         </div>
-        {/* Footer movido para fora do bloco condicional para mobile */}
-        <Footer isMobile={isMobile} />
+        {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop */}
       </div>
     </ProtectedRoute>
   );
