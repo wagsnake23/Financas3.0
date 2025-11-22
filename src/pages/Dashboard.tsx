@@ -8,7 +8,7 @@ import { ExpensesPieChart } from "@/components/ExpensesPieChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } => "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
 import { Transaction } from "@/types/finance";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -146,7 +146,7 @@ const Dashboard = () => {
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button
                       variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1")} 
+                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1 mr-1")} /* Adicionado mr-1 aqui */
                       onClick={() => navigate("/despesas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -181,7 +181,7 @@ const Dashboard = () => {
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button 
                       variant="success" 
-                      className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" /* Adicionado mr-1 aqui */
+                      className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" 
                       onClick={() => navigate("/receitas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
