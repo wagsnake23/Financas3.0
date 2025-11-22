@@ -389,7 +389,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
-          rows={3}
+          rows={isMobile ? 2 : 3} // Ajuste condicional do número de linhas
           className={cn("rounded-xl", isMobile && "text-sm")}
         />
       </div>
