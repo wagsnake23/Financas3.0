@@ -80,7 +80,7 @@ export const TransactionList = ({
 
   const paymentFilterOptions = useMemo(() => {
     const options = [
-      { value: "all", label: "Tudo" }, // Alterado para "Tudo"
+      { value: "all", label: "Forma de Pagamento" }, // Alterado de "Tudo" para "Forma de Pagamento"
       { value: "dinheiro", label: "💰 Dinheiro" }, // Adicionado emoji
       { value: "pix", label: "📲 Pix" }, // Adicionado emoji
     ];
