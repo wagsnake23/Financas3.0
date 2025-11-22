@@ -6,7 +6,7 @@ import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import { isValidUuid } from "@/lib/utils";
-import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
+import { format, parseISO, getDate, addMonths, startOfMonth } from "date-fns"; // Adicionado startOfMonth
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -359,14 +359,68 @@ export const useTransactionMutations = ({
                   updated_at: new Date().toISOString(), // Força updated_at
                 })
                 .eq("id", id)
-                .eq("user_id", user.id); // FIX: Changed "user.id" to "user_id"
+                .eq("user_id", user.id);
               if (updateOccurrenceError) throw updateOccurrenceError;
               console.log("[DEBUG] Single income occurrence updated.");
 
-            } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+            } else if (saveScope === "thisMonthForward") {
+              console.log(`[DEBUG] Updating recurring income for scope: ${saveScope}`);
+
+              // Step 1: Update the current specific occurrence being edited
+              console.log(`[DEBUG] Updating current income occurrence (ID: ${id}).`);
+              const { error: updateCurrentOccurrenceError } = await supabase
+                .from("receitas")
+                .update({
+                  valor: updatedTransaction.amount,
+                  data: updatedTransaction.date, // Keep the edited date for this specific occurrence
+                  tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
+                  descricao: updatedTransaction.description,
+                  status: updatedTransaction.status,
+                  recurrence_day: newRecurrenceDay, // Update recurrence day based on edited date
+                  updated_at: new Date().toISOString(),
+                })
+                .eq("id", id)
+                .eq("user_id", user.id);
+              if (updateCurrentOccurrenceError) throw updateCurrentOccurrenceError;
+              console.log("[DEBUG] Current income occurrence updated.");
+
+              // Step 2: Determine the start date for deleting and regenerating future occurrences
+              const nextMonthStartDate = format(startOfMonth(addMonths(parseISO(updatedTransaction.date), 1)), 'yyyy-MM-dd');
+              console.log(`[DEBUG] Income Update (thisMonthForward): Deleting and regenerating from next month's start date: ${nextMonthStartDate}`);
+
+              // Step 3: Delete all future occurrences (from the start of the next month onwards)
+              const { error: deleteFutureError } = await supabase
+                .from("receitas")
+                .delete()
+                .eq("recurrence_id", masterRecurrenceId)
+                .gte("data", nextMonthStartDate)
+                .eq("user_id", user.id);
+              if (deleteFutureError) throw deleteFutureError;
+              console.log("[DEBUG] Future income occurrences deleted.");
+
+              // Step 4: Call RPC to regenerate all future occurrences (from the start of the next month onwards)
+              const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
+                p_user_id: user.id,
+                p_transaction_type: 'income',
+                p_master_id: masterRecurrenceId,
+                p_first_occurrence_date: nextMonthStartDate, // Start regeneration from next month
+                p_monthly_amount: updatedTransaction.amount,
+                p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
+                p_description: updatedTransaction.description,
+                p_status: 'Prevista',
+                p_recurrence_day: newRecurrenceDay,
+                p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+                p_forma_pagamento: null,
+                p_cartao_id: null,
+                p_tipo_pagamento: null,
+              });
+              if (rpcError) throw rpcError;
+              console.log("[DEBUG] RPC for future income occurrences completed.");
+
+            } else if (saveScope === "all") {
               console.log(`[DEBUG] Updating recurring income for scope: ${saveScope}`);
               // 1. Atualizar o registro mestre
-              if (originalTransaction.is_recurring_master || saveScope === "all") {
+              if (originalTransaction.is_recurring_master) { // Apenas se a transação original for a mestra
                 console.log(`[DEBUG] Updating master income record (ID: ${masterRecurrenceId}).`);
                 const { error: updateMasterError } = await supabase
                   .from("receitas")
@@ -375,41 +429,37 @@ export const useTransactionMutations = ({
                     tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
-                    updated_at: new Date().toISOString(), // Força updated_at
+                    updated_at: new Date().toISOString(),
                   })
                   .eq("id", masterRecurrenceId)
-                  .eq("user_id", user.id); // FIX: Changed "user.id" to "user_id"
+                  .eq("user_id", user.id);
                 if (updateMasterError) throw updateMasterError;
                 console.log("[DEBUG] Master income record updated.");
               }
 
-              // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
-              const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
-              console.log(`[DEBUG] Income Update (thisMonthForward/all): Deleting from date: ${deleteFromDate}`); // ADDED LOG
+              // 2. Deletar todas as ocorrências a partir do início do mês da transação editada (inclusive)
+              const startOfEditedMonth = format(startOfMonth(parseISO(updatedTransaction.date)), 'yyyy-MM-dd');
+              console.log(`[DEBUG] Income Update (all): Deleting from start of edited month: ${startOfEditedMonth}`);
               
-              const { error: deleteFutureError } = await supabase
+              const { error: deleteAllFutureError } = await supabase
                 .from("receitas")
                 .delete()
                 .eq("recurrence_id", masterRecurrenceId)
-                .gte("data", deleteFromDate)
+                .gte("data", startOfEditedMonth)
                 .eq("user_id", user.id);
+              if (deleteAllFutureError) throw deleteAllFutureError;
+              console.log("[DEBUG] All future income occurrences (from start of edited month) deleted.");
 
-              if (deleteFutureError) throw deleteFutureError;
-              console.log("[DEBUG] Future income occurrences deleted.");
-
-              // 3. Chamar RPC para regenerar TODAS as ocorrências a partir da data de atualização
-              const rpcFirstOccurrenceDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'); // ADDED VARIABLE
-              console.log(`[DEBUG] Income Update (thisMonthForward/all): RPC first occurrence date: ${rpcFirstOccurrenceDate}`); // ADDED LOG
-
+              // 3. Chamar RPC para regenerar TODAS as ocorrências a partir do início do mês da transação editada
               const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: rpcFirstOccurrenceDate,
+                p_first_occurrence_date: startOfEditedMonth, // Start regeneration from the start of the edited month
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
-                p_status: 'Prevista', // Required enum value
+                p_status: 'Prevista',
                 p_recurrence_day: newRecurrenceDay,
                 p_total_installments: RECURRING_INSTALLMENTS_COUNT,
                 p_forma_pagamento: null,
@@ -417,7 +467,7 @@ export const useTransactionMutations = ({
                 p_tipo_pagamento: null,
               });
               if (rpcError) throw rpcError;
-              console.log("[DEBUG] RPC for income occurrences completed.");
+              console.log("[DEBUG] RPC for all income occurrences (from start of edited month) completed.");
 
             } else {
               console.warn("handleUpdateTransaction: Unknown saveScope for recurring income:", saveScope);
@@ -502,7 +552,7 @@ export const useTransactionMutations = ({
             console.log(`[DEBUG] Updating recurring expense for scope: ${saveScope}`);
             // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
             const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
-            console.log(`[DEBUG] Expense Update (thisMonthForward/all): Deleting from date: ${deleteFromDate}`); // ADDED LOG
+            console.log(`[DEBUG] Expense Update (thisMonthForward/all): Deleting from date: ${deleteFromDate}`);
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
@@ -514,8 +564,8 @@ export const useTransactionMutations = ({
             console.log("[DEBUG] Future expense installments deleted.");
 
             // 2. Chamar RPC para regenerar TODAS as parcelas a partir da data de atualização
-            const rpcFirstOccurrenceDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'); // ADDED VARIABLE
-            console.log(`[DEBUG] Expense Update (thisMonthForward/all): RPC first occurrence date: ${rpcFirstOccurrenceDate}`); // ADDED LOG
+            const rpcFirstOccurrenceDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
+            console.log(`[DEBUG] Expense Update (thisMonthForward/all): RPC first occurrence date: ${rpcFirstOccurrenceDate}`);
 
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
