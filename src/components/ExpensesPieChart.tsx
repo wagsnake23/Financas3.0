@@ -52,7 +52,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : 400}>
         <PieChart>
           <Pie
             data={chartData}
