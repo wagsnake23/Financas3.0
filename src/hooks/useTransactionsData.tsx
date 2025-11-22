@@ -225,6 +225,8 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     expenseInstallments,
     totalInstallmentsMap,
     enabled,
+    revenues.map(r => r.updated_at).join(","),   
+    expenseInstallments.map(p => p.updated_at).join(","), 
   ]);
 
   return {
