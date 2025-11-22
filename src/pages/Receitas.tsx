@@ -420,6 +420,7 @@ export default function Receitas() {
               {isMobile ? (
                 <> {/* Removido o div wrapper e o Footer */}
                   {oneOffFormContent}
+                  <Footer isMobile={isMobile} /> {/* Footer inserido aqui */}
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
@@ -442,7 +443,7 @@ export default function Receitas() {
             </div>
           </div>
         </div>
-        <Footer isMobile={isMobile} /> {/* Footer movido para fora do bloco condicional */}
+        {!isMobile && <Footer isMobile={isMobile} />}
       </ProtectedRoute>
     );
   }
