@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
@@ -14,6 +14,8 @@ interface UseTransactionsDataProps {
 }
 
 export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransactionsDataProps) => {
+  const queryClient = useQueryClient();
+
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -77,6 +79,46 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     },
     enabled: enabled,
   });
+
+  // Realtime subscriptions for instant updates
+  useEffect(() => {
+    if (!user?.id) return;
+
+    console.log(`Setting up Realtime subscriptions for user: ${user.id}`);
+
+    // Subscribe to income updates
+    const incomeChannel = supabase
+      .channel(`income_updates_${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'receitas', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          console.log('Realtime income update received:', payload);
+          queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        }
+      )
+      .subscribe();
+
+    // Subscribe to expense installment updates
+    // Realtime will respect RLS policies, so only updates for the current user's installments will be received.
+    const expenseInstallmentChannel = supabase
+      .channel(`expense_installments_updates_${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'despesas_parcelas' },
+        (payload) => {
+          console.log('Realtime expense installment update received:', payload);
+          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log(`Unsubscribing Realtime channels for user: ${user.id}`);
+      supabase.removeChannel(incomeChannel);
+      supabase.removeChannel(expenseInstallmentChannel);
+    };
+  }, [user?.id, queryClient]);
 
   const totalInstallmentsMap = useMemo(() => {
     const map = new Map<string, number>();
