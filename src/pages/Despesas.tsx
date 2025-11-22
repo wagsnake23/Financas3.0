@@ -128,7 +128,7 @@ export default function Despesas() {
                 Nova Despesa
               </h2>
               {formContent}
-              <Footer isMobile={isMobile} /> {/* MOVIDO AQUI para mobile */}
+              <Footer isMobile={isMobile} className="mt-4" /> {/* Adicionado mt-4 para mobile */}
             </>
           ) : (
             <Card className="p-6 rounded-xl shadow-sm">
