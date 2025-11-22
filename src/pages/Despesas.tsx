@@ -126,7 +126,7 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div className="order-2 lg:order-1 lg:col-span-2">
               {isMobile ? (
-                <div className="px-4 pt-0">
+                <div className="px-4 pt-0 bg-[#F1F9FD] rounded-xl shadow-sm"> {/* Adicionado bg-[#F1F9FD] e arredondamento */}
                   {formContent}
                   <Footer isMobile={isMobile} />
                 </div>
