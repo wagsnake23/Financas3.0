@@ -8,7 +8,7 @@ import { ExpensesPieChart } from "@/components/ExpensesPieChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } => "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
 import { Transaction } from "@/types/finance";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
 import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
@@ -117,7 +117,7 @@ const Dashboard = () => {
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
         <Navigation />
-        <main className={cn("container mx-auto", isMobile ? "px-0 py-0" : "px-4 py-8")}>
+        <main className="container mx-auto px-4 py-8">
           {!isMobile && (
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}
@@ -134,7 +134,6 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
-                className="mt-6" // Alterado de mt-4 para mt-6
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>

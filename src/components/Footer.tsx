@@ -8,7 +8,7 @@ interface FooterProps {
 
 export const Footer = ({ isMobile, className }: FooterProps) => { // Receber className
   return (
-    <footer className={cn(isMobile ? "py-2" : "py-6", isMobile ? "text-xs" : "text-sm", className)}> {/* Aplicar className */}
+    <footer className={cn("py-6", isMobile ? "text-xs" : "text-sm", className)}> {/* Aplicar className */}
       <div className="container mx-auto px-4 text-center text-muted-foreground">
         <p>© 2025 Minhas Finanças - By Vagner</p>
       </div>
