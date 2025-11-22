@@ -76,12 +76,11 @@ export const ExpensesPieChart = ({
 
   // Construir agrupamento
   const expensesByCategory = transactions
-    .filter(t => t.type === "expense")
+    .filter((t) => t.type === "expense")
     .reduce((acc, transaction) => {
-
       // CORREÇÃO: pegar a categoria correta do objeto Transaction
       const categoryId =
-        transaction.category ||             
+        transaction.category ||
         (transaction as any).categoria_id ||
         (transaction as any).category_id ||
         (transaction as any).categoryId ||
