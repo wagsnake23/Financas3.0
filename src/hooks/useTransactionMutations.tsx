@@ -7,7 +7,7 @@ import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
 import { isValidUuid } from "@/lib/utils";
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
-import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
+// Removido: import { useIsMobile } from "@/hooks/use-mobile"; // Não é mais necessário aqui para toastDuration
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
