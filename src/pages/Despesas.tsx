@@ -105,9 +105,11 @@ export default function Despesas() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-destructive/5 pt-16">
+      {/* (a) Container principal - Aplicar mobile background aqui */}
+      <div className={cn("min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
-        <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "p-6")}>
+        {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
+        <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2" : "p-6")}>
           {/* (b) Header com <h1>Despesas */}
           {!isMobile && (
             <div className="flex items-center justify-between">
