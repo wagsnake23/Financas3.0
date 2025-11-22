@@ -202,15 +202,12 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        // Invalida queries específicas e força refetch global
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
-        await queryClient.invalidateQueries({ queryKey: ["categories"] });
-        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.refetchQueries({ queryKey: ["revenues"] });
-        await queryClient.refetchQueries({ queryKey: ["categories"] });
-        await queryClient.invalidateQueries(); // força refetch global
-        await queryClient.refetchQueries(); // força refetch global
+        // Invalida queries específicas
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        // REMOVIDO: await queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
+        // REMOVIDO: await queryClient.invalidateQueries(); // força refetch global
+        // REMOVIDO: await queryClient.refetchQueries(); // força refetch global
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -448,15 +445,15 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        // Invalida queries específicas e força refetch global
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
-        await queryClient.invalidateQueries({ queryKey: ["categories"] });
-        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.refetchQueries({ queryKey: ["revenues"] });
-        await queryClient.refetchQueries({ queryKey: ["categories"] });
-        await queryClient.invalidateQueries(); // força refetch global
-        await queryClient.refetchQueries(); // força refetch global
+        // Invalida queries específicas
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        // REMOVIDO: await queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
+        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
+        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["revenues"] });
+        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["categories"] });
+        // REMOVIDO: await queryClient.invalidateQueries(); // força refetch global
+        // REMOVIDO: await queryClient.refetchQueries(); // força refetch global
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });
