@@ -424,11 +424,9 @@ export default function Receitas() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
-                <> {/* Removido o div wrapper e o Footer */}
-                  <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]"> {/* Adicionado Card e bg-lancamentos-mobile-bg */}
-                    {oneOffFormContent}
-                  </Card>
-                  <Footer isMobile={isMobile} /> {/* Footer inserido aqui */}
+                <>
+                  {oneOffFormContent} {/* Removido o Card aqui */}
+                  <Footer isMobile={isMobile} />
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
