@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
+import { cn, getBorderClass, formatCurrency } from "@/lib/utils"; // Importar cn, getBorderClass E formatCurrency
 import { format } from "date-fns"; // Importar format
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
@@ -271,7 +271,7 @@ export default function Investments() { // Alterado para export default function
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Total Investido</p>
-                  <p className="text-3xl font-bold text-foreground">R$ {stats.totalInvested.toFixed(2)}</p>
+                  <p className="text-3xl font-bold text-foreground">{formatCurrency(stats.totalInvested)}</p>
                 </div>
                 <DynamicIcon name="DollarSign" className="h-12 w-12 text-primary" />
               </div>
