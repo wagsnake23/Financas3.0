@@ -196,7 +196,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              <Footer isMobile={isMobile} className="mt-4" /> {/* Footer para mobile */}
+              <Footer isMobile={isMobile} className="" /> {/* Removido mt-4 */}
             </div>
           ) : (
             <>
