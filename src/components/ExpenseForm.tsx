@@ -395,11 +395,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       </div>
 
       {!isRecurring && tipoPagamento === "avista" && (
-        <TransactionStatusToggle
-          isPaid={isPaid}
-          setIsPaid={setIsPaid}
-          isMobile={isMobile}
-        />
+        <div className={cn(isMobile && "mt-2")}> {/* Adicionado mt-2 para mobile */}
+          <TransactionStatusToggle
+            isPaid={isPaid}
+            setIsPaid={setIsPaid}
+            isMobile={isMobile}
+          />
+        </div>
       )}
 
       <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
