@@ -34,6 +34,16 @@ import {
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 import { StatCard } from "@/components/StatCard"; // Importar StatCard
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"; // NOVO: Importar AlertDialog
 
 const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
@@ -79,6 +89,10 @@ export default function Investments() { // Alterado para export default function
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // NOVO: Estados para o diálogo de confirmação de exclusão
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [investmentToDeleteId, setInvestmentToDeleteId] = useState<string | null>(null);
 
   const investmentTypes = [
     { value: "fixed", label: "Renda Fixa", icon: "🏦" },
@@ -157,10 +171,14 @@ export default function Investments() { // Alterado para export default function
         style: toastSuccessStyle,
         duration: toastDuration
       });
+      setIsConfirmDeleteOpen(false); // Fechar o diálogo após sucesso
+      setInvestmentToDeleteId(null); // Limpar o ID
     },
     onError: (error) => {
       toast.error("Erro ao remover investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error deleting investment:", error);
+      setIsConfirmDeleteOpen(false); // Fechar o diálogo mesmo em caso de erro
+      setInvestmentToDeleteId(null); // Limpar o ID
     },
     enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
   });
@@ -219,8 +237,17 @@ export default function Investments() { // Alterado para export default function
     addInvestmentMutation.mutate(newInvestmentData);
   };
 
+  // NOVO: Função para abrir o diálogo de confirmação
   const handleDelete = (id: string) => {
-    deleteInvestmentMutation.mutate(id);
+    setInvestmentToDeleteId(id);
+    setIsConfirmDeleteOpen(true);
+  };
+
+  // NOVO: Função para confirmar a exclusão
+  const handleConfirmDelete = () => {
+    if (investmentToDeleteId) {
+      deleteInvestmentMutation.mutate(investmentToDeleteId);
+    }
   };
 
   const handleEditClick = (investment: Investment) => {
@@ -462,7 +489,7 @@ export default function Investments() { // Alterado para export default function
                             <Button
                               variant="ghost"
                               size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
-                              onClick={() => handleDelete(investment.id)}
+                              onClick={() => handleDelete(investment.id)} // Agora chama handleDelete para abrir o diálogo
                               className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
                             >
                               <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
@@ -542,6 +569,47 @@ export default function Investments() { // Alterado para export default function
           )}
         </DialogContent>
       </Dialog>
+
+      {/* NOVO: AlertDialog para confirmação de exclusão */}
+      <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este investimento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className={cn(
+            "flex flex-col sm:flex-row justify-center gap-2",
+            isMobile && "flex-row items-center justify-between"
+          )}>
+            <AlertDialogCancel
+              disabled={deleteInvestmentMutation.isPending}
+              className={cn(
+                "rounded-xl",
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
+              )}
+            >
+              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={deleteInvestmentMutation.isPending}
+              className={cn(
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                isMobile && "h-10 text-sm flex-1"
+              )}
+            >
+              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}
+              {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
