@@ -8,7 +8,7 @@ import { ExpensesPieChart } from "@/components/ExpensesPieChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } => "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query"; // Corrigido: de '=>' para 'from'
 import { Tables } from "@/integrations/supabase/types";
 import { Transaction } from "@/types/finance";
 import { useIsMobile } from "@/hooks/use-mobile";
