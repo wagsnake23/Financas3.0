@@ -7,6 +7,7 @@ import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
 import { isValidUuid } from "@/lib/utils";
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
+import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -33,6 +34,9 @@ export const useTransactionMutations = ({
   setIsEditModalOpen,
   selectedMonth,
 }: UseTransactionMutationsProps) => {
+  const isMobile = useIsMobile(); // Usar o hook aqui
+  const toastDuration = isMobile ? 1000 : 4000; // 1 segundo para mobile, 4 segundos padrão para desktop
+
   const invalidateAllTransactionQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
@@ -47,14 +51,14 @@ export const useTransactionMutations = ({
       console.log(`[DEBUG] handleDeleteTransaction called for ID: ${id}, Type: ${type}, Scope: ${deleteScope}`);
 
       if (!user) {
-        toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+        toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration });
         setLoadingEditData(false);
         return;
       }
 
       const transactionToDelete = monthlyFilteredTransactions.find((t) => t.id === id);
       if (!transactionToDelete) {
-        toast.error("Lançamento não encontrado.");
+        toast.error("Lançamento não encontrado.", { duration: toastDuration });
         setLoadingEditData(false);
         return;
       }
@@ -206,18 +210,19 @@ export const useTransactionMutations = ({
 
         toast.success("Lançamento excluído!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
+          duration: toastDuration
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
         invalidateAllTransactionQueries();
       } catch (err: any) {
-        toast.error("Erro ao excluir lançamento", { description: err.message });
+        toast.error("Erro ao excluir lançamento", { description: err.message, duration: toastDuration });
         console.error("handleDeleteTransaction: Deletion error:", err);
       } finally {
         setLoadingEditData(false);
       }
     },
-    [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, invalidateAllTransactionQueries]
+    [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, invalidateAllTransactionQueries, toastDuration]
   );
 
   const handleUpdateTransaction = useCallback(
@@ -230,7 +235,7 @@ export const useTransactionMutations = ({
       setLoadingEditData(true);
 
       if (!user) {
-        toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+        toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration });
         setLoadingEditData(false);
         return;
       }
@@ -240,7 +245,7 @@ export const useTransactionMutations = ({
       try {
         if (type === "income") {
           if (!isValidUuid(id)) {
-            toast.error("Erro (UPD-INC-1): ID de receita inválido.");
+            toast.error("Erro (UPD-INC-1): ID de receita inválido.", { duration: toastDuration });
             setLoadingEditData(false);
             return;
           }
@@ -315,7 +320,7 @@ export const useTransactionMutations = ({
 
             } else {
               console.warn("handleUpdateTransaction: Unknown saveScope for recurring income:", saveScope);
-              toast.error("Escopo de atualização desconhecido para receita recorrente.");
+              toast.error("Escopo de atualização desconhecido para receita recorrente.", { duration: toastDuration });
             }
 
           } else {
@@ -334,7 +339,7 @@ export const useTransactionMutations = ({
           }
         } else if (type === "expense") {
           if (!isValidUuid(id)) {
-            toast.error("Erro (UPD-NF-1): ID de parcela de despesa inválido.");
+            toast.error("Erro (UPD-NF-1): ID de parcela de despesa inválido.", { duration: toastDuration });
             setLoadingEditData(false);
             return;
           }
@@ -342,7 +347,7 @@ export const useTransactionMutations = ({
           const parentDespesaId = originalTransaction?.despesa_id;
 
           if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
-            toast.error("Erro (UPD-EXP-PARENT-1): ID da despesa principal inválido.");
+            toast.error("Erro (UPD-EXP-PARENT-1): ID da despesa principal inválido.", { duration: toastDuration });
             setLoadingEditData(false);
             return;
           }
@@ -436,36 +441,40 @@ export const useTransactionMutations = ({
 
             toast.success("Lançamento e parcelas futuras atualizadas!", {
                 style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
+                duration: toastDuration
             });
 
           } else {
             console.warn("handleUpdateTransaction: Unknown saveScope:", saveScope);
-            toast.error("Escopo de atualização desconhecido.");
+            toast.error("Escopo de atualização desconhecido.", { duration: toastDuration });
           }
         }
 
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
+          duration: toastDuration
         });
         invalidateAllTransactionQueries();
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
-        toast.error("Erro ao atualizar lançamento.", { description: err.message });
+        toast.error("Erro ao atualizar lançamento.", { description: err.message, duration: toastDuration });
       } finally {
         setEditingTransaction(null);
         setIsEditModalOpen(false);
         setLoadingEditData(false);
       }
     },
-    [user, monthlyFilteredTransactions, invalidateAllTransactionQueries, setLoadingEditData, setEditingTransaction, setIsEditModalOpen]
+    [user, monthlyFilteredTransactions, invalidateAllTransactionQueries, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, toastDuration]
   );
 
   const handleOptimisticToggleStatus = useCallback(
     async (id: string, type: TransactionType, newStatus: ReceitaStatus) => {
       if (!user) {
-        toast.error("Usuário não autenticado.");
+        toast.error("Usuário não autenticado.", { duration: toastDuration });
         return;
       }
+
+      const toastId = 'status-update-toast'; // ID consistente para toasts de status
 
       // 1. Optimistically update the UI
       if (type === "income") {
@@ -514,12 +523,12 @@ export const useTransactionMutations = ({
             .eq("id", id);
           if (error) throw error;
         }
-        toast.success("Status atualizado!");
+        toast.success("Status atualizado!", { id: toastId, duration: toastDuration }); // Adicionar ID e duração
         // Invalidate queries to ensure data consistency, but the UI is already updated
         invalidateAllTransactionQueries(); // This will re-fetch and confirm the state
       } catch (error: any) {
         console.error("Erro ao atualizar status:", error);
-        toast.error("Erro ao atualizar status.", { description: error.message });
+        toast.error("Erro ao atualizar status.", { id: toastId, description: error.message, duration: toastDuration }); // Adicionar ID e duração
         // 3. Revert UI on error
         if (type === "income") {
           queryClient.setQueryData(
@@ -544,12 +553,12 @@ export const useTransactionMutations = ({
         }
       }
     },
-    [user, queryClient, invalidateAllTransactionQueries]
+    [user, queryClient, invalidateAllTransactionQueries, toastDuration] // Adicionar toastDuration às dependências
   );
 
   return {
     handleDeleteTransaction,
     handleUpdateTransaction,
-    handleOptimisticToggleStatus, // Retornando a nova função
+    handleOptimisticToggleStatus,
   };
 };
