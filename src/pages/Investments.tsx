@@ -260,7 +260,7 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className="min-h-screen bg-background pt-16">
+    <div className={cn("min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
       <Navigation />
 
       {/* Main Content */}
