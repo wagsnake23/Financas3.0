@@ -419,13 +419,19 @@ export default function Receitas() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
                 <div className="px-4 pt-0">
-                  <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
+                    <DynamicIcon name="💰" className="h-6 w-6 text-success" /> {/* Ícone de emoji */}
+                    Nova Receita
+                  </h2>
                   {oneOffFormContent}
                   <Footer isMobile={isMobile} />
                 </div>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
-                  <h2 className="text-xl font-semibold mb-4">Nova Receita</h2>
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
+                    <DynamicIcon name="💰" className="h-6 w-6 text-success" /> {/* Ícone de emoji */}
+                    Nova Receita
+                  </h2>
                   {oneOffFormContent}
                 </Card>
               )}

@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 
 interface Cartao {
   id: string;
@@ -90,7 +91,10 @@ export default function Despesas() {
 
   const formContent = (
     <>
-      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-0")}>Nova Despesa</h2> {/* Alterado mb-3 para mb-0 */}
+      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2", isMobile && "text-lg mb-0")}> {/* Adicionado flex items-center gap-2 */}
+        <DynamicIcon name="💸" className="h-6 w-6 text-destructive" /> {/* Ícone de emoji */}
+        Nova Despesa
+      </h2>
       
       <ExpenseForm
         user={user}
