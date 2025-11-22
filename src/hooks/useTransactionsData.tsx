@@ -93,9 +93,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
         if (error) throw error;
         return data;
-      },
-      enabled,
-    });
+    },
+    enabled,
+  });
 
   const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<
     Tables<"cartoes">[]
@@ -166,7 +166,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         const d = p.despesas;
         const totalForNonFixed = d?.id ? totalInstallmentsMap.get(d.id) : 1;
 
-        return {
+        const transaction: Transaction = {
           id: p.id,
           type: "expense",
           amount: p.valor_parcela,
@@ -177,15 +177,14 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           totalInstallments: totalForNonFixed,
           forma_pagamento: d?.forma_pagamento,
           cartao_id: d?.cartao_id,
-          despesa_id: d?.id, // ✅ CORREÇÃO: Garantir despesa_id presente
+          despesa_id: d?.id || p.despesa_id, // FIX CRÍTICO
           is_recurring_master: Boolean(d?.is_recurring_master),
           recurrence_id: d?.id ?? null,
           recurrence_day: null,
           tipo_pagamento: d?.tipo_pagamento,
-
-          // ✅ CORREÇÃO: Usar a subcategoria real salva no banco
-          category: d?.categoria_id || "outros_diversos",
+          category: d?.categoria_id || "outros_diversos", // FIX CRÍTICO
         };
+        return transaction;
       });
 
     // Ordenar por data desc
