@@ -141,3 +141,5 @@ const Lancamentos = () => {
     </ProtectedRoute>
   );
 };
+
+export default Lancamentos;
