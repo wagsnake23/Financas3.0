@@ -202,10 +202,12 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        // 🔥 Invalida SOMENTE os dados realmente alterados
+        // 🔥 Invalida E RE-BUSCA os dados realmente alterados
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
+          queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] }),
           queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
+          queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }),
         ]);
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
@@ -225,6 +227,7 @@ export const useTransactionMutations = ({
       saveScope: SaveScope
     ) => {
       setLoadingEditData(true);
+      console.log(`[DEBUG] handleUpdateTransaction called for ID: ${id}, Type: ${type}, Scope: ${saveScope}`);
 
       if (!user) {
         toast.error("Usuário não autenticado. Por favor, faça login novamente.");
@@ -233,6 +236,13 @@ export const useTransactionMutations = ({
       }
 
       const originalTransaction = monthlyFilteredTransactions.find((t) => t.id === id);
+      if (!originalTransaction) {
+        toast.error("Lançamento original não encontrado para atualização.");
+        setLoadingEditData(false);
+        return;
+      }
+      console.log("[DEBUG] Original Transaction:", originalTransaction);
+
 
       try {
         if (type === "income") {
@@ -241,14 +251,17 @@ export const useTransactionMutations = ({
             setLoadingEditData(false);
             return;
           }
+          console.log("[DEBUG] Updating income transaction.");
 
           if (originalTransaction?.is_recurring_master || originalTransaction?.recurrence_id) {
             const masterRecurrenceId = originalTransaction.is_recurring_master ? originalTransaction.id : originalTransaction.recurrence_id;
             if (!masterRecurrenceId) throw new Error("Erro (UPD-INC-REC-1): ID de recorrência mestre não encontrado.");
+            console.log("[DEBUG] Recurring income detected. Master ID:", masterRecurrenceId);
 
             const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
             if (saveScope === "thisMonth" || saveScope === "oneOff") {
+              console.log(`[DEBUG] Updating single income occurrence (ID: ${id}) for scope: ${saveScope}`);
               const { error: updateOccurrenceError } = await supabase
                 .from("receitas")
                 .update({
@@ -262,10 +275,13 @@ export const useTransactionMutations = ({
                 .eq("id", id)
                 .eq("user_id", user.id);
               if (updateOccurrenceError) throw updateOccurrenceError;
+              console.log("[DEBUG] Single income occurrence updated.");
 
             } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+              console.log(`[DEBUG] Updating recurring income for scope: ${saveScope}`);
               // 1. Atualizar o registro mestre
               if (originalTransaction.is_recurring_master || saveScope === "all") {
+                console.log(`[DEBUG] Updating master income record (ID: ${masterRecurrenceId}).`);
                 const { error: updateMasterError } = await supabase
                   .from("receitas")
                   .update({
@@ -278,6 +294,7 @@ export const useTransactionMutations = ({
                   .eq("id", masterRecurrenceId)
                   .eq("user_id", user.id);
                 if (updateMasterError) throw updateMasterError;
+                console.log("[DEBUG] Master income record updated.");
               }
 
               // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
@@ -293,8 +310,10 @@ export const useTransactionMutations = ({
                 .eq("user_id", user.id);
 
               if (deleteFutureError) throw deleteFutureError;
+              console.log("[DEBUG] Future income occurrences deleted.");
 
               // 3. Chamar RPC para regenerar TODAS as ocorrências a partir da data de atualização
+              console.log("[DEBUG] Calling RPC to regenerate income occurrences.");
               const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
                 p_user_id: user.id,
                 p_transaction_type: 'income',
@@ -311,6 +330,7 @@ export const useTransactionMutations = ({
                 p_tipo_pagamento: null,
               });
               if (rpcError) throw rpcError;
+              console.log("[DEBUG] RPC for income occurrences completed.");
 
             } else {
               console.warn("handleUpdateTransaction: Unknown saveScope for recurring income:", saveScope);
@@ -318,6 +338,7 @@ export const useTransactionMutations = ({
             }
 
           } else {
+            console.log("[DEBUG] Updating one-off income transaction.");
             const { error: updateError } = await supabase
               .from("receitas")
               .update({
@@ -331,6 +352,7 @@ export const useTransactionMutations = ({
               .eq("id", id)
               .eq("user_id", user.id);
             if (updateError) throw updateError;
+            console.log("[DEBUG] One-off income transaction updated.");
           }
         } else if (type === "expense") {
           if (!isValidUuid(id)) {
@@ -338,6 +360,7 @@ export const useTransactionMutations = ({
             setLoadingEditData(false);
             return;
           }
+          console.log("[DEBUG] Updating expense transaction.");
 
           const parentDespesaId = originalTransaction?.despesa_id;
 
@@ -346,6 +369,7 @@ export const useTransactionMutations = ({
             setLoadingEditData(false);
             return;
           }
+          console.log("[DEBUG] Parent Despesa ID:", parentDespesaId);
 
           const newValorParcela = updatedTransaction.amount;
           const newVencimento = updatedTransaction.date;
@@ -354,6 +378,7 @@ export const useTransactionMutations = ({
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
+          console.log("[DEBUG] Updating master expense record (despesas).");
           const { error: updateDespesaParentError } = await supabase
             .from("despesas")
             .update({
@@ -367,9 +392,11 @@ export const useTransactionMutations = ({
             .eq("user_id", user.id);
 
           if (updateDespesaParentError) throw updateDespesaParentError;
+          console.log("[DEBUG] Master expense record updated.");
 
 
           if (saveScope === "thisMonth" || saveScope === "oneOff") {
+            console.log(`[DEBUG] Updating single expense installment (ID: ${id}) for scope: ${saveScope}`);
             const { error: updateParcelaError } = await supabase
               .from("despesas_parcelas")
               .update({
@@ -382,10 +409,14 @@ export const useTransactionMutations = ({
               .eq("id", id);
 
             if (updateParcelaError) throw updateParcelaError;
+            console.log("[DEBUG] Single expense installment updated.");
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
+            console.log(`[DEBUG] Updating recurring expense for scope: ${saveScope}`);
             // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
             const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
+            
+            console.log(`[DEBUG] Deleting expense installments for parent ${parentDespesaId} from ${deleteFromDate} onwards.`);
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
@@ -394,8 +425,10 @@ export const useTransactionMutations = ({
               .gte("vencimento", deleteFromDate);
 
             if (deleteFutureParcelasError) throw deleteFutureParcelasError;
+            console.log("[DEBUG] Future expense installments deleted.");
 
             // 2. Chamar RPC para regenerar TODAS as parcelas a partir da data de atualização
+            console.log("[DEBUG] Calling RPC to regenerate expense installments.");
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
               p_transaction_type: 'expense',
@@ -412,8 +445,10 @@ export const useTransactionMutations = ({
               p_tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Passando tipo_pagamento
             });
             if (rpcError) throw rpcError;
+            console.log("[DEBUG] RPC for expense installments completed.");
 
             // 3. Recalcular valor_total e numero_parcelas para o registro mestre de despesa
+            console.log("[DEBUG] Recalculating parent despesa total and number of installments.");
             const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
                 .from("despesas_parcelas")
                 .select("valor_parcela")
@@ -436,6 +471,7 @@ export const useTransactionMutations = ({
                 .eq("user_id", user.id);
 
             if (updateParentDespesaTotalError) throw updateParentDespesaTotalError;
+            console.log("[DEBUG] Parent despesa total and number of installments updated.");
 
             toast.success("Lançamento e parcelas futuras atualizadas!", {
                 style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
@@ -450,11 +486,15 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        // 🔥 Invalida SOMENTE os dados realmente alterados
+        // 🔥 Invalida E RE-BUSCA os dados realmente alterados
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
+          queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] }),
           queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
+          queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }),
         ]);
+        console.log("[DEBUG] Queries invalidated and refetched after update.");
+
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });
@@ -462,6 +502,7 @@ export const useTransactionMutations = ({
         setEditingTransaction(null);
         setIsEditModalOpen(false);
         setLoadingEditData(false);
+        console.log("[DEBUG] handleUpdateTransaction finished. setLoadingEditData(false).");
       }
     },
     [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, queryClient]
