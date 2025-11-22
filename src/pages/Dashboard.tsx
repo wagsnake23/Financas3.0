@@ -8,7 +8,7 @@ import { ExpensesPieChart } from "@/components/ExpensesPieChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query"; // Corrigido: de '=>' para 'from'
+import { useQuery } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
 import { Transaction } from "@/types/finance";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -198,6 +198,7 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
+              <Footer isMobile={isMobile} className="mt-4" /> {/* Footer para mobile */}
             </div>
           ) : (
             <>
@@ -281,10 +282,10 @@ const Dashboard = () => {
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
+              <Footer isMobile={isMobile} className="mt-8" /> {/* Footer para desktop */}
             </>
           )}
         </main>
-        <Footer isMobile={isMobile} />
       </div>
     </ProtectedRoute>
   );
