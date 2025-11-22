@@ -418,7 +418,7 @@ export default function Receitas() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
-                <div className="px-4 pt-0 rounded-xl shadow-sm"> {/* Removido bg-[#F1F9FD] daqui */}
+                <div className="px-4 pt-0 rounded-xl shadow-sm border-0"> {/* Adicionado border-0 aqui */}
                   {oneOffFormContent}
                   <Footer isMobile={isMobile} />
                 </div>
