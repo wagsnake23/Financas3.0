@@ -108,6 +108,7 @@ export default function Despesas() {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-destructive/5 pt-16">
         <Navigation />
         <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "p-6")}>
+          {/* (b) Header com <h1>Despesas */}
           {!isMobile && (
             <div className="flex items-center justify-between">
               <div>
@@ -117,57 +118,48 @@ export default function Despesas() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            <div className="order-2 lg:order-1 lg:col-span-2">
-              {isMobile ? (
-                <>
-                  {/* Mobile structure: Mimic the <form> wrapper from Receitas.tsx */}
-                  <div className="space-y-4"> {/* This div mimics the <form> in Receitas.tsx */}
-                    <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive")}>
-                      <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-                      Nova Despesa
-                    </h2>
-                    {formContent} {/* ExpenseForm component */}
-                  </div>
-                  <Footer isMobile={isMobile} /> {/* Footer for mobile, outside the form-mimicking div */}
-                </>
-              ) : (
-                // Desktop structure: h2 directly inside Card
-                <Card className="p-6 rounded-xl shadow-sm"> {/* Removed bg-[#F1F9FD] for consistency */}
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                    <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-                    Nova Despesa
-                  </h2>
-                  {formContent} {/* ExpenseForm component */}
-                </Card>
-              )}
-            </div>
+          {/* (c) Card com título “Nova Despesa” e o formulário (fora da grid) */}
+          {isMobile ? (
+            <>
+              <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
+                <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                Nova Despesa
+              </h2>
+              {formContent}
+            </>
+          ) : (
+            <Card className="p-6 rounded-xl shadow-sm">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
+                <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                Nova Despesa
+              </h2>
+              {formContent}
+            </Card>
+          )}
 
-            <div className="order-1 lg:order-2 lg:col-span-1 space-y-6">
-              {!isMobile && (
-                <>
+          {/* (d) Grid contendo os dashboards e resumos (somente isso) */}
+          {!isMobile && (
+            <div className="space-y-6"> {/* Container para todos os dashboards */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div className="lg:col-span-1">
                   <ExpensesDashboard 
                     expenses={expenses} 
                     expenseInstallments={expenseInstallments} 
                     categories={allSubcategories}
                     isMobile={isMobile}
                   />
-                </>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
 
-          {!isMobile && (
-            <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 <TopCategoriesByValue expenses={expenses} categories={allSubcategories} />
                 <MostUsedCategories expenses={expenses} categories={allSubcategories} />
               </div>
               <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
-            </>
+            </div>
           )}
         </div>
-        {!isMobile && <Footer isMobile={isMobile} />}
+        <Footer isMobile={isMobile} />
       </div>
     </ProtectedRoute>
   );
