@@ -76,7 +76,7 @@ export const useTransactionMutations = ({
               if (transactionToDelete.is_recurring_master) {
                 const { error: updateOccurrencesError } = await supabase
                   .from("receitas")
-                  .update({ recurrence_id: null, is_recurring_master: false, recurrence_day: null })
+                  .update({ recurrence_id: null, is_recurring_master: false, recurrence_day: null, updated_at: new Date().toISOString() }) // Força updated_at
                   .eq("recurrence_id", masterRecurrenceId);
                 if (updateOccurrencesError) console.error("Error updating occurrences after master deletion:", updateOccurrencesError);
               }
@@ -96,7 +96,7 @@ export const useTransactionMutations = ({
               if (transactionToDelete.is_recurring_master) {
                  const { error: updateMasterError } = await supabase
                   .from("receitas")
-                  .update({ is_recurring_master: false, recurrence_id: null, recurrence_day: null })
+                  .update({ is_recurring_master: false, recurrence_id: null, recurrence_day: null, updated_at: new Date().toISOString() }) // Força updated_at
                   .eq("id", masterRecurrenceId);
                 if (updateMasterError) console.error("Error updating master after 'thisMonthForward' deletion:", updateMasterError);
               }
@@ -144,7 +144,7 @@ export const useTransactionMutations = ({
               } else {
                 const { error: updateParentError } = await supabase
                   .from("despesas")
-                  .update({ numero_parcelas: remainingParcelas?.length || 0 })
+                  .update({ numero_parcelas: remainingParcelas?.length || 0, updated_at: new Date().toISOString() }) // Força updated_at
                   .eq("id", parentDespesaId);
                 if (updateParentError) console.error("Error updating parent despesas numero_parcelas:", updateParentError);
               }
@@ -178,7 +178,7 @@ export const useTransactionMutations = ({
             } else {
               const { error: updateParentError } = await supabase
                 .from("despesas")
-                .update({ numero_parcelas: remainingParcelas?.length || 0 })
+                .update({ numero_parcelas: remainingParcelas?.length || 0, updated_at: new Date().toISOString() }) // Força updated_at
                 .eq("id", parentDespesaId);
               if (updateParentError) console.error("Error updating parent despesas numero_parcelas:", updateParentError);
             }
@@ -257,6 +257,7 @@ export const useTransactionMutations = ({
                   tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                   descricao: updatedTransaction.description,
                   status: updatedTransaction.status,
+                  updated_at: new Date().toISOString(), // Força updated_at
                 })
                 .eq("id", id)
                 .eq("user_id", user.id);
@@ -272,6 +273,7 @@ export const useTransactionMutations = ({
                     tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
+                    updated_at: new Date().toISOString(), // Força updated_at
                   })
                   .eq("id", masterRecurrenceId)
                   .eq("user_id", user.id);
@@ -324,6 +326,7 @@ export const useTransactionMutations = ({
                 tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 descricao: updatedTransaction.description,
                 status: updatedTransaction.status,
+                updated_at: new Date().toISOString(), // Força updated_at
               })
               .eq("id", id)
               .eq("user_id", user.id);
@@ -358,6 +361,7 @@ export const useTransactionMutations = ({
               descricao: updatedTransaction.description,
               is_recurring_master: originalTransaction?.is_recurring_master,
               tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
+              updated_at: new Date().toISOString(), // Força updated_at
             })
             .eq("id", parentDespesaId)
             .eq("user_id", user.id);
@@ -373,6 +377,7 @@ export const useTransactionMutations = ({
                 vencimento: newVencimento,
                 pago: newPagoStatus,
                 data_pagamento: newPagoDate,
+                updated_at: new Date().toISOString(), // Força updated_at
               })
               .eq("id", id);
 
@@ -395,7 +400,7 @@ export const useTransactionMutations = ({
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // Format Date object to string
+              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-DD'), // Format Date object to string
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
@@ -425,6 +430,7 @@ export const useTransactionMutations = ({
                 .update({
                     valor_total: newParentValorTotal,
                     numero_parcelas: newParentNumeroParcelas,
+                    updated_at: new Date().toISOString(), // Força updated_at
                 })
                 .eq("id", parentDespesaId)
                 .eq("user_id", user.id);

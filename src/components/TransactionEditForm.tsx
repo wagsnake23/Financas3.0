@@ -45,6 +45,7 @@ interface TransactionEditFormProps {
   ) => void;
   allCategories: AppCategory[];
   isMobile: boolean;
+  loadingEditData: boolean; // NOVA PROP: Recebendo loadingEditData
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -63,6 +64,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   onDeleteTransaction,
   allCategories,
   isMobile,
+  loadingEditData, // Usar esta prop
 }) => {
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -71,27 +73,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ReceitaStatus>("Pendente");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // Removido: const [loading, setLoading] = useState(false); // Usar loadingEditData da prop
   const [isPaid, setIsPaid] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
   // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
   const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
 
-  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false); // NOVO ESTADO
-  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
+  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false);
+  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth");
 
   // NOVOS ESTADOS PARA A LÓGICA DE EXCLUSÃO CONDICIONAL
-  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0); // Renomeado para ser mais genérico
-  const [isFetchingOptions, setIsFetchingOptions] = useState(false); // Renomeado para ser mais genérico
+  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0);
+  const [isFetchingOptions, setIsFetchingOptions] = useState(false);
 
   const isRecurringTransaction = useMemo(() => {
-    // Uma transação é recorrente SE:
-    // - is_recurring_master === true
-    // OU
-    // - recurrence_id != null
     return (editingTransaction?.is_recurring_master === true || !!editingTransaction?.recurrence_id);
   }, [editingTransaction]);
 
@@ -234,12 +232,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return;
     }
 
-    setLoading(true); // Start loading for the pre-check
+    // setLoading(true); // Start loading for the pre-check
     setIsFetchingOptions(true);
     const futureItems = await fetchPendingFutureItems(editingTransaction);
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
-    setLoading(false); // Stop loading after pre-check
+    // setLoading(false); // Stop loading after pre-check
 
     const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
@@ -269,7 +267,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const performUpdate = (saveScope: SaveScope) => {
     if (!editingTransaction) return;
-    setLoading(true);
+    // setLoading(true); // Moved to useLancamentosLogic
 
     // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
@@ -311,7 +309,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       saveScope // Passa o saveScope
     );
 
-    setLoading(false);
+    // setLoading(false); // Moved to useLancamentosLogic
   };
 
   const handleTriggerDeleteConfirmation = async () => {
@@ -401,7 +399,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
           onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
           onCancel={onCancelEdit}
-          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
+          loading={loadingEditData || isFetchingOptions} // Usar loadingEditData
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
@@ -420,9 +418,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading || isFetchingOptions}>
-              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loadingEditData || isFetchingOptions}>
+              {loadingEditData || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -479,9 +477,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
-              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loadingEditData || isFetchingOptions} className="w-full sm:w-auto">
+              {loadingEditData || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -538,9 +536,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
-              {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
+            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loadingEditData || isFetchingOptions} className="w-full sm:w-auto">
+              {loadingEditData || isFetchingOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

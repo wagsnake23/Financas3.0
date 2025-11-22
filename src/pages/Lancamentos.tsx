@@ -31,7 +31,7 @@ const Lancamentos = () => {
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
-    loadingEditData,
+    loadingEditData, // Usar este loadingEditData
     loadingPayInvoice,
     setLoadingPayInvoice,
     isEditModalOpen,
@@ -54,7 +54,7 @@ const Lancamentos = () => {
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
   
-  if (authLoading || isLoading || loadingEditData) {
+  if (authLoading || isLoading || loadingEditData) { // Incluir loadingEditData aqui para o loading geral da página
     return <Loading />;
   }
 
@@ -94,6 +94,7 @@ const Lancamentos = () => {
             setLoadingPayInvoice={setLoadingPayInvoice}
             selectedMonth={selectedMonth} // Adicionado
             setSelectedMonth={setSelectedMonth} // Adicionado
+            loadingEditData={loadingEditData} // Passando loadingEditData
           />
         </main>
         <Footer isMobile={isMobile} />
@@ -114,6 +115,7 @@ const Lancamentos = () => {
                 onDeleteTransaction={handleDeleteTransaction}
                 allCategories={fetchedCategories}
                 isMobile={isMobile}
+                loadingEditData={loadingEditData} // Passando loadingEditData para o formulário
               />
             )}
           </DialogContent>

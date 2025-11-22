@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react"; // Importar useState
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
@@ -25,7 +25,8 @@ interface TransactionRowProps {
   transaction: Transaction;
   onDeleteTransaction: (
     id: string,
-    type: "income" | "expense"
+    type: "income" | "expense",
+    deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff" // Corrigido o tipo da prop
   ) => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
@@ -43,7 +44,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
+  // onDeleteTransaction não é usado diretamente aqui, mas o tipo foi corrigido
 }) => {
+  const [loadingToggle, setLoadingToggle] = useState(false); // Novo estado de carregamento para o toggle
+
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
     return {
@@ -90,34 +94,33 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
+    setLoadingToggle(true); // Inicia o carregamento
+
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
 
     try {
       if (transaction.type === "income") {
-        // For recurring income, only update the status of this specific occurrence
+        // Para receita recorrente, apenas atualiza o status desta ocorrência específica
         if (transaction.recurrence_id && !transaction.is_recurring_master) {
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus })
+            .update({ status: newStatus, updated_at: new Date().toISOString() }) // Força updated_at
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
-        } else { // One-off income or master recurring income (shouldn't be toggled directly)
+        } else { // Receita avulsa ou mestra recorrente
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus })
+            .update({ status: newStatus, updated_at: new Date().toISOString() }) // Força updated_at
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
         }
-        // Invalida queries específicas e força refetch global
-        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
-        await queryClient.refetchQueries({ queryKey: ["revenues"] });
-        await queryClient.invalidateQueries(); // força refetch global
-        await queryClient.refetchQueries(); // força refetch global
+        toast.success("Status da receita atualizado!");
+        await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
@@ -129,23 +132,20 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .update({
             pago,
             data_pagamento: dataPagamento,
+            updated_at: new Date().toISOString(), // Força updated_at
           })
           .eq("id", transaction.id);
 
         if (error) throw error;
-        // Invalida queries específicas e força refetch global
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.invalidateQueries({ queryKey: ["categories"] });
-        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
-        await queryClient.refetchQueries({ queryKey: ["categories"] });
-        await queryClient.invalidateQueries(); // força refetch global
-        await queryClient.refetchQueries(); // força refetch global
+        toast.success("Status da despesa atualizado!");
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       }
-
-      toast.success("Status atualizado!");
+      
     } catch (error: any) {
       console.error("Erro ao atualizar status:", error);
       toast.error("Erro ao atualizar status.", { description: error.message });
+    } finally {
+      setLoadingToggle(false); // Finaliza o carregamento
     }
   };
 
@@ -233,16 +233,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           size="icon"
           className="h-7 w-7"
           onClick={handleToggleStatus}
-          disabled={transaction.status === "Cancelada"}
+          disabled={transaction.status === "Cancelada" || loadingToggle} // Desabilita durante o carregamento
         >
-          {transaction.status === "Recebida" && (
+          {loadingToggle ? ( // Mostra um spinner ou ícone de carregamento
+            <DynamicIcon name="Loader" className="h-4 w-4 animate-spin text-primary" />
+          ) : transaction.status === "Recebida" ? (
             <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />
-          )}
-          {(transaction.status === "Pendente" ||
-            transaction.status === "Prevista") && (
+          ) : (transaction.status === "Pendente" ||
+            transaction.status === "Prevista") ? (
             <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />
-          )}
-          {transaction.status === "Cancelada" && (
+          ) : (
             <DynamicIcon
               name="XCircle"
               className="h-4 w-4 text-muted-foreground"
@@ -259,6 +259,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             size="icon"
             className="h-7 w-7"
             onClick={() => onEditTransaction(transaction)}
+            disabled={loadingToggle} // Desabilita o botão de edição também
           >
             <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
           </Button>
