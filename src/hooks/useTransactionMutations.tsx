@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
-import { TablesUpdate } from "@/integrations/supabase/types";
+import { TablesUpdate, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import { isValidUuid } from "@/lib/utils";
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 
@@ -52,7 +52,38 @@ export const useTransactionMutations = ({
         return;
       }
 
-      let error = null;
+      // --- OPTIMISTIC DELETE START ---
+      const previousRevenues = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id]);
+      const previousExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id]);
+
+      if (type === "income") {
+        queryClient.setQueryData<Tables<"receitas">[]>(["revenues", user.id], (oldData) => {
+          if (!oldData) return [];
+          if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
+            return oldData.filter(r => r.id !== id);
+          } else if (deleteScope === "thisMonthForward") {
+            const currentOccurrenceDate = parseISO(transactionToDelete.date);
+            return oldData.filter(r => !(r.recurrence_id === transactionToDelete.recurrence_id && parseISO(r.data) >= currentOccurrenceDate));
+          } else if (deleteScope === "all") {
+            return oldData.filter(r => r.recurrence_id !== transactionToDelete.recurrence_id);
+          }
+          return oldData;
+        });
+      } else { // expense
+        queryClient.setQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id], (oldData) => {
+          if (!oldData) return [];
+          if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
+            return oldData.filter(p => p.id !== id);
+          } else if (deleteScope === "thisMonthForward") {
+            const currentInstallmentDate = parseISO(transactionToDelete.date);
+            return oldData.filter(p => !(p.despesa_id === transactionToDelete.despesa_id && parseISO(p.vencimento) >= currentInstallmentDate));
+          } else if (deleteScope === "all") {
+            return oldData.filter(p => p.despesa_id !== transactionToDelete.despesa_id);
+          }
+          return oldData;
+        });
+      }
+      // --- OPTIMISTIC DELETE END ---
 
       try {
         if (type === "income") {
@@ -115,7 +146,7 @@ export const useTransactionMutations = ({
           } else {
             console.log(`[DEBUG] Deleting one-off income from 'receitas' table with ID: ${id}`);
             const { error: deleteError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
-            error = deleteError;
+            if (deleteError) throw deleteError;
           }
         } else if (type === "expense") {
           const parentDespesaId = transactionToDelete.despesa_id;
@@ -202,16 +233,17 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        // 🔥 Invalida E RE-BUSCA os dados realmente alterados
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
-          queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] }),
-          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
-          queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }),
-        ]);
+        // 🔥 Invalida E RE-BUSCA os dados em segundo plano
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        queryClient.refetchQueries({ queryKey: ["revenues", user?.id] });
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
+        // --- OPTIMISTIC ROLLBACK ---
+        queryClient.setQueryData(["revenues", user.id], previousRevenues);
+        queryClient.setQueryData(["expenseInstallments", user.id], previousExpenseInstallments);
       } finally {
         setLoadingEditData(false);
       }
@@ -243,6 +275,60 @@ export const useTransactionMutations = ({
       }
       console.log("[DEBUG] Original Transaction:", originalTransaction);
 
+      // --- OPTIMISTIC UPDATE START ---
+      const previousRevenues = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id]);
+      const previousExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id]);
+
+      // Prepara o objeto de atualização otimista
+      const optimisticUpdateData = {
+        amount: updatedTransaction.amount,
+        date: updatedTransaction.date,
+        category: updatedTransaction.category,
+        description: updatedTransaction.description,
+        status: updatedTransaction.status,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (type === "income") {
+        queryClient.setQueryData<Tables<"receitas">[]>(["revenues", user.id], (oldData) => {
+          if (!oldData) return [];
+          if (saveScope === "thisMonth" || saveScope === "oneOff") {
+            return oldData.map(r => r.id === id ? { ...r,
+              valor: optimisticUpdateData.amount,
+              data: optimisticUpdateData.date,
+              tipo_receita_id: optimisticUpdateData.category,
+              descricao: optimisticUpdateData.description,
+              status: optimisticUpdateData.status,
+              updated_at: optimisticUpdateData.updated_at,
+            } : r);
+          }
+          // Para 'thisMonthForward' e 'all', o optimistic update é mais complexo devido à regeneração.
+          // Apenas fechamos o modal e deixamos o refetch em background atualizar.
+          return oldData;
+        });
+      } else { // expense
+        queryClient.setQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id], (oldData) => {
+          if (!oldData) return [];
+          if (saveScope === "thisMonth" || saveScope === "oneOff") {
+            return oldData.map(p => p.id === id ? { ...p,
+              valor_parcela: optimisticUpdateData.amount,
+              vencimento: optimisticUpdateData.date,
+              pago: optimisticUpdateData.status === "Recebida",
+              data_pagamento: optimisticUpdateData.status === "Recebida" ? new Date().toISOString() : null,
+              updated_at: optimisticUpdateData.updated_at,
+              despesas: p.despesas ? { ...p.despesas,
+                categoria_id: optimisticUpdateData.category,
+                descricao: optimisticUpdateData.description,
+                updated_at: optimisticUpdateData.updated_at,
+              } : null,
+            } : p);
+          }
+          // Para 'thisMonthForward' e 'all', o optimistic update é mais complexo devido à regeneração.
+          // Apenas fechamos o modal e deixamos o refetch em background atualizar.
+          return oldData;
+        });
+      }
+      // --- OPTIMISTIC UPDATE END ---
 
       try {
         if (type === "income") {
@@ -486,18 +572,19 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        // 🔥 Invalida E RE-BUSCA os dados realmente alterados
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
-          queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] }),
-          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
-          queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }),
-        ]);
+        // 🔥 Invalida E RE-BUSCA os dados em segundo plano
+        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] });
+        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        queryClient.refetchQueries({ queryKey: ["revenues", user?.id] });
         console.log("[DEBUG] Queries invalidated and refetched after update.");
 
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });
+        // --- OPTIMISTIC ROLLBACK ---
+        queryClient.setQueryData(["revenues", user.id], previousRevenues);
+        queryClient.setQueryData(["expenseInstallments", user.id], previousExpenseInstallments);
       } finally {
         setEditingTransaction(null);
         setIsEditModalOpen(false);
