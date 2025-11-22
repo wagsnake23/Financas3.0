@@ -409,7 +409,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[90vw] p-4" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[95vw] p-4" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -424,7 +424,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "rounded-xl",
-                isMobile && "h-10 text-xs flex-1" // Apenas o Cancelar tem h-10
+                isMobile && "h-10 text-xs flex-1" 
               )}
             >
               <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
@@ -435,7 +435,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-9 text-xs flex-1" // O Excluir mantém h-9
+                isMobile && "h-9 text-xs flex-1" 
               )}
             >
               {loading || isFetchingOptions ? (
