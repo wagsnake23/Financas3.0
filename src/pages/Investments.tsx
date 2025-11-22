@@ -33,6 +33,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
+import { StatCard } from "@/components/StatCard"; // Importar StatCard
 
 const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
@@ -501,6 +502,17 @@ export default function Investments() { // Alterado para export default function
                 )}
               </div>
             </Card>
+            {isMobile && (
+              <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
+                <StatCard
+                  title="Total Investido"
+                  value={stats.totalInvested}
+                  icon="DollarSign"
+                  variant="income" // Usar variant income para cor verde
+                  isMobile={isMobile}
+                />
+              </div>
+            )}
           </div>
         </div>
       </main>
