@@ -50,7 +50,7 @@ const toastDuration = 1000; // 1 segundo para todos os dispositivos
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
-const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
+export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   cards,
   onCardUpdated,
   onCardDeleted,
