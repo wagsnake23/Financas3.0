@@ -32,7 +32,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             onSelectAvulsa();
           }
         }}
-        className={cn("w-full justify-center", isMobile && "gap-x-2")} {/* Adicionado gap-x-2 para mobile */}
+        className={cn("w-full justify-center", isMobile && "gap-x-2")}
       >
         <ToggleGroupItem 
           value="avulsa" 
