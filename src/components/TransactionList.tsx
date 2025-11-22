@@ -80,14 +80,14 @@ export const TransactionList = ({
 
   const paymentFilterOptions = useMemo(() => {
     const options = [
-      { value: "all", label: "Todas as formas de pagamento" },
-      { value: "dinheiro", label: "Dinheiro" },
-      { value: "pix", label: "Pix" },
+      { value: "all", label: "Tudo" }, // Alterado para "Tudo"
+      { value: "dinheiro", label: "💰 Dinheiro" }, // Adicionado emoji
+      { value: "pix", label: "📲 Pix" }, // Adicionado emoji
     ];
     cartoes.forEach(card => {
       options.push({
         value: card.id,
-        label: `Cartão: ${card.nome} (****${card.ultimos_digitos})`
+        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})` // Adicionado emoji
       });
     });
     return options;
