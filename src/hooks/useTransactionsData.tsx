@@ -146,6 +146,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   }, [expenseInstallments]);
 
   const monthlyFilteredTransactions = useMemo(() => {
+    console.log("useTransactionsData: Recalculating monthlyFilteredTransactions..."); // ADD THIS LOG
     if (!enabled) return [];
 
     const startDate = startOfMonth(selectedMonth);

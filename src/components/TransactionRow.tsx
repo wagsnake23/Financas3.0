@@ -127,9 +127,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           if (error) throw error;
         }
         toast.success("Status da receita atualizado!");
-        console.log("handleToggleStatus: Income status updated successfully. Invalidating queries...");
+        console.log("handleToggleStatus: Income status updated successfully. Invalidating and refetching queries...");
         await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-        console.log("handleToggleStatus: Income queries invalidated.");
+        await queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }); // Força o re-fetch
+        console.log("handleToggleStatus: Income queries invalidated and refetched.");
       } else { // expense
         console.log("handleToggleStatus: Updating expense installment.");
         const pago = newStatus === "Recebida";
@@ -148,9 +149,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
         if (error) throw error;
         toast.success("Status da despesa atualizado!");
-        console.log("handleToggleStatus: Expense status updated successfully. Invalidating queries...");
+        console.log("handleToggleStatus: Expense status updated successfully. Invalidating and refetching queries...");
         await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-        console.log("handleToggleStatus: Expense queries invalidated.");
+        await queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] }); // Força o re-fetch
+        console.log("handleToggleStatus: Expense queries invalidated and refetched.");
       }
       
     } catch (error: any) {
