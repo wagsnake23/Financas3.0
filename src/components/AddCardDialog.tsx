@@ -22,6 +22,10 @@ interface AddCardDialogProps {
   onCardAdded: () => void;
 }
 
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+
 export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded }) => {
   const [dialogAddCartaoOpen, setDialogAddCartaoOpen] = useState(false);
   const [newCardNome, setNewCardNome] = useState("");
@@ -35,7 +39,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
 
   const handleAddNewCartao = async () => {
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
@@ -50,7 +54,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios corretamente.");
+      toast.error("Preencha todos os campos obrigatórios corretamente.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
@@ -65,11 +69,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
     });
 
     if (error) {
-      toast.error("Erro ao adicionar cartão", { description: error.message });
+      toast.error("Erro ao adicionar cartão", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error(error);
     } else {
       toast.success("Cartão adicionado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       // Reset form fields
       setNewCardNome("");

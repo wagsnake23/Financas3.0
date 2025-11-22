@@ -19,6 +19,9 @@ interface CategoryFormProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const CategoryForm = ({ 
   onAddCategory, 
@@ -71,12 +74,12 @@ export const CategoryForm = ({
     e.preventDefault();
     
     if (!selectedParentId || selectedParentId === UNSELECTED_VALUE) {
-      toast.error("Selecione uma Categoria Principal para a subcategoria.");
+      toast.error("Selecione uma Categoria Principal para a subcategoria.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
     if (!nome.trim()) {
-      toast.error("Preencha o nome da subcategoria");
+      toast.error("Preencha o nome da subcategoria", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 

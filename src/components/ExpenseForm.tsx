@@ -47,6 +47,9 @@ interface ExpenseFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   user,
@@ -156,7 +159,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }
@@ -185,7 +188,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setValidationErrors(newErrors);
 
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios");
+      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }
@@ -271,7 +274,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       }
 
       toast.success("Despesa adicionada com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       
       setSelectedSubcategoryId(UNSELECTED_VALUE);
@@ -288,7 +292,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
 
     } catch (error: any) {
-      toast.error("Erro ao adicionar despesa", { description: error.message });
+      toast.error("Erro ao adicionar despesa", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error adding expense:", error);
     } finally {
       setLoading(false);

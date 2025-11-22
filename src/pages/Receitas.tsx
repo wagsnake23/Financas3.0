@@ -37,6 +37,9 @@ type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export default function Receitas() {
   const { user, loading: authLoading } = useAuth();
@@ -104,7 +107,7 @@ export default function Receitas() {
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }
@@ -131,7 +134,7 @@ export default function Receitas() {
     setValidationErrors(newErrors); // Atualiza os erros de validação
 
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios");
+      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }
@@ -183,7 +186,7 @@ export default function Receitas() {
           p_description: descricao,
           p_status: 'Prevista', // Required enum value
           p_recurrence_day: recurrenceDay,
-          p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 ocorrências
+          p_total_installments: RECURRING_INSTALLMENTS_COUNT,
           p_forma_pagamento: null,
           p_cartao_id: null,
           p_tipo_pagamento: null,
@@ -210,7 +213,8 @@ export default function Receitas() {
       }
 
       toast.success("Receita adicionada com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       setTipoReceitaId(UNSELECTED_VALUE);
       setValor(undefined);
@@ -222,7 +226,7 @@ export default function Receitas() {
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
 
     } catch (error: any) {
-      toast.error("Erro ao adicionar receita", { description: error.message });
+      toast.error("Erro ao adicionar receita", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error adding revenue:", error);
     } finally {
       setLoading(false);

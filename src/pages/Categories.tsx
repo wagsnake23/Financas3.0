@@ -53,6 +53,9 @@ const buildCategoryHierarchy = (flatCategories: AppCategory[]): HierarchicalCate
   return rootCategories;
 };
 
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 const Categories = () => {
   const { user, loading: authLoading } = useAuth();
@@ -105,11 +108,12 @@ const Categories = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       toast.success("Subcategoria adicionada!", { // Mensagem atualizada
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
     },
     onError: (error) => {
-      toast.error("Erro ao adicionar subcategoria", { description: error.message }); // Mensagem atualizada
+      toast.error("Erro ao adicionar subcategoria", { description: error.message, duration: toastDuration, style: toastErrorStyle }); // Mensagem atualizada
     },
     enabled: !!user && !authLoading,
   });
@@ -132,12 +136,13 @@ const Categories = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       toast.success("Subcategoria atualizada!", { // Mensagem atualizada
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       setEditingCategory(null);
     },
     onError: (error) => {
-      toast.error("Erro ao atualizar subcategoria", { description: error.message }); // Mensagem atualizada
+      toast.error("Erro ao atualizar subcategoria", { description: error.message, duration: toastDuration, style: toastErrorStyle }); // Mensagem atualizada
     },
     enabled: !!user && !authLoading,
   });
@@ -167,11 +172,12 @@ const Categories = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       toast.success("Categoria removida!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
     },
     onError: (error) => {
-      toast.error("Erro ao remover categoria", { description: error.message });
+      toast.error("Erro ao remover categoria", { description: error.message, duration: toastDuration, style: toastErrorStyle });
     },
     enabled: !!user && !authLoading,
   });
@@ -205,14 +211,14 @@ const Categories = () => {
 
   const handleEditCategory = (category: AppCategory) => {
     if (category.user_id === null) {
-      toast.info("Não é possível editar categorias padrão.");
+      toast.info("Não é possível editar categorias padrão.", { duration: toastDuration });
       setEditingCategory(null);
       return;
     }
     // Se a categoria selecionada para edição for uma categoria principal (parent_id === null),
     // não permitimos a edição via este formulário, pois ele é para subcategorias.
     if (category.parent_id === null) {
-      toast.info("Edite apenas subcategorias. Para categorias principais, crie subcategorias.");
+      toast.info("Edite apenas subcategorias. Para categorias principais, crie subcategorias.", { duration: toastDuration });
       setEditingCategory(null);
       return;
     }

@@ -46,6 +46,10 @@ interface ManageCardsDialogProps {
   onCardDeleted: () => void;
 }
 
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+
 const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   cards,
   onCardUpdated,
@@ -93,7 +97,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios corretamente.");
+      toast.error("Preencha todos os campos obrigatórios corretamente.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
@@ -110,11 +114,12 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       .eq("id", editingCard.id);
 
     if (error) {
-      toast.error("Erro ao atualizar cartão", { description: error.message });
+      toast.error("Erro ao atualizar cartão", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error(error);
     } else {
       toast.success("Cartão atualizado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       setIsEditCardOpen(false);
       setEditingCard(null);
@@ -143,7 +148,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     console.log(`[DEBUG] Card ${cardToDelete}: Found ${expenseCount} associated 'despesas' records.`);
 
     if (countError) {
-      toast.error("Erro ao verificar despesas associadas", { description: countError.message });
+      toast.error("Erro ao verificar despesas associadas", { description: countError.message, duration: toastDuration, style: toastErrorStyle });
       console.error(countError);
       setLoading(false);
       setIsConfirmDeleteOpen(false);
@@ -153,6 +158,7 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     if (expenseCount && expenseCount > 0) {
       toast.error("Não é possível excluir o cartão", {
         description: "Existem despesas avulsas associadas a este cartão. Remova-as ou edite-as primeiro.",
+        duration: toastDuration, style: toastErrorStyle
       });
       setLoading(false);
       setIsConfirmDeleteOpen(false);
@@ -163,11 +169,12 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
     if (error) {
-      toast.error("Erro ao excluir cartão", { description: error.message });
+      toast.error("Erro ao excluir cartão", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error(error);
     } else {
       toast.success("Cartão excluído!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       onCardDeleted();
     }

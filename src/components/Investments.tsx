@@ -25,6 +25,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"; // Importar Popover components
 
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+
 const Investments = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
@@ -77,7 +81,8 @@ const Investments = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento adicionado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       // Reset form
       setName("");
@@ -87,7 +92,7 @@ const Investments = () => {
       setType("fixed");
     },
     onError: (error) => {
-      toast.error("Erro ao adicionar investimento", { description: error.message });
+      toast.error("Erro ao adicionar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error adding investment:", error);
     },
     onSettled: () => {
@@ -108,11 +113,12 @@ const Investments = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento removido!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
     },
     onError: (error) => {
-      toast.error("Erro ao remover investimento", { description: error.message });
+      toast.error("Erro ao remover investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error deleting investment:", error);
     },
   });
@@ -122,13 +128,13 @@ const Investments = () => {
     setLoadingForm(true);
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       setLoadingForm(false);
       return;
     }
     
     if (!name || !amount || !profitability || !date) { // Adicionado validação para 'date'
-      toast.error("Preencha todos os campos obrigatórios");
+      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoadingForm(false);
       return;
     }
@@ -388,3 +394,5 @@ const Investments = () => {
     </div>
   );
 };
+
+export default Investments;

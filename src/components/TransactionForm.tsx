@@ -23,6 +23,9 @@ interface TransactionFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
@@ -77,7 +80,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const handleToggleChange = (value: string) => {
     if (value === "recorrente") {
       if (type === "expense") {
-        toast.error("Despesas recorrentes devem ser criadas no módulo de Despesas.");
+        toast.error("Despesas recorrentes devem ser criadas no módulo de Despesas.", { duration: toastDuration, style: toastErrorStyle });
         setIsRecurring(false); // Force back to Avulsa
         return;
       }
@@ -109,12 +112,12 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
     setValidationErrors(newErrors);
 
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios (Valor, Data e Subcategoria).");
+      toast.error("Preencha todos os campos obrigatórios (Valor, Data e Subcategoria).", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
 
@@ -210,10 +213,11 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       setValidationErrors({}); // Clear errors on success
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
     } catch (error: any) {
-      toast.error("Erro ao adicionar lançamento", { description: error.message });
+      toast.error("Erro ao adicionar lançamento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error adding transaction:", error);
     }
   };

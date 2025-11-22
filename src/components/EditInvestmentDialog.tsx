@@ -34,6 +34,9 @@ interface EditInvestmentDialogProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   investmentToEdit,
@@ -87,7 +90,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       onUpdateSuccess();
     },
     onError: (error) => {
-      toast.error("Erro ao atualizar investimento", { description: error.message });
+      toast.error("Erro ao atualizar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error updating investment:", error);
     },
     onSettled: () => {
@@ -103,7 +106,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }
@@ -127,7 +130,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios");
+      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoading(false);
       return;
     }

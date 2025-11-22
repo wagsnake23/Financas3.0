@@ -35,6 +35,9 @@ import {
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 
 const UNSELECTED_VALUE = "unselected";
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
@@ -115,7 +118,8 @@ export default function Investments() { // Alterado para export default function
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento adicionado!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
       // Reset form
       setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
@@ -126,7 +130,7 @@ export default function Investments() { // Alterado para export default function
       setValidationErrors({}); // Clear errors on success
     },
     onError: (error) => {
-      toast.error("Erro ao adicionar investimento", { description: error.message });
+      toast.error("Erro ao adicionar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error adding investment:", error);
     },
     onSettled: () => {
@@ -149,11 +153,12 @@ export default function Investments() { // Alterado para export default function
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
       toast.success("Investimento removido!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
     },
     onError: (error) => {
-      toast.error("Erro ao remover investimento", { description: error.message });
+      toast.error("Erro ao remover investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
       console.error("Supabase error deleting investment:", error);
     },
     enabled: !!user && !authLoading, // Habilitar mutação apenas se autenticado
@@ -167,7 +172,7 @@ export default function Investments() { // Alterado para export default function
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.");
+      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
       setLoadingForm(false);
       return;
     }
@@ -191,7 +196,7 @@ export default function Investments() { // Alterado para export default function
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios");
+      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoadingForm(false);
       return;
     }
@@ -230,7 +235,8 @@ export default function Investments() { // Alterado para export default function
   const handleUpdateSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
     toast.success("Investimento atualizado!", {
-      style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+      style: toastSuccessStyle,
+      duration: toastDuration
     });
     handleCancelEdit();
   };

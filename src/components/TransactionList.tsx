@@ -41,7 +41,6 @@ interface TransactionListProps {
   // Removido: disableFilters?: boolean;
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  selectedMonth: Date;
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
@@ -49,6 +48,9 @@ interface TransactionListProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
+const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
+const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const TransactionList = ({
   transactions, 
@@ -177,15 +179,15 @@ export const TransactionList = ({
     console.log("handlePayInvoice: isValid(monthToValidate):", isValid(monthToValidate));
 
     if (!user) {
-      toast.error("Usuário não autenticado. Por favor, faça login novamente.");
+      toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
     if (!isValidUuid(filterPaymentOptionId)) {
-      toast.error("Selecione um cartão de crédito válido para pagar a fatura.");
+      toast.error("Selecione um cartão de crédito válido para pagar a fatura.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
     if (!isValid(monthToValidate)) { // Use the new Date object for validation
-      toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.");
+      toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.", { duration: toastDuration, style: toastErrorStyle });
       console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth, "Validated object:", monthToValidate);
       return;
     }
@@ -198,7 +200,7 @@ export const TransactionList = ({
         .map(t => t.id);
 
       if (installmentIdsToUpdate.length === 0) {
-        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês selecionado.");
+        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês selecionado.", { duration: toastDuration });
         setLoadingPayInvoice(false);
         return;
       }
@@ -216,7 +218,8 @@ export const TransactionList = ({
       }
 
       toast.success("Fatura paga com sucesso!", {
-        style: { backgroundColor: 'hsl(var(--soft-green))', color: 'hsl(var(--success-darker))' }
+        style: toastSuccessStyle,
+        duration: toastDuration
       });
 
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
@@ -225,7 +228,7 @@ export const TransactionList = ({
       
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
-      toast.error("Erro ao pagar fatura.", { description: error.message });
+      toast.error("Erro ao pagar fatura.", { description: error.message, duration: toastDuration, style: toastErrorStyle });
     } finally {
       setLoadingPayInvoice(false);
     }
