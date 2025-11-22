@@ -32,7 +32,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             onSelectAvulsa();
           }
         }}
-        className="w-full justify-center"
+        className={cn("w-full justify-center", isMobile && "gap-x-2")} {/* Adicionado gap-x-2 para mobile */}
       >
         <ToggleGroupItem 
           value="avulsa" 
@@ -45,7 +45,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           <DynamicIcon 
             name="⚡" 
             className={cn(
-              "mr-1 h-3.5 w-3.5", // Reduzido de h-4 w-4 para h-3.5 w-3.5 e mr-2 para mr-1
+              "mr-1 h-3.5 w-3.5",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
             )} 
           /> Avulsa
@@ -61,7 +61,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           <DynamicIcon 
             name="🔁" 
             className={cn(
-              "mr-1 h-3.5 w-3.5", // Reduzido de h-4 w-4 para h-3.5 w-3.5 e mr-2 para mr-1
+              "mr-1 h-3.5 w-3.5",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
             )} 
           /> Recorrente
