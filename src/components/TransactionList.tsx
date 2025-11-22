@@ -99,6 +99,11 @@ export const TransactionList = ({
     }
   }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]);
 
+  // Log para verificar a mudança de referência da prop transactions
+  useEffect(() => {
+    console.log("TransactionList: transactions prop reference changed:", transactions);
+  }, [transactions]);
+
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
     
