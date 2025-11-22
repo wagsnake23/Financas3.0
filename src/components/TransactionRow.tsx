@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"; // Importar useState
+import React, { memo } from "react"; // Removido useState
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
@@ -46,7 +46,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   user,
   // onDeleteTransaction não é usado diretamente aqui, mas o tipo foi corrigido
 }) => {
-  const [loadingToggle, setLoadingToggle] = useState(false); // Novo estado de carregamento para o toggle
+  // Removido: const [loadingToggle, setLoadingToggle] = useState(false); // Novo estado de carregamento para o toggle
 
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
@@ -96,8 +96,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return;
     }
 
-    setLoadingToggle(true);
-    console.log("handleToggleStatus: Setting loadingToggle to true.");
+    // Removido: setLoadingToggle(true);
+    // Removido: console.log("handleToggleStatus: Setting loadingToggle to true.");
 
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
@@ -185,8 +185,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       }
       // --- OPTIMISTIC ROLLBACK END ---
     } finally {
-      setLoadingToggle(false);
-      console.log("handleToggleStatus: Setting loadingToggle to false (finally block).");
+      // Removido: setLoadingToggle(false);
+      // Removido: console.log("handleToggleStatus: Setting loadingToggle to false (finally block).");
     }
   };
 
@@ -274,11 +274,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           size="icon"
           className="h-7 w-7"
           onClick={handleToggleStatus}
-          disabled={transaction.status === "Cancelada" || loadingToggle} // Desabilita durante o carregamento
+          disabled={transaction.status === "Cancelada"} // Removido disabled={loadingToggle}
         >
-          {loadingToggle ? ( // Mostra um spinner ou ícone de carregamento
-            <DynamicIcon name="Loader" className="h-4 w-4 animate-spin text-primary" />
-          ) : transaction.status === "Recebida" ? (
+          {/* Removido o condicional para loadingToggle, agora sempre mostra o ícone de status */}
+          {transaction.status === "Recebida" ? (
             <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />
           ) : (transaction.status === "Pendente" ||
             transaction.status === "Prevista") ? (
@@ -300,7 +299,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             size="icon"
             className="h-7 w-7"
             onClick={() => onEditTransaction(transaction)}
-            disabled={loadingToggle} // Desabilita o botão de edição também
+            // Removido disabled={loadingToggle}
           >
             <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
           </Button>
