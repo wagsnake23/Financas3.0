@@ -513,7 +513,7 @@ export const useTransactionMutations = ({
           const newVencimento = updatedTransaction.date;
           const newPagoStatus = updatedTransaction.status === "Recebida";
           const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
-          const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
+          const newRecurrenceDay = getDate(parseISO(updatedTransaction.date)); // Dia da data editada
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
           console.log("[DEBUG] Updating master expense record (despesas).");
@@ -577,7 +577,7 @@ export const useTransactionMutations = ({
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
               p_status: 'Pendente', // Default status for expenses, as it's a required enum
-              p_recurrence_day: newRecurrenceDay, // CORREÇÃO: Para despesas, sempre usar o dia da data editada
+              p_recurrence_day: getDate(parseISO(originalTransaction.date)), // CORREÇÃO: Usar o dia da data ORIGINAL da transação
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
