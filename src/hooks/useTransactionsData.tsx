@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory, Transaction } from "@/types/finance";
-import { startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { isValidUuid } from "@/lib/utils";
 
 interface UseTransactionsDataProps {
   user: User | null;
@@ -12,11 +13,7 @@ interface UseTransactionsDataProps {
   enabled: boolean;
 }
 
-export const useTransactionsData = ({
-  user,
-  selectedMonth,
-  enabled,
-}: UseTransactionsDataProps) => {
+export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransactionsDataProps) => {
   // ✅ CORREÇÃO: Carregar TODAS as categorias (principais e subcategorias)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } =
     useQuery<AppCategory[]>({
@@ -180,15 +177,14 @@ export const useTransactionsData = ({
           totalInstallments: totalForNonFixed,
           forma_pagamento: d?.forma_pagamento,
           cartao_id: d?.cartao_id,
-          despesa_id: d?.id,
+          despesa_id: d?.id, // ✅ CORREÇÃO: Garantir despesa_id presente
           is_recurring_master: Boolean(d?.is_recurring_master),
           recurrence_id: d?.id ?? null,
           recurrence_day: null,
           tipo_pagamento: d?.tipo_pagamento,
 
-          // 🔥 Categoria corrigida: usa principal se existir
-          category:
-            d?.categoria?.parent_id || d?.categoria_id || "outros_diversos",
+          // ✅ CORREÇÃO: Usar a subcategoria real salva no banco
+          category: d?.categoria_id || "outros_diversos",
         };
       });
 
