@@ -351,7 +351,7 @@ export default function Auth() {
           <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </Button>
-          <div className="text-right text-sm mt-1">
+          <div className="text-right text-sm mt-4 sm:mt-1"> {/* Adicionado mt-4 para mobile, sm:mt-1 para desktop */}
             <button
               type="button"
               onClick={() => {
@@ -526,7 +526,7 @@ export default function Auth() {
                 setViewMode("login");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline"
+              className="text-primary hover:underline block w-full"
             >
               Voltar para login
 
