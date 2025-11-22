@@ -427,7 +427,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" 
               )}
             >
-              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              {/* <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> */}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
@@ -442,7 +442,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 "Excluindo..."
               ) : (
                 <>
-                  <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+                  {/* <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> */}
                   Excluir
                 </>
               )}
