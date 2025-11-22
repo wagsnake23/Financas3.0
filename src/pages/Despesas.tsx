@@ -91,10 +91,12 @@ export default function Despesas() {
 
   const formContent = (
     <>
-      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-primary", isMobile && "text-lg mb-4")}> {/* Alterado mb-0 para mb-4 em mobile */}
-        <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-        Nova Despesa
-      </h2>
+      {isMobile && ( // Renderiza o título apenas em mobile
+        <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
+          <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+          Nova Despesa
+        </h2>
+      )}
       
       <ExpenseForm
         user={user}
@@ -132,6 +134,11 @@ export default function Despesas() {
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]">
+                  {/* Título para desktop, fora do formContent */}
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
+                    <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                    Nova Despesa
+                  </h2>
                   {formContent}
                 </Card>
               )}
