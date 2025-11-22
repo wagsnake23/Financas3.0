@@ -235,6 +235,12 @@ export default function Receitas() {
 
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className="space-y-4">
+      {isMobile && ( // Título para mobile
+        <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-success")}>
+          <DynamicIcon name="💰" className="h-6 w-6" />
+          Nova Receita
+        </h2>
+      )}
       <div className="space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
         <ToggleGroup 
@@ -419,7 +425,9 @@ export default function Receitas() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
                 <> {/* Removido o div wrapper e o Footer */}
-                  {oneOffFormContent}
+                  <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]"> {/* Adicionado Card e bg-lancamentos-mobile-bg */}
+                    {oneOffFormContent}
+                  </Card>
                   <Footer isMobile={isMobile} /> {/* Footer inserido aqui */}
                 </>
               ) : (
