@@ -312,8 +312,18 @@ export const TransactionList = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos os tipos</SelectItem>
-            <SelectItem value="income">Receita</SelectItem>
-            <SelectItem value="expense">Despesa</SelectItem>
+            <SelectItem value="income">
+              <span className="flex items-center gap-2">
+                <DynamicIcon name="💰" className="h-4 w-4" />
+                Receita
+              </span>
+            </SelectItem>
+            <SelectItem value="expense">
+              <span className="flex items-center gap-2">
+                <DynamicIcon name="💸" className="h-4 w-4" />
+                Despesa
+              </span>
+            </SelectItem>
           </SelectContent>
         </Select>
 
