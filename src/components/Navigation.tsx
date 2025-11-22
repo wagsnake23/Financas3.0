@@ -10,12 +10,12 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: "Home", color: "hsl(210, 70%, 50%)" }, // Azul
-    { to: "/receitas", label: "Receitas", icon: "DollarSign", color: "hsl(150, 65%, 50%)" }, // Verde (success)
-    { to: "/despesas", label: "Despesas", icon: "CreditCard", color: "hsl(0, 70%, 55%)" }, // Vermelho (destructive)
-    { to: "/lancamentos", label: "Lançamentos", icon: "ScrollText", color: "hsl(45, 90%, 55%)" }, // Amarelo Ouro
-    { to: "/categorias", label: "Categorias", icon: "FolderKanban", color: "hsl(285, 70%, 55%)" }, // Púrpura
-    { to: "/investimentos", label: "Investimentos", icon: "TrendingUp", color: "hsl(180, 70%, 50%)" }, // Ciano
+    { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Azul
+    { to: "/despesas", label: "Despesas", icon: "💸", color: "hsl(0, 70%, 55%)" }, // Vermelho (destructive)
+    { to: "/receitas", label: "Receitas", icon: "💰", color: "hsl(150, 65%, 50%)" }, // Verde (success)
+    { to: "/lancamentos", label: "Lançamentos", icon: "📝", color: "hsl(45, 90%, 55%)" }, // Amarelo Ouro
+    { to: "/categorias", label: "Categorias", icon: "🗂️", color: "hsl(285, 70%, 55%)" }, // Púrpura
+    { to: "/investimentos", label: "Investimentos", icon: "📈", color: "hsl(180, 70%, 50%)" }, // Ciano
   ];
 
   const handleNavClick = () => {
@@ -56,7 +56,7 @@ export const Navigation = () => {
               onClick={signOut}
               className="ml-2 text-primary-foreground hover:bg-primary-foreground/10"
             >
-              <DynamicIcon name="LogOut" className="h-4 w-4 mr-2" />
+              <DynamicIcon name="❌" className="h-4 w-4 mr-2" />
               Sair
             </Button>
           </div>
@@ -94,7 +94,7 @@ export const Navigation = () => {
                   }}
                   className="justify-start px-4 py-3 h-auto text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
-                  <DynamicIcon name="LogOut" className="h-5 w-5 mr-3" />
+                  <DynamicIcon name="❌" className="h-5 w-5 mr-3" />
                   Sair
                 </Button>
               </div>
