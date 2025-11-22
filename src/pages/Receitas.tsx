@@ -241,14 +241,15 @@ export default function Receitas() {
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
           onValueChange={handleToggleChange}
-          className="w-full justify-center"
+          className={cn("w-full justify-center", isMobile && "gap-x-2")} {/* Adicionado gap-x-2 para mobile */}
         >
           <ToggleGroupItem 
             value="avulsa" 
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border",
               "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
+              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+              isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
             )}
           >
             <DynamicIcon 
@@ -264,7 +265,8 @@ export default function Receitas() {
             className={cn(
                 "flex-1 rounded-xl flex items-center justify-center border",
                 "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
+                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+                isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
               )}
             >
               <DynamicIcon 
