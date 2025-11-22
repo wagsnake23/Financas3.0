@@ -45,7 +45,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           <DynamicIcon 
             name="⚡" 
             className={cn(
-              "mr-2 h-4 w-4",
+              "mr-1 h-3.5 w-3.5", // Reduzido de h-4 w-4 para h-3.5 w-3.5 e mr-2 para mr-1
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
             )} 
           /> Avulsa
@@ -61,7 +61,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           <DynamicIcon 
             name="🔁" 
             className={cn(
-              "mr-2 h-4 w-4",
+              "mr-1 h-3.5 w-3.5", // Reduzido de h-4 w-4 para h-3.5 w-3.5 e mr-2 para mr-1
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
             )} 
           /> Recorrente
