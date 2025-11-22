@@ -406,7 +406,7 @@ export default function Receitas() {
       <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-success/5 pt-16">
           <Navigation />
-          <div className="max-w-4xl mx-auto p-6 space-y-6">
+          <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "p-6")}>
             {!isMobile && (
               <div className="flex items-center justify-between">
                 <div>
@@ -418,11 +418,7 @@ export default function Receitas() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
-                <div className="px-4 pt-0">
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
-                    <DynamicIcon name="💰" className="h-6 w-6 text-success" /> {/* Ícone de emoji */}
-                    Nova Receita
-                  </h2>
+                <div className="px-4 pt-0 rounded-xl shadow-sm"> {/* Removido bg-[#F1F9FD] daqui */}
                   {oneOffFormContent}
                   <Footer isMobile={isMobile} />
                 </div>
