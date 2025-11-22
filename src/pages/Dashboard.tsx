@@ -146,7 +146,7 @@ const Dashboard = () => {
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button
                       variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1")} /* Adicionado mb-1 aqui */
+                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1")} 
                       onClick={() => navigate("/despesas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -166,23 +166,28 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
               >
-                <div className={cn("flex justify-between items-end w-full")}>
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Saldo Atual:</p> {/* MonthBadge removed from here */}
-                    <p className={cn(
-                      "font-semibold text-base text-primary"
-                    )}>
-                      {showBalanceValue ? formatCurrency(stats.balance) : "R$ *****"}
-                    </p>
+                {/* Ajuste para posicionar o botão na parte inferior */}
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className={cn("flex justify-between items-end w-full")}>
+                    <div className="flex flex-col items-start">
+                      <p className="text-xs text-muted-foreground">Saldo Atual:</p> 
+                      <p className={cn(
+                        "font-semibold text-base text-primary"
+                      )}>
+                        {showBalanceValue ? formatCurrency(stats.balance) : "R$ *****"}
+                      </p>
+                    </div>
                   </div>
-                  <Button 
-                    variant="success" 
-                    className="w-[130px] h-8 px-3 text-xs rounded-xl" 
-                    onClick={() => navigate("/receitas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Receita
-                  </Button>
+                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
+                    <Button 
+                      variant="success" 
+                      className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1" 
+                      onClick={() => navigate("/receitas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Receita
+                    </Button>
+                  </div>
                 </div>
               </StatCard>
 
