@@ -297,7 +297,7 @@ export const useTransactionMutations = ({
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // Format Date object to string
+                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-DD'), // Format Date object to string
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
