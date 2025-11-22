@@ -10,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useExpenseData } from "@/hooks/useExpenseData";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { TopCategoriesByValue } from "@/components/TopCategoriesByValue";
-import { MostUsedCategories } from "@/components/MostUsedCategories"; // Corrigido o nome do componente
+import { MostUsedCategories } from "@/components/MostUsedCategories";
 import { CategoryDistributionSummary } from "@/components/CategoryDistributionSummary";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
@@ -91,7 +91,7 @@ export default function Despesas() {
 
   const formContent = (
     <>
-      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-primary", isMobile && "text-lg mb-0")}>
+      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-primary", isMobile && "text-lg mb-4")}> {/* Alterado mb-0 para mb-4 em mobile */}
         <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
         Nova Despesa
       </h2>
