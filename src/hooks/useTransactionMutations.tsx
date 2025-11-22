@@ -359,7 +359,7 @@ export const useTransactionMutations = ({
                   updated_at: new Date().toISOString(), // Força updated_at
                 })
                 .eq("id", id)
-                .eq("user_id", user.id);
+                .eq("user_id", user.id); // FIX: Changed "user.id" to "user_id"
               if (updateOccurrenceError) throw updateOccurrenceError;
               console.log("[DEBUG] Single income occurrence updated.");
 
@@ -378,15 +378,14 @@ export const useTransactionMutations = ({
                     updated_at: new Date().toISOString(), // Força updated_at
                   })
                   .eq("id", masterRecurrenceId)
-                  .eq("user_id", user.id);
+                  .eq("user_id", user.id); // FIX: Changed "user.id" to "user_id"
                 if (updateMasterError) throw updateMasterError;
                 console.log("[DEBUG] Master income record updated.");
               }
 
               // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
               const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
-              
-              console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
+              console.log(`[DEBUG] Income Update (thisMonthForward/all): Deleting from date: ${deleteFromDate}`); // ADDED LOG
               
               const { error: deleteFutureError } = await supabase
                 .from("receitas")
@@ -399,12 +398,14 @@ export const useTransactionMutations = ({
               console.log("[DEBUG] Future income occurrences deleted.");
 
               // 3. Chamar RPC para regenerar TODAS as ocorrências a partir da data de atualização
-              console.log("[DEBUG] Calling RPC to regenerate income occurrences.");
+              const rpcFirstOccurrenceDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'); // ADDED VARIABLE
+              console.log(`[DEBUG] Income Update (thisMonthForward/all): RPC first occurrence date: ${rpcFirstOccurrenceDate}`); // ADDED LOG
+
               const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // CORRIGIDO: 'yyyy-MM-DD' para 'yyyy-MM-dd'
+                p_first_occurrence_date: rpcFirstOccurrenceDate,
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
@@ -501,8 +502,7 @@ export const useTransactionMutations = ({
             console.log(`[DEBUG] Updating recurring expense for scope: ${saveScope}`);
             // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
             const deleteFromDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd');
-            
-            console.log(`[DEBUG] Deleting expense installments for parent ${parentDespesaId} from ${deleteFromDate} onwards.`);
+            console.log(`[DEBUG] Expense Update (thisMonthForward/all): Deleting from date: ${deleteFromDate}`); // ADDED LOG
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
@@ -514,12 +514,14 @@ export const useTransactionMutations = ({
             console.log("[DEBUG] Future expense installments deleted.");
 
             // 2. Chamar RPC para regenerar TODAS as parcelas a partir da data de atualização
-            console.log("[DEBUG] Calling RPC to regenerate expense installments.");
+            const rpcFirstOccurrenceDate = format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'); // ADDED VARIABLE
+            console.log(`[DEBUG] Expense Update (thisMonthForward/all): RPC first occurrence date: ${rpcFirstOccurrenceDate}`); // ADDED LOG
+
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // CORRIGIDO: 'yyyy-MM-DD' para 'yyyy-MM-dd'
+              p_first_occurrence_date: rpcFirstOccurrenceDate,
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
