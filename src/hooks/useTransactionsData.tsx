@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory, Transaction } from "@/types/finance";
-import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { format, startOfMonth, endOfMonth, isWithinInterval, getDate } from "date-fns"; // Adicionado getDate
 import { isValidUuid } from "@/lib/utils";
 
 interface UseTransactionsDataProps {
@@ -14,7 +14,6 @@ interface UseTransactionsDataProps {
 }
 
 export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransactionsDataProps) => {
-  // ✅ CORREÇÃO: Carregar TODAS as categorias (principais e subcategorias)
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } =
     useQuery<AppCategory[]>({
       queryKey: ["categories", user?.id],
@@ -24,12 +23,12 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           .from("categorias")
           .select("*")
           .or(`user_id.eq.${user.id},user_id.is.null`)
-          .order("nome"); // 🔥 REMOVIDO o .not("parent_id", "is", null)
+          .order("nome");
         if (error) throw error;
         return data as AppCategory[];
       },
       enabled,
-      staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
+      staleTime: 0,
     });
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<
@@ -53,16 +52,15 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           updated_at,
           user_id,
           created_at
-        `) // ✅ Adicionado created_at ao select
+        `)
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false }); // ✅ CORREÇÃO: Alterado de 'data' para 'created_at'
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
     enabled,
-    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
+    staleTime: 0,
   });
-  // console.log("useTransactionsData: revenues data reference:", revenues); // Log para verificar a referência
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } =
     useQuery<
@@ -102,7 +100,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
             tipo_pagamento,
             cartao_id,
             is_recurring_master,
-            recurrence_id,  // ✅ ADICIONADO recurrence_id AQUI
+            recurrence_id,
             numero_parcelas,
             updated_at,
             valor_total,
@@ -122,9 +120,8 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         return data;
     },
     enabled,
-    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
+    staleTime: 0,
   });
-  // console.log("useTransactionsData: expenseInstallments data reference:", expenseInstallments); // Log para verificar a referência
 
   const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<
     Tables<"cartoes">[]
@@ -141,7 +138,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled,
-    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
+    staleTime: 0,
   });
 
   const totalInstallmentsMap = useMemo(() => {
@@ -156,7 +153,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   }, [expenseInstallments]);
 
   const monthlyFilteredTransactions = useMemo(() => {
-    // console.log("useTransactionsData: Recalculating monthlyFilteredTransactions..."); // ADD THIS LOG
     if (!enabled) return [];
 
     const startDate = startOfMonth(selectedMonth);
@@ -185,7 +181,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_day: r.recurrence_day ?? null,
           tipo_pagamento:
             r.is_recurring_master || r.recurrence_id ? "fixo" : "avista",
-          updated_at: r.updated_at, // Adicionado updated_at
+          updated_at: r.updated_at,
         };
       });
 
@@ -198,21 +194,18 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       )
       .map((p) => {
         const d = p.despesas;
-        // console.log("[DEBUG] Processing expense installment:", p.id);
-        // console.log("[DEBUG] Raw 'despesas' object (d):", d); // Keep this detailed log
 
         if (!d) {
             console.warn(`[WARN] Expense installment ${p.id} has no associated despesas record. Skipping.`);
             return null;
         }
 
-        // Infer tipo_pagamento if it's null/undefined from old data
         let inferredTipoPagamento: "avista" | "parcelado" | "fixo" = "avista";
         if (d.tipo_pagamento) {
             inferredTipoPagamento = d.tipo_pagamento;
-        } else if (d.is_recurring_master) { // If it's a master, it's 'fixo'
+        } else if (d.is_recurring_master) {
             inferredTipoPagamento = "fixo";
-        } else if (d.numero_parcelas && d.numero_parcelas > 1) { // If it has multiple installments, it's 'parcelado'
+        } else if (d.numero_parcelas && d.numero_parcelas > 1) {
             inferredTipoPagamento = "parcelado";
         }
 
@@ -224,23 +217,21 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           description: d.descricao || "Despesa",
           status: p.pago ? "Recebida" : "Pendente",
           installmentNumber: p.numero_parcela,
-          totalInstallments: d.numero_parcelas || 1, // Ensure it's at least 1
+          totalInstallments: d.numero_parcelas || 1,
           forma_pagamento: d.forma_pagamento,
           cartao_id: d.cartao_id,
-          despesa_id: d.id, // ✅ CORREÇÃO: Garantir que despesa_id seja o ID da despesa principal
-          is_recurring_master: Boolean(d.is_recurring_master), // Ensure boolean
-          recurrence_id: d.recurrence_id ?? null, // ✅ CORREÇÃO: Usar d.recurrence_id
-          recurrence_day: null,
-          tipo_pagamento: inferredTipoPagamento, // Use inferred value
+          despesa_id: d.id,
+          is_recurring_master: Boolean(d.is_recurring_master),
+          recurrence_id: d.recurrence_id ?? null,
+          recurrence_day: d.recurrence_id ? getDate(new Date(p.vencimento)) : null, // ✅ CORREÇÃO: Derivar recurrence_day do vencimento se for recorrente
+          tipo_pagamento: inferredTipoPagamento,
           category: d.categoria_id || "outros_diversos",
           updated_at: p.updated_at,
         };
-        // console.log("[DEBUG] Constructed expense transaction:", transaction); // NEW LOG
         return transaction;
       })
-      .filter(Boolean) as Transaction[]; // Filter out nulls
+      .filter(Boolean) as Transaction[];
 
-    // Ordenar por data desc
     return [...monthlyIncomeTransactions, ...monthlyExpenseTransactions].sort(
       (a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime() ||
