@@ -302,6 +302,7 @@ export default function Auth() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  // Clear email validation error when user starts typing
                   setValidationErrors(prev => ({ ...prev, email: false }));
                 }}
                 required
