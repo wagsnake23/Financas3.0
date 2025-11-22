@@ -292,7 +292,7 @@ export default function Investments() { // Alterado para export default function
         <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
           {/* Form */}
           <div>
-            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
+            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4 bg-lancamentos-mobile-bg")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
