@@ -255,7 +255,8 @@ const Dashboard = () => {
                 </StatCard>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              {/* Alterado para grid-cols-2 em telas grandes */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allSubcategories} isMobile={isMobile} />
 
                 <div className="flex flex-col gap-4">
@@ -265,10 +266,8 @@ const Dashboard = () => {
                     isMobile={isMobile}
                     currentMonth={selectedMonth}
                   />
-                  {/* REMOVIDO: MonthlyExpenseCalendar */}
+                  <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
                 </div>
-
-                <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
               </div>
 
               <div className="grid grid-cols-1 mb-4">
