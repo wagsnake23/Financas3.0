@@ -395,6 +395,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           installmentNumber={editingTransaction?.installmentNumber}
           totalInstallments={editingTransaction?.totalInstallments}
           validationErrors={validationErrors} // Pass validation errors
+          setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
         />
 
         <TransactionEditActions

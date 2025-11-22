@@ -39,6 +39,7 @@ interface TransactionOneOffFieldsProps {
   installmentNumber?: number; // NEW: installmentNumber
   totalInstallments?: number; // NEW: totalInstallments
   validationErrors: Record<string, boolean>; // NOVO: Adicionado validationErrors
+  setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; // FIX: Adicionado setValidationErrors
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -63,6 +64,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   installmentNumber, // NEW
   totalInstallments, // NEW
   validationErrors, // NOVO
+  setValidationErrors, // FIX: Desestruturado setValidationErrors
 }) => {
   const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
 
