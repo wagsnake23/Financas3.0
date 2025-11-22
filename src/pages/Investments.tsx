@@ -81,11 +81,11 @@ export default function Investments() { // Alterado para export default function
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const investmentTypes = [
-    { value: "fixed", label: "Renda Fixa" },
-    { value: "variable", label: "Renda Variável" },
-    { value: "real-estate", label: "Fundos Imobiliários" },
-    { value: "crypto", label: "Criptomoedas" },
-    { value: "other", label: "Outros" },
+    { value: "fixed", label: "Renda Fixa", icon: "🏦" },
+    { value: "variable", label: "Renda Variável", icon: "📊" },
+    { value: "real-estate", label: "Fundos Imobiliários", icon: "🏢" },
+    { value: "crypto", label: "Criptomoedas", icon: "🪙" },
+    { value: "other", label: "Outros", icon: "🎯" },
   ];
 
   // Fetch investments using Tanstack Query
@@ -336,7 +336,10 @@ export default function Investments() { // Alterado para export default function
                     <SelectContent>
                       {investmentTypes.map(t => (
                         <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                          {t.label}
+                          <span className="flex items-center gap-2">
+                            <DynamicIcon name={t.icon} className="h-4 w-4" />
+                            {t.label}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
