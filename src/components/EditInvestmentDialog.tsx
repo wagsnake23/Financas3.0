@@ -17,9 +17,8 @@ import { User } from "@supabase/supabase-js";
 import { Investment, AppCategory } from "@/types/finance"; // Importar AppCategory
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
-import DynamicIcon from "./DynamicIcon";
 // Removido: import { Card } from "@/components/ui/card"; // Importar Card
 
 interface EditInvestmentDialogProps {
@@ -247,7 +246,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               )}
               disabled={loading}
             >
-              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
               {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>

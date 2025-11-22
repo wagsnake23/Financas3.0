@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
@@ -101,7 +101,10 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
-            onChange={(v) => setAmount(v)}
+            onChange={(v) => {
+              setAmount(v);
+              setValidationErrors(prev => ({ ...prev, amount: false }));
+            }}
             className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
@@ -134,7 +137,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
               )}
             >
-              <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
               {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
