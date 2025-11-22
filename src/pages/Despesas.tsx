@@ -10,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useExpenseData } from "@/hooks/useExpenseData";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { TopCategoriesByValue } from "@/components/TopCategoriesByValue";
-import { MostUsedCategories } from "@/components/MostUsed品種";
+import { MostUsedCategories } from "@/components/MostUsedCategories"; // Corrigido o nome do componente
 import { CategoryDistributionSummary } from "@/components/CategoryDistributionSummary";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
@@ -91,8 +91,8 @@ export default function Despesas() {
 
   const formContent = (
     <>
-      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-primary", isMobile && "text-lg mb-0")}> {/* Adicionado text-primary */}
-        <DynamicIcon name="💸" className="h-6 w-6 text-destructive" /> {/* Ícone de emoji */}
+      <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-primary", isMobile && "text-lg mb-0")}>
+        <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
         Nova Despesa
       </h2>
       
@@ -128,7 +128,7 @@ export default function Despesas() {
               {isMobile ? (
                 <>
                   {formContent}
-                  <Footer isMobile={isMobile} /> {/* Footer inserido aqui para mobile */}
+                  <Footer isMobile={isMobile} />
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]">
@@ -161,7 +161,7 @@ export default function Despesas() {
             </>
           )}
         </div>
-        {!isMobile && <Footer isMobile={isMobile} />} {/* Footer para desktop */}
+        {!isMobile && <Footer isMobile={isMobile} />}
       </div>
     </ProtectedRoute>
   );
