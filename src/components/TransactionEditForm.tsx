@@ -424,10 +424,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "rounded-xl",
-                isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" 
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" 
               )}
             >
-              {/* <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> */}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
@@ -435,16 +434,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-10 text-xs flex-1" 
+                isMobile && "h-10 text-sm flex-1" 
               )}
             >
               {loading || isFetchingOptions ? (
                 "Excluindo..."
               ) : (
-                <>
-                  {/* <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} /> */}
-                  Excluir
-                </>
+                "Excluir"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -462,7 +458,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedDeleteScope}
