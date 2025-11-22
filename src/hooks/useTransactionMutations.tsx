@@ -202,12 +202,11 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        // Invalida queries específicas
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-        await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-        // REMOVIDO: await queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
-        // REMOVIDO: await queryClient.invalidateQueries(); // força refetch global
-        // REMOVIDO: await queryClient.refetchQueries(); // força refetch global
+        // 🔥 Invalida SOMENTE os dados realmente alterados
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
+          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
+        ]);
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -445,15 +444,11 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        // Invalida queries específicas
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-        await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-        // REMOVIDO: await queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
-        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
-        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["revenues"] });
-        // REMOVIDO: await queryClient.refetchQueries({ queryKey: ["categories"] });
-        // REMOVIDO: await queryClient.invalidateQueries(); // força refetch global
-        // REMOVIDO: await queryClient.refetchQueries(); // força refetch global
+        // 🔥 Invalida SOMENTE os dados realmente alterados
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] }),
+          queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] }),
+        ]);
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });
