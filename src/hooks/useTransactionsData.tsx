@@ -197,11 +197,22 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       )
       .map((p) => {
         const d = p.despesas;
-        console.log("[DEBUG] Processing expense installment:", p.id, "Despesas object:", d); // Add this log
+        console.log("[DEBUG] Processing expense installment:", p.id);
+        console.log("[DEBUG] Raw 'despesas' object (d):", d); // Keep this detailed log
 
         if (!d) {
             console.warn(`[WARN] Expense installment ${p.id} has no associated despesas record. Skipping.`);
-            return null; // Skip this installment if despesas is null
+            return null;
+        }
+
+        // Infer tipo_pagamento if it's null/undefined from old data
+        let inferredTipoPagamento: "avista" | "parcelado" | "fixo" = "avista";
+        if (d.tipo_pagamento) {
+            inferredTipoPagamento = d.tipo_pagamento;
+        } else if (d.is_recurring_master) { // If it's a master, it's 'fixo'
+            inferredTipoPagamento = "fixo";
+        } else if (d.numero_parcelas && d.numero_parcelas > 1) { // If it has multiple installments, it's 'parcelado'
+            inferredTipoPagamento = "parcelado";
         }
 
         const transaction: Transaction = {
@@ -212,14 +223,14 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           description: d.descricao || "Despesa",
           status: p.pago ? "Recebida" : "Pendente",
           installmentNumber: p.numero_parcela,
-          totalInstallments: d.numero_parcelas, // <-- USE d.numero_parcelas
+          totalInstallments: d.numero_parcelas || 1, // Ensure it's at least 1
           forma_pagamento: d.forma_pagamento,
           cartao_id: d.cartao_id,
           despesa_id: d.id,
-          is_recurring_master: Boolean(d.is_recurring_master),
-          recurrence_id: d.id, // <-- For expenses, recurrence_id is the despesa_id
-          recurrence_day: null, // recurrence_day is not directly on despesas_parcelas
-          tipo_pagamento: d.tipo_pagamento, // <-- Use d.tipo_pagamento
+          is_recurring_master: Boolean(d.is_recurring_master), // Ensure boolean
+          recurrence_id: d.id, // For expenses, recurrence_id is the despesa_id
+          recurrence_day: null,
+          tipo_pagamento: inferredTipoPagamento, // Use inferred value
           category: d.categoria_id || "outros_diversos",
           updated_at: p.updated_at,
         };
