@@ -62,7 +62,7 @@ export const StatCard = ({
     <Card className={cn(
       cardPaddingClass, // Aplica o padding condicional
       "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl flex flex-col h-full", // Adicionado flex flex-col h-full
-      isMobile && "min-h-[140px]", // Altura mínima para mobile
+      isMobile && "min-h-[110px]", // Altura mínima para mobile - ALTERADO DE 140px PARA 110px
       variantStyles[variant]
     )}>
       <div className="flex items-start justify-between">
