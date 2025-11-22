@@ -23,9 +23,7 @@ import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
-import { MonthBadge } from "@/components/MonthBadge";
-
-const Dashboard = () => {
+import { MonthBadge } => {
   const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -265,11 +263,7 @@ const Dashboard = () => {
                     isMobile={isMobile}
                     currentMonth={selectedMonth}
                   />
-                  <MonthlyExpenseCalendar 
-                    transactions={monthlyFilteredTransactions}
-                    isMobile={isMobile} 
-                    currentMonth={selectedMonth}
-                  />
+                  {/* REMOVIDO: MonthlyExpenseCalendar */}
                 </div>
 
                 <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
