@@ -522,8 +522,6 @@ export const useTransactionMutations = ({
           const newPagoStatus = updatedTransaction.status === "Recebida";
           const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date)); // Dia da data editada
-          console.log(`[DEBUG] Expense: newRecurrenceDay (from updated date): ${newRecurrenceDay}`);
-
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
           console.log("[DEBUG] Updating master expense record (despesas).");
@@ -537,9 +535,7 @@ export const useTransactionMutations = ({
               updated_at: new Date().toISOString(), // Força updated_at
             })
             .eq("id", parentDespesaId)
-            .eq("user.id", user.id); // CORREÇÃO: user.id aqui
-            // REMOVIDO: recurrence_day: newRecurrenceDay, // NÃO ATUALIZAR recurrence_day para thisMonthForward
-            // O campo recurrence_day não existe na tabela 'despesas', então não precisa ser removido.
+            .eq("user_id", user.id); // CORREÇÃO AQUI: user_id em vez de user.id
 
           if (updateDespesaParentError) throw updateDespesaParentError;
           console.log("[DEBUG] Master expense record updated.");
@@ -579,8 +575,7 @@ export const useTransactionMutations = ({
 
             // 2. Chamar RPC para regenerar TODAS as parcelas a partir do PRIMEIRO DIA DO PRÓXIMO MÊS da data ORIGINAL
             const rpcFirstOccurrenceDate = nextMonthStartDate; // Usar nextMonthStartDate corrigido
-            console.log(`[DEBUG] Expense Update (thisMonthForward): RPC p_first_occurrence_date: ${rpcFirstOccurrenceDate}`);
-            console.log(`[DEBUG] Expense Update (thisMonthForward): RPC p_recurrence_day: ${getDate(parseISO(originalTransaction.date))} (from original transaction date)`);
+            console.log(`[DEBUG] Expense Update (thisMonthForward): RPC first occurrence date: ${rpcFirstOccurrenceDate}`);
 
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
@@ -649,7 +644,6 @@ export const useTransactionMutations = ({
             // 2. Chamar RPC para regenerar TODAS as parcelas a partir do PRIMEIRO DIA DO MÊS da data ORIGINAL
             const rpcFirstOccurrenceDate = startOfOriginalMonth; // Usar startOfOriginalMonth
             console.log(`[DEBUG] Expense Update (all): RPC p_first_occurrence_date: ${rpcFirstOccurrenceDate}`);
-            console.log(`[DEBUG] Expense Update (all): RPC p_recurrence_day: ${newRecurrenceDay} (from updated date)`);
 
             const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
               p_user_id: user.id,
