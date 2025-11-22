@@ -419,7 +419,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-end items-center")}> {/* Removido mt-auto e ajustado justify-end */}
+          <AlertDialogFooter className={cn(
+            "flex flex-col sm:flex-row justify-center gap-2",
+            isMobile && "flex-row items-center justify-between" // Ajustado para justify-between
+          )}>
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
