@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,13 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nome, setNome] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+
+  // Effect to re-validate confirm password when password changes
+  useEffect(() => {
+    if (confirmPassword !== "") {
+      setValidationErrors(prev => ({ ...prev, confirmPassword: confirmPassword !== password }));
+    }
+  }, [password, confirmPassword]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -301,9 +308,10 @@ export default function Auth() {
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
-                  // Clear email validation error when user starts typing
-                  setValidationErrors(prev => ({ ...prev, email: false }));
+                  const value = e.target.value;
+                  setEmail(value);
+                  const validation = emailSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, email: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -321,8 +329,10 @@ export default function Auth() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
-                  setPassword(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, password: false }));
+                  const value = e.target.value;
+                  setPassword(value);
+                  const validation = passwordSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, password: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -377,8 +387,10 @@ export default function Auth() {
               type="text"
               value={nome}
               onChange={(e) => {
-                setNome(e.target.value);
-                setValidationErrors(prev => ({ ...prev, nome: false }));
+                const value = e.target.value;
+                setNome(value);
+                const validation = nameSchema.safeParse(value);
+                setValidationErrors(prev => ({ ...prev, nome: !validation.success }));
               }}
               required
               disabled={loading}
@@ -396,8 +408,10 @@ export default function Auth() {
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, email: false }));
+                  const value = e.target.value;
+                  setEmail(value);
+                  const validation = emailSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, email: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -415,8 +429,10 @@ export default function Auth() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
-                  setPassword(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, password: false }));
+                  const value = e.target.value;
+                  setPassword(value);
+                  const validation = passwordSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, password: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -441,8 +457,9 @@ export default function Auth() {
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, confirmPassword: false }));
+                  const value = e.target.value;
+                  setConfirmPassword(value);
+                  setValidationErrors(prev => ({ ...prev, confirmPassword: value !== password }));
                 }}
                 required
                 disabled={loading}
@@ -487,8 +504,10 @@ export default function Auth() {
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, email: false }));
+                  const value = e.target.value;
+                  setEmail(value);
+                  const validation = emailSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, email: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -527,8 +546,10 @@ export default function Auth() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
-                  setPassword(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, password: false }));
+                  const value = e.target.value;
+                  setPassword(value);
+                  const validation = passwordSchema.safeParse(value);
+                  setValidationErrors(prev => ({ ...prev, password: !validation.success }));
                 }}
                 required
                 disabled={loading}
@@ -553,8 +574,9 @@ export default function Auth() {
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  setValidationErrors(prev => ({ ...prev, confirmPassword: false }));
+                  const value = e.target.value;
+                  setConfirmPassword(value);
+                  setValidationErrors(prev => ({ ...prev, confirmPassword: value !== password }));
                 }}
                 required
                 disabled={loading}
