@@ -419,11 +419,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-row justify-between gap-2"> {/* Ajustado para layout horizontal */}
+          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-center")}> {/* Ajustado para layout horizontal e centralizado */}
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl",
+                "rounded-xl flex-1", // flex-1 para ocupar espaço igual
                 isMobile && "h-9 text-xs"
               )}
             >
@@ -434,7 +434,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               onClick={() => handleConfirmDelete("oneOff")}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl flex-1", // flex-1 para ocupar espaço igual
                 isMobile && "h-9 text-xs"
               )}
             >
@@ -501,9 +501,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               </div>
             </RadioGroup>
           </div>
-          <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-center")}> {/* Ajustado para layout horizontal e centralizado */}
+            <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl flex-1", isMobile && "h-9 text-xs")}>
+              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl flex-1", isMobile && "h-9 text-xs")}>
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -560,9 +563,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               </div>
             </RadioGroup>
           </div>
-          <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-center")}> {/* Ajustado para layout horizontal e centralizado */}
+            <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl flex-1", isMobile && "h-9 text-xs")}>
+              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl flex-1", isMobile && "h-9 text-xs")}>
               {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
