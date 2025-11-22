@@ -117,7 +117,7 @@ const Dashboard = () => {
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
         <Navigation />
-        <main className={cn("container mx-auto", isMobile ? "px-0 py-0" : "px-4 py-8")}> {/* Alterado py-4 para py-0 em mobile */}
+        <main className={cn("container mx-auto", isMobile ? "px-0 py-0" : "px-4 py-8")}>
           {!isMobile && (
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}
@@ -134,6 +134,7 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
+                className="mt-4" {/* Adicionado mt-4 aqui */}
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
