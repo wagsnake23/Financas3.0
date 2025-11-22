@@ -389,7 +389,7 @@ export default function Investments() { // Alterado para export default function
                         )}
                         disabled={loadingForm}
                       >
-                        <CalendarIcon className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+                        <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
                         {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
                       </Button>
                     </PopoverTrigger>
