@@ -31,20 +31,20 @@ const Lancamentos = () => {
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
-    loadingEditData,
+    loadingEditData, // Mantido
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen,
+    isEditModalOpen, // Mantido
     setIsEditModalOpen,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    isLoading,
+    isLoading, // Este é para o carregamento inicial da página
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
     handleCancelEdit,
-    editingTransaction,
+    editingTransaction, // Mantido
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient,
@@ -55,13 +55,14 @@ const Lancamentos = () => {
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
   
-  if (authLoading || isLoading || loadingEditData) {
+  // Apenas mostra o loading de página cheia para o carregamento inicial, não para o modal de edição
+  if (authLoading || isLoading) { // Removido loadingEditData daqui
     return <Loading />;
   }
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background pt-16">
+      <div className="min-h-screen bg-background pt-16 relative"> {/* Adicionado relative para posicionamento do overlay */}
         <Navigation />
         <main className={cn("container mx-auto", isMobile ? "px-0 py-4" : "px-4 py-8")}>
           {!isMobile && (
@@ -100,15 +101,31 @@ const Lancamentos = () => {
         </main>
         <Footer isMobile={isMobile} />
 
+        {/* Loading Overlay - aparece sobre a tela atual enquanto o modal de edição carrega */}
+        {isEditModalOpen && loadingEditData && (
+          <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          </div>
+        )}
+
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[600px] p-6")}>
+          <DialogContent 
+            className={cn(
+              "w-full", 
+              isMobile ? "max-w-sm p-4" : "sm:max-w-[600px] p-6",
+              // Animações para fade e scale
+              "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
+              "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
+            )}
+          >
             <DialogHeader>
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 Editar Lançamento
               </DialogTitle>
             </DialogHeader>
-            {editingTransaction && (
+            {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
+            {!loadingEditData && editingTransaction && (
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}
