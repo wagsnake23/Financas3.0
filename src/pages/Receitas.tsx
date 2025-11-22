@@ -418,10 +418,9 @@ export default function Receitas() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
-                <div className="px-4 pt-0 rounded-xl shadow-sm border-0"> {/* Adicionado border-0 aqui */}
+                <> {/* Removido o div wrapper e o Footer */}
                   {oneOffFormContent}
-                  <Footer isMobile={isMobile} />
-                </div>
+                </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
@@ -443,7 +442,7 @@ export default function Receitas() {
             </div>
           </div>
         </div>
-        {!isMobile && <Footer isMobile={isMobile} />}
+        <Footer isMobile={isMobile} /> {/* Footer movido para fora do bloco condicional */}
       </ProtectedRoute>
     );
   }
