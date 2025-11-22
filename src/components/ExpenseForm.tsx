@@ -300,7 +300,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "px-4")}>
       {/* Toggle Avulsa / Recorrente */}
       <TransactionTypeToggle
         isRecurring={isRecurring}
