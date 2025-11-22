@@ -202,13 +202,11 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        // Invalida queries específicas
-        if (type === "income") {
-          await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
-        } else { // expense
-          await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
-          await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
-        }
+        // Invalida queries específicas e força refetch global
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
+        await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.invalidateQueries(); // força refetch global
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -446,13 +444,11 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        // Invalida queries específicas
-        if (type === "income") {
-          await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
-        } else { // expense
-          await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
-          await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
-        }
+        // Invalida queries específicas e força refetch global
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
+        await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.invalidateQueries(); // força refetch global
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });

@@ -59,7 +59,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   const getPaymentMethodDisplay = (
     formaPagamento: string | null,
     cartaoId: string | null
-  ) => {
+    ) => {
     if (!formaPagamento) return null;
 
     switch (formaPagamento) {
@@ -113,8 +113,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
           if (error) throw error;
         }
-        // Invalida apenas a query de receitas
-        await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        // Invalida queries específicas e força refetch global
+        await queryClient.invalidateQueries({ queryKey: ["revenues"] });
+        await queryClient.invalidateQueries(); // força refetch global
       } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
@@ -130,9 +131,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .eq("id", transaction.id);
 
         if (error) throw error;
-        // Invalida apenas as queries de parcelas de despesa e categorias
-        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
-        await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
+        // Invalida queries específicas e força refetch global
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.invalidateQueries(); // força refetch global
       }
 
       toast.success("Status atualizado!");
