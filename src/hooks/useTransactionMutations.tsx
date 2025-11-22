@@ -32,13 +32,10 @@ export const useTransactionMutations = ({
   setIsEditModalOpen,
   selectedMonth,
 }: UseTransactionMutationsProps) => {
-  const invalidateAllTransactionQueries = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["transactions"] });
-    queryClient.invalidateQueries({ queryKey: ["despesas", user?.id] });
-    queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] });
-  }, [queryClient, user?.id]);
+  // ✅ CORREÇÃO: Função para invalidar TODAS as queries
+  const invalidateAllTransactionQueries = useCallback(async () => {
+    await queryClient.invalidateQueries({ predicate: () => true });
+  }, [queryClient]);
 
   const handleDeleteTransaction = useCallback(
     async (id: string, type: "income" | "expense", deleteScope: DeleteScope) => {
@@ -208,7 +205,7 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        invalidateAllTransactionQueries();
+        await invalidateAllTransactionQueries(); // ✅ CORREÇÃO: Chamar a função atualizada
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -446,7 +443,7 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        invalidateAllTransactionQueries();
+        await invalidateAllTransactionQueries(); // ✅ CORREÇÃO: Chamar a função atualizada
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid } from "@/lib/utils"; // Importar isValidUuid
+import { cn, isValidUuid } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -113,7 +113,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
           if (error) throw error;
         }
-        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        // 1. Atualizar o status localmente para re-renderizar a UI imediatamente
+        transaction.status = newStatus;
+        // 2. Invalidar todas as queries para garantir que os dados sejam re-buscados
+        await queryClient.invalidateQueries({ predicate: () => true });
       } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
@@ -126,10 +129,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             pago,
             data_pagamento: dataPagamento,
           })
-          .eq("id", transaction.id); // ✅ único filtro necessário
+          .eq("id", transaction.id);
 
         if (error) throw error;
-        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        // 1. Atualizar o status localmente para re-renderizar a UI imediatamente
+        transaction.status = newStatus;
+        // 2. Invalidar todas as queries para garantir que os dados sejam re-buscados
+        await queryClient.invalidateQueries({ predicate: () => true });
       }
 
       toast.success("Status atualizado!");
