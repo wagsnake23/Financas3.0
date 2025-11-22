@@ -89,26 +89,18 @@ export default function Despesas() {
     );
   }
 
+  // O formContent agora contém APENAS o formulário, sem o título
   const formContent = (
-    <>
-      {isMobile && ( // Renderiza o título apenas em mobile
-        <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
-          <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-          Nova Despesa
-        </h2>
-      )}
-      
-      <ExpenseForm
-        user={user}
-        cartoes={cartoes}
-        loadCartoes={loadCartoes}
-        allSubcategories={allSubcategories}
-        queryClient={queryClient}
-        isMobile={isMobile}
-        isRecurring={isRecurring}
-        setIsRecurring={setIsRecurring}
-      />
-    </>
+    <ExpenseForm
+      user={user}
+      cartoes={cartoes}
+      loadCartoes={loadCartoes}
+      allSubcategories={allSubcategories}
+      queryClient={queryClient}
+      isMobile={isMobile}
+      isRecurring={isRecurring}
+      setIsRecurring={setIsRecurring}
+    />
   );
 
   return (
@@ -129,17 +121,22 @@ export default function Despesas() {
             <div className="order-2 lg:order-1 lg:col-span-2">
               {isMobile ? (
                 <>
-                  {formContent}
+                  {/* Título para mobile, como primeiro elemento do fragmento */}
+                  <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
+                    <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                    Nova Despesa
+                  </h2>
+                  {formContent} {/* O formulário */}
                   <Footer isMobile={isMobile} />
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]">
-                  {/* Título para desktop, fora do formContent */}
+                  {/* Título para desktop, como primeiro elemento do Card */}
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
                     <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
                     Nova Despesa
                   </h2>
-                  {formContent}
+                  {formContent} {/* O formulário */}
                 </Card>
               )}
             </div>
