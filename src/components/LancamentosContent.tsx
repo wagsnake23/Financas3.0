@@ -30,6 +30,7 @@ interface LancamentosContentProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
+  loadingEditData: boolean; // Passando loadingEditData
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -52,8 +53,9 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
+  loadingEditData, // Passando loadingEditData
 }) => {
-  console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
+  console.log("LancamentosContent: Re-rendering. User prop received:", user?.id, "Is user null?", !user);
 
   // Removido: const disableFilters = !!editingTransaction;
 

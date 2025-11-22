@@ -63,7 +63,7 @@ export const TransactionList = ({
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
 }: TransactionListProps) => {
-  console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
+  console.log("TransactionList: Re-rendering. User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const navigate = useNavigate();

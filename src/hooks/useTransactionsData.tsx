@@ -29,6 +29,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         return data as AppCategory[];
       },
       enabled,
+      staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
     });
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<
@@ -58,7 +59,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled,
+    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
   });
+  console.log("useTransactionsData: revenues data reference:", revenues); // Log para verificar a referência
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } =
     useQuery<
@@ -115,7 +118,9 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         return data;
     },
     enabled,
+    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
   });
+  console.log("useTransactionsData: expenseInstallments data reference:", expenseInstallments); // Log para verificar a referência
 
   const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<
     Tables<"cartoes">[]
@@ -132,6 +137,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled,
+    staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
   });
 
   const totalInstallmentsMap = useMemo(() => {
