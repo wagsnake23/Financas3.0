@@ -421,13 +421,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           </AlertDialogHeader>
           <AlertDialogFooter className={cn(
             "flex flex-col sm:flex-row justify-center gap-2",
-            isMobile && "flex-row items-center justify-between" // Ajustado para justify-between
+            isMobile && "flex-row items-center justify-between" // Mantido para o container do footer
           )}>
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
                 "rounded-xl",
-                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" 
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Adicionado mt-0 para mobile
               )}
             >
               Cancelar
