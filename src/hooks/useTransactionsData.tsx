@@ -51,10 +51,11 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_id,
           recurrence_day,
           updated_at,
-          user_id
-        `)
+          user_id,
+          created_at
+        `) // ✅ Adicionado created_at ao select
         .eq("user_id", user.id)
-        .order("data", { ascending: false });
+        .order("created_at", { ascending: false }); // ✅ CORREÇÃO: Alterado de 'data' para 'created_at'
       if (error) throw error;
       return data;
     },
