@@ -409,7 +409,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[95vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -453,7 +453,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
       <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[90vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -515,7 +515,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente */}
       <AlertDialog open={showSaveOptionsDialog} onOpenChange={setShowSaveOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[90vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Pencil" className="h-6 w-6 text-primary" />
