@@ -409,7 +409,7 @@ export const useTransactionMutations = ({
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
                 p_status: 'Prevista',
-                // REMOVIDO: p_recurrence_day: newRecurrenceDay, // NÃO ENVIAR recurrence_day para thisMonthForward
+                p_recurrence_day: originalTransaction.recurrence_day, // CORREÇÃO: Usar o recurrence_day original da transação mestre
                 p_total_installments: RECURRING_INSTALLMENTS_COUNT,
                 p_forma_pagamento: null,
                 p_cartao_id: null,
@@ -461,7 +461,7 @@ export const useTransactionMutations = ({
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
                 p_status: 'Prevista',
-                p_recurrence_day: newRecurrenceDay,
+                p_recurrence_day: newRecurrenceDay, // CORREÇÃO: Usar o recurrence_day da data editada para o escopo 'all'
                 p_total_installments: RECURRING_INSTALLMENTS_COUNT,
                 p_forma_pagamento: null,
                 p_cartao_id: null,
@@ -524,7 +524,6 @@ export const useTransactionMutations = ({
               descricao: updatedTransaction.description,
               is_recurring_master: originalTransaction?.is_recurring_master,
               tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
-              // REMOVIDO: recurrence_day: newRecurrenceDay, // NÃO ATUALIZAR recurrence_day para thisMonthForward
               updated_at: new Date().toISOString(), // Força updated_at
             })
             .eq("id", parentDespesaId)
@@ -578,7 +577,7 @@ export const useTransactionMutations = ({
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
               p_status: 'Pendente', // Default status for expenses, as it's a required enum
-              // REMOVIDO: p_recurrence_day: newRecurrenceDay, // NÃO ENVIAR recurrence_day para thisMonthForward
+              p_recurrence_day: newRecurrenceDay, // CORREÇÃO: Para despesas, sempre usar o dia da data editada
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
@@ -645,7 +644,7 @@ export const useTransactionMutations = ({
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
               p_status: 'Pendente', // Default status for expenses, as it's a required enum
-              p_recurrence_day: newRecurrenceDay,
+              p_recurrence_day: newRecurrenceDay, // CORREÇÃO: Para despesas, sempre usar o dia da data editada
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
               p_forma_pagamento: originalTransaction.forma_pagamento,
               p_cartao_id: originalTransaction.cartao_id,
