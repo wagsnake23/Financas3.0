@@ -409,7 +409,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className={cn("w-full sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -419,10 +419,33 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading || isFetchingOptions}>
-              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
+          <AlertDialogFooter className="flex flex-row justify-between gap-2"> {/* Ajustado para layout horizontal */}
+            <AlertDialogCancel
+              disabled={loading || isFetchingOptions}
+              className={cn(
+                "rounded-xl",
+                isMobile && "h-9 text-xs"
+              )}
+            >
+              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleConfirmDelete("oneOff")}
+              disabled={loading || isFetchingOptions}
+              className={cn(
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                isMobile && "h-9 text-xs"
+              )}
+            >
+              {loading || isFetchingOptions ? (
+                "Excluindo..."
+              ) : (
+                <>
+                  <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+                  Excluir
+                </>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -498,7 +521,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
