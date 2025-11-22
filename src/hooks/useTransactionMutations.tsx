@@ -404,7 +404,7 @@ export const useTransactionMutations = ({
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-DD'), // Format Date object to string
+                p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // CORRIGIDO: 'yyyy-MM-DD' para 'yyyy-MM-dd'
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
@@ -519,7 +519,7 @@ export const useTransactionMutations = ({
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-DD'), // Format Date object to string
+              p_first_occurrence_date: format(parseISO(updatedTransaction.date), 'yyyy-MM-dd'), // CORRIGIDO: 'yyyy-MM-DD' para 'yyyy-MM-dd'
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,
