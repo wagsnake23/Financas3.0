@@ -54,24 +54,6 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   isRecurring, // NOVA PROP
   setIsRecurring, // NOVA PROP
 }) => {
-  // Removido: const [showCustomInstallmentInput, setShowCustomInstallmentInput] = useState(false);
-  // Removido: const [customNumeroParcelas, setCustomNumeroParcelas] = useState<string>(numeroParcelas > 5 ? String(numeroParcelas) : "");
-
-  // Removido: Effect to reset custom input visibility
-  // useEffect(() => {
-  //   if (tipoPagamento !== "parcelado" || isRecurring) {
-  //     setShowCustomInstallmentInput(false);
-  //     setCustomNumeroParcelas("");
-  //   } else if (numeroParcelas > 5) {
-  //     setShowCustomInstallmentInput(true);
-  //     setCustomNumeroParcelas(String(numeroParcelas));
-  //   } else {
-  //     setShowCustomInstallmentInput(false);
-  //     setCustomNumeroParcelas("");
-  //   }
-  // }, [numeroParcelas, tipoPagamento, isRecurring]);
-
-
   const handleNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
@@ -90,20 +72,6 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
     setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
   };
-
-  // Removido: handleCustomNumeroParcelasChange
-  // Removido: const handleCustomNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // Removido:   const value = e.target.value;
-  // Removido:   setCustomNumeroParcelas(value);
-  // Removido:   const numValue = parseInt(value);
-  // Removido:   setNumeroParcelas(isNaN(numValue) ? 1 : numValue);
-  // Removido:   setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
-  // Removido: };
-
-  // Removido: selectValue
-  // Removido: const selectValue = showCustomInstallmentInput
-  // Removido:   ? "custom"
-  // Removido:   : (numeroParcelas >= 1 && numeroParcelas <= 5 ? String(numeroParcelas) : "custom");
 
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
@@ -154,7 +122,15 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Forma de Pagamento */}
         <div>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-          <Select value={formaPagamento} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
+          <Select 
+            value={formaPagamento} 
+            onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => { // Tipo explícito para 'value'
+              setFormaPagamento(value);
+              if (value !== "cartao") { // Se a forma de pagamento não for cartão, resetar o cartão selecionado
+                setCartaoId(UNSELECTED_VALUE);
+              }
+            }}
+          >
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
@@ -199,7 +175,13 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div className="col-span-full">
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
-            <Select value={cartaoId} onValueChange={(v: any) => setCartaoId(UNSELECTED_VALUE) || setFormaPagamento(v)}>
+            <Select 
+              value={cartaoId} 
+              onValueChange={(value: string) => { // Apenas atualiza o cartaoId
+                setCartaoId(value);
+                setValidationErrors(prev => ({ ...prev, cartaoId: false }));
+              }}
+            >
               <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
