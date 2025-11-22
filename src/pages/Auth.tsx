@@ -351,7 +351,7 @@ export default function Auth() {
           <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </Button>
-          <div className="text-right text-sm mt-4 sm:mt-1"> {/* Adicionado mt-4 para mobile, sm:mt-1 para desktop */}
+          <div className="text-right text-sm mb-4 sm:mb-1"> {/* Ajustado para mb-4 em mobile, sm:mb-1 para desktop */}
             <button
               type="button"
               onClick={() => {
@@ -601,9 +601,12 @@ export default function Auth() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 p-4">
+    <div className={cn(
+      "min-h-screen flex flex-col items-center justify-center p-4",
+      isMobile ? "bg-lancamentos-mobile-bg" : "bg-gradient-to-br from-background via-background to-secondary/20"
+    )}>
       {isMobile ? (
-        <div className="w-full max-w-md p-4"> {/* Alterado de p-6 para p-4 */}
+        <div className={cn("w-full max-w-md p-4", isMobile && "bg-lancamentos-mobile-bg rounded-xl shadow-xl")}>
           {formContent}
           <Footer isMobile={isMobile} className="mt-8" />
         </div>
