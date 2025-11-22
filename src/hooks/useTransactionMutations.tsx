@@ -32,10 +32,7 @@ export const useTransactionMutations = ({
   setIsEditModalOpen,
   selectedMonth,
 }: UseTransactionMutationsProps) => {
-  // ✅ CORREÇÃO: Função para invalidar TODAS as queries
-  const invalidateAllTransactionQueries = useCallback(async () => {
-    await queryClient.invalidateQueries({ predicate: () => true });
-  }, [queryClient]);
+  // REMOVIDO: invalidateAllTransactionQueries
 
   const handleDeleteTransaction = useCallback(
     async (id: string, type: "income" | "expense", deleteScope: DeleteScope) => {
@@ -205,7 +202,13 @@ export const useTransactionMutations = ({
         });
         setEditingTransaction(null);
         setIsEditModalOpen(false);
-        await invalidateAllTransactionQueries(); // ✅ CORREÇÃO: Chamar a função atualizada
+        // Invalida queries específicas
+        if (type === "income") {
+          await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        } else { // expense
+          await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+          await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
+        }
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -213,7 +216,7 @@ export const useTransactionMutations = ({
         setLoadingEditData(false);
       }
     },
-    [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, invalidateAllTransactionQueries]
+    [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, queryClient]
   );
 
   const handleUpdateTransaction = useCallback(
@@ -443,7 +446,13 @@ export const useTransactionMutations = ({
         toast.success("Lançamento atualizado!", {
           style: { backgroundColor: "hsl(var(--soft-green))", color: "hsl(var(--success-darker))" },
         });
-        await invalidateAllTransactionQueries(); // ✅ CORREÇÃO: Chamar a função atualizada
+        // Invalida queries específicas
+        if (type === "income") {
+          await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
+        } else { // expense
+          await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+          await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
+        }
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });
@@ -453,7 +462,7 @@ export const useTransactionMutations = ({
         setLoadingEditData(false);
       }
     },
-    [user, monthlyFilteredTransactions, invalidateAllTransactionQueries, setLoadingEditData, setEditingTransaction, setIsEditModalOpen]
+    [user, monthlyFilteredTransactions, setLoadingEditData, setEditingTransaction, setIsEditModalOpen, queryClient]
   );
 
   return {

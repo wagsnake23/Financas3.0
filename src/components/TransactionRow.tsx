@@ -113,10 +113,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
           if (error) throw error;
         }
-        // 1. Atualizar o status localmente para re-renderizar a UI imediatamente
-        transaction.status = newStatus;
-        // 2. Invalidar todas as queries para garantir que os dados sejam re-buscados
-        await queryClient.invalidateQueries({ predicate: () => true });
+        // Invalida apenas a query de receitas
+        await queryClient.invalidateQueries({ queryKey: ["revenues", user.id] });
       } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
@@ -132,10 +130,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .eq("id", transaction.id);
 
         if (error) throw error;
-        // 1. Atualizar o status localmente para re-renderizar a UI imediatamente
-        transaction.status = newStatus;
-        // 2. Invalidar todas as queries para garantir que os dados sejam re-buscados
-        await queryClient.invalidateQueries({ predicate: () => true });
+        // Invalida apenas as queries de parcelas de despesa e categorias
+        await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user.id] });
+        await queryClient.invalidateQueries({ queryKey: ["categories", user.id] });
       }
 
       toast.success("Status atualizado!");
