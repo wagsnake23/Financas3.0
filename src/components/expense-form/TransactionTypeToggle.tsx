@@ -38,7 +38,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           value="avulsa" 
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+            "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
             isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
           )}
@@ -55,7 +55,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           value="recorrente" 
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+            "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
             isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
           )}
