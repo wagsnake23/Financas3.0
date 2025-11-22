@@ -206,7 +206,11 @@ export const useTransactionMutations = ({
         await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
         await queryClient.invalidateQueries({ queryKey: ["revenues"] });
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.refetchQueries({ queryKey: ["revenues"] });
+        await queryClient.refetchQueries({ queryKey: ["categories"] });
         await queryClient.invalidateQueries(); // força refetch global
+        await queryClient.refetchQueries(); // força refetch global
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message });
         console.error("handleDeleteTransaction: Deletion error:", err);
@@ -448,7 +452,11 @@ export const useTransactionMutations = ({
         await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
         await queryClient.invalidateQueries({ queryKey: ["revenues"] });
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.refetchQueries({ queryKey: ["revenues"] });
+        await queryClient.refetchQueries({ queryKey: ["categories"] });
         await queryClient.invalidateQueries(); // força refetch global
+        await queryClient.refetchQueries(); // força refetch global
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message });

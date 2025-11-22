@@ -19,7 +19,6 @@ export interface Transaction {
   recurrence_id?: string | null; // ID da série recorrente
   recurrence_day?: number | null; // Dia do mês para recorrência
   tipo_pagamento?: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento
-  updated_at?: string | null; // NOVO: Adicionado para forçar re-renderização do useMemo
 }
 
 // Interface principal para categorias, alinhada com a tabela 'categorias' do Supabase

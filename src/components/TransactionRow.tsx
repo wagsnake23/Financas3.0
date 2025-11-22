@@ -115,7 +115,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         }
         // Invalida queries específicas e força refetch global
         await queryClient.invalidateQueries({ queryKey: ["revenues"] });
+        await queryClient.refetchQueries({ queryKey: ["revenues"] });
         await queryClient.invalidateQueries(); // força refetch global
+        await queryClient.refetchQueries(); // força refetch global
       } else { // expense
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
@@ -134,7 +136,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         // Invalida queries específicas e força refetch global
         await queryClient.invalidateQueries({ queryKey: ["expenseInstallments"] });
         await queryClient.invalidateQueries({ queryKey: ["categories"] });
+        await queryClient.refetchQueries({ queryKey: ["expenseInstallments"] });
+        await queryClient.refetchQueries({ queryKey: ["categories"] });
         await queryClient.invalidateQueries(); // força refetch global
+        await queryClient.refetchQueries(); // força refetch global
       }
 
       toast.success("Status atualizado!");

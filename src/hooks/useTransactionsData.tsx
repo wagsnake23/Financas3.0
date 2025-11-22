@@ -39,7 +39,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("receitas")
-        .select("*, status, is_recurring_master, recurrence_id, recurrence_day, updated_at") // Adicionado updated_at
+        .select("*, status, is_recurring_master, recurrence_id, recurrence_day") // Removido updated_at
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
@@ -71,7 +71,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           .select(
             `
           *,
-          updated_at,  // Adicionado updated_at
           despesas:despesa_id (
             id,
             categoria_id,
@@ -88,7 +87,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
             )
           )
         `
-          )
+          ) // Removido updated_at
           .filter("despesas.user_id", "eq", user.id)
           .order("vencimento", { ascending: true });
 
@@ -140,16 +139,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         })
       )
       .map((r) => {
-        const cacheKey =
-          r.id +
-          "-" +
-          r.status +
-          "-" +
-          (r.updated_at ?? "") +
-          "-" +
-          r.valor +
-          "-" +
-          r.data; // Adicionado updated_at e outros campos relevantes
         return {
           id: r.id,
           type: "income",
@@ -165,8 +154,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_day: r.recurrence_day ?? null,
           tipo_pagamento:
             r.is_recurring_master || r.recurrence_id ? "fixo" : "avista",
-          updated_at: r.updated_at, // Adicionado updated_at
-          cacheKey: cacheKey, // Adicionado cacheKey
         };
       });
 
@@ -180,15 +167,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       .map((p) => {
         const d = p.despesas;
         const totalForNonFixed = d?.id ? totalInstallmentsMap.get(d.id) : 1;
-
-        const cacheKey =
-          p.id +
-          "-" +
-          p.pago +
-          "-" +
-          (p.data_pagamento ?? "") +
-          "-" +
-          (p.updated_at ?? ""); // Adicionado updated_at
         
         const transaction: Transaction = {
           id: p.id,
@@ -207,8 +185,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_day: null,
           tipo_pagamento: d?.tipo_pagamento,
           category: d?.categoria_id || "outros_diversos", // FIX CRÍTICO
-          updated_at: p.updated_at, // Adicionado updated_at
-          cacheKey: cacheKey, // Adicionado cacheKey
         };
         return transaction;
       });
@@ -225,8 +201,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     expenseInstallments,
     totalInstallmentsMap,
     enabled,
-    revenues.map(r => r.updated_at).join(","),   
-    expenseInstallments.map(p => p.updated_at).join(","), 
   ]);
 
   return {
