@@ -34,8 +34,8 @@ export const useTransactionMutations = ({
   setIsEditModalOpen,
   selectedMonth,
 }: UseTransactionMutationsProps) => {
-  const isMobile = useIsMobile(); // Usar o hook aqui
-  const toastDuration = isMobile ? 1000 : 4000; // 1 segundo para mobile, 4 segundos padrão para desktop
+  // A duração agora é fixa para todos os dispositivos
+  const toastDuration = 1000; // 1 segundo para todos os dispositivos
 
   const invalidateAllTransactionQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
@@ -475,6 +475,8 @@ export const useTransactionMutations = ({
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
+      const successStyle = { backgroundColor: '#F3FFF3', color: '#007000' }; // Cores para sucesso
+      const errorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' }; // Cores para erro (mantendo o vermelho original para erros)
 
       // 1. Optimistically update the UI
       if (type === "income") {
@@ -523,12 +525,12 @@ export const useTransactionMutations = ({
             .eq("id", id);
           if (error) throw error;
         }
-        toast.success("Status atualizado!", { id: toastId, duration: toastDuration }); // Adicionar ID e duração
+        toast.success("Status atualizado!", { id: toastId, duration: toastDuration, style: successStyle }); // Adicionar ID, duração e estilo
         // Invalidate queries to ensure data consistency, but the UI is already updated
         invalidateAllTransactionQueries(); // This will re-fetch and confirm the state
       } catch (error: any) {
         console.error("Erro ao atualizar status:", error);
-        toast.error("Erro ao atualizar status.", { id: toastId, description: error.message, duration: toastDuration }); // Adicionar ID e duração
+        toast.error("Erro ao atualizar status.", { id: toastId, description: error.message, duration: toastDuration, style: errorStyle }); // Adicionar ID, duração e estilo
         // 3. Revert UI on error
         if (type === "income") {
           queryClient.setQueryData(
