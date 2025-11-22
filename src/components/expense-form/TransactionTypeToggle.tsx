@@ -39,7 +39,8 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
             "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
+            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+            isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
           )}
         >
           <DynamicIcon 
@@ -55,7 +56,8 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
             "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
+            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+            isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
           )}
         >
           <DynamicIcon 
