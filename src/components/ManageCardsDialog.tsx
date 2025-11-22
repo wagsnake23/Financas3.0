@@ -187,7 +187,15 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     <>
       <Dialog open={isManageCardsOpen} onOpenChange={setIsManageCardsOpen}>
         <DialogTrigger asChild>
-          <Button type="button" variant="outline" size="icon" className="rounded-xl">
+          <Button 
+            type="button" 
+            variant="outline" 
+            size="icon" 
+            className={cn(
+              "rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80", // Adicionado bg-soft-blue e hover
+              isMobile && "h-9 w-9" // Ajuste de tamanho para mobile
+            )}
+          >
             <DynamicIcon name="✏️" className="w-4 h-4" /> {/* Ícone de emoji de lápis */}
           </Button>
         </DialogTrigger>
@@ -338,5 +346,3 @@ const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     </>
   );
 };
-
-export default ManageCardsDialog;
