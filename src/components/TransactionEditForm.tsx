@@ -409,7 +409,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px] flex flex-col" : "sm:max-w-[425px]")}> {/* Adicionado flex flex-col */}
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -419,7 +419,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2 mt-auto", isMobile && "flex-row justify-between items-center")}> {/* Adicionado mt-auto */}
+          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-end items-center")}> {/* Removido mt-auto e ajustado justify-end */}
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
