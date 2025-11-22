@@ -146,7 +146,7 @@ const Dashboard = () => {
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button
                       variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} 
+                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1")} {/* Adicionado mb-1 aqui */}
                       onClick={() => navigate("/despesas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
