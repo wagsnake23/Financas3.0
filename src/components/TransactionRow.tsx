@@ -101,7 +101,25 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
+    const newPago = newStatus === "Recebida";
     console.log("handleToggleStatus: New status will be:", newStatus);
+
+    // --- OPTIMISTIC UPDATE START ---
+    const previousRevenues = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id]);
+    const previousExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id]);
+
+    if (transaction.type === "income") {
+      queryClient.setQueryData<Tables<"receitas">[]>(["revenues", user.id], (oldData) => {
+        if (!oldData) return [];
+        return oldData.map(r => r.id === transaction.id ? { ...r, status: newStatus, updated_at: new Date().toISOString() } : r);
+      });
+    } else { // expense
+      queryClient.setQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id], (oldData) => {
+        if (!oldData) return [];
+        return oldData.map(p => p.id === transaction.id ? { ...p, pago: newPago, data_pagamento: newPago ? new Date().toISOString() : null, updated_at: new Date().toISOString() } : p);
+      });
+    }
+    // --- OPTIMISTIC UPDATE END ---
 
     try {
       if (transaction.type === "income") {
@@ -133,15 +151,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         console.log("handleToggleStatus: Income queries invalidated and refetched.");
       } else { // expense
         console.log("handleToggleStatus: Updating expense installment.");
-        const pago = newStatus === "Recebida";
-        const dataPagamento = pago
+        const dataPagamento = newPago
           ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
           : null;
 
         const { error } = await supabase
           .from("despesas_parcelas")
           .update({
-            pago,
+            pago: newPago,
             data_pagamento: dataPagamento,
             updated_at: new Date().toISOString(),
           })
@@ -158,6 +175,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     } catch (error: any) {
       console.error("handleToggleStatus: Erro ao atualizar status:", error);
       toast.error("Erro ao atualizar status.", { description: error.message });
+      // --- OPTIMISTIC ROLLBACK START ---
+      if (transaction.type === "income") {
+        queryClient.setQueryData(["revenues", user.id], previousRevenues);
+      } else {
+        queryClient.setQueryData(["expenseInstallments", user.id], previousExpenseInstallments);
+      }
+      // --- OPTIMISTIC ROLLBACK END ---
     } finally {
       setLoadingToggle(false);
       console.log("handleToggleStatus: Setting loadingToggle to false (finally block).");
