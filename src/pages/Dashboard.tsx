@@ -134,7 +134,8 @@ const Dashboard = () => {
                 onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
-                className="mt-4" {/* Adicionado mt-4 aqui */}
+                // Adicionado mt-4 aqui
+                className="mt-4" 
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
