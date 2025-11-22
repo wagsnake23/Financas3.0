@@ -424,7 +424,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "rounded-xl",
-                isMobile && "h-10 text-xs flex-1" // Alterado h-9 para h-10
+                isMobile && "h-10 text-xs flex-1" // Apenas o Cancelar tem h-10
               )}
             >
               <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
@@ -435,7 +435,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-10 text-xs flex-1" // Alterado h-9 para h-10
+                isMobile && "h-9 text-xs flex-1" // O Excluir mantém h-9
               )}
             >
               {loading || isFetchingOptions ? (
@@ -506,7 +506,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-9 text-xs flex-1")}>
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -524,7 +524,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
@@ -568,7 +568,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl", isMobile && "h-9 text-xs flex-1")}>
               {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
