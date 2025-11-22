@@ -4,7 +4,6 @@ import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { MonthlyBarChart } from "@/components/MonthlyBarChart";
-import { ExpensesPieChart } from "@/components/ExpensesPieChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,12 +17,11 @@ import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
 import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
-import { MonthlyExpenseCalendar } from "@/components/MonthlyExpenseCalendar";
-import { MonthlyExpenseSummary } from "@/components/MonthlyExpenseSummary";
 import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
-import { MonthBadge } from "@/components/MonthBadge"; // CORRIGIDO: Sintaxe de importação
+import { MonthBadge } from "@/components/MonthBadge";
+import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -33,19 +31,11 @@ const Dashboard = () => {
   const [showIncomeValue, setShowIncomeValue] = useState(true);
   const [showExpenseValue, setShowExpenseValue] = useState(true);
   const [showBalanceValue, setShowBalanceValue] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(new Date()); // Este estado agora só controlará StatCards e MonthlyBarChart
 
-  const {
-    monthlyFilteredTransactions,
-    fetchedCategories: allSubcategories,
-    cartoes,
-    isLoading: isLoadingTransactionsData,
-    isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
-
-  // Fetch revenues
-  const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
-    queryKey: ["revenues", user?.id],
+  // Buscar TODAS as receitas (não filtradas por mês)
+  const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<Tables<'receitas'>[]>({
+    queryKey: ["allRevenues", user?.id], // Chave de consulta alterada
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
@@ -59,16 +49,16 @@ const Dashboard = () => {
     enabled: !!user && !authLoading,
   });
 
-  // Fetch expense installments and join with expenses to get category_id
-  const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]
+  // Buscar TODAS as parcelas de despesas (não filtradas por mês)
+  const { data: allExpenseInstallments = [], isLoading: isLoadingAllExpenses } = useQuery<
+    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master' | 'numero_parcelas'> | null })[] // Adicionado mais campos para reconstrução no dashboard combinado
   >({
-    queryKey: ["expenseInstallments", user?.id],
+    queryKey: ["allExpenseInstallments", user?.id], // Chave de consulta alterada
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
         .from("despesas_parcelas")
-        .select("*, despesas(categoria_id, user_id)")
+        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)") // Selecionar mais campos de despesas
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
@@ -76,6 +66,15 @@ const Dashboard = () => {
     },
     enabled: !!user && !authLoading,
   });
+
+  // Este hook ainda busca dados filtrados por mês para StatCards e MonthlyBarChart
+  const {
+    monthlyFilteredTransactions,
+    fetchedCategories: allSubcategories,
+    cartoes,
+    isLoading: isLoadingTransactionsData,
+    isLoadingCategories,
+  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
 
   const stats = useMemo(() => {
     const totalIncome = monthlyFilteredTransactions
@@ -91,14 +90,14 @@ const Dashboard = () => {
     return { totalIncome, totalExpenses, balance };
   }, [monthlyFilteredTransactions]);
 
-  // Calculate total paid expenses for the current month
+  // Calcular total de despesas pagas para o mês atual (usando monthlyFilteredTransactions)
   const totalPaidMonthlyExpenses = useMemo(() => {
     return monthlyFilteredTransactions
       .filter(t => t.type === "expense" && t.status === "Recebida")
       .reduce((sum, t) => sum + t.amount, 0);
   }, [monthlyFilteredTransactions]);
 
-  const isLoading = authLoading || isLoadingTransactionsData || isLoadingRevenues || isLoadingExpenses || isLoadingCategories;
+  const isLoading = authLoading || isLoadingTransactionsData || isLoadingAllRevenues || isLoadingAllExpenses || isLoadingCategories; // Verificações de loading atualizadas
 
   if (isLoading) {
     return (
@@ -193,7 +192,7 @@ const Dashboard = () => {
 
               <MobileCreditCardExpenses
                 cartoes={cartoes}
-                expenseInstallments={expenseInstallments}
+                expenseInstallments={allExpenseInstallments} // Passar todas as parcelas para o componente mobile
                 allCategories={allSubcategories}
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
@@ -255,23 +254,20 @@ const Dashboard = () => {
                 </StatCard>
               </div>
 
-              {/* Alterado para grid-cols-2 em telas grandes */}
+              {/* NOVO: CombinedMonthlyExpensesDashboard substitui ExpensesPieChart e MonthlyExpenseSummary */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allSubcategories} isMobile={isMobile} />
-
-                <div className="flex flex-col gap-4">
-                  <MonthlyExpenseSummary
-                    expenseInstallments={expenseInstallments}
-                    isLoading={isLoading}
-                    isMobile={isMobile}
-                    currentMonth={selectedMonth}
-                  />
-                  <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
-                </div>
+                <CombinedMonthlyExpensesDashboard
+                  allRevenues={allRevenues}
+                  allExpenseInstallments={allExpenseInstallments}
+                  allCategories={allSubcategories}
+                  isLoading={isLoading}
+                  isMobile={isMobile}
+                />
+                <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
               </div>
 
               <div className="grid grid-cols-1 mb-4">
-                <TotalExpensesCard expenseInstallments={expenseInstallments} isMobile={isMobile} />
+                <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} /> {/* Passar todas as parcelas aqui também */}
               </div>
 
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
