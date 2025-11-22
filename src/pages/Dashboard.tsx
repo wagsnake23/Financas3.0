@@ -27,9 +27,8 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
-  const [showIncomeValue, setShowIncomeValue] = useState(true);
-  const [showExpenseValue, setShowExpenseValue] = useState(true);
-  const [showBalanceValue, setShowBalanceValue] = useState(true);
+  // Um único estado para controlar a visibilidade de todos os valores
+  const [showAllValues, setShowAllValues] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Este estado agora só controlará StatCards e MonthlyBarChart
 
   // Buscar TODAS as receitas (não filtradas por mês)
@@ -111,6 +110,11 @@ const Dashboard = () => {
     navigate(`/lancamentos?month=${formattedMonth}`);
   };
 
+  // Função única para alternar a visibilidade de todos os valores
+  const handleToggleAllVisibility = () => {
+    setShowAllValues(prev => !prev);
+  };
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
@@ -128,8 +132,8 @@ const Dashboard = () => {
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
-                showValue={showExpenseValue}
-                onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
+                showValue={showAllValues} // Controlado por showAllValues
+                onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
               >
@@ -138,7 +142,7 @@ const Dashboard = () => {
                   <div className="flex justify-between items-end w-full">
                     <div className="flex flex-col items-start">
                       <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
+                      <p className="font-semibold text-base text-success">{showAllValues ? formatCurrency(totalPaidMonthlyExpenses) : "R$ *****"}</p>
                     </div>
                   </div>
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
@@ -160,8 +164,8 @@ const Dashboard = () => {
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
-                showValue={showIncomeValue}
-                onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
+                showValue={showAllValues} // Controlado por showAllValues
+                // onToggleVisibility removido
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
@@ -172,7 +176,7 @@ const Dashboard = () => {
                       <p className={cn(
                         "font-semibold text-base text-primary"
                       )}>
-                        {showBalanceValue ? formatCurrency(stats.balance) : "R$ *****"}
+                        {showAllValues ? formatCurrency(stats.balance) : "R$ *****"}
                       </p>
                     </div>
                   </div>
@@ -208,8 +212,8 @@ const Dashboard = () => {
                   variant="balance"
                   trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
                   isMobile={isMobile}
-                  showValue={showBalanceValue}
-                  onToggleVisibility={() => setShowBalanceValue(!showBalanceValue)}
+                  showValue={showAllValues} // Controlado por showAllValues
+                  // onToggleVisibility removido
                 />
                 <StatCard
                   title="Total de Receitas"
@@ -217,8 +221,8 @@ const Dashboard = () => {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-                  showValue={showIncomeValue}
-                  onToggleVisibility={() => setShowIncomeValue(!showIncomeValue)}
+                  showValue={showAllValues} // Controlado por showAllValues
+                  // onToggleVisibility removido
                 >
                   <div className="flex justify-end mt-4">
                     <Button 
@@ -237,8 +241,8 @@ const Dashboard = () => {
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-                  showValue={showExpenseValue}
-                  onToggleVisibility={() => setShowExpenseValue(!showExpenseValue)}
+                  showValue={showAllValues} // Controlado por showAllValues
+                  onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 >
                   <div className="flex justify-end mt-4">
                     <Button
