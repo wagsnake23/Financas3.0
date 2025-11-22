@@ -62,7 +62,7 @@ const Lancamentos = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background pt-16 relative"> {/* Adicionado relative para posicionamento do overlay */}
+      <div className={cn("min-h-screen bg-background pt-16 relative", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
         <main className={cn("container mx-auto", isMobile ? "px-0 py-4" : "px-4 py-8")}>
           {!isMobile && (
@@ -113,7 +113,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full", 
-              isMobile ? "max-w-sm p-4" : "sm:max-w-[600px] p-6",
+              isMobile ? "max-w-sm p-4 bg-lancamentos-mobile-bg" : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
@@ -141,5 +141,3 @@ const Lancamentos = () => {
     </ProtectedRoute>
   );
 };
-
-export default Lancamentos;

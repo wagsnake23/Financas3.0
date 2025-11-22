@@ -91,6 +91,9 @@ export default {
         "app-purple": { // NOVO: Roxo mais forte para botões
           DEFAULT: "hsl(var(--app-purple))",
         },
+        "lancamentos-mobile-bg": { // New color for Lancamentos mobile background
+          DEFAULT: "hsl(var(--lancamentos-mobile-bg))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
