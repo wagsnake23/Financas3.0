@@ -52,12 +52,11 @@ const Dashboard = () => {
         .from("receitas")
         .select("*")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false }); // ✅ CORREÇÃO: Alterado de 'data' para 'created_at'
+        .order("data", { ascending: false });
       if (error) throw error;
       return data;
     },
     enabled: !!user && !authLoading,
-    staleTime: 0, // ✅ Adicionado para garantir que os dados sejam sempre considerados stale
   });
 
   // Fetch expense installments and join with expenses to get category_id
@@ -76,7 +75,6 @@ const Dashboard = () => {
       return data;
     },
     enabled: !!user && !authLoading,
-    staleTime: 0, // ✅ Adicionado para garantir que os dados sejam sempre considerados stale
   });
 
   const stats = useMemo(() => {
@@ -250,7 +248,17 @@ const Dashboard = () => {
                 <ExpensesPieChart transactions={monthlyFilteredTransactions} allCategories={allSubcategories} isMobile={isMobile} />
 
                 <div className="flex flex-col gap-4">
-                  {/* MonthlyExpenseCalendar removido daqui */}
+                  <MonthlyExpenseSummary
+                    expenseInstallments={expenseInstallments}
+                    isLoading={isLoading}
+                    isMobile={isMobile}
+                    currentMonth={selectedMonth}
+                  />
+                  <MonthlyExpenseCalendar 
+                    transactions={monthlyFilteredTransactions}
+                    isMobile={isMobile} 
+                    currentMonth={selectedMonth}
+                  />
                 </div>
 
                 <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />

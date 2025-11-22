@@ -63,7 +63,7 @@ export const TransactionList = ({
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
 }: TransactionListProps) => {
-  console.log("TransactionList: Re-rendering. User prop received:", user?.id, "Is user null?", !user);
+  console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const navigate = useNavigate();
@@ -98,11 +98,6 @@ export const TransactionList = ({
       }
     }
   }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]);
-
-  // Log para verificar a mudança de referência da prop transactions
-  useEffect(() => {
-    console.log("TransactionList: transactions prop reference changed:", transactions);
-  }, [transactions]);
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");

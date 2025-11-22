@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
-import { cn, isValidUuid, getBorderClass } from "@/lib/utils";
+import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
@@ -20,14 +20,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
-type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
-type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
+type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
 
 interface TransactionEditFormProps {
   editingTransaction: Transaction | null;
@@ -35,7 +35,7 @@ interface TransactionEditFormProps {
     id: string,
     type: TransactionType,
     updatedTransaction: Omit<Transaction, "id">,
-    saveScope: SaveScope
+    saveScope: SaveScope // Adicionado saveScope
   ) => void;
   onCancelEdit: () => void;
   onDeleteTransaction: (
@@ -45,11 +45,11 @@ interface TransactionEditFormProps {
   ) => void;
   allCategories: AppCategory[];
   isMobile: boolean;
-  loadingEditData: boolean;
 }
 
 const UNSELECTED_VALUE = "unselected";
 
+// Helper function to create a local Date object from a YYYY-MM-DD string
 const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
   if (!dateString) return undefined;
   const [y, m, d] = dateString.split("-").map(Number);
@@ -63,7 +63,6 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   onDeleteTransaction,
   allCategories,
   isMobile,
-  loadingEditData,
 }) => {
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -72,23 +71,28 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<ReceitaStatus>("Pendente");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
+  // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
   const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
 
-  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false);
-  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth");
+  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false); // NOVO ESTADO
+  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
 
-  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0);
-  const [isFetchingOptions, setIsFetchingOptions] = useState(false);
+  // NOVOS ESTADOS PARA A LÓGICA DE EXCLUSÃO CONDICIONAL
+  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0); // Renomeado para ser mais genérico
+  const [isFetchingOptions, setIsFetchingOptions] = useState(false); // Renomeado para ser mais genérico
 
   const isRecurringTransaction = useMemo(() => {
-    if (!editingTransaction) return false;
-    // ✅ CORREÇÃO: Lógica unificada para identificar transações recorrentes (receitas e despesas)
-    return editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id;
+    // Uma transação é recorrente SE:
+    // - is_recurring_master === true
+    // OU
+    // - recurrence_id != null
+    return (editingTransaction?.is_recurring_master === true || !!editingTransaction?.recurrence_id);
   }, [editingTransaction]);
 
   const filteredCategories = useMemo(() => {
@@ -104,6 +108,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
 
+    // Ensure the current category is always available in the dropdown if it's not in the filtered list
     if (
       editingTransaction &&
       editingTransaction.category &&
@@ -123,6 +128,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     editingTransaction,
   ]);
 
+  // Effect to initialize form fields when editingTransaction changes
   useEffect(() => {
     if (editingTransaction) {
       setType(editingTransaction.type);
@@ -145,8 +151,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
-      setValidationErrors({});
+      setValidationErrors({}); // Clear errors when editing a new transaction
     } else {
+      // Reset form when not editing
       setType("expense");
       setAmount(undefined);
       setDate(new Date());
@@ -158,6 +165,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     }
   }, [editingTransaction, allCategories]);
 
+  // Helper function to fetch pending future items (installments or occurrences)
   const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => {
     let count = 0;
     try {
@@ -170,7 +178,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             .from("despesas_parcelas")
             .select("id", { count: 'exact' })
             .eq("despesa_id", parentDespesaId)
-            .eq("pago", false)
+            .eq("pago", false) // Apenas parcelas não pagas
             .gte("vencimento", formattedTransactionDate);
           
           if (error) throw error;
@@ -183,7 +191,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             .from("receitas")
             .select("id", { count: 'exact' })
             .eq("recurrence_id", masterRecurrenceId)
-            .in("status", ["Pendente", "Prevista"])
+            .in("status", ["Pendente", "Prevista"]) // Apenas ocorrências pendentes ou previstas
             .gte("data", formattedTransactionDate);
           
           if (error) throw error;
@@ -226,18 +234,31 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return;
     }
 
+    setLoading(true); // Start loading for the pre-check
     setIsFetchingOptions(true);
     const futureItems = await fetchPendingFutureItems(editingTransaction);
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
+    setLoading(false); // Stop loading after pre-check
+
+    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
     // Lógica unificada para determinar se deve mostrar as opções de série
-    const shouldShowSeriesOptions = isRecurringTransaction && futureItems > 0;
+    const isFixedRecurringSeries =
+      editingTransaction.tipo_pagamento === "fixo" &&
+      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id); // Covers both master and occurrences of fixed/recurring income/expense
+
+    const isInstallmentSeries =
+      editingTransaction.tipo_pagamento === "parcelado" &&
+      totalItemsInSeries > 1 &&
+      futureItems > 0; // futureItems already fetched
+
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
 
     if (shouldShowSeriesOptions) {
-      setShowSaveOptionsDialog(true);
+      setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
     } else {
-      performUpdate("oneOff");
+      performUpdate("oneOff"); // Salva diretamente para transações avulsas ou séries sem futuras pendências
     }
   };
 
@@ -248,9 +269,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   const performUpdate = (saveScope: SaveScope) => {
     if (!editingTransaction) return;
+    setLoading(true);
 
+    // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
-      ? format(date, 'yyyy-MM-dd')
+      ? format(date, 'yyyy-MM-dd') // Usar format do date-fns
       : "";
 
     let finalStatus: ReceitaStatus = isPaid
@@ -268,35 +291,50 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       category: category === UNSELECTED_VALUE ? null : category,
       description,
       status: finalStatus,
+      // Keep installment-related fields for one-off installment expenses
       installmentNumber: editingTransaction.installmentNumber,
       totalInstallments: editingTransaction.totalInstallments,
       forma_pagamento: editingTransaction.forma_pagamento,
       cartao_id: editingTransaction.cartao_id,
       despesa_id: editingTransaction.despesa_id,
+      // Include recurrence fields
       is_recurring_master: editingTransaction.is_recurring_master,
       recurrence_id: editingTransaction.recurrence_id,
       recurrence_day: editingTransaction.recurrence_day,
-      tipo_pagamento: editingTransaction.tipo_pagamento,
+      tipo_pagamento: editingTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
     };
 
     onUpdateTransaction(
       editingTransaction.id,
       type,
       updatedTransaction,
-      saveScope
+      saveScope // Passa o saveScope
     );
+
+    setLoading(false);
   };
 
   const handleTriggerDeleteConfirmation = async () => {
     if (!editingTransaction) return;
 
-    setIsFetchingOptions(true);
+    setIsFetchingOptions(true); // Use isFetchingOptions
     const futureItems = await fetchPendingFutureItems(editingTransaction);
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
 
+    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+
     // Lógica unificada para determinar se deve mostrar as opções de série
-    const shouldShowSeriesOptions = isRecurringTransaction && futureItems > 0;
+    const isFixedRecurringSeries =
+      editingTransaction.tipo_pagamento === "fixo" &&
+      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id); // Covers both master and occurrences of fixed/recurring income/expense
+
+    const isInstallmentSeries =
+      editingTransaction.tipo_pagamento === "parcelado" &&
+      totalItemsInSeries > 1 &&
+      futureItems > 0; // futureItems already fetched
+
+    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
 
     if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
@@ -314,7 +352,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       );
     }
     setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteOptionsDialog(false);
+    setShowSimpleDeleteOptionsDialog(false); // Corrigido o nome da função setter aqui
   };
 
   const formContent = (
@@ -356,19 +394,20 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           setIsPaid={setIsPaid}
           installmentNumber={editingTransaction?.installmentNumber}
           totalInstallments={editingTransaction?.totalInstallments}
-          validationErrors={validationErrors}
+          validationErrors={validationErrors} // Pass validation errors
         />
 
         <TransactionEditActions
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-          onSave={handleSubmit}
+          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
           onCancel={onCancelEdit}
-          loading={loadingEditData || isFetchingOptions}
+          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
       </form>
 
+      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -381,14 +420,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loadingEditData || isFetchingOptions}>
-              {loadingEditData || isFetchingOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete("oneOff")} disabled={loading || isFetchingOptions}>
+              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
       <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -439,14 +479,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loadingEditData || isFetchingOptions} className="w-full sm:w-auto">
-              {loadingEditData || isFetchingOptions ? "Excluindo..." : "Excluir"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente */}
       <AlertDialog open={showSaveOptionsDialog} onOpenChange={setShowSaveOptionsDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -497,9 +538,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
-            <AlertDialogCancel disabled={loadingEditData || isFetchingOptions}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loadingEditData || isFetchingOptions} className="w-full sm:w-auto">
-              {loadingEditData || isFetchingOptions ? "Salvando..." : "Salvar"}
+            <AlertDialogCancel disabled={loading || isFetchingOptions}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className="w-full sm:w-auto">
+              {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

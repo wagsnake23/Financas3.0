@@ -61,12 +61,11 @@ export default function Receitas() {
         .from("receitas")
         .select("*, status, is_recurring_master, recurrence_id, recurrence_day")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false }); // ✅ CORREÇÃO: Alterado de 'data' para 'created_at'
+        .order("data", { ascending: false });
       if (error) throw error;
       return data;
     },
     enabled: !!user && !authLoading,
-    staleTime: 0, // ✅ Adicionado para garantir que os dados sejam sempre considerados stale
   });
 
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -83,7 +82,6 @@ export default function Receitas() {
       return data as AppCategory[];
     },
     enabled: !!user && !authLoading,
-    staleTime: 0, // ✅ Adicionado para garantir que os dados sejam sempre considerados stale
   });
 
   const incomeSubcategories = useMemo(() => {

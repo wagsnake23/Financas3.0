@@ -1,9 +1,9 @@
-import React, { memo } from "react"; // Removido useState
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid } from "@/lib/utils";
+import { cn, isValidUuid } from "@/lib/utils"; // Importar isValidUuid
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -25,8 +25,7 @@ interface TransactionRowProps {
   transaction: Transaction;
   onDeleteTransaction: (
     id: string,
-    type: "income" | "expense",
-    deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff" // Corrigido o tipo da prop
+    type: "income" | "expense"
   ) => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
@@ -44,10 +43,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
-  // onDeleteTransaction não é usado diretamente aqui, mas o tipo foi corrigido
 }) => {
-  // Removido: const [loadingToggle, setLoadingToggle] = useState(false); // Novo estado de carregamento para o toggle
-
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
     return {
@@ -63,7 +59,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   const getPaymentMethodDisplay = (
     formaPagamento: string | null,
     cartaoId: string | null
-    ) => {
+  ) => {
     if (!formaPagamento) return null;
 
     switch (formaPagamento) {
@@ -89,104 +85,57 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   );
 
   const handleToggleStatus = async () => {
-    console.log("handleToggleStatus: Clicked for transaction ID:", transaction.id);
     if (!user) {
       toast.error("Usuário não autenticado.");
-      console.error("handleToggleStatus: User not authenticated.");
       return;
     }
 
-    // Removido: setLoadingToggle(true);
-    // Removido: console.log("handleToggleStatus: Setting loadingToggle to true.");
-
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
-    const newPago = newStatus === "Recebida";
-    console.log("handleToggleStatus: New status will be:", newStatus);
-
-    // --- OPTIMISTIC UPDATE START ---
-    const previousRevenues = queryClient.getQueryData<Tables<"receitas">[]>(["revenues", user.id]);
-    const previousExpenseInstallments = queryClient.getQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id]);
-
-    if (transaction.type === "income") {
-      queryClient.setQueryData<Tables<"receitas">[]>(["revenues", user.id], (oldData) => {
-        if (!oldData) return [];
-        return oldData.map(r => r.id === transaction.id ? { ...r, status: newStatus, updated_at: new Date().toISOString() } : r);
-      });
-    } else { // expense
-      queryClient.setQueryData<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>(["expenseInstallments", user.id], (oldData) => {
-        if (!oldData) return [];
-        return oldData.map(p => p.id === transaction.id ? { ...p, pago: newPago, data_pagamento: newPago ? new Date().toISOString() : null, updated_at: new Date().toISOString() } : p);
-      });
-    }
-    // --- OPTIMISTIC UPDATE END ---
 
     try {
       if (transaction.type === "income") {
-        console.log("handleToggleStatus: Updating income transaction.");
-        // Para receita recorrente, apenas atualiza o status desta ocorrência específica
+        // For recurring income, only update the status of this specific occurrence
         if (transaction.recurrence_id && !transaction.is_recurring_master) {
-          console.log("handleToggleStatus: Updating specific recurring income occurrence.");
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: new Date().toISOString() })
+            .update({ status: newStatus })
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
-        } else { // Receita avulsa ou mestra recorrente
-          console.log("handleToggleStatus: Updating one-off income or recurring master.");
+        } else { // One-off income or master recurring income (shouldn't be toggled directly)
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: new Date().toISOString() })
+            .update({ status: newStatus })
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
         }
-        toast.success("Status da receita atualizado!");
-        console.log("handleToggleStatus: Income status updated successfully. Invalidating and refetching queries...");
-        // Não aguardar o invalidate/refetch para liberar o loadingToggle mais rápido
         queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-        queryClient.refetchQueries({ queryKey: ["revenues", user?.id] }); 
-        console.log("handleToggleStatus: Income queries invalidated and refetched (in background).");
       } else { // expense
-        console.log("handleToggleStatus: Updating expense installment.");
-        const dataPagamento = newPago
+        const pago = newStatus === "Recebida";
+        const dataPagamento = pago
           ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
           : null;
 
         const { error } = await supabase
           .from("despesas_parcelas")
           .update({
-            pago: newPago,
+            pago,
             data_pagamento: dataPagamento,
-            updated_at: new Date().toISOString(),
           })
           .eq("id", transaction.id);
 
         if (error) throw error;
-        toast.success("Status da despesa atualizado!");
-        console.log("handleToggleStatus: Expense status updated successfully. Invalidating and refetching queries...");
-        // Não aguardar o invalidate/refetch para liberar o loadingToggle mais rápido
         queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-        queryClient.refetchQueries({ queryKey: ["expenseInstallments", user?.id] });
-        console.log("handleToggleStatus: Expense queries invalidated and refetched (in background).");
       }
-      
+
+      toast.success("Status atualizado!");
     } catch (error: any) {
-      console.error("handleToggleStatus: Erro ao atualizar status:", error);
+      console.error("Erro ao atualizar status:", error);
       toast.error("Erro ao atualizar status.", { description: error.message });
-      // --- OPTIMISTIC ROLLBACK START ---
-      if (transaction.type === "income") {
-        queryClient.setQueryData(["revenues", user.id], previousRevenues);
-      } else {
-        queryClient.setQueryData(["expenseInstallments", user.id], previousExpenseInstallments);
-      }
-      // --- OPTIMISTIC ROLLBACK END ---
-    } finally {
-      // Removido: setLoadingToggle(false);
-      // Removido: console.log("handleToggleStatus: Setting loadingToggle to false (finally block).");
     }
   };
 
@@ -274,15 +223,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           size="icon"
           className="h-7 w-7"
           onClick={handleToggleStatus}
-          disabled={transaction.status === "Cancelada"} // Removido disabled={loadingToggle}
+          disabled={transaction.status === "Cancelada"}
         >
-          {/* Removido o condicional para loadingToggle, agora sempre mostra o ícone de status */}
-          {transaction.status === "Recebida" ? (
+          {transaction.status === "Recebida" && (
             <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />
-          ) : (transaction.status === "Pendente" ||
-            transaction.status === "Prevista") ? (
+          )}
+          {(transaction.status === "Pendente" ||
+            transaction.status === "Prevista") && (
             <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />
-          ) : (
+          )}
+          {transaction.status === "Cancelada" && (
             <DynamicIcon
               name="XCircle"
               className="h-4 w-4 text-muted-foreground"
@@ -299,7 +249,6 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             size="icon"
             className="h-7 w-7"
             onClick={() => onEditTransaction(transaction)}
-            // Removido disabled={loadingToggle}
           >
             <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
           </Button>
