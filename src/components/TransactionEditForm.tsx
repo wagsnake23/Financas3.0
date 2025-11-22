@@ -90,7 +90,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isFetchingOptions, setIsFetchingOptions] = useState(false);
 
   const isRecurringTransaction = useMemo(() => {
-    return (editingTransaction?.is_recurring_master === true || !!editingTransaction?.recurrence_id);
+    if (!editingTransaction) return false;
+    // Para despesas, é recorrente se tipo_pagamento for 'fixo' ou 'parcelado' com mais de 1 parcela
+    if (editingTransaction.type === "expense") {
+      return editingTransaction.tipo_pagamento === "fixo" || (editingTransaction.tipo_pagamento === "parcelado" && (editingTransaction.totalInstallments || 0) > 1);
+    }
+    // Para receitas, é recorrente se is_recurring_master ou recurrence_id estiverem presentes
+    return editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id;
   }, [editingTransaction]);
 
   const filteredCategories = useMemo(() => {
@@ -168,11 +174,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     let count = 0;
     try {
       const formattedTransactionDate = format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd');
-      console.log("[DEBUG] fetchPendingFutureItems: formattedTransactionDate:", formattedTransactionDate); // NEW LOG
+      // console.log("[DEBUG] fetchPendingFutureItems: formattedTransactionDate:", formattedTransactionDate); // NEW LOG
 
       if (transaction.type === "expense") {
         const parentDespesaId = transaction.despesa_id;
-        console.log("[DEBUG] fetchPendingFutureItems: Expense parentDespesaId:", parentDespesaId); // NEW LOG
+        // console.log("[DEBUG] fetchPendingFutureItems: Expense parentDespesaId:", parentDespesaId); // NEW LOG
         if (parentDespesaId && isValidUuid(parentDespesaId)) {
           const { count: futureInstallmentsCount, error } = await supabase
             .from("despesas_parcelas")
@@ -183,13 +189,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           
           if (error) throw error;
           count = futureInstallmentsCount || 0;
-          console.log("[DEBUG] fetchPendingFutureItems: Found future installments (pending):", count); // NEW LOG
+          // console.log("[DEBUG] fetchPendingFutureItems: Found future installments (pending):", count); // NEW LOG
         } else {
-          console.log("[DEBUG] fetchPendingFutureItems: Invalid parentDespesaId for expense:", parentDespesaId); // NEW LOG
+          // console.log("[DEBUG] fetchPendingFutureItems: Invalid parentDespesaId for expense:", parentDespesaId); // NEW LOG
         }
       } else if (transaction.type === "income") {
         const masterRecurrenceId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
-        console.log("[DEBUG] fetchPendingFutureItems: Income masterRecurrenceId:", masterRecurrenceId); // NEW LOG
+        // console.log("[DEBUG] fetchPendingFutureItems: Income masterRecurrenceId:", masterRecurrenceId); // NEW LOG
         if (masterRecurrenceId && isValidUuid(masterRecurrenceId)) {
           const { count: futureOccurrencesCount, error } = await supabase
             .from("receitas")
@@ -200,9 +206,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           
           if (error) throw error;
           count = futureOccurrencesCount || 0;
-          console.log("[DEBUG] fetchPendingFutureItems: Found future income occurrences (pending/prevista):", count); // NEW LOG
+          // console.log("[DEBUG] fetchPendingFutureItems: Found future income occurrences (pending/prevista):", count); // NEW LOG
         } else {
-          console.log("[DEBUG] fetchPendingFutureItems: Invalid masterRecurrenceId for income:", masterRecurrenceId); // NEW LOG
+          // console.log("[DEBUG] fetchPendingFutureItems: Invalid masterRecurrenceId for income:", masterRecurrenceId); // NEW LOG
         }
       }
     } catch (error) {

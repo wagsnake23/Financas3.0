@@ -62,7 +62,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     enabled,
     staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
   });
-  console.log("useTransactionsData: revenues data reference:", revenues); // Log para verificar a referência
+  // console.log("useTransactionsData: revenues data reference:", revenues); // Log para verificar a referência
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } =
     useQuery<
@@ -123,7 +123,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     enabled,
     staleTime: 0, // Adicionado para garantir que os dados sejam sempre considerados stale
   });
-  console.log("useTransactionsData: expenseInstallments data reference:", expenseInstallments); // Log para verificar a referência
+  // console.log("useTransactionsData: expenseInstallments data reference:", expenseInstallments); // Log para verificar a referência
 
   const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<
     Tables<"cartoes">[]
@@ -155,7 +155,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   }, [expenseInstallments]);
 
   const monthlyFilteredTransactions = useMemo(() => {
-    console.log("useTransactionsData: Recalculating monthlyFilteredTransactions..."); // ADD THIS LOG
+    // console.log("useTransactionsData: Recalculating monthlyFilteredTransactions..."); // ADD THIS LOG
     if (!enabled) return [];
 
     const startDate = startOfMonth(selectedMonth);
@@ -197,8 +197,8 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       )
       .map((p) => {
         const d = p.despesas;
-        console.log("[DEBUG] Processing expense installment:", p.id);
-        console.log("[DEBUG] Raw 'despesas' object (d):", d); // Keep this detailed log
+        // console.log("[DEBUG] Processing expense installment:", p.id);
+        // console.log("[DEBUG] Raw 'despesas' object (d):", d); // Keep this detailed log
 
         if (!d) {
             console.warn(`[WARN] Expense installment ${p.id} has no associated despesas record. Skipping.`);
@@ -226,7 +226,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           totalInstallments: d.numero_parcelas || 1, // Ensure it's at least 1
           forma_pagamento: d.forma_pagamento,
           cartao_id: d.cartao_id,
-          despesa_id: d.id,
+          despesa_id: d.id, // ✅ CORREÇÃO: Garantir que despesa_id seja o ID da despesa principal
           is_recurring_master: Boolean(d.is_recurring_master), // Ensure boolean
           recurrence_id: d.id, // For expenses, recurrence_id is the despesa_id
           recurrence_day: null,
@@ -234,7 +234,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           category: d.categoria_id || "outros_diversos",
           updated_at: p.updated_at,
         };
-        console.log("[DEBUG] Constructed expense transaction:", transaction); // NEW LOG
+        // console.log("[DEBUG] Constructed expense transaction:", transaction); // NEW LOG
         return transaction;
       })
       .filter(Boolean) as Transaction[]; // Filter out nulls
