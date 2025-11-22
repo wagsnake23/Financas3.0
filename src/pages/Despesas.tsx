@@ -113,7 +113,7 @@ export default function Despesas() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-destructive/5 pt-16">
         <Navigation />
-        <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2" : "p-6")}>
+        <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "p-6")}>
           {!isMobile && (
             <div className="flex items-center justify-between">
               <div>
@@ -126,7 +126,7 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div className="order-2 lg:order-1 lg:col-span-2">
               {isMobile ? (
-                <div className="px-4 pt-0 bg-[#F1F9FD] rounded-xl shadow-sm"> {/* Adicionado bg-[#F1F9FD] e arredondamento */}
+                <div className="px-4 pt-0 rounded-xl shadow-sm"> {/* Removido bg-[#F1F9FD] daqui */}
                   {formContent}
                   <Footer isMobile={isMobile} />
                 </div>
