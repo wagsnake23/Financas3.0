@@ -15,10 +15,10 @@ export interface Transaction {
   cartao_id?: string | null; // Novo campo para o ID do cartão (se for pagamento com cartão)
   despesa_id?: string; // ID da despesa principal para parcelas
   // NOVOS CAMPOS PARA RECORRÊNCIA
-  is_recurring_master?: boolean; // Indica se é a transação mestra de uma série recorrente
+  is_recurring_master: boolean; // Indica se é a transação mestra de uma série recorrente (NÃO OPCIONAL)
   recurrence_id?: string | null; // ID da série recorrente
   recurrence_day?: number | null; // Dia do mês para recorrência
-  tipo_pagamento?: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento
+  tipo_pagamento: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento (NÃO OPCIONAL)
   updated_at?: string; // NOVO: Adicionado updated_at para consistência
 }
 

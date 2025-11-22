@@ -223,6 +223,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           category: d.categoria_id || "outros_diversos",
           updated_at: p.updated_at,
         };
+        console.log("[DEBUG] Constructed expense transaction:", transaction); // NEW LOG
         return transaction;
       })
       .filter(Boolean) as Transaction[]; // Filter out nulls

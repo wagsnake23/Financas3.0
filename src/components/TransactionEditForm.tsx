@@ -237,7 +237,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
 
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+    // CORREÇÃO AQUI: Usar editingTransaction.totalInstallments de forma mais robusta
+    const totalItemsInSeries = editingTransaction.totalInstallments && editingTransaction.totalInstallments > 1 ? editingTransaction.totalInstallments : 1;
 
     // Lógica unificada para determinar se deve mostrar as opções de série
     const isFixedRecurringSeries =
@@ -329,7 +330,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
 
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+    // CORREÇÃO AQUI: Usar editingTransaction.totalInstallments de forma mais robusta
+    const totalItemsInSeries = editingTransaction.totalInstallments && editingTransaction.totalInstallments > 1 ? editingTransaction.totalInstallments : 1;
 
     // Lógica unificada para determinar se deve mostrar as opções de série
     const isFixedRecurringSeries =
