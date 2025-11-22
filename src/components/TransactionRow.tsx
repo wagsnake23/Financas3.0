@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Transaction, AppCategory } from "@/types/finance";
+import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid } from "@/lib/utils"; // Importar isValidUuid
+import { cn, isValidUuid } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -11,6 +11,9 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface Cartao {
   id: string;
@@ -33,6 +36,7 @@ interface TransactionRowProps {
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
+  onToggleStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
@@ -43,6 +47,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   isMobile,
   queryClient,
   user,
+  onToggleStatus, // Recebendo a nova prop
 }) => {
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
@@ -84,60 +89,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     transaction.cartao_id
   );
 
-  const handleToggleStatus = async () => {
-    if (!user) {
-      toast.error("Usuário não autenticado.");
-      return;
-    }
+  // Lógica de toggle de status movida para o hook useLancamentosLogic
+  const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
+  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
-    const newStatus =
-      transaction.status === "Recebida" ? "Pendente" : "Recebida";
-
-    try {
-      if (transaction.type === "income") {
-        // For recurring income, only update the status of this specific occurrence
-        if (transaction.recurrence_id && !transaction.is_recurring_master) {
-          const { error } = await supabase
-            .from("receitas")
-            .update({ status: newStatus })
-            .eq("id", transaction.id)
-            .eq("user_id", user.id);
-
-          if (error) throw error;
-        } else { // One-off income or master recurring income (shouldn't be toggled directly)
-          const { error } = await supabase
-            .from("receitas")
-            .update({ status: newStatus })
-            .eq("id", transaction.id)
-            .eq("user_id", user.id);
-
-          if (error) throw error;
-        }
-        queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
-      } else { // expense
-        const pago = newStatus === "Recebida";
-        const dataPagamento = pago
-          ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
-          : null;
-
-        const { error } = await supabase
-          .from("despesas_parcelas")
-          .update({
-            pago,
-            data_pagamento: dataPagamento,
-          })
-          .eq("id", transaction.id);
-
-        if (error) throw error;
-        queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
-      }
-
-      toast.success("Status atualizado!");
-    } catch (error: any) {
-      console.error("Erro ao atualizar status:", error);
-      toast.error("Erro ao atualizar status.", { description: error.message });
-    }
-  };
 
   const transactionDate = (() => {
     const [y, m, d] = transaction.date.split("-").map(Number);
@@ -222,7 +177,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           variant="ghost"
           size="icon"
           className="h-7 w-7"
-          onClick={handleToggleStatus}
+          onClick={() => onToggleStatus(transaction.id, transaction.type, newStatus)} // Chamando a nova prop
           disabled={transaction.status === "Cancelada"}
         >
           {transaction.status === "Recebida" && (

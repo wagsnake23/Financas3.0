@@ -6,10 +6,13 @@ import { User } from "@supabase/supabase-js";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate } from "@/integrations/supabase/types";
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
 
 // Importar os novos hooks modulares
 import { useLancamentosState } from "./useLancamentosState";
 import { useTransactionMutations } from "./useTransactionMutations";
+
+type ReceitaStatus = Database['public']['Enums']['receita_status']; // Definir ReceitaStatus aqui
 
 export const useLancamentosLogic = (
   user: User | null,
@@ -65,6 +68,7 @@ export const useLancamentosLogic = (
   const {
     handleDeleteTransaction,
     handleUpdateTransaction,
+    handleOptimisticToggleStatus, // NOVO: Obter a função de toggle otimista
   } = useTransactionMutations({
     user,
     queryClient,
@@ -175,5 +179,6 @@ export const useLancamentosLogic = (
     queryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    handleOptimisticToggleStatus, // NOVO RETORNO
   };
 };

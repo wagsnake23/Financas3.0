@@ -50,6 +50,7 @@ const Lancamentos = () => {
     queryClient: logicQueryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    handleOptimisticToggleStatus, // NOVO: Destruturar a nova função
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -94,6 +95,7 @@ const Lancamentos = () => {
             setLoadingPayInvoice={setLoadingPayInvoice}
             selectedMonth={selectedMonth} // Adicionado
             setSelectedMonth={setSelectedMonth} // Adicionado
+            onToggleTransactionStatus={handleOptimisticToggleStatus} // NOVO: Passar a função
           />
         </main>
         <Footer isMobile={isMobile} />

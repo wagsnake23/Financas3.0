@@ -4,6 +4,9 @@ import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface LancamentosContentProps {
   editingTransaction: Transaction | null;
@@ -30,6 +33,7 @@ interface LancamentosContentProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -52,6 +56,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
+  onToggleTransactionStatus, // NOVA PROP
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -74,6 +79,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
       loadingPayInvoice={loadingPayInvoice} // NOVO
       setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
       setSelectedMonth={setSelectedMonth} // Adicionado
+      onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
     />
   );
 };

@@ -1,11 +1,12 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
 import { TransactionList } from "@/components/TransactionList";
-import { AppCategory, TransactionType } from "@/types/finance";
+import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
-import { cn } from "@/lib/utils";
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface TransactionViewProps {
   transactions: Transaction[];
@@ -23,6 +24,7 @@ interface TransactionViewProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -41,6 +43,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
+  onToggleTransactionStatus, // NOVA PROP
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -61,6 +64,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       loadingPayInvoice={loadingPayInvoice} // NOVO
       setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
       setSelectedMonth={setSelectedMonth} // Adicionado
+      onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
     />
   );
 

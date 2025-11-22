@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Transaction, AppCategory } from "@/types/finance";
+import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import { cn, isValidUuid } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
@@ -16,6 +16,9 @@ import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+
+type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 interface Cartao {
   id: string;
@@ -42,6 +45,7 @@ interface TransactionListProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -62,6 +66,7 @@ export const TransactionList = ({
   loadingPayInvoice, // NOVO
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
+  onToggleTransactionStatus, // NOVA PROP
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
@@ -391,6 +396,7 @@ export const TransactionList = ({
                   isMobile={isMobile}
                   queryClient={queryClient}
                   user={user}
+                  onToggleStatus={onToggleTransactionStatus} // Passando a nova prop
                 />
               ))
             )}

@@ -4,12 +4,13 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
-import { TablesUpdate } from "@/integrations/supabase/types";
+import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
 import { isValidUuid } from "@/lib/utils";
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type ReceitaStatus = Database['public']['Enums']['receita_status']; // Importar ReceitaStatus
 
 interface UseTransactionMutationsProps {
   user: User | null;
@@ -459,8 +460,96 @@ export const useTransactionMutations = ({
     [user, monthlyFilteredTransactions, invalidateAllTransactionQueries, setLoadingEditData, setEditingTransaction, setIsEditModalOpen]
   );
 
+  const handleOptimisticToggleStatus = useCallback(
+    async (id: string, type: TransactionType, newStatus: ReceitaStatus) => {
+      if (!user) {
+        toast.error("Usuário não autenticado.");
+        return;
+      }
+
+      // 1. Optimistically update the UI
+      if (type === "income") {
+        queryClient.setQueryData(
+          ["revenues", user.id],
+          (oldData: Tables<'receitas'>[] | undefined) => {
+            if (!oldData) return oldData;
+            return oldData.map((r) =>
+              r.id === id ? { ...r, status: newStatus } : r
+            );
+          }
+        );
+      } else { // expense
+        queryClient.setQueryData(
+          ["expenseInstallments", user.id],
+          (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
+            if (!oldData) return oldData;
+            return oldData.map((p) =>
+              p.id === id ? { ...p, pago: newStatus === "Recebida" } : p
+            );
+          }
+        );
+      }
+
+      // 2. Perform the API call
+      try {
+        if (type === "income") {
+          const { error } = await supabase
+            .from("receitas")
+            .update({ status: newStatus })
+            .eq("id", id)
+            .eq("user_id", user.id);
+          if (error) throw error;
+        } else { // expense
+          const pago = newStatus === "Recebida";
+          const dataPagamento = pago
+            ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
+            : null;
+
+          const { error } = await supabase
+            .from("despesas_parcelas")
+            .update({
+              pago,
+              data_pagamento: dataPagamento,
+            })
+            .eq("id", id);
+          if (error) throw error;
+        }
+        toast.success("Status atualizado!");
+        // Invalidate queries to ensure data consistency, but the UI is already updated
+        invalidateAllTransactionQueries(); // This will re-fetch and confirm the state
+      } catch (error: any) {
+        console.error("Erro ao atualizar status:", error);
+        toast.error("Erro ao atualizar status.", { description: error.message });
+        // 3. Revert UI on error
+        if (type === "income") {
+          queryClient.setQueryData(
+            ["revenues", user.id],
+            (oldData: Tables<'receitas'>[] | undefined) => {
+              if (!oldData) return oldData;
+              return oldData.map((r) =>
+                r.id === id ? { ...r, status: (newStatus === "Recebida" ? "Pendente" : "Recebida") } : r
+              );
+            }
+          );
+        } else { // expense
+          queryClient.setQueryData(
+            ["expenseInstallments", user.id],
+            (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
+              if (!oldData) return oldData;
+              return oldData.map((p) =>
+                p.id === id ? { ...p, pago: (newStatus === "Recebida" ? false : true) } : p
+              );
+            }
+          );
+        }
+      }
+    },
+    [user, queryClient, invalidateAllTransactionQueries]
+  );
+
   return {
     handleDeleteTransaction,
     handleUpdateTransaction,
+    handleOptimisticToggleStatus, // Retornando a nova função
   };
 };
