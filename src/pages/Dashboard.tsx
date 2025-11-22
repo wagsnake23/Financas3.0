@@ -135,19 +135,24 @@ const Dashboard = () => {
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
               >
-                <div className={cn("flex justify-between items-end w-full")}>
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Pago este mês:</p> {/* MonthBadge removed from here */}
-                    <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
+                {/* Ajuste para posicionar o botão na parte inferior */}
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className="flex justify-between items-end w-full">
+                    <div className="flex flex-col items-start">
+                      <p className="text-xs text-muted-foreground">Pago este mês:</p>
+                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
+                    </div>
                   </div>
-                  <Button
-                    variant="destructive"
-                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} 
-                    onClick={() => navigate("/despesas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Despesa
-                  </Button>
+                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
+                    <Button
+                      variant="destructive"
+                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px]")} 
+                      onClick={() => navigate("/despesas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Despesa
+                    </Button>
+                  </div>
                 </div>
               </StatCard>
 
