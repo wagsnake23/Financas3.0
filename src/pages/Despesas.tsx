@@ -131,7 +131,7 @@ export default function Despesas() {
                   <Footer isMobile={isMobile} />
                 </div>
               ) : (
-                <Card className="p-6 rounded-xl shadow-sm">
+                <Card className="p-6 rounded-xl shadow-sm bg-[#F1F9FD]">
                   {formContent}
                 </Card>
               )}
