@@ -120,15 +120,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
           : null;
 
-        // ✅ CORREÇÃO: Adicionar despesa_id na cláusula eq para garantir a atualização correta
         const { error } = await supabase
           .from("despesas_parcelas")
           .update({
             pago,
             data_pagamento: dataPagamento,
           })
-          .eq("id", transaction.id)
-          .eq("despesa_id", transaction.despesa_id); // ✅ Adicionado despesa_id aqui
+          .eq("id", transaction.id); // ✅ único filtro necessário
 
         if (error) throw error;
         queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
