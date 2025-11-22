@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AddCardDialog } from "@/components/AddCardDialog";
-import ManageCardsDialog from "@/components/ManageCardsDialog";
+import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // Corrigido para importação nomeada
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
