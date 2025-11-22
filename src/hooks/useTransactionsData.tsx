@@ -102,6 +102,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
             tipo_pagamento,
             cartao_id,
             is_recurring_master,
+            recurrence_id,  // ✅ ADICIONADO recurrence_id AQUI
             numero_parcelas,
             updated_at,
             valor_total,
@@ -228,7 +229,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           cartao_id: d.cartao_id,
           despesa_id: d.id, // ✅ CORREÇÃO: Garantir que despesa_id seja o ID da despesa principal
           is_recurring_master: Boolean(d.is_recurring_master), // Ensure boolean
-          recurrence_id: d.id, // For expenses, recurrence_id is the despesa_id
+          recurrence_id: d.recurrence_id ?? null, // ✅ CORREÇÃO: Usar d.recurrence_id
           recurrence_day: null,
           tipo_pagamento: inferredTipoPagamento, // Use inferred value
           category: d.categoria_id || "outros_diversos",
