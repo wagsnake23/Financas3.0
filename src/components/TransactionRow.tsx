@@ -89,39 +89,49 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   );
 
   const handleToggleStatus = async () => {
+    console.log("handleToggleStatus: Clicked for transaction ID:", transaction.id);
     if (!user) {
       toast.error("Usuário não autenticado.");
+      console.error("handleToggleStatus: User not authenticated.");
       return;
     }
 
-    setLoadingToggle(true); // Inicia o carregamento
+    setLoadingToggle(true);
+    console.log("handleToggleStatus: Setting loadingToggle to true.");
 
     const newStatus =
       transaction.status === "Recebida" ? "Pendente" : "Recebida";
+    console.log("handleToggleStatus: New status will be:", newStatus);
 
     try {
       if (transaction.type === "income") {
+        console.log("handleToggleStatus: Updating income transaction.");
         // Para receita recorrente, apenas atualiza o status desta ocorrência específica
         if (transaction.recurrence_id && !transaction.is_recurring_master) {
+          console.log("handleToggleStatus: Updating specific recurring income occurrence.");
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: new Date().toISOString() }) // Força updated_at
+            .update({ status: newStatus, updated_at: new Date().toISOString() })
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
         } else { // Receita avulsa ou mestra recorrente
+          console.log("handleToggleStatus: Updating one-off income or recurring master.");
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: new Date().toISOString() }) // Força updated_at
+            .update({ status: newStatus, updated_at: new Date().toISOString() })
             .eq("id", transaction.id)
             .eq("user_id", user.id);
 
           if (error) throw error;
         }
         toast.success("Status da receita atualizado!");
+        console.log("handleToggleStatus: Income status updated successfully. Invalidating queries...");
         await queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+        console.log("handleToggleStatus: Income queries invalidated.");
       } else { // expense
+        console.log("handleToggleStatus: Updating expense installment.");
         const pago = newStatus === "Recebida";
         const dataPagamento = pago
           ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
@@ -132,20 +142,23 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           .update({
             pago,
             data_pagamento: dataPagamento,
-            updated_at: new Date().toISOString(), // Força updated_at
+            updated_at: new Date().toISOString(),
           })
           .eq("id", transaction.id);
 
         if (error) throw error;
         toast.success("Status da despesa atualizado!");
+        console.log("handleToggleStatus: Expense status updated successfully. Invalidating queries...");
         await queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
+        console.log("handleToggleStatus: Expense queries invalidated.");
       }
       
     } catch (error: any) {
-      console.error("Erro ao atualizar status:", error);
+      console.error("handleToggleStatus: Erro ao atualizar status:", error);
       toast.error("Erro ao atualizar status.", { description: error.message });
     } finally {
-      setLoadingToggle(false); // Finaliza o carregamento
+      setLoadingToggle(false);
+      console.log("handleToggleStatus: Setting loadingToggle to false (finally block).");
     }
   };
 
