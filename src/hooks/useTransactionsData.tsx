@@ -104,6 +104,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
             is_recurring_master,
             numero_parcelas,
             updated_at,
+            valor_total,
             categoria:categoria_id (
               id,
               nome,
