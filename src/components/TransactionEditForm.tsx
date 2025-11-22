@@ -427,9 +427,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               disabled={loading || isFetchingOptions}
               className={cn(
                 "rounded-xl",
-                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Adicionado mt-0 para mobile
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Aplicado mt-0 para mobile
               )}
             >
+              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
@@ -440,6 +441,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile && "h-10 text-sm flex-1" 
               )}
             >
+              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
               {loading || isFetchingOptions ? (
                 "Excluindo..."
               ) : (
