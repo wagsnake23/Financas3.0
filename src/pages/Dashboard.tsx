@@ -3,7 +3,6 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
-import { MonthlyBarChart } from "@/components/MonthlyBarChart";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -255,7 +254,7 @@ const Dashboard = () => {
               </div>
 
               {/* NOVO: CombinedMonthlyExpensesDashboard substitui ExpensesPieChart e MonthlyExpenseSummary */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 mb-4"> {/* Alterado para grid-cols-1 */}
                 <CombinedMonthlyExpensesDashboard
                   allRevenues={allRevenues}
                   allExpenseInstallments={allExpenseInstallments}
@@ -263,7 +262,7 @@ const Dashboard = () => {
                   isLoading={isLoading}
                   isMobile={isMobile}
                 />
-                <MonthlyBarChart transactions={monthlyFilteredTransactions} isMobile={isMobile} />
+                {/* MonthlyBarChart removido daqui */}
               </div>
 
               <div className="grid grid-cols-1 mb-4">
