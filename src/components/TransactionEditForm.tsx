@@ -232,12 +232,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       return;
     }
 
-    // setLoading(true); // Start loading for the pre-check
     setIsFetchingOptions(true);
     const futureItems = await fetchPendingFutureItems(editingTransaction);
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
-    // setLoading(false); // Stop loading after pre-check
 
     const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
@@ -252,6 +250,17 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       futureItems > 0; // futureItems already fetched
 
     const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
+
+    console.log("[DEBUG - handleSubmit] editingTransaction.type:", editingTransaction.type);
+    console.log("[DEBUG - handleSubmit] editingTransaction.tipo_pagamento:", editingTransaction.tipo_pagamento);
+    console.log("[DEBUG - handleSubmit] editingTransaction.is_recurring_master:", editingTransaction.is_recurring_master);
+    console.log("[DEBUG - handleSubmit] editingTransaction.recurrence_id:", editingTransaction.recurrence_id);
+    console.log("[DEBUG - handleSubmit] totalItemsInSeries:", totalItemsInSeries);
+    console.log("[DEBUG - handleSubmit] futureItems (pending future items):", futureItems);
+    console.log("[DEBUG - handleSubmit] isFixedRecurringSeries:", isFixedRecurringSeries);
+    console.log("[DEBUG - handleSubmit] isInstallmentSeries:", isInstallmentSeries);
+    console.log("[DEBUG - handleSubmit] shouldShowSeriesOptions:", shouldShowSeriesOptions);
+
 
     if (shouldShowSeriesOptions) {
       setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
