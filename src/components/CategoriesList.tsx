@@ -20,6 +20,7 @@ interface CategoryItemProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (category: AppCategory) => void;
   level?: number;
+  forceCollapse?: boolean; // NOVA PROP
 }
 
 const getPaymentMethodLabel = (value?: string | null) => {
@@ -28,11 +29,14 @@ const getPaymentMethodLabel = (value?: string | null) => {
   return method?.label || value;
 };
 
-const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }: CategoryItemProps) => {
+const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, forceCollapse = false }: CategoryItemProps) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories = category.subCategories && category.subCategories.length > 0;
   const [isExpanded, setIsExpanded] = useState(false);
   const isDefault = category.user_id === null;
+
+  // Se forceCollapse for verdadeiro, garante que a categoria esteja colapsada
+  const currentExpandedState = forceCollapse ? false : isExpanded;
 
   return (
     <>
@@ -52,13 +56,14 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
               size="icon"
               onClick={() => setIsExpanded(!isExpanded)}
               className="h-6 w-6 text-muted-foreground"
+              disabled={forceCollapse} // Desabilita o botão de expandir/colapsar se forceCollapse for true
             >
-              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {currentExpandedState ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
             </Button>
           )}
 
           <div 
-            className="p-2 rounded-lg flex items-center justify-center text-2xl"
+            className="p-2 rounded-lg flex items-center justify-center text-2xl" // Garantindo rounded-lg
             style={{ backgroundColor: category.cor }}
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" /> {/* Usar DynamicIcon */}
@@ -97,7 +102,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
           )}
         </div>
       </div>
-      {isExpanded && hasSubcategories && (
+      {currentExpandedState && hasSubcategories && ( // Usa currentExpandedState
         <div className="space-y-2 mt-2">
           {category.subCategories?.map(subCat => (
             <CategoryItem
@@ -106,6 +111,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0 }:
               onDeleteCategory={onDeleteCategory}
               onEditCategory={onEditCategory}
               level={level + 1}
+              forceCollapse={forceCollapse} // Passa a prop para as subcategorias
             />
           ))}
         </div>
@@ -145,7 +151,10 @@ const CategoriesList = ({
   }, [categories]);
 
   const filteredCategories = useMemo(() => {
-    if (!searchTerm.trim()) return categories; // If no search term, return all hierarchical categories
+    if (!searchTerm.trim()) {
+      // Se o campo de busca estiver vazio, retorna apenas as categorias principais
+      return categories.filter(cat => cat.parent_id === null);
+    }
 
     const term = searchTerm.toLowerCase();
     const categoriesToInclude = new Set<string>();
@@ -215,7 +224,7 @@ const CategoriesList = ({
               placeholder="Buscar categoria..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 w-full"
+              className="pl-9 w-full rounded-xl" // Adicionado rounded-xl
             />
           </div>
         </div>
@@ -234,6 +243,7 @@ const CategoriesList = ({
                 category={category}
                 onDeleteCategory={onDeleteCategory}
                 onEditCategory={onEditCategory}
+                forceCollapse={!searchTerm.trim()} // Passa a prop forceCollapse
               />
             ))}
           </div>
