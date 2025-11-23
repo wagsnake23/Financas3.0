@@ -503,7 +503,7 @@ export default function Investments() { // Alterado para export default function
                               <DynamicIcon name="DollarSign" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
                               Valor
                             </p>
-                            <p className={cn("font-semibold", isMobile && "text-xs")}>R$ {investment.valor.toFixed(2)}</p>
+                            <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
                           </div>
                           <div>
                             <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
