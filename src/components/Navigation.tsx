@@ -68,7 +68,7 @@ export const Navigation = () => {
                 <DynamicIcon name="Menu" className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-card"> {/* Alterado para bg-card */}
+            <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-[#F1F9FD]"> {/* Alterado para bg-[#F1F9FD] */}
               <SheetHeader>
                 <SheetTitle className="text-foreground">Menu</SheetTitle> {/* Alterado para text-foreground */}
               </SheetHeader>
