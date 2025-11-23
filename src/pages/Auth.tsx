@@ -363,7 +363,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 mb-8"> {/* Alterado mt-4 para mt-8 para mobile, sm:mt-0 para desktop */}
+          <div className="text-center text-sm mt-8 sm:mt-0 mb-8">
             <button
               type="button"
               onClick={() => {
@@ -602,7 +602,7 @@ export default function Auth() {
 
   return (
     <div className={cn(
-      "min-h-screen flex flex-col items-center justify-center p-4",
+      "min-h-screen flex flex-col items-center justify-start p-4", // Alterado justify-center para justify-start
       isMobile ? "bg-lancamentos-mobile-bg" : "bg-gradient-to-br from-background via-background to-secondary/20"
     )}>
       {isMobile ? (
