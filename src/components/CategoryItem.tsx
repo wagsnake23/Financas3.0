@@ -55,13 +55,15 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
         )}
         style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
       >
-        <div className="flex items-center flex-1"> {/* Main content wrapper */}
-          {categoryNumber && (
-            <span className="font-bold text-sm text-muted-foreground mr-1">{categoryNumber}</span>
-          )}
-
-          {/* This div will contain the indented content */}
-          <div className="flex items-center gap-2" style={{ marginLeft: level > 0 ? `${level * 1.5}rem` : '0' }}>
+        <div className="flex items-center flex-1">
+          {/* Este div cria o espaço de indentação para o badge do ícone */}
+          <div 
+            style={{ width: `${level * 1.5}rem`, minWidth: `${level * 1.5}rem` }} 
+            className="flex items-center justify-start"
+          >
+            {categoryNumber && (
+              <span className="font-bold text-sm text-muted-foreground mr-1">{categoryNumber}</span>
+            )}
             {hasSubcategories && (
               <Button
                 variant="ghost"
@@ -75,24 +77,28 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
                 {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </Button>
             )}
+          </div>
 
-            <div
-              className="p-2 rounded-lg flex items-center justify-center text-2xl"
-              style={{ backgroundColor: effectiveColor }}
-            >
-              <DynamicIcon name={category.icone} className="h-6 w-6" />
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold">{category.nome}</p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                {paymentLabel && (
-                  <span>{paymentLabel}</span>
-                )}
-              </div>
+          {/* Badge do ícone - agora alinhado verticalmente após o espaço de indentação */}
+          <div
+            className="p-2 rounded-lg flex items-center justify-center text-2xl"
+            style={{ backgroundColor: effectiveColor }}
+          >
+            <DynamicIcon name={category.icone} className="h-6 w-6" />
+          </div>
+
+          {/* Nome da categoria e rótulo de pagamento */}
+          <div className="flex-1 flex flex-col ml-2">
+            <p className="font-semibold">{category.nome}</p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {paymentLabel && (
+                <span>{paymentLabel}</span>
+              )}
             </div>
           </div>
         </div>
         
+        {/* Botões de ação */}
         <div className="flex items-center gap-1">
           {!isDefault && category.parent_id !== null && (
             <Button
