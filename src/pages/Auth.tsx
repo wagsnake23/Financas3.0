@@ -612,9 +612,11 @@ export default function Auth() {
           <Footer isMobile={isMobile} className="mt-8" />
         </div>
       ) : (
-        <Card className="w-full max-w-md p-8 shadow-xl rounded-xl">
-          {formContent}
-          <Footer isMobile={isMobile} />
+        <Card className="w-full max-w-md p-8 shadow-xl rounded-xl flex flex-col"> {/* Adicionado flex flex-col */}
+          <div className="flex-grow"> {/* Envolve o formContent em uma div que cresce */}
+            {formContent}
+          </div>
+          <Footer isMobile={isMobile} className="mt-auto" /> {/* Adicionado mt-auto */}
         </Card>
       )}
     </div>
