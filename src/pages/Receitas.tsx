@@ -255,7 +255,7 @@ export default function Receitas() {
               "flex-1 rounded-xl flex items-center justify-center border",
               "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-              isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
+              isMobile && "h-8 py-0.5 text-xs" // Diminuir altura e padding para mobile
             )}
           >
             <DynamicIcon 
@@ -272,7 +272,7 @@ export default function Receitas() {
                 "flex-1 rounded-xl flex items-center justify-center border",
                 "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
                 "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-                isMobile && "h-9 py-1" // Diminuir altura e padding para mobile
+                isMobile && "h-8 py-0.5 text-xs" // Diminuir altura e padding para mobile
               )}
             >
               <DynamicIcon 
