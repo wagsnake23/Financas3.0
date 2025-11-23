@@ -23,6 +23,7 @@ interface CategoryItemProps {
   initialExpanded?: boolean; // Control initial expansion state
   allFlatCategories: AppCategory[]; // NEW: Pass all flat categories to find parent color
   categoryNumber?: string; // NEW: Prop for category number
+  isMobile: boolean; // Pass isMobile prop down
 }
 
 const getPaymentMethodLabel = (value?: string | null) => {
@@ -31,7 +32,7 @@ const getPaymentMethodLabel = (value?: string | null) => {
   return method?.label || value;
 };
 
-const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, initialExpanded = false, allFlatCategories, categoryNumber }: CategoryItemProps) => {
+const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, initialExpanded = false, allFlatCategories, categoryNumber, isMobile }: CategoryItemProps) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories = category.subCategories && category.subCategories.length > 0;
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
@@ -45,6 +46,9 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
     }
     return category.cor; // Use own color for main categories
   }, [category, level, allFlatCategories]);
+
+  // Define indentation unit based on mobile status
+  const indentationUnit = isMobile ? 0.75 : 1.5; // Smaller indentation for mobile
 
   return (
     <>
@@ -61,9 +65,11 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
             <span className="font-bold text-sm mr-1" style={{ color: effectiveColor }}>{categoryNumber}</span>
           )}
 
-          {/* Indentation for subcategories, containing the expand/collapse button */}
-          {/* The marginLeft here creates the indentation for the expand button and subsequent content */}
-          <div style={{ marginLeft: `${level * 1.5}rem` }} className="flex items-center">
+          {/* This div creates the space of indentation for the icon badge */}
+          <div
+            style={{ width: `${level * indentationUnit}rem`, minWidth: `${level * indentationUnit}rem` }} // Use dynamic indentationUnit
+            className="flex items-center justify-start"
+          >
             {hasSubcategories && (
               <Button
                 variant="ghost"
@@ -80,9 +86,9 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
             )}
           </div>
 
-          {/* Icon Badge - positioned after the indentation/expand button */}
+          {/* Icon Badge - now aligned vertically after the indentation space */}
           <div
-            className="p-2 rounded-lg flex items-center justify-center text-2xl ml-2" // Added ml-2 for spacing
+            className="p-2 rounded-lg flex items-center justify-center text-2xl"
             style={{ backgroundColor: effectiveColor }}
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" />
@@ -136,6 +142,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
               initialExpanded={initialExpanded}
               allFlatCategories={allFlatCategories}
               categoryNumber={`${categoryNumber}.${index + 1}`}
+              isMobile={isMobile} // Pass isMobile prop down
             />
           ))}
         </div>
@@ -266,6 +273,7 @@ const CategoriesList = ({
                 initialExpanded={!!searchTerm.trim()}
                 allFlatCategories={allFlatCategories}
                 categoryNumber={`${index + 1}`}
+                isMobile={isMobile} // Pass isMobile prop
               />
             ))}
           </div>
