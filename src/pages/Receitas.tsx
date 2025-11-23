@@ -426,7 +426,7 @@ export default function Receitas() {
               {isMobile ? (
                 <>
                   {oneOffFormContent} {/* Removido o Card aqui */}
-                  <Footer isMobile={isMobile} className="mt-2" /> {/* Alterado mt-4 para mt-2 para mobile */}
+                  <Footer isMobile={isMobile} className="mt-0" /> {/* Alterado mt-2 para mt-0 para mobile */}
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm">
