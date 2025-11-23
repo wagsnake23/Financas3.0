@@ -363,7 +363,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0"> {/* Alterado mt-4 para mt-8 para mobile */}
+          <div className="text-center text-sm mt-8 sm:mt-0 mb-8"> {/* Alterado mt-4 para mt-8 para mobile, sm:mt-0 para desktop */}
             <button
               type="button"
               onClick={() => {
@@ -606,7 +606,7 @@ export default function Auth() {
       isMobile ? "bg-lancamentos-mobile-bg" : "bg-gradient-to-br from-background via-background to-secondary/20"
     )}>
       {isMobile ? (
-        <div className="w-full max-w-md p-4">
+        <div className="w-full max-w-md p-4 flex flex-col">
           {formContent}
           <Footer isMobile={isMobile} className="mt-8" />
         </div>
