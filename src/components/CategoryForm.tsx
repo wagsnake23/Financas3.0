@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette"; // Manter para referência, se necessário
 import { X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
+import { cn } from "@/lib/utils"; // Importar cn
 
 interface CategoryFormProps {
   onAddCategory: (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
@@ -36,6 +38,7 @@ export const CategoryForm = ({
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile(); // Usar o hook useIsMobile
 
   // Load editing data when editingCategory changes
   useEffect(() => {
@@ -117,7 +120,7 @@ export const CategoryForm = ({
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">
+        <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}> {/* Ajuste aqui */}
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
         </h2>
         {editingCategory && (

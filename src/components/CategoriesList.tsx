@@ -119,13 +119,15 @@ interface CategoriesListProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (category: AppCategory) => void;
   maxHeight?: string;
+  isMobile: boolean; // Adicionado a prop isMobile
 }
 
 const CategoriesList = ({ 
   categories, 
   onDeleteCategory, 
   onEditCategory,
-  maxHeight = "600px"
+  maxHeight = "600px",
+  isMobile // Receber a prop isMobile
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -203,7 +205,7 @@ const CategoriesList = ({
     <Card className="p-6 flex flex-col rounded-xl shadow-sm" style={{ height: maxHeight }}>
       <div className="flex-shrink-0 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <h2 className="text-2xl font-bold">Categorias Cadastradas</h2>
+          <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Categorias Cadastradas</h2> {/* Ajuste aqui */}
           
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
