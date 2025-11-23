@@ -54,7 +54,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border rounded-lg hover:border-primary/50 transition-all",
+          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all", // Alterado rounded-lg para rounded-xl
           level > 0 && "bg-muted/30"
         )}
         style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
@@ -88,7 +88,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
 
           {/* Icon Badge - now aligned vertically after the indentation space */}
           <div
-            className="p-2 rounded-xl flex items-center justify-center text-2xl" {/* Changed rounded-lg to rounded-xl */}
+            className="p-2 rounded-xl flex items-center justify-center text-2xl"
             style={{ backgroundColor: effectiveColor }}
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" />
