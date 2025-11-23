@@ -56,14 +56,14 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
         style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
       >
         <div className="flex items-center flex-1">
-          {/* Este div cria o espaço de indentação para o badge do ícone */}
-          <div 
-            style={{ width: `${level * 1.5}rem`, minWidth: `${level * 1.5}rem` }} 
-            className="flex items-center justify-start"
-          >
-            {categoryNumber && (
-              <span className="font-bold text-sm text-muted-foreground mr-1">{categoryNumber}</span>
-            )}
+          {/* Category Number - always at the very left, with dynamic color */}
+          {categoryNumber && (
+            <span className="font-bold text-sm mr-1" style={{ color: effectiveColor }}>{categoryNumber}</span>
+          )}
+
+          {/* Indentation for subcategories, containing the expand/collapse button */}
+          {/* The marginLeft here creates the indentation for the expand button and subsequent content */}
+          <div style={{ marginLeft: `${level * 1.5}rem` }} className="flex items-center">
             {hasSubcategories && (
               <Button
                 variant="ghost"
@@ -71,7 +71,8 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
                 onClick={() => setIsExpanded(prev => !prev)}
                 className={cn(
                   "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
-                  isExpanded && "text-primary"
+                  isExpanded && "text-primary",
+                  "font-bold" // Make the icon bolder
                 )}
               >
                 {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -79,15 +80,15 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
             )}
           </div>
 
-          {/* Badge do ícone - agora alinhado verticalmente após o espaço de indentação */}
+          {/* Icon Badge - positioned after the indentation/expand button */}
           <div
-            className="p-2 rounded-lg flex items-center justify-center text-2xl"
+            className="p-2 rounded-lg flex items-center justify-center text-2xl ml-2" // Added ml-2 for spacing
             style={{ backgroundColor: effectiveColor }}
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" />
           </div>
 
-          {/* Nome da categoria e rótulo de pagamento */}
+          {/* Category Name and Payment Label */}
           <div className="flex-1 flex flex-col ml-2">
             <p className="font-semibold">{category.nome}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
