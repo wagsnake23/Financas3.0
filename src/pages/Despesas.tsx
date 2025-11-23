@@ -131,20 +131,18 @@ export default function Despesas() {
               <Footer isMobile={isMobile} className="mt-0" /> {/* Removido mt-4 para mobile */}
             </>
           ) : (
-            <Card className="p-6 rounded-xl shadow-sm max-w-lg mx-auto"> {/* Adicionado max-w-lg e mx-auto */}
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-                Nova Despesa
-              </h2>
-              {formContent}
-            </Card>
-          )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
+              <Card className="p-6 rounded-xl shadow-sm"> {/* Removido max-w-lg mx-auto */}
+                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
+                  <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                  Nova Despesa
+                </h2>
+                {formContent}
+              </Card>
 
-          {/* (d) Grid contendo os dashboards e resumos (somente isso) */}
-          {!isMobile && (
-            <div className="space-y-6"> {/* Container para todos os dashboards */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <div className="lg:col-span-1">
+              {/* (d) Grid contendo os dashboards e resumos (somente isso) */}
+              <div className="space-y-6"> {/* Container para todos os dashboards */}
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> {/* Ajustado para 1 coluna */}
                   <ExpensesDashboard 
                     expenses={expenses} 
                     expenseInstallments={expenseInstallments} 
@@ -152,13 +150,13 @@ export default function Despesas() {
                     isMobile={isMobile}
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                <TopCategoriesByValue expenses={expenses} categories={allSubcategories} />
-                <MostUsedCategories expenses={expenses} categories={allSubcategories} />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                  <TopCategoriesByValue expenses={expenses} categories={allSubcategories} />
+                  <MostUsedCategories expenses={expenses} categories={allSubcategories} />
+                </div>
+                <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
               </div>
-              <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
             </div>
           )}
         </div>
