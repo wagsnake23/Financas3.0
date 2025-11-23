@@ -370,7 +370,7 @@ export default function Auth() {
                 setViewMode("signup");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block"
+              className="text-primary hover:underline block font-bold" {/* Adicionado font-bold aqui */}
               style={{ marginTop: "20px" }}
             >
               Criar conta
