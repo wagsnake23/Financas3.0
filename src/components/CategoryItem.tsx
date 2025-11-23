@@ -54,7 +54,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all", // Alterado rounded-lg para rounded-xl
+          "flex items-center justify-between p-3 border rounded-2xl hover:border-primary/50 transition-all", // Alterado rounded-xl para rounded-2xl
           level > 0 && "bg-muted/30"
         )}
         style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
