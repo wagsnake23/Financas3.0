@@ -55,39 +55,40 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
         )}
         style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
       >
-        <div className="flex items-center gap-2 flex-1">
-          {level > 0 && <div style={{ width: `${level * 1.5}rem` }} />} 
-
-          {hasSubcategories && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsExpanded(prev => !prev)}
-              className={cn(
-                "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
-                isExpanded && "text-primary"
-              )}
-            >
-              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-            </Button>
-          )}
-
+        <div className="flex items-center flex-1"> {/* Main content wrapper */}
           {categoryNumber && (
             <span className="font-bold text-sm text-muted-foreground mr-1">{categoryNumber}</span>
           )}
 
-          <div 
-            className="p-2 rounded-lg flex items-center justify-center text-2xl"
-            style={{ backgroundColor: effectiveColor }} // Apply effectiveColor to icon badge background
-          >
-            <DynamicIcon name={category.icone} className="h-6 w-6" />
-          </div>
-          <div className="flex-1">
-            <p className="font-semibold">{category.nome}</p>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {paymentLabel && (
-                <span>{paymentLabel}</span>
-              )}
+          {/* This div will contain the indented content */}
+          <div className="flex items-center gap-2" style={{ marginLeft: level > 0 ? `${level * 1.5}rem` : '0' }}>
+            {hasSubcategories && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsExpanded(prev => !prev)}
+                className={cn(
+                  "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
+                  isExpanded && "text-primary"
+                )}
+              >
+                {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </Button>
+            )}
+
+            <div
+              className="p-2 rounded-lg flex items-center justify-center text-2xl"
+              style={{ backgroundColor: effectiveColor }}
+            >
+              <DynamicIcon name={category.icone} className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold">{category.nome}</p>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                {paymentLabel && (
+                  <span>{paymentLabel}</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -126,8 +127,8 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
               onEditCategory={onEditCategory}
               level={level + 1}
               initialExpanded={initialExpanded}
-              allFlatCategories={allFlatCategories} // Pass down to sub-subcategories
-              categoryNumber={`${categoryNumber}.${index + 1}`} // Pass sub-number
+              allFlatCategories={allFlatCategories}
+              categoryNumber={`${categoryNumber}.${index + 1}`}
             />
           ))}
         </div>
@@ -256,8 +257,8 @@ const CategoriesList = ({
                 onDeleteCategory={onDeleteCategory}
                 onEditCategory={onEditCategory}
                 initialExpanded={!!searchTerm.trim()}
-                allFlatCategories={allFlatCategories} // Pass allFlatCategories here
-                categoryNumber={`${index + 1}`} // Pass initial number for root categories
+                allFlatCategories={allFlatCategories}
+                categoryNumber={`${index + 1}`}
               />
             ))}
           </div>
