@@ -264,6 +264,7 @@ const Categories = () => {
                 onDeleteCategory={handleDeleteCategory}
                 onEditCategory={handleEditCategory}
                 isMobile={isMobile} 
+                allFlatCategories={allCategories} // NEW: Pass allCategories here
               />
             </React.Suspense>
           </div>

@@ -20,7 +20,8 @@ interface CategoryItemProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (category: AppCategory) => void;
   level?: number;
-  initialExpanded?: boolean; // NEW PROP: Control initial expansion state
+  initialExpanded?: boolean; // Control initial expansion state
+  allFlatCategories: AppCategory[]; // NEW: Pass all flat categories to find parent color
 }
 
 const getPaymentMethodLabel = (value?: string | null) => {
@@ -29,20 +30,29 @@ const getPaymentMethodLabel = (value?: string | null) => {
   return method?.label || value;
 };
 
-const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, initialExpanded = false }: CategoryItemProps) => {
+const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, initialExpanded = false, allFlatCategories }: CategoryItemProps) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories = category.subCategories && category.subCategories.length > 0;
-  const [isExpanded, setIsExpanded] = useState(initialExpanded); // Initialize with prop
+  const [isExpanded, setIsExpanded] = useState(initialExpanded);
   const isDefault = category.user_id === null;
+
+  // Determine the effective color based on level and parent
+  const effectiveColor = useMemo(() => {
+    if (level > 0 && category.parent_id) {
+      const parent = allFlatCategories.find(cat => cat.id === category.parent_id);
+      return parent?.cor || category.cor; // Use parent's color, fallback to own color
+    }
+    return category.cor; // Use own color for main categories
+  }, [category, level, allFlatCategories]);
 
   return (
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border border-border rounded-lg hover:border-primary/50 transition-all",
+          "flex items-center justify-between p-3 border rounded-lg hover:border-primary/50 transition-all",
           level > 0 && "bg-muted/30"
         )}
-        style={{ borderColor: category.cor, borderWidth: level === 0 ? '1px' : '0.5px' }}
+        style={{ borderColor: effectiveColor, borderWidth: level === 0 ? '1px' : '0.5px' }} // Apply effectiveColor to border
       >
         <div className="flex items-center gap-2 flex-1">
           {level > 0 && <div style={{ width: `${level * 1.5}rem` }} />} 
@@ -51,10 +61,10 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsExpanded(prev => !prev)} // Toggle internal state
+              onClick={() => setIsExpanded(prev => !prev)}
               className={cn(
                 "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
-                isExpanded && "text-primary" // Highlight when expanded
+                isExpanded && "text-primary"
               )}
             >
               {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -63,7 +73,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
 
           <div 
             className="p-2 rounded-lg flex items-center justify-center text-2xl"
-            style={{ backgroundColor: category.cor }}
+            style={{ backgroundColor: effectiveColor }} // Apply effectiveColor to icon badge background
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" />
           </div>
@@ -78,7 +88,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
         </div>
         
         <div className="flex items-center gap-1">
-          {!isDefault && category.parent_id !== null && ( // Apenas subcategorias não padrão podem ser editadas/excluídas
+          {!isDefault && category.parent_id !== null && (
             <Button
               variant="ghost"
               size="icon"
@@ -89,7 +99,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
             </Button>
           )}
           
-          {!isDefault && category.parent_id !== null && ( // Apenas subcategorias não padrão podem ser editadas/excluídas
+          {!isDefault && category.parent_id !== null && (
             <Button
               variant="ghost"
               size="icon"
@@ -101,7 +111,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
           )}
         </div>
       </div>
-      {isExpanded && hasSubcategories && ( // Use internal isExpanded state
+      {isExpanded && hasSubcategories && (
         <div className="space-y-2 mt-2">
           {category.subCategories?.map(subCat => (
             <CategoryItem
@@ -110,7 +120,8 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
               onDeleteCategory={onDeleteCategory}
               onEditCategory={onEditCategory}
               level={level + 1}
-              initialExpanded={initialExpanded} // Pass initialExpanded to subcategories
+              initialExpanded={initialExpanded}
+              allFlatCategories={allFlatCategories} // Pass down to sub-subcategories
             />
           ))}
         </div>
@@ -125,6 +136,7 @@ interface CategoriesListProps {
   onEditCategory: (category: AppCategory) => void;
   maxHeight?: string;
   isMobile: boolean;
+  allFlatCategories: AppCategory[]; // NEW: Receive all flat categories
 }
 
 const CategoriesList = ({ 
@@ -132,7 +144,8 @@ const CategoriesList = ({
   onDeleteCategory, 
   onEditCategory,
   maxHeight = "600px",
-  isMobile
+  isMobile,
+  allFlatCategories // Use the new prop
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -151,15 +164,12 @@ const CategoriesList = ({
 
   const filteredCategories = useMemo(() => {
     if (!searchTerm.trim()) {
-      // Se o campo de busca estiver vazio, retorna apenas as categorias principais
       return categories.filter(cat => cat.parent_id === null);
     }
 
     const term = searchTerm.toLowerCase();
     const categoriesToInclude = new Set<string>();
 
-    // First pass: identify all categories that match the search term directly
-    // and add them and their ancestors to the set of categories to include.
     flatCategories.forEach(cat => {
       if (cat.nome.toLowerCase().includes(term)) {
         let currentCat: AppCategory | undefined = cat;
@@ -170,10 +180,8 @@ const CategoriesList = ({
       }
     });
 
-    // Second pass: filter the original flat list to only include those in our set
     const includedFlatCategories = flatCategories.filter(cat => categoriesToInclude.has(cat.id));
 
-    // Third pass: rebuild the hierarchy from the included flat list
     const buildFilteredHierarchy = (flat: AppCategory[]): HierarchicalCategory[] => {
       const map = new Map<string, HierarchicalCategory>();
       const roots: HierarchicalCategory[] = [];
@@ -193,7 +201,6 @@ const CategoriesList = ({
         }
       });
 
-      // Sort categories within their levels
       const sortNodes = (nodes: HierarchicalCategory[]) => {
         nodes.sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
         nodes.forEach(node => {
@@ -242,8 +249,8 @@ const CategoriesList = ({
                 category={category}
                 onDeleteCategory={onDeleteCategory}
                 onEditCategory={onEditCategory}
-                // If there's a search term, start expanded. Otherwise, start collapsed.
                 initialExpanded={!!searchTerm.trim()}
+                allFlatCategories={allFlatCategories} // Pass allFlatCategories here
               />
             ))}
           </div>
