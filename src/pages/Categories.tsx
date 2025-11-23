@@ -12,6 +12,7 @@ import Loading from "@/components/Loading";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils"; // Importar cn
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -239,8 +240,8 @@ const Categories = () => {
       <Navigation />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"> {/* Alterado para 3 colunas em telas grandes */}
+          <div className="lg:col-span-2"> {/* Formulário ocupa 2/3 da largura em telas grandes */}
             <CategoryForm 
               onAddCategory={handleAddCategory}
               onUpdateCategory={handleUpdateCategory}
@@ -250,7 +251,7 @@ const Categories = () => {
             />
           </div>
 
-          <div>
+          <div className="lg:col-span-1"> {/* Lista de categorias ocupa 1/3 da largura em telas grandes */}
             <React.Suspense fallback={
               <Card className="p-6 flex flex-col rounded-xl shadow-sm">
                 <div className="flex-shrink-0 mb-4">
