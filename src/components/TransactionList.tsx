@@ -387,7 +387,8 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm mt-4",
-        isMobile ? "max-h-[320px] overflow-x-auto overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto"
+        // Removido max-h para mobile para permitir que a tabela se expanda
+        !isMobile && "max-h-[60vh] overflow-x-auto overflow-y-auto" // Mantido para desktop
       )}>
         <Table>
           <TableBody>
