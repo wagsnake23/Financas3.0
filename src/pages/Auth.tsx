@@ -363,14 +363,15 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 pb-20"> {/* Alterado mb-8 para pb-20 */}
+          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center">
             <button
               type="button"
               onClick={() => {
                 setViewMode("signup");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block w-full"
+              className="text-primary hover:underline block"
+              style={{ marginTop: "20px" }}
             >
               Criar conta
             </button>
