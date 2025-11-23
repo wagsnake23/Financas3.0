@@ -363,7 +363,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 mb-8"> {/* Alterado mt-4 para mt-8 para mobile, sm:mt-0 para desktop */}
+          <div className="text-center text-sm mt-8 sm:mt-0 pb-20"> {/* Alterado mb-8 para pb-20 */}
             <button
               type="button"
               onClick={() => {
