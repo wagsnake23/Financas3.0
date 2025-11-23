@@ -300,7 +300,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "px-4")}>
+    <form onSubmit={handleSubmit} className={cn(isMobile ? "space-y-3" : "space-y-4", isMobile && "px-4")}>
       {/* Toggle Avulsa / Recorrente */}
       <div className={cn(isMobile && "mt-0")}> {/* Adicionado mt-0 para mobile */}
         <TransactionTypeToggle
