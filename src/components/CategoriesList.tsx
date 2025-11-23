@@ -145,61 +145,62 @@ const CategoriesList = ({
   }, [categories]);
 
   const filteredCategories = useMemo(() => {
-    if (!searchTerm.trim()) return categories;
-    
+    if (!searchTerm.trim()) return categories; // If no search term, return all hierarchical categories
+
     const term = searchTerm.toLowerCase();
-    const filteredFlat = flatCategories.filter(cat => 
-      cat.nome.toLowerCase().includes(term)
-    );
+    const categoriesToInclude = new Set<string>();
 
-    // Reconstruir a hierarquia para as categorias filtradas
-    const filteredMap = new Map<string, HierarchicalCategory>();
-    filteredFlat.forEach(cat => filteredMap.set(cat.id, { ...cat, subCategories: [] }));
-
-    const rootFiltered: HierarchicalCategory[] = [];
-    filteredFlat.forEach(cat => {
-      if (cat.parent_id && filteredMap.has(cat.parent_id)) {
-        const parent = filteredMap.get(cat.parent_id);
-        if (parent) {
-          // Adicionar subcategoria ao pai, se o pai também estiver filtrado
-          if (!parent.subCategories?.some(sub => sub.id === cat.id)) {
-            parent.subCategories?.push(filteredMap.get(cat.id)!);
-          }
-        }
-      } else if (!cat.parent_id) {
-        // Adicionar categoria raiz se ela estiver filtrada
-        if (!rootFiltered.some(root => root.id === cat.id)) {
-          rootFiltered.push(filteredMap.get(cat.id)!);
+    // First pass: identify all categories that match the search term directly
+    // and add them and their ancestors to the set of categories to include.
+    flatCategories.forEach(cat => {
+      if (cat.nome.toLowerCase().includes(term)) {
+        let currentCat: AppCategory | undefined = cat;
+        while (currentCat && !categoriesToInclude.has(currentCat.id)) {
+          categoriesToInclude.add(currentCat.id);
+          currentCat = flatCategories.find(c => c.id === currentCat?.parent_id);
         }
       }
     });
 
-    // Garantir que as subcategorias sejam adicionadas aos pais corretos
-    rootFiltered.forEach(root => {
-      const processNode = (node: HierarchicalCategory): HierarchicalCategory => {
-        const newNode: HierarchicalCategory = { ...node, subCategories: [] };
-        if (node.subCategories) {
-          node.subCategories.forEach(sub => {
-            if (filteredMap.has(sub.id)) {
-              const processedSub = processNode(sub);
-              newNode.subCategories?.push(processedSub);
-            }
-          });
+    // Second pass: filter the original flat list to only include those in our set
+    const includedFlatCategories = flatCategories.filter(cat => categoriesToInclude.has(cat.id));
+
+    // Third pass: rebuild the hierarchy from the included flat list
+    const buildFilteredHierarchy = (flat: AppCategory[]): HierarchicalCategory[] => {
+      const map = new Map<string, HierarchicalCategory>();
+      const roots: HierarchicalCategory[] = [];
+
+      flat.forEach(cat => {
+        map.set(cat.id, { ...cat, subCategories: [] });
+      });
+
+      flat.forEach(cat => {
+        if (cat.parent_id && map.has(cat.parent_id)) {
+          const parent = map.get(cat.parent_id);
+          if (parent) {
+            parent.subCategories?.push(map.get(cat.id)!);
+          }
+        } else {
+          roots.push(map.get(cat.id)!);
         }
-        return newNode;
+      });
+
+      // Sort categories within their levels
+      const sortNodes = (nodes: HierarchicalCategory[]) => {
+        nodes.sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+        nodes.forEach(node => {
+          if (node.subCategories && node.subCategories.length > 0) {
+            sortNodes(node.subCategories);
+          }
+        });
       };
-      // Limpar e re-adicionar subcategorias para evitar duplicação e garantir ordem
-      root.subCategories = root.subCategories?.filter(sub => filteredMap.has(sub.id)).map(processNode) || [];
-    });
+      sortNodes(roots);
+      return roots;
+    };
 
-    // Filtrar categorias raiz que não têm subcategorias correspondentes no filtro
-    // e que não são elas mesmas o resultado de uma busca
-    const finalFilteredHierarchy = rootFiltered.filter(root => 
-      root.subCategories?.length > 0 || filteredMap.has(root.id)
-    );
+    return buildFilteredHierarchy(includedFlatCategories);
 
-    return finalFilteredHierarchy;
-  }, [categories, searchTerm, flatCategories]);
+  }, [searchTerm, flatCategories, categories]);
 
   return (
     <Card className="p-6 flex flex-col rounded-xl shadow-sm" style={{ height: maxHeight }}>
