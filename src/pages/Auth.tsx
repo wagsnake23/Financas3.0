@@ -351,7 +351,7 @@ export default function Auth() {
           <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </Button>
-          <div className="text-right text-sm mb-8 sm:mb-1"> {/* Alterado mb-4 para mb-8 para mobile */}
+          <div className="text-right text-sm mb-8 sm:mb-1">
             <button
               type="button"
               onClick={() => {
@@ -363,7 +363,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm">
+          <div className="text-center text-sm mt-4 sm:mt-0"> {/* Adicionado mt-4 para mobile, sm:mt-0 para desktop */}
             <button
               type="button"
               onClick={() => {
