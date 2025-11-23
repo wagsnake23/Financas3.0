@@ -351,7 +351,7 @@ export default function Auth() {
           <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </Button>
-          <div className="text-right text-sm mb-4 sm:mb-1">
+          <div className="text-right text-sm mb-8 sm:mb-1"> {/* Alterado mb-4 para mb-8 para mobile */}
             <button
               type="button"
               onClick={() => {
