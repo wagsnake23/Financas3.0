@@ -80,7 +80,7 @@ export const Navigation = () => {
                     end={item.to === "/"}
                     onClick={handleNavClick}
                     className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-                    activeClassName="bg-muted/50 text-foreground font-medium"
+                    activeClassName="bg-soft-blue text-foreground font-medium" {/* Alterado para bg-soft-blue */}
                   >
                     <DynamicIcon name={item.icon} className="h-5 w-5" color={item.color} />
                     <span>{item.label}</span>
