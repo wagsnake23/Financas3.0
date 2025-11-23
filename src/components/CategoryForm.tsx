@@ -11,6 +11,7 @@ import { PAYMENT_METHODS } from "@/data/colorPalette"; // Manter para referênci
 import { X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
 import { cn } from "@/lib/utils"; // Importar cn
+import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 
 interface CategoryFormProps {
   onAddCategory: (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
@@ -120,7 +121,7 @@ export const CategoryForm = ({
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}> {/* Ajuste aqui */}
+        <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
         </h2>
         {editingCategory && (
@@ -147,12 +148,14 @@ export const CategoryForm = ({
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
-              {/* Removido o item "Nenhuma" */}
               {possibleParentCategories
                 .filter(cat => cat.id !== editingCategory?.id && cat.id !== "") 
                 .map((cat) => (
                 <SelectItem key={cat.id} value={cat.id}>
-                  {cat.nome}
+                  <span className="flex items-center gap-2">
+                    <DynamicIcon name={cat.icone} className="h-4 w-4" color={cat.cor} /> {/* Adicionado DynamicIcon com cor */}
+                    {cat.nome}
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
