@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,6 +8,7 @@ import DynamicIcon from "./DynamicIcon";
 import { Search, Pencil, Trash2, ChevronRight, ChevronDown } from "lucide-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card"; // Import Card for CategoriesList
 
 // Helper interface for hierarchical categories
 interface HierarchicalCategory extends AppCategory {
