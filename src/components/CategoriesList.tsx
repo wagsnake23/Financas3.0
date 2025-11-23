@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { AppCategory } from "@/types/finance";
-import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
+import DynamicIcon from "./DynamicIcon";
 import { Search, Pencil, Trash2, ChevronRight, ChevronDown } from "lucide-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ interface CategoryItemProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (category: AppCategory) => void;
   level?: number;
-  forceCollapse?: boolean; // NOVA PROP
+  initialExpanded?: boolean; // NEW PROP: Control initial expansion state
 }
 
 const getPaymentMethodLabel = (value?: string | null) => {
@@ -29,14 +29,11 @@ const getPaymentMethodLabel = (value?: string | null) => {
   return method?.label || value;
 };
 
-const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, forceCollapse = false }: CategoryItemProps) => {
+const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, initialExpanded = false }: CategoryItemProps) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories = category.subCategories && category.subCategories.length > 0;
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(initialExpanded); // Initialize with prop
   const isDefault = category.user_id === null;
-
-  // Se forceCollapse for verdadeiro, garante que a categoria esteja colapsada
-  const currentExpandedState = forceCollapse ? false : isExpanded;
 
   return (
     <>
@@ -54,19 +51,21 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, f
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="h-6 w-6 text-muted-foreground"
-              disabled={forceCollapse} // Desabilita o botão de expandir/colapsar se forceCollapse for true
+              onClick={() => setIsExpanded(prev => !prev)} // Toggle internal state
+              className={cn(
+                "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
+                isExpanded && "text-primary" // Highlight when expanded
+              )}
             >
-              {currentExpandedState ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
             </Button>
           )}
 
           <div 
-            className="p-2 rounded-lg flex items-center justify-center text-2xl" // Garantindo rounded-lg
+            className="p-2 rounded-lg flex items-center justify-center text-2xl"
             style={{ backgroundColor: category.cor }}
           >
-            <DynamicIcon name={category.icone} className="h-6 w-6" /> {/* Usar DynamicIcon */}
+            <DynamicIcon name={category.icone} className="h-6 w-6" />
           </div>
           <div className="flex-1">
             <p className="font-semibold">{category.nome}</p>
@@ -102,7 +101,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, f
           )}
         </div>
       </div>
-      {currentExpandedState && hasSubcategories && ( // Usa currentExpandedState
+      {isExpanded && hasSubcategories && ( // Use internal isExpanded state
         <div className="space-y-2 mt-2">
           {category.subCategories?.map(subCat => (
             <CategoryItem
@@ -111,7 +110,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, f
               onDeleteCategory={onDeleteCategory}
               onEditCategory={onEditCategory}
               level={level + 1}
-              forceCollapse={forceCollapse} // Passa a prop para as subcategorias
+              initialExpanded={initialExpanded} // Pass initialExpanded to subcategories
             />
           ))}
         </div>
@@ -125,7 +124,7 @@ interface CategoriesListProps {
   onDeleteCategory: (id: string) => void;
   onEditCategory: (category: AppCategory) => void;
   maxHeight?: string;
-  isMobile: boolean; // Adicionado a prop isMobile
+  isMobile: boolean;
 }
 
 const CategoriesList = ({ 
@@ -133,7 +132,7 @@ const CategoriesList = ({
   onDeleteCategory, 
   onEditCategory,
   maxHeight = "600px",
-  isMobile // Receber a prop isMobile
+  isMobile
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -215,7 +214,7 @@ const CategoriesList = ({
     <Card className="p-6 flex flex-col rounded-xl shadow-sm" style={{ height: maxHeight }}>
       <div className="flex-shrink-0 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Categorias Cadastradas</h2> {/* Ajuste aqui */}
+          <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Categorias Cadastradas</h2>
           
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -224,7 +223,7 @@ const CategoriesList = ({
               placeholder="Buscar categoria..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 w-full rounded-xl" // Adicionado rounded-xl
+              className="pl-9 w-full rounded-xl"
             />
           </div>
         </div>
@@ -243,7 +242,8 @@ const CategoriesList = ({
                 category={category}
                 onDeleteCategory={onDeleteCategory}
                 onEditCategory={onEditCategory}
-                forceCollapse={!searchTerm.trim()} // Passa a prop forceCollapse
+                // If there's a search term, start expanded. Otherwise, start collapsed.
+                initialExpanded={!!searchTerm.trim()}
               />
             ))}
           </div>
