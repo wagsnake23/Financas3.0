@@ -302,12 +302,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "px-4")}>
       {/* Toggle Avulsa / Recorrente */}
-      <TransactionTypeToggle
-        isRecurring={isRecurring}
-        onSelectAvulsa={handleSelectAvulsa}
-        onSelectRecorrente={handleSelectRecorrente}
-        isMobile={isMobile}
-      />
+      <div className={cn(isMobile && "mt-0")}> {/* Adicionado mt-0 para mobile */}
+        <TransactionTypeToggle
+          isRecurring={isRecurring}
+          onSelectAvulsa={handleSelectAvulsa}
+          onSelectRecorrente={handleSelectRecorrente}
+          isMobile={isMobile}
+        />
+      </div>
 
       <div>
         <Label htmlFor="subcategoria" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
