@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid } from "@/lib/utils";
+import { cn, isValidUuid, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { Tables } from "@/integrations/supabase/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -168,7 +168,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         }`}
       >
         {transaction.type === "income" ? "+" : "-"}
-        R$ {transaction.amount.toFixed(2)}
+        {formatCurrency(transaction.amount)}
       </TableCell>
 
       {/* TOGGLE */}
