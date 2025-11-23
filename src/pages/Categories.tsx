@@ -263,7 +263,7 @@ const Categories = () => {
                 categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}
                 onEditCategory={handleEditCategory}
-                isMobile={isMobile} {/* Passando a prop isMobile */}
+                isMobile={isMobile} 
               />
             </React.Suspense>
           </div>
