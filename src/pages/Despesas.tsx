@@ -131,7 +131,7 @@ export default function Despesas() {
               <Footer isMobile={isMobile} className="mt-0" /> {/* Removido mt-4 para mobile */}
             </>
           ) : (
-            <Card className="p-6 rounded-xl shadow-sm">
+            <Card className="p-6 rounded-xl shadow-sm max-w-lg mx-auto"> {/* Adicionado max-w-lg e mx-auto */}
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
                 <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
                 Nova Despesa
