@@ -40,7 +40,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             "flex-1 rounded-xl flex items-center justify-center border",
             "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-            isMobile && "h-8 py-0.5 text-xs" // Diminuir altura e padding para mobile, e fonte
+            isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
           )}
         >
           <DynamicIcon 
@@ -57,7 +57,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             "flex-1 rounded-xl flex items-center justify-center border",
             "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-            isMobile && "h-8 py-0.5 text-xs" // Diminuir altura e padding para mobile, e fonte
+            isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
           )}
         >
           <DynamicIcon 
