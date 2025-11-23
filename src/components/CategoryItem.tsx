@@ -88,7 +88,7 @@ const CategoryItem = ({ category, onDeleteCategory, onEditCategory, level = 0, i
 
           {/* Icon Badge - now aligned vertically after the indentation space */}
           <div
-            className="p-2 rounded-lg flex items-center justify-center text-2xl"
+            className="p-2 rounded-xl flex items-center justify-center text-2xl" {/* Changed rounded-lg to rounded-xl */}
             style={{ backgroundColor: effectiveColor }}
           >
             <DynamicIcon name={category.icone} className="h-6 w-6" />
