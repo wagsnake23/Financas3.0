@@ -123,7 +123,7 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center", isMobile ? "py-4 px-4 justify-between" : "justify-between")}> {/* Ajustado para py-4 px-4 e justify-between */}
+            <DialogHeader className={cn("flex flex-row items-center", isMobile ? "py-6 px-4 justify-between" : "justify-between")}> {/* Ajustado para py-6 px-4 e justify-between */}
               <DialogTitle className={cn("text-xl text-left", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
