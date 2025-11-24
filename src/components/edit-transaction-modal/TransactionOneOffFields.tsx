@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtc } from "@/lib/utils"; // Importar zonedTimeToUtc de utils
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -17,7 +17,7 @@ import { StatusToggleButton } from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
-import { zonedTimeToUtc } from 'date-fns-tz'; // NOVO: Importar zonedTimeToUtc
+// Removido: import { zonedTimeToUtc } from 'date-fns-tz'; // Removido importação direta
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
