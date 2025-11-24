@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
-import { ScrollArea } from "@/components/ui/scroll-area"; // Importar ScrollArea
+// Removido: import { ScrollArea } from "@/components/ui/scroll-area"; // Importar ScrollArea
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
@@ -391,11 +391,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         onSubmit={handleSubmit}
         className={cn("flex flex-col h-full", isMobile ? "space-y-2" : "space-y-2")}
       >
-        {/* Substituído o div flex-grow por ScrollArea */}
-        <ScrollArea className={cn(
-          isMobile ? "h-[400px]" : "h-[550px]", // Altura ajustada para mobile
-          "pr-4"
-        )}>
+        {/* Removido o componente ScrollArea */}
+        <div className="flex-grow"> {/* Adicionado um div flex-grow para envolver os campos */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -443,7 +440,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             cartoes={cartoes}
             refetchCartoes={refetchCartoes}
           />
-        </ScrollArea>
+        </div>
 
         <TransactionEditActions
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
