@@ -167,12 +167,14 @@ All colors MUST be HSL.
 
 .dialog-lg-close-button button[data-radix-dialog-close] svg {
   height: 1.25rem; /* h-5 */
-  width: 1.25rem; /* w-5 */
+  width: 1.25rem;
 }
 
-/* NOVO: Esconder o botão de fechar padrão em mobile quando a classe personalizada está presente */
+/* Ajuste para o botão de fechar padrão em mobile */
 @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller screens */
   .dialog-lg-close-button button[data-radix-dialog-close] {
-    display: none;
+    top: 1.5rem; /* Move para baixo */
+    right: 1.5rem; /* Move para a direita */
+    display: flex; /* Garante que o botão seja visível */
   }
 }
