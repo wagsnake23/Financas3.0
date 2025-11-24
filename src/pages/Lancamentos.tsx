@@ -123,7 +123,7 @@ const Lancamentos = () => {
             )}
           >
             <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6")}> {/* Ajustado para pt-6 para mobile */}
-              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg ml-auto")}> {/* Adicionado ml-auto aqui */}
                 ✏️ Editar Lançamento
               </DialogTitle>
               {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
