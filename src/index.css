@@ -170,49 +170,7 @@ All colors MUST be HSL.
 @media (max-width: 767px) {
   .dialog-lg-close-button button[data-radix-dialog-close] {
     position: absolute !important;
-    top: 3.5rem !important;
-    right: 1rem !important;
-  }
-
-  /* NOVO: Regras para transformar o modal em full-screen no mobile */
-  .dialog-mobile-fullscreen {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important; /* Alterado para 0 */
-    overflow-y: auto !important;
-    box-shadow: none !important;
-    background: hsl(var(--background)) !important;
-    transform: none !important; /* remove a centralização do Radix */
-  }
-
-  /* NOVO: Regras para tornar o overlay transparente no mobile */
-  .dialog-mobile-overlay {
-    background: transparent !important;
-  }
-
-  /* NOVO: Ajuste para o cabeçalho do formulário no mobile */
-  .form-header {
-    padding: 1rem 1.2rem 0.5rem 1.2rem !important; /* Alterado para 1rem 1.2rem 0.5rem 1.2rem */
-    margin-bottom: 1rem !important; /* reduz espaço abaixo do título */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  /* NOVO: Ajuste para o título do formulário no mobile */
-  .form-title {
-    margin-top: 0.4rem !important;
-  }
-
-  /* NOVO: Ajuste para os botões de ação no mobile */
-  .action-buttons {
-    margin-top: 0.5rem !important; /* reduz o espaço */
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
+    top: 1rem !important; /* Revertido para o padrão */
+    right: 1rem !important; /* Revertido para o padrão */
   }
 }

@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogOverlay, // Importar DialogOverlay
+  // Removido: DialogOverlay, // Importar DialogOverlay
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -114,27 +114,22 @@ const Lancamentos = () => {
 
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogOverlay className="dialog-mobile-overlay" /> {/* NOVO: Adicionado DialogOverlay com a classe */}
+          {/* Removido: <DialogOverlay className="dialog-mobile-overlay" /> */}
           <DialogContent 
             className={cn(
-              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6", // NOVO: Aplicado dialog-mobile-fullscreen condicionalmente
+              "w-full dialog-lg-close-button sm:max-w-[600px] p-6", // Revertido para o comportamento padrão do shadcn/ui
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
             <DialogHeader
-              className={cn(
-                isMobile
-                  ? "form-header"
-                  : "flex flex-row items-center justify-between"
-              )}
+              className="flex flex-row items-center justify-between" // Revertido para o comportamento padrão do desktop
             >
-              <DialogTitle className={cn(isMobile ? "form-title text-lg" : "text-xl")}>
+              <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
+              {/* O botão de fechar padrão do shadcn/ui será renderizado automaticamente pelo DialogContent */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
