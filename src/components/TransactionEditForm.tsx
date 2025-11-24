@@ -386,7 +386,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-4")}> {/* Alterado px-0 para px-4 aqui */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-4 max-w-sm mx-auto")}> {/* Alterado px-0 para px-4 aqui */}
         <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4 pb-4")}> {/* Removido max-h e adicionado flex-grow, adicionado pb-4 */}
           <TransactionOneOffFields
             amount={amount}
