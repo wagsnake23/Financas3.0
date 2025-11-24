@@ -119,7 +119,7 @@ const Lancamentos = () => {
             className={cn(
               "dialog-lg-close-button",
               isMobile
-                ? "fixed inset-0 w-full h-[100vh] max-h-[100vh] max-w-[100vw] rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0 p-3 pt-14"
+                ? "fixed inset-0 m-0 w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0"
                 : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
@@ -129,10 +129,10 @@ const Lancamentos = () => {
             <DialogHeader
               className={cn(
                 "flex items-center justify-between",
-                isMobile && "fixed top-0 left-0 w-full bg-background z-50 px-4 py-3 shadow-sm border-b"
+                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm"
               )}
             >
-              <DialogTitle className="text-lg font-semibold">
+              <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
                 ✏️ Editar Lançamento
               </DialogTitle>
               {/* O botão de fechar padrão do shadcn/ui será renderizado automaticamente pelo DialogContent */}
