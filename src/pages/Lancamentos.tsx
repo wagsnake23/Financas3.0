@@ -140,6 +140,7 @@ const Lancamentos = () => {
                   isMobile={isMobile}
                   cartoes={cartoes} // NOVO: Passando cartoes
                   refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
+                  className={cn(isMobile && "mt-4")} {/* Adicionado mt-4 para mobile */}
                 />
               </>
             )}
