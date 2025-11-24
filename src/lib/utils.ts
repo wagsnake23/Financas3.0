@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { formatInTimeZone } from 'date-fns-tz'; // Manter esta importação
-import { zonedTimeToUtc } from 'date-fns-tz/esm'; // Importar de 'date-fns-tz/esm'
+import { formatInTimeZone, zonedTimeToUtc } from 'date-fns-tz'; // Importar ambos diretamente do pacote raiz
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,7 +35,7 @@ export const getBorderClass = ({ isValid, isInvalid }: GetBorderClassProps): str
   return cn(
     borderClass,
     "focus-visible:ring-0 focus-visible:outline-none focus-visible:border-success",
-    "focus:ring-0 focus:outline-none focus:border-success" // For non-focus-visible elements
+    "focus:ring-0 focus:outline-none focus:focus-visible:border-success" // For non-focus-visible elements
   );
 };
 
