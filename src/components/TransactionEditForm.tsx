@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
+import { Footer } from "./Footer"; // Importar o Footer
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
@@ -443,7 +444,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
+          className={cn(isMobile && "mt-0")} // Remover mt-6 em mobile
         />
+
+        {isMobile && <Footer isMobile={isMobile} className="mt-4" />} {/* Adicionar Footer aqui para mobile */}
       </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}

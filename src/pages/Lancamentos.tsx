@@ -102,7 +102,7 @@ const Lancamentos = () => {
             onToggleTransactionStatus={handleOptimisticToggleStatus} // NOVO: Passar a função
           />
         </main>
-        <Footer isMobile={isMobile} />
+        {/* REMOVIDO: <Footer isMobile={isMobile} /> */}
 
         {/* Loading Overlay - aparece sobre a tela atual enquanto o modal de edição carrega */}
         {isEditModalOpen && loadingEditData && (
