@@ -173,4 +173,23 @@ All colors MUST be HSL.
     top: 3.5rem !important;
     right: 1rem !important;
   }
+
+  /* NOVO: Regras para transformar o modal em full-screen no mobile */
+  .dialog-mobile-fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    padding: 1.5rem !important;
+    overflow-y: auto !important;
+    box-shadow: none !important;
+    background: hsl(var(--background)) !important;
+  }
+
+  /* NOVO: Regras para tornar o overlay transparente no mobile */
+  .dialog-mobile-overlay {
+    background: transparent !important;
+  }
 }

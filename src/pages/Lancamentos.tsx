@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogOverlay, // Importar DialogOverlay
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -113,10 +114,11 @@ const Lancamentos = () => {
 
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+          <DialogOverlay className="dialog-mobile-overlay" /> {/* NOVO: Adicionado DialogOverlay com a classe */}
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "max-w-sm pt-16 px-4 pb-4 mt-8" : "sm:max-w-[600px] p-6", // Ajustado pt e mt para mobile
+              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6", // NOVO: Aplicado dialog-mobile-fullscreen condicionalmente
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
