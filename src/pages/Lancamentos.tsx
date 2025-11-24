@@ -116,13 +116,13 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              "sm:max-w-[600px] p-6", // Aplicado para mobile e desktop
+              isMobile ? "max-w-[98vw] pt-[5.5rem] px-4 pb-4" : "sm:max-w-[600px] p-6", // Ajustado padding-top para mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4 pt-8")}> {/* Alterado pt-8 para py-4 */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4 pt-8")}>
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
@@ -140,7 +140,6 @@ const Lancamentos = () => {
                   isMobile={isMobile}
                   cartoes={cartoes} // NOVO: Passando cartoes
                   refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
-                  className={cn(isMobile && "mt-4")} 
                 />
               </>
             )}
