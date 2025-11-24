@@ -129,10 +129,11 @@ const Lancamentos = () => {
             <DialogHeader
               className={cn(
                 "flex items-center justify-between",
-                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm"
+                isMobile &&
+                  "sticky top-0 z-50 bg-background px-4 py-3 shadow-sm border-b"
               )}
             >
-              <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
+              <DialogTitle className="text-lg font-semibold">
                 ✏️ Editar Lançamento
               </DialogTitle>
               {/* O botão de fechar padrão do shadcn/ui será renderizado automaticamente pelo DialogContent */}
