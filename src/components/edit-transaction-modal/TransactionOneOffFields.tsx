@@ -14,6 +14,7 @@ import { AppCategory } from "@/types/finance";
 import { Database } from "@/integrations/supabase/types";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { StatusToggleButton } from "@/components/StatusToggleButton";
+import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -42,6 +43,8 @@ interface TransactionOneOffFieldsProps {
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; // FIX: Adicionado setValidationErrors
   paidAtTimestamp: string | null; // NOVO: Adicionado paidAtTimestamp
 }
+
+const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
   amount,
@@ -189,7 +192,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               <Input
                 id="paidAt"
                 type="text"
-                value={format(new Date(paidAtTimestamp), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                value={paidAtTimestamp ? formatInTimeZone(new Date(paidAtTimestamp), TARGET_TIMEZONE, "dd/MM/yyyy HH:mm", { locale: ptBR }) : ''}
                 readOnly
                 disabled
                 className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}

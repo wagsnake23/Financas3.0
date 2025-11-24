@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getDate, format } from "date-fns"; // Importar format
+import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 
@@ -26,6 +27,7 @@ const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();

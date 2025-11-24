@@ -7,7 +7,7 @@ import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
 import { isValidUuid } from "@/lib/utils";
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
-// Removido: import { useIsMobile } from "@/hooks/use-mobile"; // Não é mais necessário aqui para toastDuration
+import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -24,6 +24,7 @@ interface UseTransactionMutationsProps {
 }
 
 const RECURRING_INSTALLMENTS_COUNT = 120; // Definir aqui também para consistência
+const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const useTransactionMutations = ({
   user,
@@ -357,7 +358,7 @@ export const useTransactionMutations = ({
           const newValorParcela = updatedTransaction.amount;
           const newVencimento = updatedTransaction.date;
           const newPagoStatus = updatedTransaction.status === "Recebida";
-          const newPagoDate = newPagoStatus ? new Date().toISOString() : null;
+          const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // NOVO: Usa formatInTimeZone
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
@@ -472,12 +473,12 @@ export const useTransactionMutations = ({
   const handleOptimisticToggleStatus = useCallback(
     async (id: string, type: TransactionType, newStatus: ReceitaStatus) => {
       if (!user) {
-        toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
+        toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration, style: toastErrorStyle });
         return;
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
-      const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss"); // NOVO: Captura o timestamp atual
+      const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"); // NOVO: Captura o timestamp atual em UTC-3
 
       // 1. Optimistically update the UI
       if (type === "income") {

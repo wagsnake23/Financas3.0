@@ -17,6 +17,7 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -51,6 +52,7 @@ const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const TransactionList = ({
   transactions, 
@@ -209,7 +211,7 @@ export const TransactionList = ({
         .from("despesas_parcelas")
         .update({
           pago: true,
-          data_pagamento: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+          data_pagamento: formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"), // NOVO: Usa formatInTimeZone
         })
         .in("id", installmentIdsToUpdate);
 

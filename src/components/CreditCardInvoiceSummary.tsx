@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
 import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { Button } from "@/components/ui/button"; // Importar Button
+import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 interface CreditCardInvoiceSummaryProps {
   totalPaid: number;
@@ -17,6 +18,8 @@ interface CreditCardInvoiceSummaryProps {
   loadingPayInvoice: boolean;
   disablePayInvoiceButton: boolean;
 }
+
+const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> = ({
   totalPaid,
