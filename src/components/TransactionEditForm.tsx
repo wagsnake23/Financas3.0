@@ -393,7 +393,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       >
         {/* Substituído o div flex-grow por ScrollArea */}
         <ScrollArea className={cn(
-          isMobile ? "h-[calc(100vh-350px)]" : "h-[400px]", // Altura ajustada para mobile
+          isMobile ? "h-[calc(100vh-420px)]" : "h-[400px]", // Altura ajustada para mobile
           "pr-4"
         )}>
           <TransactionOneOffFields
