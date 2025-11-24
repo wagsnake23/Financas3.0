@@ -159,18 +159,17 @@ All colors MUST be HSL.
 
 /* Estilos para o botão de fechar do modal de edição de lançamentos */
 .dialog-lg-close-button button[data-radix-dialog-close] {
+  position: absolute;
+  right: 1rem;
+  top: 5rem; /* Desktop */
   height: 2.25rem; /* h-9 */
   width: 2.25rem; /* w-9 */
-  top: 1rem; /* Ajusta a posição para compensar o tamanho maior */
-  right: 1rem; /* Ajusta a posição para compensar o tamanho maior */
   z-index: 50; /* Garante que o botão esteja acima de outros elementos */
 }
 
 /* Ajuste para o botão de fechar padrão em mobile */
 @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller screens */
   .dialog-lg-close-button button[data-radix-dialog-close] {
-    /* Removido: display: none; */ /* Oculta o botão de fechar padrão em mobile */
-    top: 8rem; /* Aumentado o recuo do topo para 8rem */
-    right: 1rem;
+    top: 6rem; /* Mobile */
   }
 }
