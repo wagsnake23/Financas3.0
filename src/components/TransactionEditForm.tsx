@@ -437,20 +437,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           />
         </div>
 
-        {isMobile ? (
-          <footer className="mt-8 pb-8 sticky bottom-0 bg-background z-10 shadow-md"> {/* Tailwind for form-footer */}
-            <div className="flex gap-4 justify-center"> {/* Tailwind for action-buttons */}
-              <TransactionEditActions
-                onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-                onSave={handleSubmit}
-                onCancel={onCancelEdit}
-                loading={loading || isFetchingOptions}
-                isMobile={isMobile}
-                isRecurringTransaction={isRecurringTransaction}
-              />
-            </div>
-          </footer>
-        ) : (
+        <div className={cn(isMobile && "action-buttons")}> {/* Aplicar action-buttons aqui */}
           <TransactionEditActions
             onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
             onSave={handleSubmit}
@@ -459,12 +446,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             isMobile={isMobile}
             isRecurringTransaction={isRecurringTransaction}
           />
-        )}
+        </div>
 
-        {/* Removido o Footer condicional para mobile */}
-      </form>
-
-      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
+        {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
         <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>

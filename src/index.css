@@ -188,7 +188,7 @@ All colors MUST be HSL.
 
     margin: 0 !important;
     padding: 1.5rem !important;
-    padding-bottom: 4.5rem !important; /* Adicionado padding extra no final */
+    padding-bottom: 2.5rem !important; /* Ajustado padding extra no final */
 
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -203,10 +203,52 @@ All colors MUST be HSL.
   .dialog-mobile-overlay {
     background: transparent !important;
   }
+
+  /* NOVO: Estilos para o cabeçalho do formulário no mobile */
+  .form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 3rem; /* desce mais o título */
+    margin-bottom: 1.5rem;
+  }
+
+  .form-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .close-form-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: hsl(var(--destructive));
+    cursor: pointer;
+  }
+
+  /* NOVO: Estilos para os botões de ação no mobile */
+  .action-buttons {
+    margin-top: 1.5rem; /* aproxima dos campos */
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
 }
 
 @media (min-width: 768px) {
   .dialog-mobile-fullscreen {
     padding-bottom: 1.5rem !important; /* volta ao normal no desktop (p-6) */
+  }
+
+  .form-header {
+    padding-top: 1rem !important; /* volta ao normal no desktop */
+    margin-bottom: 1.5rem !important; /* Mantém o espaçamento padrão do desktop */
+  }
+
+  .action-buttons {
+    margin-top: 0 !important; /* Remove a margem superior no desktop */
+    display: flex; /* Garante que continue flex no desktop */
+    justify-content: flex-end !important; /* Alinha à direita no desktop */
+    gap: 0.5rem !important; /* Ajusta o gap para desktop */
   }
 }

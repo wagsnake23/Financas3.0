@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogOverlay, // Importar DialogOverlay
+  DialogClose, // Importar DialogClose
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -124,14 +125,15 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn(
-              "flex flex-row items-center justify-between", // Base classes for alignment
-              isMobile ? "pt-8 mb-6" : "sm:pt-8" // Mobile specific padding and margin-bottom, desktop default
-            )}>
-              <DialogTitle className={cn("text-xl", isMobile && "text-[1.4rem] font-semibold")}> {/* Apply mobile font styles directly */}
+            <DialogHeader className={cn(isMobile && "form-header")}> {/* Aplicar form-header aqui */}
+              <DialogTitle className={cn("text-xl", isMobile && "form-title")}> {/* Aplicar form-title aqui */}
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {/* The DialogClose button is rendered by DialogContent, and its styling is handled by CSS */}
+              {isMobile && ( // Renderizar o botão de fechar apenas no mobile
+                <DialogClose asChild>
+                  <button className="close-form-btn">✕</button>
+                </DialogClose>
+              )}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
