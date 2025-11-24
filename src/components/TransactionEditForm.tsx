@@ -449,7 +449,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "max-w-xs mx-auto px-3 pt-1 pb-4 mt-2")} // Alterado pb-3 para pb-4
+          className={cn(isMobile && "max-w-xs mx-auto px-3 pt-1 pb-8 mt-2")} // Alterado pb-4 para pb-8
         />
 
         {/* Removido o Footer condicional para mobile */}
