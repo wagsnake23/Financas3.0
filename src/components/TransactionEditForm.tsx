@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Transaction, TransactionType, AppCategory } from "@/types/finance";
 import { toast } from "sonner";
-import DynamicIcon from "@/components/DynamicIcon";
-import { Transaction, AppCategory, TransactionType } from "@/types/finance";
+import DynamicIcon from "./DynamicIcon";
 import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -392,7 +396,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         className={cn("flex flex-col h-full", isMobile && "space-y-0")} // Alterado space-y-2 para space-y-0
       >
         {/* Removido o componente ScrollArea */}
-        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-3")}> {/* Alterado max-w-sm para max-w-xs e p-4 para p-3 */}
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-3 pt-4")}> {/* Adicionado pt-4 para mobile */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
