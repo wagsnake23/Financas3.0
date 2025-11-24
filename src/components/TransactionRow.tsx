@@ -201,22 +201,24 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         </Button>
       </TableCell>
 
-      {/* AÇÕES */}
-      <TableCell className={cn("py-2 px-2 text-right", isMobile ? "min-w-[40px]" : "min-w-[50px]")}>
-        <div className="flex justify-end gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={(e) => {
-              e.stopPropagation(); // Impede que o clique na linha seja acionado
-              onEditTransaction(transaction);
-            }}
-          >
-            <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
-          </Button>
-        </div>
-      </TableCell>
+      {/* AÇÕES - Ocultado em mobile */}
+      {!isMobile && (
+        <TableCell className={cn("py-2 px-2 text-right", "min-w-[50px]")}>
+          <div className="flex justify-end gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={(e) => {
+                e.stopPropagation(); // Impede que o clique na linha seja acionado
+                onEditTransaction(transaction);
+              }}
+            >
+              <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
+            </Button>
+          </div>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
