@@ -42,9 +42,4 @@ export const getBorderClass = ({ isValid, isInvalid }: GetBorderClassProps): str
 export const TARGET_TIMEZONE = 'America/Sao_Paulo'; // Fuso horário UTC-3 (Brasília)
 export { formatInTimeZone }; // Exportar apenas formatInTimeZone
 
-// Função de fallback para zonedTimeToUtc
-export function zonedTimeToUtcFallback(dateString: string, timeZone: string): Date {
-  return new Date(
-    new Date(dateString).toLocaleString("en-US", { timeZone })
-  );
-}
+// Função de fallback para zonedTimeToUtc - REMOVIDA
