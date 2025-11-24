@@ -4,7 +4,7 @@ import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
-import { useLancamentosLogic } => "@/hooks/useLancamentosLogic";
+import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
