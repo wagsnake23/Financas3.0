@@ -385,7 +385,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col", isMobile && "space-y-3 px-0")}> {/* Adicionado flex flex-col aqui */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-0")}> {/* Adicionado h-full aqui */}
         <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4")}> {/* Removido max-h e adicionado flex-grow */}
           <TransactionOneOffFields
             amount={amount}
@@ -439,7 +439,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         <TransactionEditActions
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
           onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
-          onCancel={onCancelEdit}
+          onCancel={isMobile ? undefined : onCancelEdit}
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
