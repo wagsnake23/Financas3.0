@@ -117,9 +117,9 @@ const Lancamentos = () => {
           {/* Removido: <DialogOverlay className="dialog-mobile-overlay" /> */}
           <DialogContent 
             className={cn(
-              "w-full dialog-lg-close-button",
+              "dialog-lg-close-button",
               isMobile
-                ? "fixed inset-0 w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 rounded-none overflow-y-auto bg-background"
+                ? "fixed inset-0 m-0 w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0"
                 : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
