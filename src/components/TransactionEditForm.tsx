@@ -447,7 +447,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           className={cn()} // Removido classes condicionais para mobile
         />
 
-        {isMobile && <Footer isMobile={isMobile} className="mt-4" />} {/* Adicionar Footer aqui para mobile */}
+        {/* Removido o Footer condicional para mobile */}
       </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
