@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { formatInTimeZone } from 'date-fns-tz'; // Removido zonedTimeToUtc
+import { formatInTimeZone, zonedTimeToUtc } from 'date-fns-tz'; // Importar zonedTimeToUtc
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -40,11 +40,4 @@ export const getBorderClass = ({ isValid, isInvalid }: GetBorderClassProps): str
 };
 
 export const TARGET_TIMEZONE = 'America/Sao_Paulo'; // Fuso horário UTC-3 (Brasília)
-export { formatInTimeZone }; // Exportar apenas formatInTimeZone
-
-// Função de fallback para zonedTimeToUtc
-export function zonedTimeToUtcFallback(dateString: string, timeZone: string): Date {
-  return new Date(
-    new Date(dateString).toLocaleString("en-US", { timeZone })
-  );
-}
+export { formatInTimeZone, zonedTimeToUtc }; // Exportar formatInTimeZone e zonedTimeToUtc
