@@ -45,6 +45,7 @@ interface TransactionOneOffFieldsProps {
   validationErrors: Record<string, boolean>; // NOVO: Adicionado validationErrors
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; // FIX: Adicionado setValidationErrors
   paidAtTimestamp: string | null; // NOVO: Adicionado paidAtTimestamp
+  setPaidAtTimestamp: React.Dispatch<React.SetStateAction<string | null>>; // FIX: Adicionado setPaidAtTimestamp
   // NOVO: Props de forma de pagamento e cartão
   formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
   setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
@@ -78,6 +79,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   validationErrors, // NOVO
   setValidationErrors, // FIX: Desestruturado setValidationErrors
   paidAtTimestamp, // NOVO
+  setPaidAtTimestamp, // FIX: Desestruturado setPaidAtTimestamp
   // NOVO: Props de forma de pagamento e cartão
   formaPagamento,
   setFormaPagamento,
