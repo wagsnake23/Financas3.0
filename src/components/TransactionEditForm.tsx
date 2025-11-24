@@ -9,16 +9,6 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 
@@ -38,15 +28,20 @@ interface TransactionEditFormProps {
     saveScope: SaveScope // Adicionado saveScope
   ) => void;
   onCancelEdit: () => void;
-  onDeleteTransaction: (
-    id: string,
-    type: TransactionType,
-    deleteScope: DeleteScope
-  ) => void;
+  // REMOVIDO: onDeleteTransaction: (id: string, type: TransactionType, deleteScope: DeleteScope) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[]; // NOVO: Adicionado cartoes
   refetchCartoes: () => void; // NOVO: Adicionado refetchCartoes
   isMobile: boolean;
+  // NOVO: Props para o fluxo de exclusão (agora vêm do pai)
+  isFetchingDeleteOptions: boolean;
+  handleTriggerDeleteConfirmation: () => void;
+  // NOVO: Props para o fluxo de salvamento
+  showSaveOptionsDialog: boolean;
+  setShowSaveOptionsDialog: (show: boolean) => void;
+  selectedSaveScope: SaveScope;
+  setSelectedSaveScope: (scope: SaveScope) => void;
+  handleConfirmSaveAction: (scope: SaveScope) => void; // Nova prop para confirmar o salvamento
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -62,11 +57,20 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   editingTransaction,
   onUpdateTransaction,
   onCancelEdit,
-  onDeleteTransaction,
+  // REMOVIDO: onDeleteTransaction,
   allCategories,
   cartoes, // NOVO
   refetchCartoes, // NOVO
   isMobile,
+  // NOVO: Props para o fluxo de exclusão
+  isFetchingDeleteOptions,
+  handleTriggerDeleteConfirmation,
+  // NOVO: Props para o fluxo de salvamento
+  showSaveOptionsDialog,
+  setShowSaveOptionsDialog,
+  selectedSaveScope,
+  setSelectedSaveScope,
+  handleConfirmSaveAction, // Nova prop
 }) => {
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -77,30 +81,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
-  const [paidAtTimestamp, setPaidAtTimestamp] = useState<string | null>(null); // NOVO ESTADO
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+  const [paidAtTimestamp, setPaidAtTimestamp] = useState<string | null>(null);
 
   // NOVO: Estados para forma de pagamento e cartão
   const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
-  // Estados para os diálogos de confirmação
-  const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = useState(false);
-  const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
-
-  const [showSaveOptionsDialog, setShowSaveOptionsDialog] = useState(false); // NOVO ESTADO
-  const [selectedSaveScope, setSelectedSaveScope] = useState<SaveScope>("thisMonth"); // NOVO ESTADO
+  // REMOVIDO: Estados para os diálogos de confirmação de exclusão
+  // REMOVIDO: const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
+  // REMOVIDO: const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = useState(false);
+  // REMOVIDO: const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
 
   // NOVOS ESTADOS PARA A LÓGICA DE EXCLUSÃO CONDICIONAL
-  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0); // Renomeado para ser mais genérico
-  const [isFetchingOptions, setIsFetchingOptions] = useState(false); // Renomeado para ser mais genérico
+  // REMOVIDO: const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0);
+  // REMOVIDO: const [isFetchingOptions, setIsFetchingOptions] = useState(false);
 
   const isRecurringTransaction = useMemo(() => {
-    // Uma transação é recorrente SE:
-    // - is_recurring_master === true
-    // OU
-    // - recurrence_id != null
     return (editingTransaction?.is_recurring_master === true || !!editingTransaction?.recurrence_id);
   }, [editingTransaction]);
 
@@ -160,9 +157,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
-      setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
+      setPaidAtTimestamp(editingTransaction.paymentTimestamp || null);
 
-      // NOVO: Inicializa formaPagamento e cartaoId
       setFormaPagamento(editingTransaction.forma_pagamento as "dinheiro" | "pix" | "cartao" | "boleto" || "dinheiro");
       setCartaoId(editingTransaction.cartao_id || UNSELECTED_VALUE);
 
@@ -176,52 +172,15 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDescription("");
       setStatus("Pendente");
       setIsPaid(false);
-      setPaidAtTimestamp(null); // NOVO: Reseta paidAtTimestamp
-      setFormaPagamento("dinheiro"); // NOVO: Reseta formaPagamento
-      setCartaoId(UNSELECTED_VALUE); // NOVO: Reseta cartaoId
+      setPaidAtTimestamp(null);
+      setFormaPagamento("dinheiro");
+      setCartaoId(UNSELECTED_VALUE);
       setValidationErrors({});
     }
   }, [editingTransaction, allCategories]);
 
-  // Helper function to fetch pending future items (installments or occurrences)
-  const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => {
-    let count = 0;
-    try {
-      const formattedTransactionDate = format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd');
-
-      if (transaction.type === "expense") {
-        const parentDespesaId = transaction.despesa_id;
-        if (parentDespesaId && isValidUuid(parentDespesaId)) {
-          const { count: futureInstallmentsCount, error } = await supabase
-            .from("despesas_parcelas")
-            .select("id", { count: 'exact' })
-            .eq("despesa_id", parentDespesaId)
-            .eq("pago", false) // Apenas parcelas não pagas
-            .gte("vencimento", formattedTransactionDate);
-          
-          if (error) throw error;
-          count = futureInstallmentsCount || 0;
-        }
-      } else if (transaction.type === "income") {
-        const masterRecurrenceId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
-        if (masterRecurrenceId && isValidUuid(masterRecurrenceId)) {
-          const { count: futureOccurrencesCount, error } = await supabase
-            .from("receitas")
-            .select("id", { count: 'exact' })
-            .eq("recurrence_id", masterRecurrenceId)
-            .in("status", ["Pendente", "Prevista"]) // Apenas ocorrências pendentes ou previstas
-            .gte("data", formattedTransactionDate);
-          
-          if (error) throw error;
-          count = futureOccurrencesCount || 0;
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching pending future items:", error);
-      toast.error("Erro ao verificar lançamentos futuros.");
-    }
-    return count;
-  };
+  // REMOVIDO: Helper function to fetch pending future items (agora no useLancamentosLogic)
+  // REMOVIDO: const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => { ... };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,7 +201,6 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       newErrors.category = true;
       hasError = true;
     }
-    // NOVO: Validação para formaPagamento e cartaoId
     if (formaPagamento === UNSELECTED_VALUE) {
       newErrors.formaPagamento = true;
       hasError = true;
@@ -262,11 +220,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     }
 
     setLoading(true); // Start loading for the pre-check
-    setIsFetchingOptions(true);
-    const futureItems = await fetchPendingFutureItems(editingTransaction);
-    setPendingFutureItemsCount(futureItems);
-    setIsFetchingOptions(false);
-    setLoading(false); // Stop loading after pre-check
+    // REMOVIDO: setIsFetchingOptions(true);
+    // REMOVIDO: const futureItems = await fetchPendingFutureItems(editingTransaction);
+    // REMOVIDO: setPendingFutureItemsCount(futureItems);
+    // REMOVIDO: setIsFetchingOptions(false);
+    // REMOVIDO: setLoading(false); // Stop loading after pre-check
 
     const totalItemsInSeries = editingTransaction.totalInstallments || 1;
 
@@ -277,30 +235,25 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
     const isInstallmentSeries =
       editingTransaction.tipo_pagamento === "parcelado" &&
-      totalItemsInSeries > 1 &&
-      futureItems > 0; // futureItems already fetched
+      totalItemsInSeries > 1; // futureItems check is now done in parent logic
 
     const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
 
     if (shouldShowSeriesOptions) {
       setShowSaveOptionsDialog(true); // Abre o diálogo de opções de salvamento
     } else {
-      performUpdate("oneOff"); // Salva diretamente para transações avulsas ou séries sem futuras pendências
+      handleConfirmSaveAction("oneOff"); // Salva diretamente para transações avulsas ou séries sem futuras pendências
     }
   };
 
-  const handleConfirmSave = (saveScope: SaveScope) => {
-    performUpdate(saveScope);
-    setShowSaveOptionsDialog(false);
-  };
+  // REMOVIDO: const handleConfirmSave = (saveScope: SaveScope) => { ... }; // Lógica movida para handleConfirmSaveAction no pai
 
   const performUpdate = (saveScope: SaveScope) => {
     if (!editingTransaction) return;
     setLoading(true);
 
-    // Formatar a data como string YYYY-MM-DD (local)
     const formattedDate = date
-      ? format(date, 'yyyy-MM-dd') // Usar format do date-fns
+      ? format(date, 'yyyy-MM-dd')
       : "";
 
     let finalStatus: ReceitaStatus = isPaid
@@ -318,75 +271,35 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       category: category === UNSELECTED_VALUE ? null : category,
       description,
       status: finalStatus,
-      // Keep installment-related fields for one-off installment expenses
       installmentNumber: editingTransaction.installmentNumber,
       totalInstallments: editingTransaction.totalInstallments,
-      forma_pagamento: formaPagamento, // NOVO: Incluído formaPagamento
-      cartao_id: formaPagamento === "cartao" ? cartaoId : null, // NOVO: Incluído cartaoId
+      forma_pagamento: formaPagamento,
+      cartao_id: formaPagamento === "cartao" ? cartaoId : null,
       despesa_id: editingTransaction.despesa_id,
-      // Include recurrence fields
       is_recurring_master: editingTransaction.is_recurring_master,
       recurrence_id: editingTransaction.recurrence_id,
       recurrence_day: editingTransaction.recurrence_day,
-      tipo_pagamento: editingTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
-      paymentTimestamp: paidAtTimestamp, // NOVO: Incluído paidAtTimestamp
+      tipo_pagamento: editingTransaction.tipo_pagamento,
+      paymentTimestamp: paidAtTimestamp,
     };
 
     onUpdateTransaction(
       editingTransaction.id,
       type,
       updatedTransaction,
-      saveScope // Passa o saveScope
+      saveScope
     );
 
     setLoading(false);
   };
 
-  const handleTriggerDeleteConfirmation = async () => {
-    if (!editingTransaction) return;
-
-    setIsFetchingOptions(true); // Use isFetchingOptions
-    const futureItems = await fetchPendingFutureItems(editingTransaction);
-    setPendingFutureItemsCount(futureItems);
-    setIsFetchingOptions(false);
-
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
-
-    // Lógica unificada para determinar se deve mostrar as opções de série
-    const isFixedRecurringSeries =
-      editingTransaction.tipo_pagamento === "fixo" &&
-      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id); // Covers both master and occurrences of fixed/recurring income/expense
-
-    const isInstallmentSeries =
-      editingTransaction.tipo_pagamento === "parcelado" &&
-      totalItemsInSeries > 1 &&
-      futureItems > 0; // futureItems already fetched
-
-    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
-
-    if (shouldShowSeriesOptions) {
-      setShowDeleteOptionsDialog(true);
-    } else {
-      setShowSimpleDeleteOptionsDialog(true);
-    }
-  };
-
-  const handleConfirmDelete = (deleteScope: DeleteScope) => {
-    if (editingTransaction) {
-      onDeleteTransaction(
-        editingTransaction.id,
-        editingTransaction.type,
-        deleteScope
-      );
-    }
-    setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteOptionsDialog(false); // Corrigido o nome da função setter aqui
-  };
+  // REMOVIDO: handleTriggerDeleteConfirmation (agora no useLancamentosLogic)
+  // REMOVIDO: handleConfirmDelete (agora no useLancamentosLogic)
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-0")}> {/* Adicionado h-full aqui */}
-        <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4")}> {/* Removido max-h e adicionado flex-grow */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-0")}>
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4")}>
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -423,10 +336,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setIsPaid={setIsPaid}
             installmentNumber={editingTransaction?.installmentNumber}
             totalInstallments={editingTransaction?.totalInstallments}
-            validationErrors={validationErrors} // Pass validation errors
-            setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
-            paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
-            // NOVO: Passando props de forma de pagamento e cartão
+            validationErrors={validationErrors}
+            setValidationErrors={setValidationErrors}
+            paidAtTimestamp={paidAtTimestamp}
             formaPagamento={formaPagamento}
             setFormaPagamento={setFormaPagamento}
             cartaoId={cartaoId}
@@ -437,123 +349,16 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         </div>
 
         <TransactionEditActions
-          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
+          // REMOVIDO: onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+          onSave={handleSubmit}
           onCancel={isMobile ? undefined : onCancelEdit}
-          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
+          loading={loading || isFetchingDeleteOptions} // Usar isFetchingDeleteOptions do pai
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
       </form>
 
-      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
-      <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-              Confirmar Exclusão
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className={cn(
-            "flex flex-col sm:flex-row justify-center gap-2",
-            isMobile && "flex-row items-center justify-between" // Mantido para o container do footer
-          )}>
-            <AlertDialogCancel
-              disabled={loading || isFetchingOptions}
-              className={cn(
-                "rounded-xl",
-                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Aplicado mt-0 para mobile
-              )}
-            >
-              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => handleConfirmDelete("oneOff")}
-              disabled={loading || isFetchingOptions}
-              className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-10 text-sm flex-1" 
-              )}
-            >
-              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
-              {loading || isFetchingOptions ? (
-                "Excluindo..."
-              ) : (
-                "Excluir"
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
-      <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
-        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-              Excluir Lançamento Recorrente
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="py-4">
-            <RadioGroup
-              value={selectedDeleteScope}
-              onValueChange={(value: DeleteScope) => setSelectedDeleteScope(value)}
-              className="space-y-3 radio-fix-click"
-            >
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem 
-                  value="thisMonth" 
-                  id="delete-this-month" 
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                />
-                <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Apenas este mês
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem 
-                  value="thisMonthForward" 
-                  id="delete-this-month-forward" 
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                />
-                <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Deste mês em diante
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem 
-                  value="all" 
-                  id="delete-all" 
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                />
-                <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Todo o período
-                </label>
-              </div>
-            </RadioGroup>
-          </div>
-          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-between items-center")}>
-            <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
-              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
-              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente */}
+      {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente (agora no TransactionEditForm) */}
       <AlertDialog open={showSaveOptionsDialog} onOpenChange={setShowSaveOptionsDialog}>
         <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
@@ -604,12 +409,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             </RadioGroup>
           </div>
           <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-between items-center")}>
-            <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
+            <AlertDialogCancel disabled={loading || isFetchingDeleteOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
               <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirmSave(selectedSaveScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
-              {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
+            <AlertDialogAction onClick={() => performUpdate(selectedSaveScope)} disabled={loading || isFetchingDeleteOptions} className={cn("w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
+              {loading || isFetchingDeleteOptions ? "Salvando..." : "Salvar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
