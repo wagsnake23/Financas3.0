@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button"; // Importar Button
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -120,10 +122,20 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn(isMobile && "pt-8")}> {/* Adicionado pt-8 para mobile */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-20")}> {/* Ajustado para flex e pt-20 */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
+              {isMobile && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleCancelEdit}
+                  className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                >
+                  <DynamicIcon name="XCircle" className="h-5 w-5" />
+                </Button>
+              )}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
