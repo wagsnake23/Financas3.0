@@ -130,16 +130,23 @@ const Lancamentos = () => {
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
-              <TransactionEditForm
-                editingTransaction={editingTransaction}
-                onUpdateTransaction={handleUpdateTransaction}
-                onCancelEdit={handleCancelEdit}
-                onDeleteTransaction={handleDeleteTransaction}
-                allCategories={fetchedCategories}
-                isMobile={isMobile}
-                cartoes={cartoes} // NOVO: Passando cartoes
-                refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
-              />
+              <> {/* Adicionado um fragmento para agrupar o formulário e o footer */}
+                <TransactionEditForm
+                  editingTransaction={editingTransaction}
+                  onUpdateTransaction={handleUpdateTransaction}
+                  onCancelEdit={handleCancelEdit}
+                  onDeleteTransaction={handleDeleteTransaction}
+                  allCategories={fetchedCategories}
+                  isMobile={isMobile}
+                  cartoes={cartoes} // NOVO: Passando cartoes
+                  refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
+                />
+                {isMobile && ( // Renderiza o Footer apenas em mobile
+                  <div className="mt-4"> {/* Adiciona margem superior para espaçamento */}
+                    <Footer isMobile={isMobile} />
+                  </div>
+                )}
+              </>
             )}
           </DialogContent>
         </Dialog>
