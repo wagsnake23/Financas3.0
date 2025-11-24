@@ -91,7 +91,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   // Lógica de toggle de status movida para o hook useLancamentosLogic
   const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
-  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
+  const newStatus: ReceetaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
 
   const transactionDate = (() => {
@@ -170,7 +170,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         )}
       >
         {transaction.type === "income" ? "+" : "-"}
-        {formatCurrency(transaction.amount)}
+        {isMobile ? formatCurrency(transaction.amount).replace("R$", "").trim() : formatCurrency(transaction.amount)}
       </TableCell>
 
       {/* TOGGLE */}
