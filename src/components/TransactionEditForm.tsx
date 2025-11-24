@@ -481,7 +481,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile ? "mt-0 h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" : "sm:mt-0" // Aplicado mt-0 para mobile
               )}
             >
-              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
@@ -492,7 +492,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile && "h-10 text-sm flex-1" 
               )}
             >
-              <DynamicIcon name="Trash2" className={cn("mr-1 h-4 w-4", isMobile && "h-4 w-4")} /> {/* Ícone de emoji para mobile */}
+              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
               {loading || isFetchingOptions ? (
                 "Excluindo..."
               ) : (
@@ -514,7 +514,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedDeleteScope}
@@ -581,7 +581,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
