@@ -30,24 +30,24 @@ interface TransactionRowProps {
     id: string,
     type: "income" | "expense"
   ) => void;
-  onEditTransaction: (transaction: Transaction) => void;
+  onEditTransaction: (transaction: Transaction) => void; // NOVA PROP
   allCategories: AppCategory[];
   cartoes: Tables<"cartoes">[];
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  onToggleStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
+  onToggleStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
-  onEditTransaction,
+  onEditTransaction, // Destruturar a prop
   allCategories,
   cartoes,
   isMobile,
   queryClient,
   user,
-  onToggleStatus, // Recebendo a nova prop
+  onToggleStatus,
 }) => {
   const getCategoryDisplay = (categoryId: string) => {
     const category = allCategories.find((cat) => cat.id === categoryId);
@@ -91,7 +91,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   // Lógica de toggle de status movida para o hook useLancamentosLogic
   const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
-  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
+  const newStatus: ReceetaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
 
   const transactionDate = (() => {
@@ -109,8 +109,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.status === "Prevista") &&
           "bg-soft-red/30 hover:bg-soft-red/50",
         transaction.status === "Cancelada" &&
-          "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
+          "bg-muted/20 hover:bg-muted/40 text-muted-foreground",
+        "cursor-pointer" // Adiciona cursor de ponteiro para indicar clicável
       )}
+      onClick={() => onEditTransaction(transaction)} // Adiciona o handler de clique na linha
     >
       {/* DATA */}
       <TableCell className={cn("py-2 px-2 text-xs", isMobile ? "min-w-[55px]" : "min-w-[70px]")}>
@@ -177,7 +179,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           variant="ghost"
           size="icon"
           className="h-7 w-7"
-          onClick={() => onToggleStatus(transaction.id, transaction.type, newStatus)} // Chamando a nova prop
+          onClick={(e) => {
+            e.stopPropagation(); // Impede que o clique na linha seja acionado
+            onToggleStatus(transaction.id, transaction.type, newStatus);
+          }}
           disabled={transaction.status === "Cancelada"}
         >
           {transaction.status === "Recebida" && (
@@ -203,7 +208,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             variant="ghost"
             size="icon"
             className="h-7 w-7"
-            onClick={() => onEditTransaction(transaction)}
+            onClick={(e) => {
+              e.stopPropagation(); // Impede que o clique na linha seja acionado
+              onEditTransaction(transaction);
+            }}
           >
             <DynamicIcon name="Pencil" className="h-3.5 w-3.5 text-primary" />
           </Button>
