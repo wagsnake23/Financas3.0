@@ -16,7 +16,7 @@ import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
@@ -219,8 +219,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       const valorParcela = isRecurring ? valorTotal : (tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal);
 
-      // Usar a nova função para formatar a data com a hora atual
-      const formattedFirstInstallmentDate = formatDateWithCurrentTimeInTimeZone(dataVencimento as Date);
+      const formattedFirstInstallmentDate = formatInTimeZone(dataVencimento as Date, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
 
       if (isRecurring) {
         // A RPC agora gera TODAS as parcelas, incluindo a primeira
@@ -256,8 +255,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
         for (let i = 1; i < numeroParcelas; i++) {
           const installmentDate = addMonths(dataVencimento as Date, i);
-          // Usar a nova função para formatar a data com a hora atual
-          const formattedInstallmentDate = formatDateWithCurrentTimeInTimeZone(installmentDate);
+          const formattedInstallmentDate = formatInTimeZone(installmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
           
           installmentsToInsert.push({
             despesa_id: despesaData.id,

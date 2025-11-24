@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar zonedTimeToUtcFallback de utils
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -17,7 +17,7 @@ import { StatusToggleButton } from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
-import { DateTime } from "luxon"; // NOVO: Importar DateTime de luxon
+// Removido: import { zonedTimeToUtc } from 'date-fns-tz'; // Removido importação direta
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -45,7 +45,6 @@ interface TransactionOneOffFieldsProps {
   validationErrors: Record<string, boolean>; // NOVO: Adicionado validationErrors
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; // FIX: Adicionado setValidationErrors
   paidAtTimestamp: string | null; // NOVO: Adicionado paidAtTimestamp
-  setPaidAtTimestamp: React.Dispatch<React.SetStateAction<string | null>>; // FIX: Adicionado setPaidAtTimestamp
   // NOVO: Props de forma de pagamento e cartão
   formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
   setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
@@ -79,7 +78,6 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   validationErrors, // NOVO
   setValidationErrors, // FIX: Desestruturado setValidationErrors
   paidAtTimestamp, // NOVO
-  setPaidAtTimestamp, // FIX: Desestruturado setPaidAtTimestamp
   // NOVO: Props de forma de pagamento e cartão
   formaPagamento,
   setFormaPagamento,
@@ -239,23 +237,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(selectedDateFromCalendar) => { // Renomeado para clareza
-                if (!selectedDateFromCalendar) {
-                  setDate(undefined);
-                  return;
-                }
-                // Combine a data selecionada com a hora atual de Brasília
-                const now = new Date();
-                const combinedDate = new Date(
-                  selectedDateFromCalendar.getFullYear(),
-                  selectedDateFromCalendar.getMonth(),
-                  selectedDateFromCalendar.getDate(),
-                  now.getHours(),
-                  now.getMinutes(),
-                  now.getSeconds(),
-                  now.getMilliseconds()
-                );
-                setDate(combinedDate);
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
                 setIsCalendarOpen(false);
               }}
               initialFocus
@@ -285,13 +268,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
             transactionType={transactionType}
-            onToggle={() => {
-              const dataBrasilia = DateTime.now()
-                .setZone(TARGET_TIMEZONE)
-                .toISO();
-              setPaidAtTimestamp(dataBrasilia);
-              setIsPaid(!isPaid);
-            }}
+            onToggle={() => setIsPaid(!isPaid)}
             isMobile={isMobile}
           />
           {paidAtTimestamp && (
@@ -302,7 +279,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 type="text"
                 value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        paidAtTimestamp, // Passa diretamente o ISO string
+                        zonedTimeToUtcFallback(paidAtTimestamp, TARGET_TIMEZONE), // Substituído zonedTimeToUtc por zonedTimeToUtcFallback
                         TARGET_TIMEZONE, 
                         "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }

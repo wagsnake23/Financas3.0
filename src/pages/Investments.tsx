@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar cn, getBorderClass E formatCurrency, formatInTimeZone, TARGET_TIMEZONE
 import { format } from "date-fns"; // Importar format
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
@@ -220,9 +220,9 @@ export default function Investments() { // Alterado para export default function
       return;
     }
 
-    // Usar a nova função para formatar a data com a hora atual
+    // Formatar a data usando os componentes locais para evitar problemas de fuso horário
     const formattedDate = date 
-      ? formatDateWithCurrentTimeInTimeZone(date)
+      ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
     const newInvestmentData: TablesInsert<'investimentos'> = {

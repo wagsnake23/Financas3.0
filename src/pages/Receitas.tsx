@@ -20,7 +20,7 @@ import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -139,9 +139,8 @@ export default function Receitas() {
       return;
     }
 
-    // Usar a nova função para formatar a data com a hora atual
     const formattedDate = data 
-      ? formatDateWithCurrentTimeInTimeZone(data)
+      ? formatInTimeZone(data, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
     let masterRevenueId: string | null = null;
@@ -181,7 +180,7 @@ export default function Receitas() {
           p_user_id: user?.id,
           p_transaction_type: 'income',
           p_master_id: masterRevenueId,
-          p_first_occurrence_date: formattedDate, // Already a 'YYYY-MM-DD HH:mm:ss' string
+          p_first_occurrence_date: formattedDate, // Already a 'YYYY-MM-DD' string
           p_monthly_amount: valor as number,
           p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           p_description: descricao,
