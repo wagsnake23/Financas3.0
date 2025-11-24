@@ -15,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogOverlay, // Importar DialogOverlay
-  DialogClose, // Importar DialogClose
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -115,25 +114,21 @@ const Lancamentos = () => {
 
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogOverlay className={cn(isMobile && "dialog-mobile-overlay")} /> {/* Apply overlay class conditionally */}
+          <DialogOverlay className="dialog-mobile-overlay" /> {/* NOVO: Adicionado DialogOverlay com a classe */}
           <DialogContent 
             className={cn(
-              "w-full dialog-lg-close-button",
-              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6",
+              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
+              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6", // NOVO: Aplicado dialog-mobile-fullscreen condicionalmente
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn(isMobile && "form-header")}> {/* Aplicar form-header aqui */}
-              <DialogTitle className={cn("text-xl", isMobile && "form-title")}> {/* Aplicar form-title aqui */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4")}> {/* Removido pt-8 */}
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && ( // Renderizar o botão de fechar apenas no mobile
-                <DialogClose asChild>
-                  <button className="close-form-btn">✕</button>
-                </DialogClose>
-              )}
+              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (

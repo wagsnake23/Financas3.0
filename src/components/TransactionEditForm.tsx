@@ -386,8 +386,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}>
-        <div className={cn("flex-grow overflow-y-auto")}>
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
+        <div className={cn("flex-grow overflow-y-auto")}> {/* Removido classes condicionais para mobile */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -437,17 +437,17 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           />
         </div>
 
-        {/* Action buttons, always in a div with action-buttons class */}
-        <div className={cn(isMobile && "action-buttons")}>
-          <TransactionEditActions
-            onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-            onSave={handleSubmit}
-            onCancel={onCancelEdit}
-            loading={loading || isFetchingOptions}
-            isMobile={isMobile}
-            isRecurringTransaction={isRecurringTransaction}
-          />
-        </div>
+        <TransactionEditActions
+          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
+          onCancel={onCancelEdit} // Removido a condição isMobile ? undefined :
+          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
+          isMobile={isMobile}
+          isRecurringTransaction={isRecurringTransaction}
+          className={cn()} // Removido classes condicionais para mobile
+        />
+
+        {/* Removido o Footer condicional para mobile */}
       </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
