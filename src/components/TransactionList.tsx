@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid } from "@/lib/utils";
+import { cn, isValidUuid, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -300,13 +300,15 @@ export const TransactionList = ({
     return !hasPendingExpenses;
   }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
 
+  // Determine if "Todos os tipos" filter should be hidden
+  const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-4 mb-0", isMobile ? "grid-cols-1 gap-2" : "grid-cols-4")}> {/* Alterado para grid-cols-1 em mobile */}
+      <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-2" : "grid-cols-4")}> {/* Alterado para grid-cols-2 em mobile */}
         <Select value={filterType} onValueChange={setFilterType} 
-                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
+                className={cn("rounded-xl", hideTypeFilter && "hidden")}> {/* Adicionado visibilidade condicional */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -328,7 +330,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
-                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Adicionado col-span-1 para mobile */}
+                className={cn("rounded-xl", isMobile && (hideTypeFilter ? "col-span-1" : "col-span-1"))}> {/* Ajustado col-span para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
@@ -349,7 +351,7 @@ export const TransactionList = ({
 
         {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "col-span-1")}> {/* Alterado para col-span-1 para mobile */}
+                className={cn("rounded-xl", isMobile && (hideTypeFilter ? "col-span-1" : "col-span-1"))}> {/* Ajustado col-span para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -424,7 +426,7 @@ export const TransactionList = ({
             "text-sm font-bold",
             accumulatedValue >= 0 ? "text-success" : "text-destructive"
           )}>
-            R$ {accumulatedValue.toFixed(2)}
+            {formatCurrency(accumulatedValue)}
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { Button } from "@/components/ui/button"; // Importar Button
 
 interface CreditCardInvoiceSummaryProps {
@@ -64,17 +64,17 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
-            <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>R$ {totalPaid.toFixed(2)}</p>
+            <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
           </div>
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
             <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
-            <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>R$ {totalPending.toFixed(2)}</p>
+            <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
           </div>
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
             <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
-            <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>R$ {totalCardExpenses.toFixed(2)}</p>
+            <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         <Button
           variant="secondary"
           onClick={onPayInvoice}
-          className="w-full rounded-xl"
+          className={cn("rounded-xl", isMobile ? "w-full h-8 px-2 text-xs" : "w-auto px-4")}
           disabled={loadingPayInvoice || disablePayInvoiceButton}
         >
           <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
