@@ -69,7 +69,7 @@ export const TransactionList = ({
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
   onToggleTransactionStatus, // NOVA PROP
-}: TransactionListProps) => {
+}) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
@@ -389,7 +389,7 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm mt-4",
-        isMobile ? "max-h-[367px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
+        isMobile ? "max-h-[365px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
       )}>
         <Table>
           <TableBody>
