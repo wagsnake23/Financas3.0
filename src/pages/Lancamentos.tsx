@@ -126,15 +126,18 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn(isMobile && "form-header")}> {/* Aplicar form-header aqui */}
-              <DialogTitle className={cn("text-xl", isMobile && "form-title")}> {/* Aplicar form-title aqui */}
-                ✏️ Editar Lançamento
-              </DialogTitle>
-              {isMobile && ( // Renderizar o botão de fechar apenas no mobile
-                <DialogClose asChild>
-                  <button className="close-form-btn">✕</button>
-                </DialogClose>
-              )}
+            <DialogHeader className={cn(isMobile && "form-header")}>
+              <div className="w-full flex items-center justify-between">
+                <DialogTitle className={cn("text-xl", isMobile && "form-title")}>
+                  ✏️ Editar Lançamento
+                </DialogTitle>
+
+                {isMobile && (
+                  <DialogClose asChild>
+                    <button className="close-form-btn">✕</button>
+                  </DialogClose>
+                )}
+              </div>
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
