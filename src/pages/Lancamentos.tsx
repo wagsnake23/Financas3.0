@@ -17,19 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import DynamicIcon from "@/components/DynamicIcon";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"; // Importar AlertDialog components
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
+import { Button } from "@/components/ui/button"; // Importar Button
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -38,55 +27,39 @@ const Lancamentos = () => {
 
   const {
     selectedMonth,
-    setSelectedMonth,
+    setSelectedMonth, // Adicionado
     handlePreviousMonth,
     handleNextMonth,
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
-    loadingEditData,
+    loadingEditData, // Mantido
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen,
+    isEditModalOpen, // Mantido
     setIsEditModalOpen,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    isLoading,
+    isLoading, // Este é para o carregamento inicial da página
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
     handleCancelEdit,
-    editingTransaction,
+    editingTransaction, // Mantido
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
-    handleOptimisticToggleStatus,
-    refetchCartoes,
-    // NOVO: Estados e funções para o fluxo de exclusão
-    showDeleteOptionsDialog,
-    setShowDeleteOptionsDialog,
-    showSimpleDeleteDialog,
-    setShowSimpleDeleteDialog,
-    selectedDeleteScope,
-    setSelectedDeleteScope,
-    pendingFutureItemsCount,
-    isFetchingDeleteOptions,
-    handleTriggerDeleteConfirmation,
-    handleConfirmDeleteAction,
-    // NOVO: Estados e funções para o fluxo de salvamento (passados para TransactionEditForm)
-    showSaveOptionsDialog,
-    setShowSaveOptionsDialog,
-    selectedSaveScope,
-    setSelectedSaveScope,
-    // handleConfirmSaveAction, // Já existe no TransactionEditForm
+    handleOptimisticToggleStatus, // NOVO: Destruturar a nova função
+    refetchCartoes, // NOVO: Obter refetchCartoes
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
   
-  if (authLoading || isLoading) {
+  // Apenas mostra o loading de página cheia para o carregamento inicial, não para o modal de edição
+  if (authLoading || isLoading) { // Removido loadingEditData daqui
     return <Loading />;
   }
 
@@ -124,9 +97,9 @@ const Lancamentos = () => {
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
-            selectedMonth={selectedMonth}
-            setSelectedMonth={setSelectedMonth}
-            onToggleTransactionStatus={handleOptimisticToggleStatus}
+            selectedMonth={selectedMonth} // Adicionado
+            setSelectedMonth={setSelectedMonth} // Adicionado
+            onToggleTransactionStatus={handleOptimisticToggleStatus} // NOVO: Passar a função
           />
         </main>
         <Footer isMobile={isMobile} />
@@ -142,158 +115,34 @@ const Lancamentos = () => {
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
           <DialogContent 
             className={cn(
-              "w-full dialog-lg-close-button",
-              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4 bg-lancamentos-mobile-bg max-h-[90vh] flex flex-col" : "sm:max-w-[600px] p-6",
+              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
+              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4 bg-lancamentos-mobile-bg max-h-[90vh] flex flex-col" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
+              // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6")}>
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6")}> {/* Ajustado para pt-6 para mobile */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && (
-                <Button
-                  variant="destructive" // Botão vermelho
-                  size="icon"
-                  onClick={handleTriggerDeleteConfirmation} // Chama a lógica de exclusão
-                  className="h-9 w-9 text-destructive hover:bg-destructive/10"
-                  disabled={isFetchingDeleteOptions} // Desabilitar enquanto busca opções
-                >
-                  <DynamicIcon name="Trash2" className="h-5 w-5" />
-                </Button>
-              )}
+              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
             </DialogHeader>
+            {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}
                 onCancelEdit={handleCancelEdit}
-                // REMOVIDO: onDeleteTransaction={handleDeleteTransaction}
+                onDeleteTransaction={handleDeleteTransaction}
                 allCategories={fetchedCategories}
                 isMobile={isMobile}
-                cartoes={cartoes}
-                refetchCartoes={refetchCartoes}
-                // NOVO: Props para o fluxo de exclusão
-                isFetchingDeleteOptions={isFetchingDeleteOptions}
-                handleTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-                // NOVO: Props para o fluxo de salvamento
-                showSaveOptionsDialog={showSaveOptionsDialog}
-                setShowSaveOptionsDialog={setShowSaveOptionsDialog}
-                selectedSaveScope={selectedSaveScope}
-                setSelectedSaveScope={setSelectedSaveScope}
-                handleConfirmSaveAction={handleUpdateTransaction} // Passa a função de atualização para o form
+                cartoes={cartoes} // NOVO: Passando cartoes
+                refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
               />
             )}
           </DialogContent>
         </Dialog>
-
-        {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
-        <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteDialog}>
-          <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-                Confirmar Exclusão
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className={cn(
-              "flex flex-col sm:flex-row justify-center gap-2",
-              isMobile && "flex-row items-center justify-between"
-            )}>
-              <AlertDialogCancel
-                disabled={isFetchingDeleteOptions}
-                className={cn(
-                  "rounded-xl",
-                  isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
-                )}
-              >
-                {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
-                Cancelar
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleConfirmDeleteAction} // Chama a nova função de confirmação
-                disabled={isFetchingDeleteOptions}
-                className={cn(
-                  "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                  isMobile && "h-10 text-sm flex-1" 
-                )}
-              >
-                {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}
-                {isFetchingDeleteOptions ? (
-                  "Excluindo..."
-                ) : (
-                  "Excluir"
-                )}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
-        <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
-          <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-                Excluir Lançamento Recorrente
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <div className="py-4">
-              <RadioGroup
-                value={selectedDeleteScope}
-                onValueChange={(value: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => setSelectedDeleteScope(value)}
-                className="space-y-3 radio-fix-click"
-              >
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem 
-                    value="thisMonth" 
-                    id="delete-this-month" 
-                    className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                  />
-                  <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Apenas este mês
-                  </label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem 
-                    value="thisMonthForward" 
-                    id="delete-this-month-forward" 
-                    className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                  />
-                  <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Deste mês em diante
-                  </label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <RadioGroupItem 
-                    value="all" 
-                    id="delete-all" 
-                    className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-                  />
-                  <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Todo o período
-                  </label>
-                </div>
-              </RadioGroup>
-            </div>
-            <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-between items-center")}>
-              <AlertDialogCancel disabled={isFetchingDeleteOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
-                <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-                Cancelar
-              </AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmDeleteAction} disabled={isFetchingDeleteOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
-                {isFetchingDeleteOptions ? "Excluindo..." : "Excluir"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </ProtectedRoute>
   );

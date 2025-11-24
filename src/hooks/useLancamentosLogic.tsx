@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"; // Adicionado useState
+import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,16 +6,13 @@ import { User } from "@supabase/supabase-js";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate } from "@/integrations/supabase/types";
-import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
+import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
 
 // Importar os novos hooks modulares
 import { useLancamentosState } from "./useLancamentosState";
 import { useTransactionMutations } from "./useTransactionMutations";
-import { format, parseISO } from "date-fns"; // Importar format e parseISO
-import { isValidUuid } from "@/lib/utils"; // Importar isValidUuid
 
 type ReceitaStatus = Database['public']['Enums']['receita_status']; // Definir ReceitaStatus aqui
-type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff"; // 'oneOff' para transações avulsas
 
 export const useLancamentosLogic = (
   user: User | null,
@@ -33,7 +30,7 @@ export const useLancamentosLogic = (
   // Usar o hook de estado para gerenciar todos os estados da UI
   const {
     selectedMonth,
-    setSelectedMonth, // Adicionado
+    setSelectedMonth,
     handlePreviousMonth,
     handleNextMonth,
     editingTransaction,
@@ -51,7 +48,7 @@ export const useLancamentosLogic = (
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     handleCancelEdit,
-    isValidUuid: isValidUuidFromState, // Renomeado para evitar conflito
+    isValidUuid,
   } = useLancamentosState();
 
   // Usar o hook de dados para buscar transações e categorias
@@ -82,94 +79,6 @@ export const useLancamentosLogic = (
     setIsEditModalOpen,
     selectedMonth,
   });
-
-  // NOVO: Estados e lógica para o fluxo de exclusão
-  const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] = useState(false);
-  const [selectedDeleteScope, setSelectedDeleteScope] = useState<DeleteScope>("thisMonth");
-  const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0);
-  const [isFetchingDeleteOptions, setIsFetchingDeleteOptions] = useState(false);
-
-  // Helper function to fetch pending future items (installments or occurrences)
-  const fetchPendingFutureItems = useCallback(async (transaction: Transaction): Promise<number> => {
-    let count = 0;
-    try {
-      const formattedTransactionDate = format(parseISO(transaction.date) || new Date(), 'yyyy-MM-dd');
-
-      if (transaction.type === "expense") {
-        const parentDespesaId = transaction.despesa_id;
-        if (parentDespesaId && isValidUuid(parentDespesaId)) {
-          const { count: futureInstallmentsCount, error } = await supabase
-            .from("despesas_parcelas")
-            .select("id", { count: 'exact' })
-            .eq("despesa_id", parentDespesaId)
-            .eq("pago", false) // Apenas parcelas não pagas
-            .gte("vencimento", formattedTransactionDate);
-          
-          if (error) throw error;
-          count = futureInstallmentsCount || 0;
-        }
-      } else if (transaction.type === "income") {
-        const masterRecurrenceId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
-        if (masterRecurrenceId && isValidUuid(masterRecurrenceId)) {
-          const { count: futureOccurrencesCount, error } = await supabase
-            .from("receitas")
-            .select("id", { count: 'exact' })
-            .eq("recurrence_id", masterRecurrenceId)
-            .in("status", ["Pendente", "Prevista"]) // Apenas ocorrências pendentes ou previstas
-            .gte("data", formattedTransactionDate);
-          
-          if (error) throw error;
-          count = futureOccurrencesCount || 0;
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching pending future items:", error);
-      toast.error("Erro ao verificar lançamentos futuros.");
-    }
-    return count;
-  }, []);
-
-  const handleTriggerDeleteConfirmation = useCallback(async () => {
-    if (!editingTransaction) return;
-
-    setIsFetchingDeleteOptions(true);
-    const futureItems = await fetchPendingFutureItems(editingTransaction);
-    setPendingFutureItemsCount(futureItems);
-    setIsFetchingDeleteOptions(false);
-
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
-
-    const isFixedRecurringSeries =
-      editingTransaction.tipo_pagamento === "fixo" &&
-      (editingTransaction.is_recurring_master || !!editingTransaction.recurrence_id);
-
-    const isInstallmentSeries =
-      editingTransaction.tipo_pagamento === "parcelado" &&
-      totalItemsInSeries > 1 &&
-      futureItems > 0;
-
-    const shouldShowSeriesOptions = isFixedRecurringSeries || isInstallmentSeries;
-
-    if (shouldShowSeriesOptions) {
-      setShowDeleteOptionsDialog(true);
-    } else {
-      setShowSimpleDeleteDialog(true);
-    }
-  }, [editingTransaction, fetchPendingFutureItems]);
-
-  const handleConfirmDeleteAction = useCallback(() => {
-    if (editingTransaction) {
-      handleDeleteTransaction(
-        editingTransaction.id,
-        editingTransaction.type,
-        selectedDeleteScope
-      );
-    }
-    setShowDeleteOptionsDialog(false);
-    setShowSimpleDeleteDialog(false);
-  }, [editingTransaction, selectedDeleteScope, handleDeleteTransaction]);
-
 
   // Lógica para carregar dados completos da transação para edição (mantida aqui, pois depende de queryClient e setStates específicos)
   const handleEditTransaction = useCallback(
@@ -273,16 +182,5 @@ export const useLancamentosLogic = (
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus, // NOVO RETORNO
     refetchCartoes, // NOVO: Retornar refetchCartoes
-    // NOVO: Retornos para o fluxo de exclusão
-    showDeleteOptionsDialog,
-    setShowDeleteOptionsDialog,
-    showSimpleDeleteDialog,
-    setShowSimpleDeleteDialog,
-    selectedDeleteScope,
-    setSelectedDeleteScope,
-    pendingFutureItemsCount,
-    isFetchingDeleteOptions,
-    handleTriggerDeleteConfirmation,
-    handleConfirmDeleteAction,
   };
 };
