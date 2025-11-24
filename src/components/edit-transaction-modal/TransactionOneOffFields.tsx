@@ -17,7 +17,7 @@ import { StatusToggleButton } from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
-// Removido: import { zonedTimeToUtc } from 'date-fns-tz'; // Removido importação direta
+import { DateTime } from "luxon"; // NOVO: Importar DateTime de luxon
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -268,7 +268,13 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
             transactionType={transactionType}
-            onToggle={() => setIsPaid(!isPaid)}
+            onToggle={() => {
+              const dataBrasilia = DateTime.now()
+                .setZone(TARGET_TIMEZONE)
+                .toISO();
+              setPaidAtTimestamp(dataBrasilia);
+              setIsPaid(!isPaid);
+            }}
             isMobile={isMobile}
           />
           {paidAtTimestamp && (

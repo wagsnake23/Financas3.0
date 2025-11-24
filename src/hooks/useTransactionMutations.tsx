@@ -7,6 +7,7 @@ import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
 import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar formatInTimeZone e zonedTimeToUtcFallback
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
+import { DateTime } from "luxon"; // NOVO: Importar DateTime de luxon
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
 type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -356,7 +357,7 @@ export const useTransactionMutations = ({
           const newValorParcela = updatedTransaction.amount;
           const newVencimento = updatedTransaction.date;
           const newPagoStatus = updatedTransaction.status === "Recebida";
-          const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // NOVO: Usa formatInTimeZone
+          const newPagoDate = newPagoStatus ? DateTime.now().setZone(TARGET_TIMEZONE).toISO() : null; // NOVO: Usa luxon
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
@@ -476,7 +477,7 @@ export const useTransactionMutations = ({
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
-      const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"); // NOVO: Usa formatInTimeZone
+      const currentTimestamp = DateTime.now().setZone(TARGET_TIMEZONE).toISO(); // NOVO: Usa luxon
 
       // 1. Optimistically update the UI
       if (type === "income") {
