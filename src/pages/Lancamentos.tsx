@@ -64,7 +64,7 @@ const Lancamentos = () => {
   }
 
   return (
-    <ProtectedRoute>
+    ProtectedRoute>
       <div className={cn("min-h-screen bg-background pt-16 relative", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
         <main className={cn("container mx-auto", isMobile ? "px-0 py-4" : "px-4 py-8")}>
@@ -116,7 +116,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "fixed top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-6 bg-lancamentos-mobile-bg flex flex-col max-h-[90vh] rounded-xl" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
+              isMobile ? "fixed top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-6 bg-lancamentos-mobile-bg flex flex-col max-h-[80vh] rounded-xl" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
