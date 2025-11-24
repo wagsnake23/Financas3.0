@@ -112,7 +112,7 @@ const Lancamentos = () => {
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
           <DialogContent 
             className={cn(
-              "w-full", 
+              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
               isMobile ? "max-w-sm p-4 bg-lancamentos-mobile-bg" : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
@@ -121,7 +121,7 @@ const Lancamentos = () => {
           >
             <DialogHeader>
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
-                Editar Lançamento
+                ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}

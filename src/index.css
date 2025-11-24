@@ -156,3 +156,16 @@ All colors MUST be HSL.
 .radio-fix-click [role="radio"]::after {
   pointer-events: none; /* Impede que o pseudo-elemento bloqueie os cliques */
 }
+
+/* Estilos para o botão de fechar do modal de edição de lançamentos */
+.dialog-lg-close-button button[data-radix-dialog-close] {
+  height: 2.25rem; /* h-9 */
+  width: 2.25rem; /* w-9 */
+  top: 1rem; /* Ajusta a posição para compensar o tamanho maior */
+  right: 1rem; /* Ajusta a posição para compensar o tamanho maior */
+}
+
+.dialog-lg-close-button button[data-radix-dialog-close] svg {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
