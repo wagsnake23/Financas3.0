@@ -21,6 +21,7 @@ import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; // Importar Button
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { ScrollArea } from "@/components/ui/scroll-area"; // NOVO: Importar ScrollArea
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -137,7 +138,7 @@ const Lancamentos = () => {
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
-              <> {/* Adicionado um fragmento para agrupar o formulário e o footer */}
+              <ScrollArea className={cn(isMobile ? "h-[calc(100vh-180px)]" : "h-[400px]", "pr-4")}> {/* Envolvido em ScrollArea */}
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
@@ -148,7 +149,7 @@ const Lancamentos = () => {
                   cartoes={cartoes} // NOVO: Passando cartoes
                   refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
                 />
-              </>
+              </ScrollArea>
             )}
           </DialogContent>
         </Dialog>
