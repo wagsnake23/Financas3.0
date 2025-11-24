@@ -386,8 +386,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-4")}> {/* Removido max-w-sm mx-auto e adicionado h-full para mobile */}
-        <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4 pb-4")}> {/* Removido max-h e adicionado flex-grow, adicionado pb-4 */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
+        <div className={cn("flex-grow overflow-y-auto")}> {/* Removido classes condicionais para mobile */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -444,10 +444,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "mt-[-0.75rem]")} // Removido mt-6 em mobile
+          className={cn()} // Removido classes condicionais para mobile
         />
 
-        {isMobile && <Footer isMobile={isMobile} className="mt-4" />} {/* Adicionar Footer aqui para mobile */}
+        {/* Removido o Footer condicional para mobile */}
       </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
