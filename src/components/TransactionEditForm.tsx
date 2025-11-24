@@ -439,7 +439,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         <TransactionEditActions
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
           onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
-          onCancel={isMobile ? undefined : onCancelEdit}
+          onCancel={onCancelEdit} // Removido a condição isMobile ? undefined :
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
