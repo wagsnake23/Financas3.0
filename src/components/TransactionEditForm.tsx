@@ -385,7 +385,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   };
 
   return (
-    <div className="transaction-edit-form-container" key={editingTransaction?.id || "new"}> {/* Adicionado key para forçar remontagem */}
+    <> {/* Alterado para React.Fragment */}
       <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}>
         <div className={cn("flex-grow overflow-y-auto")}>
           <TransactionOneOffFields
@@ -447,8 +447,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             isRecurringTransaction={isRecurringTransaction}
           />
         </div>
+      </form>
 
-        {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
+      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
         <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
@@ -626,6 +627,6 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 };
