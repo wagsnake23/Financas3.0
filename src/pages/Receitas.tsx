@@ -20,7 +20,7 @@ import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -140,7 +140,7 @@ export default function Receitas() {
     }
 
     const formattedDate = data 
-      ? format(data, 'yyyy-MM-dd')
+      ? formatInTimeZone(data, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
     let masterRevenueId: string | null = null;

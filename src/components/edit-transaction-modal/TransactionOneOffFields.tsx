@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -14,7 +14,6 @@ import { AppCategory } from "@/types/finance";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { StatusToggleButton } from "@/components/StatusToggleButton";
-import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
@@ -53,8 +52,6 @@ interface TransactionOneOffFieldsProps {
   cartoes: Tables<'cartoes'>[];
   refetchCartoes: () => void; // Renomeado de loadCartoes para refetchCartoes
 }
-
-const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
   amount,

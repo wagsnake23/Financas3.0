@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
+import { cn, isValidUuid, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatCurrency, formatInTimeZone, TARGET_TIMEZONE
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -17,7 +17,6 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
-import { formatInTimeZone } from 'date-fns-tz'; // NOVO: Importar formatInTimeZone
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -52,7 +51,6 @@ const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
-const TARGET_TIMEZONE = 'America/Sao_Paulo'; // NOVO: Fuso horário UTC-3
 
 export const TransactionList = ({
   transactions, 

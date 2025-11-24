@@ -16,7 +16,7 @@ import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
@@ -194,7 +194,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
 
     const valorTotal = valor as number;
-    const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+    const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"); // Usar formatInTimeZone
     const recurrenceDay = getDate(dataVencimento as Date);
 
     try {
@@ -219,7 +219,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       const valorParcela = isRecurring ? valorTotal : (tipoPagamento === "parcelado" ? valorTotal / numeroParcelas : valorTotal);
 
-      const formattedFirstInstallmentDate = format(dataVencimento as Date, 'yyyy-MM-dd');
+      const formattedFirstInstallmentDate = formatInTimeZone(dataVencimento as Date, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
 
       if (isRecurring) {
         // A RPC agora gera TODAS as parcelas, incluindo a primeira
@@ -255,7 +255,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
         for (let i = 1; i < numeroParcelas; i++) {
           const installmentDate = addMonths(dataVencimento as Date, i);
-          const formattedInstallmentDate = format(installmentDate, 'yyyy-MM-dd');
+          const formattedInstallmentDate = formatInTimeZone(installmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
           
           installmentsToInsert.push({
             despesa_id: despesaData.id,

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { formatInTimeZone } from 'date-fns-tz'; // Importar formatInTimeZone
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,3 +38,6 @@ export const getBorderClass = ({ isValid, isInvalid }: GetBorderClassProps): str
     "focus:ring-0 focus:outline-none focus:border-success" // For non-focus-visible elements
   );
 };
+
+export const TARGET_TIMEZONE = 'America/Sao_Paulo'; // Fuso horário UTC-3 (Brasília)
+export { formatInTimeZone }; // Exportar formatInTimeZone para uso global

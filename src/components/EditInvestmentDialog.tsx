@@ -18,7 +18,7 @@ import { Investment, AppCategory } from "@/types/finance"; // Importar AppCatego
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
 // Removido: import { Card } from "@/components/ui/card"; // Importar Card
 
 interface EditInvestmentDialogProps {
@@ -135,7 +135,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     }
 
     const formattedDate = date
-      ? format(date, 'yyyy-MM-dd')
+      ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
     const updatedInvestment: Investment = {
