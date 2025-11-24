@@ -19,7 +19,6 @@ import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; // Importar Button
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
-import { X } from "lucide-react"; // Importar o ícone X
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -123,22 +122,11 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center", isMobile ? "py-6 px-4 justify-between" : "justify-between")}> {/* Ajustado para py-6 px-4 e justify-between */}
-              <DialogTitle className={cn("text-xl text-left", isMobile && "text-lg")}>
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4 pt-8")}> {/* Alterado pt-8 para py-4 */}
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && ( // Renderiza o botão de fechar personalizado apenas em mobile
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleCancelEdit} // Este handler fecha o diálogo
-                  className="h-8 w-8 text-destructive hover:bg-destructive/10" // Estilo vermelho para o X
-                  data-radix-dialog-close // Importante para o comportamento de fechar
-                >
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Fechar</span>
-                </Button>
-              )}
+              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
