@@ -170,7 +170,7 @@ All colors MUST be HSL.
 @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller screens */
   .dialog-lg-close-button button[data-radix-dialog-close] {
     /* Removido: display: none; */ /* Oculta o botão de fechar padrão em mobile */
-    top: 3rem; /* Alinha com o título */
+    top: 4rem; /* Aumentado o recuo do topo para 4rem */
     right: 1rem;
   }
 }
