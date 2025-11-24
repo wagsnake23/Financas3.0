@@ -15,6 +15,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: { // NOVO: Adicionado para otimização de dependências
+    include: ['date-fns-tz'], // Força o Vite a pré-empacotar date-fns-tz
+  },
   build: {
     rollupOptions: {
       output: {
