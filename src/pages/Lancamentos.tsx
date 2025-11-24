@@ -116,7 +116,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4 bg-lancamentos-mobile-bg max-h-[90vh] flex flex-col" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
+              isMobile ? "fixed top-4 bottom-4 left-1/2 -translate-x-1/2 w-full max-w-sm p-4 bg-lancamentos-mobile-bg flex flex-col overflow-hidden" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
@@ -141,11 +141,7 @@ const Lancamentos = () => {
                   cartoes={cartoes} // NOVO: Passando cartoes
                   refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
                 />
-                {isMobile && ( // Renderiza o Footer apenas em mobile
-                  <div className="mt-4"> {/* Adiciona margem superior para espaçamento */}
-                    <Footer isMobile={isMobile} />
-                  </div>
-                )}
+                {/* Removido o Footer condicional para mobile */}
               </>
             )}
           </DialogContent>
