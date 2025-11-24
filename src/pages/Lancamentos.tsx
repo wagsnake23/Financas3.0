@@ -126,34 +126,36 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn(isMobile && "form-header")}>
-              <div className="w-full flex items-center justify-between">
-                <DialogTitle className={cn("text-xl", isMobile && "form-title")}>
-                  ✏️ Editar Lançamento
-                </DialogTitle>
+            <div> {/* NOVO: Wrapper div */}
+              <DialogHeader className={cn(isMobile && "form-header")}>
+                <div className="w-full flex items-center justify-between">
+                  <DialogTitle className={cn("text-xl", isMobile && "form-title")}>
+                    ✏️ Editar Lançamento
+                  </DialogTitle>
 
-                {isMobile && (
-                  <DialogClose asChild>
-                    <button className="close-form-btn">✕</button>
-                  </DialogClose>
-                )}
-              </div>
-            </DialogHeader>
-            {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
-            {!loadingEditData && editingTransaction && (
-              <ScrollArea className={cn(isMobile ? "h-[calc(100vh-180px)]" : "h-[400px]", "pr-4")}> {/* Envolvido em ScrollArea */}
-                <TransactionEditForm
-                  editingTransaction={editingTransaction}
-                  onUpdateTransaction={handleUpdateTransaction}
-                  onCancelEdit={handleCancelEdit}
-                  onDeleteTransaction={handleDeleteTransaction}
-                  allCategories={fetchedCategories}
-                  isMobile={isMobile}
-                  cartoes={cartoes} // NOVO: Passando cartoes
-                  refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
-                />
-              </ScrollArea>
-            )}
+                  {isMobile && (
+                    <DialogClose asChild>
+                      <button className="close-form-btn">✕</button>
+                    </DialogClose>
+                  )}
+                </div>
+              </DialogHeader>
+              {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
+              {!loadingEditData && editingTransaction && (
+                <ScrollArea className={cn(isMobile ? "h-[calc(100vh-180px)]" : "h-[400px]", "pr-4")}> {/* Envolvido em ScrollArea */}
+                  <TransactionEditForm
+                    editingTransaction={editingTransaction}
+                    onUpdateTransaction={handleUpdateTransaction}
+                    onCancelEdit={handleCancelEdit}
+                    onDeleteTransaction={handleDeleteTransaction}
+                    allCategories={fetchedCategories}
+                    isMobile={isMobile}
+                    cartoes={cartoes} // NOVO: Passando cartoes
+                    refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
+                  />
+                </ScrollArea>
+              )}
+            </div> {/* FIM: Wrapper div */}
           </DialogContent>
         </Dialog>
       </div>
