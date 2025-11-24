@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { cn, isValidUuid, getBorderClass, nowInBrazilISO, parseBrazilLocalToDate } from "@/lib/utils"; // Importar nowInBrazilISO e parseBrazilLocalToDate
-import { format, isValid } from "date-fns"; // NOVO: Importar isValid de date-fns
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
@@ -162,9 +162,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
-      // NOVO: Inicializa paidAtTimestamp usando parseBrazilLocalToDate e verifica validade
-      const parsedPaidAtDate = editingTransaction.paymentTimestamp ? parseBrazilLocalToDate(editingTransaction.paymentTimestamp) : undefined;
-      setPaidAtTimestamp(parsedPaidAtDate && isValid(parsedPaidAtDate) ? parsedPaidAtDate.toISOString() : null);
+      // NOVO: Inicializa paidAtTimestamp usando parseBrazilLocalToDate
+      setPaidAtTimestamp(editingTransaction.paymentTimestamp ? parseBrazilLocalToDate(editingTransaction.paymentTimestamp)?.toISOString() || null : null);
 
       // NOVO: Inicializa formaPagamento e cartaoId
       setFormaPagamento(editingTransaction.forma_pagamento as "dinheiro" | "pix" | "cartao" | "boleto" || "dinheiro");

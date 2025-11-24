@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, parseBrazilLocalToDate } from "@/lib/utils"; // Importar parseBrazilLocalToDate de utils
-import { format, isValid } from "date-fns"; // NOVO: Importar isValid de date-fns
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { AppCategory } from "@/types/finance";
@@ -277,17 +277,15 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               <Input
                 id="paidAt"
                 type="text"
-                value={(() => {
-                  const parsedDate = paidAtTimestamp ? parseBrazilLocalToDate(paidAtTimestamp) : undefined;
-                  return (parsedDate && isValid(parsedDate))
+                value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        parsedDate,
-                        TARGET_TIMEZONE,
-                        "dd/MM/yyyy HH:mm",
+                        parseBrazilLocalToDate(paidAtTimestamp), // Substituído zonedTimeToUtcFallback por parseBrazilLocalToDate
+                        TARGET_TIMEZONE, 
+                        "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }
-                      )
-                    : '';
-                })()}
+                      ) 
+                    : ''
+                }
                 readOnly
                 disabled
                 className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
