@@ -383,170 +383,174 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setShowSimpleDeleteOptionsDialog(false); // Corrigido o nome da função setter aqui
   };
 
-  const formContent = (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-3 px-0")}>
-      <TransactionOneOffFields
-        amount={amount}
-        setAmount={(v) => {
-          setAmount(v);
-          setValidationErrors(prev => ({ ...prev, amount: false }));
-        }}
-        date={date}
-        setDate={(date) => {
-          if (!date) return;
-          const fixedDate = new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate()
-          );
-          setDate(fixedDate);
-          setValidationErrors(prev => ({ ...prev, date: false }));
-        }}
-        category={category}
-        setCategory={(v) => {
-          setCategory(v);
-          setValidationErrors(prev => ({ ...prev, category: false }));
-        }}
-        description={description}
-        setDescription={setDescription}
-        status={status}
-        setStatus={setStatus}
-        isCalendarOpen={isCalendarOpen}
-        setIsCalendarOpen={setIsCalendarOpen}
-        filteredCategories={filteredCategories}
-        isMobile={isMobile}
-        transactionType={type}
-        UNSELECTED_VALUE={UNSELECTED_VALUE}
-        isPaid={isPaid}
-        setIsPaid={setIsPaid}
-        installmentNumber={editingTransaction?.installmentNumber}
-        totalInstallments={editingTransaction?.totalInstallments}
-        validationErrors={validationErrors} // Pass validation errors
-        setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
-        paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
-        // NOVO: Passando props de forma de pagamento e cartão
-        formaPagamento={formaPagamento}
-        setFormaPagamento={setFormaPagamento}
-        cartaoId={cartaoId}
-        setCartaoId={setCartaoId}
-        cartoes={cartoes}
-        refetchCartoes={refetchCartoes}
-      />
+  return (
+    <>
+      <div className={cn("flex-grow overflow-y-auto", isMobile && "max-h-[calc(90vh-120px)] -mr-4 pr-4")}> {/* Ajustado max-h para mobile */}
+        <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-3 px-0")}>
+          <TransactionOneOffFields
+            amount={amount}
+            setAmount={(v) => {
+              setAmount(v);
+              setValidationErrors(prev => ({ ...prev, amount: false }));
+            }}
+            date={date}
+            setDate={(date) => {
+              if (!date) return;
+              const fixedDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()
+              );
+              setDate(fixedDate);
+              setValidationErrors(prev => ({ ...prev, date: false }));
+            }}
+            category={category}
+            setCategory={(v) => {
+              setCategory(v);
+              setValidationErrors(prev => ({ ...prev, category: false }));
+            }}
+            description={description}
+            setDescription={setDescription}
+            status={status}
+            setStatus={setStatus}
+            isCalendarOpen={isCalendarOpen}
+            setIsCalendarOpen={setIsCalendarOpen}
+            filteredCategories={filteredCategories}
+            isMobile={isMobile}
+            transactionType={type}
+            UNSELECTED_VALUE={UNSELECTED_VALUE}
+            isPaid={isPaid}
+            setIsPaid={setIsPaid}
+            installmentNumber={editingTransaction?.installmentNumber}
+            totalInstallments={editingTransaction?.totalInstallments}
+            validationErrors={validationErrors} // Pass validation errors
+            setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
+            paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
+            // NOVO: Passando props de forma de pagamento e cartão
+            formaPagamento={formaPagamento}
+            setFormaPagamento={setFormaPagamento}
+            cartaoId={cartaoId}
+            setCartaoId={setCartaoId}
+            cartoes={cartoes}
+            refetchCartoes={refetchCartoes}
+          />
 
-      <TransactionEditActions
-        onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-        onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
-        onCancel={onCancelEdit}
-        loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
-        isMobile={isMobile}
-        isRecurringTransaction={isRecurringTransaction}
-      />
-    </form>
+          <TransactionEditActions
+            onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+            onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
+            onCancel={onCancelEdit}
+            loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
+            isMobile={isMobile}
+            isRecurringTransaction={isRecurringTransaction}
+          />
+        </form>
+      </div>
 
-    {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
-    <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
-      <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
-            <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-            Confirmar Exclusão
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className={cn(
-          "flex flex-col sm:flex-row justify-center gap-2",
-          isMobile && "flex-row items-center justify-between" // Mantido para o container do footer
-        )}>
-          <AlertDialogCancel
-            disabled={loading || isFetchingOptions}
-            className={cn(
-              "rounded-xl",
-              isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Aplicado mt-0 para mobile
-            )}
-          >
-            {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
-            Cancelar
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => handleConfirmDelete("oneOff")}
-            disabled={loading || isFetchingOptions}
-            className={cn(
-              "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-              isMobile && "h-10 text-sm flex-1" 
-            )}
-          >
-            {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
-            {loading || isFetchingOptions ? (
-              "Excluindo..."
-            ) : (
-              "Excluir"
-            )}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
+      <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este lançamento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className={cn(
+            "flex flex-col sm:flex-row justify-center gap-2",
+            isMobile && "flex-row items-center justify-between" // Mantido para o container do footer
+          )}>
+            <AlertDialogCancel
+              disabled={loading || isFetchingOptions}
+              className={cn(
+                "rounded-xl",
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0" // Aplicado mt-0 para mobile
+              )}
+            >
+              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleConfirmDelete("oneOff")}
+              disabled={loading || isFetchingOptions}
+              className={cn(
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                isMobile && "h-10 text-sm flex-1" 
+              )}
+            >
+              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
+              {loading || isFetchingOptions ? (
+                "Excluindo..."
+              ) : (
+                "Excluir"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-    {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
-    <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
-      <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
-            <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-            Excluir Lançamento Recorrente
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <div className="py-4">
-          <RadioGroup
-            value={selectedDeleteScope}
-            onValueChange={(value: DeleteScope) => setSelectedDeleteScope(value)}
-            className="space-y-3 radio-fix-click"
-          >
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem 
-                value="thisMonth" 
-                id="delete-this-month" 
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-              />
-              <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Apenas este mês
-              </label>
-            </div>
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem 
-                value="thisMonthForward" 
-                id="delete-this-month-forward" 
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-              />
-              <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Deste mês em diante
-              </label>
-            </div>
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem 
-                value="all" 
-                id="delete-all" 
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
-              />
-              <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Todo o período
-              </label>
-            </div>
-          </RadioGroup>
-        </div>
-        <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-between items-center")}>
-          <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
-            <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-            Cancelar
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
-            {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
+      {/* Diálogo de Confirmação para Exclusão de Despesa Parcelada/Recorrente */}
+      <AlertDialog open={showDeleteOptionsDialog} onOpenChange={setShowDeleteOptionsDialog}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Excluir Lançamento Recorrente
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <RadioGroup
+              value={selectedDeleteScope}
+              onValueChange={(value: DeleteScope) => setSelectedDeleteScope(value)}
+              className="space-y-3 radio-fix-click"
+            >
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem 
+                  value="thisMonth" 
+                  id="delete-this-month" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
+                <label htmlFor="delete-this-month" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Apenas este mês
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem 
+                  value="thisMonthForward" 
+                  id="delete-this-month-forward" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
+                <label htmlFor="delete-this-month-forward" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Deste mês em diante
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem 
+                  value="all" 
+                  id="delete-all" 
+                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary" 
+                />
+                <label htmlFor="delete-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Todo o período
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row justify-between items-center")}>
+            <AlertDialogCancel disabled={loading || isFetchingOptions} className={cn("rounded-xl", isMobile && "h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary")}>
+              <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleConfirmDelete(selectedDeleteScope)} disabled={loading || isFetchingOptions} className={cn("w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl", isMobile && "h-10 text-xs flex-1")}>
+              {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
 
     {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente */}
@@ -610,11 +614,5 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         </AlertDialogFooter>
       </AlertDialog>
     </>
-  );
-
-  return (
-    <div className="flex-grow overflow-y-auto -mr-4 pr-4">
-      {formContent}
-    </div>
   );
 };
