@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
-import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
+import { cn, isValidUuid, getBorderClass, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
@@ -158,13 +158,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       
       setAmount(editingTransaction.amount);
       setDate(createSafeDate(editingTransaction.date));
-      setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
       setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
 
       // NOVO: Inicializa formaPagamento e cartaoId
       setFormaPagamento(editingTransaction.forma_pagamento as "dinheiro" | "pix" | "cartao" | "boleto" || "dinheiro");
       setCartaoId(editingTransaction.cartao_id || UNSELECTED_VALUE);
+      setCategory(editingTransaction.category || UNSELECTED_VALUE); // Mover para cá para garantir que filteredCategories esteja pronto
 
       setValidationErrors({}); // Clear errors when editing a new transaction
     } else {
@@ -298,9 +298,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     if (!editingTransaction) return;
     setLoading(true);
 
-    // Formatar a data como string YYYY-MM-DD (local)
+    // Usar a nova função para formatar a data com a hora atual
     const formattedDate = date
-      ? format(date, 'yyyy-MM-dd') // Usar format do date-fns
+      ? formatDateWithCurrentTimeInTimeZone(date)
       : "";
 
     let finalStatus: ReceitaStatus = isPaid
@@ -314,7 +314,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     const updatedTransaction: Omit<Transaction, "id"> = {
       type,
       amount: amount as number,
-      date: formattedDate,
+      date: formattedDate, // 'date' já está formatado com hora
       category: category === UNSELECTED_VALUE ? null : category,
       description,
       status: finalStatus,

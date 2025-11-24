@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
-import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone
+import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 import { DateTime } from "luxon"; // NOVO: Importar DateTime de luxon
 
@@ -78,7 +78,7 @@ export const useTransactionMutations = ({
             if (!masterRecurrenceId) throw new Error("Erro (DEL-INC-REC-1): ID de recorrência mestre não encontrado.");
 
             const currentOccurrenceDate = parseISO(transactionToDelete.date);
-            const formattedCurrentOccurrenceDate = formatInTimeZone(currentOccurrenceDate, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
+            const formattedCurrentOccurrenceDate = formatInTimeZone(currentOccurrenceDate, TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss'); // Usar formato completo
 
             if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
               console.log(`[DEBUG] Deleting single income occurrence from 'receitas' table with ID: ${id}`);
@@ -167,13 +167,13 @@ export const useTransactionMutations = ({
               throw new Error("Erro (DEL-EXP-2): ID da despesa principal inválido para exclusão 'deste mês em diante'.");
             }
             const currentInstallmentDate = parseISO(transactionToDelete.date);
-            console.log(`[DEBUG] Deleting expense installments from 'despesas_parcelas' for parent ${parentDespesaId} from ${formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd')} onwards.`); // Usar formatInTimeZone
+            console.log(`[DEBUG] Deleting expense installments from 'despesas_parcelas' for parent ${parentDespesaId} from ${formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss')} onwards.`); // Usar formato completo
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
               .delete()
               .eq("despesa_id", parentDespesaId)
-              .gte("vencimento", formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd')); // Usar formatInTimeZone
+              .gte("vencimento", formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss')); // Usar formato completo
 
             if (deleteFutureParcelasError) throw deleteFutureParcelasError;
 
@@ -263,7 +263,7 @@ export const useTransactionMutations = ({
                 .from("receitas")
                 .update({
                   valor: updatedTransaction.amount,
-                  data: updatedTransaction.date,
+                  data: updatedTransaction.date, // 'date' já está formatado com hora
                   tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                   descricao: updatedTransaction.description,
                   status: updatedTransaction.status,
@@ -289,7 +289,7 @@ export const useTransactionMutations = ({
               }
 
               // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
-              const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
+              const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss'); // Usar formato completo
               
               console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
               
@@ -307,7 +307,7 @@ export const useTransactionMutations = ({
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'), // Usar formatInTimeZone
+                p_first_occurrence_date: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss'), // Usar formato completo
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
@@ -330,7 +330,7 @@ export const useTransactionMutations = ({
               .from("receitas")
               .update({
                 valor: updatedTransaction.amount,
-                data: updatedTransaction.date,
+                data: updatedTransaction.date, // 'date' já está formatado com hora
                 tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 descricao: updatedTransaction.description,
                 status: updatedTransaction.status,
@@ -355,7 +355,7 @@ export const useTransactionMutations = ({
           }
 
           const newValorParcela = updatedTransaction.amount;
-          const newVencimento = updatedTransaction.date;
+          const newVencimento = updatedTransaction.date; // 'date' já está formatado com hora
           const newPagoStatus = updatedTransaction.status === "Recebida";
           const newPagoDate = newPagoStatus ? DateTime.now().setZone(TARGET_TIMEZONE).toISO() : null; // NOVO: Usa luxon
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
@@ -390,7 +390,7 @@ export const useTransactionMutations = ({
 
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
             // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
-            const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
+            const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss'); // Usar formato completo
             
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
@@ -405,7 +405,7 @@ export const useTransactionMutations = ({
               p_user_id: user.id,
               p_transaction_type: 'expense',
               p_master_id: parentDespesaId,
-              p_first_occurrence_date: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'), // Usar formatInTimeZone
+              p_first_occurrence_date: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd HH:mm:ss'), // Usar formato completo
               p_monthly_amount: newValorParcela,
               p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               p_description: updatedTransaction.description,

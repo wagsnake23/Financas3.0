@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getDate, format } from "date-fns"; // Importar format
-import { formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // NOVO: Importar formatInTimeZone e TARGET_TIMEZONE
+import { formatInTimeZone, TARGET_TIMEZONE, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // NOVO: Importar formatDateWithCurrentTimeInTimeZone
 
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 
@@ -32,7 +32,8 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
-  const [date, setDate] = useState(formatInTimeZone(new Date(), TARGET_TIMEZONE, 'yyyy-MM-dd')); // Usar formatInTimeZone
+  // Inicializar com a data e hora atual de Brasília
+  const [date, setDate] = useState(formatDateWithCurrentTimeInTimeZone(new Date()));
   const [category, setCategory] = useState(UNSELECTED_VALUE);
   const [description, setDescription] = useState("");
   const [isRecurring, setIsRecurring] = useState(false); // State for the toggle
@@ -134,7 +135,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               user_id: user.id,
               tipo_receita_id: category === UNSELECTED_VALUE ? null : category,
               valor: amount as number,
-              data: date,
+              data: date, // 'date' já está formatado com hora
               descricao,
               status: 'Prevista', // Master is always 'Prevista'
               is_recurring_master: true,
@@ -159,7 +160,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             p_user_id: user.id,
             p_transaction_type: 'income',
             p_master_id: masterRevenueId,
-            p_first_occurrence_date: date, // Already a 'YYYY-MM-DD' string
+            p_first_occurrence_date: date, // 'date' já é uma string 'YYYY-MM-DD HH:mm:ss'
             p_monthly_amount: amount as number,
             p_category_id: category === UNSELECTED_VALUE ? null : category,
             p_description: description,
@@ -178,7 +179,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           await onAddTransaction({
             type,
             amount: amount as number,
-            date,
+            date, // 'date' já está formatado com hora
             category: category === UNSELECTED_VALUE ? null : category,
             description,
             status: "Pendente", // Default for one-off income
@@ -195,7 +196,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         await onAddTransaction({
           type,
           amount: amount as number,
-          date,
+          date, // 'date' já está formatado com hora
           category: category === UNSELECTED_VALUE ? null : category,
           description,
           status: "Pendente", // Default for one-off expense
@@ -212,6 +213,8 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       setIsRecurring(false); // Reset toggle
       setStatus("Pendente"); // Reset status
       setValidationErrors({}); // Clear errors on success
+      // Reset date to current date and time
+      setDate(formatDateWithCurrentTimeInTimeZone(new Date()));
       
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
         style: toastSuccessStyle,
@@ -309,9 +312,11 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             <Input
               id="date"
               type="date"
-              value={date}
+              value={date.split(' ')[0]} // Exibir apenas a data para o input type="date"
               onChange={(e) => {
-                setDate(e.target.value);
+                // Ao mudar a data, combine com a hora atual de Brasília
+                const selectedDate = new Date(e.target.value);
+                setDate(formatDateWithCurrentTimeInTimeZone(selectedDate));
                 setValidationErrors(prev => ({ ...prev, date: false }));
               }}
               required
