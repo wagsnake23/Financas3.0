@@ -91,7 +91,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   // Lógica de toggle de status movida para o hook useLancamentosLogic
   const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
-  const newStatus: ReceetaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
+  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
 
   const transactionDate = (() => {
@@ -113,7 +113,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       onClick={() => onEditTransaction(transaction)} // Adiciona o handler de clique na linha
     >
       {/* DATA */}
-      <TableCell className={cn("py-2 px-2 text-xs", isMobile ? "min-w-[55px]" : "min-w-[70px]")}>
+      <TableCell className={cn("py-2 px-2", isMobile ? "min-w-[55px] text-sm" : "min-w-[70px] text-xs")}>
         {isMobile
           ? format(transactionDate, "dd/MMM", { locale: ptBR })
           : transactionDate.toLocaleDateString("pt-BR")}
@@ -135,9 +135,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
 
       {/* SUBCATEGORIA */}
-      <TableCell className={cn("py-2 px-2 text-xs flex items-center gap-1", isMobile ? "min-w-[35px]" : "min-w-[80px]")}>
+      <TableCell className={cn("py-2 px-2 flex items-center gap-1", isMobile ? "min-w-[35px] text-sm" : "min-w-[80px] text-xs")}>
         {categoryIcon && (
-          <DynamicIcon name={categoryIcon} className="h-4 w-4" />
+          <DynamicIcon name={categoryIcon} className={cn("h-4 w-4", isMobile && "h-4 w-4")} />
         )}
         <span>{categoryName}</span>
       </TableCell>
@@ -161,11 +161,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* VALOR */}
       <TableCell
-        className={`py-2 px-2 text-right font-semibold text-xs min-w-[80px] ${
+        className={cn(
+          "py-2 px-2 text-right font-semibold",
+          isMobile ? "min-w-[80px] text-sm" : "min-w-[80px] text-xs",
           transaction.type === "income"
             ? "text-success"
             : "text-destructive"
-        }`}
+        )}
       >
         {transaction.type === "income" ? "+" : "-"}
         {formatCurrency(transaction.amount)}
@@ -176,7 +178,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7"
+          className={cn("h-7 w-7", isMobile && "h-8 w-8")}
           onClick={(e) => {
             e.stopPropagation(); // Impede que o clique na linha seja acionado
             onToggleStatus(transaction.id, transaction.type, newStatus);
@@ -184,16 +186,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           disabled={transaction.status === "Cancelada"}
         >
           {transaction.status === "Recebida" && (
-            <DynamicIcon name="CheckCircle" className="h-4 w-4 text-success" />
+            <DynamicIcon name="CheckCircle" className={cn("h-4 w-4", isMobile && "h-5 w-5 text-success")} />
           )}
           {(transaction.status === "Pendente" ||
             transaction.status === "Prevista") && (
-            <DynamicIcon name="Circle" className="h-4 w-4 text-destructive" />
+            <DynamicIcon name="Circle" className={cn("h-4 w-4", isMobile && "h-5 w-5 text-destructive")} />
           )}
           {transaction.status === "Cancelada" && (
             <DynamicIcon
               name="XCircle"
-              className="h-4 w-4 text-muted-foreground"
+              className={cn("h-4 w-4", isMobile && "h-5 w-5 text-muted-foreground")}
             />
           )}
         </Button>
