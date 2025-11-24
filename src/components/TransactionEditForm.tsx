@@ -385,9 +385,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   };
 
   return (
-    <div className="transaction-edit-form-container"> {/* NEW: Wrap in a div */}
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
-        <div className={cn("flex-grow overflow-y-auto")}> {/* Removido classes condicionais para mobile */}
+    <div className="transaction-edit-form-container" key={editingTransaction?.id || "new"}> {/* Adicionado key para forçar remontagem */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}>
+        <div className={cn("flex-grow overflow-y-auto")}>
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -437,7 +437,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           />
         </div>
 
-        <div className={cn(isMobile && "action-buttons")}> {/* Aplicar action-buttons aqui */}
+        <div className={cn(isMobile && "action-buttons")}>
           <TransactionEditActions
             onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
             onSave={handleSubmit}
