@@ -394,7 +394,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         {/* Substituído o div flex-grow por ScrollArea */}
         <ScrollArea className={cn(
           isMobile ? "h-[calc(100vh-260px)]" : "h-[400px]",
-          "pr-4"
+          "pr-4 pb-0 mb-0" // Adicionado pb-0 e mb-0
         )}>
           <TransactionOneOffFields
             wrapperClassName={isMobile ? "space-y-3" : "space-y-4"} // Aplicado espaçamento aqui
@@ -453,7 +453,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "mt-1")} // Adicionado mt-1 para mobile
+          className={cn(isMobile && "mt-0")} // Alterado mt-1 para mt-0
         />
 
         {/* Removido o Footer condicional para mobile */}
