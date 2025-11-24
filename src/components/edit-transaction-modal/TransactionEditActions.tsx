@@ -10,6 +10,7 @@ interface TransactionEditActionsProps {
   loading: boolean;
   isMobile: boolean;
   isRecurringTransaction: boolean; // Nova prop para indicar se é transação recorrente
+  className?: string; // Adicionado className para receber classes externas
 }
 
 export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
@@ -19,29 +20,28 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   loading,
   isMobile,
   isRecurringTransaction,
+  className, // Receber a prop className
 }) => {
   return (
-    <>
-      <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row")}> {/* Aplicado action-buttons para mobile */}
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={onTriggerDeleteConfirmation} // Chama a nova prop
-          className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
-          disabled={loading}
-        >
-          <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          Excluir
-        </Button>
-        <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}>
-          <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          {loading ? "Salvando..." : "Salvar"}
-        </Button>
-        <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}>
-          <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          Cancelar
-        </Button>
-      </div>
-    </>
+    <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
+      <Button
+        type="button"
+        variant="destructive"
+        onClick={onTriggerDeleteConfirmation} // Chama a nova prop
+        className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
+        disabled={loading}
+      >
+        <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        Excluir
+      </Button>
+      <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}>
+        <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        {loading ? "Salvando..." : "Salvar"}
+      </Button>
+      <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}>
+        <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        Cancelar
+      </Button>
+    </div>
   );
 };

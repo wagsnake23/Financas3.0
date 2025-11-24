@@ -393,7 +393,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       >
         {/* Substituído o div flex-grow por ScrollArea */}
         <ScrollArea className={cn(
-          isMobile ? "h-[calc(100vh-260px)]" : "h-[550px]", // Altura ajustada para desktop
+          isMobile ? "h-[calc(100%-136px)]" : "h-[550px]", // Altura ajustada para mobile
           "pr-4"
         )}>
           <TransactionOneOffFields
@@ -514,7 +514,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedDeleteScope}
@@ -581,7 +581,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogHeader>
+          </AlertDialogDescription>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
