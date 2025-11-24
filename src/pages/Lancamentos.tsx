@@ -126,16 +126,7 @@ const Lancamentos = () => {
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleCancelEdit}
-                  className="h-9 w-9 text-muted-foreground hover:text-foreground"
-                >
-                  <DynamicIcon name="XCircle" className="h-5 w-5" />
-                </Button>
-              )}
+              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
