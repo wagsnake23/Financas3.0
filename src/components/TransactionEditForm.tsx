@@ -11,16 +11,6 @@ import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"; // NOVO: Importar AlertDialog components
 
 import { TransactionOneOffFields } from "./edit-transaction-modal/TransactionOneOffFields";
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
@@ -77,7 +67,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   handleTriggerDeleteConfirmation,
   // NOVO: Props para o fluxo de salvamento
   showSaveOptionsDialog,
-  setShowSaveOptionsDialog = () => {}, // Adicionado valor padrão para evitar o erro
+  setShowSaveOptionsDialog,
   selectedSaveScope,
   setSelectedSaveScope,
   handleConfirmSaveAction, // Nova prop
@@ -308,7 +298,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-6 px-0")}>
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full", isMobile && "space-y-3 px-0")}>
         <div className={cn("flex-grow overflow-y-auto", isMobile && "-mr-4 pr-4")}>
           <TransactionOneOffFields
             amount={amount}
@@ -366,7 +356,6 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
-        {isMobile && <div className="mb-4" />} {/* Adiciona espaço extra após os botões em mobile */}
       </form>
 
       {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente (agora no TransactionEditForm) */}
