@@ -105,12 +105,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       className={cn(
         transaction.status === "Recebida" &&
           "bg-soft-green/30 hover:bg-soft-green/50",
-        // Removido: (transaction.status === "Pendente" ||
-        // Removido:   transaction.status === "Prevista") &&
-        // Removido:   "bg-soft-red/30 hover:bg-soft-red/50",
         transaction.status === "Cancelada" &&
           "bg-muted/20 hover:bg-muted/40 text-muted-foreground",
-        "cursor-pointer" // Adiciona cursor de ponteiro para indicar clicável
+        "cursor-pointer", // Adiciona cursor de ponteiro para indicar clicável
+        "hover:bg-soft-blue/30" // Adiciona a cor de fundo azul suave ao passar o mouse
       )}
       onClick={() => onEditTransaction(transaction)} // Adiciona o handler de clique na linha
     >
