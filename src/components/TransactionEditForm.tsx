@@ -7,7 +7,7 @@ import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { X } from "lucide-react";
+import { X } from "lucide-react"; // Para o ícone de fechar
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import {
   AlertDialog,
@@ -616,7 +616,22 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   );
 
   return isMobile ? (
-    <div className={cn("p-4", isMobile && "p-0")}>{formContent}</div>
+    <Card className={cn("p-4 animate-fade-in rounded-xl shadow-sm bg-card relative h-full flex flex-col")}>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-bold">✏️ Editar Lançamento</h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onCancelEdit}
+          className="h-9 w-9 text-muted-foreground hover:text-foreground"
+        >
+          <X className="h-5 w-5" />
+        </Button>
+      </div>
+      <div className="flex-grow overflow-y-auto -mr-4 pr-4">
+        {formContent}
+      </div>
+    </Card>
   ) : (
     <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm")}>
       {formContent}
