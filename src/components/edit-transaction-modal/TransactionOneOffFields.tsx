@@ -17,6 +17,7 @@ import { StatusToggleButton } from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
+import { zonedTimeToUtc } from 'date-fns-tz'; // NOVO: Importar zonedTimeToUtc
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -276,7 +277,15 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               <Input
                 id="paidAt"
                 type="text"
-                value={paidAtTimestamp ? formatInTimeZone(new Date(paidAtTimestamp), TARGET_TIMEZONE, "dd/MM/yyyy HH:mm", { locale: ptBR }) : ''}
+                value={paidAtTimestamp 
+                    ? formatInTimeZone(
+                        zonedTimeToUtc(paidAtTimestamp, TARGET_TIMEZONE), // Parse string as BRT, then convert to UTC Date object
+                        TARGET_TIMEZONE, 
+                        "dd/MM/yyyy HH:mm", 
+                        { locale: ptBR }
+                      ) 
+                    : ''
+                }
                 readOnly
                 disabled
                 className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
