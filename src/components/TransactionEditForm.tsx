@@ -366,6 +366,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
         />
+        {isMobile && <div className="mb-4" />} {/* Adiciona espaço extra após os botões em mobile */}
       </form>
 
       {/* NOVO: Diálogo de Confirmação para Salvar Despesa Parcelada/Recorrente (agora no TransactionEditForm) */}
