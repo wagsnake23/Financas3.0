@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar zonedTimeToUtcFallback de utils
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, parseBrazilLocalToDate } from "@/lib/utils"; // Importar parseBrazilLocalToDate de utils
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -279,7 +279,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 type="text"
                 value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        zonedTimeToUtcFallback(paidAtTimestamp, TARGET_TIMEZONE), // Substituído zonedTimeToUtc por zonedTimeToUtcFallback
+                        parseBrazilLocalToDate(paidAtTimestamp), // Substituído zonedTimeToUtcFallback por parseBrazilLocalToDate
                         TARGET_TIMEZONE, 
                         "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }

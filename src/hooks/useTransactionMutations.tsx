@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
-import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar formatInTimeZone e zonedTimeToUtcFallback
+import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE, nowInBrazilISO, parseBrazilLocalToDate } from "@/lib/utils"; // Importar nowInBrazilISO e parseBrazilLocalToDate
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -356,7 +356,7 @@ export const useTransactionMutations = ({
           const newValorParcela = updatedTransaction.amount;
           const newVencimento = updatedTransaction.date;
           const newPagoStatus = updatedTransaction.status === "Recebida";
-          const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // NOVO: Usa formatInTimeZone
+          const newPagoDate = newPagoStatus ? nowInBrazilISO() : null; // NOVO: Usa nowInBrazilISO()
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
@@ -476,7 +476,7 @@ export const useTransactionMutations = ({
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
-      const currentTimestamp = formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"); // NOVO: Usa formatInTimeZone
+      const timestamp = nowInBrazilISO(); // NOVO: Usa nowInBrazilISO() para o timestamp
 
       // 1. Optimistically update the UI
       if (type === "income") {
@@ -485,7 +485,7 @@ export const useTransactionMutations = ({
           (oldData: Tables<'receitas'>[] | undefined) => {
             if (!oldData) return oldData;
             return oldData.map((r) =>
-              r.id === id ? { ...r, status: newStatus, updated_at: newStatus === "Recebida" ? currentTimestamp : r.updated_at } : r // NOVO: Atualiza updated_at
+              r.id === id ? { ...r, status: newStatus, updated_at: newStatus === "Recebida" ? timestamp : r.updated_at } : r // NOVO: Atualiza updated_at com o timestamp
             );
           }
         );
@@ -495,7 +495,7 @@ export const useTransactionMutations = ({
           (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
             if (!oldData) return oldData;
             return oldData.map((p) =>
-              p.id === id ? { ...p, pago: newStatus === "Recebida", data_pagamento: newStatus === "Recebida" ? currentTimestamp : null } : p // NOVO: Atualiza data_pagamento
+              p.id === id ? { ...p, pago: newStatus === "Recebida", data_pagamento: newStatus === "Recebida" ? timestamp : null } : p // NOVO: Atualiza data_pagamento com o timestamp
             );
           }
         );
@@ -506,14 +506,14 @@ export const useTransactionMutations = ({
         if (type === "income") {
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus, updated_at: currentTimestamp }) // NOVO: Envia updated_at
+            .update({ status: newStatus, updated_at: timestamp }) // NOVO: Envia updated_at com o timestamp
             .eq("id", id)
-            .eq("user_id", user.id);
+            .eq("user.id", user.id);
           if (error) throw error;
         } else { // expense
           const pago = newStatus === "Recebida";
           const dataPagamento = pago
-            ? currentTimestamp // NOVO: Usa o timestamp capturado
+            ? timestamp // NOVO: Usa o timestamp capturado
             : null;
 
           const { error } = await supabase

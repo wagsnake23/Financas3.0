@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
-import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isValidUuid e getBorderClass
+import { cn, isValidUuid, getBorderClass, nowInBrazilISO, parseBrazilLocalToDate } from "@/lib/utils"; // Importar nowInBrazilISO e parseBrazilLocalToDate
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
@@ -162,7 +162,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
-      setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
+      // NOVO: Inicializa paidAtTimestamp usando parseBrazilLocalToDate
+      setPaidAtTimestamp(editingTransaction.paymentTimestamp ? parseBrazilLocalToDate(editingTransaction.paymentTimestamp)?.toISOString() || null : null);
 
       // NOVO: Inicializa formaPagamento e cartaoId
       setFormaPagamento(editingTransaction.forma_pagamento as "dinheiro" | "pix" | "cartao" | "boleto" || "dinheiro");
