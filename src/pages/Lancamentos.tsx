@@ -102,7 +102,7 @@ const Lancamentos = () => {
             onToggleTransactionStatus={handleOptimisticToggleStatus} // NOVO: Passar a função
           />
         </main>
-        {/* REMOVIDO: <Footer isMobile={isMobile} /> */}
+        <Footer isMobile={isMobile} />
 
         {/* Loading Overlay - aparece sobre a tela atual enquanto o modal de edição carrega */}
         {isEditModalOpen && loadingEditData && (
@@ -122,7 +122,7 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6 px-4 justify-center")}> {/* Adicionado px-4 aqui */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-8 px-4 justify-center")}> {/* Alterado pt-6 para pt-8 */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
