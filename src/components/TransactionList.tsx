@@ -301,7 +301,7 @@ export const TransactionList = ({
   }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
 
   // Determine if "Todos os tipos" filter should be hidden
-  const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId); // Corrigido o nome da variável aqui
+  const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
@@ -351,7 +351,7 @@ export const TransactionList = ({
 
         {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "col-span-2")}> {/* Ajustado para col-span-2 em mobile */}
+                className={cn("rounded-xl", isMobile && "col-span-full")}> {/* Alterado para col-span-full em mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
