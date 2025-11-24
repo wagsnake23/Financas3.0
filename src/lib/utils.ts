@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatInTimeZone } from 'date-fns-tz'; // Mantido o import de formatInTimeZone
+import { isValid } from 'date-fns'; // NOVO: Importar isValid de date-fns
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,6 +56,11 @@ export function parseBrazilLocalToDate(isoString: string | null | undefined): Da
 
   const inst = new Date(isoString); // Parse a string ISO em um objeto Date (UTC)
 
+  // NOVO: Verifica se a data inicial é válida
+  if (isNaN(inst.getTime())) {
+    return undefined;
+  }
+
   // Formata este objeto Date UTC em uma string de hora local do Brasil (ex: "DD/MM/YYYY HH:mm:ss")
   const fmt = new Intl.DateTimeFormat("en-GB", {
     timeZone: "America/Sao_Paulo",
@@ -69,7 +75,6 @@ export function parseBrazilLocalToDate(isoString: string | null | undefined): Da
 
   const formatted = fmt.format(inst); // ex: "27/10/2023 10:00:00"
 
-  // Analisa a string de hora local formatada de volta em um objeto Date
   const [datePart, timePart] = formatted.split(" ");
   const [day, month, year] = datePart.split("/");
   const [hour, minute, second] = timePart.split(":");
@@ -78,7 +83,7 @@ export function parseBrazilLocalToDate(isoString: string | null | undefined): Da
   // No entanto, como derivamos os componentes (ano, mês, dia, hora, minuto, segundo) de uma string formatada
   // para a hora local do Brasil, este objeto Date, quando subsequentemente formatado de volta para a hora do Brasil,
   // representará corretamente a hora local original do Brasil.
-  return new Date(
+  const resultDate = new Date(
     Number(year),
     Number(month) - 1,
     Number(day),
@@ -86,7 +91,14 @@ export function parseBrazilLocalToDate(isoString: string | null | undefined): Da
     Number(minute),
     Number(second)
   );
+
+  // NOVO: Verifica se a data reconstruída é válida
+  if (isNaN(resultDate.getTime())) {
+    return undefined;
+  }
+
+  return resultDate;
 }
 
 // Re-exporta formatInTimeZone e as novas funções
-export { formatInTimeZone };
+export { formatInTimeZone, isValid }; // NOVO: Exportar isValid
