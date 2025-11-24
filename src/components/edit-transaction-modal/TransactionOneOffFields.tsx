@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Removido zonedTimeToUtcFallback
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -239,8 +239,23 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(selectedDate) => {
-                setDate(selectedDate);
+              onSelect={(selectedDateFromCalendar) => { // Renomeado para clareza
+                if (!selectedDateFromCalendar) {
+                  setDate(undefined);
+                  return;
+                }
+                // Combine a data selecionada com a hora atual de Brasília
+                const now = new Date();
+                const combinedDate = new Date(
+                  selectedDateFromCalendar.getFullYear(),
+                  selectedDateFromCalendar.getMonth(),
+                  selectedDateFromCalendar.getDate(),
+                  now.getHours(),
+                  now.getMinutes(),
+                  now.getSeconds(),
+                  now.getMilliseconds()
+                );
+                setDate(combinedDate);
                 setIsCalendarOpen(false);
               }}
               initialFocus

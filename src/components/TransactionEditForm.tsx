@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import { cn, isValidUuid, getBorderClass, formatDateWithCurrentTimeInTimeZone } from "@/lib/utils"; // Importar formatDateWithCurrentTimeInTimeZone
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns"; // Importar parseISO
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
@@ -51,11 +51,11 @@ interface TransactionEditFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 
-// Helper function to create a local Date object from a YYYY-MM-DD string
+// Helper function to create a local Date object from an ISO string, preserving time
 const createSafeDate = (dateString: string | null | undefined): Date | undefined => {
   if (!dateString) return undefined;
-  const [y, m, d] = dateString.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  const parsedDate = parseISO(dateString);
+  return isNaN(parsedDate.getTime()) ? undefined : parsedDate; // Retorna undefined se a data for inválida
 };
 
 export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
@@ -157,7 +157,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setStatus(initialStatus);
       
       setAmount(editingTransaction.amount);
-      setDate(createSafeDate(editingTransaction.date));
+      setDate(createSafeDate(editingTransaction.date)); // Usar createSafeDate para preservar a hora
       setIsPaid(editingTransaction.status === "Recebida");
       setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
 
@@ -187,7 +187,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const fetchPendingFutureItems = async (transaction: Transaction): Promise<number> => {
     let count = 0;
     try {
-      const formattedTransactionDate = format(createSafeDate(transaction.date) || new Date(), 'yyyy-MM-dd');
+      // Usar a data completa para a comparação, não apenas YYYY-MM-DD
+      const formattedTransactionDate = formatInTimeZone(parseISO(transaction.date), 'America/Sao_Paulo', 'yyyy-MM-dd HH:mm:ss');
 
       if (transaction.type === "expense") {
         const parentDespesaId = transaction.despesa_id;
@@ -394,14 +395,23 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             date={date}
-            setDate={(date) => {
-              if (!date) return;
-              const fixedDate = new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate()
+            setDate={(selectedDateFromCalendar) => { // Renomeado para clareza
+              if (!selectedDateFromCalendar) {
+                setDate(undefined);
+                return;
+              }
+              // Combine a data selecionada com a hora atual de Brasília
+              const now = new Date();
+              const combinedDate = new Date(
+                selectedDateFromCalendar.getFullYear(),
+                selectedDateFromCalendar.getMonth(),
+                selectedDateFromCalendar.getDate(),
+                now.getHours(),
+                now.getMinutes(),
+                now.getSeconds(),
+                now.getMilliseconds()
               );
-              setDate(fixedDate);
+              setDate(combinedDate);
               setValidationErrors(prev => ({ ...prev, date: false }));
             }}
             category={category}
