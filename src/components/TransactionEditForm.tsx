@@ -514,7 +514,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de excluí-lo?
             </AlertDialogDescription>
-          </AlertDialogDescription>
+          </AlertDialogHeader>
           <div className="py-4">
             <RadioGroup
               value={selectedDeleteScope}
@@ -581,7 +581,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você gostaria de aplicar as alterações?
             </AlertDialogDescription>
-          </AlertDialogDescription>
+          </AlertDialogHeader>
           <div className="py-4">
             <RadioGroup
               value={selectedSaveScope}
