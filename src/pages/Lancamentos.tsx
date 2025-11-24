@@ -28,8 +28,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"; // Importar AlertDialog components
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Importar RadioGroup
+} from "@/components/ui/alert-dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -65,7 +65,7 @@ const Lancamentos = () => {
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus,
     refetchCartoes,
-    // NOVO: Estados e funções para o fluxo de exclusão
+    // Estados e funções para o fluxo de exclusão
     showDeleteOptionsDialog,
     setShowDeleteOptionsDialog,
     showSimpleDeleteDialog,
@@ -76,12 +76,11 @@ const Lancamentos = () => {
     isFetchingDeleteOptions,
     handleTriggerDeleteConfirmation,
     handleConfirmDeleteAction,
-    // NOVO: Estados e funções para o fluxo de salvamento (passados para TransactionEditForm)
+    // Estados e funções para o fluxo de salvamento (passados para TransactionEditForm)
     showSaveOptionsDialog,
     setShowSaveOptionsDialog,
     selectedSaveScope,
     setSelectedSaveScope,
-    // handleConfirmSaveAction, // Já existe no TransactionEditForm
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -152,24 +151,14 @@ const Lancamentos = () => {
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && (
-                <Button
-                  variant="destructive" // Botão vermelho
-                  size="icon"
-                  onClick={handleTriggerDeleteConfirmation} // Chama a lógica de exclusão
-                  className="h-9 w-9 text-destructive hover:bg-destructive/10"
-                  disabled={isFetchingDeleteOptions} // Desabilitar enquanto busca opções
-                >
-                  <DynamicIcon name="Trash2" className="h-5 w-5" />
-                </Button>
-              )}
+              {/* REMOVIDO: Botão de exclusão ao lado do título em mobile */}
             </DialogHeader>
             {!loadingEditData && editingTransaction && (
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}
                 onCancelEdit={handleCancelEdit}
-                // REMOVIDO: onDeleteTransaction={handleDeleteTransaction}
+                onDeleteTransaction={handleDeleteTransaction}
                 allCategories={fetchedCategories}
                 isMobile={isMobile}
                 cartoes={cartoes}
