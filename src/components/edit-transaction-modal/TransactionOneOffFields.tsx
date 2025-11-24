@@ -93,7 +93,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   const dummyUser: User = { id: "dummy-user-id", email: "dummy@example.com", app_metadata: {}, user_metadata: {}, aud: "", created_at: "" };
 
   return (
-    <>
+    <div className={cn("space-y-4", isMobile && "w-full")}> {/* Removido max-w-[280px] mx-auto */}
       {/* Subcategoria */}
       <div className="space-y-2">
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
@@ -294,6 +294,6 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
