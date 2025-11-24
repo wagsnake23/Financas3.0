@@ -426,6 +426,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             validationErrors={validationErrors} // Pass validation errors
             setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
             paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
+            setPaidAtTimestamp={setPaidAtTimestamp} // FIX: Passa setPaidAtTimestamp
             // NOVO: Passando props de forma de pagamento e cartão
             formaPagamento={formaPagamento}
             setFormaPagamento={setFormaPagamento}
