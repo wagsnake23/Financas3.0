@@ -389,7 +389,7 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm mt-4",
-        isMobile ? "max-h-[400px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
+        isMobile ? "max-h-[375px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
       )}>
         <Table>
           <TableBody>
