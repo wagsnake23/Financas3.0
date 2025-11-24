@@ -118,7 +118,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button",
-              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[98vh] max-w-full p-4 rounded-none overflow-y-auto" : "sm:max-w-[600px] p-6", // Ajustado para fullscreen
+              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[98vh] max-w-full p-0 rounded-none overflow-y-auto" : "sm:max-w-[600px] p-6", // Revertido para o estado anterior
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
