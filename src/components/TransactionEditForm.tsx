@@ -387,7 +387,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
+      <form
+        onSubmit={handleSubmit}
+        className={cn("flex flex-col h-full", isMobile ? "space-y-2" : "space-y-4")}
+      >
         {/* Substituído o div flex-grow por ScrollArea */}
         <ScrollArea className={cn(
           isMobile ? "h-[calc(100vh-260px)]" : "h-[400px]", // Altura ajustada para mobile
