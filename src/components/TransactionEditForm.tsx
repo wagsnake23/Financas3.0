@@ -396,7 +396,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         className={cn("flex flex-col h-full", isMobile && "space-y-0")} // Alterado space-y-2 para space-y-0
       >
         {/* Removido o componente ScrollArea */}
-        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-3 pt-2")}> {/* Alterado pt-4 para pt-2 */}
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-3 pt-0")}> {/* Alterado pt-2 para pt-0 */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
