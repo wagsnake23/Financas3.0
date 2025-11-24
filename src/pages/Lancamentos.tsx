@@ -118,14 +118,19 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button",
-              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[98vw] h-full max-h-[95vh] px-2 rounded-lg overflow-y-auto" : "sm:max-w-[600px] p-6", // Ajustado para altura maior e alinhado ao topo
+              isMobile
+                ? "fixed inset-0 w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 rounded-none overflow-y-auto bg-background"
+                : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
             <DialogHeader
-              className={cn("flex flex-row items-center justify-between", isMobile && "p-4 pt-12")} // Alterado pt-18 para pt-12 para mobile
+              className={cn(
+                "flex items-center justify-between",
+                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm"
+              )}
             >
               <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
                 ✏️ Editar Lançamento
