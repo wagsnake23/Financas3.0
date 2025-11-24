@@ -396,7 +396,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         className={cn("flex flex-col h-full", isMobile && "space-y-0")} // Alterado space-y-2 para space-y-0
       >
         {/* Removido o componente ScrollArea */}
-        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-3 pt-0")}> {/* Alterado pt-2 para pt-0 */}
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-xs mx-auto p-2 pt-0")}> {/* Alterado p-3 para p-2 */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -453,7 +453,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "max-w-xs mx-auto px-3 pt-1 pb-4 mt-2")} // Alterado pb-24 para pb-4
+          className={cn(isMobile && "max-w-xs mx-auto px-3 pt-1 pb-2 mt-2")} // Alterado pb-4 para pb-2
         />
 
         {/* Removido o Footer condicional para mobile */}
@@ -482,7 +482,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
                 isMobile ? "mt-0 h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary" : "sm:mt-0" // Aplicado mt-0 para mobile
               )}
             >
-              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />} {/* Ícone de emoji para mobile */}
+              <DynamicIcon name="❌" className="mr-1 h-4 w-4" /> {/* Ícone de emoji para mobile */}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
