@@ -5,7 +5,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
-import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
@@ -20,6 +19,7 @@ import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; // Importar Button
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { LancamentosContent } from "@/components/LancamentosContent"; // Importar LancamentosContent
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -120,7 +120,8 @@ const Lancamentos = () => {
               "w-full dialog-lg-close-button sm:max-w-[600px] p-6", // Revertido para o comportamento padrão do shadcn/ui
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
-              "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
+              "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95",
+              isMobile && "max-w-[95vw] h-[90vh] p-4" // Ajustes para mobile
             )}
           >
             <DialogHeader
