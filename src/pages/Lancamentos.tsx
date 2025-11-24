@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose, // Importar DialogClose
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -116,21 +115,18 @@ const Lancamentos = () => {
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
           <DialogContent 
             className={cn(
-              "w-full relative dialog-lg-close-button", // Adicionada a classe personalizada e 'relative' aqui
+              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
               isMobile ? "max-w-sm pt-16 px-4 pb-4 mt-8" : "sm:max-w-[600px] p-6", // Ajustado pt e mt para mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogClose /> {/* Botão de fechar como filho direto */}
-            <DialogHeader className={cn(
-              isMobile ? "px-4 pt-24" : "pt-20", // Ajustado padding para o header para alinhar o título
-              "flex flex-col items-start" // Simplificado o layout do header
-            )}>
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4")}> {/* Removido pt-8 */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
+              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
