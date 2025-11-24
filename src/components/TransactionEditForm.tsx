@@ -385,7 +385,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   };
 
   return (
-    <>
+    <div className="transaction-edit-form-container"> {/* NEW: Wrap in a div */}
       <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
         <div className={cn("flex-grow overflow-y-auto")}> {/* Removido classes condicionais para mobile */}
           <TransactionOneOffFields
@@ -626,6 +626,6 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 };
