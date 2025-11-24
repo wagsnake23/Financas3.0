@@ -63,7 +63,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     enabled: enabled,
   });
 
-  const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<Tables<'cartoes'>[]>({
+  const { data: cartoes = [], isLoading: isLoadingCartoes, refetch: refetchCartoes } = useQuery<Tables<'cartoes'>[]>({
     queryKey: ["cartoes", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
@@ -171,5 +171,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     cartoes,
     isLoading,
     isLoadingCategories,
+    refetchCartoes, // Expor a função de refetch
   };
 };

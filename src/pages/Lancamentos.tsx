@@ -51,6 +51,7 @@ const Lancamentos = () => {
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus, // NOVO: Destruturar a nova função
+    refetchCartoes, // NOVO: Obter refetchCartoes
   } = useLancamentosLogic(user, authLoading);
 
   console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
@@ -133,6 +134,8 @@ const Lancamentos = () => {
                 onDeleteTransaction={handleDeleteTransaction}
                 allCategories={fetchedCategories}
                 isMobile={isMobile}
+                cartoes={cartoes} // NOVO: Passando cartoes
+                refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
               />
             )}
           </DialogContent>

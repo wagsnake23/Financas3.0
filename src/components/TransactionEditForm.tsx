@@ -8,7 +8,7 @@ import { cn, isValidUuid, getBorderClass } from "@/lib/utils"; // Importar isVal
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
-import { Database } from "@/integrations/supabase/types";
+import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +44,8 @@ interface TransactionEditFormProps {
     deleteScope: DeleteScope
   ) => void;
   allCategories: AppCategory[];
+  cartoes: Tables<'cartoes'>[]; // NOVO: Adicionado cartoes
+  refetchCartoes: () => void; // NOVO: Adicionado refetchCartoes
   isMobile: boolean;
 }
 
@@ -62,6 +64,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   onCancelEdit,
   onDeleteTransaction,
   allCategories,
+  cartoes, // NOVO
+  refetchCartoes, // NOVO
   isMobile,
 }) => {
   const [type, setType] = useState<TransactionType>("expense");
@@ -75,6 +79,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [isPaid, setIsPaid] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
   const [paidAtTimestamp, setPaidAtTimestamp] = useState<string | null>(null); // NOVO ESTADO
+
+  // NOVO: Estados para forma de pagamento e cartão
+  const [formaPagamento, setFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
+  const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
   // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
@@ -153,6 +161,11 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
       setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
+
+      // NOVO: Inicializa formaPagamento e cartaoId
+      setFormaPagamento(editingTransaction.forma_pagamento as "dinheiro" | "pix" | "cartao" | "boleto" || "dinheiro");
+      setCartaoId(editingTransaction.cartao_id || UNSELECTED_VALUE);
+
       setValidationErrors({}); // Clear errors when editing a new transaction
     } else {
       // Reset form when not editing
@@ -164,6 +177,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setStatus("Pendente");
       setIsPaid(false);
       setPaidAtTimestamp(null); // NOVO: Reseta paidAtTimestamp
+      setFormaPagamento("dinheiro"); // NOVO: Reseta formaPagamento
+      setCartaoId(UNSELECTED_VALUE); // NOVO: Reseta cartaoId
       setValidationErrors({});
     }
   }, [editingTransaction, allCategories]);
@@ -227,12 +242,21 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       newErrors.category = true;
       hasError = true;
     }
+    // NOVO: Validação para formaPagamento e cartaoId
+    if (formaPagamento === UNSELECTED_VALUE) {
+      newErrors.formaPagamento = true;
+      hasError = true;
+    }
+    if (formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {
+      newErrors.cartaoId = true;
+      hasError = true;
+    }
 
     setValidationErrors(newErrors);
 
     if (hasError) {
       toast.error(
-        "Preencha todos os campos obrigatórios (Valor, Data e Subcategoria)."
+        "Preencha todos os campos obrigatórios (Valor, Data, Subcategoria, Forma de Pagamento e Cartão, se aplicável)."
       );
       return;
     }
@@ -297,8 +321,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       // Keep installment-related fields for one-off installment expenses
       installmentNumber: editingTransaction.installmentNumber,
       totalInstallments: editingTransaction.totalInstallments,
-      forma_pagamento: editingTransaction.forma_pagamento,
-      cartao_id: editingTransaction.cartao_id,
+      forma_pagamento: formaPagamento, // NOVO: Incluído formaPagamento
+      cartao_id: formaPagamento === "cartao" ? cartaoId : null, // NOVO: Incluído cartaoId
       despesa_id: editingTransaction.despesa_id,
       // Include recurrence fields
       is_recurring_master: editingTransaction.is_recurring_master,
@@ -401,6 +425,13 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           validationErrors={validationErrors} // Pass validation errors
           setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
           paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
+          // NOVO: Passando props de forma de pagamento e cartão
+          formaPagamento={formaPagamento}
+          setFormaPagamento={setFormaPagamento}
+          cartaoId={cartaoId}
+          setCartaoId={setCartaoId}
+          cartoes={cartoes}
+          refetchCartoes={refetchCartoes}
         />
 
         <TransactionEditActions

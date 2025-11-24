@@ -58,6 +58,7 @@ export const useLancamentosLogic = (
     cartoes,
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
+    refetchCartoes, // NOVO: Obter refetchCartoes
   } = useTransactionsData({
     user,
     selectedMonth,
@@ -180,5 +181,6 @@ export const useLancamentosLogic = (
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus, // NOVO RETORNO
+    refetchCartoes, // NOVO: Retornar refetchCartoes
   };
 };
