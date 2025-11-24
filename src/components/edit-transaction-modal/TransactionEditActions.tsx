@@ -21,27 +21,25 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   isRecurringTransaction,
 }) => {
   return (
-    <>
-      <div className={cn("flex gap-2", isMobile ? "flex-row" : "md:flex-row")}> {/* Removido mt-6 */}
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={onTriggerDeleteConfirmation} // Chama a nova prop
-          className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
-          disabled={loading}
-        >
-          <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          Excluir
-        </Button>
-        <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}>
-          <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          {loading ? "Salvando..." : "Salvar"}
-        </Button>
-        <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}>
-          <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-          Cancelar
-        </Button>
-      </div>
-    </>
+    <div className={cn("flex gap-2", isMobile ? "flex-row" : "md:flex-row")}> {/* Removido mt-6 */}
+      <Button
+        type="button"
+        variant="destructive"
+        onClick={onTriggerDeleteConfirmation} // Chama a nova prop
+        className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
+        disabled={loading}
+      >
+        <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        Excluir
+      </Button>
+      <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}>
+        <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        {loading ? "Salvando..." : "Salvar"}
+      </Button>
+      <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}>
+        <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        Cancelar
+      </Button>
+    </div>
   );
 };
