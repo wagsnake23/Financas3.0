@@ -385,8 +385,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <div className={cn("flex-grow overflow-y-auto", isMobile && "max-h-[calc(90vh-120px)] -mr-4 pr-4")}> {/* Ajustado max-h para mobile */}
-        <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-3 px-0")}>
+      <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-3 px-0")}>
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-h-[calc(90vh-120px)] -mr-4 pr-4")}>
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -434,17 +434,17 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             cartoes={cartoes}
             refetchCartoes={refetchCartoes}
           />
+        </div>
 
-          <TransactionEditActions
-            onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-            onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
-            onCancel={onCancelEdit}
-            loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
-            isMobile={isMobile}
-            isRecurringTransaction={isRecurringTransaction}
-          />
-        </form>
-      </div>
+        <TransactionEditActions
+          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
+          onCancel={onCancelEdit}
+          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
+          isMobile={isMobile}
+          isRecurringTransaction={isRecurringTransaction}
+        />
+      </form>
 
       {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
