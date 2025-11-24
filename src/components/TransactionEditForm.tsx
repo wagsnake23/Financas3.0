@@ -389,10 +389,10 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col h-full", isMobile ? "space-y-2 mt-4" : "space-y-2")}
+        className={cn("flex flex-col h-full", isMobile && "space-y-2")} // Removido mt-4 aqui
       >
         {/* Removido o componente ScrollArea */}
-        <div className="flex-grow"> {/* Adicionado um div flex-grow para envolver os campos */}
+        <div className={cn("flex-grow overflow-y-auto", isMobile && "max-w-sm mx-auto p-4")}> {/* Adicionado max-w-sm, mx-auto, p-4, e overflow-y-auto */}
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -449,7 +449,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "")} // Removido mt-auto para mobile
+          className={cn(isMobile && "max-w-sm mx-auto p-4")} // Adicionado max-w-sm, mx-auto, p-4 para actions
         />
 
         {/* Removido o Footer condicional para mobile */}
