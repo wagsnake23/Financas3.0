@@ -301,7 +301,7 @@ export const TransactionList = ({
   }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
 
   // Determine if "Todos os tipos" filter should be hidden
-  const hideTypeFilter = isMobile && isValidUuid(filterPaymentId);
+  const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId); // Corrigido o nome da variável aqui
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
