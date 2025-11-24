@@ -389,7 +389,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col h-full", isMobile ? "space-y-2" : "space-y-2")} // Alterado space-y-4 para space-y-2 para desktop
+        className={cn("flex flex-col h-full", isMobile ? "space-y-2" : "space-y-2")}
       >
         {/* Substituído o div flex-grow por ScrollArea */}
         <ScrollArea className={cn(
@@ -452,7 +452,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn()} // Removido classes condicionais para mobile
+          className={cn(isMobile && "mt-auto")} // Adicionado mt-auto para mobile
         />
 
         {/* Removido o Footer condicional para mobile */}
