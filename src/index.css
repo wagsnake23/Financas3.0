@@ -196,11 +196,16 @@ All colors MUST be HSL.
 
   /* NOVO: Ajuste para o cabeçalho do formulário no mobile */
   .form-header {
-    padding-top: 1.2rem !important;   /* antes estava maior */
-    margin-bottom: 0.4rem !important; /* reduz espaço abaixo do título */
+    padding-top: 2rem !important;   /* antes estava maior */
+    margin-bottom: 1rem !important; /* reduz espaço abaixo do título */
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  /* NOVO: Ajuste para o título do formulário no mobile */
+  .form-title {
+    margin-top: 0.4rem !important;
   }
 
   /* NOVO: Ajuste para os botões de ação no mobile */
