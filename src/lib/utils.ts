@@ -1,10 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { formatInTimeZone } from 'date-fns-tz'; // Manter esta importação
-import * as dateFnsTz from 'date-fns-tz'; // Importar o módulo completo
-
-// Desestruturar zonedTimeToUtc do módulo completo
-const { zonedTimeToUtc } = dateFnsTz;
+import { formatInTimeZone, zonedTimeToUtc } from 'date-fns-tz'; // Importação direta de ambos
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
