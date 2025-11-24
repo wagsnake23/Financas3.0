@@ -125,7 +125,7 @@ const Lancamentos = () => {
             )}
           >
             <DialogHeader
-              className={cn("flex flex-row items-center justify-between", isMobile && "p-4")} // Adicionado padding para mobile
+              className={cn("flex flex-row items-center justify-between", isMobile && "p-4 pt-8")} // Adicionado padding para mobile
             >
               <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
                 ✏️ Editar Lançamento
