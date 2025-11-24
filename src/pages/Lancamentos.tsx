@@ -116,13 +116,13 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "fixed inset-0 w-full h-full max-w-none max-h-none p-0 bg-lancamentos-mobile-bg flex flex-col rounded-none justify-center items-center" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
+              isMobile ? "fixed inset-0 w-full h-full max-w-none max-h-none p-0 bg-lancamentos-mobile-bg flex flex-col rounded-none" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4 justify-center")}> {/* Alterado pt-8 para py-4 */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4")}> {/* Alterado pt-8 para py-4 */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
