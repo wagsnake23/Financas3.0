@@ -386,8 +386,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}> {/* Removido classes condicionais para mobile */}
-        <div className={cn("flex-grow overflow-y-auto")}> {/* Removido classes condicionais para mobile */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4 flex flex-col h-full")}>
+        <div className={cn("flex-grow overflow-y-auto")}>
           <TransactionOneOffFields
             amount={amount}
             setAmount={(v) => {
@@ -437,7 +437,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           />
         </div>
 
-        <div className={cn(isMobile && "action-buttons")}> {/* Aplicar action-buttons aqui */}
+        {/* Action buttons, always in a div with action-buttons class */}
+        <div className={cn(isMobile && "action-buttons")}>
           <TransactionEditActions
             onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
             onSave={handleSubmit}
@@ -447,8 +448,9 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             isRecurringTransaction={isRecurringTransaction}
           />
         </div>
+      </form>
 
-        {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
+      {/* Diálogo de Confirmação para Exclusão de Despesa Avulsa */}
       <AlertDialog open={showSimpleDeleteDialog} onOpenChange={setShowSimpleDeleteOptionsDialog}>
         <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
