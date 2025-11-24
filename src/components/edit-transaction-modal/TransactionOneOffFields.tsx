@@ -13,7 +13,8 @@ import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { AppCategory } from "@/types/finance";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
-import { StatusToggleButton } from "@/components/StatusToggleButton";
+import { StatusToggleButton }
+ from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
@@ -95,7 +96,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}> {/* Removido max-w-[280px] mx-auto */}
       {/* Subcategoria */}
-      <div className={cn("space-y-2", isMobile && "space-y-1 mt-[-1rem]")}> {/* Adicionado mt-[-1rem] para mobile */}
+      <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Removido mt-[-1rem] para mobile */}
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
@@ -166,8 +167,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
+          <SelectContent>
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
