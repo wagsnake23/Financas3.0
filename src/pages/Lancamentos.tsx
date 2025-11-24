@@ -116,7 +116,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "max-w-sm p-4 bg-lancamentos-mobile-bg min-h-[90vh]" : "sm:max-w-[600px] p-6", // NOVO: min-h-[90vh] para mobile
+              isMobile ? "max-w-sm p-4 bg-lancamentos-mobile-bg min-h-[90vh] flex flex-col" : "sm:max-w-[600px] p-6", // NOVO: flex flex-col para mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
