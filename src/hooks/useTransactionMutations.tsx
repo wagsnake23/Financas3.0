@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Transaction, TransactionType } from "@/types/finance";
 import { TablesUpdate, Tables, Database } from "@/integrations/supabase/types"; // Importar Tables e Database
-import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar formatInTimeZone e zonedTimeToUtcFallback
+import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone
 import { format, parseISO, getDate, addMonths, endOfMonth } from "date-fns";
 import { DateTime } from "luxon"; // NOVO: Importar DateTime de luxon
 
@@ -478,6 +478,7 @@ export const useTransactionMutations = ({
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
       const currentTimestamp = DateTime.now().setZone(TARGET_TIMEZONE).toISO(); // NOVO: Usa luxon
+      console.log(`[DEBUG] handleOptimisticToggleStatus: currentTimestamp generated: ${currentTimestamp}`); // ADDED LOG
 
       // 1. Optimistically update the UI
       if (type === "income") {

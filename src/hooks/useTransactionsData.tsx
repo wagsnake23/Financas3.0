@@ -40,6 +40,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .eq("user_id", user.id)
         .order("data", { ascending: false });
       if (error) throw error;
+      console.log("[DEBUG] useTransactionsData: Raw revenues fetched:", data.map(r => ({ id: r.id, updated_at: r.updated_at }))); // ADDED LOG
       return data;
     },
     enabled: enabled,
@@ -57,7 +58,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .filter("despesas.user_id", "eq", user.id)
         .order("vencimento", { ascending: true });
       if (error) throw error;
-      console.log("useTransactionsData: Raw expenseInstallments fetched:", data.map(p => ({ id: p.id, despesa_id: p.despesas?.id, forma_pagamento: p.despesas?.forma_pagamento, cartao_id: p.despesas?.cartao_id })));
+      console.log("[DEBUG] useTransactionsData: Raw expenseInstallments fetched:", data.map(p => ({ id: p.id, data_pagamento: p.data_pagamento }))); // ADDED LOG
       return data;
     },
     enabled: enabled,
