@@ -477,6 +477,7 @@ export const useTransactionMutations = ({
       }
 
       const toastId = 'status-update-toast'; // ID consistente para toasts de status
+      const currentTimestamp = format(new Date(), "yyyy-MM-dd HH:mm:ss"); // NOVO: Captura o timestamp atual
 
       // 1. Optimistically update the UI
       if (type === "income") {
@@ -485,7 +486,7 @@ export const useTransactionMutations = ({
           (oldData: Tables<'receitas'>[] | undefined) => {
             if (!oldData) return oldData;
             return oldData.map((r) =>
-              r.id === id ? { ...r, status: newStatus } : r
+              r.id === id ? { ...r, status: newStatus, updated_at: newStatus === "Recebida" ? currentTimestamp : r.updated_at } : r // NOVO: Atualiza updated_at
             );
           }
         );
@@ -495,7 +496,7 @@ export const useTransactionMutations = ({
           (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
             if (!oldData) return oldData;
             return oldData.map((p) =>
-              p.id === id ? { ...p, pago: newStatus === "Recebida" } : p
+              p.id === id ? { ...p, pago: newStatus === "Recebida", data_pagamento: newStatus === "Recebida" ? currentTimestamp : null } : p // NOVO: Atualiza data_pagamento
             );
           }
         );
@@ -506,14 +507,14 @@ export const useTransactionMutations = ({
         if (type === "income") {
           const { error } = await supabase
             .from("receitas")
-            .update({ status: newStatus })
+            .update({ status: newStatus, updated_at: currentTimestamp }) // NOVO: Envia updated_at
             .eq("id", id)
             .eq("user_id", user.id);
           if (error) throw error;
         } else { // expense
           const pago = newStatus === "Recebida";
           const dataPagamento = pago
-            ? format(new Date(), "yyyy-MM-dd HH:mm:ss")
+            ? currentTimestamp // NOVO: Usa o timestamp capturado
             : null;
 
           const { error } = await supabase
@@ -538,7 +539,7 @@ export const useTransactionMutations = ({
             (oldData: Tables<'receitas'>[] | undefined) => {
               if (!oldData) return oldData;
               return oldData.map((r) =>
-                r.id === id ? { ...r, status: (newStatus === "Recebida" ? "Pendente" : "Recebida") } : r
+                r.id === id ? { ...r, status: (newStatus === "Recebida" ? "Pendente" : "Recebida"), updated_at: r.updated_at } : r // Reverte updated_at também
               );
             }
           );
@@ -548,7 +549,7 @@ export const useTransactionMutations = ({
             (oldData: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[] | undefined) => {
               if (!oldData) return oldData;
               return oldData.map((p) =>
-                p.id === id ? { ...p, pago: (newStatus === "Recebida" ? false : true) } : p
+                p.id === id ? { ...p, pago: (newStatus === "Recebida" ? false : true), data_pagamento: p.data_pagamento } : p // Reverte data_pagamento também
               );
             }
           );

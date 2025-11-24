@@ -40,6 +40,7 @@ interface TransactionOneOffFieldsProps {
   totalInstallments?: number; // NEW: totalInstallments
   validationErrors: Record<string, boolean>; // NOVO: Adicionado validationErrors
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; // FIX: Adicionado setValidationErrors
+  paidAtTimestamp: string | null; // NOVO: Adicionado paidAtTimestamp
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -65,6 +66,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   totalInstallments, // NEW
   validationErrors, // NOVO
   setValidationErrors, // FIX: Desestruturado setValidationErrors
+  paidAtTimestamp, // NOVO
 }) => {
   const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
 
@@ -174,12 +176,27 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 
       <div className="flex flex-col items-start space-y-2">
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
-        <StatusToggleButton
-          currentStatus={isPaid ? "Recebida" : "Pendente"}
-          transactionType={transactionType}
-          onToggle={() => setIsPaid(!isPaid)}
-          isMobile={isMobile}
-        />
+        <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
+          <StatusToggleButton
+            currentStatus={isPaid ? "Recebida" : "Pendente"}
+            transactionType={transactionType}
+            onToggle={() => setIsPaid(!isPaid)}
+            isMobile={isMobile}
+          />
+          {paidAtTimestamp && (
+            <div className="flex-1">
+              <Label htmlFor="paidAt" className={cn(isMobile && "text-xs", "sr-only")}>Data/Hora Pagamento</Label>
+              <Input
+                id="paidAt"
+                type="text"
+                value={format(new Date(paidAtTimestamp), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                readOnly
+                disabled
+                className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

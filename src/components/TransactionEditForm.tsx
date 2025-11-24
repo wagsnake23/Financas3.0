@@ -74,6 +74,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [paidAtTimestamp, setPaidAtTimestamp] = useState<string | null>(null); // NOVO ESTADO
 
   // Estados para os diálogos de confirmação
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
@@ -151,6 +152,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDate(createSafeDate(editingTransaction.date));
       setCategory(editingTransaction.category || UNSELECTED_VALUE);
       setIsPaid(editingTransaction.status === "Recebida");
+      setPaidAtTimestamp(editingTransaction.paymentTimestamp || null); // NOVO: Inicializa paidAtTimestamp
       setValidationErrors({}); // Clear errors when editing a new transaction
     } else {
       // Reset form when not editing
@@ -161,6 +163,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       setDescription("");
       setStatus("Pendente");
       setIsPaid(false);
+      setPaidAtTimestamp(null); // NOVO: Reseta paidAtTimestamp
       setValidationErrors({});
     }
   }, [editingTransaction, allCategories]);
@@ -302,6 +305,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       recurrence_id: editingTransaction.recurrence_id,
       recurrence_day: editingTransaction.recurrence_day,
       tipo_pagamento: editingTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
+      paymentTimestamp: paidAtTimestamp, // NOVO: Incluído paidAtTimestamp
     };
 
     onUpdateTransaction(
@@ -396,6 +400,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           totalInstallments={editingTransaction?.totalInstallments}
           validationErrors={validationErrors} // Pass validation errors
           setValidationErrors={setValidationErrors} // FIX: Pass setValidationErrors
+          paidAtTimestamp={paidAtTimestamp} // NOVO: Passa paidAtTimestamp
         />
 
         <TransactionEditActions
