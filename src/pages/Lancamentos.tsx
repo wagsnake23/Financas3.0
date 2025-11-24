@@ -122,8 +122,8 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6")}> {/* Ajustado para pt-6 para mobile */}
-              <DialogTitle className={cn("text-xl", isMobile && "text-lg ml-auto")}> {/* Adicionado ml-auto aqui */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "pt-6 justify-center")}> {/* Adicionado justify-center aqui */}
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}> {/* Removido ml-auto aqui */}
                 ✏️ Editar Lançamento
               </DialogTitle>
               {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
