@@ -151,17 +151,7 @@ const Lancamentos = () => {
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {isMobile && (
-                <Button
-                  variant="ghost" // Alterado para ghost
-                  size="icon"
-                  onClick={handleTriggerDeleteConfirmation} // Chama a lógica de exclusão
-                  className="h-9 w-9 bg-soft-red text-destructive hover:bg-soft-red/80" // Novas cores
-                  disabled={isFetchingDeleteOptions} // Desabilitar enquanto busca opções
-                >
-                  <DynamicIcon name="Trash2" className="h-5 w-5" />
-                </Button>
-              )}
+              {/* REMOVIDO: Botão de exclusão ao lado do título em mobile */}
             </DialogHeader>
             {!loadingEditData && editingTransaction && (
               <TransactionEditForm
