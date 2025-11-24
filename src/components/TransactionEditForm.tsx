@@ -77,7 +77,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
   handleTriggerDeleteConfirmation,
   // NOVO: Props para o fluxo de salvamento
   showSaveOptionsDialog,
-  setShowSaveOptionsDialog,
+  setShowSaveOptionsDialog = () => {}, // Adicionado valor padrão para evitar o erro
   selectedSaveScope,
   setSelectedSaveScope,
   handleConfirmSaveAction, // Nova prop

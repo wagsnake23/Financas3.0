@@ -158,7 +158,6 @@ const Lancamentos = () => {
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}
                 onCancelEdit={handleCancelEdit}
-                onDeleteTransaction={handleDeleteTransaction}
                 allCategories={fetchedCategories}
                 isMobile={isMobile}
                 cartoes={cartoes}
