@@ -12,8 +12,8 @@ import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogHeader, // Mantido para compatibilidade, mas o conteúdo será removido
-  DialogTitle, // Mantido para compatibilidade, mas o conteúdo será removido
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -114,13 +114,18 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "max-w-sm p-0 bg-lancamentos-mobile-bg min-h-[90vh]" : "sm:max-w-[600px] p-6", // NOVO: min-h-[90vh] para mobile
+              isMobile ? "max-w-sm p-4 bg-lancamentos-mobile-bg min-h-[90vh]" : "sm:max-w-[600px] p-6", // NOVO: min-h-[90vh] para mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            {/* DialogHeader e DialogTitle removidos daqui, serão renderizados dentro do TransactionEditForm para mobile */}
+            <DialogHeader>
+              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
+                ✏️ Editar Lançamento
+              </DialogTitle>
+            </DialogHeader>
+            {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (
               <TransactionEditForm
                 editingTransaction={editingTransaction}
