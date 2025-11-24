@@ -169,7 +169,6 @@ All colors MUST be HSL.
 /* Ajuste para o botão de fechar padrão em mobile */
 @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px, so this targets smaller screens */
   .dialog-lg-close-button > button[data-radix-dialog-close] {
-    display: none; /* Oculta o botão de fechar padrão quando o personalizado é usado */
+    display: none !important; /* Força a ocultação do botão de fechar padrão */
   }
-  /* Removido o ajuste de 'top' e 'right' para o botão de fechar, pois ele agora está dentro do DialogHeader */
 }
