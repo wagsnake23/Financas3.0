@@ -95,7 +95,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}> {/* Removido max-w-[280px] mx-auto */}
       {/* Subcategoria */}
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isMobile && "mt-[-0.5rem]")}> {/* Adicionado mt-[-0.5rem] para mobile */}
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
