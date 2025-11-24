@@ -52,6 +52,7 @@ interface TransactionOneOffFieldsProps {
   setCartaoId: (value: string) => void;
   cartoes: Tables<'cartoes'>[];
   refetchCartoes: () => void; // Renomeado de loadCartoes para refetchCartoes
+  wrapperClassName?: string; // Nova prop
 }
 
 export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = ({
@@ -85,6 +86,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   setCartaoId,
   cartoes,
   refetchCartoes, // Renomeado
+  wrapperClassName, // Destruturar nova prop
 }) => {
   const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
 
@@ -93,7 +95,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   const dummyUser: User = { id: "dummy-user-id", email: "dummy@example.com", app_metadata: {}, user_metadata: {}, aud: "", created_at: "" };
 
   return (
-    <>
+    <div className={cn(wrapperClassName)}> {/* Aplicar wrapperClassName aqui */}
       {/* Subcategoria */}
       <div className="space-y-2">
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
@@ -294,6 +296,6 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
