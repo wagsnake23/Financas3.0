@@ -330,7 +330,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
-                className={cn("rounded-xl", isMobile && (hideTypeFilter ? "col-span-2" : "col-span-1"))}> {/* Ajustado col-span para mobile */}
+                className={cn("rounded-xl", isMobile && (hideTypeFilter ? "col-span-1" : "col-span-1"))}> {/* Ajustado col-span para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
@@ -351,7 +351,7 @@ export const TransactionList = ({
 
         {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "col-span-full")}> {/* Alterado para col-span-full em mobile */}
+                className={cn("rounded-xl", isMobile && (hideTypeFilter ? "col-span-1" : "col-span-1"))}> {/* Ajustado col-span para mobile */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>

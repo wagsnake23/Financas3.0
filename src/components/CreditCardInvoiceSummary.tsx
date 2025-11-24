@@ -83,7 +83,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         <Button
           variant="secondary"
           onClick={onPayInvoice}
-          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")} 
+          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")} {/* Ajustado w-auto e max-w-[150px] */}
           disabled={loadingPayInvoice || disablePayInvoiceButton}
         >
           <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
