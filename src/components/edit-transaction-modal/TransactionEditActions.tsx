@@ -22,7 +22,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
 }) => {
   return (
     <>
-      <div className={cn("flex gap-2", isMobile ? "flex-row" : "md:flex-row")}> {/* Removido mt-6 */}
+      <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row")}> {/* Aplicado action-buttons para mobile */}
         <Button
           type="button"
           variant="destructive"

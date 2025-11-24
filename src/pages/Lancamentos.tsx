@@ -4,7 +4,7 @@ import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { MonthNavigator } from "@/components/MonthNavigator";
-import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
+import { useLancamentosLogic } => "@/hooks/useLancamentosLogic";
 import { LancamentosContent } from "@/components/LancamentosContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -124,7 +124,7 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4")}> {/* Removido pt-8 */}
+            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "form-header")}> {/* Aplicado form-header para mobile */}
               <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
                 ✏️ Editar Lançamento
               </DialogTitle>

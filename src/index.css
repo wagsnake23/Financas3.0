@@ -177,29 +177,37 @@ All colors MUST be HSL.
   /* NOVO: Regras para transformar o modal em full-screen no mobile */
   .dialog-mobile-fullscreen {
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-
+    inset: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
     max-width: none !important;
-
-    margin: 0 !important;
-    padding: 1.5rem !important;
-
     border-radius: 0 !important;
-    box-shadow: none !important;
-
+    padding: 1.5rem !important;
     overflow-y: auto !important;
+    box-shadow: none !important;
     background: hsl(var(--background)) !important;
-
     transform: none !important; /* remove a centralização do Radix */
   }
 
   /* NOVO: Regras para tornar o overlay transparente no mobile */
   .dialog-mobile-overlay {
     background: transparent !important;
+  }
+
+  /* NOVO: Ajuste para o cabeçalho do formulário no mobile */
+  .form-header {
+    padding-top: 2.5rem !important; /* desce o título */
+    margin-bottom: 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* NOVO: Ajuste para os botões de ação no mobile */
+  .action-buttons {
+    margin-top: 0.8rem !important; /* reduz o espaço */
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
   }
 }
