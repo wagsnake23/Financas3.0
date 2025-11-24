@@ -122,8 +122,8 @@ const Lancamentos = () => {
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4 pt-8")}> {/* Alterado pt-8 para py-4 */}
-              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
+            <DialogHeader className={cn("flex flex-row items-center", isMobile && "py-4 px-4 pt-8")}> {/* Removido justify-between */}
+              <DialogTitle className={cn("text-xl text-left", isMobile && "text-lg")}> {/* Adicionado text-left */}
                 ✏️ Editar Lançamento
               </DialogTitle>
               {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
