@@ -114,21 +114,24 @@ const Lancamentos = () => {
 
         {/* Modal de Edição de Transação */}
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogOverlay className="dialog-mobile-overlay" /> {/* NOVO: Adicionado DialogOverlay com a classe */}
+          <DialogOverlay className={cn(isMobile && "dialog-mobile-overlay")} /> {/* Apply overlay class conditionally */}
           <DialogContent 
             className={cn(
-              "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6", // NOVO: Aplicado dialog-mobile-fullscreen condicionalmente
+              "w-full dialog-lg-close-button",
+              isMobile ? "dialog-mobile-fullscreen" : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader className={cn("flex flex-row items-center justify-between", isMobile && "py-4 px-4")}> {/* Removido pt-8 */}
-              <DialogTitle className={cn("text-xl", isMobile && "text-lg")}>
+            <DialogHeader className={cn(
+              "flex flex-row items-center justify-between", // Base classes for alignment
+              isMobile ? "pt-8 mb-6" : "sm:pt-8" // Mobile specific padding and margin-bottom, desktop default
+            )}>
+              <DialogTitle className={cn("text-xl", isMobile && "text-[1.4rem] font-semibold")}> {/* Apply mobile font styles directly */}
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {/* REMOVIDO: Botão de fechar ao lado do título em mobile */}
+              {/* The DialogClose button is rendered by DialogContent, and its styling is handled by CSS */}
             </DialogHeader>
             {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
             {!loadingEditData && editingTransaction && (

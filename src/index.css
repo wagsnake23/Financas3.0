@@ -188,6 +188,7 @@ All colors MUST be HSL.
 
     margin: 0 !important;
     padding: 1.5rem !important;
+    padding-bottom: 4.5rem !important; /* Adicionado padding extra no final */
 
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -201,5 +202,11 @@ All colors MUST be HSL.
   /* NOVO: Regras para tornar o overlay transparente no mobile */
   .dialog-mobile-overlay {
     background: transparent !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .dialog-mobile-fullscreen {
+    padding-bottom: 1.5rem !important; /* volta ao normal no desktop (p-6) */
   }
 }

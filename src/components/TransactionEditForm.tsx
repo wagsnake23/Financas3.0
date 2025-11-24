@@ -437,15 +437,29 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           />
         </div>
 
-        <TransactionEditActions
-          onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
-          onSave={handleSubmit} // Agora chama handleSubmit para lidar com o diálogo
-          onCancel={onCancelEdit} // Removido a condição isMobile ? undefined :
-          loading={loading || isFetchingOptions} // Desabilitar se estiver buscando opções
-          isMobile={isMobile}
-          isRecurringTransaction={isRecurringTransaction}
-          className={cn()} // Removido classes condicionais para mobile
-        />
+        {isMobile ? (
+          <footer className="mt-8 pb-8 sticky bottom-0 bg-background z-10 shadow-md"> {/* Tailwind for form-footer */}
+            <div className="flex gap-4 justify-center"> {/* Tailwind for action-buttons */}
+              <TransactionEditActions
+                onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+                onSave={handleSubmit}
+                onCancel={onCancelEdit}
+                loading={loading || isFetchingOptions}
+                isMobile={isMobile}
+                isRecurringTransaction={isRecurringTransaction}
+              />
+            </div>
+          </footer>
+        ) : (
+          <TransactionEditActions
+            onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
+            onSave={handleSubmit}
+            onCancel={onCancelEdit}
+            loading={loading || isFetchingOptions}
+            isMobile={isMobile}
+            isRecurringTransaction={isRecurringTransaction}
+          />
+        )}
 
         {/* Removido o Footer condicional para mobile */}
       </form>
