@@ -116,7 +116,7 @@ const Lancamentos = () => {
           <DialogContent 
             className={cn(
               "w-full dialog-lg-close-button", // Adicionada a classe personalizada aqui
-              isMobile ? "fixed inset-0 h-full w-full p-0 bg-lancamentos-mobile-bg flex flex-col overflow-hidden pt-safe pb-safe" : "sm:max-w-[600px] p-6", // Ajustado para ocupar toda a tela em mobile
+              isMobile ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-0 bg-lancamentos-mobile-bg flex flex-col overflow-y-auto max-h-[120vh] pt-safe pb-safe" : "sm:max-w-[600px] p-6", // Ajustado para centralizar e limitar tamanho em mobile
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
