@@ -108,7 +108,7 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient}
-            filterPaymentOptionId={filterPaymentPaymentOptionId}
+            filterPaymentOptionId={filterPaymentOptionId} {/* Corrigido o nome da prop aqui */}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
@@ -131,16 +131,16 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(
-            isMobile ? "w-full p-4 flex flex-col" : "sm:max-w-lg p-6" // Adicionado flex flex-col para mobile
+            isMobile ? "w-full p-4 flex flex-col" : "sm:max-w-lg p-6"
           )}>
-            <DialogHeader className={cn(isMobile && "sticky top-0 z-20 bg-background pb-2")}> {/* Header fixo para mobile */}
+            <DialogHeader className={cn(isMobile && "sticky top-0 z-20 bg-background pb-2")}>
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <div className={cn(isMobile && "flex-1 overflow-y-auto")}> {/* Conteúdo rolável para mobile */}
+              <div className={cn(isMobile && "flex-1 overflow-y-auto")}>
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
