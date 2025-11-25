@@ -108,7 +108,7 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient}
-            filterPaymentOptionId={filterPaymentOptionId}
+            filterPaymentOptionId={filterPaymentPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
@@ -130,7 +130,7 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent className={cn(isMobile && "mobile-dialog")}>
+          <DialogContent className={cn(isMobile && "dialog-mobile")}>
             <DialogHeader>
               <DialogTitle>
                 ✏️ Editar Lançamento
