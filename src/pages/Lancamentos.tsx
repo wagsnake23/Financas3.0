@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TransactionEditForm } from "@/components/TransactionEditForm";
+import { TransactionEditForm }2 from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { LancamentosContent } from "@/components/LancamentosContent";
 
@@ -138,7 +138,7 @@ const Lancamentos = () => {
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <>
+              <div className="mt-8"> 
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
@@ -149,7 +149,7 @@ const Lancamentos = () => {
                   cartoes={cartoes}
                   refetchCartoes={refetchCartoes}
                 />
-              </>
+              </div>
             )}
           </DialogContent>
         </Dialog>
