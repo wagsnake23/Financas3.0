@@ -41,7 +41,7 @@ const DialogContent = React.forwardRef<
 
         // Ajuste para mobile: NÃO ficar atrás do menu superior
         "sm:top-1/2 sm:-translate-y-1/2", // desktop normal
-        "top-[15%] translate-y-0 sm:translate-y-[-50%]", // mobile agora mais equilibrado
+        "top-[18%] translate-y-0 sm:translate-y-[-50%]", // mobile agora mais equilibrado
 
         // Remove TODAS as animações
         "!animate-none data-[state=open]:!animate-none data-[state=closed]:!animate-none",

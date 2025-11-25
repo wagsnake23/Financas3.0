@@ -135,9 +135,9 @@ const Lancamentos = () => {
           <DialogContent
             className={cn(
               "dialog-lg-close-button",
-              isMobile
-                ? "sm:max-w-[425px]"
-                : "sm:max-w-[600px]",
+              // Removidas as classes de posicionamento e tamanho específicas para mobile
+              // "sm:max-w-[425px]", // Esta classe será removida para mobile
+              "sm:max-w-[600px]",
               // Classes para remover animações
               "!animate-none",
               "data-[state=open]:!animate-none",
