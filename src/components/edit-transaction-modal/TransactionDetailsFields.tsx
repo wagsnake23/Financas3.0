@@ -96,7 +96,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         value: card.id, // Use card ID as value
         label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})`
       }));
-      return [...baseOptions, ...cardOptions];
+      return [...baseOptions, { value: "cartao", label: "💳 Cartão" }, ...cardOptions]; // Adicionado "Cartão" como opção genérica para mobile
     } else {
       // On desktop, keep "Cartão" as a separate option
       return [...baseOptions, { value: "cartao", label: "💳 Cartão" }];
@@ -317,7 +317,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 }
                 readOnly
                 disabled
-                className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+                className={cn("rounded-xl bg-muted/50 text-muted-foreground border-none", isMobile && "h-9 text-sm")}
               />
             </div>
           )}
