@@ -69,7 +69,7 @@ export const useTransactionEditForm = ({
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] =
+  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = // Corrected name
     useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] =
     useState<DeleteScope>("thisMonth");
@@ -367,7 +367,7 @@ export const useTransactionEditForm = ({
     if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
     } else {
-      setShowSimpleDeleteDialog(true);
+      setShowSimpleDeleteOptionsDialog(true); // Corrected call
     }
   }, [editingTransaction, fetchPendingFutureItems]);
 
@@ -381,7 +381,7 @@ export const useTransactionEditForm = ({
         );
       }
       setShowDeleteOptionsDialog(false);
-      setShowSimpleDeleteDialog(false);
+      setShowSimpleDeleteOptionsDialog(false); // Corrected call
     },
     [editingTransaction, onDeleteTransaction]
   );
