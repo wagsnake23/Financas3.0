@@ -51,7 +51,7 @@ const Lancamentos = () => {
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient,
-    filterPaymentOptionId,
+    filterPaymentOptionId, // Corrigido o nome da variável aqui
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus, // NOVO: Destruturar a nova função
     refetchCartoes, // NOVO: Obter refetchCartoes
@@ -94,7 +94,7 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient} 
-            filterPaymentOptionId={filterPaymentPaymentOptionId}
+            filterPaymentOptionId={filterPaymentOptionId} {/* Corrigido o nome da propriedade aqui */}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
