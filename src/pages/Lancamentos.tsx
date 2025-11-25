@@ -131,7 +131,7 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(
-            isMobile ? "max-w-[100vw] p-4 max-h-[95vh] overflow-y-auto pt-8" : "sm:max-w-lg p-6" // Ajuste para desktop e mobile
+            isMobile ? "w-full p-4" : "sm:max-w-lg p-6" // Ajuste para desktop e mobile
           )}>
             <DialogHeader>
               <DialogTitle>
