@@ -132,7 +132,7 @@ const Lancamentos = () => {
         >
           <DialogContent className={cn(
             isMobile
-              ? "w-full max-w-[95vw] p-4 mt-6"
+              ? "w-full p-4 mt-6" // Removido max-w-[95vw]
               : "sm:max-w-lg p-6"
           )}>
             <DialogHeader>
