@@ -250,7 +250,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           valor_parcela: valorParcela,
           vencimento: formattedFirstInstallmentDate,
           pago: tipoPagamento === "avista" ? isPaid : false,
-          data_pagamento: tipoPagamento === "avista" && isPaid ? currentTimestamp : null,
+          data_pagamento: tipoPagamento === "avista" && isPaid ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null, // NOVO: Directly use new Date()
         });
 
         for (let i = 1; i < numeroParcelas; i++) {

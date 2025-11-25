@@ -266,6 +266,8 @@ export const useTransactionMutations = ({
                   tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                   descricao: updatedTransaction.description,
                   status: updatedTransaction.status,
+                  // NOVO: Adicionado updated_at para receitas quando o status é 'Recebida'
+                  updated_at: updatedTransaction.status === "Recebida" ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null,
                 })
                 .eq("id", id)
                 .eq("user_id", user.id);
@@ -281,6 +283,8 @@ export const useTransactionMutations = ({
                     tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
+                    // NOVO: Adicionado updated_at para receitas mestras quando o status é 'Recebida'
+                    updated_at: updatedTransaction.status === "Recebida" ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null,
                   })
                   .eq("id", masterRecurrenceId)
                   .eq("user_id", user.id);
@@ -333,6 +337,8 @@ export const useTransactionMutations = ({
                 tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 descricao: updatedTransaction.description,
                 status: updatedTransaction.status,
+                // NOVO: Adicionado updated_at para receitas quando o status é 'Recebida'
+                updated_at: updatedTransaction.status === "Recebida" ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null,
               })
               .eq("id", id)
               .eq("user_id", user.id);
@@ -381,7 +387,7 @@ export const useTransactionMutations = ({
                 valor_parcela: newValorParcela,
                 vencimento: newVencimento,
                 pago: newPagoStatus,
-                data_pagamento: newPagoDate,
+                data_pagamento: newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null, // NOVO: Directly use new Date()
               })
               .eq("id", id);
 
@@ -513,7 +519,7 @@ export const useTransactionMutations = ({
         } else { // expense
           const pago = newStatus === "Recebida";
           const dataPagamento = pago
-            ? currentTimestamp // NOVO: Usa o timestamp capturado
+            ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") // NOVO: Directly use new Date()
             : null;
 
           const { error } = await supabase
