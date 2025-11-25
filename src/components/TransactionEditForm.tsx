@@ -144,7 +144,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         <div
           className={cn(
             "overflow-y-auto",
-            isMobile && "w-full px-2 mt-0 max-h-[58vh] overflow-x-hidden"
+            isMobile && "w-full px-2 mt-0 max-h-[65vh] overflow-x-hidden"
           )}
         >
           <TransactionDetailsFields
