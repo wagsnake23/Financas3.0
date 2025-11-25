@@ -24,7 +24,8 @@ export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
   const buttonClasses = cn(
     "h-9 px-3 text-sm rounded-xl",
     isMobile && "h-8 px-2 text-xs",
-    isPaidOrReceived ? "bg-success/10 hover:bg-success/20 text-success" : "bg-destructive/10 hover:bg-destructive/20 text-destructive",
+    // Removido as classes de background e hover background para deixar o fundo transparente
+    isPaidOrReceived ? "text-success hover:bg-transparent" : "text-destructive hover:bg-transparent",
   );
 
   const label = isPaidOrReceived ? "Pago/Recebido" : "Pendente";
