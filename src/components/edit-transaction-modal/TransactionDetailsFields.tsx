@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, isValidUuid } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -82,6 +82,54 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
   const dummyUser: User = { id: "dummy-user-id", email: "dummy@example.com", app_metadata: {}, user_metadata: {}, aud: "", created_at: "" };
 
+  const paymentOptions = useMemo(() => {
+    const baseOptions = [
+      { value: UNSELECTED_VALUE, label: "Selecione a forma de pagamento", disabled: true },
+      { value: "dinheiro", label: "💰 Dinheiro" },
+      { value: "pix", label: "📲 Pix" },
+      { value: "boleto", label: "📑 Boleto" },
+    ];
+
+    if (isMobile) {
+      // On mobile, integrate credit cards directly
+      const cardOptions = cartoes.map(card => ({
+        value: card.id, // Use card ID as value
+        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})`
+      }));
+      return [...baseOptions, ...cardOptions];
+    } else {
+      // On desktop, keep "Cartão" as a separate option
+      return [...baseOptions, { value: "cartao", label: "💳 Cartão" }];
+    }
+  }, [cartoes, isMobile, UNSELECTED_VALUE]);
+
+  const handleFormaPagamentoChange = (value: string) => {
+    if (isMobile) {
+      if (isValidUuid(value)) { // If a card ID is selected
+        setFormaPagamento("cartao");
+        setCartaoId(value);
+      } else { // If a non-card option is selected
+        setFormaPagamento(value as "dinheiro" | "pix" | "boleto");
+        setCartaoId(UNSELECTED_VALUE);
+      }
+    } else {
+      setFormaPagamento(value as "dinheiro" | "pix" | "cartao" | "boleto");
+      if (value !== "cartao") {
+        setCartaoId(UNSELECTED_VALUE);
+      }
+    }
+    setValidationErrors(prev => ({ ...prev, formaPagamento: false }));
+    setValidationErrors(prev => ({ ...prev, cartaoId: false })); // Clear cartaoId error too
+  };
+
+  // Determine the value for the Select component
+  const selectValue = useMemo(() => {
+    if (isMobile && formaPagamento === "cartao") {
+      return cartaoId;
+    }
+    return formaPagamento;
+  }, [isMobile, formaPagamento, cartaoId]);
+
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}>
       {/* Subcategoria */}
@@ -144,39 +192,30 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select 
-            value={formaPagamento} 
-            onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => {
-              setFormaPagamento(value);
-              if (value !== "cartao") {
-                setCartaoId(UNSELECTED_VALUE);
-              }
-              setValidationErrors(prev => ({ ...prev, formaPagamento: false }));
-            }}
+            value={selectValue} 
+            onValueChange={handleFormaPagamentoChange}
           >
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
           <SelectContent>
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
-              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
+            {paymentOptions.map((option) => (
+              <SelectItem 
+                key={option.value} 
+                value={option.value} 
+                disabled={option.disabled} 
+                className={cn(isMobile && "text-sm")}
+              >
+                {option.label}
               </SelectItem>
-              <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📲</span> Pix</span>
-              </SelectItem>
-              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>
-              </SelectItem>
-              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📑</span> Boleto</span>
-              </SelectItem>
+            ))}
             </SelectContent>
           </Select>
         </div>
       )}
 
-      {/* Seleção de Cartão de Crédito (condicional) */}
-      {transactionType === "expense" && formaPagamento === "cartao" && (
+      {/* Seleção de Cartão de Crédito (condicional - APENAS DESKTOP) */}
+      {transactionType === "expense" && formaPagamento === "cartao" && !isMobile && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
@@ -205,7 +244,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         </div>
       )}
 
-      {/* Data */}
+      {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -219,7 +258,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
               )}
             >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
               {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
@@ -254,7 +293,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
-        <div className="flex items-center gap-2 w-full">
+        <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
             transactionType={transactionType}
@@ -269,7 +308,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 type="text"
                 value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        paidAtTimestamp,
+                        paidAtTimestamp, // Simplificado para passar a string diretamente
                         TARGET_TIMEZONE, 
                         "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }
