@@ -69,7 +69,7 @@ export const useTransactionEditForm = ({
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] =
+  const [showSimpleDeleteDialog, setShowSimpleDeleteDialog] =
     useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] =
     useState<DeleteScope>("thisMonth");
@@ -416,7 +416,7 @@ export const useTransactionEditForm = ({
     showDeleteOptionsDialog,
     setShowDeleteOptionsDialog,
     showSimpleDeleteDialog,
-    setShowSimpleDeleteOptionsDialog,
+    setShowSimpleDeleteDialog, // Adicionado aqui
     selectedDeleteScope,
     setSelectedDeleteScope,
     showSaveOptionsDialog,
