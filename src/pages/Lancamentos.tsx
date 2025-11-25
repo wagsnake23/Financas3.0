@@ -108,7 +108,7 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient}
-            filterPaymentOptionId={filterPaymentOptionId} {/* Corrigido o nome da prop aqui */}
+            filterPaymentOptionId={filterPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
