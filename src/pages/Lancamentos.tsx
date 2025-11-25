@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogOverlay, // Importar DialogOverlay
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -130,25 +131,11 @@ const Lancamentos = () => {
         <Dialog
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
-          className="flex items-center justify-center"
+          // Removida a classe "flex items-center justify-center" do Dialog
         >
+          <DialogOverlay /> {/* Adicionado DialogOverlay */}
           <DialogContent
-            className={cn(
-              "dialog-lg-close-button",
-              // Removidas as classes de posicionamento e tamanho específicas para mobile
-              // "sm:max-w-[425px]", // Esta classe será removida para mobile
-              "sm:max-w-[600px]",
-              // Classes para remover animações
-              "!animate-none",
-              "data-[state=open]:!animate-none",
-              "data-[state=closed]:!animate-none",
-              "data-[state=open]:!fade-in-0",
-              "data-[state=closed]:!fade-out-0",
-              "data-[state=open]:!zoom-in-95",
-              "data-[state=closed]:!zoom-out-95",
-              "data-[state=open]:!slide-in-from-top-2",
-              "data-[state=closed]:!slide-out-to-top-2"
-            )}
+            className="sm:max-w-[600px] p-6" // Classes padrão do shadcn/ui
           >
             <DialogHeader
               className={cn(
