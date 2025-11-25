@@ -139,7 +139,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       >
         <div
           className={cn(
-            "flex-grow overflow-y-auto",
+            "overflow-y-auto", // Removido flex-grow
             isMobile && "w-full px-2 mt-0" // Reduzido mt-6 para mt-0
           )}
         >
