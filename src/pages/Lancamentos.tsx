@@ -13,13 +13,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  // Removido: DialogOverlay, // Importar DialogOverlay
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button"; // Importar Button
-import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
-import { LancamentosContent } from "@/components/LancamentosContent"; // Importar LancamentosContent
+import { LancamentosContent } from "@/components/LancamentosContent";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -28,51 +25,68 @@ const Lancamentos = () => {
 
   const {
     selectedMonth,
-    setSelectedMonth, // Adicionado
+    setSelectedMonth,
     handlePreviousMonth,
     handleNextMonth,
     setEditingTransaction,
     setFullEditingRevenue,
     setFullEditingExpense,
-    loadingEditData, // Mantido
+    loadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
-    isEditModalOpen, // Mantido
+    isEditModalOpen,
     setIsEditModalOpen,
     monthlyFilteredTransactions,
     fetchedCategories,
     cartoes,
-    isLoading, // Este é para o carregamento inicial da página
+    isLoading,
     handleDeleteTransaction,
     handleEditTransaction,
     handleUpdateTransaction,
     handleCancelEdit,
-    editingTransaction, // Mantido
+    editingTransaction,
     fullEditingRevenue,
     fullEditingExpense,
     queryClient: logicQueryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
-    handleOptimisticToggleStatus, // NOVO: Destruturar a nova função
-    refetchCartoes, // NOVO: Obter refetchCartoes
+    handleOptimisticToggleStatus,
+    refetchCartoes,
   } = useLancamentosLogic(user, authLoading);
 
-  console.log("Lancamentos.tsx: User from useAuth:", user?.id, "Is user null?", !user);
-  
-  // Apenas mostra o loading de página cheia para o carregamento inicial, não para o modal de edição
-  if (authLoading || isLoading) { // Removido loadingEditData daqui
+  console.log(
+    "Lancamentos.tsx: User from useAuth:",
+    user?.id,
+    "Is user null?",
+    !user
+  );
+
+  if (authLoading || isLoading) {
     return <Loading />;
   }
 
   return (
     <ProtectedRoute>
-      <div className={cn("min-h-screen bg-background pt-16 relative", isMobile && "bg-lancamentos-mobile-bg")}>
+      <div
+        className={cn(
+          "min-h-screen bg-background pt-16 relative",
+          isMobile && "bg-lancamentos-mobile-bg"
+        )}
+      >
         <Navigation />
-        <main className={cn("container mx-auto", isMobile ? "px-0 py-4" : "px-4 py-8")}>
-          {!isMobile && (
-            <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
+
+        <main
+          className={cn(
+            "container mx-auto",
+            isMobile ? "px-0 py-4" : "px-4 py-8"
           )}
-          
+        >
+          {!isMobile && (
+            <h1 className="text-3xl font-bold mb-6">
+              Histórico de Lançamentos
+            </h1>
+          )}
+
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
@@ -93,35 +107,37 @@ const Lancamentos = () => {
             cartoes={cartoes}
             user={user}
             onEditTransaction={handleEditTransaction}
-            queryClient={logicQueryClient} 
+            queryClient={logicQueryClient}
             filterPaymentOptionId={filterPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
-            selectedMonth={selectedMonth} // Adicionado
-            setSelectedMonth={setSelectedMonth} // Adicionado
-            onToggleTransactionStatus={handleOptimisticToggleStatus} // NOVO: Passar a função
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            onToggleTransactionStatus={handleOptimisticToggleStatus}
           />
         </main>
+
         <Footer isMobile={isMobile} />
 
-        {/* Loading Overlay - aparece sobre a tela atual enquanto o modal de edição carrega */}
         {isEditModalOpen && loadingEditData && (
           <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           </div>
         )}
 
-        {/* Modal de Edição de Transação */}
-        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          {/* Removido: <DialogOverlay className="dialog-mobile-overlay" /> */}
-          <DialogContent 
+        {/* Modal corrigido */}
+        <Dialog
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          className="flex items-center justify-center"
+        >
+          <DialogContent
             className={cn(
               "dialog-lg-close-button",
               isMobile
                 ? "sm:max-w-[425px]"
                 : "sm:max-w-[600px]",
-              // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
@@ -135,11 +151,10 @@ const Lancamentos = () => {
               <DialogTitle className="text-lg font-semibold">
                 ✏️ Editar Lançamento
               </DialogTitle>
-              {/* O botão de fechar padrão do shadcn/ui será renderizado automaticamente pelo DialogContent */}
             </DialogHeader>
-            {/* Renderiza o formulário apenas quando editingTransaction estiver pronto e não estiver carregando dados */}
+
             {!loadingEditData && editingTransaction && (
-              <> {/* Adicionado um fragmento para agrupar o formulário e o footer */}
+              <>
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
@@ -147,8 +162,8 @@ const Lancamentos = () => {
                   onDeleteTransaction={handleDeleteTransaction}
                   allCategories={fetchedCategories}
                   isMobile={isMobile}
-                  cartoes={cartoes} // NOVO: Passando cartoes
-                  refetchCartoes={refetchCartoes} // NOVO: Passando refetchCartoes
+                  cartoes={cartoes}
+                  refetchCartoes={refetchCartoes}
                 />
               </>
             )}

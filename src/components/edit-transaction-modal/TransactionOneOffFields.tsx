@@ -13,8 +13,7 @@ import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { AppCategory } from "@/types/finance";
 import { Database, Tables } from "@/integrations/supabase/types"; // Importar Tables
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
-import { StatusToggleButton }
- from "@/components/StatusToggleButton";
+import { StatusToggleButton } from "@/components/StatusToggleButton";
 import { AddCardDialog } from "@/components/AddCardDialog"; // NOVO: Importar AddCardDialog
 import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // NOVO: Importar ManageCardsDialog
 import { User } from "@supabase/supabase-js"; // NOVO: Importar User
@@ -280,7 +279,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 type="text"
                 value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        zonedTimeToUtcFallback(paidAtTimestamp, TARGET_TIMEZONE), // Substituído zonedTimeToUtc por zonedTimeToUtcFallback
+                        paidAtTimestamp, // Simplificado para passar a string diretamente
                         TARGET_TIMEZONE, 
                         "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }
