@@ -162,7 +162,7 @@ All colors MUST be HSL.
 
 @media (max-width: 767px) {
   .dialog-mobile {
-    padding-top: 2.5rem !important;   /* Aumentado para descer o título */
+    padding-top: 0.5rem !important;   /* Aumentado para descer o título */
     padding-bottom: 0 !important;  /* remove faixa preta inferior */
   }
 
