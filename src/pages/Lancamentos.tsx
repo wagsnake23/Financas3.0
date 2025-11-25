@@ -131,14 +131,7 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(
-            "max-w-[100vw] p-4", // Mantém as classes existentes
-            // Removido as classes de animação conforme solicitado
-            // data-[state=open]:animate-in
-            // data-[state=open]:fade-in
-            // data-[state=open]:zoom-in-95
-            // data-[state=closed]:animate-out
-            // data-[state=closed]:fade-out
-            // data-[state=closed]:zoom-out-95
+            isMobile ? "max-w-[100vw] p-4" : "sm:max-w-lg p-6" // Ajuste para desktop e mobile
           )}>
             <DialogHeader className="mt-6">
               <DialogTitle>
