@@ -138,8 +138,16 @@ const Lancamentos = () => {
               isMobile
                 ? "sm:max-w-[425px]"
                 : "sm:max-w-[600px]",
-              "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
-              "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
+              // Classes para remover animações
+              "!animate-none",
+              "data-[state=open]:!animate-none",
+              "data-[state=closed]:!animate-none",
+              "data-[state=open]:!fade-in-0",
+              "data-[state=closed]:!fade-out-0",
+              "data-[state=open]:!zoom-in-95",
+              "data-[state=closed]:!zoom-out-95",
+              "data-[state=open]:!slide-in-from-top-2",
+              "data-[state=closed]:!slide-out-to-top-2"
             )}
           >
             <DialogHeader
