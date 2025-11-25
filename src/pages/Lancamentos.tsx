@@ -131,8 +131,8 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(isMobile && "dialog-mobile")}>
-            <DialogHeader>
-              <DialogTitle className="dialog-title"> {/* Adicionada a classe dialog-title aqui */}
+            <DialogHeader className={cn(isMobile && "absolute top-4 left-4 right-12 text-left")}>
+              <DialogTitle> {/* Removida a classe dialog-title */}
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
