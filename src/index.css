@@ -169,7 +169,7 @@ All colors MUST be HSL.
 
   .dialog-mobile .form-body {
     margin-top: 2.5rem !important;      /* sobe Subcategoria */
-    padding-bottom: 1rem !important;  /* Ajustado para aproximar os botões do rodapé */
+    padding-bottom: 0rem !important;  /* Ajustado para aproximar os botões do rodapé */
   }
 
   .dialog-mobile .dialog-title {
