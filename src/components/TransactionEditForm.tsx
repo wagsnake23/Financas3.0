@@ -135,12 +135,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col h-full", isMobile && "space-y-4")}
+        className={cn("flex flex-col h-full", isMobile && "space-y-2")} // Reduzido space-y-4 para space-y-2
       >
         <div
           className={cn(
             "flex-grow overflow-y-auto",
-            isMobile && "w-full px-2 mt-6"
+            isMobile && "w-full px-2 mt-0" // Reduzido mt-6 para mt-0
           )}
         >
           <TransactionDetailsFields
@@ -181,7 +181,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "w-full px-2 pt-1 pb-4 mt-2")}
+          className={cn(isMobile && "w-full px-2 pt-0 pb-2 mt-1")} // Ajustado padding e margem
         />
       </form>
 

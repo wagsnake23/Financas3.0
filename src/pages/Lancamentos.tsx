@@ -131,16 +131,16 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(
-            isMobile ? "max-w-[100vw] p-4" : "sm:max-w-lg p-6" // Ajuste para desktop e mobile
+            isMobile ? "max-w-[100vw] p-4 max-h-[95vh] overflow-y-auto" : "sm:max-w-lg p-6" // Ajuste para desktop e mobile
           )}>
-            <DialogHeader className="mt-6">
+            <DialogHeader className={cn("mt-6", isMobile && "mt-2")}>
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <div className="mt-8"> 
+              <div className={cn("mt-8", isMobile && "mt-2")}> 
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
