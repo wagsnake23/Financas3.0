@@ -131,7 +131,8 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(
-            isMobile ? "w-full p-4 flex flex-col" : "sm:max-w-lg p-6"
+            isMobile && "max-w-[100vw] p-4 pt-12 pb-6 max-h-[95vh] overflow-y-auto",
+            !isMobile && "sm:max-w-lg p-6"
           )}>
             <DialogHeader className={cn(isMobile && "sticky top-0 z-20 bg-background pb-2")}>
               <DialogTitle>
