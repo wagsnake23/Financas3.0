@@ -173,7 +173,7 @@ All colors MUST be HSL.
   }
 
   .dialog-mobile .dialog-title {
-    margin-top: 0.8rem !important;   /* ajuste fino do título */
+    margin-top: 0.2rem !important;   /* ajuste fino do título */
   }
 }
 
