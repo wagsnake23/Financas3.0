@@ -130,7 +130,7 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent className={cn(isMobile && "max-w-[95vw] p-4")}>
+          <DialogContent className={cn(isMobile && "max-w-[98vw] p-4")}>
             <DialogHeader>
               <DialogTitle>
                 ✏️ Editar Lançamento
