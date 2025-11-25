@@ -80,6 +80,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                   ? "mt-0 h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary"
                   : "sm:mt-0"
               )}
+              onClick={() => setShowSimpleDeleteDialog(false)}
             >
               {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}{" "}
               Cancelar
@@ -183,6 +184,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                   ? "mt-0 h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary"
                   : "sm:mt-0"
               )}
+              onClick={() => setShowDeleteOptionsDialog(false)}
             >
               <DynamicIcon
                 name="XCircle"

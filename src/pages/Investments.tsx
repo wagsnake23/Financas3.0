@@ -592,6 +592,7 @@ export default function Investments() { // Alterado para export default function
                 "rounded-xl",
                 isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
               )}
+              onClick={() => setIsConfirmDeleteOpen(false)}
             >
               {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
               Cancelar

@@ -336,7 +336,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteCard} disabled={loading}>
               {loading ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>

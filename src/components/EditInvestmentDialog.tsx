@@ -142,9 +142,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       ...investmentToEdit,
       nome: selectedInvestmentCategoryId, // Store category ID
       tipo: type,
-      valor: amount,
+      valor: amount, // Usar o valor como number
       data: formattedDate,
-      rentabilidade: profitability,
+      rentabilidade: profitability, // Usar o valor como number
     };
 
     updateInvestmentMutation.mutate(updatedInvestment);
