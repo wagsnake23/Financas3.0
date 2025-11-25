@@ -360,9 +360,14 @@ export const useTransactionMutations = ({
           }
 
           const newValorParcela = updatedTransaction.amount;
-          const newVencimento = updatedTransaction.date;
+          // CORREÇÃO: Garantir que newVencimento inclua a hora atual
+          const newVencimento = formatInTimeZone(
+            parseISO(updatedTransaction.date),
+            TARGET_TIMEZONE,
+            "yyyy-MM-dd HH:mm:ss"
+          );
           const newPagoStatus = updatedTransaction.status === "Recebida";
-          const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // NOVO: Usa formatInTimeZone
+          const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // Usa formatInTimeZone
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
           // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
@@ -387,7 +392,7 @@ export const useTransactionMutations = ({
                 valor_parcela: newValorParcela,
                 vencimento: newVencimento,
                 pago: newPagoStatus,
-                data_pagamento: newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null, // NOVO: Directly use new Date()
+                data_pagamento: newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null, // Directly use new Date()
               })
               .eq("id", id);
 

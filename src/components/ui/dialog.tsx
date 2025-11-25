@@ -2,17 +2,14 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
-
-// Close button exportado corretamente
 const DialogClose = DialogPrimitive.Close;
 
-// Overlay padrão
+// Overlay SEM animação
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -20,9 +17,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/80",
-      "data-[state=open]:animate-in data-[state=open]:fade-in-0",
-      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+      "fixed inset-0 z-50 bg-black/50", // sem animações
       className
     )}
     {...props}
@@ -30,7 +25,7 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-// Content do modal
+// Content SEM animação + margem automática no mobile
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -40,12 +35,17 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg",
-        "translate-x-[-50%] translate-y-[-50%]",
-        "gap-4 border bg-background p-6 shadow-lg duration-200",
-        "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-        "sm:rounded-lg",
+        "fixed z-50 grid w-full max-w-lg p-6 border bg-background shadow-lg sm:rounded-lg",
+        // Centraliza normalmente em desktop
+        "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+
+        // Ajuste para mobile: NÃO ficar atrás do menu superior
+        "sm:top-1/2 sm:-translate-y-1/2", // desktop normal
+        "top-[15%] translate-y-0 sm:translate-y-[-50%]", // mobile agora mais equilibrado
+
+        // Remove TODAS as animações
+        "!animate-none data-[state=open]:!animate-none data-[state=closed]:!animate-none",
+
         className
       )}
       {...props}
@@ -56,17 +56,14 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-// HEADER – Agora o botão fechar e o título ficam juntos
+// Header alinhado corretamente
 const DialogHeader = ({
   className,
   children,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
-    )}
+    className={cn("flex items-center justify-between w-full", className)}
     {...props}
   >
     {children}
@@ -96,10 +93,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
+    className={cn("text-lg font-semibold", className)}
     {...props}
   />
 ));
