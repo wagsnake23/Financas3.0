@@ -135,7 +135,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col h-full", isMobile && "space-y-12")}
+        className={cn("flex flex-col h-full", isMobile && "space-y-4")}
       >
         <div
           className={cn(

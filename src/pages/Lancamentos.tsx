@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  // DialogOverlay, // Removido: DialogOverlay é renderizado internamente pelo DialogContent padrão
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -127,15 +126,13 @@ const Lancamentos = () => {
           </div>
         )}
 
-        {/* Modal corrigido */}
         <Dialog
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          {/* Removido: DialogOverlay é renderizado internamente pelo DialogContent padrão */}
-          <DialogContent> {/* Removidas classes customizadas */}
-            <DialogHeader> {/* Removidas classes customizadas */}
-              <DialogTitle> {/* Removidas classes customizadas */}
+          <DialogContent className={cn(isMobile && "max-w-[95vw] p-4")}>
+            <DialogHeader>
+              <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
