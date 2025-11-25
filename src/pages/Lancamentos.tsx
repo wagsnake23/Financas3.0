@@ -94,7 +94,7 @@ const Lancamentos = () => {
             user={user}
             onEditTransaction={handleEditTransaction}
             queryClient={logicQueryClient} 
-            filterPaymentOptionId={filterPaymentOptionId}
+            filterPaymentOptionId={filterPaymentPaymentOptionId}
             setFilterPaymentOptionId={setFilterPaymentOptionId}
             loadingPayInvoice={loadingPayInvoice}
             setLoadingPayInvoice={setLoadingPayInvoice}
@@ -119,7 +119,7 @@ const Lancamentos = () => {
             className={cn(
               "dialog-lg-close-button",
               isMobile
-                ? "fixed inset-0 z-[9999] w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 pt-14 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0"
+                ? "fixed inset-0 z-[9999] w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 pt-14 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0 border-0"
                 : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
@@ -129,7 +129,7 @@ const Lancamentos = () => {
             <DialogHeader
               className={cn(
                 "flex items-center justify-between",
-                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm border-0" // Adicionado border-0 aqui
+                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm border-0"
               )}
             >
               <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
