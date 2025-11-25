@@ -130,8 +130,17 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent className={cn(isMobile && "max-w-[100vw] p-4")}>
-            <DialogHeader className="mt-6"> {/* Adicionado mt-6 aqui */}
+          <DialogContent className={cn(
+            "max-w-[100vw] p-4", // Mantém as classes existentes
+            // Removido as classes de animação conforme solicitado
+            // data-[state=open]:animate-in
+            // data-[state=open]:fade-in
+            // data-[state=open]:zoom-in-95
+            // data-[state=closed]:animate-out
+            // data-[state=closed]:fade-out
+            // data-[state=closed]:zoom-out-95
+          )}>
+            <DialogHeader className="mt-6">
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
