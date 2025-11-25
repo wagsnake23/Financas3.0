@@ -130,21 +130,15 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent
-            className={cn(
-              isMobile
-                ? "fixed left-1/2 -translate-x-1/2 top-[80px] bottom-6 w-[92vw] max-w-md bg-background overflow-y-auto rounded-xl px-4 pt-3 pb-8 shadow-lg"
-                : "sm:max-w-lg p-6"
-            )}
-          >
-            <DialogHeader>
+          <DialogContent className={cn(isMobile && "mobile-fullscreen-modal")}>
+            <DialogHeader className={isMobile && "dialog-title-mobile"}>
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <div className={cn(isMobile ? "mt-3" : "mt-4")}>
+              <div className="form-body">
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
