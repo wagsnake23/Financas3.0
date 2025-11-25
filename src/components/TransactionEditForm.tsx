@@ -15,7 +15,7 @@ import { Transaction, TransactionType, AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn, isValidUuid, getBorderClass } from "@/lib/utils";
-import { format } => "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types";
