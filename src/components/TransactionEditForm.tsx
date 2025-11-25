@@ -15,7 +15,7 @@ import { Transaction, TransactionType, AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn, isValidUuid, getBorderClass } from "@/lib/utils";
-import { format } from "date-fns";
+import { format } => "date-fns";
 import { ptBR } from "date-fns/locale";
 import { X } from "lucide-react";
 import { Database, Tables } from "@/integrations/supabase/types";
@@ -185,7 +185,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn("w-full px-2 pt-0 pb-1 mt-1")}
+          className={cn("w-full px-2 pt-0 pb-0 mt-1")}
         />
       </form>
 
