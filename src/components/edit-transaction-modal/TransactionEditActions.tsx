@@ -26,9 +26,10 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
     <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
       <Button
         type="button"
+        // Removido variant="destructive" para aplicar classes diretas
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl bg-soft-red text-primary-foreground hover:bg-destructive/90", // Cores personalizadas, texto branco
+          "flex-1 rounded-xl bg-soft-red text-destructive hover:bg-destructive/90", // Cores personalizadas
           isMobile && "h-9 text-xs"
         )}
         disabled={loading}
@@ -38,8 +39,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       </Button>
       <Button 
         type="submit" 
+        // Removido variant="success" para aplicar classes diretas
         className={cn(
-          "flex-1 rounded-xl bg-soft-green text-primary-foreground hover:bg-success/90", // Cores personalizadas, texto branco
+          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success/90", // Cores personalizadas
           isMobile && "h-9 text-xs"
         )} 
         disabled={loading} 
@@ -50,9 +52,10 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       </Button>
       <Button 
         type="button" 
+        // Removido variant="default" para aplicar classes diretas
         onClick={onCancel} 
         className={cn(
-          "flex-1 rounded-xl bg-soft-blue text-primary-foreground hover:bg-primary/90", // Cores personalizadas, texto branco
+          "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90", // Cores personalizadas
           isMobile && "h-9 text-xs"
         )} 
         disabled={loading}
