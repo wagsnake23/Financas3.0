@@ -39,7 +39,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button 
         type="submit" 
         className={cn(
-          "flex-1 rounded-xl bg-success text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
+          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
           isMobile && "h-9 text-xs"
         )} 
         disabled={loading} 
