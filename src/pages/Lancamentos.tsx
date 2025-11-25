@@ -132,7 +132,7 @@ const Lancamentos = () => {
         >
           <DialogContent className={cn(
             isMobile
-              ? "max-w-[100vw] p-4 pt-6 pb-2 max-h-[100vh] overflow-y-auto"
+              ? "max-w-[100vw] p-3 pt-4 pb-2 max-h-[92vh] overflow-hidden"
               : "sm:max-w-lg p-6"
           )}>
             <DialogHeader className={cn(isMobile && "sticky top-0 z-20 bg-background pb-2")}>
@@ -142,7 +142,7 @@ const Lancamentos = () => {
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <div className={cn(isMobile ? "mt-0" : "mt-4")}>
+              <div className={cn(isMobile ? "mt-[-8px]" : "mt-2")}>
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
