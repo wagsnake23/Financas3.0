@@ -132,7 +132,7 @@ const Lancamentos = () => {
         >
           <DialogContent className={cn(isMobile && "dialog-mobile")}>
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="dialog-title"> {/* Adicionada a classe dialog-title aqui */}
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
