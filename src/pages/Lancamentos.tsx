@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TransactionEditForm } from "@/components/TransactionEditForm"; // CORRIGIDO: Removido o '2'
+import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { LancamentosContent } from "@/components/LancamentosContent";
 
@@ -131,7 +131,7 @@ const Lancamentos = () => {
           onOpenChange={setIsEditModalOpen}
         >
           <DialogContent className={cn(isMobile && "max-w-[100vw] p-4")}>
-            <DialogHeader>
+            <DialogHeader className="mt-6"> {/* Adicionado mt-6 aqui */}
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
