@@ -7,7 +7,6 @@ import { MonthNavigator } from "@/components/MonthNavigator";
 import { useLancamentosLogic } from "@/hooks/useLancamentosLogic";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -28,9 +27,6 @@ const Lancamentos = () => {
     setSelectedMonth,
     handlePreviousMonth,
     handleNextMonth,
-    setEditingTransaction,
-    setFullEditingRevenue,
-    setFullEditingExpense,
     loadingEditData,
     loadingPayInvoice,
     setLoadingPayInvoice,
@@ -45,21 +41,14 @@ const Lancamentos = () => {
     handleUpdateTransaction,
     handleCancelEdit,
     editingTransaction,
-    fullEditingRevenue,
-    fullEditingExpense,
-    queryClient: logicQueryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus,
     refetchCartoes,
+    fullEditingExpense,
+    fullEditingRevenue,
+    queryClient: logicQueryClient,
   } = useLancamentosLogic(user, authLoading);
-
-  console.log(
-    "Lancamentos.tsx: User from useAuth:",
-    user?.id,
-    "Is user null?",
-    !user
-  );
 
   if (authLoading || isLoading) {
     return <Loading />;
@@ -120,6 +109,7 @@ const Lancamentos = () => {
 
         <Footer isMobile={isMobile} />
 
+        {/* Loading Overlay */}
         {isEditModalOpen && loadingEditData && (
           <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -135,19 +125,15 @@ const Lancamentos = () => {
           <DialogContent
             className={cn(
               "dialog-lg-close-button",
-              isMobile
-                ? "sm:max-w-[425px]"
-                : "sm:max-w-[600px]",
+              isMobile ? "sm:max-w-[425px]" : "sm:max-w-[600px]",
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
               "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95"
             )}
           >
-            <DialogHeader
-              className={cn(
-                "flex items-center justify-between",
-                isMobile && "mt-4"
-              )}
-            >
+            {/* 🔥 Espaçador invisível — desce apenas o título e o botão fechar */}
+            {isMobile && <div className="h-12 w-full" />}
+
+            <DialogHeader className="flex items-center justify-between">
               <DialogTitle className="text-lg font-semibold">
                 ✏️ Editar Lançamento
               </DialogTitle>
