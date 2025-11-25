@@ -164,7 +164,7 @@ All colors MUST be HSL.
   .dialog-mobile {
     padding-top: 0.75rem !important;   /* Aumentado para descer o título */
     padding-bottom: 0 !important;  /* remove faixa preta inferior */
-    top: 45% !important; /* NEW: Move the modal down slightly */
+    top: 40% !important; /* NEW: Move the modal down slightly */
   }
 
   .dialog-mobile .form-body {
