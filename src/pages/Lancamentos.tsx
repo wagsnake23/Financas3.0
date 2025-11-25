@@ -130,8 +130,8 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent className={cn(isMobile && "mobile-fullscreen-modal")}>
-            <DialogHeader className={isMobile && "dialog-title-mobile"}>
+          <DialogContent className={cn(isMobile && "mobile-dialog")}>
+            <DialogHeader>
               <DialogTitle>
                 ✏️ Editar Lançamento
               </DialogTitle>
