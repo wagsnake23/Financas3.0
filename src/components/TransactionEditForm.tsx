@@ -135,12 +135,12 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col h-full", isMobile && "space-y-2")} // Reduzido space-y-4 para space-y-2
+        className={cn("flex flex-col h-full", isMobile && "space-y-2")}
       >
         <div
           className={cn(
-            "flex-grow overflow-y-auto", // Esta div já é a área rolável
-            isMobile && "w-full px-2" // Removido mt-0, pois o pai agora gerencia a margem superior
+            "flex-grow overflow-y-auto",
+            isMobile && "w-full px-2 mt-4" // Adicionado mt-4 aqui para mobile
           )}
         >
           <TransactionDetailsFields
@@ -181,7 +181,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn(isMobile && "w-full px-2 pt-0 pb-2 mt-1")} // Ajustado padding e margem
+          className={cn(isMobile && "w-full px-2 pt-0 pb-2 mt-1")}
         />
       </form>
 
