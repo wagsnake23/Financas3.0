@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TransactionEditForm }2 from "@/components/TransactionEditForm";
+import { TransactionEditForm } from "@/components/TransactionEditForm"; // CORRIGIDO: Removido o '2'
 import { cn } from "@/lib/utils";
 import { LancamentosContent } from "@/components/LancamentosContent";
 
