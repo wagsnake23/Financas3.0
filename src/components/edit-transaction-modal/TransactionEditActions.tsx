@@ -29,7 +29,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
           "flex-1 rounded-xl bg-soft-red text-destructive hover:bg-destructive/90 hover:text-primary-foreground", // Cores personalizadas e hover
-          isMobile && "h-9 text-xs"
+          "text-sm", // Aumenta a fonte para 'sm'
+          isMobile && "h-9" // Mantém a altura para mobile
         )}
         disabled={loading}
       >
@@ -40,7 +41,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="submit" 
         className={cn(
           "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
-          isMobile && "h-9 text-xs"
+          "text-sm", // Aumenta a fonte para 'sm'
+          isMobile && "h-9" // Mantém a altura para mobile
         )} 
         disabled={loading} 
         onClick={onSave}
@@ -53,7 +55,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         onClick={onCancel} 
         className={cn(
           "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90 hover:text-primary-foreground", // Cores personalizadas e hover
-          isMobile && "h-9 text-xs"
+          "text-sm", // Aumenta a fonte para 'sm'
+          isMobile && "h-9" // Mantém a altura para mobile
         )} 
         disabled={loading}
       >
