@@ -105,7 +105,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     showDeleteOptionsDialog,
     setShowDeleteOptionsDialog,
     showSimpleDeleteDialog,
-    setShowSimpleDeleteDialog,
+    setShowSimpleDeleteOptionsDialog, // Corrected name
     selectedDeleteScope,
     setSelectedDeleteScope,
     showSaveOptionsDialog,
@@ -193,7 +193,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         showDeleteOptionsDialog={showDeleteOptionsDialog}
         setShowDeleteOptionsDialog={setShowDeleteOptionsDialog}
         showSimpleDeleteDialog={showSimpleDeleteDialog}
-        setShowSimpleDeleteDialog={setShowSimpleDeleteDialog}
+        setShowSimpleDeleteDialog={setShowSimpleDeleteOptionsDialog} // Corrected here
         selectedDeleteScope={selectedDeleteScope}
         setSelectedDeleteScope={setSelectedDeleteScope}
         handleConfirmDelete={handleConfirmDelete}
