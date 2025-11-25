@@ -119,7 +119,7 @@ const Lancamentos = () => {
             className={cn(
               "dialog-lg-close-button",
               isMobile
-                ? "fixed inset-0 z-[9999] w-full h-[100vh] max-h-[100vh] max-w-[100vw] p-3 pt-8 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0"
+                ? "fixed inset-0 z-[9900] w-full h-[90vh] max-h-[90vh] max-w-[100vw] p-3 pt-6 pb-40 rounded-none overflow-y-auto bg-background !top-0 !left-0 !translate-x-0 !translate-y-0"
                 : "sm:max-w-[600px] p-6",
               // Animações para fade e scale
               "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95",
