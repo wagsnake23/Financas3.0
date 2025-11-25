@@ -136,6 +136,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
             {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
           </AlertDialogAction>
         </AlertDialogFooter>
-      </AlertDialog>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
