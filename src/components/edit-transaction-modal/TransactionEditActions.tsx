@@ -26,19 +26,40 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
     <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
       <Button
         type="button"
-        variant="destructive"
+        // Removido variant="destructive" para aplicar classes diretas
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
-        className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")}
+        className={cn(
+          "flex-1 rounded-xl bg-soft-red text-destructive hover:bg-destructive/90", // Cores personalizadas
+          isMobile && "h-9 text-xs"
+        )}
         disabled={loading}
       >
         <DynamicIcon name="Trash2" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
         Excluir
       </Button>
-      <Button type="submit" variant="success" className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading} onClick={onSave}>
+      <Button 
+        type="submit" 
+        // Removido variant="success" para aplicar classes diretas
+        className={cn(
+          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success/90", // Cores personalizadas
+          isMobile && "h-9 text-xs"
+        )} 
+        disabled={loading} 
+        onClick={onSave}
+      >
         <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
         {loading ? "Salvando..." : "Salvar"}
       </Button>
-      <Button type="button" variant="default" onClick={onCancel} className={cn("flex-1 rounded-xl", isMobile && "h-9 text-xs")} disabled={loading}>
+      <Button 
+        type="button" 
+        // Removido variant="default" para aplicar classes diretas
+        onClick={onCancel} 
+        className={cn(
+          "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90", // Cores personalizadas
+          isMobile && "h-9 text-xs"
+        )} 
+        disabled={loading}
+      >
         <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
         Cancelar
       </Button>
