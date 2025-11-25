@@ -28,7 +28,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+}
+from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -143,7 +144,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         <div
           className={cn(
             "flex-grow overflow-y-auto w-full", // Adicionado w-full para desktop
-            isMobile && "w-full px-2 mt-2 pb-3"
+            isMobile && "w-full px-2 mt-2 pb-10"
           )}
         >
           <TransactionDetailsFields
