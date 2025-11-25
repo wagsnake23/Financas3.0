@@ -185,7 +185,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn("w-full px-2 pt-1 pb-1")}
+          className={cn("w-full px-2 pt-0 pb-1 mt-1")}
         />
       </form>
 
