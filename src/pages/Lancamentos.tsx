@@ -130,11 +130,13 @@ const Lancamentos = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
         >
-          <DialogContent className={cn(
-            isMobile
-              ? "fixed inset-x-0 top-10 bottom-4 w-full max-w-md mx-auto bg-background overflow-y-auto px-4 pt-2 pb-6 rounded-xl"
-              : "sm:max-w-lg p-6"
-          )}>
+          <DialogContent
+            className={cn(
+              isMobile
+                ? "fixed left-1/2 -translate-x-1/2 top-[80px] bottom-6 w-[92vw] max-w-md bg-background overflow-y-auto rounded-xl px-4 pt-3 pb-8 shadow-lg"
+                : "sm:max-w-lg p-6"
+            )}
+          >
             <DialogHeader>
               <DialogTitle>
                 ✏️ Editar Lançamento
@@ -142,7 +144,7 @@ const Lancamentos = () => {
             </DialogHeader>
 
             {!loadingEditData && editingTransaction && (
-              <div className={cn(isMobile ? "mt-2" : "mt-4")}>
+              <div className={cn(isMobile ? "mt-3" : "mt-4")}>
                 <TransactionEditForm
                   editingTransaction={editingTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
