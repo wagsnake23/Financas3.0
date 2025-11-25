@@ -132,7 +132,7 @@ const Lancamentos = () => {
         >
           <DialogContent className={cn(
             isMobile
-              ? "fixed inset-0 h-screen max-h-screen overflow-y-auto p-4"
+              ? "fixed inset-0 h-screen w-full max-w-md mx-auto overflow-y-auto p-4 bg-background rounded-none"
               : "sm:max-w-lg p-6"
           )}>
             <DialogHeader>
