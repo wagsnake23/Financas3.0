@@ -13,7 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogOverlay, // Importar DialogOverlay
+  // DialogOverlay, // Removido: DialogOverlay é renderizado internamente pelo DialogContent padrão
 } from "@/components/ui/dialog";
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
@@ -131,19 +131,11 @@ const Lancamentos = () => {
         <Dialog
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
-          // Removida a classe "flex items-center justify-center" do Dialog
         >
-          <DialogOverlay /> {/* Adicionado DialogOverlay */}
-          <DialogContent
-            className="sm:max-w-[600px] p-6" // Classes padrão do shadcn/ui
-          >
-            <DialogHeader
-              className={cn(
-                "flex items-center justify-between",
-                isMobile && "mt-4"
-              )}
-            >
-              <DialogTitle className="text-lg font-semibold">
+          {/* Removido: DialogOverlay é renderizado internamente pelo DialogContent padrão */}
+          <DialogContent> {/* Removidas classes customizadas */}
+            <DialogHeader> {/* Removidas classes customizadas */}
+              <DialogTitle> {/* Removidas classes customizadas */}
                 ✏️ Editar Lançamento
               </DialogTitle>
             </DialogHeader>
