@@ -129,7 +129,7 @@ const Lancamentos = () => {
             <DialogHeader
               className={cn(
                 "flex items-center justify-between",
-                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm"
+                isMobile && "p-4 sticky top-0 bg-background z-50 shadow-sm border-0" // Adicionado border-0 aqui
               )}
             >
               <DialogTitle className="text-xl"> {/* Revertido para o tamanho padrão do desktop */}
