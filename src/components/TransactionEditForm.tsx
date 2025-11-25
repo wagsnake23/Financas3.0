@@ -139,8 +139,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
       >
         <div
           className={cn(
-            "flex-grow overflow-y-auto",
-            isMobile && "w-full px-2 mt-0" // Reduzido mt-6 para mt-0
+            "flex-grow overflow-y-auto", // Esta div já é a área rolável
+            isMobile && "w-full px-2" // Removido mt-0, pois o pai agora gerencia a margem superior
           )}
         >
           <TransactionDetailsFields
