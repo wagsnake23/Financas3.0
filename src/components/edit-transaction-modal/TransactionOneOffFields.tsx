@@ -279,7 +279,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 type="text"
                 value={paidAtTimestamp 
                     ? formatInTimeZone(
-                        zonedTimeToUtcFallback(paidAtTimestamp, TARGET_TIMEZONE), // Usar zonedTimeToUtcFallback para parsear corretamente
+                        paidAtTimestamp, // Simplificado para passar a string diretamente
                         TARGET_TIMEZONE, 
                         "dd/MM/yyyy HH:mm", 
                         { locale: ptBR }
