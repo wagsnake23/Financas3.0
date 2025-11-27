@@ -72,7 +72,7 @@ export const StatCard = ({
         : "text-secondary"
     : "text-foreground";
 
-  const contentSpacingClass = isMobile ? "space-y-0.5" : "space-y-1";
+  const contentSpacingClass = isMobile ? "space-y-0" : "space-y-0.5"; // Adjusted spacing here
 
   return (
     <Card className={cn(
