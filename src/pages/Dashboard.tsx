@@ -15,17 +15,17 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
-import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths } from "date-fns"; // Adicionado addMonths e subMonths
-import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
+import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths } from "date-fns";
+import { cn, formatCurrency } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
-import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
-import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
-import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
-import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact"; // NOVO IMPORT
+import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard";
+import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
+import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
+import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 
-const Dashboard = () => {
+export default function Dashboard() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
