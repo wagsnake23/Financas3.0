@@ -29,8 +29,6 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
-  // Removido: Um único estado para controlar a visibilidade de todos os valores
-  // Removido: const [showAllValues, setShowAllValues] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Este estado agora só controlará StatCards e MonthlyBarChart
 
   // Buscar TODAS as receitas (não filtradas por mês)
@@ -112,9 +110,6 @@ const Dashboard = () => {
     navigate(`/lancamentos?month=${formattedMonth}`);
   };
 
-  // Removido: Função única para alternar a visibilidade de todos os valores
-  // Removido: const handleToggleAllVisibility = () => { setShowAllValues(prev => !prev); };
-
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
@@ -132,11 +127,14 @@ const Dashboard = () => {
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
-                // Removido: showValue={showAllValues} // Controlado por showAllValues
-                // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
-                secondaryStat={`Pago este mês: ${formatCurrency(totalPaidMonthlyExpenses)}`} // NEW: Secondary stat
+                secondaryInfo={ // NEW: secondaryInfo for mobile expense card
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs text-muted-foreground">Pago este mês</p>
+                    <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
+                  </div>
+                }
                 chartContent={ // NEW: Add chart content for mobile expense card
                   <MonthlyExpenseBarChart
                     expenseInstallments={allExpenseInstallments}
@@ -166,10 +164,17 @@ const Dashboard = () => {
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
-                // Removido: showValue={showAllValues} // Controlado por showAllValues
-                // onToggleVisibility removido
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
-                secondaryStat={`Saldo Atual: ${formatCurrency(stats.balance)}`} // NEW: Secondary stat for income card
+                secondaryInfo={ // NEW: secondaryInfo for mobile income card (Saldo Atual)
+                  <div className="flex flex-col items-start">
+                    <p className="text-xs text-muted-foreground">Saldo Atual</p> 
+                    <p className={cn(
+                      "font-semibold text-base text-primary"
+                    )}>
+                      {formatCurrency(stats.balance)}
+                    </p>
+                  </div>
+                }
                 chartContent={ // NEW: Add chart content for mobile revenue card
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
@@ -212,8 +217,6 @@ const Dashboard = () => {
                   variant="balance"
                   trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
                   isMobile={isMobile}
-                  // Removido: showValue={showAllValues} // Controlado por showAllValues
-                  // onToggleVisibility removido
                 />
                 <StatCard
                   title="Total de Receitas"
@@ -221,8 +224,6 @@ const Dashboard = () => {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-                  // Removido: showValue={showAllValues} // Controlado por showAllValues
-                  // onToggleVisibility removido
                   chartContent={ // NEW: Add chart content for desktop revenue card
                     <MonthlyRevenueBarChart
                       revenues={allRevenues}
@@ -248,9 +249,12 @@ const Dashboard = () => {
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-                  // Removido: showValue={showAllValues} // Controlado por showAllValues
-                  // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
-                  secondaryStat={`Pago este mês: ${formatCurrency(totalPaidMonthlyExpenses)}`} // NEW: Secondary stat
+                  secondaryInfo={ // NEW: secondaryInfo for desktop expense card
+                    <div className="flex flex-col items-start">
+                      <p className="text-xs text-muted-foreground">Pago este mês</p>
+                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
+                    </div>
+                  }
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
@@ -281,17 +285,16 @@ const Dashboard = () => {
                   isLoading={isLoading}
                   isMobile={isMobile}
                 />
-                {/* MonthlyBarChart removido daqui */}
               </div>
 
               <div className="grid grid-cols-1 mb-4">
-                <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} /> {/* Passar todas as parcelas aqui também */}
+                <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} />
               </div>
 
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
-              <Footer isMobile={isMobile} className="mt-8" /> {/* Footer para desktop */}
+              <Footer isMobile={isMobile} className="mt-8" />
             </>
           )}
         </main>

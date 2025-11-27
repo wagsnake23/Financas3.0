@@ -14,7 +14,7 @@ interface StatCardProps {
   isMobile?: boolean; // Adicionado a prop isMobile
   childrenAlignment?: "start" | "end" | "center"; // Nova prop para alinhamento dos filhos
   headerContent?: React.ReactNode; // NOVA PROP: Conteúdo para o cabeçalho (top-right)
-  secondaryStat?: React.ReactNode; // NEW: Prop for a secondary stat next to the main value
+  secondaryInfo?: React.ReactNode; // NEW: Prop for a custom info block below the title
 }
 
 export const StatCard = ({ 
@@ -28,7 +28,7 @@ export const StatCard = ({
   isMobile, 
   childrenAlignment = "end", // Padrão para 'end'
   headerContent, // NOVA PROP
-  secondaryStat, // NEW: Destructure secondaryStat
+  secondaryInfo, // NEW: Destructure secondaryInfo
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -68,15 +68,15 @@ export const StatCard = ({
       <div className="flex items-start justify-between">
         <div className={cn(contentSpacingClass)}> {/* Apply conditional spacing here */}
           <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
+          {secondaryInfo && ( // Render secondaryInfo here
+            <div className={cn("flex flex-col items-start", isMobile ? "mt-0.5" : "mt-1")}> {/* Adjust margin for mobile */}
+              {secondaryInfo}
+            </div>
+          )}
           <div className="flex items-baseline gap-2"> {/* Use items-baseline to align text baselines */}
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
               {formatCurrency(value)}
             </p>
-            {secondaryStat && ( // Render secondary stat here
-              <span className={cn(isMobile ? "text-xs" : "text-sm", "text-muted-foreground")}>
-                {secondaryStat}
-              </span>
-            )}
           </div>
           {trend && (
             <p className="text-xs text-muted-foreground">{trend}</p>
