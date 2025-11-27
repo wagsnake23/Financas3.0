@@ -79,7 +79,6 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           domain={[0, 'dataMax']}
         />
         <Tooltip
-          cursor={{ fill: 'hsl(var(--muted)/50%)' }}
           formatter={(value: number) => formatCurrency(value)}
           contentStyle={{
             backgroundColor: "hsl(var(--card))",
