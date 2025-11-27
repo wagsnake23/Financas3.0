@@ -19,10 +19,10 @@ export const MonthBadge: React.FC<MonthBadgeProps> = ({ selectedMonth, isMobile,
       isMobile ? "p-1" : "p-2" // Keep padding, no background color
     )}>
       <DynamicIcon name="Calendar" className={cn(textColorClass, isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} />
-      <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-xs" : "text-sm")}>
+      <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-xs" : "text-sm", "font-roboto")}>
         {format(selectedMonth, "MMM", { locale: ptBR })}
       </span>
-      <span className={cn("leading-none", textColorClass, isMobile ? "text-[0.6rem]" : "text-xs")}>
+      <span className={cn("leading-none", textColorClass, isMobile ? "text-[0.6rem]" : "text-xs", "font-roboto")}>
         {format(selectedMonth, "yyyy")}
       </span>
     </div>

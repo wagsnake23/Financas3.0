@@ -19,7 +19,7 @@ export const TotalExpensesCard = ({ expenseInstallments, isMobile }: TotalExpens
     )}>
       <div className="flex items-center justify-between">
         <div>
-          <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs")}>Total Geral de Despesas</p>
+          <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs", "font-roboto")}>Total Geral de Despesas</p>
           <p className={cn("text-3xl font-bold text-foreground", isMobile && "text-xl")}>{formatCurrency(totalOverallExpenses)}</p>
         </div>
         <DynamicIcon name="CreditCard" className={cn("h-12 w-12 text-destructive", isMobile && "h-8 w-8")} />

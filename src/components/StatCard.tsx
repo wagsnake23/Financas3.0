@@ -81,19 +81,19 @@ export const StatCard = ({
         <div className="flex items-start gap-4"> {/* Adjusted gap for spacing between stat blocks */}
           {/* Main Stat Block */}
           <div className={cn("flex flex-col items-start", contentSpacingClass)}>
-            <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground")}>{mainStatTitle}</p>
+            <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{mainStatTitle}</p>
             <p className={cn(valueFontSizeAndWeightClass, "tracking-tight", mainValueColorClass)}>
               {formatCurrency(mainStatValue)}
             </p>
             {trend && (
-              <p className="text-xs text-muted-foreground">{trend}</p>
+              <p className={cn("text-xs text-muted-foreground", "font-roboto")}>{trend}</p>
             )}
           </div>
 
           {/* Secondary Stat Block (e.g., "Pago este mês") */}
           {secondaryStatTitle && secondaryStatValue !== undefined && (
             <div className={cn("flex flex-col items-start", contentSpacingClass)}>
-              <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground")}>{secondaryStatTitle}</p>
+              <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{secondaryStatTitle}</p>
               <p className={cn(
                 valueFontSizeAndWeightClass, // Usando a classe unificada
                 "tracking-tight", 

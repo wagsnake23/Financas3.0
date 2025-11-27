@@ -116,7 +116,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   if (isLoading) {
     return (
       <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile ? "h-48" : "h-60 flex items-center justify-center")}>
-        <div className="animate-pulse text-muted-foreground">Carregando dados mensais...</div>
+        <div className={cn("animate-pulse text-muted-foreground", "font-roboto")}>Carregando dados mensais...</div>
       </Card>
     );
   }
@@ -127,7 +127,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         <Button variant="outline" size="icon" onClick={handlePreviousMonth} className={cn(isMobile && "h-6 w-6")}>
           <DynamicIcon name="ChevronLeft" className={cn("h-5 w-5", isMobile && "h-2.5 w-2.5")} />
         </Button>
-        <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg")}>
+        <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg", "font-roboto")}>
           {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <Button variant="outline" size="icon" onClick={handleNextMonth} className={cn(isMobile && "h-6 w-6")}>
@@ -141,22 +141,22 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           "p-3 border rounded-lg", 
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
         )}>
-          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pago</p>
+          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pago</p>
           <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>{formatCurrency(totalPaid)}</p>
         </div>
         <div className={cn(
           "p-3 border rounded-lg", 
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
         )}>
-          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pendente</p>
+          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pendente</p>
           <p className={cn("text-xl font-bold text-destructive", isMobile && "text-base")}>{formatCurrency(totalPending)}</p>
         </div>
       </div>
 
       {/* Parte do Gráfico de Pizza de Despesas por Categoria */}
-      <h3 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Despesas por Categoria</h3>
+      <h3 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3", "font-roboto")}>Despesas por Categoria</h3>
       {chartData.length === 0 ? (
-        <div className={cn("h-60 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
+        <div className={cn("h-60 flex items-center justify-center text-muted-foreground", isMobile && "h-48", "font-roboto")}>
           Nenhuma despesa registrada
         </div>
       ) : (

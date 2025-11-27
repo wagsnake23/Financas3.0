@@ -277,7 +277,7 @@ const Dashboard = () => {
               </div>
 
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-                <p className="text-muted-foreground">Mais conteúdo do Dashboard virá aqui.</p>
+                <p className={cn("text-muted-foreground", "font-roboto")}>Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
               <Footer isMobile={isMobile} className="mt-8" />
             </>
