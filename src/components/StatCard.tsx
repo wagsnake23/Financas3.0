@@ -63,8 +63,14 @@ export const StatCard = ({
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
   const valueFontSizeAndWeightClass = isMobile ? "text-base font-medium" : "text-3xl font-bold"; 
-  // Alterado para text-muted-foreground para que os valores sejam cinza
-  const mainValueColorClass = "text-muted-foreground"; 
+  const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
+  const mainValueColorClass = isMobile
+    ? variant === "income"
+      ? "text-success"
+      : variant === "expense"
+        ? "text-destructive"
+        : "text-secondary"
+    : "text-foreground";
 
   const contentSpacingClass = isMobile ? "space-y-0.5" : "space-y-1";
 
@@ -106,7 +112,9 @@ export const StatCard = ({
               <p className={cn(
                 valueFontSizeAndWeightClass, // Usando a classe unificada
                 "tracking-tight", 
-                "text-muted-foreground" // Alterado para cinza
+                // Conditional color for secondary stat value
+                secondaryStatTitle === "Pago este mês" ? "text-success" : 
+                (secondaryStatTitle === "Saldo Atual" ? "text-primary" : "text-foreground") // Alterado para text-primary
               )}>
                 {formatCurrency(secondaryStatValue)}
               </p>
