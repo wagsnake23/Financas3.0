@@ -12,10 +12,9 @@ interface StatCardProps {
   children?: React.ReactNode; // Adicionado a prop children (for buttons)
   chartContent?: React.ReactNode; // NEW: Prop for chart content
   isMobile?: boolean; // Adicionado a prop isMobile
-  // Removido: showValue?: boolean; // Nova prop para controlar a visibilidade do valor
-  // Removido: onToggleVisibility?: () => void; // Nova prop para a função de alternância
   childrenAlignment?: "start" | "end" | "center"; // Nova prop para alinhamento dos filhos
   headerContent?: React.ReactNode; // NOVA PROP: Conteúdo para o cabeçalho (top-right)
+  secondaryStat?: React.ReactNode; // NEW: Prop for a secondary stat next to the main value
 }
 
 export const StatCard = ({ 
@@ -27,10 +26,9 @@ export const StatCard = ({
   children, 
   chartContent, // NEW: Destructure chartContent
   isMobile, 
-  // Removido: showValue = true, 
-  // Removido: onToggleVisibility,
   childrenAlignment = "end", // Padrão para 'end'
-  headerContent // NOVA PROP
+  headerContent, // NOVA PROP
+  secondaryStat, // NEW: Destructure secondaryStat
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -70,11 +68,15 @@ export const StatCard = ({
       <div className="flex items-start justify-between">
         <div className={cn(contentSpacingClass)}> {/* Apply conditional spacing here */}
           <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-baseline gap-2"> {/* Use items-baseline to align text baselines */}
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
               {formatCurrency(value)}
             </p>
-            {/* Removido: Botão de toggle de visibilidade */}
+            {secondaryStat && ( // Render secondary stat here
+              <span className={cn(isMobile ? "text-xs" : "text-sm", "text-muted-foreground")}>
+                {secondaryStat}
+              </span>
+            )}
           </div>
           {trend && (
             <p className="text-xs text-muted-foreground">{trend}</p>

@@ -136,6 +136,7 @@ const Dashboard = () => {
                 // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
+                secondaryStat={`Pago este mês: ${formatCurrency(totalPaidMonthlyExpenses)}`} // NEW: Secondary stat
                 chartContent={ // NEW: Add chart content for mobile expense card
                   <MonthlyExpenseBarChart
                     expenseInstallments={allExpenseInstallments}
@@ -146,12 +147,6 @@ const Dashboard = () => {
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
-                  <div className="flex justify-between items-end w-full">
-                    <div className="flex flex-col items-start">
-                      <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
-                    </div>
-                  </div>
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button
                       variant="destructive"
@@ -174,6 +169,7 @@ const Dashboard = () => {
                 // Removido: showValue={showAllValues} // Controlado por showAllValues
                 // onToggleVisibility removido
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
+                secondaryStat={`Saldo Atual: ${formatCurrency(stats.balance)}`} // NEW: Secondary stat for income card
                 chartContent={ // NEW: Add chart content for mobile revenue card
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
@@ -184,16 +180,6 @@ const Dashboard = () => {
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-between items-end w-full")}>
-                    <div className="flex flex-col items-start">
-                      <p className="text-xs text-muted-foreground">Saldo Atual:</p> 
-                      <p className={cn(
-                        "font-semibold text-base text-primary"
-                      )}>
-                        {formatCurrency(stats.balance)}
-                      </p>
-                    </div>
-                  </div>
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
                     <Button 
                       variant="success" 
@@ -264,6 +250,7 @@ const Dashboard = () => {
                   isMobile={isMobile}
                   // Removido: showValue={showAllValues} // Controlado por showAllValues
                   // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
+                  secondaryStat={`Pago este mês: ${formatCurrency(totalPaidMonthlyExpenses)}`} // NEW: Secondary stat
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
