@@ -62,44 +62,8 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          style={{ fontSize: isMobile ? "10px" : "12px" }} 
-          tick={({ x, y, payload }) => {
-            const entry = chartData.find(d => d.month === payload.value);
-            const isCurrent = entry?.isCurrentMonth;
-            const monthLabel = payload.value.substring(0, 3);
-            const textColorClass = isCurrent ? "text-destructive" : "text-muted-foreground";
-            const bgColorClass = isCurrent ? "fill-destructive/10" : "fill-transparent";
-
-            // Approximate dimensions for the background rectangle
-            const textWidth = isMobile ? 20 : 30; 
-            const textHeight = isMobile ? 12 : 14; 
-            const padding = isMobile ? 2 : 4;
-
-            return (
-              <g transform={`translate(${x},${y})`}>
-                {isCurrent && (
-                  <rect
-                    x={-textWidth / 2 - padding}
-                    y={-textHeight / 2 - padding + 10} // Adjust y to be below the axis line
-                    width={textWidth + 2 * padding}
-                    height={textHeight + 2 * padding}
-                    rx={4}
-                    ry={4}
-                    className={bgColorClass}
-                  />
-                )}
-                <text
-                  x={0}
-                  y={0}
-                  dy={16} // Position text below the axis line
-                  textAnchor="middle"
-                  className={cn("font-bold", textColorClass)}
-                >
-                  {monthLabel}
-                </text>
-              </g>
-            );
-          }}
+          style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }} 
+          tickFormatter={(value) => value.substring(0, 3)} // Show only first 3 letters
         />
         <YAxis
           hide={true} // Hide Y-axis for a cleaner look
