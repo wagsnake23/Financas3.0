@@ -9,14 +9,14 @@ interface MonthlyExpenseBarChartProps {
   expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
   currentDate: Date; // To determine the year for the 12-month range
   isMobile?: boolean;
-  // Removido: onMonthClick: (date: Date) => void;
+  onMonthClick: (date: Date) => void; // NOVA PROP
 }
 
 export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
   expenseInstallments,
   currentDate,
   isMobile,
-  // Removido: onMonthClick,
+  onMonthClick, // NOVA PROP
 }) => {
   const chartData = useMemo(() => {
     const dataMap: { [key: string]: { month: string; expenses: number; fullDate: Date; isCurrentMonth: boolean } } = {};
@@ -75,7 +75,8 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                 dy={16} 
                 textAnchor="middle" 
                 fill={color} 
-                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }} // Removido cursor: pointer
+                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }} // Adicionado cursor: pointer
+                onClick={() => onMonthClick(entry.fullDate)} // Adicionado onClick
               >
                 {payload.value.substring(0, 3)}
               </text>
