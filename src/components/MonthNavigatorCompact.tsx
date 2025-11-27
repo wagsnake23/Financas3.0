@@ -21,6 +21,8 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   variant,
 }) => {
   const textColorClass = variant === "income" ? "text-success" : "text-destructive";
+  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : "hover:bg-destructive/10";
+  const hoverTextColorClass = variant === "income" ? "hover:text-success" : "hover:text-destructive";
 
   return (
     <div className={cn(
@@ -32,11 +34,14 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
         size="icon"
         onClick={onPreviousMonth}
         className={cn(
-          "h-5 w-5 p-0", // Botões pequenos
-          "text-muted-foreground hover:bg-muted/50 hover:text-primary"
+          isMobile ? "h-7 w-7 p-0" : "h-8 w-8 p-0", // Botões maiores
+          "font-bold", // Negrito para o texto do botão
+          textColorClass, // Aplica a cor do texto (verde/vermelho)
+          hoverBgClass, // Cor de fundo ao passar o mouse
+          hoverTextColorClass // Cor do texto ao passar o mouse
         )}
       >
-        <DynamicIcon name="ChevronLeft" className="h-3 w-3" />
+        <DynamicIcon name="ChevronLeft" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Ícone maior */}
       </Button>
       <div className={cn("flex flex-col items-center", isMobile ? "text-xs" : "text-sm")}> {/* Ajustado o tamanho base para mobile e desktop */}
         <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-sm" : "text-base", "font-roboto")}> {/* Mês: maior */}
@@ -51,11 +56,14 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
         size="icon"
         onClick={onNextMonth}
         className={cn(
-          "h-5 w-5 p-0", // Botões pequenos
-          "text-muted-foreground hover:bg-muted/50 hover:text-primary"
+          isMobile ? "h-7 w-7 p-0" : "h-8 w-8 p-0", // Botões maiores
+          "font-bold", // Negrito para o texto do botão
+          textColorClass, // Aplica a cor do texto (verde/vermelho)
+          hoverBgClass, // Cor de fundo ao passar o mouse
+          hoverTextColorClass // Cor do texto ao passar o mouse
         )}
       >
-        <DynamicIcon name="ChevronRight" className="h-3 w-3" />
+        <DynamicIcon name="ChevronRight" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Ícone maior */}
       </Button>
     </div>
   );
