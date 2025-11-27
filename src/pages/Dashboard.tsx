@@ -179,7 +179,15 @@ const Dashboard = () => {
                 mainStatValue={stats.totalIncome}
                 secondaryStatTitle="Saldo Atual"
                 secondaryStatValue={stats.balance}
-                topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" />}
+                topRightContent={
+                  <MonthNavigatorCompact // Use the new component
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="income"
+                  />
+                }
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
@@ -232,6 +240,15 @@ const Dashboard = () => {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
+                  topRightContent={
+                    <MonthNavigatorCompact // Use the new component
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="income"
+                    />
+                  }
                   chartContent={
                     <MonthlyRevenueBarChart
                       revenues={allRevenues}
@@ -313,6 +330,4 @@ const Dashboard = () => {
       </div>
     </ProtectedRoute>
   );
-};
-
-export default Dashboard;
+}
