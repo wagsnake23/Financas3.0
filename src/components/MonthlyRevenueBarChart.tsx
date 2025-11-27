@@ -60,7 +60,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          style={{ fontSize: isMobile ? "10px" : "12px" }} {/* Ajustado aqui */}
+          style={{ fontSize: isMobile ? "10px" : "12px" }} 
           tickFormatter={(value) => value.substring(0, 3)} // Show only first 3 letters
         />
         <YAxis
