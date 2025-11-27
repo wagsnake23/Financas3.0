@@ -122,19 +122,16 @@ const Dashboard = () => {
           {isMobile ? (
             <div className="grid grid-cols-1 gap-4 mb-4">
               <StatCard
-                title="Total de Despesas"
-                value={stats.totalExpenses} // Passando valor numérico
-                icon="TrendingDown"
+                mainStatTitle="Total de Despesas"
+                mainStatValue={stats.totalExpenses}
+                secondaryStatTitle="Pago este mês"
+                secondaryStatValue={totalPaidMonthlyExpenses}
+                topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" />}
+                hideMainIcon={true} // Hide the main icon
                 variant="expense"
                 isMobile={isMobile}
-                childrenAlignment="start" 
-                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
-                secondaryInfo={ // NEW: secondaryInfo for mobile expense card
-                  <span className="font-semibold text-success">
-                    {formatCurrency(totalPaidMonthlyExpenses)} pago
-                  </span>
-                }
-                chartContent={ // NEW: Add chart content for mobile expense card
+                childrenAlignment="start"
+                chartContent={
                   <MonthlyExpenseBarChart
                     expenseInstallments={allExpenseInstallments}
                     currentDate={selectedMonth}
@@ -158,21 +155,15 @@ const Dashboard = () => {
               </StatCard>
 
               <StatCard
-                title="Total de Receitas"
-                value={stats.totalIncome} // Passando valor numérico
-                icon="TrendingUp"
+                mainStatTitle="Total de Receitas"
+                mainStatValue={stats.totalIncome}
+                secondaryStatTitle="Saldo Atual"
+                secondaryStatValue={stats.balance}
+                topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" />}
+                icon="TrendingUp" // Keep the icon
                 variant="income"
                 isMobile={isMobile}
-                headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
-                secondaryInfo={ // NEW: secondaryInfo for mobile income card (Saldo Atual)
-                  <span className={cn(
-                    "font-semibold",
-                    stats.balance >= 0 ? "text-success" : "text-destructive"
-                  )}>
-                    {formatCurrency(stats.balance)} saldo
-                  </span>
-                }
-                chartContent={ // NEW: Add chart content for mobile revenue card
+                chartContent={
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
                     currentDate={selectedMonth}
@@ -208,16 +199,16 @@ const Dashboard = () => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <StatCard
-                  title="Saldo Atual"
-                  value={stats.balance} // Passando valor numérico
+                  mainStatTitle="Saldo Atual"
+                  mainStatValue={stats.balance}
                   icon="Wallet"
                   variant="balance"
                   trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
                   isMobile={isMobile}
                 />
                 <StatCard
-                  title="Total de Receitas"
-                  value={stats.totalIncome} // Passando valor numérico
+                  mainStatTitle="Total de Receitas"
+                  mainStatValue={stats.totalIncome}
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
@@ -241,16 +232,13 @@ const Dashboard = () => {
                   </div>
                 </StatCard>
                 <StatCard
-                  title="Total de Despesas"
-                  value={stats.totalExpenses} // Passando valor numérico
+                  mainStatTitle="Total de Despesas"
+                  mainStatValue={stats.totalExpenses}
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-                  secondaryInfo={ // NEW: secondaryInfo for desktop expense card
-                    <span className="font-semibold text-success">
-                      {formatCurrency(totalPaidMonthlyExpenses)} pago
-                    </span>
-                  }
+                  secondaryStatTitle="Pago este mês"
+                  secondaryStatValue={totalPaidMonthlyExpenses}
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
