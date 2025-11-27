@@ -19,7 +19,7 @@ interface StatCardProps {
   // Content for the top-right corner (e.g., MonthBadge)
   topRightContent?: React.ReactNode; 
   
-  // Option to hide the main icon (e.g., when topRightContent is present and icon is not desired)
+// Option to hide the main icon (e.g., when topRightContent is present and icon is not desired)
   hideMainIcon?: boolean; 
 
   children?: React.ReactNode; // For buttons
@@ -57,8 +57,8 @@ export const StatCard = ({
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
-  // Unificando o tamanho e peso da fonte para todos os valores
-  const valueFontSizeAndWeightClass = isMobile ? "text-lg font-semibold" : "text-3xl font-bold"; 
+  // Ajustado para text-base e font-medium no mobile
+  const valueFontSizeAndWeightClass = isMobile ? "text-base font-medium" : "text-3xl font-bold"; 
   const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
   const mainValueColorClass = isMobile
     ? variant === "income"
