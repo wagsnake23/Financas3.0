@@ -7,25 +7,24 @@ import { cn, formatCurrency } from "@/lib/utils";
 
 interface MonthlyRevenueBarChartProps {
   revenues: Tables<'receitas'>[];
-  currentDate: Date; // To determine the year for the 12-month range
+  currentDate: Date;
   isMobile?: boolean;
-  onMonthClick: (date: Date) => void; // NOVA PROP
+  onMonthClick: (date: Date) => void;
 }
 
 export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   revenues,
   currentDate,
   isMobile,
-  onMonthClick, // NOVA PROP
+  onMonthClick,
 }) => {
   const chartData = useMemo(() => {
     const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date; isCurrentMonth: boolean } } = {};
     const currentYear = getYear(currentDate);
     const currentMonthIndex = getMonth(currentDate);
 
-    // Initialize data for the last 12 months (Jan-Dec of the current year)
     for (let i = 0; i < 12; i++) {
-      const monthDate = subMonths(new Date(currentYear, 11), 11 - i); // Start from Jan of currentYear
+      const monthDate = subMonths(new Date(currentYear, 11), 11 - i);
       const monthKey = format(monthDate, "MMM", { locale: ptBR });
       const isCurrentMonth = getMonth(monthDate) === currentMonthIndex && getYear(monthDate) === currentYear;
       dataMap[monthKey] = { month: monthKey, revenues: 0, fullDate: monthDate, isCurrentMonth };
@@ -34,8 +33,6 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
     revenues.forEach(revenue => {
       const revenueDate = new Date(revenue.data);
       const revenueYear = getYear(revenueDate);
-
-      // Only include revenues from the current year (based on currentDate)
       if (revenueYear === currentYear) {
         const monthKey = format(revenueDate, "MMM", { locale: ptBR });
         if (dataMap[monthKey]) {
@@ -44,7 +41,6 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
       }
     });
 
-    // Convert map to array and sort by date
     return Object.values(dataMap).sort((a, b) => a.fullDate.getTime() - b.fullDate.getTime());
   }, [revenues, currentDate]);
 
@@ -70,11 +66,11 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
             const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
             return (
               <text 
-                x={x} 
-                y={y} 
-                dy={10} {/* Ajustado de 16 para 10 para aproximar os meses das barras */}
-                textAnchor="middle" 
-                fill={color} 
+                x={x}
+                y={y}
+                dy={10} /* Ajustado para aproximar os meses das barras */
+                textAnchor="middle"
+                fill={color}
                 style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
