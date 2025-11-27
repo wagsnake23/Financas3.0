@@ -127,7 +127,8 @@ const Dashboard = () => {
                 secondaryStatTitle="Pago este mês"
                 secondaryStatValue={totalPaidMonthlyExpenses}
                 topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" />}
-                hideMainIcon={true} // Hide the main icon
+                icon="TrendingDown" // Adicionado o ícone
+                // Removido: hideMainIcon={true}
                 variant="expense"
                 isMobile={isMobile}
                 childrenAlignment="start"
