@@ -38,7 +38,7 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
       >
         <DynamicIcon name="ChevronLeft" className="h-3 w-3" />
       </Button>
-      <div className={cn("flex flex-col items-center gap-y-0", isMobile ? "text-xs" : "text-sm")}> {/* Adicionado gap-y-0 aqui */}
+      <div className={cn("flex flex-col items-center", isMobile ? "text-xs" : "text-sm")}> {/* Ajustado o tamanho base para mobile e desktop */}
         <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-sm" : "text-base", "font-roboto")}> {/* Mês: maior */}
           {format(selectedMonth, "MMM", { locale: ptBR })}
         </span>
