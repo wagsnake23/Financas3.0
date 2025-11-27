@@ -56,8 +56,9 @@ export const StatCard = ({
   };
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
-  const titleFontSizeClass = isMobile ? "text-[0.65rem]" : "text-sm";
-  const valueFontSizeClass = isMobile ? "text-base" : "text-3xl";
+  const titleFontSizeClass = isMobile ? "text-xs" : "text-sm"; // Aumentado para text-xs no mobile
+  const valueFontSizeClass = isMobile ? "text-xl" : "text-3xl"; // Aumentado para text-xl no mobile
+  const secondaryValueFontSizeClass = isMobile ? "text-lg" : "text-3xl"; // NOVO: Para o valor secundário
   const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
   const mainValueColorClass = isMobile
     ? variant === "income"
@@ -95,7 +96,7 @@ export const StatCard = ({
             <div className={cn("flex flex-col items-start", contentSpacingClass)}>
               <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{secondaryStatTitle}</p>
               <p className={cn(
-                valueFontSizeClass, 
+                secondaryValueFontSizeClass, // Usar o novo tamanho de fonte
                 "font-bold tracking-tight", 
                 // Conditional color for secondary stat value
                 secondaryStatTitle === "Pago este mês" ? "text-success" : 
