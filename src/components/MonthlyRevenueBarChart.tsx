@@ -71,7 +71,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                 dy={10} /* Ajustado para aproximar os meses das barras */
                 textAnchor="middle"
                 fill={color}
-                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer" }}
+                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
                 {payload.value.substring(0, 3)}
