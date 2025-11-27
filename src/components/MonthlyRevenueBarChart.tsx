@@ -90,7 +90,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           }}
           labelStyle={{ fontSize: isMobile ? "10px" : "12px" }}
         />
-        <Bar dataKey="revenues" radius={[4, 4, 0, 0]} barSize={isMobile ? 10 : undefined}>
+        <Bar dataKey="revenues" radius={[4, 4, 0, 0]} barSize={isMobile ? 8 : undefined}>
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
