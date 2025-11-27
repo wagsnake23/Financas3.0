@@ -29,8 +29,8 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
-  // Um único estado para controlar a visibilidade de todos os valores
-  const [showAllValues, setShowAllValues] = useState(true);
+  // Removido: Um único estado para controlar a visibilidade de todos os valores
+  // Removido: const [showAllValues, setShowAllValues] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(new Date()); // Este estado agora só controlará StatCards e MonthlyBarChart
 
   // Buscar TODAS as receitas (não filtradas por mês)
@@ -112,10 +112,8 @@ const Dashboard = () => {
     navigate(`/lancamentos?month=${formattedMonth}`);
   };
 
-  // Função única para alternar a visibilidade de todos os valores
-  const handleToggleAllVisibility = () => {
-    setShowAllValues(prev => !prev);
-  };
+  // Removido: Função única para alternar a visibilidade de todos os valores
+  // Removido: const handleToggleAllVisibility = () => { setShowAllValues(prev => !prev); };
 
   return (
     <ProtectedRoute>
@@ -134,8 +132,8 @@ const Dashboard = () => {
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
-                showValue={showAllValues} // Controlado por showAllValues
-                onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
+                // Removido: showValue={showAllValues} // Controlado por showAllValues
+                // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
                 chartContent={ // NEW: Add chart content for mobile expense card
@@ -151,7 +149,7 @@ const Dashboard = () => {
                   <div className="flex justify-between items-end w-full">
                     <div className="flex flex-col items-start">
                       <p className="text-xs text-muted-foreground">Pago este mês:</p>
-                      <p className="font-semibold text-base text-success">{showAllValues ? formatCurrency(totalPaidMonthlyExpenses) : "R$ *****"}</p>
+                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
                     </div>
                   </div>
                   <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
@@ -173,7 +171,7 @@ const Dashboard = () => {
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
-                showValue={showAllValues} // Controlado por showAllValues
+                // Removido: showValue={showAllValues} // Controlado por showAllValues
                 // onToggleVisibility removido
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
                 chartContent={ // NEW: Add chart content for mobile revenue card
@@ -192,7 +190,7 @@ const Dashboard = () => {
                       <p className={cn(
                         "font-semibold text-base text-primary"
                       )}>
-                        {showAllValues ? formatCurrency(stats.balance) : "R$ *****"}
+                        {formatCurrency(stats.balance)}
                       </p>
                     </div>
                   </div>
@@ -228,7 +226,7 @@ const Dashboard = () => {
                   variant="balance"
                   trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
                   isMobile={isMobile}
-                  showValue={showAllValues} // Controlado por showAllValues
+                  // Removido: showValue={showAllValues} // Controlado por showAllValues
                   // onToggleVisibility removido
                 />
                 <StatCard
@@ -237,7 +235,7 @@ const Dashboard = () => {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-                  showValue={showAllValues} // Controlado por showAllValues
+                  // Removido: showValue={showAllValues} // Controlado por showAllValues
                   // onToggleVisibility removido
                   chartContent={ // NEW: Add chart content for desktop revenue card
                     <MonthlyRevenueBarChart
@@ -264,8 +262,8 @@ const Dashboard = () => {
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-                  showValue={showAllValues} // Controlado por showAllValues
-                  onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
+                  // Removido: showValue={showAllValues} // Controlado por showAllValues
+                  // Removido: onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}

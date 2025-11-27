@@ -12,8 +12,8 @@ interface StatCardProps {
   children?: React.ReactNode; // Adicionado a prop children (for buttons)
   chartContent?: React.ReactNode; // NEW: Prop for chart content
   isMobile?: boolean; // Adicionado a prop isMobile
-  showValue?: boolean; // Nova prop para controlar a visibilidade do valor
-  onToggleVisibility?: () => void; // Nova prop para a função de alternância
+  // Removido: showValue?: boolean; // Nova prop para controlar a visibilidade do valor
+  // Removido: onToggleVisibility?: () => void; // Nova prop para a função de alternância
   childrenAlignment?: "start" | "end" | "center"; // Nova prop para alinhamento dos filhos
   headerContent?: React.ReactNode; // NOVA PROP: Conteúdo para o cabeçalho (top-right)
 }
@@ -27,8 +27,8 @@ export const StatCard = ({
   children, 
   chartContent, // NEW: Destructure chartContent
   isMobile, 
-  showValue = true, 
-  onToggleVisibility,
+  // Removido: showValue = true, 
+  // Removido: onToggleVisibility,
   childrenAlignment = "end", // Padrão para 'end'
   headerContent // NOVA PROP
 }: StatCardProps) => {
@@ -72,18 +72,9 @@ export const StatCard = ({
           <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
           <div className="flex items-center gap-2">
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
-              {showValue ? formatCurrency(value) : "R$ *****"}
+              {formatCurrency(value)}
             </p>
-            {isMobile && onToggleVisibility && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onToggleVisibility}
-                className="h-5 w-5 text-muted-foreground hover:text-foreground" // Botão de toggle menor
-              >
-                <DynamicIcon name={showValue ? "EyeOff" : "Eye"} className="h-3.5 w-3.5" /> {/* Ícone menor */}
-              </Button>
-            )}
+            {/* Removido: Botão de toggle de visibilidade */}
           </div>
           {trend && (
             <p className="text-xs text-muted-foreground">{trend}</p>
