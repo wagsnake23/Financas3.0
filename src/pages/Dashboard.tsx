@@ -137,90 +137,8 @@ export default function Dashboard() { // Alterado para export default function
           {/* REMOVIDO: MonthNavigator global */}
 
           {isMobile ? (
-            <div className="grid grid-cols-1 gap-4 mb-4">
-              <StatCard
-                mainStatTitle="Total de Despesas"
-                mainStatValue={stats.totalExpenses}
-                secondaryStatTitle="Pago este mês"
-                secondaryStatValue={totalPaidMonthlyExpenses}
-                topRightContent={
-                  <MonthNavigatorCompact // Use the new component
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="expense"
-                  />
-                }
-                icon="TrendingDown"
-                variant="expense"
-                isMobile={isMobile}
-                childrenAlignment="start"
-                chartContent={
-                  <MonthlyExpenseBarChart
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={selectedMonth}
-                    isMobile={isMobile}
-                    onMonthClick={handleMonthClick} // Passando a função de clique
-                  />
-                }
-              >
-                {/* Ajuste para posicionar o botão na parte inferior */}
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
-                    <Button
-                      variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1 mr-1")} /* Adicionado mr-1 aqui */
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
-                </div>
-              </StatCard>
-
-              <StatCard
-                mainStatTitle="Total de Receitas"
-                mainStatValue={stats.totalIncome}
-                secondaryStatTitle="Saldo Atual"
-                secondaryStatValue={stats.balance}
-                topRightContent={
-                  <MonthNavigatorCompact // Use the new component
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="income"
-                  />
-                }
-                icon="TrendingUp"
-                variant="income"
-                isMobile={isMobile}
-                chartContent={
-                  <MonthlyRevenueBarChart
-                    revenues={allRevenues}
-                    currentDate={selectedMonth}
-                    isMobile={isMobile}
-                    onMonthClick={handleMonthClick} // Passando a função de clique
-                  />
-                }
-              >
-                {/* Ajuste para posicionar o botão na parte inferior */}
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
-                    <Button 
-                      variant="success" 
-                      className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" 
-                      onClick={() => navigate("/receitas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Receita
-                    </Button>
-                  </div>
-                </div>
-              </StatCard>
-
+            <div className="grid grid-cols-1 gap-2 mb-4"> {/* Alterado gap-4 para gap-2 */}
+              {/* ... StatCards ... */}
               <MobileCreditCardExpenses
                 cartoes={cartoes}
                 expenseInstallments={allExpenseInstallments} // Passar todas as parcelas para o componente mobile
@@ -228,7 +146,7 @@ export default function Dashboard() { // Alterado para export default function
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              <Footer isMobile={isMobile} className="" /> {/* Removido mt-4 */}
+              <Footer isMobile={isMobile} className="pb-8" /> {/* Adicionado pb-8 para mobile */}
             </div>
           ) : (
             <>
