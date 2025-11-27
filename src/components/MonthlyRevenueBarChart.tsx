@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Tables } from "@/integrations/supabase/types";
 import { format, subMonths, getMonth, getYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -17,14 +17,16 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   isMobile,
 }) => {
   const chartData = useMemo(() => {
-    const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date } } = {};
-    const currentYear = getYear(currentDate); // Use the year from currentDate
+    const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date; isCurrentMonth: boolean } } = {};
+    const currentYear = getYear(currentDate);
+    const currentMonthIndex = getMonth(currentDate);
 
     // Initialize data for the last 12 months (Jan-Dec of the current year)
     for (let i = 0; i < 12; i++) {
       const monthDate = subMonths(new Date(currentYear, 11), 11 - i); // Start from Jan of currentYear
       const monthKey = format(monthDate, "MMM", { locale: ptBR });
-      dataMap[monthKey] = { month: monthKey, revenues: 0, fullDate: monthDate };
+      const isCurrentMonth = getMonth(monthDate) === currentMonthIndex && getYear(monthDate) === currentYear;
+      dataMap[monthKey] = { month: monthKey, revenues: 0, fullDate: monthDate, isCurrentMonth };
     }
 
     revenues.forEach(revenue => {
@@ -60,7 +62,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          style={{ fontSize: isMobile ? "10px" : "12px" }} 
+          style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }} 
           tickFormatter={(value) => value.substring(0, 3)} // Show only first 3 letters
         />
         <YAxis
@@ -79,7 +81,14 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           }}
           labelStyle={{ fontSize: isMobile ? "10px" : "12px" }}
         />
-        <Bar dataKey="revenues" fill="hsl(var(--success))" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="revenues" radius={[4, 4, 0, 0]}>
+          {chartData.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--soft-green))"}
+            />
+          ))}
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );
