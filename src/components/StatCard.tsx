@@ -57,7 +57,6 @@ export const StatCard = ({
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
-  // Ajustado para text-base e font-medium no mobile
   const valueFontSizeAndWeightClass = isMobile ? "text-base font-medium" : "text-3xl font-bold"; 
   const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
   const mainValueColorClass = isMobile
@@ -100,7 +99,7 @@ export const StatCard = ({
                 "tracking-tight", 
                 // Conditional color for secondary stat value
                 secondaryStatTitle === "Pago este mês" ? "text-success" : 
-                (secondaryStatTitle === "Saldo Atual" ? (secondaryStatValue >= 0 ? "text-success" : "text-destructive") : "text-foreground")
+                (secondaryStatTitle === "Saldo Atual" ? "text-primary" : "text-foreground") // Alterado para text-primary
               )}>
                 {formatCurrency(secondaryStatValue)}
               </p>
