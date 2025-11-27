@@ -72,7 +72,7 @@ export const StatCard = ({
   return (
     <Card className={cn(
       cardPaddingClass,
-      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl flex flex-col h-full",
+      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl flex flex-col h-full relative", // Adicionado 'relative' aqui
       isMobile && "min-h-[110px]",
       variantStyles[variant]
     )}>
@@ -107,18 +107,14 @@ export const StatCard = ({
           )}
         </div>
 
-        {/* Right Section: Top-right content (MonthBadge) and (optional) Main Icon */}
+        {/* Right Section: Top-right content (MonthBadge) */}
         <div className={cn("flex items-start gap-2", isMobile && "flex-row-reverse")}> {/* Alterado items-center para items-start */}
           {topRightContent && (
             <div className={cn(isMobile && "mr-1")}> {/* Removido mt-0.5 */}
               {topRightContent}
             </div>
           )}
-          {!hideMainIcon && icon && ( // Only render icon if not hidden and icon prop is provided
-            <div className={`p-1 rounded-xl ${iconStyles[variant]}`}>
-              <DynamicIcon name={icon} className={iconSizeClass} />
-            </div>
-          )}
+          {/* REMOVIDO: O ícone principal não é mais renderizado aqui */}
         </div>
       </div>
       {chartContent && (
@@ -135,6 +131,17 @@ export const StatCard = ({
           isMobile && "mt-2"
         )}>
           {children}
+        </div>
+      )}
+
+      {/* NOVO: Ícone principal na parte inferior esquerda */}
+      {!hideMainIcon && icon && (
+        <div className={cn(
+          `absolute rounded-xl`,
+          iconStyles[variant],
+          isMobile ? "bottom-2 left-2 p-1" : "bottom-4 left-4 p-2" // Ajuste de padding e posição para mobile/desktop
+        )}>
+          <DynamicIcon name={icon} className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} /> {/* Ajuste de tamanho do ícone */}
         </div>
       )}
     </Card>
