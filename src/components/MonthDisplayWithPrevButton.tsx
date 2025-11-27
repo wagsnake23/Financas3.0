@@ -5,18 +5,16 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
-interface CompactMonthNavigatorProps {
+interface MonthDisplayWithPrevButtonProps {
   selectedMonth: Date;
   onPreviousMonth: () => void;
-  onNextMonth: () => void;
   isMobile?: boolean;
-  variant: "income" | "expense"; // Para passar o contexto de cor
+  variant: "income" | "expense";
 }
 
-export const CompactMonthNavigator: React.FC<CompactMonthNavigatorProps> = ({
+export const MonthDisplayWithPrevButton: React.FC<MonthDisplayWithPrevButtonProps> = ({
   selectedMonth,
   onPreviousMonth,
-  onNextMonth,
   isMobile,
   variant,
 }) => {
@@ -47,18 +45,6 @@ export const CompactMonthNavigator: React.FC<CompactMonthNavigatorProps> = ({
           {format(selectedMonth, "yyyy")}
         </span>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onNextMonth}
-        className={cn(
-          "h-5 w-5 p-0", // Botões muito pequenos
-          isMobile ? "mt-0.5" : "ml-0.5", // Ajusta margem
-          "text-muted-foreground hover:bg-muted/50 hover:text-primary"
-        )}
-      >
-        <DynamicIcon name="ChevronRight" className="h-3 w-3" />
-      </Button>
     </div>
   );
 };

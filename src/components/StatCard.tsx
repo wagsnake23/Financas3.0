@@ -1,6 +1,10 @@
 import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
 import { cn, formatCurrency } from "@/lib/utils";
+import { Button } from "@/components/ui/button"; // Import Button
+
+// NEW IMPORT
+import { MonthDisplayWithPrevButton } from "./MonthDisplayWithPrevButton";
 
 interface StatCardProps {
   // Renamed existing props for clarity and flexibility
@@ -26,6 +30,7 @@ interface StatCardProps {
   chartContent?: React.ReactNode; // For charts
   isMobile?: boolean;
   childrenAlignment?: "start" | "end" | "center";
+  onNextMonth?: () => void; // NEW: Prop for next month action
 }
 
 export const StatCard = ({ 
@@ -42,6 +47,7 @@ export const StatCard = ({
   chartContent, 
   isMobile, 
   childrenAlignment = "end", 
+  onNextMonth, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -76,6 +82,32 @@ export const StatCard = ({
       isMobile && "min-h-[110px]",
       variantStyles[variant]
     )}>
+      {/* Container para o display do mês e botão anterior */}
+      {topRightContent && (
+        <div className={cn(
+          "absolute top-2 right-8", // Posiciona absolutamente no topo-direita, deixando espaço para o botão 'próximo'
+          isMobile ? "top-1 right-6" : "top-2 right-8" // Ajusta para mobile
+        )}>
+          {topRightContent}
+        </div>
+      )}
+
+      {/* Botão de próximo mês, posicionado separadamente */}
+      {onNextMonth && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onNextMonth}
+          className={cn(
+            "absolute top-2 right-2 h-5 w-5 p-0", // Posiciona absolutamente no canto superior direito
+            isMobile ? "top-1 right-1" : "top-2 right-2",
+            "text-muted-foreground hover:bg-muted/50 hover:text-primary"
+          )}
+        >
+          <DynamicIcon name="ChevronRight" className="h-3 w-3" />
+        </Button>
+      )}
+
       <div className="flex items-start justify-between">
         {/* Left and Middle Stats Container */}
         <div className="flex items-start gap-4"> {/* Adjusted gap for spacing between stat blocks */}
@@ -107,15 +139,7 @@ export const StatCard = ({
           )}
         </div>
 
-        {/* Right Section: Top-right content (MonthBadge) */}
-        <div className={cn("flex items-start gap-2", isMobile && "flex-row-reverse")}> {/* Alterado items-center para items-start */}
-          {topRightContent && (
-            <div className={cn(isMobile && "mr-1")}> {/* Removido mt-0.5 */}
-              {topRightContent}
-            </div>
-          )}
-          {/* REMOVIDO: O ícone principal não é mais renderizado aqui */}
-        </div>
+        {/* REMOVIDO: O ícone principal não é mais renderizado aqui */}
       </div>
       {chartContent && (
         <div className={cn("mt-2", isMobile && "mt-1")}>

@@ -23,7 +23,7 @@ import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
-import { CompactMonthNavigator } from "@/components/CompactMonthNavigator"; // NOVO IMPORT
+import { MonthDisplayWithPrevButton } from "@/components/MonthDisplayWithPrevButton"; // NOVO IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -139,15 +139,15 @@ const Dashboard = () => {
                 secondaryStatTitle="Pago este mês"
                 secondaryStatValue={totalPaidMonthlyExpenses}
                 topRightContent={
-                  <CompactMonthNavigator
+                  <MonthDisplayWithPrevButton // Use the new component
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
                     isMobile={isMobile}
                     variant="expense"
                   />
                 }
-                icon="TrendingDown" // Adicionado o ícone
+                onNextMonth={handleNextMonth} // Pass onNextMonth to StatCard
+                icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
                 childrenAlignment="start"
@@ -180,7 +180,7 @@ const Dashboard = () => {
                 secondaryStatTitle="Saldo Atual"
                 secondaryStatValue={stats.balance}
                 topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" />}
-                icon="TrendingUp" // Keep the icon
+                icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
                 chartContent={
@@ -232,7 +232,7 @@ const Dashboard = () => {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-                  chartContent={ // NEW: Add chart content for desktop revenue card
+                  chartContent={
                     <MonthlyRevenueBarChart
                       revenues={allRevenues}
                       currentDate={selectedMonth}
@@ -241,9 +241,9 @@ const Dashboard = () => {
                   }
                 >
                   <div className="flex justify-end mt-4">
-                    <Button 
-                      variant="success" 
-                      className="w-auto px-4 h-8 text-xs rounded-xl" 
+                    <Button
+                      variant="success"
+                      className="w-auto px-4 h-8 text-xs rounded-xl"
                       onClick={() => navigate("/receitas")}
                     >
                       <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -260,15 +260,15 @@ const Dashboard = () => {
                   secondaryStatTitle="Pago este mês"
                   secondaryStatValue={totalPaidMonthlyExpenses}
                   topRightContent={
-                    <CompactMonthNavigator
+                    <MonthDisplayWithPrevButton // Use the new component
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
-                      onNextMonth={handleNextMonth}
                       isMobile={isMobile}
                       variant="expense"
                     />
                   }
-                  chartContent={ // NEW: Add chart content for desktop expense card
+                  onNextMonth={handleNextMonth} // Pass onNextMonth to StatCard
+                  chartContent={
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
                       currentDate={selectedMonth}
@@ -289,8 +289,7 @@ const Dashboard = () => {
                 </StatCard>
               </div>
 
-              {/* NOVO: CombinedMonthlyExpensesDashboard substitui ExpensesPieChart e MonthlyExpenseSummary */}
-              <div className="grid grid-cols-1 mb-4"> {/* Alterado para grid-cols-1 */}
+              <div className="grid grid-cols-1 mb-4">
                 <CombinedMonthlyExpensesDashboard
                   allRevenues={allRevenues}
                   allExpenseInstallments={allExpenseInstallments}
