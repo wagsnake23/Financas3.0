@@ -62,6 +62,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
+          interval={0} {/* Adicionado para garantir que todos os ticks sejam exibidos */}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))";

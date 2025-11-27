@@ -62,6 +62,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
+          interval={0} {/* Adicionado para garantir que todos os ticks sejam exibidos */}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
