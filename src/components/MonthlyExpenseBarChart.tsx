@@ -57,7 +57,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
   }
 
   return (
-    <ResponsiveContainer width="100%" height={isMobile ? 80 : 120}>
+    <ResponsiveContainer width="100%" height={isMobile ? 70 : 100}> {/* Altura ajustada aqui */}
       <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
         <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
         <XAxis
@@ -75,8 +75,8 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                 dy={16} 
                 textAnchor="middle" 
                 fill={color} 
-                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }} // Adicionado cursor: pointer e onClick
-                onClick={() => onMonthClick(entry.fullDate)} // Adicionado onClick
+                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => onMonthClick(entry.fullDate)}
               >
                 {payload.value.substring(0, 3)}
               </text>
@@ -98,7 +98,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           }}
           labelStyle={{ fontSize: isMobile ? "10px" : "12px" }}
         />
-        <Bar dataKey="expenses" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}> {/* Adicionado activeBar={false} */}
+        <Bar dataKey="expenses" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
