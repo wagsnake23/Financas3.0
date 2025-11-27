@@ -9,7 +9,8 @@ interface StatCardProps {
   icon: string; // Alterado para string para usar DynamicIcon
   trend?: string;
   variant: "income" | "expense" | "balance";
-  children?: React.ReactNode; // Adicionado a prop children
+  children?: React.ReactNode; // Adicionado a prop children (for buttons)
+  chartContent?: React.ReactNode; // NEW: Prop for chart content
   isMobile?: boolean; // Adicionado a prop isMobile
   showValue?: boolean; // Nova prop para controlar a visibilidade do valor
   onToggleVisibility?: () => void; // Nova prop para a função de alternância
@@ -24,6 +25,7 @@ export const StatCard = ({
   trend, 
   variant, 
   children, 
+  chartContent, // NEW: Destructure chartContent
   isMobile, 
   showValue = true, 
   onToggleVisibility,
@@ -99,6 +101,11 @@ export const StatCard = ({
           </div>
         </div>
       </div>
+      {chartContent && ( // NEW: Render chartContent if provided
+        <div className={cn("mt-2", isMobile && "mt-1")}> {/* Adjust margin for chart */}
+          {chartContent}
+        </div>
+      )}
       {children && (
         <div className={cn(
           "flex mt-auto", // Usar mt-auto para empurrar para o final

@@ -21,6 +21,7 @@ import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
+import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -136,6 +137,13 @@ const Dashboard = () => {
                 onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
+                chartContent={ // NEW: Add chart content for mobile expense card
+                  <MonthlyExpenseBarChart
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                  />
+                }
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -243,6 +251,13 @@ const Dashboard = () => {
                   isMobile={isMobile}
                   showValue={showAllValues} // Controlado por showAllValues
                   onToggleVisibility={handleToggleAllVisibility} // Botão de olho aqui
+                  chartContent={ // NEW: Add chart content for desktop expense card
+                    <MonthlyExpenseBarChart
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={selectedMonth}
+                      isMobile={isMobile}
+                    />
+                  }
                 >
                   <div className="flex justify-end mt-4">
                     <Button
