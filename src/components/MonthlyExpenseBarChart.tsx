@@ -62,8 +62,15 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }} 
-          tickFormatter={(value) => value.substring(0, 3)} // Show only first 3 letters
+          tick={({ x, y, payload }) => {
+            const entry = chartData[payload.index];
+            const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))";
+            return (
+              <text x={x} y={y} dy={16} textAnchor="middle" fill={color} style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }}>
+                {payload.value.substring(0, 3)}
+              </text>
+            );
+          }}
         />
         <YAxis
           hide={true} // Hide Y-axis for a cleaner look
