@@ -23,7 +23,7 @@ import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
-import { MonthNavigator } from "@/components/MonthNavigator"; // NOVO IMPORT: MonthNavigator
+import { CompactMonthNavigator } from "@/components/CompactMonthNavigator"; // NOVO IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -129,13 +129,7 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}
           
-          {/* NOVO: MonthNavigator para controlar o mês exibido */}
-          <MonthNavigator
-            selectedMonth={selectedMonth}
-            onPreviousMonth={handlePreviousMonth}
-            onNextMonth={handleNextMonth}
-            isMobile={isMobile}
-          />
+          {/* REMOVIDO: MonthNavigator global */}
 
           {isMobile ? (
             <div className="grid grid-cols-1 gap-4 mb-4">
@@ -144,9 +138,16 @@ const Dashboard = () => {
                 mainStatValue={stats.totalExpenses}
                 secondaryStatTitle="Pago este mês"
                 secondaryStatValue={totalPaidMonthlyExpenses}
-                topRightContent={<MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" />}
+                topRightContent={
+                  <CompactMonthNavigator
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="expense"
+                  />
+                }
                 icon="TrendingDown" // Adicionado o ícone
-                // Removido: hideMainIcon={true}
                 variant="expense"
                 isMobile={isMobile}
                 childrenAlignment="start"
@@ -258,6 +259,15 @@ const Dashboard = () => {
                   isMobile={isMobile}
                   secondaryStatTitle="Pago este mês"
                   secondaryStatValue={totalPaidMonthlyExpenses}
+                  topRightContent={
+                    <CompactMonthNavigator
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="expense"
+                    />
+                  }
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
