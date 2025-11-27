@@ -107,6 +107,11 @@ export default function Dashboard() { // Alterado para export default function
     setSelectedMonth(prev => addMonths(prev, 1));
   };
 
+  // Função para lidar com o clique no mês do gráfico
+  const handleMonthClick = (date: Date) => {
+    setSelectedMonth(date);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -156,6 +161,7 @@ export default function Dashboard() { // Alterado para export default function
                     expenseInstallments={allExpenseInstallments}
                     currentDate={selectedMonth}
                     isMobile={isMobile}
+                    onMonthClick={handleMonthClick} // Passando a função de clique
                   />
                 }
               >
@@ -196,6 +202,7 @@ export default function Dashboard() { // Alterado para export default function
                     revenues={allRevenues}
                     currentDate={selectedMonth}
                     isMobile={isMobile}
+                    onMonthClick={handleMonthClick} // Passando a função de clique
                   />
                 }
               >
@@ -254,6 +261,7 @@ export default function Dashboard() { // Alterado para export default function
                       revenues={allRevenues}
                       currentDate={selectedMonth}
                       isMobile={isMobile}
+                      onMonthClick={handleMonthClick} // Passando a função de clique
                     />
                   }
                 >
@@ -290,6 +298,7 @@ export default function Dashboard() { // Alterado para export default function
                       expenseInstallments={allExpenseInstallments}
                       currentDate={selectedMonth}
                       isMobile={isMobile}
+                      onMonthClick={handleMonthClick} // Passando a função de clique
                     />
                   }
                 >

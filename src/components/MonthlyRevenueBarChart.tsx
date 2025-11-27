@@ -9,12 +9,14 @@ interface MonthlyRevenueBarChartProps {
   revenues: Tables<'receitas'>[];
   currentDate: Date; // To determine the year for the 12-month range
   isMobile?: boolean;
+  onMonthClick: (date: Date) => void; // NOVA PROP
 }
 
 export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   revenues,
   currentDate,
   isMobile,
+  onMonthClick, // NOVA PROP
 }) => {
   const chartData = useMemo(() => {
     const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date; isCurrentMonth: boolean } } = {};
@@ -62,13 +64,20 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          // Adicionado para garantir que todos os ticks sejam exibidos
           interval={0} 
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
             return (
-              <text x={x} y={y} dy={16} textAnchor="middle" fill={color} style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }}>
+              <text 
+                x={x} 
+                y={y} 
+                dy={16} 
+                textAnchor="middle" 
+                fill={color} 
+                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }} // Adicionado cursor: pointer
+                onClick={() => onMonthClick(entry.fullDate)} // Adicionado onClick
+              >
                 {payload.value.substring(0, 3)}
               </text>
             );
