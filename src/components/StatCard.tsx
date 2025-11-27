@@ -66,14 +66,19 @@ export const StatCard = ({
       variantStyles[variant]
     )}>
       <div className="flex items-start justify-between">
-        <div className={cn(contentSpacingClass)}> {/* Apply conditional spacing here */}
-          <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
-          {secondaryInfo && ( // Render secondaryInfo here
-            <div className={cn("flex flex-col items-start", isMobile ? "mt-0.5" : "mt-1")}> {/* Adjust margin for mobile */}
-              {secondaryInfo}
-            </div>
-          )}
-          <div className="flex items-baseline gap-2"> {/* Use items-baseline to align text baselines */}
+        {/* Left section: Title, Secondary Info, Value, Trend */}
+        <div className={cn("flex flex-col items-start", contentSpacingClass)}>
+          {/* Title and optional secondaryInfo on the same line */}
+          <div className="flex items-baseline gap-2"> {/* Use items-baseline for vertical alignment */}
+            <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{title}</p>
+            {secondaryInfo && ( // Render secondaryInfo next to the title
+              <div className={cn(isMobile ? "text-[0.6rem] text-muted-foreground" : "text-xs text-muted-foreground")}>
+                {secondaryInfo}
+              </div>
+            )}
+          </div>
+          {/* Main Value */}
+          <div className="flex items-baseline gap-2">
             <p className={cn(valueFontSizeClass, "font-bold tracking-tight", valueColorClass)}>
               {formatCurrency(value)}
             </p>
@@ -82,15 +87,15 @@ export const StatCard = ({
             <p className="text-xs text-muted-foreground">{trend}</p>
           )}
         </div>
-        {/* NEW: Container for header content and main icon */}
-        <div className={cn("flex items-center gap-2", isMobile && "flex-row-reverse")}> {/* Added flex-row-reverse for mobile */}
+        {/* Right section: headerContent (MonthBadge), Main Icon */}
+        <div className={cn("flex items-center gap-2", isMobile && "flex-row-reverse")}>
           {headerContent && (
-            <div className={cn(isMobile && "mt-0.5 mr-1")}> {/* Adjust margin for mobile if needed, add mr-1 */}
+            <div className={cn(isMobile && "mt-0.5 mr-1")}>
               {headerContent}
             </div>
           )}
-          <div className={`p-1 rounded-xl ${iconStyles[variant]}`}> {/* Reduzido de p-1.5 para p-1 */}
-            <DynamicIcon name={icon} className={iconSizeClass} /> {/* Aplica o tamanho do ícone condicional */}
+          <div className={`p-1 rounded-xl ${iconStyles[variant]}`}>
+            <DynamicIcon name={icon} className={iconSizeClass} />
           </div>
         </div>
       </div>

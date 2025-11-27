@@ -130,10 +130,9 @@ const Dashboard = () => {
                 childrenAlignment="start" 
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="expense" /> : null} // Pass MonthBadge here
                 secondaryInfo={ // NEW: secondaryInfo for mobile expense card
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Pago este mês</p>
-                    <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
-                  </div>
+                  <span className="font-semibold text-success">
+                    {formatCurrency(totalPaidMonthlyExpenses)} pago
+                  </span>
                 }
                 chartContent={ // NEW: Add chart content for mobile expense card
                   <MonthlyExpenseBarChart
@@ -166,14 +165,12 @@ const Dashboard = () => {
                 isMobile={isMobile}
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
                 secondaryInfo={ // NEW: secondaryInfo for mobile income card (Saldo Atual)
-                  <div className="flex flex-col items-start">
-                    <p className="text-xs text-muted-foreground">Saldo Atual</p> 
-                    <p className={cn(
-                      "font-semibold text-base text-primary"
-                    )}>
-                      {formatCurrency(stats.balance)}
-                    </p>
-                  </div>
+                  <span className={cn(
+                    "font-semibold",
+                    stats.balance >= 0 ? "text-success" : "text-destructive"
+                  )}>
+                    {formatCurrency(stats.balance)} saldo
+                  </span>
                 }
                 chartContent={ // NEW: Add chart content for mobile revenue card
                   <MonthlyRevenueBarChart
@@ -250,10 +247,9 @@ const Dashboard = () => {
                   variant="expense"
                   isMobile={isMobile}
                   secondaryInfo={ // NEW: secondaryInfo for desktop expense card
-                    <div className="flex flex-col items-start">
-                      <p className="text-xs text-muted-foreground">Pago este mês</p>
-                      <p className="font-semibold text-base text-success">{formatCurrency(totalPaidMonthlyExpenses)}</p>
-                    </div>
+                    <span className="font-semibold text-success">
+                      {formatCurrency(totalPaidMonthlyExpenses)} pago
+                    </span>
                   }
                   chartContent={ // NEW: Add chart content for desktop expense card
                     <MonthlyExpenseBarChart
