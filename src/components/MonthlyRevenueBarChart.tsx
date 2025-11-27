@@ -9,14 +9,14 @@ interface MonthlyRevenueBarChartProps {
   revenues: Tables<'receitas'>[];
   currentDate: Date; // To determine the year for the 12-month range
   isMobile?: boolean;
-  onMonthClick: (date: Date) => void; // NOVA PROP
+  // Removido: onMonthClick: (date: Date) => void;
 }
 
 export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   revenues,
   currentDate,
   isMobile,
-  onMonthClick, // NOVA PROP
+  // Removido: onMonthClick,
 }) => {
   const chartData = useMemo(() => {
     const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date; isCurrentMonth: boolean } } = {};
@@ -75,8 +75,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                 dy={16} 
                 textAnchor="middle" 
                 fill={color} 
-                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold", cursor: "pointer" }} // Adicionado cursor: pointer
-                onClick={() => onMonthClick(entry.fullDate)} // Adicionado onClick
+                style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "bold" }} // Removido cursor: pointer
               >
                 {payload.value.substring(0, 3)}
               </text>
