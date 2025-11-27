@@ -22,6 +22,7 @@ import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses"
 import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
+import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -175,6 +176,13 @@ const Dashboard = () => {
                 showValue={showAllValues} // Controlado por showAllValues
                 // onToggleVisibility removido
                 headerContent={isMobile ? <MonthBadge selectedMonth={selectedMonth} isMobile={isMobile} variant="income" /> : null} // Pass MonthBadge here
+                chartContent={ // NEW: Add chart content for mobile revenue card
+                  <MonthlyRevenueBarChart
+                    revenues={allRevenues}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                  />
+                }
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -231,6 +239,13 @@ const Dashboard = () => {
                   isMobile={isMobile}
                   showValue={showAllValues} // Controlado por showAllValues
                   // onToggleVisibility removido
+                  chartContent={ // NEW: Add chart content for desktop revenue card
+                    <MonthlyRevenueBarChart
+                      revenues={allRevenues}
+                      currentDate={selectedMonth}
+                      isMobile={isMobile}
+                    />
+                  }
                 >
                   <div className="flex justify-end mt-4">
                     <Button 
