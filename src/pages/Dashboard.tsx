@@ -15,7 +15,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
-import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths } from "date-fns"; // Adicionado addMonths e subMonths
 import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -23,6 +23,7 @@ import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
+import { MonthNavigator } from "@/components/MonthNavigator"; // NOVO IMPORT: MonthNavigator
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -97,6 +98,15 @@ const Dashboard = () => {
 
   const isLoading = authLoading || isLoadingTransactionsData || isLoadingAllRevenues || isLoadingAllExpenses || isLoadingCategories; // Verificações de loading atualizadas
 
+  // Funções para navegar entre os meses
+  const handlePreviousMonth = () => {
+    setSelectedMonth(prev => subMonths(prev, 1));
+  };
+
+  const handleNextMonth = () => {
+    setSelectedMonth(prev => addMonths(prev, 1));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -119,6 +129,14 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}
           
+          {/* NOVO: MonthNavigator para controlar o mês exibido */}
+          <MonthNavigator
+            selectedMonth={selectedMonth}
+            onPreviousMonth={handlePreviousMonth}
+            onNextMonth={handleNextMonth}
+            isMobile={isMobile}
+          />
+
           {isMobile ? (
             <div className="grid grid-cols-1 gap-4 mb-4">
               <StatCard
