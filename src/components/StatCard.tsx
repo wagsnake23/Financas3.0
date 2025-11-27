@@ -4,7 +4,7 @@ import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; // Import Button
 
 // NEW IMPORT
-import { MonthDisplayWithPrevButton } from "./MonthDisplayWithPrevButton";
+import { MonthNavigatorCompact } from "./MonthNavigatorCompact"; // Updated import
 
 interface StatCardProps {
   // Renamed existing props for clarity and flexibility
@@ -20,7 +20,7 @@ interface StatCardProps {
   variant: "income" | "expense" | "balance";
   trend?: string; // Still for main stat
   
-  // Content for the top-right corner (e.g., MonthBadge)
+  // Content for the top-right corner (e.g., MonthBadge or MonthNavigatorCompact)
   topRightContent?: React.ReactNode; 
   
 // Option to hide the main icon (e.g., when topRightContent is present and icon is not desired)
@@ -30,7 +30,7 @@ interface StatCardProps {
   chartContent?: React.ReactNode; // For charts
   isMobile?: boolean;
   childrenAlignment?: "start" | "end" | "center";
-  onNextMonth?: () => void; // NEW: Prop for next month action
+  // Removed onNextMonth prop as it will be handled by MonthNavigatorCompact
 }
 
 export const StatCard = ({ 
@@ -47,7 +47,6 @@ export const StatCard = ({
   chartContent, 
   isMobile, 
   childrenAlignment = "end", 
-  onNextMonth, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -82,30 +81,14 @@ export const StatCard = ({
       isMobile && "min-h-[110px]",
       variantStyles[variant]
     )}>
-      {/* Container para o display do mês e botão anterior */}
+      {/* Top-right content (MonthNavigatorCompact or MonthBadge) */}
       {topRightContent && (
         <div className={cn(
-          "absolute top-2 right-8", // Posiciona absolutamente no topo-direita, deixando espaço para o botão 'próximo'
-          isMobile ? "top-1 right-6" : "top-2 right-8" // Ajusta para mobile
+          "absolute top-2 right-2", // Posiciona absolutamente no canto superior direito
+          isMobile ? "top-1 right-1" : "top-2 right-2" // Ajusta para mobile
         )}>
           {topRightContent}
         </div>
-      )}
-
-      {/* Botão de próximo mês, posicionado separadamente */}
-      {onNextMonth && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onNextMonth}
-          className={cn(
-            "absolute top-2 right-2 h-5 w-5 p-0", // Posiciona absolutamente no canto superior direito
-            isMobile ? "top-1 right-1" : "top-2 right-2",
-            "text-muted-foreground hover:bg-muted/50 hover:text-primary"
-          )}
-        >
-          <DynamicIcon name="ChevronRight" className="h-3 w-3" />
-        </Button>
       )}
 
       <div className="flex items-start justify-between">

@@ -23,7 +23,7 @@ import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard"; // NOVO IMPORT
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart"; // NEW IMPORT
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart"; // NEW IMPORT
-import { MonthDisplayWithPrevButton } from "@/components/MonthDisplayWithPrevButton"; // NOVO IMPORT
+import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact"; // NOVO IMPORT
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -139,14 +139,14 @@ const Dashboard = () => {
                 secondaryStatTitle="Pago este mês"
                 secondaryStatValue={totalPaidMonthlyExpenses}
                 topRightContent={
-                  <MonthDisplayWithPrevButton // Use the new component
+                  <MonthNavigatorCompact // Use the new component
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
                     isMobile={isMobile}
                     variant="expense"
                   />
                 }
-                onNextMonth={handleNextMonth} // Pass onNextMonth to StatCard
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
@@ -260,14 +260,14 @@ const Dashboard = () => {
                   secondaryStatTitle="Pago este mês"
                   secondaryStatValue={totalPaidMonthlyExpenses}
                   topRightContent={
-                    <MonthDisplayWithPrevButton // Use the new component
+                    <MonthNavigatorCompact // Use the new component
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
                       isMobile={isMobile}
                       variant="expense"
                     />
                   }
-                  onNextMonth={handleNextMonth} // Pass onNextMonth to StatCard
                   chartContent={
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
