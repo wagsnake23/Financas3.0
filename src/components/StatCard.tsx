@@ -57,10 +57,8 @@ export const StatCard = ({
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
-  // Ajustado para text-lg e font-semibold no mobile
-  const mainValueFontSizeAndWeightClass = isMobile ? "text-lg font-semibold" : "text-3xl font-bold"; 
-  // Ajustado para text-base e font-semibold no mobile
-  const secondaryValueFontSizeAndWeightClass = isMobile ? "text-base font-semibold" : "text-3xl font-bold"; 
+  // Unificando o tamanho e peso da fonte para todos os valores
+  const valueFontSizeAndWeightClass = isMobile ? "text-lg font-semibold" : "text-3xl font-bold"; 
   const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
   const mainValueColorClass = isMobile
     ? variant === "income"
@@ -85,7 +83,7 @@ export const StatCard = ({
           {/* Main Stat Block */}
           <div className={cn("flex flex-col items-start", contentSpacingClass)}>
             <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{mainStatTitle}</p>
-            <p className={cn(mainValueFontSizeAndWeightClass, "tracking-tight", mainValueColorClass)}>
+            <p className={cn(valueFontSizeAndWeightClass, "tracking-tight", mainValueColorClass)}>
               {formatCurrency(mainStatValue)}
             </p>
             {trend && (
@@ -98,7 +96,7 @@ export const StatCard = ({
             <div className={cn("flex flex-col items-start", contentSpacingClass)}>
               <p className={cn(titleFontSizeClass, "font-medium text-muted-foreground")}>{secondaryStatTitle}</p>
               <p className={cn(
-                secondaryValueFontSizeAndWeightClass, 
+                valueFontSizeAndWeightClass, // Usando a classe unificada
                 "tracking-tight", 
                 // Conditional color for secondary stat value
                 secondaryStatTitle === "Pago este mês" ? "text-success" : 
