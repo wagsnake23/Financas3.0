@@ -38,11 +38,11 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
       >
         <DynamicIcon name="ChevronLeft" className="h-3 w-3" />
       </Button>
-      <div className={cn("flex flex-col items-center", isMobile ? "text-[0.6rem]" : "text-xs")}>
-        <span className={cn("font-bold uppercase leading-none", textColorClass, "font-roboto")}>
+      <div className={cn("flex flex-col items-center", isMobile ? "text-xs" : "text-sm")}> {/* Ajustado o tamanho base para mobile e desktop */}
+        <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-sm" : "text-base", "font-roboto")}> {/* Mês: maior */}
           {format(selectedMonth, "MMM", { locale: ptBR })}
         </span>
-        <span className={cn("leading-none", textColorClass, "font-roboto")}>
+        <span className={cn("leading-none", textColorClass, isMobile ? "text-xs" : "text-sm", "font-roboto")}> {/* Ano: um pouco menor que o mês */}
           {format(selectedMonth, "yyyy")}
         </span>
       </div>
