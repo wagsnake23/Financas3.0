@@ -108,9 +108,9 @@ export const StatCard = ({
         </div>
 
         {/* Right Section: Top-right content (MonthBadge) and (optional) Main Icon */}
-        <div className={cn("flex items-center gap-2", isMobile && "flex-row-reverse")}>
+        <div className={cn("flex items-start gap-2", isMobile && "flex-row-reverse")}> {/* Alterado items-center para items-start */}
           {topRightContent && (
-            <div className={cn(isMobile && "mt-0.5 mr-1")}>
+            <div className={cn(isMobile && "mr-1")}> {/* Removido mt-0.5 */}
               {topRightContent}
             </div>
           )}
