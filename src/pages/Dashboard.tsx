@@ -251,7 +251,7 @@ export default function Dashboard() { // Alterado para export default function
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              <Footer isMobile={isMobile} className="" /> {/* Removido mt-4 */}
+              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-1rem]")} /> {/* Removido mt-4 */}
             </div>
           ) : (
             <>
