@@ -187,7 +187,7 @@ export default function Dashboard() { // Alterado para export default function
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
-                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
                     <Button
                       variant="destructive"
                       className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1 mr-1")} /* Adicionado mr-1 aqui */
@@ -230,7 +230,7 @@ export default function Dashboard() { // Alterado para export default function
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
-                  <div className="flex justify-end mt-auto"> {/* Empurra o botão para o final */}
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
                     <Button 
                       variant="success" 
                       className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" 
