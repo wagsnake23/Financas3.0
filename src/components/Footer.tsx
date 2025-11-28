@@ -28,7 +28,11 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
         className="inline-flex items-center gap-1 font-semibold hover:opacity-90 transition-opacity duration-200"
         style={{ color: "#25D366" }} // Cor verde do WhatsApp
       >
-        <DynamicIcon name="Whatsapp" size={isMobile ? 12 : 14} style={{ color: "#25D366" }} /> {/* Usando DynamicIcon */}
+        <img 
+          src="/whatsapp-icon.ico" 
+          alt="WhatsApp" 
+          className={cn(isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} 
+        />
         Vagner
       </a>
     </footer>
