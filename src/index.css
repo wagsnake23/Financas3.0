@@ -185,59 +185,37 @@ html, body {
 /* Apenas para Desktop */
 @media (min-width: 1024px) {
 
-  /* Wrapper com rolagem */
   .lancamentos-wrapper {
-    max-height: 420px;
-    overflow-y: auto;
-    width: 100%;
-    display: block;
     position: relative;
   }
 
-  /* Tabela se comporta como tabela real */
+  /* Scroll somente no corpo da tabela */
+  .lancamentos-scroll-container {
+    overflow-y: auto;
+    max-height: calc(100vh - 320px);
+    overflow-x: visible !important; /* Impedir overflow lateral invisível */
+  }
+
+  /* Tabela com layout fluido e centralizada */
   .lancamentos-table {
     width: 100%;
-    display: table;
-    border-collapse: collapse;
-    table-layout: auto; /* Distribuição inteligente de largura */
+    max-width: 1200px;
+    table-layout: auto !important;
+    margin: 0 auto;
   }
 
-  /* Header fixo e perfeitamente alinhado */
-  .lancamentos-table thead {
+  /* Forçar que as duas tabelas tenham exatamente o mesmo tamanho */
+  .lancamentos-wrapper table {
+    width: 100%;
+    table-layout: fixed !important;
+  }
+
+  /* Cabeçalho fixo (sticky) */
+  .lancamentos-table-header tr {
     position: sticky;
     top: 0;
-    z-index: 10;
-    display: table-header-group;
-    background: #F5F7FA;
-  }
-
-  .lancamentos-table tbody {
-    display: table-row-group;
-  }
-
-  /* Espaçamento consistente */
-  .lancamentos-table th,
-  .lancamentos-table td {
-    padding: 10px 12px;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-
-  /* Ajuste principal: Descrição ocupa o espaço livre */
-  .col-desc,
-  .col-desc-cell {
-    width: auto;
-    min-width: 260px;
-    max-width: 100%;
-    text-align: left;
-  }
-
-  /* Removendo regras de largura fixas e alinhamento que serão sobrescritas */
-  .lancamentos-scroll-container {
-    overflow-x: visible !important;
-  }
-
-  .lancamentos-table-header tr {
+    z-index: 50;
+    background: #F5F6FA;
     height: 52px;
     font-size: 15px;
     font-weight: 600;
@@ -245,16 +223,18 @@ html, body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
+  /* Zebra striping suave */
   .lancamentos-table-body tr:nth-child(even) {
     background-color: #FAFAFA;
   }
 
+  /* Hover elegante */
   .lancamentos-table-body tr:hover {
     background-color: #EEF6FF;
     transition: background-color 0.15s ease-in-out;
   }
 
-  /* Larguras alinhadas - Mantendo as larguras para as outras colunas */
+  /* Distribuição de colunas */
   .lancamentos-table th:first-child,
   .lancamentos-table td:first-child {
     width: 110px; /* Data */
@@ -272,10 +252,16 @@ html, body {
     text-align: left;
   }
 
+  .lancamentos-table th:nth-child(4),
+  .lancamentos-table td:nth-child(4) {
+    width: auto; /* Descrição - auto-fit */
+    text-align: left;
+  }
+
   .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
     width: 120px; /* Valor */
-    text-align: right; /* Mantido alinhamento à direita para valor */
+    text-align: right;
   }
 
   .lancamentos-table th:nth-child(6),
@@ -286,10 +272,30 @@ html, body {
     text-align: center;
   }
 
+  /* Mesmo padding nas células */
+  .lancamentos-table th,
+  .lancamentos-table td {
+    padding: 10px 12px !important;
+  }
+
+  /* Cabeçalho usa mesma largura das colunas */
+  .lancamentos-table-header th {
+    width: inherit;
+  }
+
   /* Remover estilos que Shadcn coloca e que causam desalinhamento */
   .lancamentos-table-header {
     display: table-header-group !important;
   }
+
+  /* Larguras alinhadas */
+  .col-data { width: 110px; text-align: left !important; }
+  .col-tipo { width: 100px; text-align: center !important; }
+  .col-subcat { min-width: 160px; text-align: left !important; }
+  .col-desc { width: auto; min-width: 180px; text-align: center !important; } /* Changed to center */
+  .col-valor { width: 120px; text-align: center !important; } /* Changed to center */
+  .col-status,
+  .col-acoes { width: 70px; text-align: center !important; }
 
   /* Tooltip nativa */
   .lancamentos-table th[title] {
@@ -298,6 +304,7 @@ html, body {
 
   /* Ícones de seta com animação suave */
   .arrow-icon {
+    /* margin-left: 4px; */ /* Removed as it's now absolutely positioned */
     transition: transform 0.15s ease-in-out, opacity 0.15s;
   }
   .rotate-animation {
