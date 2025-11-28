@@ -91,7 +91,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   // Lógica de toggle de status movida para o hook useLancamentosLogic
   const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
-  const newStatus: ReceetaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
+  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
 
   const transactionDate = (() => {
@@ -144,7 +144,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* DESCRIÇÃO */}
       {!isMobile && (
-        <TableCell className="py-2 px-2 text-left min-w-[100px] text-base">
+        <TableCell className="py-2 pl-8 text-left min-w-[100px] text-base"> {/* Alterado px-2 para pl-8 */}
           {transaction.installmentNumber &&
           transaction.totalInstallments &&
           transaction.totalInstallments > 1

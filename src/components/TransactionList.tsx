@@ -434,7 +434,7 @@ export const TransactionList = ({
                 <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
                   Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none pl-8"> {/* Alterado pl-4 para pl-8 */}
+                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none pl-8"> {/* Mantido pl-8 */}
                   Descrição {sortColumn === "description" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
