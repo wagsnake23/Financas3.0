@@ -17,7 +17,6 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Import ToggleGroup
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -74,8 +73,7 @@ export const TransactionList = ({
 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  // Alterado filterType para ser um array de strings
-  const [filterType, setFilterType] = useState<string[]>([]); // [] significa 'todos'
+  const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc"); // Default sort direction
@@ -110,8 +108,7 @@ export const TransactionList = ({
     
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
-      // Lógica de filtro de tipo atualizada para array
-      const matchesType = filterType.length === 0 || filterType.includes(transaction.type);
+      const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
       let matchesPaymentOption = true;
@@ -212,17 +209,11 @@ export const TransactionList = ({
   }, [filteredTransactions]);
 
   const selectableCategories = useMemo(() => {
-    // Se nenhum tipo estiver selecionado (filterType.length === 0), ou ambos estiverem, mostre todas as subcategorias.
-    // Se apenas 'income' estiver selecionado, mostre subcategorias de receita.
-    // Se apenas 'expense' estiver selecionado, mostre subcategorias de despesa.
-    if (filterType.length === 0 || (filterType.includes("income") && filterType.includes("expense"))) {
-      return allCategories.filter(cat => cat.parent_id !== null); // Todas as subcategorias
-    } else if (filterType.includes("income")) {
+    if (filterType === "income") {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
-    } else if (filterType.includes("expense")) {
+    } else {
       return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
-    return []; // Caso contrário, nenhuma categoria
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
@@ -348,64 +339,27 @@ export const TransactionList = ({
     <div className={cn("p-6", isMobile && "p-0")}>
       
       <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}>
-        {isMobile ? (
-          <ToggleGroup 
-            type="multiple" // Alterado para multiple
-            value={filterType} 
-            onValueChange={(values: string[]) => setFilterType(values)} // Recebe um array
-            className={cn("w-full justify-center", hideTypeFilter && "hidden", isMobile && "max-w-[160px]")}
-          >
-            <ToggleGroupItem 
-              value="income" 
-              className={cn(
-                "flex-1 rounded-xl flex items-center justify-center border",
-                "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-                isMobile && "h-8 py-0.5 text-sm"
-              )}
-            >
-              {filterType.includes("income") && <DynamicIcon name="Check" className="mr-1 h-3.5 w-3.5" />} {/* Ícone de check */}
-              <DynamicIcon name="💰" className="mr-1 h-3.5 w-3.5" /> Receita
-            </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="expense" 
-              className={cn(
-                "flex-1 rounded-xl flex items-center justify-center border",
-                "data-[state=on]:bg-destructive data-[state=on]:border-destructive data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
-                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-                isMobile && "h-8 py-0.5 text-sm"
-              )}
-            >
-              {filterType.includes("expense") && <DynamicIcon name="Check" className="mr-1 h-3.5 w-3.5" />} {/* Ícone de check */}
-              <DynamicIcon name="💸" className="mr-1 h-3.5 w-3.5" /> Despesa
-            </ToggleGroupItem>
-          </ToggleGroup>
-        ) : (
-          <Select 
-            value={filterType.length === 0 ? "all" : filterType[0]} // Adapta para o valor único do Select
-            onValueChange={(value) => setFilterType(value === "all" ? [] : [value])} // Adapta para o array
-            className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}
-          >
-            <SelectTrigger className="rounded-xl">
-              <SelectValue placeholder="Tipo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os tipos</SelectItem>
-              <SelectItem value="income">
-                <span className="flex items-center gap-2">
-                  <DynamicIcon name="💰" className="h-4 w-4" />
-                  Receita
-                </span>
-              </SelectItem>
-              <SelectItem value="expense">
-                <span className="flex items-center gap-2">
-                  <DynamicIcon name="💸" className="h-4 w-4" />
-                  Despesa
-                </span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        )}
+        <Select value={filterType} onValueChange={setFilterType} 
+                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
+          <SelectTrigger className="rounded-xl">
+            <SelectValue placeholder="Tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os tipos</SelectItem>
+            <SelectItem value="income">
+              <span className="flex items-center gap-2">
+                <DynamicIcon name="💰" className="h-4 w-4" />
+                Receita
+              </span>
+            </SelectItem>
+            <SelectItem value="expense">
+              <span className="flex items-center gap-2">
+                <DynamicIcon name="💸" className="h-4 w-4" />
+                Despesa
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
                 className={cn("rounded-xl", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
