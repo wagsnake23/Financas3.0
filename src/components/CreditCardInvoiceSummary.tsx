@@ -71,7 +71,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           isMobile && "items-center text-center" // Removido space-y-0.5
         )}>
           {/* NOVO: Emoji azul de mês */}
-          <span className={cn("text-blue-500", isMobile && "text-xs")}>🗓️</span>
+          <span className={cn("text-primary", isMobile && "text-xs")}>🗓️</span>
           <span className={cn(
             "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
             isMobile && "text-[0.6rem] px-1.5 py-0.5"
@@ -81,7 +81,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           {formattedDueDate && (
             <span className={cn(
               "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-xs mt-0" // Alterado text-[0.5rem] para text-xs
+              isMobile && "text-xs mt-0"
             )}>
               Venc. {formattedDueDate}
             </span>
