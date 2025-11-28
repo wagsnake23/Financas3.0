@@ -81,7 +81,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           {formattedDueDate && (
             <span className={cn(
               "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-[0.5rem] mt-0" // Alterado mt-[1px] para mt-0
+              isMobile && "text-xs mt-0" // Alterado text-[0.5rem] para text-xs
             )}>
               Venc. {formattedDueDate}
             </span>
