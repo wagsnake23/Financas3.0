@@ -41,7 +41,8 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       isMobile && "p-3 space-y-2"
     )}>
       {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      <div className={cn("flex items-center justify-between w-full", isMobile ? "gap-1" : "gap-2")}>
+      {/* Ajustado o gap para diminuir o espaçamento */}
+      <div className={cn("flex items-center justify-between w-full", isMobile ? "gap-0" : "gap-1")}>
         {/* Pago */}
         <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
           <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
@@ -63,9 +64,11 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
         {/* Badge (agora ao lado dos valores) */}
         <div className={cn(
-          "flex flex-col items-end text-right gap-0 flex-none", // Adicionado flex-none para que o badge não cresça
-          isMobile && "items-center text-center"
+          "flex flex-col items-end text-right gap-0 flex-none",
+          isMobile && "items-center text-center space-y-0.5" // Adicionado space-y para separar o emoji
         )}>
+          {/* NOVO: Emoji azul de mês */}
+          <span className={cn("text-blue-500", isMobile && "text-xs")}>🗓️</span>
           <span className={cn(
             "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
             isMobile && "text-[0.6rem] px-1.5 py-0.5"
@@ -88,7 +91,11 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         <Button
           variant="secondary"
           onClick={onPayInvoice}
-          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")}
+          className={cn(
+            "rounded-xl",
+            // Ajustado a largura do botão
+            isMobile ? "w-auto max-w-[180px] h-8 px-3 text-xs" : "w-auto px-6"
+          )}
           disabled={loadingPayInvoice || disablePayInvoiceButton}
         >
           <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
