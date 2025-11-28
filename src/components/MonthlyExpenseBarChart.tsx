@@ -57,7 +57,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
   }
 
   return (
-    <ResponsiveContainer width="100%" height={isMobile ? 70 : 100}> {/* Altura ajustada aqui */}
+    <ResponsiveContainer width="100%" height={isMobile ? 70 : 'auto'} minHeight={isMobile ? undefined : 260}> {/* Altura ajustada aqui */}
       <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
         <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
         <XAxis

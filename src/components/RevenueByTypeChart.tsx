@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
+import { cn, formatCurrency } from "@/lib/utils";
 
 interface RevenueByTypeChartProps {
   revenues: Tables<'receitas'>[];
@@ -42,7 +43,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
   return (
     <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2>
-      <ResponsiveContainer width="100%" height={240}>
+      <ResponsiveContainer width="100%" height="auto" minHeight={260}>
         <PieChart>
           <Pie
             data={chartData}

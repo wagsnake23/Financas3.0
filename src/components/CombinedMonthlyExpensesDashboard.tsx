@@ -160,7 +160,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           Nenhuma despesa registrada
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={isMobile ? 200 : 400}>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
           <PieChart>
             <Pie
               data={chartData}

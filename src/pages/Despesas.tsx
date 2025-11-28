@@ -109,7 +109,7 @@ export default function Despesas() {
       <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
         {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
-        <div className={cn("max-w-4xl mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "p-6")}>
+        <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
           {/* (b) Header com <h1>Despesas */}
           {!isMobile && (
             <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ export default function Despesas() {
             </>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
-              <Card className="p-6 rounded-xl shadow-sm"> {/* Removido max-w-lg mx-auto */}
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto"> {/* Removido max-w-lg mx-auto */}
                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
                   <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
                   Nova Despesa

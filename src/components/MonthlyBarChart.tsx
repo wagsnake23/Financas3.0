@@ -48,7 +48,7 @@ export const MonthlyBarChart = ({ transactions, isMobile }: MonthlyBarChartProps
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Receitas vs Despesas Mensais</h2>
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 320}>
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis 

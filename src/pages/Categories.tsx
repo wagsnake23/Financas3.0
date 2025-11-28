@@ -239,7 +239,7 @@ const Categories = () => {
     <div className="min-h-screen bg-background pt-16">
       <Navigation />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "max-w-[1200px] px-6")}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"> {/* Revertido para lg:grid-cols-2 */}
           <div> {/* Removido lg:col-span-2 */}
             <CategoryForm 

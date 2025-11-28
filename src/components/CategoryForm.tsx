@@ -119,7 +119,7 @@ export const CategoryForm = ({
   }, [allCategories]);
 
   return (
-    <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
+    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", !isMobile && "max-w-[700px] mx-auto")}>
       <div className="flex items-center justify-between mb-6">
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}

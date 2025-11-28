@@ -224,7 +224,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   };
 
   return (
-    <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
+    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", "max-w-[700px] mx-auto")}>
       <h2 className="text-2xl font-bold mb-6">Novo Lançamento</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Toggle Avulsa / Recorrente */}

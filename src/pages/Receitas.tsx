@@ -412,7 +412,7 @@ export default function Receitas() {
       <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-success/5 pt-16">
           <Navigation />
-          <div className={cn("max-w-4xl mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "p-6")}>
+          <div className={cn("mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "max-w-[1200px] px-6 py-8")}>
             {!isMobile && (
               <div className="flex items-center justify-between">
                 <div>
@@ -429,7 +429,7 @@ export default function Receitas() {
                   <Footer isMobile={isMobile} className="mt-0" /> {/* Alterado mt-2 para mt-0 para mobile */}
                 </>
               ) : (
-                <Card className="p-6 rounded-xl shadow-sm">
+                <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
                     <DynamicIcon name="💰" className="h-6 w-6 text-success" /> {/* Ícone de emoji */}
                     Nova Receita

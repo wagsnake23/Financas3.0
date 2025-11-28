@@ -52,7 +52,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   return (
     <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 400}>
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
         <PieChart>
           <Pie
             data={chartData}
@@ -69,7 +69,7 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
             ))}
           </Pie>
           <Tooltip 
-            formatter={(value: number) => formatCurrency(value)} // Formatar Tooltip
+            formatter={(value: number) => `R$ ${value.toFixed(2)}`}
             contentStyle={{ 
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",

@@ -15,7 +15,7 @@ import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
-import { CreditCardInvoiceSummary } from "./CreditCardInvoiceSummary";
+import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];

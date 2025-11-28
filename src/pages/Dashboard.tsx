@@ -129,7 +129,7 @@ export default function Dashboard() { // Alterado para export default function
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
         <Navigation />
-        <main className="container mx-auto px-4 py-8">
+        <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "max-w-[1200px] px-6")}>
           {!isMobile && (
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}

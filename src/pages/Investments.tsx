@@ -291,7 +291,7 @@ export default function Investments() { // Alterado para export default function
       <Navigation />
 
       {/* Main Content */}
-      <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "px-4")}>
+      <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "max-w-[1200px] px-6")}>
         {/* Stats Cards - Ocultados em mobile */}
         {!isMobile && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -320,7 +320,7 @@ export default function Investments() { // Alterado para export default function
         <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
           {/* Form */}
           <div>
-            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4 bg-lancamentos-mobile-bg")}>
+            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -535,8 +535,8 @@ export default function Investments() { // Alterado para export default function
             {isMobile && (
               <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
                 <StatCard
-                  title="Total Investido"
-                  value={stats.totalInvested}
+                  mainStatTitle="Total Investido"
+                  mainStatValue={stats.totalInvested}
                   icon="DollarSign"
                   variant="income" // Usar variant income para cor verde
                   isMobile={isMobile}
