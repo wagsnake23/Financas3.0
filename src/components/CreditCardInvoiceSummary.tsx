@@ -37,37 +37,12 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
   return (
     <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm relative", // Adicionado 'relative'
+      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm relative",
       isMobile && "p-3 space-y-2"
     )}>
-      {/* NOVO BADGE NO CANTO SUPERIOR DIREITO */}
-      <div className={cn(
-        "absolute top-2 right-2 text-right flex flex-col items-end",
-        isMobile ? "top-1 right-1" : "top-2 right-2"
-      )}>
-        <span className={cn(
-          "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
-          isMobile && "text-[0.6rem] px-1.5 py-0.5" // Ajuste de tamanho para mobile
-        )}>
-          {formattedBadgeMonth}
-        </span>
-        {formattedDueDate && (
-          <span className={cn(
-            "text-[10px] text-muted-foreground mt-[2px]",
-            isMobile && "text-[0.5rem] mt-[1px]" // Ajuste de tamanho para mobile
-          )}>
-            Venc. {formattedDueDate}
-          </span>
-        )}
-      </div>
-      
-      <div className={cn("flex items-start justify-between gap-4", isMobile && "flex-col items-center text-center gap-2")}>
-        {/* Detalhes do Cartão (Esquerda) - Removido o mês e vencimento daqui */}
-        <div className={cn("flex flex-col items-start", isMobile && "items-center")}>
-          {/* Removido: Fatura: Novembro 2025 e Vencimento: 05/12 */}
-        </div>
-
-        {/* Valores (Centro, em uma linha) */}
+      {/* Novo contêiner principal para alinhar tudo horizontalmente no desktop e verticalmente no mobile */}
+      <div className={cn("flex flex-row items-start justify-between gap-3 w-full", isMobile && "flex-col items-center gap-2")}>
+        {/* Valores (Pago, Pendente, Total Fatura) */}
         <div className={cn("flex items-center justify-center gap-4", isMobile && "gap-4 w-full")}> {/* Aumentado o gap para mobile */}
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
@@ -85,13 +60,35 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
           </div>
         </div>
+
+        {/* Badge (agora parte do flex row, não mais absoluto) */}
+        <div className={cn(
+          "flex flex-col items-end text-right gap-0",
+          isMobile && "items-center text-center" // Centraliza o conteúdo do badge no mobile se o pai for flex-col
+        )}>
+          <span className={cn(
+            "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
+            isMobile && "text-[0.6rem] px-1.5 py-0.5" // Ajuste de tamanho para mobile
+          )}>
+            {formattedBadgeMonth}
+          </span>
+          {formattedDueDate && (
+            <span className={cn(
+              "text-[10px] text-muted-foreground leading-none mt-[2px]", // Adicionado mt-[2px] para espaçamento
+              isMobile && "text-[0.5rem] mt-[1px]" // Ajuste de tamanho para mobile
+            )}>
+              Venc. {formattedDueDate}
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className={cn("mt-4", isMobile && "mt-3 flex justify-center")}> {/* Adicionado flex justify-center para centralizar o botão */}
+      {/* Botão "Pagar Fatura" isolado abaixo e centralizado */}
+      <div className={cn("flex justify-center mt-3", isMobile && "mt-2")}>
         <Button
           variant="secondary"
           onClick={onPayInvoice}
-          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")} /* Ajustado w-auto e max-w-[150px] */
+          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")}
           disabled={loadingPayInvoice || disablePayInvoiceButton}
         >
           <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
