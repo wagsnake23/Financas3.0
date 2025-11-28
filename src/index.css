@@ -264,13 +264,4 @@ html, body {
     width: 70px; /* Status/Ações */
     text-align: center;
   }
-
-  /* Estilos adicionais para cabeçalhos de ordenação */
-  .lancamentos-table-header th {
-    white-space: nowrap;
-  }
-
-  .lancamentos-table-header th svg {
-    margin-left: 2px;
-  }
 }
