@@ -337,7 +337,8 @@ export const TransactionList = ({
 
   const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
 
-  const transactionsToDisplay = isMobile ? sortedTransactions.slice(0, 8) : sortedTransactions;
+  // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
+  const transactionsToDisplay = sortedTransactions;
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
@@ -420,7 +421,10 @@ export const TransactionList = ({
         </div>
       )}
 
-      <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
+      <div className={cn(
+        "rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper",
+        isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible" // Aplicando as classes aqui
+      )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className="lancamentos-table">
             <TableHeader className="lancamentos-table-header">
