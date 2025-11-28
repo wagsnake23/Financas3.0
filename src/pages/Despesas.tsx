@@ -128,7 +128,8 @@ export default function Despesas() {
                 Nova Despesa
               </h2>
               {formContent}
-              <Footer isMobile={isMobile} className="mt-0" user={user} /> {/* Passando a prop user */}
+              {/* Footer para mobile, com ajuste de padding-y */}
+              <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
             </>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
