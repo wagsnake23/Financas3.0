@@ -70,7 +70,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           isMobile && "items-center text-center"
         )}>
           <span className={cn(
-            "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
+            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md", // Removido bg-primary/10
             isMobile && "text-[0.6rem] px-1.5 py-0.5"
           )}>
             {formattedBadgeMonth}
