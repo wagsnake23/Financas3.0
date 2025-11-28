@@ -171,7 +171,7 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* Ajustado h-9 text-sm para mobile */}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")} 
             disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
           />
         </div>
