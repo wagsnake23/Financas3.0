@@ -119,7 +119,7 @@ export const CategoryForm = ({
   }, [allCategories]);
 
   return (
-    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", !isMobile && "max-w-[700px] mx-auto")}>
+    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4", !isMobile && "max-w-[700px] mx-auto")}>
       <div className="flex items-center justify-between mb-6">
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
@@ -203,7 +203,12 @@ export const CategoryForm = ({
         </div>
 
         <div className="flex gap-2">
-          <Button type="submit" className="flex-1 rounded-xl" size="lg" disabled={editingCategory?.user_id === null}>
+          <Button 
+            type="submit" 
+            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} 
+            size="lg" 
+            disabled={editingCategory?.user_id === null}
+          >
             {editingCategory ? "Atualizar Subcategoria" : "Adicionar Subcategoria"}
           </Button>
           {editingCategory && (
@@ -211,8 +216,8 @@ export const CategoryForm = ({
               type="button"
               variant="outline"
               onClick={handleCancel}
+              className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}
               size="lg"
-              className="rounded-xl"
             >
               Cancelar
             </Button>
