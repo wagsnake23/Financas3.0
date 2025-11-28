@@ -147,7 +147,7 @@ export default function Dashboard() { // Alterado para export default function
     <ProtectedRoute>
       <div className="min-h-screen bg-background pt-16">
         <Navigation />
-        <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "max-w-[1200px] px-6")}>
+        <main className={cn("container mx-auto", isMobile ? "pt-8 px-4" : "py-8 max-w-[1200px] px-6")}>
           {!isMobile && (
             <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
           )}
@@ -155,7 +155,7 @@ export default function Dashboard() { // Alterado para export default function
           {/* REMOVIDO: MonthNavigator global */}
 
           {isMobile ? (
-            <div className="grid grid-cols-1 gap-4 mb-4">
+            <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
               <StatCard
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
@@ -251,7 +251,7 @@ export default function Dashboard() { // Alterado para export default function
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-1rem]")} /> {/* Removido mt-4 */}
+              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} /> {/* Alterado mt-[-1rem] para mt-[-2rem] */}
             </div>
           ) : (
             <>
