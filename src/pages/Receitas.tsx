@@ -410,9 +410,9 @@ export default function Receitas() {
 
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gradient-to-br from-background via-background to-success/5 pt-16">
+        <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
           <Navigation />
-          <div className={cn("mx-auto space-y-6", isMobile ? "p-4 pt-2 bg-[#F1F9FD]" : "max-w-[1200px] px-6 py-8")}>
+          <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
             {!isMobile && (
               <div className="flex items-center justify-between">
                 <div>
@@ -426,7 +426,7 @@ export default function Receitas() {
               {isMobile ? (
                 <>
                   {oneOffFormContent} {/* Removido o Card aqui */}
-                  <Footer isMobile={isMobile} className="mt-0" user={user} /> {/* Alterado mt-2 para mt-0 para mobile, passando a prop user */}
+                  <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} /> {/* Alterado mt-2 para mt-0 para mobile, passando a prop user */}
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
