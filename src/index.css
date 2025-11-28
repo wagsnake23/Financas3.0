@@ -175,6 +175,11 @@ All colors MUST be HSL.
   .dialog-mobile .dialog-title {
     /* margin-top: 0 !important; */   /* ajuste fino do título */
   }
+
+  /* Ocultar o cabeçalho da tabela em mobile */
+  .lancamentos-table-header {
+    display: none !important;
+  }
 }
 
 html, body {
@@ -204,7 +209,8 @@ html, body {
     margin: 0 auto;
   }
 
-  /* REMOVIDO: Forçar que as duas tabelas tenham exatamente o mesmo tamanho */
+  /* Forçar que as duas tabelas tenham exatamente o mesmo tamanho */
+  /* REMOVIDO: Esta regra estava causando problemas e não é mais necessária com a estrutura correta */
   /* .lancamentos-wrapper table {
     width: 100%;
     table-layout: fixed !important;

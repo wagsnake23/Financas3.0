@@ -423,29 +423,27 @@ export const TransactionList = ({
       <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className="lancamentos-table">
-            {!isMobile && (
-              <TableHeader className="lancamentos-table-header">
-                <TableRow>
-                  <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
-                    Data {sortColumn === "date" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
-                  </TableHead>
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none">
-                    Tipo {sortColumn === "type" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
-                  </TableHead>
-                  <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
-                    Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
-                  </TableHead>
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none"> {/* Removido pl-8 */}
-                    Descrição {sortColumn === "description" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
-                  </TableHead>
-                  <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
-                    Valor {sortColumn === "amount" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
-                  </TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-center">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-            )}
+            <TableHeader className="lancamentos-table-header">
+              <TableRow>
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
+                  Data {sortColumn === "date" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none">
+                  Tipo {sortColumn === "type" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
+                  Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none">
+                  Descrição {sortColumn === "description" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
+                  Valor {sortColumn === "amount" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody className="lancamentos-table-body">
               {transactionsToDisplay.length === 0 ? (
                 <TableRow>
