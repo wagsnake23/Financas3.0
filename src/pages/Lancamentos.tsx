@@ -118,7 +118,7 @@ const Lancamentos = () => {
           />
         </main>
 
-        <Footer isMobile={isMobile} />
+        <Footer isMobile={isMobile} className={cn(isMobile && "mt-0 py-2")} />
 
         {isEditModalOpen && loadingEditData && (
           <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
