@@ -18,7 +18,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon } => "lucide-react";
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -446,8 +446,8 @@ export default function Receitas() {
               )}
             </div>
           </div>
-        </div>
-        {!isMobile && <Footer isMobile={isMobile} user={user} />}
-    </div>
-  );
-}
+          {/* O Footer para desktop foi movido para cá, dentro do div principal do componente Receitas */}
+          {!isMobile && <Footer isMobile={isMobile} user={user} />}
+      </div>
+    );
+  }
