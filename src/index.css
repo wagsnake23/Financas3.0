@@ -193,6 +193,7 @@ html, body {
   .lancamentos-scroll-container {
     overflow-y: auto;
     max-height: calc(100vh - 320px);
+    overflow-x: visible !important; /* Impedir overflow lateral invisível */
   }
 
   /* Tabela com layout fluido e centralizada */
@@ -201,6 +202,12 @@ html, body {
     max-width: 1200px;
     table-layout: auto !important;
     margin: 0 auto;
+  }
+
+  /* Forçar que as duas tabelas tenham exatamente o mesmo tamanho */
+  .lancamentos-wrapper table {
+    width: 100%;
+    table-layout: fixed !important;
   }
 
   /* Cabeçalho fixo (sticky) */
@@ -263,5 +270,21 @@ html, body {
   .lancamentos-table td:nth-child(7) {
     width: 70px; /* Status/Ações */
     text-align: center;
+  }
+
+  /* Mesmo padding nas células */
+  .lancamentos-table th,
+  .lancamentos-table td {
+    padding: 10px 12px;
+  }
+
+  /* Cabeçalho usa mesma largura das colunas */
+  .lancamentos-table-header th {
+    width: inherit;
+  }
+
+  /* Remover estilos que Shadcn coloca e que causam desalinhamento */
+  .lancamentos-table-header {
+    display: table-header-group !important;
   }
 }

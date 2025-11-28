@@ -421,7 +421,7 @@ export const TransactionList = ({
       <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
         {!isMobile && (
           <Table className="lancamentos-table">
-            <TableHeader className="lancamentos-table-header">
+            <TableHeader className="lancamentos-table-header lancamentos-table">
               <TableRow>
                 <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
