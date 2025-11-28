@@ -65,7 +65,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         {/* Badge (agora ao lado dos valores) */}
         <div className={cn(
           "flex flex-col items-end text-right gap-0 flex-none",
-          isMobile && "items-center text-center space-y-0.5" // Adicionado space-y para separar o emoji
+          isMobile && "items-center text-center" // Removido space-y-0.5
         )}>
           {/* NOVO: Emoji azul de mês */}
           <span className={cn("text-blue-500", isMobile && "text-xs")}>🗓️</span>
@@ -78,7 +78,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           {formattedDueDate && (
             <span className={cn(
               "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-[0.5rem] mt-[1px]"
+              isMobile && "text-[0.5rem] mt-0" // Alterado mt-[1px] para mt-0
             )}>
               Venc. {formattedDueDate}
             </span>
