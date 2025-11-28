@@ -113,7 +113,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             onClick={onPayInvoice}
             className={cn(
               "rounded-xl",
-              isMobile ? "w-auto max-w-[180px] h-8 px-3 text-xs" : "w-auto px-6"
+              isMobile ? "w-full max-w-[250px] h-8 px-3 text-xs" : "w-auto px-6" // Aumentado max-w para mobile
             )}
             disabled={loadingPayInvoice || disablePayInvoiceButton}
           >
