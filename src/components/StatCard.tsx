@@ -138,7 +138,7 @@ export const StatCard = ({
           childrenAlignment === "start" && "justify-start",
           childrenAlignment === "end" && "justify-end",
           childrenAlignment === "center" && "justify-center",
-          isMobile && "mt-2"
+          isMobile && "mt-1" // Alterado de mt-2 para mt-1 aqui
         )}>
           {children}
         </div>
