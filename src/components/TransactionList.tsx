@@ -17,7 +17,7 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
-// Removido: import { ChevronUp, ChevronDown } from "lucide-react"; 
+import { ChevronUp, ChevronDown } from "lucide-react"; // Importar ChevronUp e ChevronDown
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -155,7 +155,7 @@ export const TransactionList = ({
       let valB: any;
 
       switch (sortColumn) {
-        case "data": // Changed from "date" to "data"
+        case "date":
           valA = new Date(a.date).getTime();
           valB = new Date(b.date).getTime();
           break;
@@ -163,15 +163,15 @@ export const TransactionList = ({
           valA = a.type;
           valB = b.type;
           break;
-        case "subcategoria": // Changed from "category" to "subcategoria"
+        case "category":
           valA = getCategoryDisplayName(a.category);
           valB = getCategoryDisplayName(b.category);
           break;
-        case "descricao": // Changed from "description" to "descricao"
+        case "description":
           valA = a.description || "";
           valB = b.description || "";
           break;
-        case "valor": // Changed from "amount" to "valor"
+        case "amount":
           valA = a.amount;
           valB = b.amount;
           break;
@@ -422,69 +422,25 @@ export const TransactionList = ({
       <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
         {!isMobile && (
           <Table className="lancamentos-table">
-            <TableHeader className="lancamentos-table-header">
+            <TableHeader className="lancamentos-table-header lancamentos-table">
               <TableRow>
-
-                <TableHead
-                  className="col-data sort-header"
-                  onClick={() => handleSort("data")}
-                >
-                  <span className="sort-label">Data</span>
-                  {sortColumn === "data" && (
-                    <span className="sort-icon">
-                      {sortDirection === "asc" ? "▴" : "▾"}
-                    </span>
-                  )}
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none col-data" title="Clique para ordenar">
+                  Data {sortColumn === "date" && (sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />)}
                 </TableHead>
-
-                <TableHead className="col-tipo text-center">
-                  Tipo
+                <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none col-tipo text-center" title="Clique para ordenar">
+                  Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />)}
                 </TableHead>
-
-                <TableHead
-                  className="col-subcat sort-header"
-                  onClick={() => handleSort("subcategoria")}
-                >
-                  <span className="sort-label">Subcategoria</span>
-                  {sortColumn === "subcategoria" && (
-                    <span className="sort-icon">
-                      {sortDirection === "asc" ? "▴" : "▾"}
-                    </span>
-                  )}
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none col-subcat text-left" title="Clique para ordenar">
+                  Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />)}
                 </TableHead>
-
-                <TableHead
-                  className="col-desc sort-header"
-                  onClick={() => handleSort("descricao")}
-                >
-                  <span className="sort-label">Descrição</span>
-                  {sortColumn === "descricao" && (
-                    <span className="sort-icon">
-                      {sortDirection === "asc" ? "▴" : "▾"}
-                    </span>
-                  )}
+                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none col-desc text-left" title="Clique para ordenar">
+                  Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />)}
                 </TableHead>
-
-                <TableHead
-                  className="col-valor sort-header text-right"
-                  onClick={() => handleSort("valor")}
-                >
-                  <span className="sort-label">Valor</span>
-                  {sortColumn === "valor" && (
-                    <span className="sort-icon">
-                      {sortDirection === "asc" ? "▴" : "▾"}
-                    </span>
-                  )}
+                <TableHead className="text-right cursor-pointer select-none col-valor" data-order-col="amount" onClick={() => handleSort("amount")} title="Clique para ordenar">
+                  Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />)}
                 </TableHead>
-
-                <TableHead className="col-status text-center">
-                  Status
-                </TableHead>
-
-                <TableHead className="col-acoes text-center">
-                  Ações
-                </TableHead>
-
+                <TableHead className="text-center col-status">Status</TableHead>
+                <TableHead className="text-center col-acoes">Ações</TableHead>
               </TableRow>
             </TableHeader>
           </Table>
