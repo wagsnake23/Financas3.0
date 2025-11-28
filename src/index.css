@@ -252,10 +252,11 @@ html, body {
     text-align: left;
   }
 
-  .lancamentos-table th:nth-child(4),
+  .lancamentos-table th:nth-child(4), /* This is the Description column */
   .lancamentos-table td:nth-child(4) {
     width: auto; /* Descrição - auto-fit */
     text-align: left; /* Alterado para alinhar à esquerda */
+    padding-left: 32px !important; /* NEW: Explicitly set padding-left for description column */
   }
 
   .lancamentos-table th:nth-child(5),

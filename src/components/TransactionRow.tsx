@@ -144,7 +144,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* DESCRIÇÃO */}
       {!isMobile && (
-        <TableCell className="py-2 pl-8 text-left min-w-[100px] text-base"> {/* Alterado px-2 para pl-8 */}
+        <TableCell className="py-2 text-left min-w-[100px] text-base"> {/* Removido pl-8 */}
           {transaction.installmentNumber &&
           transaction.totalInstallments &&
           transaction.totalInstallments > 1
