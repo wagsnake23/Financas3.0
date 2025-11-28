@@ -19,6 +19,7 @@ interface CategoryFormProps {
   editingCategory?: AppCategory | null;
   onCancelEdit?: () => void;
   allCategories: AppCategory[]; // Agora recebe todas as categorias (principais e sub)
+  hideCardWrapper?: boolean; // NOVA PROP
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -31,7 +32,8 @@ export const CategoryForm = ({
   onUpdateCategory,
   editingCategory,
   onCancelEdit,
-  allCategories
+  allCategories,
+  hideCardWrapper = false // Valor padrão é false
 }: CategoryFormProps) => {
   const [nome, setNome] = useState("");
   const [icone, setIcone] = useState("😀");
@@ -118,8 +120,8 @@ export const CategoryForm = ({
     return allCategories.filter(cat => cat.parent_id === null);
   }, [allCategories]);
 
-  return (
-    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4", !isMobile && "max-w-[700px] mx-auto")}>
+  const formContent = (
+    <>
       <div className="flex items-center justify-between mb-6">
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
@@ -136,24 +138,24 @@ export const CategoryForm = ({
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-2")}> {/* Ajustado space-y para mobile */}
-        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
-          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>Categoria Principal</Label> {/* Ajustado text-xs para mobile */}
+      <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-2")}>
+        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>Categoria Principal</Label>
           <Select 
             value={selectedParentId || UNSELECTED_VALUE} 
             onValueChange={(value) => setSelectedParentId(value === UNSELECTED_VALUE ? null : value)}
-            disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
+            disabled={editingCategory?.user_id === null}
           >
-            <SelectTrigger id="parent_id" className={cn("rounded-xl", isMobile && "h-9 text-sm")}> {/* Ajustado h-9 text-sm para mobile */}
+            <SelectTrigger id="parent_id" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
               {possibleParentCategories
                 .filter(cat => cat.id !== editingCategory?.id && cat.id !== "") 
                 .map((cat) => (
-                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}> {/* Ajustado text-sm para mobile */}
+                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                   <span className="flex items-center gap-2">
-                    <DynamicIcon name={cat.icone} className="h-4 w-4" color={cat.cor} /> {/* Adicionado DynamicIcon com cor */}
+                    <DynamicIcon name={cat.icone} className="h-4 w-4" color={cat.cor} />
                     {cat.nome}
                   </span>
                 </SelectItem>
@@ -162,8 +164,8 @@ export const CategoryForm = ({
           </Select>
         </div>
 
-        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
-          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>Nome da Subcategoria</Label> {/* Ajustado text-xs para mobile */}
+        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>Nome da Subcategoria</Label>
           <Input
             id="nome"
             type="text"
@@ -172,21 +174,21 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn("rounded-xl", isMobile && "h-9 text-sm")} 
-            disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
+            disabled={editingCategory?.user_id === null}
           />
         </div>
         
-        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
-          <Label className={cn(isMobile && "text-xs")}>Ícone / Emoji</Label> {/* Ajustado text-xs para mobile */}
+        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+          <Label className={cn(isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
                 "w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background",
-                isMobile && "p-2 text-3xl" // Reduzido padding e tamanho do emoji para mobile
+                isMobile && "p-2 text-3xl"
               )}
-              disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
+              disabled={editingCategory?.user_id === null}
             >
               {icone}
             </button>
@@ -195,8 +197,8 @@ export const CategoryForm = ({
               <div ref={emojiPickerRef} className="absolute z-50 mt-2">
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
-                  width={isMobile ? 280 : 350} // Ajustado largura para mobile
-                  height={isMobile ? 300 : 400} // Ajustado altura para mobile
+                  width={isMobile ? 280 : 350}
+                  height={isMobile ? 300 : 400}
                   searchPlaceHolder="Buscar emoji..."
                   previewConfig={{ showPreview: false }}
                 />
@@ -227,6 +229,14 @@ export const CategoryForm = ({
           )}
         </div>
       </form>
+    </>
+  );
+
+  return hideCardWrapper ? (
+    formContent
+  ) : (
+    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4", !isMobile && "max-w-[700px] mx-auto")}>
+      {formContent}
     </Card>
   );
 };

@@ -47,6 +47,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
               editingCategory={editingCategory}
               onCancelEdit={onCancelEdit}
               allCategories={allCategories}
+              hideCardWrapper={true} // Passando a nova prop aqui
             />
           )}
         </div>
