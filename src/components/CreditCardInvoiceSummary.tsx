@@ -41,36 +41,33 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       isMobile && "p-3 space-y-2"
     )}>
       {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      <div className={cn("flex items-center justify-between w-full")}>
-        {/* Grupo para Pago, Pendente, Total Fatura */}
-        <div className={cn("flex flex-1 items-center justify-between gap-2")}>
-          {/* Pago */}
-          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
-            <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
-            <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
-          </div>
-          {/* Pendente */}
-          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
-            <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
-            <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
-          </div>
-          {/* Total Fatura */}
-          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
-            <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-            <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
-            <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
-          </div>
+      <div className={cn("flex items-center justify-between w-full", isMobile ? "gap-1" : "gap-2")}>
+        {/* Pago */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
+          <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
+          <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
+        </div>
+        {/* Pendente */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
+          <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
+          <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
+        </div>
+        {/* Total Fatura */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
+          <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
+          <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
         </div>
 
         {/* Badge (agora ao lado dos valores) */}
         <div className={cn(
-          "flex flex-col items-end text-right gap-0",
+          "flex flex-col items-end text-right gap-0 flex-none", // Adicionado flex-none para que o badge não cresça
           isMobile && "items-center text-center"
         )}>
           <span className={cn(
-            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md", // Removido bg-primary/10
+            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
             isMobile && "text-[0.6rem] px-1.5 py-0.5"
           )}>
             {formattedBadgeMonth}
