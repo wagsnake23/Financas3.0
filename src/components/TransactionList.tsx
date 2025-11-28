@@ -392,6 +392,19 @@ export const TransactionList = ({
         isMobile ? "max-h-[354px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
       )}>
         <Table>
+          {!isMobile && ( // Show TableHeader only on desktop
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[70px]">Data</TableHead>
+                <TableHead className="w-[60px]">Tipo</TableHead>
+                <TableHead className="w-[80px]">Subcategoria</TableHead>
+                <TableHead className="w-[100px]">Descrição</TableHead>
+                <TableHead className="w-[80px] text-right">Valor</TableHead>
+                <TableHead className="w-[50px] text-center">Status</TableHead>
+                <TableHead className="w-[50px] text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+          )}
           <TableBody>
             {filteredTransactions.length === 0 ? (
               <TableRow>
