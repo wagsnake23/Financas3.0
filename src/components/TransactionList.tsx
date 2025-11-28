@@ -74,7 +74,8 @@ export const TransactionList = ({
 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<string>("all");
+  // Alterado filterType para ser um array de strings
+  const [filterType, setFilterType] = useState<string[]>([]); // [] significa 'todos'
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc"); // Default sort direction
@@ -109,7 +110,8 @@ export const TransactionList = ({
     
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesType = filterType === "all" || transaction.type === filterType;
+      // Lógica de filtro de tipo atualizada para array
+      const matchesType = filterType.length === 0 || filterType.includes(transaction.type);
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
       
       let matchesPaymentOption = true;
@@ -210,11 +212,17 @@ export const TransactionList = ({
   }, [filteredTransactions]);
 
   const selectableCategories = useMemo(() => {
-    if (filterType === "income") {
+    // Se nenhum tipo estiver selecionado (filterType.length === 0), ou ambos estiverem, mostre todas as subcategorias.
+    // Se apenas 'income' estiver selecionado, mostre subcategorias de receita.
+    // Se apenas 'expense' estiver selecionado, mostre subcategorias de despesa.
+    if (filterType.length === 0 || (filterType.includes("income") && filterType.includes("expense"))) {
+      return allCategories.filter(cat => cat.parent_id !== null); // Todas as subcategorias
+    } else if (filterType.includes("income")) {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
-    } else {
+    } else if (filterType.includes("expense")) {
       return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
+    return []; // Caso contrário, nenhuma categoria
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
@@ -342,9 +350,9 @@ export const TransactionList = ({
       <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}>
         {isMobile ? (
           <ToggleGroup 
-            type="single" 
+            type="multiple" // Alterado para multiple
             value={filterType} 
-            onValueChange={(value) => setFilterType(value)}
+            onValueChange={(values: string[]) => setFilterType(values)} // Recebe um array
             className={cn("w-full justify-center", hideTypeFilter && "hidden", isMobile && "max-w-[160px]")}
           >
             <ToggleGroupItem 
@@ -356,6 +364,7 @@ export const TransactionList = ({
                 isMobile && "h-8 py-0.5 text-sm"
               )}
             >
+              {filterType.includes("income") && <DynamicIcon name="Check" className="mr-1 h-3.5 w-3.5" />} {/* Ícone de check */}
               <DynamicIcon name="💰" className="mr-1 h-3.5 w-3.5" /> Receita
             </ToggleGroupItem>
             <ToggleGroupItem 
@@ -367,12 +376,16 @@ export const TransactionList = ({
                 isMobile && "h-8 py-0.5 text-sm"
               )}
             >
+              {filterType.includes("expense") && <DynamicIcon name="Check" className="mr-1 h-3.5 w-3.5" />} {/* Ícone de check */}
               <DynamicIcon name="💸" className="mr-1 h-3.5 w-3.5" /> Despesa
             </ToggleGroupItem>
           </ToggleGroup>
         ) : (
-          <Select value={filterType} onValueChange={setFilterType} 
-                  className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}>
+          <Select 
+            value={filterType.length === 0 ? "all" : filterType[0]} // Adapta para o valor único do Select
+            onValueChange={(value) => setFilterType(value === "all" ? [] : [value])} // Adapta para o array
+            className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}
+          >
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Tipo" />
             </SelectTrigger>
