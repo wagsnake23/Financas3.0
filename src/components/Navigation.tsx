@@ -10,7 +10,7 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Azul
+    { to: "/", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Azul - CORRIGIDO: Alterado para '/'
     { to: "/despesas", label: "Despesas", icon: "💸", color: "hsl(0, 70%, 55%)" }, // Vermelho (destructive)
     { to: "/receitas", label: "Receitas", icon: "💰", color: "hsl(150, 65%, 50%)" }, // Verde (success)
     { to: "/lancamentos", label: "Lançamentos", icon: "📝", color: "hsl(45, 90%, 55%)" }, // Amarelo Ouro
