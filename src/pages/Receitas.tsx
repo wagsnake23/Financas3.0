@@ -18,7 +18,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } => "lucide-react";
+import { CalendarIcon } from "lucide-react"; // Linha corrigida aqui
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
 import { Calendar } from "@/components/ui/calendar";
 import {
