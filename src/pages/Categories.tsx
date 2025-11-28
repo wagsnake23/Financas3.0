@@ -13,6 +13,7 @@ import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils"; // Importar cn
+import { EditCategoryModal } from "@/components/EditCategoryModal"; // Importar o novo modal
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -62,6 +63,7 @@ const Categories = () => {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
   const isMobile = useIsMobile();
 
   // Fetch ALL categories (both main and subcategories) for the Categories page
@@ -141,6 +143,7 @@ const Categories = () => {
         duration: toastDuration
       });
       setEditingCategory(null);
+      setIsEditModalOpen(false); // Fechar o modal após a atualização
     },
     onError: (error) => {
       toast.error("Erro ao atualizar subcategoria", { description: error.message, duration: toastDuration, style: toastErrorStyle }); // Mensagem atualizada
@@ -214,6 +217,7 @@ const Categories = () => {
     if (category.user_id === null) {
       toast.info("Não é possível editar categorias padrão.", { duration: toastDuration });
       setEditingCategory(null);
+      setIsEditModalOpen(false); // Garante que o modal não abra
       return;
     }
     // Se a categoria selecionada para edição for uma categoria principal (parent_id === null),
@@ -221,10 +225,17 @@ const Categories = () => {
     if (category.parent_id === null) {
       toast.info("Edite apenas subcategorias. Para categorias principais, crie subcategorias.", { duration: toastDuration });
       setEditingCategory(null);
+      setIsEditModalOpen(false); // Garante que o modal não abra
       return;
     }
     setEditingCategory(category);
+    setIsEditModalOpen(true); // Abrir o modal
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategory(null);
+    setIsEditModalOpen(false);
   };
 
   if (authLoading || isLoadingCategories) {
@@ -244,9 +255,9 @@ const Categories = () => {
           <div> {/* Removido lg:col-span-2 */}
             <CategoryForm 
               onAddCategory={handleAddCategory}
-              onUpdateCategory={handleUpdateCategory}
-              editingCategory={editingCategory}
-              onCancelEdit={() => setEditingCategory(null)}
+              onUpdateCategory={handleUpdateCategory} // Passar para o formulário principal também
+              editingCategory={null} // O formulário principal é sempre para adicionar
+              onCancelEdit={handleCancelEdit} // Passar para o formulário principal também
               allCategories={allCategories} // Passar todas as categorias para o formulário
             />
           </div>
@@ -263,7 +274,7 @@ const Categories = () => {
               <CategoriesList 
                 categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}
-                onEditCategory={handleEditCategory}
+                onEditCategory={handleEditCategory} // Passar a função que abre o modal
                 isMobile={isMobile} 
                 allFlatCategories={allCategories} // NEW: Pass allCategories here
               />
@@ -273,6 +284,16 @@ const Categories = () => {
       </main>
 
       <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
+
+      {/* Novo Modal de Edição */}
+      <EditCategoryModal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        editingCategory={editingCategory}
+        onUpdateCategory={handleUpdateCategory}
+        onCancelEdit={handleCancelEdit}
+        allCategories={allCategories}
+      />
     </div>
   );
 };

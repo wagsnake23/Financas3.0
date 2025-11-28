@@ -124,16 +124,7 @@ export const CategoryForm = ({
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
         </h2>
-        {editingCategory && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCancel}
-            className="h-8 w-8"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
+        {/* Removido o botão X de cancelar, pois o modal agora gerencia o fechamento */}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
