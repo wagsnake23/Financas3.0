@@ -292,8 +292,8 @@ html, body {
   .col-data { width: 110px; text-align: left !important; }
   .col-tipo { width: 100px; text-align: center !important; }
   .col-subcat { min-width: 160px; text-align: left !important; }
-  .col-desc { width: auto; min-width: 180px; text-align: left !important; } /* Added min-width */
-  .col-valor { width: 120px; text-align: right !important; }
+  .col-desc { width: auto; min-width: 180px; text-align: center !important; } /* Changed to center */
+  .col-valor { width: 120px; text-align: center !important; } /* Changed to center */
   .col-status,
   .col-acoes { width: 70px; text-align: center !important; }
 
