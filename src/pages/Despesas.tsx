@@ -159,7 +159,6 @@ export default function Despesas() {
           )}
         </div>
         {!isMobile && <Footer isMobile={isMobile} user={user} />} {/* Mantido para desktop, passando a prop user */}
-      </div>
     </div>
   );
 }
