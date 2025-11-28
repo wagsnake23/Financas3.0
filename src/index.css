@@ -194,11 +194,11 @@ html, body {
     position: relative;
   }
 
-  /* Scroll somente no corpo da tabela */
+  /* Área rolável apenas no corpo da tabela */
   .lancamentos-scroll-container {
+    max-height: calc(100vh - 300px); /* ajuste mínimo para rolar */
     overflow-y: auto;
-    max-height: calc(100vh - 320px);
-    overflow-x: visible !important; /* Impedir overflow lateral invisível */
+    overflow-x: hidden;
   }
 
   /* Tabela com layout fluido e centralizada */
@@ -209,19 +209,16 @@ html, body {
     margin: 0 auto;
   }
 
-  /* Forçar que as duas tabelas tenham exatamente o mesmo tamanho */
-  /* REMOVIDO: Esta regra estava causando problemas e não é mais necessária com a estrutura correta */
-  /* .lancamentos-wrapper table {
-    width: 100%;
-    table-layout: fixed !important;
-  } */
-
   /* Cabeçalho fixo (sticky) */
-  .lancamentos-table-header { /* Aplicado diretamente ao thead */
+  .lancamentos-table-header th { /* Aplicado diretamente ao th */
     position: sticky;
     top: 0;
     z-index: 50;
-    background: #F5F6FA;
+    background: #F5F6FA; /* mesma cor atual do cabeçalho */
+  }
+
+  /* Propriedades para o thead container (lancamentos-table-header) */
+  .lancamentos-table-header {
     display: table-header-group !important;
     height: 52px;
     font-size: 15px;
@@ -308,9 +305,6 @@ html, body {
   .arrow-icon {
     /* margin-left: 4px; */ /* Removed as it's now absolutely positioned */
     transition: transform 0.15s ease-in-out, opacity 0.15s;
-  }
-  .rotate-animation {
-    animation: rotateArrow 0.15s ease-in-out;
   }
   @keyframes rotateArrow {
     from { opacity: 0; transform: translateY(-2px); }
