@@ -26,7 +26,7 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
         href={linkWhatsApp}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 font-semibold hover:opacity-90 transition-opacity duration-200 relative top-[2px]" // Ajustado para relative top-[2px]
+        className="inline-flex items-center gap-1 font-semibold hover:opacity-90 transition-opacity duration-200 relative top-[3px]" // Ajustado para relative top-[3px]
         style={{ color: "#20C05A" }} // Cor verde do WhatsApp atualizada
       >
         <svg
