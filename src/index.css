@@ -240,46 +240,37 @@ html, body {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 6px;
+    gap: 4px;
     cursor: pointer;
     white-space: nowrap;
   }
 
-  /* Setas leves e discretas, com animação */
+  .sort-label {
+    font-weight: 500;
+  }
+
   .sort-icon {
     font-size: 12px;
     opacity: 0.8;
-    transition: transform 0.15s ease-in-out, opacity 0.15s;
   }
   .sort-icon:hover {
     opacity: 1;
   }
-
-  /* Quando está ordenando, destaque suave */
-  .sort-header.active .sort-label {
-    font-weight: 600;
-    color: #222;
-  }
-
-  /* Garantir que não quebre linha */
-  .sort-label {
-    display: inline-block;
-  }
-
-  /* Distribuição de colunas idêntica ao TableBody */
-  .col-data { width: 110px; text-align: left; }
-  .col-tipo { width: 100px; text-align: center; }
-  .col-subcat { min-width: 160px; text-align: left; }
-  .col-desc { width: auto; text-align: left; }
-  .col-valor { width: 120px; text-align: right !important; }
-  .col-status,
-  .col-acoes { width: 70px; text-align: center !important; }
 
   /* Padding igual entre header e body */
   .lancamentos-table th,
   .lancamentos-table td {
     padding: 10px 12px !important;
   }
+
+  /* Distribuição de colunas idêntica ao TableBody */
+  .col-data { width: 110px; }
+  .col-tipo { width: 100px; text-align: center; }
+  .col-subcat { min-width: 160px; text-align: left; }
+  .col-desc { width: auto; text-align: left; }
+  .col-valor { width: 120px; text-align: right !important; }
+  .col-status,
+  .col-acoes { width: 70px; text-align: center !important; }
 
   /* Tooltip nativa */
   .lancamentos-table th[title] {

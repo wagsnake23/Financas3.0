@@ -155,7 +155,7 @@ export const TransactionList = ({
       let valB: any;
 
       switch (sortColumn) {
-        case "date":
+        case "data": // Changed from "date" to "data"
           valA = new Date(a.date).getTime();
           valB = new Date(b.date).getTime();
           break;
@@ -163,15 +163,15 @@ export const TransactionList = ({
           valA = a.type;
           valB = b.type;
           break;
-        case "category":
+        case "subcategoria": // Changed from "category" to "subcategoria"
           valA = getCategoryDisplayName(a.category);
           valB = getCategoryDisplayName(b.category);
           break;
-        case "description":
+        case "descricao": // Changed from "description" to "descricao"
           valA = a.description || "";
           valB = b.description || "";
           break;
-        case "amount":
+        case "valor": // Changed from "amount" to "valor"
           valA = a.amount;
           valB = b.amount;
           break;
@@ -422,50 +422,69 @@ export const TransactionList = ({
       <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
         {!isMobile && (
           <Table className="lancamentos-table">
-            <TableHeader className="lancamentos-table-header lancamentos-table">
+            <TableHeader className="lancamentos-table-header">
               <TableRow>
-                <TableHead className="sort-header col-data" onClick={() => handleSort("date")} title="Clique para ordenar">
+
+                <TableHead
+                  className="col-data sort-header"
+                  onClick={() => handleSort("data")}
+                >
                   <span className="sort-label">Data</span>
-                  {sortColumn === "date" && (
-                    sortDirection === "asc"
-                      ? <span className="sort-icon">▴</span>
-                      : <span className="sort-icon">▾</span>
+                  {sortColumn === "data" && (
+                    <span className="sort-icon">
+                      {sortDirection === "asc" ? "▴" : "▾"}
+                    </span>
                   )}
                 </TableHead>
-                <TableHead className="sort-header col-tipo text-center" onClick={() => handleSort("type")} title="Clique para ordenar">
-                  <span className="sort-label">Tipo</span>
-                  {sortColumn === "type" && (
-                    sortDirection === "asc"
-                      ? <span className="sort-icon">▴</span>
-                      : <span className="sort-icon">▾</span>
-                  )}
+
+                <TableHead className="col-tipo text-center">
+                  Tipo
                 </TableHead>
-                <TableHead className="sort-header col-subcat text-left" onClick={() => handleSort("category")} title="Clique para ordenar">
+
+                <TableHead
+                  className="col-subcat sort-header"
+                  onClick={() => handleSort("subcategoria")}
+                >
                   <span className="sort-label">Subcategoria</span>
-                  {sortColumn === "category" && (
-                    sortDirection === "asc"
-                      ? <span className="sort-icon">▴</span>
-                      : <span className="sort-icon">▾</span>
+                  {sortColumn === "subcategoria" && (
+                    <span className="sort-icon">
+                      {sortDirection === "asc" ? "▴" : "▾"}
+                    </span>
                   )}
                 </TableHead>
-                <TableHead className="sort-header col-desc text-left" onClick={() => handleSort("description")} title="Clique para ordenar">
+
+                <TableHead
+                  className="col-desc sort-header"
+                  onClick={() => handleSort("descricao")}
+                >
                   <span className="sort-label">Descrição</span>
-                  {sortColumn === "description" && (
-                    sortDirection === "asc"
-                      ? <span className="sort-icon">▴</span>
-                      : <span className="sort-icon">▾</span>
+                  {sortColumn === "descricao" && (
+                    <span className="sort-icon">
+                      {sortDirection === "asc" ? "▴" : "▾"}
+                    </span>
                   )}
                 </TableHead>
-                <TableHead className="sort-header col-valor text-right" onClick={() => handleSort("amount")} title="Clique para ordenar">
+
+                <TableHead
+                  className="col-valor sort-header text-right"
+                  onClick={() => handleSort("valor")}
+                >
                   <span className="sort-label">Valor</span>
-                  {sortColumn === "amount" && (
-                    sortDirection === "asc"
-                      ? <span className="sort-icon">▴</span>
-                      : <span className="sort-icon">▾</span>
+                  {sortColumn === "valor" && (
+                    <span className="sort-icon">
+                      {sortDirection === "asc" ? "▴" : "▾"}
+                    </span>
                   )}
                 </TableHead>
-                <TableHead className="text-center col-status">Status</TableHead>
-                <TableHead className="text-center col-acoes">Ações</TableHead>
+
+                <TableHead className="col-status text-center">
+                  Status
+                </TableHead>
+
+                <TableHead className="col-acoes text-center">
+                  Ações
+                </TableHead>
+
               </TableRow>
             </TableHeader>
           </Table>
