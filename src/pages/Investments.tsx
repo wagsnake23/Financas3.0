@@ -318,17 +318,21 @@ export default function Investments() { // Alterado para export default function
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
-                      {incomeInvestmentSubcategories.length === 0 ? (
+                      {incomeInvestmentSubcategories.length === 0 && (
                         <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
-                      ) : (
-                        incomeInvestmentSubcategories.map(cat => (
-                          <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                            <span className="flex items-center gap-2">
-                              <span>{cat.icone}</span>
-                              <span>{cat.nome}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
+                      )}
+                      {incomeInvestmentSubcategories.length > 0 && (
+                        <>
+                          {incomeInvestmentSubcategories.map(cat => (
+                            <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                              <span className="flex items-center gap-2">
+                                <DynamicIcon name={cat.icone} className="h-4 w-4" />
+                                <span>{cat.nome}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -568,17 +572,20 @@ export default function Investments() { // Alterado para export default function
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
-                          {incomeInvestmentSubcategories.length === 0 ? (
+                          {incomeInvestmentSubcategories.length === 0 && (
                             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
-                          ) : (
-                            incomeInvestmentSubcategories.map(cat => (
-                              <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                                <span className="flex items-center gap-2">
-                                  <DynamicIcon name={cat.icone} className="h-4 w-4" />
-                                  {cat.nome}
-                                </span>
-                              </SelectItem>
-                            ))
+                          )}
+                          {incomeInvestmentSubcategories.length > 0 && (
+                            <>
+                              {incomeInvestmentSubcategories.map(cat => (
+                                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                                  <span className="flex items-center gap-2">
+                                    <DynamicIcon name={cat.icone} className="h-4 w-4" />
+                                    <span>{cat.nome}</span>
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </>
                           )}
                         </SelectContent>
                       </Select>
@@ -741,19 +748,6 @@ export default function Investments() { // Alterado para export default function
                                   Rentabilidade
                                 </p>
                                 <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
-                              </div>
-                              <div>
-                                <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                  Data
-                                </p>
-                                <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
-                                  {(() => {
-                                    const [year, month, day] = investment.data.split('-').map(Number);
-                                    const localDate = new Date(year, month - 1, day);
-                                    return localDate.toLocaleDateString('pt-BR');
-                                  })()}
-                                </p>
                               </div>
                             </div>
                           </div>
