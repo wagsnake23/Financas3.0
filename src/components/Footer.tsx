@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
+import { Whatsapp } from "lucide-react"; // Importar o ícone do WhatsApp
 import { User } from "@supabase/supabase-js"; // Importar o tipo User do Supabase
 
 interface FooterProps {
@@ -28,11 +28,7 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
         className="inline-flex items-center gap-1 font-semibold hover:opacity-90 transition-opacity duration-200"
         style={{ color: "#25D366" }} // Cor verde do WhatsApp
       >
-        <img 
-          src="/whatsapp-icon.png" 
-          alt="WhatsApp" 
-          className={cn(isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} 
-        />
+        <Whatsapp size={isMobile ? 12 : 14} style={{ color: "#25D366" }} /> {/* Tamanho do ícone responsivo */}
         Vagner
       </a>
     </footer>

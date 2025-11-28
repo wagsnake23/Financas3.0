@@ -11,7 +11,7 @@ import {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat // Removed Whatsapp from Lucide imports
+  Building2, Sandwich, Zap, Repeat // Adicionado Zap e Repeat
 } from 'lucide-react';
 import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 
@@ -29,7 +29,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat // Removed Whatsapp from here as well
+  Building2, Sandwich, Zap, Repeat // Adicionado Zap e Repeat
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
