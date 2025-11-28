@@ -70,8 +70,8 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           "flex flex-col items-end text-right gap-0 flex-none",
           isMobile && "items-center text-center" // Removido space-y-0.5
         )}>
-          {/* NOVO: Emoji azul de mês */}
-          <span className={cn("text-primary", isMobile && "text-xs")}>🗓️</span>
+          {/* NOVO: Ícone de calendário Lucide com cor primária */}
+          <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
           <span className={cn(
             "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
             isMobile && "text-[0.6rem] px-1.5 py-0.5"
