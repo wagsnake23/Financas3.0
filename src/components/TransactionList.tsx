@@ -389,47 +389,49 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border overflow-hidden shadow-sm mt-4 bg-white", // Adicionado bg-white aqui
-        isMobile ? "max-h-[354px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
+        isMobile ? "max-h-[354px] overflow-y-auto" : "" // Aplicado max-h para mobile, desktop handled by new wrapper
       )}>
-        <Table className="lancamentos-table"> {/* Adicionado a classe lancamentos-table */}
-          {!isMobile && ( // Show TableHeader only on desktop
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[70px] text-left">Data</TableHead> {/* Alinhamento à esquerda */}
-                <TableHead className="w-[60px] text-center">Tipo</TableHead> {/* Alinhamento ao centro */}
-                <TableHead className="w-[80px] text-left">Subcategoria</TableHead> {/* Alinhamento à esquerda */}
-                <TableHead className="w-[100px] text-left">Descrição</TableHead> {/* Alinhamento à esquerda */}
-                <TableHead className="w-[80px] text-right">Valor</TableHead> {/* Alinhamento à direita */}
-                <TableHead className="w-[50px] text-center">Status</TableHead> {/* Alinhamento ao centro */}
-                <TableHead className="w-[50px] text-center">Ações</TableHead> {/* Alinhamento ao centro */}
-              </TableRow>
-            </TableHeader>
-          )}
-          <TableBody>
-            {filteredTransactions.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
-                  Nenhum lançamento encontrado
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredTransactions.map((transaction) => (
-                <TransactionRow
-                  key={transaction.id}
-                  transaction={transaction}
-                  onDeleteTransaction={onDeleteTransaction}
-                  onEditTransaction={onEditTransaction}
-                  allCategories={allCategories}
-                  cartoes={cartoes}
-                  isMobile={isMobile}
-                  queryClient={queryClient}
-                  user={user}
-                  onToggleStatus={onToggleTransactionStatus} // Passando a nova prop
-                />
-              ))
+        <div className="scroll-tabela-lancamentos"> {/* NEW WRAPPER */}
+          <Table className="lancamentos-table"> {/* Adicionado a classe lancamentos-table */}
+            {!isMobile && ( // Show TableHeader only on desktop
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[70px] text-left">Data</TableHead> {/* Alinhamento à esquerda */}
+                  <TableHead className="w-[60px] text-center">Tipo</TableHead> {/* Alinhamento ao centro */}
+                  <TableHead className="w-[80px] text-left">Subcategoria</TableHead> {/* Alinhamento à esquerda */}
+                  <TableHead className="w-[100px] text-left">Descrição</TableHead> {/* Alinhamento à esquerda */}
+                  <TableHead className="w-[80px] text-right">Valor</TableHead> {/* Alinhamento à direita */}
+                  <TableHead className="w-[50px] text-center">Status</TableHead> {/* Alinhamento ao centro */}
+                  <TableHead className="w-[50px] text-center">Ações</TableHead> {/* Alinhamento ao centro */}
+                </TableRow>
+              </TableHeader>
             )}
-          </TableBody>
-        </Table>
+            <TableBody>
+              {filteredTransactions.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
+                    Nenhum lançamento encontrado
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredTransactions.map((transaction) => (
+                  <TransactionRow
+                    key={transaction.id}
+                    transaction={transaction}
+                    onDeleteTransaction={onDeleteTransaction}
+                    onEditTransaction={onEditTransaction}
+                    allCategories={allCategories}
+                    cartoes={cartoes}
+                    isMobile={isMobile}
+                    queryClient={queryClient}
+                    user={user}
+                    onToggleStatus={onToggleTransactionStatus} // Passando a nova prop
+                  />
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div> {/* END NEW WRAPPER */}
       </div>
 
       <div className="flex justify-end mb-0 mt-0 pr-5">
