@@ -31,6 +31,8 @@ interface StatCardProps {
   isMobile?: boolean;
   childrenAlignment?: "start" | "end" | "center";
   // Removed onNextMonth prop as it will be handled by MonthNavigatorCompact
+  annualTotalValue?: number; // NEW: Prop for the annual total value
+  annualTotalLabel?: string; // NEW: Prop for the annual total label (e.g., "Total Anual")
 }
 
 export const StatCard = ({ 
@@ -47,6 +49,8 @@ export const StatCard = ({
   chartContent, 
   isMobile, 
   childrenAlignment = "end", 
+  annualTotalValue, // Destructure new prop
+  annualTotalLabel, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
@@ -63,7 +67,6 @@ export const StatCard = ({
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
   const valueFontSizeAndWeightClass = isMobile ? "text-base font-medium" : "text-3xl font-bold"; 
-  const iconSizeClass = isMobile ? "h-3.5 w-3.5" : "h-6 w-6";
   const mainValueColorClass = isMobile
     ? variant === "income"
       ? "text-success"
@@ -141,16 +144,31 @@ export const StatCard = ({
         </div>
       )}
 
-      {/* NOVO: Ícone principal na parte inferior esquerda */}
-      {!hideMainIcon && icon && (
+      {/* Bottom-left content (Icon + Annual Total) */}
+      {((!hideMainIcon && icon) || (annualTotalValue !== undefined && annualTotalLabel)) ? (
         <div className={cn(
-          `absolute rounded-xl`,
-          iconStyles[variant],
-          isMobile ? "bottom-2 left-2 p-1" : "bottom-4 left-4 p-2" // Ajuste de padding e posição para mobile/desktop
+          "absolute flex items-center gap-2", // Use flex to align icon and text
+          isMobile ? "bottom-2 left-2" : "bottom-4 left-4"
         )}>
-          <DynamicIcon name={icon} className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} /> {/* Ajuste de tamanho do ícone */}
+          {!hideMainIcon && icon && (
+            <div className={cn(
+              `rounded-xl`,
+              iconStyles[variant],
+              isMobile ? "p-1" : "p-2"
+            )}>
+              <DynamicIcon name={icon} className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} />
+            </div>
+          )}
+          {annualTotalValue !== undefined && annualTotalLabel && (
+            <div className={cn("flex flex-col items-start", isMobile ? "text-xs" : "text-sm")}>
+              <p className={cn("text-muted-foreground leading-none", isMobile && "text-[0.6rem]", "font-roboto")}>{annualTotalLabel}</p>
+              <p className={cn("font-bold leading-none", isMobile ? "text-xs" : "text-sm", variant === "income" ? "text-success" : "text-destructive")}>
+                {formatCurrency(annualTotalValue)}
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      ) : null}
     </Card>
   );
 };

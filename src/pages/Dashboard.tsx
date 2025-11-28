@@ -15,7 +15,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
-import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths } from "date-fns";
+import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths, getYear } from "date-fns"; // Importar getYear
 import { cn, formatCurrency } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -96,6 +96,24 @@ export default function Dashboard() { // Alterado para export default function
       .reduce((sum, t) => sum + t.amount, 0);
   }, [monthlyFilteredTransactions]);
 
+  // NOVO: Calcular totais anuais
+  const currentYear = getYear(selectedMonth);
+
+  const totalAnnualExpenses = useMemo(() => {
+    if (!allExpenseInstallments) return 0;
+    return allExpenseInstallments
+      .filter(p => getYear(new Date(p.vencimento)) === currentYear)
+      .reduce((sum, p) => sum + p.valor_parcela, 0);
+  }, [allExpenseInstallments, currentYear]);
+
+  const totalAnnualRevenues = useMemo(() => {
+    if (!allRevenues) return 0;
+    return allRevenues
+      .filter(r => getYear(new Date(r.data)) === currentYear)
+      .reduce((sum, r) => sum + r.valor, 0);
+  }, [allRevenues, currentYear]);
+
+
   const isLoading = authLoading || isLoadingTransactionsData || isLoadingAllRevenues || isLoadingAllExpenses || isLoadingCategories; // Verificações de loading atualizadas
 
   // Funções para navegar entre os meses
@@ -164,6 +182,8 @@ export default function Dashboard() { // Alterado para export default function
                     onMonthClick={handleMonthClick} // Passando a função de clique
                   />
                 }
+                annualTotalLabel="Total Anual" // NEW
+                annualTotalValue={totalAnnualExpenses} // NEW
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -205,6 +225,8 @@ export default function Dashboard() { // Alterado para export default function
                     onMonthClick={handleMonthClick} // Passando a função de clique
                   />
                 }
+                annualTotalLabel="Total Anual" // NEW
+                annualTotalValue={totalAnnualRevenues} // NEW
               >
                 {/* Ajuste para posicionar o botão na parte inferior */}
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -264,6 +286,8 @@ export default function Dashboard() { // Alterado para export default function
                       onMonthClick={handleMonthClick} // Passando a função de clique
                     />
                   }
+                  annualTotalLabel="Total Anual" // NEW
+                  annualTotalValue={totalAnnualRevenues} // NEW
                 >
                   <div className="flex justify-end mt-4">
                     <Button
@@ -301,6 +325,8 @@ export default function Dashboard() { // Alterado para export default function
                       onMonthClick={handleMonthClick} // Passando a função de clique
                     />
                   }
+                  annualTotalLabel="Total Anual" // NEW
+                  annualTotalValue={totalAnnualExpenses} // NEW
                 >
                   <div className="flex justify-end mt-4">
                     <Button
