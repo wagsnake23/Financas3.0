@@ -287,146 +287,396 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <ProtectedRoute>
-      <div className={cn("flex flex-col bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}> {/* Alterado min-h-screen para flex flex-col */}
-        <Navigation />
+    <div className={cn("flex flex-col bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}> {/* Alterado min-h-screen para flex flex-col */}
+      <Navigation />
 
-        {/* Main Content */}
-        <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 py-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
-          {!isMobile && (
-            <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
-          )}
-          
-          {/* REMOVIDO: MonthNavigator global */}
+      {/* Main Content */}
+      <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 py-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
+        {!isMobile && (
+          <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
+        )}
+        
+        {/* REMOVIDO: MonthNavigator global */}
 
-          {isMobile ? (
-            <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
-              <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
-                <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                    <Select 
-                      value={selectedInvestmentCategoryId} 
-                      onValueChange={(value) => {
-                        setSelectedInvestmentCategoryId(value);
-                        setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-                      }} 
-                      disabled={loadingForm}
-                    >
-                      <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
-                        <SelectValue placeholder="Selecione o tipo de investimento" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
-                        {incomeInvestmentSubcategories.length === 0 ? (
-                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
-                        ) : (
-                          incomeInvestmentSubcategories.map(cat => (
-                            <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                              <span className="flex items-center gap-2">
-                                <span>{cat.icone}</span>
-                                <span>{cat.nome}</span>
-                              </span>
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-                    <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                      <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {investmentTypes.map(t => (
-                          <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
+        {isMobile ? (
+          <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
+            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
+              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+                  <Select 
+                    value={selectedInvestmentCategoryId} 
+                    onValueChange={(value) => {
+                      setSelectedInvestmentCategoryId(value);
+                      setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+                    }} 
+                    disabled={loadingForm}
+                  >
+                    <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+                      <SelectValue placeholder="Selecione o tipo de investimento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+                      {incomeInvestmentSubcategories.length === 0 ? (
+                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+                      ) : (
+                        incomeInvestmentSubcategories.map(cat => (
+                          <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                             <span className="flex items-center gap-2">
-                              <DynamicIcon name={t.icon} className="h-4 w-4" />
-                              {t.label}
+                              <span>{cat.icone}</span>
+                              <span>{cat.nome}</span>
                             </span>
                           </SelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                  {/* Agrupando Valor Investido e Rentabilidade */}
-                  <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
-                    <div className="space-y-2">
-                      <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                      <CurrencyBR
-                        value={amount}
-                        onChange={(v) => {
-                          setAmount(v);
-                          setValidationErrors(prev => ({ ...prev, amount: false }));
-                        }}
-                        disabled={loadingForm}
-                        className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
-                      />
-                    </div>
+                <div className="space-y-2">
+                  <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
+                  <Select value={type} onValueChange={setType} disabled={loadingForm}>
+                    <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {investmentTypes.map(t => (
+                        <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
+                          <span className="flex items-center gap-2">
+                            <DynamicIcon name={t.icon} className="h-4 w-4" />
+                            {t.label}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
-                      <NumericInput
-                        id="profitability"
-                        value={profitability}
-                        onValueChange={(values) => {
-                          setProfitability(values.floatValue);
-                          setValidationErrors(prev => ({ ...prev, profitability: false }));
-                        }}
-                        placeholder="0,00"
-                        required
-                        disabled={loadingForm}
-                        className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
-                      />
-                    </div>
+                {/* Agrupando Valor Investido e Rentabilidade */}
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
+                  <div className="space-y-2">
+                    <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                    <CurrencyBR
+                      value={amount}
+                      onChange={(v) => {
+                        setAmount(v);
+                        setValidationErrors(prev => ({ ...prev, amount: false }));
+                      }}
+                      disabled={loadingForm}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
-                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full justify-start text-left font-normal h-10 rounded-xl",
-                            !date && "text-muted-foreground",
-                            isMobile && "h-9 text-sm",
-                            getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-                          )}
-                          disabled={loadingForm}
-                        >
-                          <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                          {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-                        <Calendar
-                          mode="single"
-                          selected={date}
-                          onSelect={(selectedDate) => {
-                            setDate(selectedDate);
-                            setIsCalendarOpen(false);
-                            setValidationErrors(prev => ({ ...prev, date: false }));
-                          }}
-                          initialFocus
-                          locale={ptBR}
-                          showOutsideDays={false}
-                          className={cn(isMobile && "text-sm")}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                    <NumericInput
+                      id="profitability"
+                      value={profitability}
+                      onValueChange={(values) => {
+                        setProfitability(values.floatValue);
+                        setValidationErrors(prev => ({ ...prev, profitability: false }));
+                      }}
+                      placeholder="0,00"
+                      required
+                      disabled={loadingForm}
+                      className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+                    />
                   </div>
+                </div>
 
-                  <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
-                    {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
-                  </Button>
-                </form>
+                <div className="space-y-2">
+                  <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+                  <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-10 rounded-xl",
+                          !date && "text-muted-foreground",
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                        )}
+                        disabled={loadingForm}
+                      >
+                        <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
+                        {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={(selectedDate) => {
+                          setDate(selectedDate);
+                          setIsCalendarOpen(false);
+                          setValidationErrors(prev => ({ ...prev, date: false }));
+                        }}
+                        initialFocus
+                        locale={ptBR}
+                        showOutsideDays={false}
+                        className={cn(isMobile && "text-sm")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
+                  {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
+                </Button>
+              </form>
+            </Card>
+
+            {/* Investments List */}
+            <div>
+              <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+                <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
+                <div className="space-y-3">
+                  {investments.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      Nenhum investimento cadastrado ainda.
+                    </p>
+                  ) : (
+                    investments.map((investment) => {
+                      const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
+                      const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
+                      const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
+                      const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
+                      
+                      return (
+                        <div
+                          key={investment.id}
+                          className={cn("p-4 border border-border rounded-lg hover:border-primary/50 transition-all", isMobile && "p-3")}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2"> {/* Added flex container for icon and name */}
+                              <DynamicIcon name={investmentIcon} className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} /> {/* Display icon */}
+                              <div>
+                                <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
+                                <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-1"> {/* Container para os botões de ação */}
+                              <Button
+                                variant="ghost"
+                                size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
+                                onClick={() => handleEditClick(investment)}
+                                className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                              >
+                                <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
+                                onClick={() => handleDelete(investment.id)} // Agora chama handleDelete para abrir o diálogo
+                                className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                              >
+                                <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
+                            <div>
+                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
+                                <DynamicIcon name="DollarSign" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                Valor
+                              </p>
+                              <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
+                            </div>
+                            <div>
+                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
+                                <DynamicIcon name="Percent" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                Rentabilidade
+                              </p>
+                              <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
+                            </div>
+                            <div>
+                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
+                                <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                Data
+                              </p>
+                              <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
+                                {(() => {
+                                  const [year, month, day] = investment.data.split('-').map(Number);
+                                  const localDate = new Date(year, month - 1, day);
+                                  return localDate.toLocaleDateString('pt-BR');
+                                })()}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </Card>
+              {isMobile && (
+                <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
+                  <StatCard
+                    mainStatTitle="Total Investido"
+                    mainStatValue={stats.totalInvested}
+                    icon="DollarSign"
+                    variant="income" // Usar variant income para cor verde
+                    isMobile={isMobile}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 rounded-xl shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Total Investido</p>
+                    <p className="text-3xl font-bold text-foreground">{formatCurrency(stats.totalInvested)}</p>
+                  </div>
+                  <DynamicIcon name="DollarSign" className="h-12 w-12 text-primary" />
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 rounded-xl shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Rentabilidade Média</p>
+                    <p className="text-3xl font-bold text-foreground">{stats.avgProfitability.toFixed(2)}%</p>
+                  </div>
+                  <DynamicIcon name="Percent" className="h-12 w-12 text-success" />
+                </div>
+              </Card>
+            </div>
+
+            <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
+              {/* Form */}
+              <div>
+                <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
+                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+                      <Select 
+                        value={selectedInvestmentCategoryId} 
+                        onValueChange={(value) => {
+                          setSelectedInvestmentCategoryId(value);
+                          setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+                        }} 
+                        disabled={loadingForm}
+                      >
+                        <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+                          <SelectValue placeholder="Selecione o tipo de investimento" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+                          {incomeInvestmentSubcategories.length === 0 ? (
+                            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+                          ) : (
+                            incomeInvestmentSubcategories.map(cat => (
+                              <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                                <span className="flex items-center gap-2">
+                                  <DynamicIcon name={cat.icone} className="h-4 w-4" />
+                                  {cat.nome}
+                                </span>
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
+                      <Select value={type} onValueChange={setType} disabled={loadingForm}>
+                        <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {investmentTypes.map(t => (
+                            <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
+                              <span className="flex items-center gap-2">
+                                <DynamicIcon name={t.icon} className="h-4 w-4" />
+                                {t.label}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Agrupando Valor Investido e Rentabilidade */}
+                    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
+                      <div className="space-y-2">
+                        <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                        <CurrencyBR
+                          value={amount}
+                          onChange={(v) => {
+                            setAmount(v);
+                            setValidationErrors(prev => ({ ...prev, amount: false }));
+                          }}
+                          disabled={loadingForm}
+                          className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                        <NumericInput
+                          id="profitability"
+                          value={profitability}
+                          onValueChange={(values) => {
+                            setProfitability(values.floatValue);
+                            setValidationErrors(prev => ({ ...prev, profitability: false }));
+                          }}
+                          placeholder="0,00"
+                          required
+                          disabled={loadingForm}
+                          className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+                      <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal h-10 rounded-xl",
+                              !date && "text-muted-foreground",
+                              isMobile && "h-9 text-sm",
+                              getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                            )}
+                            disabled={loadingForm}
+                          >
+                            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
+                            {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={(selectedDate) => {
+                              setDate(selectedDate);
+                              setIsCalendarOpen(false);
+                              setValidationErrors(prev => ({ ...prev, date: false }));
+                            }}
+                            initialFocus
+                            locale={ptBR}
+                            showOutsideDays={false}
+                            className={cn(isMobile && "text-sm")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+
+                    <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
+                      {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
+                    </Button>
+                  </form>
+                </Card>
+              </div>
 
               {/* Investments List */}
               <div>
@@ -525,327 +775,74 @@ export default function Investments() { // Alterado para export default function
                 )}
               </div>
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 rounded-xl shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Total Investido</p>
-                      <p className="text-3xl font-bold text-foreground">{formatCurrency(stats.totalInvested)}</p>
-                    </div>
-                    <DynamicIcon name="DollarSign" className="h-12 w-12 text-primary" />
-                  </div>
-                </Card>
+          </>
+        )}
+      </main>
 
-                <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 rounded-xl shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Rentabilidade Média</p>
-                      <p className="text-3xl font-bold text-foreground">{stats.avgProfitability.toFixed(2)}%</p>
-                    </div>
-                    <DynamicIcon name="Percent" className="h-12 w-12 text-success" />
-                  </div>
-                </Card>
-              </div>
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
 
-              <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
-                {/* Form */}
-                <div>
-                  <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
-                    <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                        <Select 
-                          value={selectedInvestmentCategoryId} 
-                          onValueChange={(value) => {
-                            setSelectedInvestmentCategoryId(value);
-                            setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-                          }} 
-                          disabled={loadingForm}
-                        >
-                          <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
-                            <SelectValue placeholder="Selecione o tipo de investimento" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
-                            {incomeInvestmentSubcategories.length === 0 ? (
-                              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
-                            ) : (
-                              incomeInvestmentSubcategories.map(cat => (
-                                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                                  <span className="flex items-center gap-2">
-                                    <span>{cat.icone}</span>
-                                    <span>{cat.nome}</span>
-                                  </span>
-                                </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-                        <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {investmentTypes.map(t => (
-                              <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                                <span className="flex items-center gap-2">
-                                  <DynamicIcon name={t.icon} className="h-4 w-4" />
-                                  {t.label}
-                                </span>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Agrupando Valor Investido e Rentabilidade */}
-                      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
-                        <div className="space-y-2">
-                          <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                          <CurrencyBR
-                            value={amount}
-                            onChange={(v) => {
-                              setAmount(v);
-                              setValidationErrors(prev => ({ ...prev, amount: false }));
-                            }}
-                            disabled={loadingForm}
-                            className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
-                          <NumericInput
-                            id="profitability"
-                            value={profitability}
-                            onValueChange={(values) => {
-                              setProfitability(values.floatValue);
-                              setValidationErrors(prev => ({ ...prev, profitability: false }));
-                            }}
-                            placeholder="0,00"
-                            required
-                            disabled={loadingForm}
-                            className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
-                        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-start text-left font-normal h-10 rounded-xl",
-                                !date && "text-muted-foreground",
-                                isMobile && "h-9 text-sm",
-                                getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-                              )}
-                              disabled={loadingForm}
-                            >
-                              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                              {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-                            <Calendar
-                              mode="single"
-                              selected={date}
-                              onSelect={(selectedDate) => {
-                                setDate(selectedDate);
-                                setIsCalendarOpen(false);
-                                setValidationErrors(prev => ({ ...prev, date: false }));
-                              }}
-                              initialFocus
-                              locale={ptBR}
-                              showOutsideDays={false}
-                              className={cn(isMobile && "text-sm")}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-
-                      <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
-                        {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
-                      </Button>
-                    </form>
-                  </Card>
-                </div>
-
-                {/* Investments List */}
-                <div>
-                  <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
-                    <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
-                    <div className="space-y-3">
-                      {investments.length === 0 ? (
-                        <p className="text-muted-foreground text-center py-8">
-                          Nenhum investimento cadastrado ainda.
-                        </p>
-                      ) : (
-                        investments.map((investment) => {
-                          const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
-                          const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                          const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
-                          const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
-                          
-                          return (
-                            <div
-                              key={investment.id}
-                              className={cn("p-4 border border-border rounded-lg hover:border-primary/50 transition-all", isMobile && "p-3")}
-                            >
-                              <div className="flex items-start justify-between mb-2">
-                                <div className="flex items-center gap-2"> {/* Added flex container for icon and name */}
-                                  <DynamicIcon name={investmentIcon} className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} /> {/* Display icon */}
-                                  <div>
-                                    <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
-                                    <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
-                                  </div>
-                                </div>
-                                <div className="flex gap-1"> {/* Container para os botões de ação */}
-                                  <Button
-                                    variant="ghost"
-                                    size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
-                                    onClick={() => handleEditClick(investment)}
-                                    className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
-                                  >
-                                    <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
-                                    onClick={() => handleDelete(investment.id)} // Agora chama handleDelete para abrir o diálogo
-                                    className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
-                                  >
-                                    <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
-                                  </Button>
-                                </div>
-                              </div>
-                              
-                              <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
-                                <div>
-                                  <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                    <DynamicIcon name="DollarSign" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                    Valor
-                                  </p>
-                                  <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
-                                </div>
-                                <div>
-                                  <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                    <DynamicIcon name="Percent" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                    Rentabilidade
-                                  </p>
-                                  <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
-                                </div>
-                                <div>
-                                  <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                    <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                    Data
-                                  </p>
-                                  <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
-                                    {(() => {
-                                      const [year, month, day] = investment.data.split('-').map(Number);
-                                      const localDate = new Date(year, month - 1, day);
-                                      return localDate.toLocaleDateString('pt-BR');
-                                    })()}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
-                  </Card>
-                  {isMobile && (
-                    <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
-                      <StatCard
-                        mainStatTitle="Total Investido"
-                        mainStatValue={stats.totalInvested}
-                        icon="DollarSign"
-                        variant="income" // Usar variant income para cor verde
-                        isMobile={isMobile}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
+      {/* Edit Investment Dialog */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
+          <DialogHeader>
+            <DialogTitle>Editar Investimento</DialogTitle>
+          </DialogHeader>
+          {editingInvestment && (
+            <EditInvestmentDialog
+              investmentToEdit={editingInvestment}
+              onUpdateSuccess={handleUpdateSuccess}
+              onCancelEdit={handleCancelEdit}
+              user={user}
+              investmentTypes={investmentTypes}
+              isMobile={isMobile}
+              allSubcategories={allSubcategories}
+              incomeInvestmentSubcategories={incomeInvestmentSubcategories}
+            />
           )}
-        </main>
+        </DialogContent>
+      </Dialog>
 
-        <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
-
-        {/* Edit Investment Dialog */}
-        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
-            <DialogHeader>
-              <DialogTitle>Editar Investimento</DialogTitle>
-            </DialogHeader>
-            {editingInvestment && (
-              <EditInvestmentDialog
-                investmentToEdit={editingInvestment}
-                onUpdateSuccess={handleUpdateSuccess}
-                onCancelEdit={handleCancelEdit}
-                user={user}
-                investmentTypes={investmentTypes}
-                isMobile={isMobile}
-                allSubcategories={allSubcategories}
-                incomeInvestmentSubcategories={incomeInvestmentSubcategories}
-              />
-            )}
-          </DialogContent>
-        </Dialog>
-
-        {/* NOVO: AlertDialog para confirmação de exclusão */}
-        <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-          <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-                Confirmar Exclusão
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja excluir este investimento? Esta ação não pode ser desfeita.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className={cn(
-              "flex flex-col sm:flex-row justify-center gap-2",
-              isMobile && "flex-row items-center justify-between"
-            )}>
-              <AlertDialogCancel
-                disabled={deleteInvestmentMutation.isPending}
-                className={cn(
-                  "rounded-xl",
-                  isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
-                )}
-                onClick={() => setIsConfirmDeleteOpen(false)}
-              >
-                {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
-                Cancelar
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleConfirmDelete}
-                disabled={deleteInvestmentMutation.isPending}
-                className={cn(
-                  "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                  isMobile && "h-10 text-sm flex-1"
-                )}
-              >
-                {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}
-                {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </ProtectedRoute>
+      {/* NOVO: AlertDialog para confirmação de exclusão */}
+      <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+        <AlertDialogContent className={cn("w-full", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este investimento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className={cn(
+            "flex flex-col sm:flex-row justify-center gap-2",
+            isMobile && "flex-row items-center justify-between"
+          )}>
+            <AlertDialogCancel
+              disabled={deleteInvestmentMutation.isPending}
+              className={cn(
+                "rounded-xl",
+                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
+              )}
+              onClick={() => setIsConfirmDeleteOpen(false)}
+            >
+              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={deleteInvestmentMutation.isPending}
+              className={cn(
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                isMobile && "h-10 text-sm flex-1"
+              )}
+            >
+              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}
+              {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }

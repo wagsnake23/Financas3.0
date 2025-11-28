@@ -2,6 +2,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute"; // Importar ProtectedRoute
 
 // Importações diretas para diagnóstico
 // import Index from "./pages/Index"; // Removed as Dashboard will be the root
@@ -25,15 +26,15 @@ const App = () => (
       <BrowserRouter>
         {/* Removido React.Suspense para as rotas principais para diagnóstico */}
         <Routes>
-          <Route path="/" element={<Dashboard />} /> {/* Set Dashboard as the root page */}
+          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/* Set Dashboard as the root page */}
           <Route path="/auth" element={<Auth />} />
-          <Route path="/categorias" element={<Categories />} />
-          <Route path="/investimentos" element={<Investments />} />
-          <Route path="/receitas" element={<Receitas />} />
-          <Route path="/despesas" element={<Despesas />} />
-          <Route path="/lancamentos" element={<Lancamentos />} />
-          <Route path="/charts" element={<Charts />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/categorias" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+          <Route path="/investimentos" element={<ProtectedRoute><Investments /></ProtectedRoute>} />
+          <Route path="/receitas" element={<ProtectedRoute><Receitas /></ProtectedRoute>} />
+          <Route path="/despesas" element={<ProtectedRoute><Despesas /></ProtectedRoute>} />
+          <Route path="/lancamentos" element={<ProtectedRoute><Lancamentos /></ProtectedRoute>} />
+          <Route path="/charts" element={<ProtectedRoute><Charts /></ProtectedRoute>} />
+          {/* Removed duplicate Dashboard route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

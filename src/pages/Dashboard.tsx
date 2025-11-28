@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
@@ -144,67 +143,131 @@ export default function Dashboard() { // Alterado para export default function
   };
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-background pt-16">
-        <Navigation />
-        <main className={cn("container mx-auto", isMobile ? "pt-8 px-4" : "py-8 max-w-[1200px] px-6")}>
-          {!isMobile && (
-            <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
-          )}
-          
-          {/* REMOVIDO: MonthNavigator global */}
+    <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
+      <Navigation />
+      <main className={cn("container mx-auto", isMobile ? "pt-8 px-4" : "py-8 max-w-[1200px] px-6")}>
+        {!isMobile && (
+          <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
+        )}
+        
+        {/* REMOVIDO: MonthNavigator global */}
 
-          {isMobile ? (
-            <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
-              <StatCard
-                mainStatTitle="Total de Despesas"
-                mainStatValue={stats.totalExpenses}
-                secondaryStatTitle="Pago este mês"
-                secondaryStatValue={totalPaidMonthlyExpenses}
-                topRightContent={
-                  <MonthNavigatorCompact // Use the new component
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="expense"
-                  />
-                }
-                icon="TrendingDown"
-                variant="expense"
-                isMobile={isMobile}
-                childrenAlignment="start"
-                chartContent={
-                  <MonthlyExpenseBarChart
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={selectedMonth}
-                    isMobile={isMobile}
-                    onMonthClick={handleMonthClick} // Passando a função de clique
-                  />
-                }
-                annualTotalLabel="Total Anual" // NEW
-                annualTotalValue={totalAnnualExpenses} // NEW
-              >
-                {/* Ajuste para posicionar o botão na parte inferior */}
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
-                    <Button
-                      variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1 mr-1")} /* Adicionado mr-1 aqui */
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
+        {isMobile ? (
+          <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
+            <StatCard
+              mainStatTitle="Total de Despesas"
+              mainStatValue={stats.totalExpenses}
+              secondaryStatTitle="Pago este mês"
+              secondaryStatValue={totalPaidMonthlyExpenses}
+              topRightContent={
+                <MonthNavigatorCompact // Use the new component
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="expense"
+                />
+              }
+              icon="TrendingDown"
+              variant="expense"
+              isMobile={isMobile}
+              childrenAlignment="start"
+              chartContent={
+                <MonthlyExpenseBarChart
+                  expenseInstallments={allExpenseInstallments}
+                  currentDate={selectedMonth}
+                  isMobile={isMobile}
+                  onMonthClick={handleMonthClick} // Passando a função de clique
+                />
+              }
+              annualTotalLabel="Total Anual" // NEW
+              annualTotalValue={totalAnnualExpenses} // NEW
+            >
+              {/* Ajuste para posicionar o botão na parte inferior */}
+              <div className={cn("flex flex-col w-full h-full")}>
+                <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
+                  <Button
+                    variant="destructive"
+                    className={cn("h-8 px-3 text-xs rounded-xl w-[130px] mb-1 mr-1")} /* Adicionado mr-1 aqui */
+                    onClick={() => navigate("/despesas")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Despesa
+                  </Button>
                 </div>
-              </StatCard>
+              </div>
+            </StatCard>
 
+            <StatCard
+              mainStatTitle="Total de Receitas"
+              mainStatValue={stats.totalIncome}
+              secondaryStatTitle="Saldo Atual"
+              secondaryStatValue={stats.balance}
+              topRightContent={
+                <MonthNavigatorCompact // Use the new component
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="income"
+                />
+              }
+              icon="TrendingUp"
+              variant="income"
+              isMobile={isMobile}
+              childrenAlignment="start" 
+              chartContent={
+                <MonthlyRevenueBarChart
+                  revenues={allRevenues}
+                  currentDate={selectedMonth}
+                  isMobile={isMobile}
+                  onMonthClick={handleMonthClick} // Passando a função de clique
+                />
+              }
+              annualTotalLabel="Total Anual" // NEW
+              annualTotalValue={totalAnnualRevenues} // NEW
+            >
+              {/* Ajuste para posicionar o botão na parte inferior */}
+              <div className={cn("flex flex-col w-full h-full")}>
+                <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
+                  <Button 
+                    variant="success" 
+                    className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" 
+                    onClick={() => navigate("/receitas")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Receita
+                  </Button>
+                </div>
+              </div>
+            </StatCard>
+
+            <MobileCreditCardExpenses
+              cartoes={cartoes}
+              expenseInstallments={allExpenseInstallments} // Passar todas as parcelas para o componente mobile
+              allCategories={allSubcategories}
+              isMobile={isMobile}
+              selectedMonth={selectedMonth}
+            />
+            <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} user={user} /> {/* Passando a prop user */}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <StatCard
+                mainStatTitle="Saldo Atual"
+                mainStatValue={stats.balance}
+                icon="Wallet"
+                variant="balance"
+                trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
+                isMobile={isMobile}
+              />
               <StatCard
                 mainStatTitle="Total de Receitas"
                 mainStatValue={stats.totalIncome}
-                secondaryStatTitle="Saldo Atual"
-                secondaryStatValue={stats.balance}
+                icon="TrendingUp"
+                variant="income"
+                isMobile={isMobile}
                 topRightContent={
                   <MonthNavigatorCompact // Use the new component
                     selectedMonth={selectedMonth}
@@ -214,10 +277,6 @@ export default function Dashboard() { // Alterado para export default function
                     variant="income"
                   />
                 }
-                icon="TrendingUp"
-                variant="income"
-                isMobile={isMobile}
-                childrenAlignment="start" 
                 chartContent={
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
@@ -229,141 +288,79 @@ export default function Dashboard() { // Alterado para export default function
                 annualTotalLabel="Total Anual" // NEW
                 annualTotalValue={totalAnnualRevenues} // NEW
               >
-                {/* Ajuste para posicionar o botão na parte inferior */}
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
-                    <Button 
-                      variant="success" 
-                      className="w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1" 
-                      onClick={() => navigate("/receitas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Receita
-                    </Button>
-                  </div>
+                <div className="flex justify-end mt-4">
+                  <Button
+                    variant="success"
+                    className="w-auto px-4 h-8 text-xs rounded-xl"
+                    onClick={() => navigate("/receitas")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Receita
+                  </Button>
                 </div>
               </StatCard>
-
-              <MobileCreditCardExpenses
-                cartoes={cartoes}
-                expenseInstallments={allExpenseInstallments} // Passar todas as parcelas para o componente mobile
-                allCategories={allSubcategories}
+              <StatCard
+                mainStatTitle="Total de Despesas"
+                mainStatValue={stats.totalExpenses}
+                icon="TrendingDown"
+                variant="expense"
                 isMobile={isMobile}
-                selectedMonth={selectedMonth}
-              />
-              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} user={user} /> {/* Passando a prop user */}
+                secondaryStatTitle="Pago este mês"
+                secondaryStatValue={totalPaidMonthlyExpenses}
+                topRightContent={
+                  <MonthNavigatorCompact // Use the new component
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="expense"
+                  />
+                }
+                chartContent={
+                  <MonthlyExpenseBarChart
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                    onMonthClick={handleMonthClick} // Passando a função de clique
+                  />
+                }
+                annualTotalLabel="Total Anual" // NEW
+                annualTotalValue={totalAnnualExpenses} // NEW
+              >
+                <div className="flex justify-end mt-4">
+                  <Button
+                    variant="destructive"
+                    className={cn("h-8 px-3 text-xs rounded-xl w-auto px-4")}
+                    onClick={() => navigate("/despesas")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Despesa
+                  </Button>
+                </div>
+              </StatCard>
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <StatCard
-                  mainStatTitle="Saldo Atual"
-                  mainStatValue={stats.balance}
-                  icon="Wallet"
-                  variant="balance"
-                  trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
-                  isMobile={isMobile}
-                />
-                <StatCard
-                  mainStatTitle="Total de Receitas"
-                  mainStatValue={stats.totalIncome}
-                  icon="TrendingUp"
-                  variant="income"
-                  isMobile={isMobile}
-                  topRightContent={
-                    <MonthNavigatorCompact // Use the new component
-                      selectedMonth={selectedMonth}
-                      onPreviousMonth={handlePreviousMonth}
-                      onNextMonth={handleNextMonth}
-                      isMobile={isMobile}
-                      variant="income"
-                    />
-                  }
-                  chartContent={
-                    <MonthlyRevenueBarChart
-                      revenues={allRevenues}
-                      currentDate={selectedMonth}
-                      isMobile={isMobile}
-                      onMonthClick={handleMonthClick} // Passando a função de clique
-                    />
-                  }
-                  annualTotalLabel="Total Anual" // NEW
-                  annualTotalValue={totalAnnualRevenues} // NEW
-                >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      variant="success"
-                      className="w-auto px-4 h-8 text-xs rounded-xl"
-                      onClick={() => navigate("/receitas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Receita
-                    </Button>
-                  </div>
-                </StatCard>
-                <StatCard
-                  mainStatTitle="Total de Despesas"
-                  mainStatValue={stats.totalExpenses}
-                  icon="TrendingDown"
-                  variant="expense"
-                  isMobile={isMobile}
-                  secondaryStatTitle="Pago este mês"
-                  secondaryStatValue={totalPaidMonthlyExpenses}
-                  topRightContent={
-                    <MonthNavigatorCompact // Use the new component
-                      selectedMonth={selectedMonth}
-                      onPreviousMonth={handlePreviousMonth}
-                      onNextMonth={handleNextMonth}
-                      isMobile={isMobile}
-                      variant="expense"
-                    />
-                  }
-                  chartContent={
-                    <MonthlyExpenseBarChart
-                      expenseInstallments={allExpenseInstallments}
-                      currentDate={selectedMonth}
-                      isMobile={isMobile}
-                      onMonthClick={handleMonthClick} // Passando a função de clique
-                    />
-                  }
-                  annualTotalLabel="Total Anual" // NEW
-                  annualTotalValue={totalAnnualExpenses} // NEW
-                >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      variant="destructive"
-                      className={cn("h-8 px-3 text-xs rounded-xl w-auto px-4")}
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
-                </StatCard>
-              </div>
 
-              <div className="grid grid-cols-1"> {/* Removido mb-4 */}
-                <CombinedMonthlyExpensesDashboard
-                  allRevenues={allRevenues}
-                  allExpenseInstallments={allExpenseInstallments}
-                  allCategories={allSubcategories}
-                  isLoading={isLoading}
-                  isMobile={isMobile}
-                />
-              </div>
+            <div className="grid grid-cols-1"> {/* Removido mb-4 */}
+              <CombinedMonthlyExpensesDashboard
+                allRevenues={allRevenues}
+                allExpenseInstallments={allExpenseInstallments}
+                allCategories={allSubcategories}
+                isLoading={isLoading}
+                isMobile={isMobile}
+              />
+            </div>
 
-              <div className="grid grid-cols-1"> {/* Removido mb-4 */}
-                <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} />
-              </div>
+            <div className="grid grid-cols-1"> {/* Removido mb-4 */}
+              <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} />
+            </div>
 
-              <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-                <p className={cn("text-muted-foreground", "font-roboto")}>Mais conteúdo do Dashboard virá aqui.</p>
-              </Card>
-              <Footer isMobile={isMobile} className="mt-8" user={user} /> {/* Passando a prop user */}
-            </>
-          )}
-        </main>
-      </div>
-    </ProtectedRoute>
+            <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
+              <p className={cn("text-muted-foreground", "font-roboto")}>Mais conteúdo do Dashboard virá aqui.</p>
+            </Card>
+            <Footer isMobile={isMobile} className="mt-8" user={user} /> {/* Passando a prop user */}
+          </>
+        )}
+      </main>
+    </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
@@ -104,9 +103,7 @@ export default function Despesas() {
   );
 
   return (
-    <ProtectedRoute>
-      {/* (a) Container principal - Aplicar mobile background aqui */}
-      <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
+    <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
         {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
         <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
@@ -163,6 +160,6 @@ export default function Despesas() {
         </div>
         {!isMobile && <Footer isMobile={isMobile} user={user} />} {/* Mantido para desktop, passando a prop user */}
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -409,8 +408,7 @@ export default function Receitas() {
     }
 
     return (
-      <ProtectedRoute>
-        <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
+      <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
           <Navigation />
           <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
             {!isMobile && (
@@ -450,6 +448,6 @@ export default function Receitas() {
           </div>
         </div>
         {!isMobile && <Footer isMobile={isMobile} user={user} />}
-      </ProtectedRoute>
-    );
-  }
+    </div>
+  );
+}
