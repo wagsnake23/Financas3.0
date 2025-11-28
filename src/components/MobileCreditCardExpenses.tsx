@@ -77,7 +77,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
 
   return (
     <Card className={cn("p-4 animate-fade-in bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm", isMobile && "p-3")}> {/* Removido space-y-2 aqui */}
-      <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-sm mb-1")}>Cartões de Crédito</h2>
+      <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-xs font-semibold text-muted-foreground font-roboto mb-1")}>Cartões de Crédito</h2>
 
       <div className={cn("space-y-2", isMobile && "space-y-2")}> {/* Novo contêiner para o restante do conteúdo */}
         {cartoes.length === 0 ? (
