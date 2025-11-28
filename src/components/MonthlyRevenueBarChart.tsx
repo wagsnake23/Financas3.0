@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from "recharts"; // Removido Tooltip
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip } from "recharts"; // Adicionado Tooltip
 import { Tables } from "@/integrations/supabase/types";
 import { format, subMonths, getMonth, getYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -63,7 +63,8 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           interval={0} 
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
-            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
+            // Corrigido para usar hsl(var(--muted)) para meses não atuais
+            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted))";
             return (
               <text 
                 x={x}
@@ -71,7 +72,12 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                 dy={10} /* Ajustado para aproximar os meses das barras */
                 textAnchor="middle"
                 fill={color}
-                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
+                style={{ 
+                  fontSize: isMobile ? "10px" : "12px", // Tamanho da fonte ajustado
+                  fontWeight: "bold", 
+                  cursor: "pointer", 
+                  fontFamily: "Roboto" 
+                }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
                 {payload.value.substring(0, 3)}
@@ -83,7 +89,15 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           hide={true}
           domain={[0, 'dataMax']}
         />
-        {/* Removido Tooltip */}
+        <Tooltip 
+          formatter={(value: number) => formatCurrency(value)}
+          contentStyle={{ 
+            backgroundColor: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            borderRadius: "var(--radius)",
+            color: "hsl(var(--foreground))", // Cor do texto do tooltip
+          }}
+        />
         <Bar dataKey="revenues" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
           {chartData.map((entry, index) => (
             <Cell
