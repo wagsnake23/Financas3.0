@@ -342,7 +342,7 @@ export default function Dashboard() { // Alterado para export default function
                 </StatCard>
               </div>
 
-              <div className="grid grid-cols-1 mb-4">
+              <div className="grid grid-cols-1"> {/* Removido mb-4 */}
                 <CombinedMonthlyExpensesDashboard
                   allRevenues={allRevenues}
                   allExpenseInstallments={allExpenseInstallments}
@@ -352,7 +352,7 @@ export default function Dashboard() { // Alterado para export default function
                 />
               </div>
 
-              <div className="grid grid-cols-1 mb-4">
+              <div className="grid grid-cols-1"> {/* Removido mb-4 */}
                 <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} />
               </div>
 
