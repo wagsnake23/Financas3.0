@@ -194,38 +194,61 @@ html, body {
     position: relative;
   }
 
-  /* Área rolável apenas no corpo da tabela */
+  /* REMOVIDO: Scroll no lancamentos-scroll-container, agora o scroll é no tbody */
   .lancamentos-scroll-container {
-    max-height: calc(100vh - 300px); /* ajuste mínimo para rolar */
-    overflow-y: auto;
-    overflow-x: hidden;
+    /* overflow-y: auto; */
+    /* max-height: calc(100vh - 320px); */
+    overflow-x: visible !important; /* Impedir overflow lateral invisível */
   }
 
-  /* Tabela com layout fluido e centralizada */
-  .lancamentos-table {
+  /* Fixar o cabeçalho ao topo */
+  .lancamentos-table-header {
+    display: table;
     width: 100%;
-    max-width: 1200px;
-    table-layout: auto !important; /* Mantido como auto */
-    margin: 0 auto;
-  }
-
-  /* Cabeçalho fixo (sticky) */
-  .lancamentos-table-header th { /* Aplicado diretamente ao th */
+    table-layout: fixed;
     position: sticky;
     top: 0;
     z-index: 50;
-    background: #F5F6FA; /* mesma cor atual do cabeçalho */
+  }
+
+  .lancamentos-table-header th {
+    position: sticky;
+    top: 0;
+    background: #F5F6FA;
+    z-index: 51;
+  }
+
+  .lancamentos-table-body {
+    display: block;
+    max-height: 400px; /* ajuste mínimo para rolar */
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .lancamentos-table-body tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .lancamentos-table {
+    width: 100%;
+    max-width: 1200px; /* Mantido para centralizar a tabela */
+    table-layout: fixed;
+    margin: 0 auto; /* Mantido para centralizar a tabela */
   }
 
   /* Propriedades para o thead container (lancamentos-table-header) */
+  /* REMOVIDO: display: table-header-group !important; height: 52px; font-size: 15px; font-weight: 600; color: #222; box-shadow: 0 2px 5px rgba(0,0,0,0.05); */
+  /* Essas propriedades foram movidas para .lancamentos-table-header ou já existiam em .lancamentos-table-header th */
   .lancamentos-table-header {
-    display: table-header-group !important;
     height: 52px;
     font-size: 15px;
     font-weight: 600;
     color: #222;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
+
 
   /* Zebra striping suave */
   .lancamentos-table-body tr:nth-child(even) {
@@ -238,9 +261,9 @@ html, body {
     transition: background-color 0.15s ease-in-out;
   }
 
-  /* Distribuição de colunas */
-  .lancamentos-table th:first-child,
-  .lancamentos-table td:first-child {
+  /* Ajustar alinhamento das colunas do cabeçalho com o conteúdo */
+  .lancamentos-table th:nth-child(1),
+  .lancamentos-table td:nth-child(1) {
     width: 110px; /* Data */
   }
 
@@ -259,21 +282,25 @@ html, body {
   .lancamentos-table th:nth-child(4), /* This is the Description column */
   .lancamentos-table td:nth-child(4) {
     width: auto; /* Descrição - auto-fit */
-    text-align: left; /* Alterado para alinhar à esquerda */
-    padding: 10px 12px 10px 32px !important; /* NEW: Explicitly set padding-left for description column */
+    text-align: left;
+    /* padding: 10px 12px 10px 32px !important; */ /* Mantido o padding-left de 32px */
   }
 
   .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
     width: 120px; /* Valor */
-    text-align: left; /* Alterado para alinhar à esquerda */
+    text-align: right; /* Alterado para alinhar à direita */
   }
 
   .lancamentos-table th:nth-child(6),
-  .lancamentos-table td:nth-child(6),
+  .lancamentos-table td:nth-child(6) {
+    width: 90px; /* Status */
+    text-align: center;
+  }
+
   .lancamentos-table th:nth-child(7),
   .lancamentos-table td:nth-child(7) {
-    width: 70px; /* Status/Ações */
+    width: 70px; /* Ações */
     text-align: center;
   }
 
@@ -290,7 +317,7 @@ html, body {
 
   /* Remover estilos que Shadcn coloca e que causam desalinhamento */
   .lancamentos-table-header {
-    display: table-header-group !important;
+    /* display: table-header-group !important; */ /* Removido, pois display: table já foi aplicado */
   }
 
   /* Larguras alinhadas */
