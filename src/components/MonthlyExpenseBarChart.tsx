@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from "recharts"; // Removido Tooltip
 import { Tables } from "@/integrations/supabase/types";
 import { format, subMonths, getMonth, getYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -87,17 +87,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           hide={true} // Hide Y-axis for a cleaner look
           domain={[0, 'dataMax']}
         />
-        <Tooltip
-          formatter={(value: number) => formatCurrency(value)}
-          contentStyle={{
-            backgroundColor: "hsl(var(--card))",
-            border: "1px solid hsl(var(--border))",
-            borderRadius: "var(--radius)",
-            fontSize: isMobile ? "10px" : "12px",
-            padding: isMobile ? "4px 6px" : "6px 8px",
-          }}
-          labelStyle={{ fontSize: isMobile ? "10px" : "12px" }}
-        />
+        {/* Removido Tooltip */}
         <Bar dataKey="expenses" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
           {chartData.map((entry, index) => (
             <Cell
