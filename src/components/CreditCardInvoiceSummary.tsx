@@ -37,48 +37,48 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
   return (
     <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm", // Removido 'relative'
+      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
       isMobile && "p-3 space-y-2"
     )}>
-      {/* Novo contêiner principal para alinhar valores e badge horizontalmente no desktop e verticalmente no mobile */}
-      <div className={cn(
-        "flex items-center gap-4", // Desktop: horizontal, com gap entre o grupo de valores e o badge
-        isMobile ? "flex-col items-center gap-2" : "justify-center" // Mobile: vertical, centralizado. Desktop: centralizado horizontalmente
-      )}>
-        {/* Valores (Pago, Pendente, Total Fatura) */}
-        <div className={cn("flex items-center justify-center gap-4", isMobile && "gap-4 w-full")}> {/* Aumentado o gap para mobile */}
-          <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
+      {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
+      <div className={cn("flex items-center justify-between w-full")}>
+        {/* Grupo para Pago, Pendente, Total Fatura */}
+        <div className={cn("flex flex-1 items-center justify-between gap-2")}>
+          {/* Pago */}
+          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
             <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
           </div>
-          <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
+          {/* Pendente */}
+          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
             <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
             <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
           </div>
-          <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
+          {/* Total Fatura */}
+          <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
             <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
             <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
             <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
           </div>
         </div>
 
-        {/* Badge (agora ao lado dos valores no desktop, abaixo no mobile) */}
+        {/* Badge (agora ao lado dos valores) */}
         <div className={cn(
-          "flex flex-col items-end text-right gap-0", // Desktop: alinhado à direita
-          isMobile && "items-center text-center" // Mobile: centralizado
+          "flex flex-col items-end text-right gap-0",
+          isMobile && "items-center text-center"
         )}>
           <span className={cn(
             "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
-            isMobile && "text-[0.6rem] px-1.5 py-0.5" // Ajuste de tamanho para mobile
+            isMobile && "text-[0.6rem] px-1.5 py-0.5"
           )}>
             {formattedBadgeMonth}
           </span>
           {formattedDueDate && (
             <span className={cn(
               "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-[0.5rem] mt-[1px]" // Ajuste de tamanho para mobile
+              isMobile && "text-[0.5rem] mt-[1px]"
             )}>
               Venc. {formattedDueDate}
             </span>
