@@ -255,7 +255,7 @@ html, body {
   .lancamentos-table th:nth-child(4),
   .lancamentos-table td:nth-child(4) {
     width: auto; /* Descrição - auto-fit */
-    text-align: right; /* Alterado para alinhar à direita */
+    text-align: left; /* Alterado para alinhar à esquerda */
   }
 
   .lancamentos-table th:nth-child(5),
