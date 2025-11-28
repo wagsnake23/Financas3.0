@@ -194,7 +194,7 @@ html, body {
   /* Configuração da tabela */
   .lancamentos-table {
     width: 100%;
-    max-width: 1200px; /* Keeping 1200px to match main container */
+    max-width: 1250px; /* Ajustado para 1250px conforme solicitado */
     margin: 0 auto;
     table-layout: fixed;
     border-collapse: separate !important;

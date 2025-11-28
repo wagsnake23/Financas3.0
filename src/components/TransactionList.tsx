@@ -388,11 +388,11 @@ export const TransactionList = ({
       )}
 
       <div className={cn(
-        "rounded-xl border overflow-hidden shadow-sm mt-4 bg-white", // Adicionado bg-white aqui
-        isMobile ? "max-h-[354px] overflow-y-auto" : "" // Aplicado max-h para mobile, removido para desktop
+        "rounded-xl border shadow-sm mt-4 bg-white", // Adicionado bg-white aqui
+        isMobile ? "max-h-[354px] overflow-y-auto" : "" // Removido overflow-x-auto e overflow-y-auto para desktop
       )}>
         {/* NEW: Wrapper for scrollable table body */}
-        <div className="lancamentos-scroll-container">
+        <div className={cn(!isMobile && "lancamentos-scroll-container")}> {/* Aplicar lancamentos-scroll-container aqui para desktop */}
           <Table className="lancamentos-table"> {/* Adicionado a classe lancamentos-table */}
             {!isMobile && ( // Show TableHeader only on desktop
               <TableHeader>
