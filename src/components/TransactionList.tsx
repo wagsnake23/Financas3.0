@@ -17,7 +17,6 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
-import { ChevronUp, ChevronDown } from "lucide-react"; // Importar ChevronUp e ChevronDown
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -338,6 +337,8 @@ export const TransactionList = ({
 
   const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
 
+  const transactionsToDisplay = isMobile ? sortedTransactions.slice(0, 8) : sortedTransactions;
+
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
@@ -422,50 +423,25 @@ export const TransactionList = ({
       <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
         {!isMobile && (
           <Table className="lancamentos-table">
-            <TableHeader className="lancamentos-table-header lancamentos-table">
+            <TableHeader className="lancamentos-table-header">
               <TableRow>
-                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none col-data text-left relative" title="Clique para ordenar">
-                  <span className="block">Data</span>
-                  {sortColumn === "date" && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />}
-                    </div>
-                  )}
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
+                  Data {sortColumn === "date" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none col-tipo text-center relative" title="Clique para ordenar">
-                  <span className="block">Tipo</span>
-                  {sortColumn === "type" && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />}
-                    </div>
-                  )}
+                <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none">
+                  Tipo {sortColumn === "type" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none col-subcat text-left relative" title="Clique para ordenar">
-                  <span className="block">Subcategoria</span>
-                  {sortColumn === "category" && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />}
-                    </div>
-                  )}
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
+                  Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none col-desc text-left relative" title="Clique para ordenar">
-                  <span className="block">Descrição</span>
-                  {sortColumn === "description" && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />}
-                    </div>
-                  )}
+                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none">
+                  Descrição {sortColumn === "description" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead className="text-right cursor-pointer select-none col-valor relative" data-order-col="amount" onClick={() => handleSort("amount")} title="Clique para ordenar">
-                  <span className="block">Valor</span>
-                  {sortColumn === "amount" && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      {sortDirection === "asc" ? <ChevronUp className="h-4 w-4 arrow-icon rotate-animation" /> : <ChevronDown className="h-4 w-4 arrow-icon rotate-animation" />}
-                    </div>
-                  )}
+                <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
+                  Valor {sortColumn === "amount" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead className="text-center col-status">Status</TableHead>
-                <TableHead className="text-center col-acoes">Ações</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Ações</TableHead>
               </TableRow>
             </TableHeader>
           </Table>
@@ -474,14 +450,14 @@ export const TransactionList = ({
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className="lancamentos-table lancamentos-table-body">
             <TableBody>
-              {sortedTransactions.length === 0 ? (
+              {transactionsToDisplay.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     Nenhum lançamento encontrado
                   </TableCell>
                 </TableRow>
               ) : (
-                sortedTransactions.map((transaction) => (
+                transactionsToDisplay.map((transaction) => (
                   <TransactionRow
                     key={transaction.id}
                     transaction={transaction}
