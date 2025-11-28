@@ -236,10 +236,10 @@ const Categories = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-16">
+    <div className="flex flex-col bg-background pt-16"> {/* Alterado min-h-screen para flex flex-col */}
       <Navigation />
 
-      <main className={cn("container mx-auto py-8", isMobile ? "px-4" : "max-w-[1200px] px-6")}>
+      <main className={cn("container mx-auto", isMobile ? "px-4 py-4 flex-grow" : "max-w-[1200px] px-6 py-8")}> {/* Ajustado py-4 e adicionado flex-grow para mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"> {/* Revertido para lg:grid-cols-2 */}
           <div> {/* Removido lg:col-span-2 */}
             <CategoryForm 
@@ -272,7 +272,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} /> {/* Passando a prop user */}
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
     </div>
   );
 };
