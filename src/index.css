@@ -184,28 +184,21 @@ html, body {
 
 /* Desktop-only styles for Lancamentos table */
 @media (min-width: 1024px) {
-  .scroll-tabela-lancamentos {
-    max-height: calc(100vh - 220px); /* Ajustar conforme layout */
-    overflow-y: auto;
-    width: 100%;
-  }
-
   .lancamentos-table {
-    border-collapse: separate; /* Important for sticky header */
     width: 100%;
-    table-layout: fixed;
     max-width: 1200px;
+    table-layout: fixed;
     margin-left: auto;
     margin-right: auto;
-    /* Removed padding here, it should be on the wrapper */
+    padding: 0 24px; /* Apply padding to the table container */
   }
 
   .lancamentos-table thead th {
     position: sticky;
     top: 0;
-    z-index: 20; /* Increased z-index to ensure it's above other content */
-    background-color: #F5F6FA !important; /* soft light gray */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Adjusted shadow */
+    z-index: 10;
+    background-color: #F5F6FA; /* soft light gray */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     color: #222222; /* dark gray */
     font-weight: 600; /* semibold */
     font-size: 15px; /* 15px */
