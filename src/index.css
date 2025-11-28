@@ -189,82 +189,37 @@ html, body {
 
 /* Apenas para Desktop */
 @media (min-width: 1024px) {
-
-  .lancamentos-wrapper {
-    position: relative;
-  }
-
-  /* REMOVIDO: Scroll no lancamentos-scroll-container, agora o scroll é no tbody */
   .lancamentos-scroll-container {
-    /* overflow-y: auto; */
-    /* max-height: calc(100vh - 320px); */
-    overflow-x: visible !important; /* Impedir overflow lateral invisível */
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
-  /* Fixar o cabeçalho ao topo */
-  .lancamentos-table-header {
-    display: table;
+  .lancamentos-table {
+    border-collapse: collapse;
     width: 100%;
     table-layout: fixed;
-    position: sticky;
-    top: 0;
-    z-index: 50;
   }
 
-  .lancamentos-table-header th {
-    position: sticky;
-    top: 0;
-    background: #F5F6FA;
-    z-index: 51;
-  }
-
-  .lancamentos-table-body {
-    display: block;
-    max-height: 400px; /* ajuste mínimo para rolar */
-    overflow-y: auto;
-    width: 100%;
-  }
-
+  .lancamentos-table-header,
   .lancamentos-table-body tr {
     display: table;
     width: 100%;
     table-layout: fixed;
   }
 
-  .lancamentos-table {
-    width: 100%;
-    max-width: 1200px; /* Mantido para centralizar a tabela */
-    table-layout: fixed;
-    margin: 0 auto; /* Mantido para centralizar a tabela */
+  .lancamentos-table-header th {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #F5F6FA;
   }
 
-  /* Propriedades para o thead container (lancamentos-table-header) */
-  /* REMOVIDO: display: table-header-group !important; height: 52px; font-size: 15px; font-weight: 600; color: #222; box-shadow: 0 2px 5px rgba(0,0,0,0.05); */
-  /* Essas propriedades foram movidas para .lancamentos-table-header ou já existiam em .lancamentos-table-header th */
-  .lancamentos-table-header {
-    height: 52px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #222;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-
-
-  /* Zebra striping suave */
-  .lancamentos-table-body tr:nth-child(even) {
-    background-color: #FAFAFA;
-  }
-
-  /* Hover elegante */
-  .lancamentos-table-body tr:hover {
-    background-color: #EEF6FF;
-    transition: background-color 0.15s ease-in-out;
-  }
-
-  /* Ajustar alinhamento das colunas do cabeçalho com o conteúdo */
+  /* Larguras exatamente iguais para todas as colunas */
   .lancamentos-table th:nth-child(1),
   .lancamentos-table td:nth-child(1) {
     width: 110px; /* Data */
+    text-align: left;
   }
 
   .lancamentos-table th:nth-child(2),
@@ -279,22 +234,23 @@ html, body {
     text-align: left;
   }
 
-  .lancamentos-table th:nth-child(4), /* This is the Description column */
+  /* DESCRIÇÃO corrigido */
+  .lancamentos-table th:nth-child(4),
   .lancamentos-table td:nth-child(4) {
-    width: auto; /* Descrição - auto-fit */
+    width: 360px;
     text-align: left;
-    /* padding: 10px 12px 10px 32px !important; */ /* Mantido o padding-left de 32px */
+    padding-left: 12px !important;
   }
 
   .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
-    width: 120px; /* Valor */
-    text-align: right; /* Alterado para alinhar à direita */
+    width: 140px; /* Valor */
+    text-align: right;
   }
 
   .lancamentos-table th:nth-child(6),
   .lancamentos-table td:nth-child(6) {
-    width: 90px; /* Status */
+    width: 70px; /* Status */
     text-align: center;
   }
 
@@ -302,39 +258,5 @@ html, body {
   .lancamentos-table td:nth-child(7) {
     width: 70px; /* Ações */
     text-align: center;
-  }
-
-  /* Mesmo padding nas células */
-  .lancamentos-table th,
-  .lancamentos-table td {
-    padding: 10px 12px !important;
-  }
-
-  /* Cabeçalho usa mesma largura das colunas */
-  .lancamentos-table-header th {
-    width: inherit;
-  }
-
-  /* Remover estilos que Shadcn coloca e que causam desalinhamento */
-  .lancamentos-table-header {
-    /* display: table-header-group !important; */ /* Removido, pois display: table já foi aplicado */
-  }
-
-  /* Larguras alinhadas */
-  /* Removidas as classes .col-desc e .col-valor para evitar conflitos com nth-child */
-
-  /* Tooltip nativa */
-  .lancamentos-table th[title] {
-    cursor: pointer;
-  }
-
-  /* Ícones de seta com animação suave */
-  .arrow-icon {
-    /* margin-left: 4px; */ /* Removed as it's now absolutely positioned */
-    transition: transform 0.15s ease-in-out, opacity 0.15s;
-  }
-  @keyframes rotateArrow {
-    from { opacity: 0; transform: translateY(-2px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 }
