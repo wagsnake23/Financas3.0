@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
 const iconMap: { [key: string]: React.ElementType } = {
-  UtensilsCrossed, Car, Gamepad2, Heart, GraduationCap, ShoppingBag, FileText,
+  UtensilsCrossed, Car, Gamepad2, Heart, GraduationCap, ShoppingBag, FileText, // Corrigido ShoppingCap para ShoppingBag
   Wallet, TrendingUp, MoreHorizontal, Plus, Trash2, Search, Pencil, DollarSign,
   Percent, Calendar, TrendingDown, ArrowUp, ArrowDown, CreditCard, FolderKanban, LogOut,
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
