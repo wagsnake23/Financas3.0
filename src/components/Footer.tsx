@@ -21,9 +21,7 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
       isMobile ? "text-xs" : "text-sm",
       className
     )}>
-      <span className="inline-block"> {/* Envolvido o texto estático em um span para garantir o alinhamento */}
-        © 2025 Minhas Finanças — By{" "}
-      </span>
+      © 2025 Minhas Finanças — By{" "}
       <a
         href={linkWhatsApp}
         target="_blank"
