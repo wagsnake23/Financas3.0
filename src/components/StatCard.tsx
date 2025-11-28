@@ -162,7 +162,7 @@ export const StatCard = ({
           {annualTotalValue !== undefined && annualTotalLabel && (
             <div className={cn("flex flex-col items-start")}> {/* Removido classes de texto aqui */}
               <p className={cn(titleFontSizeClass, "text-muted-foreground leading-none", "font-roboto")}>{annualTotalLabel}</p> {/* Aplicado titleFontSizeClass e text-muted-foreground */}
-              <p className={cn("font-bold leading-none", isMobile ? "text-xs" : "text-sm", variant === "income" ? "text-success" : "text-destructive")}>
+              <p className={cn("font-bold leading-none", isMobile ? "text-sm" : "text-base", variant === "income" ? "text-success" : "text-destructive")}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>
