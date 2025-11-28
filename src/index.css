@@ -275,7 +275,7 @@ html, body {
   /* Mesmo padding nas células */
   .lancamentos-table th,
   .lancamentos-table td {
-    padding: 10px 12px;
+    padding: 10px 12px !important;
   }
 
   /* Cabeçalho usa mesma largura das colunas */
@@ -286,5 +286,32 @@ html, body {
   /* Remover estilos que Shadcn coloca e que causam desalinhamento */
   .lancamentos-table-header {
     display: table-header-group !important;
+  }
+
+  /* Larguras alinhadas */
+  .col-data { width: 110px; }
+  .col-tipo { width: 100px; }
+  .col-subcat { min-width: 160px; }
+  .col-desc { width: auto; }
+  .col-valor { width: 120px; text-align: right !important; }
+  .col-status,
+  .col-acoes { width: 70px; text-align: center !important; }
+
+  /* Tooltip nativa */
+  .lancamentos-table th[title] {
+    cursor: pointer;
+  }
+
+  /* Ícones de seta com animação suave */
+  .arrow-icon {
+    margin-left: 4px;
+    transition: transform 0.15s ease-in-out, opacity 0.15s;
+  }
+  .rotate-animation {
+    animation: rotateArrow 0.15s ease-in-out;
+  }
+  @keyframes rotateArrow {
+    from { opacity: 0; transform: translateY(-2px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
