@@ -547,7 +547,7 @@ export default function Investments() { // Alterado para export default function
         </div>
       </main>
 
-      <Footer isMobile={isMobile} />
+      <Footer isMobile={isMobile} user={user} /> {/* Passando a prop user */}
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>

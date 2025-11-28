@@ -426,7 +426,7 @@ export default function Receitas() {
               {isMobile ? (
                 <>
                   {oneOffFormContent} {/* Removido o Card aqui */}
-                  <Footer isMobile={isMobile} className="mt-0" /> {/* Alterado mt-2 para mt-0 para mobile */}
+                  <Footer isMobile={isMobile} className="mt-0" user={user} /> {/* Alterado mt-2 para mt-0 para mobile, passando a prop user */}
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
@@ -449,7 +449,7 @@ export default function Receitas() {
             </div>
           </div>
         </div>
-        {!isMobile && <Footer isMobile={isMobile} />}
+        {!isMobile && <Footer isMobile={isMobile} user={user} />}
       </ProtectedRoute>
     );
   }

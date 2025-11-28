@@ -272,7 +272,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} />
+      <Footer isMobile={isMobile} user={user} /> {/* Passando a prop user */}
     </div>
   );
 };

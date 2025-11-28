@@ -609,14 +609,14 @@ export default function Auth() {
       {isMobile ? (
         <div className="w-full max-w-md p-4 flex flex-col">
           {formContent}
-          <Footer isMobile={isMobile} className="mt-8" />
+          <Footer isMobile={isMobile} className="mt-8" user={null} /> {/* Passando user={null} para a página de autenticação */}
         </div>
       ) : (
         <Card className="w-full max-w-md p-8 shadow-xl rounded-xl flex flex-col"> {/* Adicionado flex flex-col */}
           <div className="flex-grow"> {/* Envolve o formContent em uma div que cresce */}
             {formContent}
           </div>
-          <Footer isMobile={isMobile} className="mt-auto" /> {/* Adicionado mt-auto */}
+          <Footer isMobile={isMobile} className="mt-auto" user={null} /> {/* Passando user={null} para a página de autenticação */}
         </Card>
       )}
     </div>

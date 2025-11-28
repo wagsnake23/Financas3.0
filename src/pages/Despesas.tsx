@@ -128,7 +128,7 @@ export default function Despesas() {
                 Nova Despesa
               </h2>
               {formContent}
-              <Footer isMobile={isMobile} className="mt-0" /> {/* Removido mt-4 para mobile */}
+              <Footer isMobile={isMobile} className="mt-0" user={user} /> {/* Passando a prop user */}
             </>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
@@ -160,7 +160,7 @@ export default function Despesas() {
             </div>
           )}
         </div>
-        {!isMobile && <Footer isMobile={isMobile} />} {/* Mantido para desktop */}
+        {!isMobile && <Footer isMobile={isMobile} user={user} />} {/* Mantido para desktop, passando a prop user */}
       </div>
     </ProtectedRoute>
   );

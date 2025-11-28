@@ -2,10 +2,12 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar o hook useIsMobile
+import { useAuth } from "@/hooks/useAuth"; // Importar useAuth para obter o usuário
 
 const NotFound = () => {
   const location = useLocation();
   const isMobile = useIsMobile(); // Usar o hook para detectar se é mobile
+  const { user } = useAuth(); // Obter o usuário logado
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
@@ -22,7 +24,7 @@ const NotFound = () => {
           </a>
         </div>
       </div>
-      <Footer isMobile={isMobile} /> {/* Passando a prop isMobile */}
+      <Footer isMobile={isMobile} user={user} /> {/* Passando a prop isMobile e user */}
     </div>
   );
 };

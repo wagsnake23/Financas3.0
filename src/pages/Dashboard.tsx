@@ -251,7 +251,7 @@ export default function Dashboard() { // Alterado para export default function
                 isMobile={isMobile}
                 selectedMonth={selectedMonth}
               />
-              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} /> {/* Alterado mt-[-1rem] para mt-[-2rem] */}
+              <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} user={user} /> {/* Passando a prop user */}
             </div>
           ) : (
             <>
@@ -359,7 +359,7 @@ export default function Dashboard() { // Alterado para export default function
               <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
                 <p className={cn("text-muted-foreground", "font-roboto")}>Mais conteúdo do Dashboard virá aqui.</p>
               </Card>
-              <Footer isMobile={isMobile} className="mt-8" />
+              <Footer isMobile={isMobile} className="mt-8" user={user} /> {/* Passando a prop user */}
             </>
           )}
         </main>
