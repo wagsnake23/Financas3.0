@@ -3,6 +3,8 @@ import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
 import { cn, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatCurrency, formatInTimeZone, TARGET_TIMEZONE
 import { Button } from "@/components/ui/button"; // Importar Button
+import { format } from "date-fns"; // Importar format
+import { ptBR } from "date-fns/locale"; // Importar ptBR
 
 interface CreditCardInvoiceSummaryProps {
   totalPaid: number;
@@ -12,7 +14,7 @@ interface CreditCardInvoiceSummaryProps {
   formattedDueDate: string | null;
   formattedClosingDate: string | null;
   cardLastDigits: string | null;
-  invoiceMonth: string | null;
+  selectedMonth: Date; // NOVA PROP
   onPayInvoice: () => void;
   loadingPayInvoice: boolean;
   disablePayInvoiceButton: boolean;
@@ -26,37 +28,43 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   formattedDueDate,
   formattedClosingDate,
   cardLastDigits,
-  invoiceMonth,
+  selectedMonth, // Usar a nova prop
   onPayInvoice,
   loadingPayInvoice,
   disablePayInvoiceButton,
 }) => {
+  const formattedBadgeMonth = format(selectedMonth, "MMM/yy", { locale: ptBR });
+
   return (
     <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
+      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm relative", // Adicionado 'relative'
       isMobile && "p-3 space-y-2"
     )}>
-      {/* Título mais ao topo - Removido em mobile */}
-      {!isMobile && (
-        <h3 className={cn("text-lg font-bold mt-0")}>Resumo da Fatura</h3>
-      )}
+      {/* NOVO BADGE NO CANTO SUPERIOR DIREITO */}
+      <div className={cn(
+        "absolute top-2 right-2 text-right flex flex-col items-end",
+        isMobile ? "top-1 right-1" : "top-2 right-2"
+      )}>
+        <span className={cn(
+          "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
+          isMobile && "text-[0.6rem] px-1.5 py-0.5" // Ajuste de tamanho para mobile
+        )}>
+          {formattedBadgeMonth}
+        </span>
+        {formattedDueDate && (
+          <span className={cn(
+            "text-[10px] text-muted-foreground mt-[2px]",
+            isMobile && "text-[0.5rem] mt-[1px]" // Ajuste de tamanho para mobile
+          )}>
+            Venc. {formattedDueDate}
+          </span>
+        )}
+      </div>
       
       <div className={cn("flex items-start justify-between gap-4", isMobile && "flex-col items-center text-center gap-2")}>
-        {/* Detalhes do Cartão (Esquerda) */}
+        {/* Detalhes do Cartão (Esquerda) - Removido o mês e vencimento daqui */}
         <div className={cn("flex flex-col items-start", isMobile && "items-center")}>
-          {/* Fatura e Vencimento na mesma linha para mobile */}
-          <div className={cn("flex items-center gap-2", isMobile && "flex-row justify-center gap-2")}>
-            {invoiceMonth && (
-              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
-                Fatura: <span className={cn("font-semibold text-sm", isMobile && "text-xs capitalize")}>{invoiceMonth}</span>
-              </p>
-            )}
-            {formattedDueDate && (
-              <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>
-                Vencimento: <span className={cn("font-semibold text-sm", isMobile && "text-xs")}>{formattedDueDate}</span>
-              </p>
-            )}
-          </div>
+          {/* Removido: Fatura: Novembro 2025 e Vencimento: 05/12 */}
         </div>
 
         {/* Valores (Centro, em uma linha) */}

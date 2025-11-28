@@ -315,10 +315,7 @@ export const TransactionList = ({
     };
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
-  const formattedInvoiceMonth = useMemo(() => {
-    if (!isValid(selectedMonth)) return null;
-    return format(selectedMonth, "MMMM yyyy", { locale: ptBR });
-  }, [selectedMonth]);
+  // Removido formattedInvoiceMonth, pois não é mais necessário aqui.
 
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
@@ -413,7 +410,7 @@ export const TransactionList = ({
             formattedDueDate={cardDetails?.formattedDueDate || null}
             formattedClosingDate={cardDetails?.formattedClosingDate || null}
             cardLastDigits={cardDetails?.cardLastDigits || null}
-            invoiceMonth={formattedInvoiceMonth} 
+            selectedMonth={selectedMonth} {/* Passando selectedMonth */}
             onPayInvoice={handlePayInvoice}
             loadingPayInvoice={loadingPayInvoice}
             disablePayInvoiceButton={disablePayInvoiceButton}
