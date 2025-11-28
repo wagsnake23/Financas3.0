@@ -41,7 +41,6 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       isMobile && "p-3 space-y-2"
     )}>
       {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      {/* Ajustado o gap para diminuir o espaçamento */}
       <div className={cn("flex items-center justify-between w-full", isMobile ? "gap-0" : "gap-1")}>
         {/* Pago */}
         <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
@@ -55,33 +54,26 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
           <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
         </div>
-        {/* Total Fatura */}
+        {/* Total Fatura (modificado para incluir o badge para mobile) */}
         <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
           <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
           <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
-          <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
-        </div>
-
-        {/* Badge (agora ao lado dos valores) */}
-        <div className={cn(
-          "flex flex-col items-end text-right gap-0 flex-none",
-          isMobile && "items-center text-center space-y-0.5" // Adicionado space-y para separar o emoji
-        )}>
-          {/* NOVO: Emoji azul de mês */}
-          <span className={cn("text-blue-500", isMobile && "text-xs")}>🗓️</span>
-          <span className={cn(
-            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
-            isMobile && "text-[0.6rem] px-1.5 py-0.5"
-          )}>
-            {formattedBadgeMonth}
-          </span>
-          {formattedDueDate && (
-            <span className={cn(
-              "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-[0.5rem] mt-[1px]"
-            )}>
-              Venc. {formattedDueDate}
-            </span>
+          
+          {isMobile ? (
+            <div className="flex items-center gap-1">
+              <p className="text-sm font-bold text-foreground text-xs">{formatCurrency(totalCardExpenses)}</p>
+              <div className="flex flex-col items-start gap-0">
+                <span className="text-blue-500 text-xs leading-none">🗓️ {formattedBadgeMonth}</span>
+                {formattedDueDate && (
+                  <span className="text-[0.6rem] text-muted-foreground leading-none">
+                    Venc. {formattedDueDate}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            // Layout desktop original para o valor
+            <p className={cn("text-sm font-bold text-foreground")}>{formatCurrency(totalCardExpenses)}</p>
           )}
         </div>
       </div>
@@ -93,7 +85,6 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           onClick={onPayInvoice}
           className={cn(
             "rounded-xl",
-            // Ajustado a largura do botão
             isMobile ? "w-auto max-w-[180px] h-8 px-3 text-xs" : "w-auto px-6"
           )}
           disabled={loadingPayInvoice || disablePayInvoiceButton}
