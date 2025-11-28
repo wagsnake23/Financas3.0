@@ -37,11 +37,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
   return (
     <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm relative",
+      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm", // Removido 'relative'
       isMobile && "p-3 space-y-2"
     )}>
-      {/* Novo contêiner principal para alinhar tudo horizontalmente no desktop e verticalmente no mobile */}
-      <div className={cn("flex flex-row items-start justify-between gap-3 w-full", isMobile && "flex-col items-center gap-2")}>
+      {/* Novo contêiner principal para alinhar valores e badge horizontalmente no desktop e verticalmente no mobile */}
+      <div className={cn(
+        "flex items-center gap-4", // Desktop: horizontal, com gap entre o grupo de valores e o badge
+        isMobile ? "flex-col items-center gap-2" : "justify-center" // Mobile: vertical, centralizado. Desktop: centralizado horizontalmente
+      )}>
         {/* Valores (Pago, Pendente, Total Fatura) */}
         <div className={cn("flex items-center justify-center gap-4", isMobile && "gap-4 w-full")}> {/* Aumentado o gap para mobile */}
           <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}>
@@ -61,10 +64,10 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           </div>
         </div>
 
-        {/* Badge (agora parte do flex row, não mais absoluto) */}
+        {/* Badge (agora ao lado dos valores no desktop, abaixo no mobile) */}
         <div className={cn(
-          "flex flex-col items-end text-right gap-0",
-          isMobile && "items-center text-center" // Centraliza o conteúdo do badge no mobile se o pai for flex-col
+          "flex flex-col items-end text-right gap-0", // Desktop: alinhado à direita
+          isMobile && "items-center text-center" // Mobile: centralizado
         )}>
           <span className={cn(
             "text-xs font-bold uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-md",
@@ -74,7 +77,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           </span>
           {formattedDueDate && (
             <span className={cn(
-              "text-[10px] text-muted-foreground leading-none mt-[2px]", // Adicionado mt-[2px] para espaçamento
+              "text-[10px] text-muted-foreground leading-none mt-[2px]",
               isMobile && "text-[0.5rem] mt-[1px]" // Ajuste de tamanho para mobile
             )}>
               Venc. {formattedDueDate}
