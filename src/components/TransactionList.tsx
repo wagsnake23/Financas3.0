@@ -424,7 +424,7 @@ export const TransactionList = ({
           <Table className="lancamentos-table">
             <TableHeader className="lancamentos-table-header lancamentos-table">
               <TableRow>
-                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none col-data relative" title="Clique para ordenar">
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none col-data text-left relative" title="Clique para ordenar">
                   <span className="block">Data</span>
                   {sortColumn === "date" && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
