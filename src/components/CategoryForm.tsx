@@ -124,25 +124,34 @@ export const CategoryForm = ({
         <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
           {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
         </h2>
-        {/* Removido o botão X de cancelar, pois o modal agora gerencia o fechamento */}
+        {editingCategory && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleCancel}
+            className="h-8 w-8"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="parent_id">Categoria Principal</Label>
+      <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-2")}> {/* Ajustado space-y para mobile */}
+        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
+          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>Categoria Principal</Label> {/* Ajustado text-xs para mobile */}
           <Select 
             value={selectedParentId || UNSELECTED_VALUE} 
             onValueChange={(value) => setSelectedParentId(value === UNSELECTED_VALUE ? null : value)}
             disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
           >
-            <SelectTrigger id="parent_id" className="rounded-xl">
+            <SelectTrigger id="parent_id" className={cn("rounded-xl", isMobile && "h-9 text-sm")}> {/* Ajustado h-9 text-sm para mobile */}
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
               {possibleParentCategories
                 .filter(cat => cat.id !== editingCategory?.id && cat.id !== "") 
                 .map((cat) => (
-                <SelectItem key={cat.id} value={cat.id}>
+                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}> {/* Ajustado text-sm para mobile */}
                   <span className="flex items-center gap-2">
                     <DynamicIcon name={cat.icone} className="h-4 w-4" color={cat.cor} /> {/* Adicionado DynamicIcon com cor */}
                     {cat.nome}
@@ -153,8 +162,8 @@ export const CategoryForm = ({
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="nome">Nome da Subcategoria</Label>
+        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
+          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>Nome da Subcategoria</Label> {/* Ajustado text-xs para mobile */}
           <Input
             id="nome"
             type="text"
@@ -162,18 +171,21 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className="rounded-xl"
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")} {/* Ajustado h-9 text-sm para mobile */}
             disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
           />
         </div>
         
-        <div className="space-y-2">
-          <Label>Ícone / Emoji</Label>
+        <div className={cn("space-y-2", isMobile && "space-y-1")}> {/* Ajustado space-y para mobile */}
+          <Label className={cn(isMobile && "text-xs")}>Ícone / Emoji</Label> {/* Ajustado text-xs para mobile */}
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background"
+              className={cn(
+                "w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background",
+                isMobile && "p-2 text-3xl" // Reduzido padding e tamanho do emoji para mobile
+              )}
               disabled={editingCategory?.user_id === null} // Desabilitar para categorias padrão
             >
               {icone}
@@ -183,8 +195,8 @@ export const CategoryForm = ({
               <div ref={emojiPickerRef} className="absolute z-50 mt-2">
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
-                  width={350}
-                  height={400}
+                  width={isMobile ? 280 : 350} // Ajustado largura para mobile
+                  height={isMobile ? 300 : 400} // Ajustado altura para mobile
                   searchPlaceHolder="Buscar emoji..."
                   previewConfig={{ showPreview: false }}
                 />
