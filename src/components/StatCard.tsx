@@ -160,8 +160,8 @@ export const StatCard = ({
             </div>
           )}
           {annualTotalValue !== undefined && annualTotalLabel && (
-            <div className={cn("flex flex-col items-start", isMobile ? "text-xs" : "text-sm")}>
-              <p className={cn("text-muted-foreground leading-none", isMobile && "text-[0.6rem]", "font-roboto")}>{annualTotalLabel}</p>
+            <div className={cn("flex flex-col items-start")}> {/* Removido classes de texto aqui */}
+              <p className={cn(titleFontSizeClass, "text-muted-foreground leading-none", "font-roboto")}>{annualTotalLabel}</p> {/* Aplicado titleFontSizeClass e text-muted-foreground */}
               <p className={cn("font-bold leading-none", isMobile ? "text-xs" : "text-sm", variant === "income" ? "text-success" : "text-destructive")}>
                 {formatCurrency(annualTotalValue)}
               </p>
