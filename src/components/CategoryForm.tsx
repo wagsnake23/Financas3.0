@@ -122,21 +122,23 @@ export const CategoryForm = ({
 
   const formContent = (
     <>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-          {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
-        </h2>
-        {editingCategory && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCancel}
-            className="h-8 w-8"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      {!hideCardWrapper && ( // Renderiza o título apenas se não estiver escondendo o Card Wrapper
+        <div className="flex items-center justify-between mb-6">
+          <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
+            {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
+          </h2>
+          {editingCategory && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCancel}
+              className="h-8 w-8"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-2")}>
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
