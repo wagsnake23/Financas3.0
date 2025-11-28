@@ -17,6 +17,7 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"; // Import ToggleGroup
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -339,27 +340,59 @@ export const TransactionList = ({
     <div className={cn("p-6", isMobile && "p-0")}>
       
       <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}>
-        <Select value={filterType} onValueChange={setFilterType} 
-                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
-          <SelectTrigger className="rounded-xl">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os tipos</SelectItem>
-            <SelectItem value="income">
-              <span className="flex items-center gap-2">
-                <DynamicIcon name="💰" className="h-4 w-4" />
-                Receita
-              </span>
-            </SelectItem>
-            <SelectItem value="expense">
-              <span className="flex items-center gap-2">
-                <DynamicIcon name="💸" className="h-4 w-4" />
-                Despesa
-              </span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        {isMobile ? (
+          <ToggleGroup 
+            type="single" 
+            value={filterType} 
+            onValueChange={(value) => setFilterType(value)}
+            className={cn("w-full justify-center", hideTypeFilter && "hidden", isMobile && "max-w-[160px]")}
+          >
+            <ToggleGroupItem 
+              value="income" 
+              className={cn(
+                "flex-1 rounded-xl flex items-center justify-center border",
+                "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+                isMobile && "h-8 py-0.5 text-sm"
+              )}
+            >
+              <DynamicIcon name="💰" className="mr-1 h-3.5 w-3.5" /> Receita
+            </ToggleGroupItem>
+            <ToggleGroupItem 
+              value="expense" 
+              className={cn(
+                "flex-1 rounded-xl flex items-center justify-center border",
+                "data-[state=on]:bg-destructive data-[state=on]:border-destructive data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+                "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+                isMobile && "h-8 py-0.5 text-sm"
+              )}
+            >
+              <DynamicIcon name="💸" className="mr-1 h-3.5 w-3.5" /> Despesa
+            </ToggleGroupItem>
+          </ToggleGroup>
+        ) : (
+          <Select value={filterType} onValueChange={setFilterType} 
+                  className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}>
+            <SelectTrigger className="rounded-xl">
+              <SelectValue placeholder="Tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os tipos</SelectItem>
+              <SelectItem value="income">
+                <span className="flex items-center gap-2">
+                  <DynamicIcon name="💰" className="h-4 w-4" />
+                  Receita
+                </span>
+              </SelectItem>
+              <SelectItem value="expense">
+                <span className="flex items-center gap-2">
+                  <DynamicIcon name="💸" className="h-4 w-4" />
+                  Despesa
+                </span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        )}
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
                 className={cn("rounded-xl", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
