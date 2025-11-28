@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip } from "recharts"; // Adicionado Tooltip
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from "recharts"; // Removido Tooltip
 import { Tables } from "@/integrations/supabase/types";
 import { format, subMonths, getMonth, getYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -67,8 +67,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           interval={0} 
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
-            // Corrigido para usar hsl(var(--muted)) para meses não atuais
-            const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--muted))";
+            const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))";
             return (
               <text 
                 x={x} 
@@ -76,12 +75,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                 dy={16} 
                 textAnchor="middle" 
                 fill={color} 
-                style={{ 
-                  fontSize: isMobile ? "10px" : "12px", // Tamanho da fonte ajustado
-                  fontWeight: "bold", 
-                  cursor: "pointer", 
-                  fontFamily: "Roboto" 
-                }}
+                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
                 {payload.value.substring(0, 3)}
@@ -93,15 +87,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           hide={true} // Hide Y-axis for a cleaner look
           domain={[0, 'dataMax']}
         />
-        <Tooltip 
-          formatter={(value: number) => formatCurrency(value)}
-          contentStyle={{ 
-            backgroundColor: "hsl(var(--card))",
-            border: "1px solid hsl(var(--border))",
-            borderRadius: "var(--radius)",
-            color: "hsl(var(--foreground))", // Cor do texto do tooltip
-          }}
-        />
+        {/* Removido Tooltip */}
         <Bar dataKey="expenses" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
           {chartData.map((entry, index) => (
             <Cell
