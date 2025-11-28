@@ -340,7 +340,7 @@ export const TransactionList = ({
       
       <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}>
         <Select value={filterType} onValueChange={setFilterType} 
-                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[200px]")}>
+                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -362,7 +362,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
-                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}>
+                className={cn("rounded-xl", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
@@ -382,7 +382,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}>
+                className={cn("rounded-xl", isMobile && "w-full max-w-[160px]")}> {/* Ajustado max-w */}
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -399,7 +399,7 @@ export const TransactionList = ({
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
-        <div className="mt-4">
+        <div className={cn("mt-4", isMobile && "max-w-[98vw] mx-auto")}> {/* Adicionado max-w e mx-auto para mobile */}
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
@@ -418,7 +418,7 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper",
-        isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible" // Aplicando as classes aqui
+        isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible max-w-[98vw] mx-auto" // Adicionado max-w e mx-auto para mobile
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className="lancamentos-table">

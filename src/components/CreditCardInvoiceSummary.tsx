@@ -38,7 +38,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   return (
     <Card className={cn(
       "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
-      isMobile && "p-3 space-y-2"
+      isMobile && "p-3 space-y-2 max-w-[98vw] mx-auto" // Adicionado max-w e mx-auto para mobile
     )}>
       {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
       {/* Ajustado o gap para diminuir o espaçamento */}
