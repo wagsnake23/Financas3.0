@@ -1,10 +1,10 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import DynamicIcon from "./DynamicIcon";
-import { cn, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatCurrency, formatInTimeZone, TARGET_TIMEZONE
-import { Button } from "@/components/ui/button"; // Importar Button
-import { format } from "date-fns"; // Importar format
-import { ptBR } from "date-fns/locale"; // Importar ptBR
+import { cn, formatCurrency } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface CreditCardInvoiceSummaryProps {
   totalPaid: number;
@@ -14,7 +14,7 @@ interface CreditCardInvoiceSummaryProps {
   formattedDueDate: string | null;
   formattedClosingDate: string | null;
   cardLastDigits: string | null;
-  selectedMonth: Date; // NOVA PROP
+  selectedMonth: Date;
   onPayInvoice: () => void;
   loadingPayInvoice: boolean;
   disablePayInvoiceButton: boolean;
@@ -28,7 +28,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   formattedDueDate,
   formattedClosingDate,
   cardLastDigits,
-  selectedMonth, // Usar a nova prop
+  selectedMonth,
   onPayInvoice,
   loadingPayInvoice,
   disablePayInvoiceButton,
@@ -37,13 +37,23 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
   return (
     <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
+      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm relative", // Adicionado relative
       isMobile && "p-3 space-y-2"
     )}>
-      {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      <div className={cn("flex items-center justify-between w-full")}>
+      {/* Month Badge para Mobile (Posicionamento Absoluto) */}
+      {isMobile && (
+        <div className="absolute top-2 right-2 flex items-center gap-1">
+          <DynamicIcon name="📅" className="h-4 w-4 text-primary" />
+          <span className="text-xs font-bold uppercase text-primary">
+            {formattedBadgeMonth}
+          </span>
+        </div>
+      )}
+
+      {/* Wrapper para o conteúdo principal (com padding para mobile para limpar o badge absoluto) */}
+      <div className={cn(isMobile && "pt-6")}> {/* Adicionado pt-6 para mobile */}
         {/* Grupo para Pago, Pendente, Total Fatura */}
-        <div className={cn("flex flex-1 items-center justify-between gap-2")}>
+        <div className={cn("flex items-center justify-between gap-2", isMobile && "w-full")}>
           {/* Pago */}
           <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0.5")}>
             <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
@@ -64,39 +74,37 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           </div>
         </div>
 
-        {/* Badge (agora ao lado dos valores) */}
-        <div className={cn(
-          "flex flex-col items-end text-right gap-0",
-          isMobile && "items-center text-center"
-        )}>
-          <span className={cn(
-            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md", // Removido bg-primary/10
-            isMobile && "text-[0.6rem] px-1.5 py-0.5"
-          )}>
-            {formattedBadgeMonth}
-          </span>
-          {formattedDueDate && (
-            <span className={cn(
-              "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-[0.5rem] mt-[1px]"
-            )}>
-              Venc. {formattedDueDate}
-            </span>
-          )}
-        </div>
-      </div>
+        {/* Datas de Fechamento e Vencimento (abaixo dos totais) */}
+        {formattedClosingDate && formattedDueDate && (
+          <div className={cn("flex justify-between text-xs text-muted-foreground mt-2", isMobile && "text-[0.65rem] mt-1")}>
+            <span>Fechamento: {formattedClosingDate}</span>
+            <span>Vencimento: {formattedDueDate}</span>
+          </div>
+        )}
 
-      {/* Botão "Pagar Fatura" isolado abaixo e centralizado */}
-      <div className={cn("flex justify-center mt-3", isMobile && "mt-2")}>
-        <Button
-          variant="secondary"
-          onClick={onPayInvoice}
-          className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")}
-          disabled={loadingPayInvoice || disablePayInvoiceButton}
-        >
-          <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-          {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-        </Button>
+        {/* Month Badge para Desktop (se não for mobile, mantém no fluxo) */}
+        {!isMobile && (
+          <div className={cn(
+            "flex flex-col items-end text-right gap-0"
+          )}>
+            <span className="text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md">
+              {formattedBadgeMonth}
+            </span>
+          </div>
+        )}
+
+        {/* Botão "Pagar Fatura" isolado abaixo e centralizado */}
+        <div className={cn("flex justify-center mt-3", isMobile && "mt-2")}>
+          <Button
+            variant="secondary"
+            onClick={onPayInvoice}
+            className={cn("rounded-xl", isMobile ? "w-auto max-w-[150px] h-8 px-2 text-xs" : "w-auto px-4")}
+            disabled={loadingPayInvoice || disablePayInvoiceButton}
+          >
+            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
+            {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
+          </Button>
+        </div>
       </div>
     </Card>
   );
