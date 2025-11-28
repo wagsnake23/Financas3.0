@@ -217,6 +217,7 @@ export default function Dashboard() { // Alterado para export default function
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
+                childrenAlignment="start" {/* Adicionado childrenAlignment="start" aqui */}
                 chartContent={
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
