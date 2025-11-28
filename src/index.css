@@ -304,7 +304,7 @@ html, body {
 
   /* Ícones de seta com animação suave */
   .arrow-icon {
-    margin-left: 4px;
+    /* margin-left: 4px; */ /* Removed as it's now absolutely positioned */
     transition: transform 0.15s ease-in-out, opacity 0.15s;
   }
   .rotate-animation {
