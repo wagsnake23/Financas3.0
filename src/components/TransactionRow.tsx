@@ -91,7 +91,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   // Lógica de toggle de status movida para o hook useLancamentosLogic
   const currentStatus: ReceitaStatus = transaction.status || "Pendente"; // Garante um status padrão
-  const newStatus: ReceitaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
+  const newStatus: ReceetaStatus = currentStatus === "Recebida" ? "Pendente" : "Recebida";
 
 
   const transactionDate = (() => {
@@ -113,7 +113,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       onClick={() => onEditTransaction(transaction)} // Adiciona o handler de clique na linha
     >
       {/* DATA */}
-      <TableCell className={cn("py-2 px-2", isMobile ? "min-w-[55px] text-sm" : "min-w-[70px] text-xs")}>
+      <TableCell className={cn("py-2 px-2 text-left", isMobile ? "min-w-[55px] text-sm" : "min-w-[70px] text-base")}>
         {isMobile
           ? format(transactionDate, "dd/MMM", { locale: ptBR })
           : transactionDate.toLocaleDateString("pt-BR")}
@@ -121,7 +121,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* TIPO */}
       {!isMobile && (
-        <TableCell className="py-2 px-2 text-xs min-w-[60px]">
+        <TableCell className="py-2 px-2 text-center min-w-[60px] text-base">
           <span
             className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
               transaction.type === "income"
@@ -135,7 +135,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       )}
 
       {/* SUBCATEGORIA */}
-      <TableCell className={cn("py-2 px-2 flex items-center gap-1", isMobile ? "min-w-[80px] text-sm" : "min-w-[80px] text-xs")}>
+      <TableCell className={cn("py-2 px-2 flex items-center gap-1 text-left", isMobile ? "min-w-[80px] text-sm" : "min-w-[80px] text-base")}>
         {categoryIcon && (
           <DynamicIcon name={categoryIcon} className={cn("h-4 w-4", isMobile && "h-4 w-4")} />
         )}
@@ -144,7 +144,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* DESCRIÇÃO */}
       {!isMobile && (
-        <TableCell className="py-2 px-2 text-xs min-w-[100px]">
+        <TableCell className="py-2 px-2 text-left min-w-[100px] text-base">
           {transaction.installmentNumber &&
           transaction.totalInstallments &&
           transaction.totalInstallments > 1
@@ -163,7 +163,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell
         className={cn(
           "py-2 px-2 text-right font-semibold",
-          isMobile ? "min-w-[80px] text-sm" : "min-w-[80px] text-xs",
+          isMobile ? "min-w-[80px] text-sm" : "min-w-[80px] text-base",
           transaction.type === "income"
             ? "text-success"
             : "text-destructive"
@@ -203,8 +203,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* AÇÕES - Ocultado em mobile */}
       {!isMobile && (
-        <TableCell className={cn("py-2 px-2 text-right", "min-w-[50px]")}>
-          <div className="flex justify-end gap-1">
+        <TableCell className={cn("py-2 px-2 text-center", "min-w-[50px]")}>
+          <div className="flex justify-center gap-1"> {/* Alterado para justify-center */}
             <Button
               variant="ghost"
               size="icon"

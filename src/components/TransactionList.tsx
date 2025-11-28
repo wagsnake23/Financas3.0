@@ -391,17 +391,17 @@ export const TransactionList = ({
         "rounded-xl border overflow-hidden shadow-sm mt-4 bg-white", // Adicionado bg-white aqui
         isMobile ? "max-h-[354px] overflow-y-auto" : "max-h-[60vh] overflow-x-auto overflow-y-auto" // Aplicado max-h para mobile
       )}>
-        <Table>
+        <Table className="lancamentos-table"> {/* Adicionado a classe lancamentos-table */}
           {!isMobile && ( // Show TableHeader only on desktop
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[70px]">Data</TableHead>
-                <TableHead className="w-[60px]">Tipo</TableHead>
-                <TableHead className="w-[80px]">Subcategoria</TableHead>
-                <TableHead className="w-[100px]">Descrição</TableHead>
-                <TableHead className="w-[80px] text-right">Valor</TableHead>
-                <TableHead className="w-[50px] text-center">Status</TableHead>
-                <TableHead className="w-[50px] text-right">Ações</TableHead>
+                <TableHead className="w-[70px] text-left">Data</TableHead> {/* Alinhamento à esquerda */}
+                <TableHead className="w-[60px] text-center">Tipo</TableHead> {/* Alinhamento ao centro */}
+                <TableHead className="w-[80px] text-left">Subcategoria</TableHead> {/* Alinhamento à esquerda */}
+                <TableHead className="w-[100px] text-left">Descrição</TableHead> {/* Alinhamento à esquerda */}
+                <TableHead className="w-[80px] text-right">Valor</TableHead> {/* Alinhamento à direita */}
+                <TableHead className="w-[50px] text-center">Status</TableHead> {/* Alinhamento ao centro */}
+                <TableHead className="w-[50px] text-center">Ações</TableHead> {/* Alinhamento ao centro */}
               </TableRow>
             </TableHeader>
           )}

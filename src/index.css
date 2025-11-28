@@ -181,3 +181,71 @@ html, body {
   height: 100%;
   /* Removido overflow: hidden para permitir pull-to-refresh e scroll da página de fundo */
 }
+
+/* Desktop-only styles for Lancamentos table */
+@media (min-width: 1024px) {
+  .lancamentos-table {
+    width: 100%;
+    max-width: 1200px;
+    table-layout: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 24px; /* Apply padding to the table container */
+  }
+
+  .lancamentos-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #F5F6FA; /* soft light gray */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: #222222; /* dark gray */
+    font-weight: 600; /* semibold */
+    font-size: 15px; /* 15px */
+    min-height: 48px; /* min height */
+    height: 56px; /* ensure it's at least 56px */
+    text-transform: none; /* no uppercase */
+    vertical-align: middle; /* Center text vertically */
+    padding-top: 12px; /* Adjust padding for min-height */
+    padding-bottom: 12px; /* Adjust padding for min-height */
+  }
+
+  .lancamentos-table tbody td {
+    font-size: 16px; /* 16px */
+    font-weight: 400; /* normal */
+    color: #444444; /* medium dark gray */
+    line-height: 1.3;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    vertical-align: middle; /* Center content vertically */
+  }
+
+  /* Column alignment for desktop */
+  .lancamentos-table th:nth-child(1), /* Data */
+  .lancamentos-table td:nth-child(1) {
+    text-align: left;
+  }
+  .lancamentos-table th:nth-child(2), /* Tipo */
+  .lancamentos-table td:nth-child(2) {
+    text-align: center;
+  }
+  .lancamentos-table th:nth-child(3), /* Subcategoria */
+  .lancamentos-table td:nth-child(3) {
+    text-align: left;
+  }
+  .lancamentos-table th:nth-child(4), /* Descrição */
+  .lancamentos-table td:nth-child(4) {
+    text-align: left;
+  }
+  .lancamentos-table th:nth-child(5), /* Valor */
+  .lancamentos-table td:nth-child(5) {
+    text-align: right;
+  }
+  .lancamentos-table th:nth-child(6), /* Status */
+  .lancamentos-table td:nth-child(6) {
+    text-align: center;
+  }
+  .lancamentos-table th:nth-child(7), /* Ações */
+  .lancamentos-table td:nth-child(7) {
+    text-align: center;
+  }
+}
