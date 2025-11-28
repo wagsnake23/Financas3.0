@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatCurrency, formatInTimeZone, TARGET_TIMEZONE
+import { cn, isValidUuid, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
-import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+import { Database } from "@/integrations/supabase/types";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -31,24 +31,23 @@ interface Cartao {
 
 interface TransactionListProps {
   transactions: Transaction[];
-  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado
+  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<'cartoes'>[];
   isMobile?: boolean;
   queryClient: ReturnType<typeof useQueryClient>;
   user: User | null;
-  // Removido: disableFilters?: boolean;
   filterPaymentOptionId: string;
   setFilterPaymentOptionId: (cardId: string) => void;
-  loadingPayInvoice: boolean; // NOVA PROP
-  setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
-  setSelectedMonth: (month: Date) => void; // Adicionado
-  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
+  loadingPayInvoice: boolean;
+  setLoadingPayInvoice: (loading: boolean) => void;
+  setSelectedMonth: (month: Date) => void;
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
@@ -61,15 +60,14 @@ export const TransactionList = ({
   isMobile,
   queryClient,
   user,
-  // Removido: disableFilters = false,
   filterPaymentOptionId,
   setFilterPaymentOptionId,
   selectedMonth,
-  loadingPayInvoice, // NOVO
-  setLoadingPayInvoice, // NOVO
-  setSelectedMonth, // Adicionado
-  onToggleTransactionStatus, // NOVA PROP
-}) => {
+  loadingPayInvoice,
+  setLoadingPayInvoice,
+  setSelectedMonth,
+  onToggleTransactionStatus,
+}: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
@@ -77,31 +75,30 @@ export const TransactionList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc"); // Default sort direction
 
   const paymentFilterOptions = useMemo(() => {
     const options = [
-      { value: "all", label: "Forma de Pagamento" }, // Alterado de "Tudo" para "Forma de Pagamento"
-      { value: "dinheiro", label: "💰 Dinheiro" }, // Adicionado emoji
-      { value: "pix", label: "📲 Pix" }, // Adicionado emoji
+      { value: "all", label: "Forma de Pagamento" },
+      { value: "dinheiro", label: "💰 Dinheiro" },
+      { value: "pix", label: "📲 Pix" },
     ];
     cartoes.forEach(card => {
       options.push({
         value: card.id,
-        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})` // Adicionado emoji
+        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})`
       });
     });
     return options;
   }, [cartoes]);
 
-  // NEW: Effect to reset filterPaymentOptionId if the selected card is not found in cartoes
   useEffect(() => {
     if (isValidUuid(filterPaymentOptionId) && cartoes.length > 0) {
       const cardExists = cartoes.some(card => card.id === filterPaymentOptionId);
       if (!cardExists) {
         console.warn(`TransactionList: Selected card ID ${filterPaymentOptionId} not found in loaded cards. Resetting filter.`);
         setFilterPaymentOptionId("all");
-        // Optionally, if the filter came from the URL, you might want to clear it from the URL too.
-        // navigate('/lancamentos', { replace: true });
       }
     }
   }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]);
@@ -135,20 +132,74 @@ export const TransactionList = ({
     });
   }, [transactions, searchTerm, filterType, filterCategory, filterPaymentOptionId, isMobile]);
 
+  const getCategoryDisplayName = (categoryId: string) => {
+    const category = allCategories.find(cat => cat.id === categoryId);
+    return category?.nome || categoryId;
+  };
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(prev => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedTransactions = useMemo(() => {
+    if (!sortColumn) return filteredTransactions;
+
+    const sorted = [...filteredTransactions].sort((a, b) => {
+      let valA: any;
+      let valB: any;
+
+      switch (sortColumn) {
+        case "date":
+          valA = new Date(a.date).getTime();
+          valB = new Date(b.date).getTime();
+          break;
+        case "type":
+          valA = a.type;
+          valB = b.type;
+          break;
+        case "category":
+          valA = getCategoryDisplayName(a.category);
+          valB = getCategoryDisplayName(b.category);
+          break;
+        case "description":
+          valA = a.description || "";
+          valB = b.description || "";
+          break;
+        case "amount":
+          valA = a.amount;
+          valB = b.amount;
+          break;
+        default:
+          return 0;
+      }
+
+      if (typeof valA === "string" && typeof valB === "string") {
+        return sortDirection === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      } else {
+        return sortDirection === "asc" ? valA - valB : valB - valA;
+      }
+    });
+    return sorted;
+  }, [filteredTransactions, sortColumn, sortDirection, allCategories]);
+
   const accumulatedValue = useMemo(() => {
     return filteredTransactions.reduce((sum, transaction) => {
       return sum + (transaction.type === "income" ? transaction.amount : -transaction.amount);
     }, 0);
   }, [filteredTransactions]);
 
-  // NOVO: Calcular totais para o resumo da fatura do cartão
   const { totalPaidCard, totalPendingCard, totalCardExpenses } = useMemo(() => {
     let paid = 0;
     let pending = 0;
     filteredTransactions
-      .filter(t => t.type === "expense") // Apenas despesas
+      .filter(t => t.type === "expense")
       .forEach(transaction => {
-        if (transaction.status === "Recebida") { // "Recebida" para despesas significa "paga"
+        if (transaction.status === "Recebida") {
           paid += transaction.amount;
         } else {
           pending += transaction.amount;
@@ -157,22 +208,15 @@ export const TransactionList = ({
     return { totalPaidCard: paid, totalPendingCard: pending, totalCardExpenses: paid + pending };
   }, [filteredTransactions]);
 
-
-  const getCategoryDisplayName = (categoryId: string) => {
-    const category = allCategories.find(cat => cat.id === categoryId);
-    return category?.nome || categoryId;
-  };
-
   const selectableCategories = useMemo(() => {
     if (filterType === "income") {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
-    } else { // This covers "expense" and "all"
+    } else {
       return allCategories.filter(cat => cat.parent_id !== 'receitas_e_investimentos');
     }
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
-    // Create a new Date object from the current selectedMonth to ensure it's a valid Date instance
     const monthToValidate = new Date(selectedMonth); 
 
     console.log("handlePayInvoice: monthToValidate:", monthToValidate);
@@ -186,7 +230,7 @@ export const TransactionList = ({
       toast.error("Selecione um cartão de crédito válido para pagar a fatura.", { duration: toastDuration, style: toastErrorStyle });
       return;
     }
-    if (!isValid(monthToValidate)) { // Use the new Date object for validation
+    if (!isValid(monthToValidate)) {
       toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.", { duration: toastDuration, style: toastErrorStyle });
       console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth, "Validated object:", monthToValidate);
       return;
@@ -209,7 +253,7 @@ export const TransactionList = ({
         .from("despesas_parcelas")
         .update({
           pago: true,
-          data_pagamento: formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"), // NOVO: Usa formatInTimeZone
+          data_pagamento: formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss"),
         })
         .in("id", installmentIdsToUpdate);
 
@@ -234,9 +278,8 @@ export const TransactionList = ({
     }
   };
 
-  // Calcular a data de vencimento da fatura e o dia de fechamento
   const cardDetails = useMemo(() => {
-    const monthForCardDetails = new Date(selectedMonth); // Ensure a fresh Date object
+    const monthForCardDetails = new Date(selectedMonth); 
     console.log("cardDetails useMemo: monthForCardDetails:", monthForCardDetails);
     console.log("cardDetails useMemo: isValid(monthForCardDetails):", isValid(monthForCardDetails));
 
@@ -249,21 +292,16 @@ export const TransactionList = ({
     }
 
     const currentYear = getYear(monthForCardDetails);
-    const currentMonthIndex = getMonth(monthForCardDetails); // 0-indexed
+    const currentMonthIndex = getMonth(monthForCardDetails);
 
-    // Calculate the closing date for the invoice that *covers* transactions up to the selected month's closing day.
-    // This means the closing date is in the `selectedMonth`.
     let closingDateForDisplay = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_fechamento);
-    // Handle cases where dia_fechamento is greater than days in month (e.g., 31 in Feb)
     if (!isValid(closingDateForDisplay)) {
       closingDateForDisplay = setDate(endOfMonth(new Date(currentYear, currentMonthIndex)), selectedCard.dia_fechamento);
     }
     const formattedClosingDate = isValid(closingDateForDisplay) ? format(closingDateForDisplay, "dd/MM", { locale: ptBR }) : null;
 
-    // Calculate the due date for this invoice. It will be in the *next* month.
     let dueDateForDisplay = setDate(new Date(currentYear, currentMonthIndex), selectedCard.dia_vencimento);
-    dueDateForDisplay = addMonths(dueDateForDisplay, 1); // Add 1 month for the due date
-    // Handle cases where dia_vencimento is greater than days in next month
+    dueDateForDisplay = addMonths(dueDateForDisplay, 1);
     if (!isValid(dueDateForDisplay)) {
       dueDateForDisplay = setDate(endOfMonth(addMonths(new Date(currentYear, currentMonthIndex), 1)), selectedCard.dia_vencimento);
     }
@@ -277,7 +315,6 @@ export const TransactionList = ({
     };
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
 
-  // NEW: Calculate formatted invoice month
   const formattedInvoiceMonth = useMemo(() => {
     if (!isValid(selectedMonth)) return null;
     return format(selectedMonth, "MMMM yyyy", { locale: ptBR });
@@ -286,11 +323,9 @@ export const TransactionList = ({
   console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
   console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
 
-  // Determine if the pay invoice button should be disabled
   const disablePayInvoiceButton = useMemo(() => {
-    if (!isValidUuid(filterPaymentOptionId)) return true; // No card selected
-    if (loadingPayInvoice) return true; // Already loading
-    // Check if there are any pending expenses for the selected card
+    if (!isValidUuid(filterPaymentOptionId)) return true;
+    if (loadingPayInvoice) return true;
     const hasPendingExpenses = filteredTransactions.some(t => 
       t.type === "expense" && 
       t.status !== "Recebida" && 
@@ -300,15 +335,14 @@ export const TransactionList = ({
     return !hasPendingExpenses;
   }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
 
-  // Determine if "Todos os tipos" filter should be hidden
   const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
       
-      <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}> {/* Adicionado place-items-center para centralizar */}
+      <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center" : "grid-cols-4")}>
         <Select value={filterType} onValueChange={setFilterType} 
-                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[200px]")}> {/* Adicionado max-w-[200px] */}
+                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full max-w-[200px]")}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
@@ -330,7 +364,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory} 
-                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}> {/* Adicionado max-w-[200px] */}
+                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
@@ -349,9 +383,8 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Payment Option Select */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}> {/* Adicionado max-w-[200px] */}
+                className={cn("rounded-xl", isMobile && "w-full max-w-[200px]")}>
           <SelectTrigger className="rounded-xl">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
@@ -364,11 +397,9 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        {/* Este slot agora está vazio, pois o botão foi movido */}
         <div className={cn("hidden", !isMobile && "block")}></div> 
       </div>
 
-      {/* Resumo da Fatura do Cartão (agora com o botão Pagar Fatura dentro) */}
       {isValidUuid(filterPaymentOptionId) && (
         <div className="mt-4">
           <CreditCardInvoiceSummary
@@ -377,7 +408,7 @@ export const TransactionList = ({
             totalCardExpenses={totalCardExpenses}
             isMobile={!!isMobile}
             formattedDueDate={cardDetails?.formattedDueDate || null}
-            formattedClosingDate={cardDetails?.formattedClosingDate || null} // Passando a nova prop
+            formattedClosingDate={cardDetails?.formattedClosingDate || null}
             cardLastDigits={cardDetails?.cardLastDigits || null}
             invoiceMonth={formattedInvoiceMonth} 
             onPayInvoice={handlePayInvoice}
@@ -387,35 +418,44 @@ export const TransactionList = ({
         </div>
       )}
 
-      <div className={cn(
-        "rounded-xl border shadow-sm mt-4 bg-white", // Adicionado bg-white aqui
-        isMobile ? "max-h-[354px] overflow-y-auto" : "" // Removido overflow-x-auto e overflow-y-auto para desktop
-      )}>
-        {/* NEW: Wrapper for scrollable table body */}
-        <div className={cn(!isMobile && "lancamentos-scroll-container")}> {/* Aplicar lancamentos-scroll-container aqui para desktop */}
-          <Table className="lancamentos-table"> {/* Adicionado a classe lancamentos-table */}
-            {!isMobile && ( // Show TableHeader only on desktop
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[70px]">Data</TableHead>
-                  <TableHead className="w-[60px]">Tipo</TableHead>
-                  <TableHead className="w-[80px]">Subcategoria</TableHead>
-                  <TableHead className="w-[100px]">Descrição</TableHead>
-                  <TableHead className="w-[80px] text-right">Valor</TableHead>
-                  <TableHead className="w-[50px] text-center">Status</TableHead>
-                  <TableHead className="w-[50px] text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-            )}
+      <div className="rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper">
+        {!isMobile && (
+          <Table className="lancamentos-table">
+            <TableHeader className="lancamentos-table-header">
+              <TableRow>
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
+                  Data {sortColumn === "date" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none">
+                  Tipo {sortColumn === "type" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
+                  Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none">
+                  Descrição {sortColumn === "description" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
+                  Valor {sortColumn === "amount" && (sortDirection === "asc" ? <DynamicIcon name="ArrowUp" className="inline-block h-4 w-4 ml-1" /> : <DynamicIcon name="ArrowDown" className="inline-block h-4 w-4 ml-1" />)}
+                </TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+          </Table>
+        )}
+
+        <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
+          <Table className="lancamentos-table lancamentos-table-body">
             <TableBody>
-              {filteredTransactions.length === 0 ? (
+              {sortedTransactions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isMobile ? 5 : 7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     Nenhum lançamento encontrado
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredTransactions.map((transaction) => (
+                sortedTransactions.map((transaction) => (
                   <TransactionRow
                     key={transaction.id}
                     transaction={transaction}
@@ -426,7 +466,7 @@ export const TransactionList = ({
                     isMobile={isMobile}
                     queryClient={queryClient}
                     user={user}
-                    onToggleStatus={onToggleTransactionStatus} // Passando a nova prop
+                    onToggleStatus={onToggleTransactionStatus}
                   />
                 ))
               )}

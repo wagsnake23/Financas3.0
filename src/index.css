@@ -182,83 +182,86 @@ html, body {
   /* Removido overflow: hidden para permitir pull-to-refresh e scroll da página de fundo */
 }
 
-/* Desktop-only styles for Lancamentos table */
+/* Apenas para Desktop */
 @media (min-width: 1024px) {
-  /* Wrapper com scroll */
-  .lancamentos-scroll-container {
-    max-height: calc(100vh - 260px); /* Ajustar conforme layout */
-    overflow-y: auto;
-    overflow-x: hidden;
+
+  .lancamentos-wrapper {
+    position: relative;
   }
 
-  /* Configuração da tabela */
+  /* Scroll somente no corpo da tabela */
+  .lancamentos-scroll-container {
+    overflow-y: auto;
+    max-height: calc(100vh - 320px);
+  }
+
+  /* Tabela com layout fluido e centralizada */
   .lancamentos-table {
     width: 100%;
-    max-width: 1250px; /* Ajustado para 1250px conforme solicitado */
+    max-width: 1200px;
+    table-layout: auto !important;
     margin: 0 auto;
-    table-layout: fixed;
-    border-collapse: separate !important;
   }
 
-  /* Cabeçalho fixo */
-  .lancamentos-table thead th {
+  /* Cabeçalho fixo (sticky) */
+  .lancamentos-table-header tr {
     position: sticky;
     top: 0;
-    z-index: 20;
-    background-color: #F5F6FA;
-    font-weight: 600;
+    z-index: 50;
+    background: #F5F6FA;
+    height: 52px;
     font-size: 15px;
-    color: #222222;
-    line-height: 1.25;
-    height: 50px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    text-transform: none;
-    vertical-align: middle; /* Ensure vertical alignment */
+    font-weight: 600;
+    color: #222;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
-  /* Melhorias visuais e alinhamento das colunas */
-  .lancamentos-table th,
-  .lancamentos-table td {
-    padding: 8px 12px;
+  /* Zebra striping suave */
+  .lancamentos-table-body tr:nth-child(even) {
+    background-color: #FAFAFA;
   }
 
-  /* Fonte profissional para leitura constante */
-  .lancamentos-table tbody td {
-    font-size: 16px;
-    font-weight: 400;
-    color: #444444;
-    line-height: 1.3;
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
-    vertical-align: middle; /* Center content vertically */
+  /* Hover elegante */
+  .lancamentos-table-body tr:hover {
+    background-color: #EEF6FF;
+    transition: background-color 0.15s ease-in-out;
   }
 
-  /* Alinhamentos específicos */
-  .lancamentos-table th:nth-child(1), /* Data */
-  .lancamentos-table td:nth-child(1) {
-    text-align: left;
+  /* Distribuição de colunas */
+  .lancamentos-table th:first-child,
+  .lancamentos-table td:first-child {
+    width: 110px; /* Data */
   }
-  .lancamentos-table th:nth-child(2), /* Tipo */
+
+  .lancamentos-table th:nth-child(2),
   .lancamentos-table td:nth-child(2) {
+    width: 100px; /* Tipo */
     text-align: center;
   }
-  .lancamentos-table th:nth-child(3), /* Subcategoria */
+
+  .lancamentos-table th:nth-child(3),
   .lancamentos-table td:nth-child(3) {
+    width: 180px; /* Subcategoria */
     text-align: left;
   }
-  .lancamentos-table th:nth-child(4), /* Descrição */
+
+  .lancamentos-table th:nth-child(4),
   .lancamentos-table td:nth-child(4) {
+    width: auto; /* Descrição - auto-fit */
     text-align: left;
   }
-  .lancamentos-table th:nth-child(5), /* Valor */
+
+  .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
+    width: 120px; /* Valor */
     text-align: right;
   }
-  .lancamentos-table th:nth-child(6), /* Status */
-  .lancamentos-table td:nth-child(6) {
-    text-align: center;
-  }
-  .lancamentos-table th:nth-child(7), /* Ações */
+
+  .lancamentos-table th:nth-child(6),
+  .lancamentos-table td:nth-child(6),
+  .lancamentos-table th:nth-child(7),
   .lancamentos-table td:nth-child(7) {
+    width: 70px; /* Status/Ações */
     text-align: center;
   }
 }
