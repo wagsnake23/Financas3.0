@@ -28,8 +28,7 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
     });
 
     const sortedCategories = Object.values(categoryTotals)
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 10); // Top 10 categories
+      .sort((a, b) => b.value - a.value); // Removido .slice(0, 10) para mostrar todas as categorias
 
     return sortedCategories;
   }, [expenses, categories]);
@@ -37,7 +36,7 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
   if (chartData.length === 0) {
     return (
       <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}>
-        <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Top 10 Subcategorias por Valor</h2>
+        <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Subcategorias por Valor</h2>
         <div className={cn("h-60 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
           Nenhuma despesa registrada
         </div>
@@ -47,8 +46,8 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
 
   return (
     <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}>
-      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Top 10 Subcategorias por Valor</h2>
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+      <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Subcategorias por Valor</h2>
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : Math.max(300, chartData.length * 40)}> {/* Ajusta a altura dinamicamente */}
         <BarChart
           data={chartData}
           margin={{
