@@ -320,11 +320,11 @@ html, body {
     0px 10px 24px rgba(0, 0, 0, 0.08), /* profundidade */
     inset 0px -2px 6px rgba(0, 0, 0, 0.05), /* sombra interna sutil */
     inset 0px 2px 8px rgba(255, 255, 255, 0.6); /* luz superior */
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: box-shadow 0.25s ease; /* Removido transform da transição */
 }
 
 .card-neumorphism:hover {
-  transform: translateY(-4px);
+  /* Removido transform: translateY(-4px); */
   box-shadow:
     0px 14px 30px rgba(0, 0, 0, 0.11),
     inset 0px -1px 5px rgba(0, 0, 0, 0.04),
