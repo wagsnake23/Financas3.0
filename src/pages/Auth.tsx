@@ -350,7 +350,7 @@ export default function Auth() {
           </div>
           <Button 
             type="submit" 
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
+            className="w-full rounded-2xl text-base font-bold shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
             size="lg" 
             disabled={loading}
           >
