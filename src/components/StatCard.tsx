@@ -77,7 +77,7 @@ export const StatCard = ({
       cardPaddingClass,
       "transition-all duration-300 animate-fade-in flex flex-col h-full relative", // Adicionado 'relative' aqui
       isMobile && "min-h-[110px]",
-      neumorphism ? "card-neumorphism rounded-3xl" : cn(variantStyles[variant], "rounded-xl shadow-sm") // Apply neumorphism or existing variant styles
+      neumorphism ? "card-3d rounded-3xl" : cn(variantStyles[variant], "rounded-xl shadow-sm") // Apply neumorphism or existing variant styles
     )}>
       {/* Top-right content (MonthNavigatorCompact or MonthBadge) */}
       {topRightContent && (

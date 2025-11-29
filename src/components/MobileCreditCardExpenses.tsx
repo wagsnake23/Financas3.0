@@ -76,7 +76,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   if (!isMobile) return null;
 
   return (
-    <Card className={cn("p-4 animate-fade-in rounded-3xl card-neumorphism", isMobile && "p-3")}> {/* Aplicado card-neumorphism e rounded-3xl */}
+    <Card className={cn("p-4 animate-fade-in rounded-3xl card-3d", isMobile && "p-3")}> {/* Aplicado card-3d e rounded-3xl */}
       <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-xs font-semibold text-muted-foreground font-roboto mt-0")}>Cartões de Crédito</h2>
 
       <div className={cn("space-y-2", isMobile && "space-y-2")}> {/* Novo contêiner para o restante do conteúdo */}
@@ -103,7 +103,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
                 "rounded-xl w-full",
                 isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs"
               )}
-              style={{ '--cor-clara': '#A46CFF', '--cor-escura': '#6A32CF' } as React.CSSProperties}
+              style={{ '--cor-clara': '#B27CFF', '--cor-media': '#7A47D3' } as React.CSSProperties}
               onClick={handlePayMonthlyBill}
               disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
             >
