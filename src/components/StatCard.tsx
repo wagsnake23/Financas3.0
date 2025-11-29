@@ -53,9 +53,10 @@ export const StatCard = ({
   annualTotalLabel, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
-    income: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
-    expense: "bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20",
-    balance: "bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20",
+    // MODIFIED: Reduced opacity for a lighter, softer background
+    income: "bg-gradient-to-br from-success/8 to-success/4 border-success/20",
+    expense: "bg-gradient-to-br from-destructive/8 to-destructive/4 border-destructive/20",
+    balance: "bg-gradient-to-br from-secondary/8 to-secondary/4 border-secondary/20",
   };
 
   const iconStyles = {
