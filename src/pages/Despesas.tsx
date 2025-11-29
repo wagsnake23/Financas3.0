@@ -16,15 +16,8 @@ import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import DynamicIcon from "@/components/DynamicIcon";
-import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { TopExpensesBarChart } from "@/components/TopExpensesBarChart"; // NOVO: Importar TopExpensesBarChart
 
 interface Cartao {
   id: string;
@@ -43,13 +36,7 @@ export default function Despesas() {
   const isMobile = useIsMobile();
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
-  const [isRecurring, setIsRecurring] = useState(false);
-
-  // Estados para o seletor de mês e ano
-  const currentMonth = new Date().getMonth() + 1; // Mês atual (1-12)
-  const currentYear = new Date().getFullYear();
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(currentMonth);
-  const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
+  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
 
   const {
     allSubcategories,
@@ -102,6 +89,7 @@ export default function Despesas() {
     );
   }
 
+  // O formContent agora contém APENAS o formulário, sem o título
   const formContent = (
     <ExpenseForm
       user={user}
@@ -115,22 +103,12 @@ export default function Despesas() {
     />
   );
 
-  // Opções de meses
-  const monthOptions = Array.from({ length: 12 }, (_, i) => ({
-    value: (i + 1).toString(),
-    label: new Date(0, i).toLocaleString("pt-BR", { month: "long" }),
-  }));
-
-  // Opções de anos (ex: 5 anos para trás e o ano atual)
-  const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i).map(year => ({
-    value: year.toString(),
-    label: year.toString(),
-  })).reverse(); // Para exibir do mais antigo para o mais novo
-
   return (
     <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
         <Navigation />
+        {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
         <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
+          {/* (b) Header com <h1>Despesas */}
           {!isMobile && (
             <div className="flex items-center justify-between">
               <div>
@@ -140,6 +118,7 @@ export default function Despesas() {
             </div>
           )}
 
+          {/* (c) Card com título “Nova Despesa” e o formulário (fora da grid) */}
           {isMobile ? (
             <>
               <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
@@ -147,11 +126,12 @@ export default function Despesas() {
                 Nova Despesa
               </h2>
               {formContent}
+              {/* Footer para mobile, com ajuste de padding-y */}
               <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
             </>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto"> {/* Removido max-w-lg mx-auto */}
                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
                   <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
                   Nova Despesa
@@ -159,11 +139,12 @@ export default function Despesas() {
                 {formContent}
               </Card>
 
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start">
-                  <ExpensesDashboard
-                    expenses={expenses}
-                    expenseInstallments={expenseInstallments}
+              {/* (d) Grid contendo os dashboards e resumos (somente isso) */}
+              <div className="space-y-6"> {/* Container para todos os dashboards */}
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> {/* Ajustado para 1 coluna */}
+                  <ExpensesDashboard 
+                    expenses={expenses} 
+                    expenseInstallments={expenseInstallments} 
                     categories={allSubcategories}
                     isMobile={isMobile}
                   />
@@ -174,54 +155,13 @@ export default function Despesas() {
                   <MostUsedCategories expenses={expenses} categories={allSubcategories} />
                 </div>
                 <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
-
-                {/* Seletores de Mês e Ano para o gráfico */}
-                <div className="flex gap-4 mb-4">
-                  <Select
-                    onValueChange={(value) => setSelectedMonth(Number(value))}
-                    value={selectedMonth?.toString() || ""}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Selecione o Mês" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {monthOptions.map((month) => (
-                        <SelectItem key={month.value} value={month.value}>
-                          {month.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    onValueChange={(value) => setSelectedYear(Number(value))}
-                    value={selectedYear?.toString() || ""}
-                  >
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder="Selecione o Ano" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {yearOptions.map((year) => (
-                        <SelectItem key={year.value} value={year.value}>
-                          {year.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <TopExpensesBarChart
-                  expenses={expenses}
-                  categories={allSubcategories}
-                  isMobile={isMobile}
-                  selectedMonth={selectedMonth}
-                  selectedYear={selectedYear}
-                />
+                {/* NOVO: Gráfico de barras das Top 10 Subcategorias */}
+                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} />
               </div>
             </div>
           )}
         </div>
-        {!isMobile && <Footer isMobile={isMobile} user={user} />}
+        {!isMobile && <Footer isMobile={isMobile} user={user} />} {/* Mantido para desktop, passando a prop user */}
     </div>
   );
 }
