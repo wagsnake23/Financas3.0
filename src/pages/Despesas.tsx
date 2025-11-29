@@ -161,7 +161,7 @@ export default function Despesas() {
                   {/* <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> */}
                   {/* <MostUsedCategories expenses={expenses} categories={allSubcategories} /> */}
                 {/* </div> */}
-                <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
+                {/* <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} /> */} {/* REMOVIDO */}
                 {/* Gráfico de barras das Subcategorias por Valor */}
                 <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} />
               </div>
