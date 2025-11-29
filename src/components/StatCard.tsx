@@ -33,6 +33,7 @@ interface StatCardProps {
   // Removed onNextMonth prop as it will be handled by MonthNavigatorCompact
   annualTotalValue?: number; // NEW: Prop for the annual total value
   annualTotalLabel?: string; // NEW: Prop for the annual total label (e.g., "Total Anual")
+  neumorphism?: boolean; // NEW PROP for Neumorphism style
 }
 
 export const StatCard = ({ 
@@ -51,6 +52,7 @@ export const StatCard = ({
   childrenAlignment = "end", 
   annualTotalValue, // Destructure new prop
   annualTotalLabel, // Destructure new prop
+  neumorphism = false, // Default to false
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -73,9 +75,9 @@ export const StatCard = ({
   return (
     <Card className={cn(
       cardPaddingClass,
-      "transition-all duration-300 hover:shadow-lg animate-fade-in rounded-xl flex flex-col h-full relative", // Adicionado 'relative' aqui
+      "transition-all duration-300 animate-fade-in flex flex-col h-full relative", // Adicionado 'relative' aqui
       isMobile && "min-h-[110px]",
-      variantStyles[variant]
+      neumorphism ? "card-neumorphism rounded-3xl" : cn(variantStyles[variant], "rounded-xl shadow-sm") // Apply neumorphism or existing variant styles
     )}>
       {/* Top-right content (MonthNavigatorCompact or MonthBadge) */}
       {topRightContent && (

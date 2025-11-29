@@ -14,7 +14,7 @@ export const TotalExpensesCard = ({ expenseInstallments, isMobile }: TotalExpens
 
   return (
     <Card className={cn(
-      "p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm", 
+      "p-6 animate-fade-in rounded-3xl card-neumorphism", // Aplicado card-neumorphism e rounded-3xl
       isMobile ? "p-4 h-24" : "h-auto"
     )}>
       <div className="flex items-center justify-between">

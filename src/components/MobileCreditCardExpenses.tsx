@@ -76,7 +76,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
   if (!isMobile) return null;
 
   return (
-    <Card className={cn("p-4 animate-fade-in bg-soft-purple/20 border border-soft-purple rounded-xl shadow-sm", isMobile && "p-3")}>
+    <Card className={cn("p-4 animate-fade-in rounded-3xl card-neumorphism", isMobile && "p-3")}> {/* Aplicado card-neumorphism e rounded-3xl */}
       <h2 className={cn("text-lg font-bold mb-2", isMobile && "text-xs font-semibold text-muted-foreground font-roboto mt-0")}>Cartões de Crédito</h2>
 
       <div className={cn("space-y-2", isMobile && "space-y-2")}> {/* Novo contêiner para o restante do conteúdo */}

@@ -182,6 +182,7 @@ export default function Dashboard() { // Alterado para export default function
               }
               annualTotalLabel="Total Anual" // NEW
               annualTotalValue={totalAnnualExpenses} // NEW
+              neumorphism={true} // Aplicado Neumorphism
             >
               {/* Ajuste para posicionar o botão na parte inferior */}
               <div className={cn("flex flex-col w-full h-full")}>
@@ -226,6 +227,7 @@ export default function Dashboard() { // Alterado para export default function
               }
               annualTotalLabel="Total Anual" // NEW
               annualTotalValue={totalAnnualRevenues} // NEW
+              neumorphism={true} // Aplicado Neumorphism
             >
               {/* Ajuste para posicionar o botão na parte inferior */}
               <div className={cn("flex flex-col w-full h-full")}>
@@ -287,6 +289,7 @@ export default function Dashboard() { // Alterado para export default function
                 }
                 annualTotalLabel="Total Anual" // NEW
                 annualTotalValue={totalAnnualRevenues} // NEW
+                neumorphism={true} // Aplicado Neumorphism
               >
                 <div className="flex justify-end mt-4">
                   <Button
@@ -326,6 +329,7 @@ export default function Dashboard() { // Alterado para export default function
                 }
                 annualTotalLabel="Total Anual" // NEW
                 annualTotalValue={totalAnnualExpenses} // NEW
+                neumorphism={true} // Aplicado Neumorphism
               >
                 <div className="flex justify-end mt-4">
                   <Button
