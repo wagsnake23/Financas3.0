@@ -93,7 +93,7 @@ export const StatCard = ({
         {/* Left and Middle Stats Container */}
         <div className="flex items-start gap-4"> {/* Adjusted gap for spacing between stat blocks */}
           {/* Main Stat Block */}
-          <div className={cn("flex flex-col items-start", contentSpacingClass)}>
+          <div className={cn("flex flex-col items-start pl-2 pt-2", contentSpacingClass)}>
             <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{mainStatTitle}</p>
             <p className={cn(
               "font-bold leading-none", 
@@ -110,7 +110,7 @@ export const StatCard = ({
 
           {/* Secondary Stat Block (e.g., "Pago este mês") */}
           {secondaryStatTitle && secondaryStatValue !== undefined && (
-            <div className={cn("flex flex-col items-start", contentSpacingClass)}>
+            <div className={cn("flex flex-col items-start pl-2 pt-2", contentSpacingClass)}>
               <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{secondaryStatTitle}</p>
               <p className={cn(
                 "font-bold leading-none", 
