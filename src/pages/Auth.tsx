@@ -348,7 +348,12 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
+            size="lg" 
+            disabled={loading}
+          >
             {loading ? "Entrando..." : "Entrar"}
           </Button>
           <div className="text-right text-sm mb-8 sm:mb-1">
@@ -476,7 +481,12 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
+            size="lg" 
+            disabled={loading}
+          >
             {loading ? "Criando conta..." : "Cadastrar"}
           </Button>
           <div className="text-center text-sm">
@@ -517,7 +527,12 @@ export default function Auth() {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
+            size="lg" 
+            disabled={loading}
+          >
             {loading ? "Enviando..." : "Enviar link de recuperação"}
           </Button>
           <div className="text-center text-sm">
@@ -593,7 +608,12 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button type="submit" className="w-full rounded-xl" size="lg" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
+            size="lg" 
+            disabled={loading}
+          >
             {loading ? "Redefinindo..." : "Redefinir senha"}
           </Button>
         </form>
