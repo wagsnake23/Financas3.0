@@ -98,14 +98,14 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
               </SelectContent>
             </Select>
             <Button
-              variant="success"
-              size="default"
+              className={cn(
+                "btn-3d", // Aplicado btn-3d
+                "rounded-xl w-full",
+                isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs"
+              )}
+              style={{ '--cor-clara': '#A46CFF', '--cor-escura': '#6A32CF' } as React.CSSProperties}
               onClick={handlePayMonthlyBill}
               disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
-              className={cn(
-                "rounded-xl w-full",
-                isMobile ? "h-9 text-sm bg-app-purple text-primary-foreground hover:bg-app-purple/80" : "w-auto px-4 h-9 text-xs"
-              )}
             >
               <>
                 <DynamicIcon name="CreditCard" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
