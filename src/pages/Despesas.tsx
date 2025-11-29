@@ -17,6 +17,7 @@ import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
+import { TopExpensesBarChart } from "@/components/TopExpensesBarChart"; // NOVO: Importar TopExpensesBarChart
 
 interface Cartao {
   id: string;
@@ -154,6 +155,8 @@ export default function Despesas() {
                   <MostUsedCategories expenses={expenses} categories={allSubcategories} />
                 </div>
                 <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
+                {/* NOVO: Gráfico de barras das Top 10 Subcategorias */}
+                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} />
               </div>
             </div>
           )}
