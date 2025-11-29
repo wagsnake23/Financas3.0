@@ -9,14 +9,28 @@ interface TopExpensesBarChartProps {
   expenses: Tables<'despesas'>[];
   categories: AppCategory[];
   isMobile?: boolean;
+  selectedMonth: number | null; // NOVO: Mês selecionado
+  selectedYear: number | null;   // NOVO: Ano selecionado
 }
 
-export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expenses, categories, isMobile }) => {
+export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expenses, categories, isMobile, selectedMonth, selectedYear }) => {
   const chartData = useMemo(() => {
     const categoryTotals: { [key: string]: { name: string; value: number; color: string } } = {};
     const allSubcategories = categories;
 
-    expenses.forEach(expense => {
+    // Filtrar despesas pelo mês e ano selecionados
+    const filteredExpenses = expenses.filter(expense => {
+      const expenseDate = new Date(expense.data);
+      const expenseMonth = expenseDate.getMonth() + 1; // Mês (1-12)
+      const expenseYear = expenseDate.getFullYear();
+
+      const matchMonth = selectedMonth === null || expenseMonth === selectedMonth;
+      const matchYear = selectedYear === null || expenseYear === selectedYear;
+
+      return matchMonth && matchYear;
+    });
+
+    filteredExpenses.forEach(expense => {
       const subcategory = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryName = subcategory?.nome || "Outros";
       const categoryColor = subcategory?.cor || "hsl(215, 15%, 50%)"; // Default color
@@ -28,17 +42,17 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
     });
 
     const sortedCategories = Object.values(categoryTotals)
-      .sort((a, b) => b.value - a.value); // Removido .slice(0, 10) para mostrar todas as categorias
+      .sort((a, b) => b.value - a.value);
 
     return sortedCategories;
-  }, [expenses, categories]);
+  }, [expenses, categories, selectedMonth, selectedYear]); // Adicionado selectedMonth e selectedYear às dependências
 
   if (chartData.length === 0) {
     return (
       <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}>
         <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Subcategorias por Valor</h2>
         <div className={cn("h-60 flex items-center justify-center text-muted-foreground", isMobile && "h-48")}>
-          Nenhuma despesa registrada
+          Nenhuma despesa registrada para o período selecionado.
         </div>
       </Card>
     );
@@ -47,7 +61,7 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
   return (
     <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4")}>
       <h2 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3")}>Subcategorias por Valor</h2>
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : Math.max(300, chartData.length * 40)}> {/* Ajusta a altura dinamicamente */}
+      <ResponsiveContainer width="100%" height={isMobile ? 200 : Math.max(300, chartData.length * 40)}>
         <BarChart
           data={chartData}
           margin={{
