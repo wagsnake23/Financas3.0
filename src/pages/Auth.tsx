@@ -363,7 +363,7 @@ export default function Auth() {
                 setViewMode("forgot-password");
                 setValidationErrors({});
               }}
-              className="text-destructive underline hover:text-destructive"
+              className="text-destructive hover:text-destructive"
             >
               Esqueci minha senha
             </button>
