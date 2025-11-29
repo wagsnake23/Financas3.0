@@ -72,6 +72,10 @@ All colors MUST be HSL.
     --app-purple: 270 70% 58%; /* NOVO: Roxo mais forte para botões */
 
     --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD */
+
+    /* Cores para o botão Entrar */
+    --azul-claro: hsl(210, 89%, 52%);
+    --azul-escuro: hsl(210, 89%, 42%);
   }
 
   .dark {
@@ -130,6 +134,10 @@ All colors MUST be HSL.
     --app-purple: 270 70% 60%; /* NOVO: Roxo mais forte para botões em dark mode */
 
     --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD - Keep it light as requested */
+
+    /* Cores para o botão Entrar em dark mode */
+    --azul-claro: hsl(210, 89%, 47%); /* Ajustado para dark mode */
+    --azul-escuro: hsl(210, 89%, 37%); /* Ajustado para dark mode */
   }
 }
 
@@ -352,6 +360,35 @@ html, body {
 .btn-3d:hover {
   box-shadow:
     0px 6px 14px rgba(0, 0, 0, 0.14),
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* 3D Entrar Button Style */
+.btn-entrar {
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+  padding: 14px 24px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.20); /* luz bem mais sutil */
+
+  background: linear-gradient(180deg,
+    var(--azul-claro) 0%,
+    var(--azul-escuro) 100%
+  );
+
+  box-shadow:
+    0px 5px 12px rgba(0, 0, 0, 0.12), /* sombra suave */
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25), /* highlight leve */
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15); /* relevo inferior */
+
+  transition: box-shadow 0.2s ease;
+}
+
+.btn-entrar:hover {
+  box-shadow:
+    0px 7px 16px rgba(0, 0, 0, 0.14),
     inset 0px 1px 2px rgba(255, 255, 255, 0.25),
     inset 0px -2px 3px rgba(0, 0, 0, 0.15);
 }
