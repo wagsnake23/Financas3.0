@@ -150,9 +150,9 @@ export default function Despesas() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                  <TopCategoriesByValue expenses={expenses} categories={allSubcategories} />
-                  <MostUsedCategories expenses={expenses} categories={allSubcategories} />
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> {/* Removido o grid de 2 colunas e os cards */}
+                  {/* <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> */}
+                  {/* <MostUsedCategories expenses={expenses} categories={allSubcategories} /> */}
                 </div>
                 <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
                 {/* NOVO: Gráfico de barras das Top 10 Subcategorias */}
