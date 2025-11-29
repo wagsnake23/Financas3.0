@@ -151,19 +151,8 @@ export default function Despesas() {
 
               {/* Coluna Direita: Outros dashboards e resumos */}
               <div className="space-y-6">
-                {/* Removido o grid de 1 coluna que envolvia ExpensesDashboard */}
-                {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> */}
-                  {/* ExpensesDashboard foi movido */}
-                {/* </div> */}
-
-                {/* Removido o grid de 2 colunas e os cards */}
-                {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> */}
-                  {/* <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> */}
-                  {/* <MostUsedCategories expenses={expenses} categories={allSubcategories} /> */}
-                {/* </div> */}
-                {/* <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} /> */} {/* REMOVIDO */}
                 {/* Gráfico de barras das Subcategorias por Valor */}
-                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} />
+                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} className="h-[250px]" />
               </div>
             </div>
           )}
