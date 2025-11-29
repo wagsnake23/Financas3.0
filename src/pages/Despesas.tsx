@@ -152,7 +152,7 @@ export default function Despesas() {
               {/* Coluna Direita: Outros dashboards e resumos */}
               <div className="space-y-6">
                 {/* Gráfico de barras das Subcategorias por Valor */}
-                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} className="h-[250px]" />
+                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} className="h-[200px]" />
               </div>
             </div>
           )}
