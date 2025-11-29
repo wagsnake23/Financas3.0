@@ -355,3 +355,25 @@ html, body {
     inset 0px 1px 2px rgba(255, 255, 255, 0.25),
     inset 0px -2px 3px rgba(0, 0, 0, 0.15);
 }
+
+/* 3D Login Button Style */
+.btn-entrar-3d {
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+  padding: 14px 24px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+
+  background: linear-gradient(180deg,
+    var(--azul-topo) 0%,
+    var(--azul-base) 100%
+  );
+
+  box-shadow:
+    0px 5px 12px rgba(0, 0, 0, 0.12),
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
+
+  transition: box-shadow 0.2s ease;
+}
