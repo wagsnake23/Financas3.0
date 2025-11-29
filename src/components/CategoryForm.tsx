@@ -210,15 +210,7 @@ export const CategoryForm = ({
         </div>
 
         <div className="flex gap-2">
-          <Button 
-            type="submit" 
-            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} 
-            size="lg" 
-            disabled={editingCategory?.user_id === null}
-          >
-            {editingCategory ? "Atualizar Subcategoria" : "Adicionar Subcategoria"}
-          </Button>
-          {editingCategory && (
+          {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
               type="button"
               variant="outline"
@@ -229,6 +221,14 @@ export const CategoryForm = ({
               Cancelar
             </Button>
           )}
+          <Button 
+            type="submit" 
+            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} 
+            size="lg" 
+            disabled={editingCategory?.user_id === null}
+          >
+            {editingCategory ? "Atualizar" : "Adicionar Subcategoria"}
+          </Button>
         </div>
       </form>
     </>
