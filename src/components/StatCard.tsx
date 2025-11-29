@@ -66,15 +66,7 @@ export const StatCard = ({
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
-  const valueFontSizeAndWeightClass = isMobile ? "text-base font-medium" : "text-3xl font-bold"; 
-  const mainValueColorClass = isMobile
-    ? variant === "income"
-      ? "text-success"
-      : variant === "expense"
-        ? "text-destructive"
-        : "text-secondary"
-    : "text-foreground";
-
+  // Removido valueFontSizeAndWeightClass e mainValueColorClass para aplicar diretamente
   const contentSpacingClass = isMobile ? "space-y-0" : "space-y-0.5"; // Adjusted spacing here
 
   return (
@@ -100,7 +92,12 @@ export const StatCard = ({
           {/* Main Stat Block */}
           <div className={cn("flex flex-col items-start", contentSpacingClass)}>
             <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{mainStatTitle}</p>
-            <p className={cn(valueFontSizeAndWeightClass, "tracking-tight", mainValueColorClass)}>
+            <p className={cn(
+              "font-bold leading-none", 
+              isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
+              variant === "income" ? "text-success" : variant === "expense" ? "text-destructive" : "text-primary", // Cor consistente
+              "font-roboto" // Fonte Roboto
+            )}>
               {formatCurrency(mainStatValue)}
             </p>
             {trend && (
@@ -113,11 +110,10 @@ export const StatCard = ({
             <div className={cn("flex flex-col items-start", contentSpacingClass)}>
               <p className={cn(titleFontSizeClass, "font-semibold text-muted-foreground", "font-roboto")}>{secondaryStatTitle}</p>
               <p className={cn(
-                valueFontSizeAndWeightClass, // Usando a classe unificada
-                "tracking-tight", 
-                // Conditional color for secondary stat value
-                secondaryStatTitle === "Pago este mês" ? "text-success" : 
-                (secondaryStatTitle === "Saldo Atual" ? "text-primary" : "text-foreground") // Alterado para text-primary
+                "font-bold leading-none", 
+                isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
+                secondaryStatTitle === "Pago este mês" ? "text-success" : "text-primary", // Cor consistente
+                "font-roboto" // Fonte Roboto
               )}>
                 {formatCurrency(secondaryStatValue)}
               </p>
@@ -162,7 +158,12 @@ export const StatCard = ({
           {annualTotalValue !== undefined && annualTotalLabel && (
             <div className={cn("flex flex-col items-start")}> {/* Removido classes de texto aqui */}
               <p className={cn(titleFontSizeClass, "text-muted-foreground leading-none", "font-roboto")}>{annualTotalLabel}</p> {/* Aplicado titleFontSizeClass e text-muted-foreground */}
-              <p className={cn("font-bold leading-none", isMobile ? "text-sm" : "text-base", variant === "income" ? "text-success" : "text-destructive")}>
+              <p className={cn(
+                "font-bold leading-none", 
+                isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
+                variant === "income" ? "text-success" : "text-destructive", // Cor consistente
+                "font-roboto" // Fonte Roboto
+              )}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>
