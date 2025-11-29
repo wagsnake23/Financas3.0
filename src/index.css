@@ -335,24 +335,23 @@ html, body {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  border: 2px solid rgba(255, 255, 255, 0.30); /* luz sutil */
+  border: 1px solid rgba(255, 255, 255, 0.20); /* luz bem mais sutil */
 
   background: linear-gradient(180deg,
-    var(--cor-clara) 0%,
-    var(--cor-media) 100%
+    var(--cor-topo) 0%,
+    var(--cor-base) 100%
   );
 
   box-shadow:
-    0px 6px 14px rgba(0, 0, 0, 0.15),
-    inset 0px 1px 3px rgba(255, 255, 255, 0.35),
-    inset 0px -2px 4px rgba(0, 0, 0, 0.18);
-
+    0px 5px 12px rgba(0, 0, 0, 0.12), /* sombra suave */
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25), /* highlight leve */
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15); /* relevo inferior */
   transition: box-shadow 0.2s ease;
 }
 
 .btn-3d:hover {
   box-shadow:
-    0px 8px 18px rgba(0, 0, 0, 0.18),
-    inset 0px 1px 3px rgba(255, 255, 255, 0.35),
-    inset 0px -2px 4px rgba(0, 0, 0, 0.18);
+    0px 6px 14px rgba(0, 0, 0, 0.14),
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
 }

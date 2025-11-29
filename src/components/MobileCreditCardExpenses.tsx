@@ -103,7 +103,7 @@ export const MobileCreditCardExpenses: React.FC<MobileCreditCardExpensesProps> =
                 "rounded-xl w-full",
                 isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs"
               )}
-              style={{ '--cor-clara': '#B27CFF', '--cor-media': '#7A47D3' } as React.CSSProperties}
+              style={{ '--cor-topo': '#B27CFF', '--cor-base': '#7B4ED6' } as React.CSSProperties}
               onClick={handlePayMonthlyBill}
               disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
             >

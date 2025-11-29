@@ -189,7 +189,7 @@ export default function Dashboard() { // Alterado para export default function
                 <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
                   <Button
                     className={cn("btn-3d", "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-clara': '#FF7B7B', '--cor-media': '#E44A4A' } as React.CSSProperties}
+                    style={{ '--cor-topo': '#FF6D6D', '--cor-base': '#E85454' } as React.CSSProperties}
                     onClick={() => navigate("/despesas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -234,7 +234,7 @@ export default function Dashboard() { // Alterado para export default function
                 <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
                   <Button 
                     className={cn("btn-3d", "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-clara': '#42D98A', '--cor-media': '#26AF67' } as React.CSSProperties}
+                    style={{ '--cor-topo': '#38C97C', '--cor-base': '#26A765' } as React.CSSProperties}
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -294,7 +294,7 @@ export default function Dashboard() { // Alterado para export default function
                 <div className="flex justify-end mt-4">
                   <Button
                     className={cn("btn-3d", "w-auto px-4 h-8 text-xs rounded-xl")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-clara': '#42D98A', '--cor-media': '#26AF67' } as React.CSSProperties}
+                    style={{ '--cor-topo': '#38C97C', '--cor-base': '#26A765' } as React.CSSProperties}
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -334,7 +334,7 @@ export default function Dashboard() { // Alterado para export default function
                 <div className="flex justify-end mt-4">
                   <Button
                     className={cn("btn-3d", "h-8 px-3 text-xs rounded-xl w-auto px-4")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-clara': '#FF7B7B', '--cor-media': '#E44A4A' } as React.CSSProperties}
+                    style={{ '--cor-topo': '#FF6D6D', '--cor-base': '#E85454' } as React.CSSProperties}
                     onClick={() => navigate("/despesas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
