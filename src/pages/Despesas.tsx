@@ -131,31 +131,38 @@ export default function Despesas() {
             </>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto"> {/* Removido max-w-lg mx-auto */}
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                  <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
-                  Nova Despesa
-                </h2>
-                {formContent}
-              </Card>
+              {/* Coluna Esquerda: Formulário e Total de Despesas */}
+              <div className="space-y-6">
+                <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
+                    <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                    Nova Despesa
+                  </h2>
+                  {formContent}
+                </Card>
+                {/* Card Total de Despesas movido para abaixo do formulário */}
+                <ExpensesDashboard
+                  expenses={expenses}
+                  expenseInstallments={expenseInstallments}
+                  categories={allSubcategories}
+                  isMobile={isMobile}
+                />
+              </div>
 
-              {/* (d) Grid contendo os dashboards e resumos (somente isso) */}
-              <div className="space-y-6"> {/* Container para todos os dashboards */}
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> {/* Ajustado para 1 coluna */}
-                  <ExpensesDashboard 
-                    expenses={expenses} 
-                    expenseInstallments={expenseInstallments} 
-                    categories={allSubcategories}
-                    isMobile={isMobile}
-                  />
-                </div>
+              {/* Coluna Direita: Outros dashboards e resumos */}
+              <div className="space-y-6">
+                {/* Removido o grid de 1 coluna que envolvia ExpensesDashboard */}
+                {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> */}
+                  {/* ExpensesDashboard foi movido */}
+                {/* </div> */}
 
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> {/* Removido o grid de 2 colunas e os cards */}
+                {/* Removido o grid de 2 colunas e os cards */}
+                {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 items-start"> */}
                   {/* <TopCategoriesByValue expenses={expenses} categories={allSubcategories} /> */}
                   {/* <MostUsedCategories expenses={expenses} categories={allSubcategories} /> */}
-                </div>
+                {/* </div> */}
                 <CategoryDistributionSummary expenses={expenses} categories={allSubcategories} />
-                {/* NOVO: Gráfico de barras das Top 10 Subcategorias */}
+                {/* Gráfico de barras das Subcategorias por Valor */}
                 <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} />
               </div>
             </div>
