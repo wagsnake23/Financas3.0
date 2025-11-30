@@ -233,7 +233,7 @@ export default function Receitas() {
   };
 
   const oneOffFormContent = (
-    <form onSubmit={handleSubmitOneOff} className={cn(isMobile ? "space-y-3" : "space-y-4")}>
+    <form onSubmit={handleSubmitOneOff} className={cn("w-full", isMobile ? "space-y-3" : "space-y-4")}>
       {isMobile && ( // Título para mobile
         <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-success")}>
           <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
@@ -298,7 +298,7 @@ export default function Receitas() {
               }}
             >
               <SelectTrigger className={cn(
-                "rounded-xl", 
+                "w-full rounded-xl", 
                 isMobile && "h-9 text-sm", 
                 getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
               )}>
@@ -368,7 +368,7 @@ export default function Receitas() {
               setValidationErrors(prev => ({ ...prev, valor: false })); // Limpa erro ao digitar
             }}
             className={cn(
-              "rounded-xl", 
+              "w-full rounded-xl", 
               isMobile && "h-9 text-sm", 
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )} 
@@ -383,7 +383,7 @@ export default function Receitas() {
             onChange={(e) => setDescricao(e.target.value)}
             placeholder="Detalhes sobre a receita..."
             rows={3}
-            className={cn("rounded-xl", isMobile && "text-sm")}
+            className={cn("w-full rounded-xl", isMobile && "text-sm")}
           />
         </div>
 
@@ -392,6 +392,7 @@ export default function Receitas() {
             status={status}
             setStatus={setStatus}
             isMobile={isMobile}
+            className={cn(isMobile && "w-full")}
           />
         )}
 
