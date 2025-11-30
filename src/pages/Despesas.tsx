@@ -122,7 +122,9 @@ export default function Despesas() {
           {isMobile ? (
             <>
               <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
-                <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                  <DynamicIcon name="TrendingDown" className="h-6 w-6 text-destructive" />
+                </div>
                 Nova Despesa
               </h2>
               {formContent}
@@ -135,7 +137,9 @@ export default function Despesas() {
               <div className="space-y-6">
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                    <DynamicIcon name="💸" className="h-6 w-6 text-destructive" />
+                    <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                      <DynamicIcon name="TrendingDown" className="h-6 w-6 text-destructive" />
+                    </div>
                     Nova Despesa
                   </h2>
                   {formContent}

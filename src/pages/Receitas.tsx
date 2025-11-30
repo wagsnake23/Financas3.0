@@ -236,7 +236,9 @@ export default function Receitas() {
     <form onSubmit={handleSubmitOneOff} className={cn(isMobile ? "space-y-3" : "space-y-4")}>
       {isMobile && ( // Título para mobile
         <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-success")}>
-          <DynamicIcon name="💰" className="h-6 w-6" />
+          <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
+            <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
+          </div>
           Nova Receita
         </h2>
       )}
@@ -429,7 +431,9 @@ export default function Receitas() {
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
-                    <DynamicIcon name="💰" className="h-6 w-6 text-success" /> {/* Ícone de emoji */}
+                    <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
+                      <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
+                    </div>
                     Nova Receita
                   </h2>
                   {oneOffFormContent}
