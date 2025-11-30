@@ -145,7 +145,7 @@ export default function Dashboard() { // Alterado para export default function
   return (
     <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
       <Navigation />
-      <main className={cn("container mx-auto", isMobile ? "pt-8 px-4" : "py-8 max-w-[1200px] px-6")}>
+      <main className={cn("container mx-auto", isMobile ? "pt-4 px-4" : "py-8 max-w-[1200px] px-6")}> {/* Reduzido pt-8 para pt-4 em mobile */}
         {!isMobile && (
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
