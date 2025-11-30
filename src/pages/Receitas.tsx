@@ -425,7 +425,9 @@ export default function Receitas() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
                 <>
-                  {oneOffFormContent} {/* Directly render the form content */}
+                  <Card className="w-full !max-w-full flex-shrink-0 p-4 rounded-xl shadow-none border-none">
+                    {oneOffFormContent}
+                  </Card>
                   <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
                 </>
               ) : (
