@@ -167,21 +167,22 @@ export default function Auth() {
         duration: toastDuration, style: toastErrorStyle
       });
     } else if (data.user) {
-      // All new users default to 'conferente' role
+      // Attempt to assign the role, but don't block the success message or change it based on this error
       const { error: roleError } = await supabase
         .from("user_roles")
         .insert({ user_id: data.user.id, role: "conferente" });
 
       if (roleError) {
-        toast.error("Conta criada, mas houve erro ao definir permissões. Por favor, ative sua conta pelo e-mail.", { duration: toastDuration, style: toastErrorStyle });
-      } else {
-        toast.success("Conta criada com sucesso! Por favor, ative sua conta pelo e-mail.", {
-          style: toastSuccessStyle,
-          duration: toastDuration
-        });
+        console.error("Erro ao definir permissões para o novo usuário:", roleError.message);
+        // We still show the success message about email activation, but log the role error internally.
       }
-      // After successful signup (even if role assignment had issues),
-      // clear the form and switch to login view, prompting email activation.
+      
+      toast.success("Conta criada com sucesso! Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.", {
+        style: toastSuccessStyle,
+        duration: toastDuration
+      });
+      
+      // After successful signup, clear the form and switch to login view.
       setEmail("");
       setPassword("");
       setConfirmPassword("");
