@@ -426,8 +426,10 @@ export default function Receitas() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
                 <>
-                  {oneOffFormContent} {/* Removido o Card aqui */}
-                  <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} /> {/* Alterado mt-2 para mt-0 para mobile, passando a prop user */}
+                  <Card className="w-full !max-w-full flex-shrink-0 p-4 rounded-xl shadow-none border-none">
+                    {oneOffFormContent}
+                  </Card>
+                  <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
                 </>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
