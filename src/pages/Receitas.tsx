@@ -298,13 +298,13 @@ export default function Receitas() {
               }}
             >
               <SelectTrigger className={cn(
-                "rounded-xl", 
+                "rounded-xl w-full", // Adicionado w-full aqui
                 isMobile && "h-9 text-sm", 
                 getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
               )}>
                 <SelectValue placeholder="Selecione a subcategoria de receita" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="w-full"> {/* Adicionado w-full aqui */}
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
                 {incomeSubcategories.length === 0 ? (
                   <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
@@ -424,10 +424,10 @@ export default function Receitas() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {isMobile ? (
-                <>
+                <div className="w-full"> {/* Adicionado um wrapper div com w-full para o formulário em mobile */}
                   {oneOffFormContent} {/* Removido o Card aqui */}
                   <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} /> {/* Alterado mt-2 para mt-0 para mobile, passando a prop user */}
-                </>
+                </div>
               ) : (
                 <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
