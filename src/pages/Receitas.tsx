@@ -289,39 +289,38 @@ export default function Receitas() {
 
         <div>
           <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
-          <div className="flex gap-2">
-            <Select 
-              value={tipoReceitaId} 
-              onValueChange={(value) => {
-                setTipoReceitaId(value);
-                setValidationErrors(prev => ({ ...prev, tipoReceitaId: false })); // Limpa erro ao mudar
-              }}
-            >
-              <SelectTrigger className={cn(
-                "w-full rounded-xl", 
-                isMobile && "h-9 text-sm", 
-                getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
-              )}>
-                <SelectValue placeholder="Selecione a subcategoria de receita" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
-                {incomeSubcategories.length === 0 ? (
-                  <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
-                ) : (
-                  incomeSubcategories
-                    .map((tipo) => (
-                      <SelectItem key={tipo.id} value={tipo.id} className={cn(isMobile && "text-sm")}>
-                        <span className="flex items-center gap-2">
-                          <span>{tipo.icone}</span>
-                          <span>{tipo.nome}</span>
-                        </span>
-                      </SelectItem>
-                    ))
-                )}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Removed the div with className="flex gap-2" */}
+          <Select 
+            value={tipoReceitaId} 
+            onValueChange={(value) => {
+              setTipoReceitaId(value);
+              setValidationErrors(prev => ({ ...prev, tipoReceitaId: false })); // Limpa erro ao mudar
+            }}
+          >
+            <SelectTrigger className={cn(
+              "w-full rounded-xl", 
+              isMobile && "h-9 text-sm", 
+              getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
+            )}>
+              <SelectValue placeholder="Selecione a subcategoria de receita" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria de receita</SelectItem>
+              {incomeSubcategories.length === 0 ? (
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de receita disponível</SelectItem>
+              ) : (
+                incomeSubcategories
+                  .map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id} className={cn(isMobile && "text-sm")}>
+                      <span className="flex items-center gap-2">
+                        <span>{tipo.icone}</span>
+                        <span>{tipo.nome}</span>
+                      </span>
+                    </SelectItem>
+                  ))
+              )}
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
