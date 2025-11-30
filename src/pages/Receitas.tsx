@@ -243,7 +243,7 @@ export default function Receitas() {
         </h2>
       )}
       <div className="space-y-2">
-        <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
+        {/* Removed Label for "Tipo de Lançamento" */}
         <ToggleGroup 
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
@@ -391,7 +391,7 @@ export default function Receitas() {
             status={status}
             setStatus={setStatus}
             isMobile={isMobile}
-            className={cn(isMobile && "w-full")}
+            // Removed className from here as it's not needed for this component
           />
         )}
 
