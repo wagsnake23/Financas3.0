@@ -9,11 +9,14 @@ interface TransactionStatusToggleProps {
   isMobile: boolean;
 }
 
-export const TransactionStatusToggle: React.FC<
-  TransactionStatusToggleProps
-> = ({ isPaid, setIsPaid, isMobile }) => {
+export const TransactionStatusToggle: React.FC<TransactionStatusToggleProps> = ({
+  isPaid,
+  setIsPaid,
+  isMobile,
+}) => {
   return (
     <div className="space-y-2">
+      <Label className={cn("text-sm font-medium", isMobile && "text-xs")}>Status desta despesa:</Label>
       <RadioGroup
         value={isPaid ? "paid" : "pending"}
         onValueChange={(value) => setIsPaid(value === "paid")}

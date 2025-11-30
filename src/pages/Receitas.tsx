@@ -298,7 +298,7 @@ export default function Receitas() {
               }}
             >
               <SelectTrigger className={cn(
-                "w-full rounded-xl", // Adicionado w-full aqui para garantir que o Select ocupe toda a largura disponível
+                "rounded-xl", 
                 isMobile && "h-9 text-sm", 
                 getBorderClass({ isInvalid: validationErrors.tipoReceitaId, isValid: validationErrors.tipoReceitaId === false })
               )}>
