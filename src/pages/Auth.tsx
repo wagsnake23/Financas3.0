@@ -173,14 +173,21 @@ export default function Auth() {
         .insert({ user_id: data.user.id, role: "conferente" });
 
       if (roleError) {
-        toast.error("Conta criada, mas houve erro ao definir permissões", { duration: toastDuration, style: toastErrorStyle });
+        toast.error("Conta criada, mas houve erro ao definir permissões. Por favor, ative sua conta pelo e-mail.", { duration: toastDuration, style: toastErrorStyle });
       } else {
-        toast.success("Conta criada com sucesso!", {
+        toast.success("Conta criada com sucesso! Por favor, ative sua conta pelo e-mail.", {
           style: toastSuccessStyle,
           duration: toastDuration
         });
-        navigate("/");
       }
+      // After successful signup (even if role assignment had issues),
+      // clear the form and switch to login view, prompting email activation.
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setNome("");
+      setValidationErrors({});
+      setViewMode("login"); // Switch back to login view
     }
 
     setLoading(false);
