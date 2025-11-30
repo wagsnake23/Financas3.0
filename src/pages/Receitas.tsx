@@ -233,7 +233,7 @@ export default function Receitas() {
   };
 
   const oneOffFormContent = (
-    <form onSubmit={handleSubmitOneOff} className={cn("w-full", isMobile ? "space-y-3" : "space-y-4")}>
+    <form onSubmit={handleSubmitOneOff} className={cn("w-full", isMobile ? "space-y-3 max-w-sm" : "space-y-4")}>
       {isMobile && ( // Título para mobile
         <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-success")}>
           <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
