@@ -412,7 +412,7 @@ export default function Receitas() {
     return (
       <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
           <Navigation />
-          <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
+          <div className={cn("space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}> {/* Removed mx-auto */}
             {!isMobile && (
               <div className="flex items-center justify-between">
                 <div>
@@ -431,7 +431,7 @@ export default function Receitas() {
                   <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
                 </>
               ) : (
-                <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+                <Card className="p-6 rounded-xl shadow-sm"> {/* Removed max-w-[700px] and mx-auto */}
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
                     <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
                       <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
