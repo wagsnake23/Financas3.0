@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } => "@/components/ui/card";
+import { Card } from "@/components/ui/card"; // Corrected line
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -18,8 +18,8 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react"; // Linha corrigida aqui
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
+import { CalendarIcon } from "lucide-react";
+import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
-import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
+import CurrencyBR from "@/components/ui/currency-br";
 
 import { Database } from "@/integrations/supabase/types";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
@@ -36,7 +36,7 @@ type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
@@ -53,7 +53,7 @@ export default function Receitas() {
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id],
@@ -111,26 +111,26 @@ export default function Receitas() {
       return;
     }
     
-    if (valor === undefined || valor <= 0) { // Adicionado validação para valor > 0
+    if (valor === undefined || valor <= 0) {
       newErrors.valor = true;
       hasError = true;
     } else {
-      newErrors.valor = false; // Mark as valid
+      newErrors.valor = false;
     }
     if (!data) {
       newErrors.data = true;
       hasError = true;
     } else {
-      newErrors.data = false; // Mark as valid
+      newErrors.data = false;
     }
     if (tipoReceitaId === UNSELECTED_VALUE) {
       newErrors.tipoReceitaId = true;
       hasError = true;
     } else {
-      newErrors.tipoReceitaId = false; // Mark as valid
+      newErrors.tipoReceitaId = false;
     }
 
-    setValidationErrors(newErrors); // Atualiza os erros de validação
+    setValidationErrors(newErrors);
 
     if (hasError) {
       toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
@@ -139,7 +139,7 @@ export default function Receitas() {
     }
 
     const formattedDate = data 
-      ? formatInTimeZone(data, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
+      ? formatInTimeZone(data, TARGET_TIMEZONE, 'yyyy-MM-dd')
       : "";
 
     let masterRevenueId: string | null = null;
@@ -147,16 +147,15 @@ export default function Receitas() {
     try {
       if (isRecurring) {
         const recurrenceDay = getDate(data);
-        // 1. Create the master recurring revenue entry (this will be the first occurrence)
         const { data: masterData, error: masterError } = await supabase
           .from("receitas")
           .insert({
             user_id: user?.id,
             tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
             valor: valor as number,
-            data: formattedDate, // Data da primeira ocorrência
+            data: formattedDate,
             descricao,
-            status: 'Prevista', // Master é sempre 'Prevista'
+            status: 'Prevista',
             is_recurring_master: true,
             recurrence_day: recurrenceDay,
           })
@@ -166,7 +165,6 @@ export default function Receitas() {
         if (masterError) throw masterError;
         masterRevenueId = masterData.id;
 
-        // Atualiza o registro mestre para referenciar a si mesmo como recurrence_id
         const { error: updateMasterError } = await supabase
           .from("receitas")
           .update({ recurrence_id: masterRevenueId })
@@ -174,16 +172,15 @@ export default function Receitas() {
         
         if (updateMasterError) throw updateMasterError;
 
-        // 2. Call RPC to generate ALL occurrences, including the first one (which is the master itself)
         const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
           p_user_id: user?.id,
           p_transaction_type: 'income',
           p_master_id: masterRevenueId,
-          p_first_occurrence_date: formattedDate, // Already a 'YYYY-MM-DD' string
+          p_first_occurrence_date: formattedDate,
           p_monthly_amount: valor as number,
           p_category_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
           p_description: descricao,
-          p_status: 'Prevista', // Required enum value
+          p_status: 'Prevista',
           p_recurrence_day: recurrenceDay,
           p_total_installments: RECURRING_INSTALLMENTS_COUNT,
           p_forma_pagamento: null,
@@ -194,7 +191,6 @@ export default function Receitas() {
         if (rpcError) throw rpcError;
 
       } else {
-        // Create a one-off revenue entry (as before)
         const newRevenueData = {
           user_id: user?.id,
           tipo_receita_id: tipoReceitaId === UNSELECTED_VALUE ? null : tipoReceitaId,
@@ -221,7 +217,7 @@ export default function Receitas() {
       setDescricao("");
       setStatus('Pendente');
       setIsRecurring(false);
-      setValidationErrors({}); // Limpa os erros após o sucesso
+      setValidationErrors({});
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
 
     } catch (error: any) {
@@ -234,7 +230,7 @@ export default function Receitas() {
 
   const oneOffFormContent = (
     <form onSubmit={handleSubmitOneOff} className={cn("w-full", isMobile ? "space-y-3 w-[95%]" : "space-y-4")}>
-      {isMobile && ( // Título para mobile
+      {isMobile && (
         <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-success")}>
           <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
             <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
@@ -243,7 +239,6 @@ export default function Receitas() {
         </h2>
       )}
       <div className="space-y-2">
-        {/* Removed Label for "Tipo de Lançamento" */}
         <ToggleGroup 
           type="single" 
           value={isRecurring ? "recorrente" : "avulsa"} 
@@ -256,7 +251,7 @@ export default function Receitas() {
               "flex-1 rounded-xl flex items-center justify-center border",
               "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-              isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
+              isMobile && "h-8 py-0.5 text-sm"
             )}
           >
             <DynamicIcon 
@@ -273,7 +268,7 @@ export default function Receitas() {
                 "flex-1 rounded-xl flex items-center justify-center border",
                 "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
                 "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-                isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
+                isMobile && "h-8 py-0.5 text-sm"
               )}
             >
               <DynamicIcon 
@@ -289,12 +284,11 @@ export default function Receitas() {
 
         <div>
           <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>Subcategoria de Receita</Label>
-          {/* Removed the div with className="flex gap-2" */}
           <Select 
             value={tipoReceitaId} 
             onValueChange={(value) => {
               setTipoReceitaId(value);
-              setValidationErrors(prev => ({ ...prev, tipoReceitaId: false })); // Limpa erro ao mudar
+              setValidationErrors(prev => ({ ...prev, tipoReceitaId: false }));
             }}
           >
             <SelectTrigger className={cn(
@@ -336,7 +330,7 @@ export default function Receitas() {
                   getBorderClass({ isInvalid: validationErrors.data, isValid: validationErrors.data === false })
                 )}
               >
-                <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
+                <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
                 {data ? format(data, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
               </Button>
             </PopoverTrigger>
@@ -347,7 +341,7 @@ export default function Receitas() {
                 onSelect={(date) => {
                   setData(date);
                   setIsCalendarOpen(false);
-                  setValidationErrors(prev => ({ ...prev, data: false })); // Limpa erro ao selecionar
+                  setValidationErrors(prev => ({ ...prev, data: false }));
                 }}
                 initialFocus
                 locale={ptBR}
@@ -364,7 +358,7 @@ export default function Receitas() {
             value={valor}
             onChange={(v) => {
               setValor(v);
-              setValidationErrors(prev => ({ ...prev, valor: false })); // Limpa erro ao digitar
+              setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             className={cn(
               "w-full rounded-xl", 
@@ -387,13 +381,11 @@ export default function Receitas() {
         </div>
 
         {!isRecurring && (
-          <div className="space-y-2"> {/* Adicionado um div para envolver o RevenueStatusToggle e o Label */}
-            {/* <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status desta receita:</Label> */} {/* REMOVIDO */}
+          <div className="space-y-2">
             <RevenueStatusToggle
               status={status}
               setStatus={setStatus}
               isMobile={isMobile}
-              // Removed className from here as it's not needed for this component
             />
           </div>
         )}
@@ -415,7 +407,7 @@ export default function Receitas() {
     return (
       <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
           <Navigation />
-          <div className={cn("space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}> {/* Removed mx-auto */}
+          <div className={cn("space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
             {!isMobile && (
               <div className="flex items-center justify-between">
                 <div>
@@ -434,8 +426,8 @@ export default function Receitas() {
                   <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
                 </>
               ) : (
-                <Card className="p-6 rounded-xl shadow-sm"> {/* Removed max-w-[700px] and mx-auto */}
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"> {/* Adicionado flex items-center gap-2 */}
+                <Card className="p-6 rounded-xl shadow-sm">
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                     <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
                       <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
                     </div>
@@ -455,7 +447,6 @@ export default function Receitas() {
               )}
             </div>
           </div>
-          {/* O Footer para desktop foi movido para cá, dentro do div principal do componente Receitas */}
           {!isMobile && <Footer isMobile={isMobile} user={user} />}
       </div>
     );
