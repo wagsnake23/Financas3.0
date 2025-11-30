@@ -279,12 +279,12 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         </Popover>
       </div>
 
-      {/* Campo de Descrição re-adicionado */}
+      {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
-          value={description}
+          value={description} 
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
           rows={3}
