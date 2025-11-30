@@ -288,6 +288,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           placeholder="Adicione uma descrição..."
           rows={3}
           className={cn("rounded-xl", isMobile && "text-sm")}
+          disabled={false} // Explicitly ensure it's not disabled
         />
       </div>
 
