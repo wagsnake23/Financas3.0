@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Card } => "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -387,12 +387,15 @@ export default function Receitas() {
         </div>
 
         {!isRecurring && (
-          <RevenueStatusToggle
-            status={status}
-            setStatus={setStatus}
-            isMobile={isMobile}
-            // Removed className from here as it's not needed for this component
-          />
+          <div className="space-y-2"> {/* Adicionado um div para envolver o RevenueStatusToggle e o Label */}
+            {/* <Label htmlFor="status" className={cn(isMobile && "text-xs")}>Status desta receita:</Label> */} {/* REMOVIDO */}
+            <RevenueStatusToggle
+              status={status}
+              setStatus={setStatus}
+              isMobile={isMobile}
+              // Removed className from here as it's not needed for this component
+            />
+          </div>
         )}
 
         <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} disabled={loading}>
