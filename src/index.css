@@ -71,7 +71,7 @@ All colors MUST be HSL.
     --soft-purple: 280 60% 90%; /* Nova cor roxo suave */
     --app-purple: 270 70% 58%; /* NOVO: Roxo mais forte para botões */
 
-    --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD */
+    --lancamentos-mobile-bg: 0 0% 100%; /* Alterado para branco */
   }
 
   .dark {
