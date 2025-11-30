@@ -279,7 +279,8 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         </Popover>
       </div>
 
-      {/* Campo de Descrição (reinserido abaixo da Data) */}
+      {/* REMOVIDO: Campo de Descrição */}
+      {/*
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
         <Textarea
@@ -289,9 +290,10 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           placeholder="Adicione uma descrição..."
           rows={3}
           className={cn("rounded-xl", isMobile && "text-sm")}
-          disabled={false} // Garantindo que esteja editável
+          disabled={false} // Explicitly ensure it's not disabled
         />
       </div>
+      */}
 
       <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
         <Label className={cn(isMobile && "text-xs")}>Status</Label>
