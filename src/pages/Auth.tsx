@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Card } => "@/components/ui/card";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -179,7 +179,7 @@ export default function Auth() {
       
       toast.success("Conta criada com sucesso! Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.", {
         style: toastSuccessStyle,
-        duration: toastDuration
+        duration: 4000 // Aumentado para 4 segundos
       });
       
       // After successful signup, clear the form and switch to login view.
