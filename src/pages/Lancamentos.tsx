@@ -72,7 +72,6 @@ const Lancamentos = () => {
       )}
     >
       <Navigation />
-
       <main
         className={cn(
           "container mx-auto",
@@ -80,9 +79,7 @@ const Lancamentos = () => {
         )}
       >
         {!isMobile && (
-          <h1 className="text-3xl font-bold mb-6">
-            Histórico de Lançamentos
-          </h1>
+          <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
         )}
 
         <MonthNavigator
@@ -115,26 +112,31 @@ const Lancamentos = () => {
           onToggleTransactionStatus={handleOptimisticToggleStatus}
         />
       </main>
-
-      <Footer isMobile={isMobile} className={cn(isMobile && "mt-0 py-2")} user={user} /> {/* Passando a prop user */}
-
+      <Footer
+        isMobile={isMobile}
+        className={cn(isMobile && "mt-0 py-0")}
+        user={user}
+      />{" "}
+      {/* Passando a prop user */}
       {isEditModalOpen && loadingEditData && (
         <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       )}
-
-      <Dialog
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-      >
-        <DialogContent className={cn(
-          isMobile ? "w-full dialog-mobile" : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto"
-        )}>
-          <DialogHeader className={cn(isMobile && "absolute top-4 left-4 right-12 text-left")}>
-            <DialogTitle>
-              ✏️ Editar Lançamento
-            </DialogTitle>
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent
+          className={cn(
+            isMobile
+              ? "w-full dialog-mobile"
+              : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto"
+          )}
+        >
+          <DialogHeader
+            className={cn(
+              isMobile && "absolute top-4 left-4 right-12 text-left"
+            )}
+          >
+            <DialogTitle>✏️ Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (

@@ -45,7 +45,9 @@ export default function Despesas() {
     isLoading: isLoadingExpenseData,
   } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading);
 
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
+  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<
+    AppCategory[]
+  >({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
@@ -84,7 +86,9 @@ export default function Despesas() {
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando Despesas...</div>
+        <div className="animate-pulse text-muted-foreground">
+          Carregando Despesas...
+        </div>
       </div>
     );
   }
@@ -104,64 +108,91 @@ export default function Despesas() {
   );
 
   return (
-    <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
-        <Navigation />
-        {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
-        <div className={cn("mx-auto space-y-6 flex-grow", isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8")}>
-          {/* (b) Header com <h1>Despesas */}
-          {!isMobile && (
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold">Despesas</h1>
-                <p className="text-muted-foreground">Registre suas saídas financeiras</p>
-              </div>
+    <div
+      className={cn(
+        "flex flex-col min-h-screen bg-background pt-16",
+        isMobile && "bg-lancamentos-mobile-bg"
+      )}
+    >
+      <Navigation />
+      {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
+      <div
+        className={cn(
+          "mx-auto space-y-6 flex-grow",
+          isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8"
+        )}
+      >
+        {/* (b) Header com <h1>Despesas */}
+        {!isMobile && (
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">Despesas</h1>
+              <p className="text-muted-foreground">
+                Registre suas saídas financeiras
+              </p>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* (c) Card com título “Nova Despesa” e o formulário (fora da grid) */}
-          {isMobile ? (
-            <>
-              <h2 className={cn("text-xl font-semibold mb-4 flex items-center gap-2 text-destructive", isMobile && "text-lg mb-4")}>
-                <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                  <DynamicIcon name="TrendingDown" className="h-6 w-6 text-destructive" />
-                </div>
-                Nova Despesa
-              </h2>
-              {formContent}
-              {/* Footer para mobile, com ajuste de padding-y */}
-              <Footer isMobile={isMobile} className={cn(isMobile && "py-2")} user={user} />
-            </>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Novo grid para desktop */}
-              {/* Coluna Esquerda: Formulário e Total de Despesas */}
-              <div className="space-y-6">
-                <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                    <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                      <DynamicIcon name="TrendingDown" className="h-6 w-6 text-destructive" />
-                    </div>
-                    Nova Despesa
-                  </h2>
-                  {formContent}
-                </Card>
-                {/* Card Total de Despesas movido para abaixo do formulário */}
-                <ExpensesDashboard
-                  expenses={expenses}
-                  expenseInstallments={expenseInstallments}
-                  categories={allSubcategories}
-                  isMobile={isMobile}
+        {/* (c) Card com título “Nova Despesa” e o formulário (fora da grid) */}
+        {isMobile ? (
+          <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
+              <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                <DynamicIcon
+                  name="TrendingDown"
+                  className="h-6 w-6 text-destructive"
                 />
               </div>
+              Nova Despesa
+            </h2>
 
-              {/* Coluna Direita: Outros dashboards e resumos */}
-              <div className="space-y-6">
-                {/* Gráfico de barras das Subcategorias por Valor */}
-                <TopExpensesBarChart expenses={expenses} categories={allSubcategories} isMobile={isMobile} className="h-[200px]" />
-              </div>
+            {formContent}
+
+            {/* Footer logo após o botão Salvar */}
+            <Footer isMobile={isMobile} className="pt-2" user={user} />
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            {" "}
+            {/* Novo grid para desktop */}
+            {/* Coluna Esquerda: Formulário e Total de Despesas */}
+            <div className="space-y-6">
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
+                  <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                    <DynamicIcon
+                      name="TrendingDown"
+                      className="h-6 w-6 text-destructive"
+                    />
+                  </div>
+                  Nova Despesa
+                </h2>
+                {formContent}
+              </Card>
+              {/* Card Total de Despesas movido para abaixo do formulário */}
+              <ExpensesDashboard
+                expenses={expenses}
+                expenseInstallments={expenseInstallments}
+                categories={allSubcategories}
+                isMobile={isMobile}
+              />
             </div>
-          )}
-        </div>
-        {!isMobile && <Footer isMobile={isMobile} user={user} />} {/* Mantido para desktop, passando a prop user */}
+            {/* Coluna Direita: Outros dashboards e resumos */}
+            <div className="space-y-6">
+              {/* Gráfico de barras das Subcategorias por Valor */}
+              <TopExpensesBarChart
+                expenses={expenses}
+                categories={allSubcategories}
+                isMobile={isMobile}
+                className="h-[200px]"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      {!isMobile && <Footer isMobile={isMobile} user={user} />}{" "}
+      {/* Mantido para desktop, passando a prop user */}
     </div>
   );
 }
