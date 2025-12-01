@@ -14,7 +14,15 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { useNavigate } from "react-router-dom";
-import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths, subMonths, getYear } from "date-fns"; // Importar getYear
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  addMonths,
+  subMonths,
+  getYear,
+} from "date-fns";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -24,16 +32,17 @@ import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 
-export default function Dashboard() { // Alterado para export default function
+export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  
-  const [selectedMonth, setSelectedMonth] = useState(new Date()); // Este estado agora só controlará StatCards e MonthlyBarChart
 
-  // Buscar TODAS as receitas (não filtradas por mês)
-  const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<Tables<'receitas'>[]>({
-    queryKey: ["allRevenues", user?.id], // Chave de consulta alterada
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+
+  const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<
+    Tables<"receitas">[]
+  >({
+    queryKey: ["allRevenues", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
@@ -47,84 +56,102 @@ export default function Dashboard() { // Alterado para export default function
     enabled: !!user && !authLoading,
   });
 
-  // Buscar TODAS as parcelas de despesas (não filtradas por mês)
-  const { data: allExpenseInstallments = [], isLoading: isLoadingAllExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id' | 'id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master' | 'numero_parcelas'> | null })[] // Adicionado mais campos para reconstrução no dashboard combinado
-  >({
-    queryKey: ["allExpenseInstallments", user?.id], // Chave de consulta alterada
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("despesas_parcelas")
-        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)") // Selecionar mais campos de despesas
-        .filter("despesas.user_id", "eq", user.id)
-        .order("vencimento", { ascending: true });
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user && !authLoading,
-  });
+  const { data: allExpenseInstallments = [], isLoading: isLoadingAllExpenses } =
+    useQuery<
+      (Tables<"despesas_parcelas"> & {
+        despesas: Pick<
+          Tables<"despesas">,
+          | "categoria_id"
+          | "id"
+          | "user_id"
+          | "descricao"
+          | "forma_pagamento"
+          | "tipo_pagamento"
+          | "cartao_id"
+          | "is_recurring_master"
+          | "numero_parcelas"
+        > | null;
+      })[]
+    >({
+      queryKey: ["allExpenseInstallments", user?.id],
+      queryFn: async () => {
+        if (!user?.id) return [];
+        const { data, error } = await supabase
+          .from("despesas_parcelas")
+          .select(
+            "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)"
+          )
+          .filter("despesas.user_id", "eq", user.id)
+          .order("vencimento", { ascending: true });
+        if (error) throw error;
+        return data;
+      },
+      enabled: !!user && !authLoading,
+    });
 
-  // Este hook ainda busca dados filtrados por mês para StatCards e MonthlyBarChart
   const {
     monthlyFilteredTransactions,
     fetchedCategories: allSubcategories,
     cartoes,
     isLoading: isLoadingTransactionsData,
     isLoadingCategories,
-  } = useTransactionsData({ user, selectedMonth, enabled: !!user && !authLoading });
+  } = useTransactionsData({
+    user,
+    selectedMonth,
+    enabled: !!user && !authLoading,
+  });
 
   const stats = useMemo(() => {
     const totalIncome = monthlyFilteredTransactions
-      .filter(t => t.type === "income")
+      .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
-    
+
     const totalExpenses = monthlyFilteredTransactions
-      .filter(t => t.type === "expense")
+      .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
-    
+
     const balance = totalIncome - totalExpenses;
 
     return { totalIncome, totalExpenses, balance };
   }, [monthlyFilteredTransactions]);
 
-  // Calcular total de despesas pagas para o mês atual (usando monthlyFilteredTransactions)
   const totalPaidMonthlyExpenses = useMemo(() => {
     return monthlyFilteredTransactions
-      .filter(t => t.type === "expense" && t.status === "Recebida")
+      .filter((t) => t.type === "expense" && t.status === "Recebida")
       .reduce((sum, t) => sum + t.amount, 0);
   }, [monthlyFilteredTransactions]);
 
-  // NOVO: Calcular totais anuais
   const currentYear = getYear(selectedMonth);
 
   const totalAnnualExpenses = useMemo(() => {
     if (!allExpenseInstallments) return 0;
     return allExpenseInstallments
-      .filter(p => getYear(new Date(p.vencimento)) === currentYear)
+      .filter((p) => getYear(new Date(p.vencimento)) === currentYear)
       .reduce((sum, p) => sum + p.valor_parcela, 0);
   }, [allExpenseInstallments, currentYear]);
 
   const totalAnnualRevenues = useMemo(() => {
     if (!allRevenues) return 0;
     return allRevenues
-      .filter(r => getYear(new Date(r.data)) === currentYear)
+      .filter((r) => getYear(new Date(r.data)) === currentYear)
       .reduce((sum, r) => sum + r.valor, 0);
   }, [allRevenues, currentYear]);
 
+  const isLoading =
+    authLoading ||
+    isLoadingTransactionsData ||
+    isLoadingAllRevenues ||
+    isLoadingAllExpenses ||
+    isLoadingCategories;
 
-  const isLoading = authLoading || isLoadingTransactionsData || isLoadingAllRevenues || isLoadingAllExpenses || isLoadingCategories; // Verificações de loading atualizadas
-
-  // Funções para navegar entre os meses
   const handlePreviousMonth = () => {
-    setSelectedMonth(prev => subMonths(prev, 1));
+    setSelectedMonth((prev) => subMonths(prev, 1));
   };
 
   const handleNextMonth = () => {
-    setSelectedMonth(prev => addMonths(prev, 1));
+    setSelectedMonth((prev) => addMonths(prev, 1));
   };
 
-  // Função para lidar com o clique no mês do gráfico
   const handleMonthClick = (date: Date) => {
     setSelectedMonth(date);
   };
@@ -132,7 +159,9 @@ export default function Dashboard() { // Alterado para export default function
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando Dashboard...</div>
+        <div className="animate-pulse text-muted-foreground">
+          Carregando Dashboard...
+        </div>
       </div>
     );
   }
@@ -143,24 +172,35 @@ export default function Dashboard() { // Alterado para export default function
   };
 
   return (
-    <div className={cn("flex flex-col min-h-screen bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}>
+    <div
+      className={cn(
+        "flex flex-col min-h-screen pt-16",
+        isMobile && "bg-lancamentos-mobile-bg"
+      )}
+      style={{
+        backgroundColor: "#F6FAFF",
+      }}
+    >
       <Navigation />
-      <main className={cn("container mx-auto", isMobile ? "pt-4 px-4" : "py-8 max-w-[1200px] px-6")}> {/* Reduzido pt-8 para pt-4 em mobile */}
+      <main
+        className={cn(
+          "container mx-auto",
+          isMobile ? "pt-4 px-4" : "py-8 max-w-[1200px] px-6"
+        )}
+      >
         {!isMobile && (
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
-        
-        {/* REMOVIDO: MonthNavigator global */}
 
         {isMobile ? (
-          <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
+          <div className="grid grid-cols-1 gap-4">
             <StatCard
               mainStatTitle="Total de Despesas"
               mainStatValue={stats.totalExpenses}
               secondaryStatTitle="Pago este mês"
               secondaryStatValue={totalPaidMonthlyExpenses}
               topRightContent={
-                <MonthNavigatorCompact // Use the new component
+                <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
                   onPreviousMonth={handlePreviousMonth}
                   onNextMonth={handleNextMonth}
@@ -177,19 +217,26 @@ export default function Dashboard() { // Alterado para export default function
                   expenseInstallments={allExpenseInstallments}
                   currentDate={selectedMonth}
                   isMobile={isMobile}
-                  onMonthClick={handleMonthClick} // Passando a função de clique
+                  onMonthClick={handleMonthClick}
                 />
               }
-              annualTotalLabel="Total Anual" // NEW
-              annualTotalValue={totalAnnualExpenses} // NEW
-              neumorphism={true} // Aplicado Neumorphism
+              annualTotalLabel="Total Anual"
+              annualTotalValue={totalAnnualExpenses}
+              neumorphism={true}
             >
-              {/* Ajuste para posicionar o botão na parte inferior */}
               <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
+                <div className={cn("flex justify-end", isMobile && "mt-2")}>
                   <Button
-                    className={cn("btn-3d", "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-topo': '#FF6D6D', '--cor-base': '#E85454' } as React.CSSProperties}
+                    className={cn(
+                      "btn-3d",
+                      "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#FF6D6D",
+                        "--cor-base": "#E85454",
+                      } as React.CSSProperties
+                    }
                     onClick={() => navigate("/despesas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -205,7 +252,7 @@ export default function Dashboard() { // Alterado para export default function
               secondaryStatTitle="Saldo Atual"
               secondaryStatValue={stats.balance}
               topRightContent={
-                <MonthNavigatorCompact // Use the new component
+                <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
                   onPreviousMonth={handlePreviousMonth}
                   onNextMonth={handleNextMonth}
@@ -216,25 +263,32 @@ export default function Dashboard() { // Alterado para export default function
               icon="TrendingUp"
               variant="income"
               isMobile={isMobile}
-              childrenAlignment="start" 
+              childrenAlignment="start"
               chartContent={
                 <MonthlyRevenueBarChart
                   revenues={allRevenues}
                   currentDate={selectedMonth}
                   isMobile={isMobile}
-                  onMonthClick={handleMonthClick} // Passando a função de clique
+                  onMonthClick={handleMonthClick}
                 />
               }
-              annualTotalLabel="Total Anual" // NEW
-              annualTotalValue={totalAnnualRevenues} // NEW
-              neumorphism={true} // Aplicado Neumorphism
+              annualTotalLabel="Total Anual"
+              annualTotalValue={totalAnnualRevenues}
+              neumorphism={true}
             >
-              {/* Ajuste para posicionar o botão na parte inferior */}
               <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}> {/* Alterado mt-auto para mt-2 para mobile */}
-                  <Button 
-                    className={cn("btn-3d", "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-topo': '#38C97C', '--cor-base': '#26A765' } as React.CSSProperties}
+                <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[130px] h-8 px-3 text-xs rounded-xl mb-1 mr-1"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#38C97C",
+                        "--cor-base": "#26A765",
+                      } as React.CSSProperties
+                    }
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -246,12 +300,16 @@ export default function Dashboard() { // Alterado para export default function
 
             <MobileCreditCardExpenses
               cartoes={cartoes}
-              expenseInstallments={allExpenseInstallments} // Passar todas as parcelas para o componente mobile
+              expenseInstallments={allExpenseInstallments}
               allCategories={allSubcategories}
               isMobile={isMobile}
               selectedMonth={selectedMonth}
             />
-            <Footer isMobile={isMobile} className={cn(isMobile && "mt-[-2rem]")} user={user} /> {/* Passando a prop user */}
+            <Footer
+              isMobile={isMobile}
+              className={cn(isMobile && "mt-[-2rem]")}
+              user={user}
+            />
           </div>
         ) : (
           <>
@@ -271,7 +329,7 @@ export default function Dashboard() { // Alterado para export default function
                 variant="income"
                 isMobile={isMobile}
                 topRightContent={
-                  <MonthNavigatorCompact // Use the new component
+                  <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
                     onNextMonth={handleNextMonth}
@@ -284,17 +342,25 @@ export default function Dashboard() { // Alterado para export default function
                     revenues={allRevenues}
                     currentDate={selectedMonth}
                     isMobile={isMobile}
-                    onMonthClick={handleMonthClick} // Passando a função de clique
+                    onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Total Anual" // NEW
-                annualTotalValue={totalAnnualRevenues} // NEW
-                neumorphism={true} // Aplicado Neumorphism
+                annualTotalLabel="Total Anual"
+                annualTotalValue={totalAnnualRevenues}
+                neumorphism={true}
               >
                 <div className="flex justify-end mt-4">
                   <Button
-                    className={cn("btn-3d", "w-auto px-4 h-8 text-xs rounded-xl")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-topo': '#38C97C', '--cor-base': '#26A765' } as React.CSSProperties}
+                    className={cn(
+                      "btn-3d",
+                      "w-auto px-4 h-8 text-xs rounded-xl"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#38C97C",
+                        "--cor-base": "#26A765",
+                      } as React.CSSProperties
+                    }
                     onClick={() => navigate("/receitas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -311,7 +377,7 @@ export default function Dashboard() { // Alterado para export default function
                 secondaryStatTitle="Pago este mês"
                 secondaryStatValue={totalPaidMonthlyExpenses}
                 topRightContent={
-                  <MonthNavigatorCompact // Use the new component
+                  <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
                     onNextMonth={handleNextMonth}
@@ -324,17 +390,25 @@ export default function Dashboard() { // Alterado para export default function
                     expenseInstallments={allExpenseInstallments}
                     currentDate={selectedMonth}
                     isMobile={isMobile}
-                    onMonthClick={handleMonthClick} // Passando a função de clique
+                    onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Total Anual" // NEW
-                annualTotalValue={totalAnnualExpenses} // NEW
-                neumorphism={true} // Aplicado Neumorphism
+                annualTotalLabel="Total Anual"
+                annualTotalValue={totalAnnualExpenses}
+                neumorphism={true}
               >
                 <div className="flex justify-end mt-4">
                   <Button
-                    className={cn("btn-3d", "h-8 px-3 text-xs rounded-xl w-auto px-4")} /* Aplicado btn-3d e mantido classes de tamanho */
-                    style={{ '--cor-topo': '#FF6D6D', '--cor-base': '#E85454' } as React.CSSProperties}
+                    className={cn(
+                      "btn-3d",
+                      "h-8 px-3 text-xs rounded-xl w-auto px-4"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#FF6D6D",
+                        "--cor-base": "#E85454",
+                      } as React.CSSProperties
+                    }
                     onClick={() => navigate("/despesas")}
                   >
                     <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
@@ -344,7 +418,7 @@ export default function Dashboard() { // Alterado para export default function
               </StatCard>
             </div>
 
-            <div className="grid grid-cols-1"> {/* Removido mb-4 */}
+            <div className="grid grid-cols-1">
               <CombinedMonthlyExpensesDashboard
                 allRevenues={allRevenues}
                 allExpenseInstallments={allExpenseInstallments}
@@ -354,14 +428,19 @@ export default function Dashboard() { // Alterado para export default function
               />
             </div>
 
-            <div className="grid grid-cols-1"> {/* Removido mb-4 */}
-              <TotalExpensesCard expenseInstallments={allExpenseInstallments} isMobile={isMobile} />
+            <div className="grid grid-cols-1">
+              <TotalExpensesCard
+                expenseInstallments={allExpenseInstallments}
+                isMobile={isMobile}
+              />
             </div>
 
             <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-              <p className={cn("text-muted-foreground", "font-roboto")}>Mais conteúdo do Dashboard virá aqui.</p>
+              <p className={cn("text-muted-foreground", "font-roboto")}>
+                Mais conteúdo do Dashboard virá aqui.
+              </p>
             </Card>
-            <Footer isMobile={isMobile} className="mt-8" user={user} /> {/* Passando a prop user */}
+            <Footer isMobile={isMobile} className="mt-8" user={user} />
           </>
         )}
       </main>
