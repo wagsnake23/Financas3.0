@@ -317,6 +317,43 @@ html, body {
     from { opacity: 0; transform: translateY(-2px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* Desktop Dialog Adjustments for Edit Form */
+  div[role="dialog"] > div:last-child { /* Targets the DialogContent */
+    max-height: 85vh; /* Define uma altura máxima para o conteúdo do diálogo */
+    padding-top: 1rem !important; /* Reduz o padding superior */
+    padding-bottom: 1rem !important; /* Reduz o padding inferior */
+  }
+
+  div[role="dialog"] > div:last-child form { /* Targets the form within DialogContent */
+    padding-top: 0.5rem !important; /* Reduz o padding superior do formulário */
+    padding-bottom: 0.5rem !important; /* Reduz o padding inferior do formulário */
+  }
+
+  div[role="dialog"] > div:last-child form > div { /* Reduz o espaçamento vertical entre os grupos de campos */
+    margin-bottom: 0.75rem !important;
+  }
+
+  div[role="dialog"] > div:last-child .dialog-header { /* Reduz o padding inferior do cabeçalho do diálogo */
+    padding-bottom: 0.5rem !important;
+  }
+
+  div[role="dialog"] > div:last-child .dialog-footer { /* Reduz o padding superior do rodapé do diálogo */
+    padding-top: 0.75rem !important;
+  }
+
+  div[role="dialog"] > div:last-child input, /* Ajusta a altura de inputs, selects e botões */
+  div[role="dialog"] > div:last-child select,
+  div[role="dialog"] > div:last-child button {
+    height: 2.25rem !important;
+    min-height: 2.25rem !important;
+    padding-top: 0.3rem !important;
+    padding-bottom: 0.3rem !important;
+  }
+
+  div[role="dialog"] > div:last-child textarea { /* Ajusta a altura mínima de textareas */
+    min-height: 4rem !important;
+  }
 }
 
 /* 3D Card Style (previously .card-neumorphism) */
