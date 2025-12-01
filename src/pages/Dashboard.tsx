@@ -229,7 +229,7 @@ export default function Dashboard() {
                   <Button
                     className={cn(
                       "btn-3d",
-                      "w-[130px] h-9 px-3 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed h-8 to h-9, text-xs to text-sm, added font-bold
+                      "w-auto h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-[130px] to w-auto, px-3 to px-4
                     )}
                     style={
                       {
@@ -281,7 +281,7 @@ export default function Dashboard() {
                   <Button
                     className={cn(
                       "btn-3d",
-                      "w-[130px] h-9 px-3 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed h-8 to h-9, text-xs to text-sm, added font-bold
+                      "w-auto h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-[130px] to w-auto, px-3 to px-4
                     )}
                     style={
                       {
@@ -353,7 +353,7 @@ export default function Dashboard() {
                   <Button
                     className={cn(
                       "btn-3d",
-                      "w-auto px-4 h-9 text-sm rounded-xl font-bold" // Changed h-8 to h-9, text-xs to text-sm, added font-bold
+                      "w-auto px-4 h-9 text-sm rounded-xl font-bold"
                     )}
                     style={
                       {
@@ -401,7 +401,7 @@ export default function Dashboard() {
                   <Button
                     className={cn(
                       "btn-3d",
-                      "h-9 px-3 text-sm rounded-xl w-auto px-4 font-bold" // Changed h-8 to h-9, text-xs to text-sm, added font-bold
+                      "w-auto h-9 px-4 text-sm rounded-xl font-bold" // Consolidated px-3 and px-4 to just px-4, ensured w-auto
                     )}
                     style={
                       {
