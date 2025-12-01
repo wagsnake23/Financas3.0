@@ -9,14 +9,14 @@ import { ptBR } from "date-fns/locale";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
-import { Button } from "@/components/ui/button"; // Importar Button
-import { Pencil, Trash2 } from "lucide-react"; // Importar ícones de lápis e lixeira
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash2 } from "lucide-react";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 
 interface TransactionRowProps {
   transaction: Transaction;
-  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado para incluir deleteScope
+  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void;
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<"cartoes">[];
@@ -32,7 +32,7 @@ interface TransactionRowProps {
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
-  onDeleteTransaction, // Adicionado
+  onDeleteTransaction,
   onEditTransaction,
   allCategories,
   cartoes,
@@ -61,7 +61,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         transaction.status === "Cancelada" &&
           "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
       )}
-      // Removido onClick da TableRow para evitar conflito com os botões de ação
+      onClick={isMobile ? () => onEditTransaction(transaction) : undefined} // Reintroduzido onClick condicional
     >
       {/* 📌 DATA */}
       <TableCell
