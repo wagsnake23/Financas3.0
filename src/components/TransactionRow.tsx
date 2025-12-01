@@ -53,10 +53,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     <TableRow
       className={cn(
         "cursor-pointer hover:bg-soft-blue/30",
-
         transaction.status === "Recebida" &&
           "bg-soft-green/30 hover:bg-soft-green/50",
-
         transaction.status === "Cancelada" &&
           "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
       )}
@@ -116,12 +114,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           className={cn(
             "flex items-center justify-center rounded-full cursor-pointer select-none transition-all",
 
-            // Pago → manter o ✓ branco com fundo verde
+            // Pago → ✓ branco mais forte + tamanho maior
             transaction.status === "Recebida" &&
-              "bg-[#44E37F] border border-[#44E37F] text-white font-black" +
+              "bg-[#44E37F] border border-[#44E37F] text-white font-extrabold" +
                 (isMobile
-                  ? " h-[17px] w-[17px] text-[8px]"
-                  : " h-[21px] w-[21px] text-[10px]"),
+                  ? " h-[17px] w-[17px] text-[10px]"
+                  : " h-[21px] w-[21px] text-[12px]"),
 
             // Pendente → só borda vermelha, fundo transparente e sem ícone
             (transaction.status === "Pendente" ||
