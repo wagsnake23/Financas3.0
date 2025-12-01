@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
-import { TopExpensesBarChart } from "@/components/TopExpensesBarChart"; // NOVO: Importar TopExpensesBarChart
+import DynamicIcon from "@/components/DynamicIcon";
+import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
 
 interface Cartao {
   id: string;
@@ -36,7 +36,7 @@ export default function Despesas() {
   const isMobile = useIsMobile();
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
-  const [isRecurring, setIsRecurring] = useState(false); // Novo estado para o toggle
+  const [isRecurring, setIsRecurring] = useState(false);
 
   const {
     allSubcategories,
@@ -93,7 +93,6 @@ export default function Despesas() {
     );
   }
 
-  // O formContent agora contém APENAS o formulário, sem o título
   const formContent = (
     <ExpenseForm
       user={user}
@@ -115,14 +114,15 @@ export default function Despesas() {
       )}
     >
       <Navigation />
-      {/* Container interno para o conteúdo, remover background explícito para mobile aqui */}
+
+      {/* CONTAINER AJUSTADO */}
       <div
         className={cn(
-          "mx-auto space-y-6 flex-grow",
+          "mx-auto space-y-6",
+          !isMobile && "flex-grow", // flex-grow apenas no desktop
           isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8"
         )}
       >
-        {/* (b) Header com <h1>Despesas */}
         {!isMobile && (
           <div className="flex items-center justify-between">
             <div>
@@ -134,7 +134,6 @@ export default function Despesas() {
           </div>
         )}
 
-        {/* (c) Card com título “Nova Despesa” e o formulário (fora da grid) */}
         {isMobile ? (
           <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
             <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
@@ -149,14 +148,10 @@ export default function Despesas() {
 
             {formContent}
 
-            {/* Footer logo após o botão Salvar */}
             <Footer isMobile={isMobile} className="pt-2" user={user} />
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            {" "}
-            {/* Novo grid para desktop */}
-            {/* Coluna Esquerda: Formulário e Total de Despesas */}
             <div className="space-y-6">
               <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
@@ -170,7 +165,7 @@ export default function Despesas() {
                 </h2>
                 {formContent}
               </Card>
-              {/* Card Total de Despesas movido para abaixo do formulário */}
+
               <ExpensesDashboard
                 expenses={expenses}
                 expenseInstallments={expenseInstallments}
@@ -178,9 +173,8 @@ export default function Despesas() {
                 isMobile={isMobile}
               />
             </div>
-            {/* Coluna Direita: Outros dashboards e resumos */}
+
             <div className="space-y-6">
-              {/* Gráfico de barras das Subcategorias por Valor */}
               <TopExpensesBarChart
                 expenses={expenses}
                 categories={allSubcategories}
@@ -191,8 +185,8 @@ export default function Despesas() {
           </div>
         )}
       </div>
-      {!isMobile && <Footer isMobile={isMobile} user={user} />}{" "}
-      {/* Mantido para desktop, passando a prop user */}
+
+      {!isMobile && <Footer isMobile={isMobile} user={user} />}
     </div>
   );
 }
