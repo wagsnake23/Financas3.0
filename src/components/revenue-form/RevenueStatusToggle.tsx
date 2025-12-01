@@ -21,20 +21,20 @@ export const RevenueStatusToggle: React.FC<RevenueStatusToggleProps> = ({
         onValueChange={(value) => setStatus(value)}
         className="flex items-center justify-center gap-6"
       >
-        {/* RECEBIDA */}
+        {/* RECEBIDA (Pago) */}
         <div className="flex items-center gap-2">
           <RadioGroupItem
             value="Recebida"
             id="status-received"
             className={cn(
-              isMobile && "h-3.5 w-3.5",
+              isMobile ? "h-[17px] w-[17px]" : "h-[21px] w-[21px]",
               "peer appearance-none rounded-full border border-success/40",
               "ring-offset-background focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2",
-              "data-[state=checked]:bg-[#4EF58D]",
-              "data-[state=checked]:border-[#4EF58D]",
+              // Fundo verde e ✓ central
+              "data-[state=checked]:bg-[#44E37F]",
+              "data-[state=checked]:border-[#44E37F]",
               "data-[state=checked]:after:content-['✓'] data-[state=checked]:after:text-white",
-              "data-[state=checked]:after:text-[11px]",
-              "data-[state=checked]:after:font-extrabold",
+              "data-[state=checked]:after:text-[11px] data-[state=checked]:after:font-extrabold",
               "data-[state=checked]:after:flex data-[state=checked]:after:items-center data-[state=checked]:after:justify-center"
             )}
           />
@@ -56,14 +56,15 @@ export const RevenueStatusToggle: React.FC<RevenueStatusToggleProps> = ({
             value="Pendente"
             id="status-pending"
             className={cn(
-              isMobile && "h-3.5 w-3.5",
-              "peer appearance-none rounded-full border border-destructive/40",
+              isMobile ? "h-[17px] w-[17px]" : "h-[21px] w-[21px]",
+              "peer appearance-none rounded-full border border-destructive/40 bg-white",
               "ring-offset-background focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2",
+
+              // Fundo vermelho + ✓ branco NEGRITO quando marcado
               "data-[state=checked]:bg-[#FF8A8A]",
               "data-[state=checked]:border-[#FF8A8A]",
               "data-[state=checked]:after:content-['✓'] data-[state=checked]:after:text-white",
-              "data-[state=checked]:after:text-[11px]",
-              "data-[state=checked]:after:font-extrabold",
+              "data-[state=checked]:after:text-[11px] data-[state=checked]:after:font-extrabold",
               "data-[state=checked]:after:flex data-[state=checked]:after:items-center data-[state=checked]:after:justify-center"
             )}
           />
