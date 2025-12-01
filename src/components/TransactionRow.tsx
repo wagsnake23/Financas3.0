@@ -9,12 +9,14 @@ import { ptBR } from "date-fns/locale";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
+import { Button } from "@/components/ui/button"; // Importar Button
+import { Pencil, Trash2 } from "lucide-react"; // Importar ícones de lápis e lixeira
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 
 interface TransactionRowProps {
   transaction: Transaction;
-  onDeleteTransaction: (id: string, type: "income" | "expense") => void;
+  onDeleteTransaction: (id: string, type: "income" | "expense", deleteScope: "thisMonth" | "thisMonthForward" | "all" | "oneOff") => void; // Atualizado para incluir deleteScope
   onEditTransaction: (transaction: Transaction) => void;
   allCategories: AppCategory[];
   cartoes: Tables<"cartoes">[];
@@ -30,6 +32,7 @@ interface TransactionRowProps {
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
   transaction,
+  onDeleteTransaction, // Adicionado
   onEditTransaction,
   allCategories,
   cartoes,
@@ -58,7 +61,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         transaction.status === "Cancelada" &&
           "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
       )}
-      onClick={() => onEditTransaction(transaction)}
+      // Removido onClick da TableRow para evitar conflito com os botões de ação
     >
       {/* 📌 DATA */}
       <TableCell
@@ -71,6 +74,19 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           locale: ptBR,
         })}
       </TableCell>
+
+      {/* 📌 TIPO (Receita/Despesa) */}
+      {!isMobile && (
+        <TableCell className="py-2 px-2 text-center">
+          <DynamicIcon
+            name={transaction.type === "income" ? "ArrowUp" : "ArrowDown"}
+            className={cn(
+              "h-4 w-4",
+              transaction.type === "income" ? "text-success" : "text-destructive"
+            )}
+          />
+        </TableCell>
+      )}
 
       {/* 📌 SUBCATEGORIA */}
       <TableCell
@@ -87,6 +103,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         )}
         {categoryName}
       </TableCell>
+
+      {/* 📌 DESCRIÇÃO */}
+      {!isMobile && (
+        <TableCell className="py-2 px-2 text-left">
+          {transaction.description || "-"}
+        </TableCell>
+      )}
 
       {/* 📌 VALOR */}
       <TableCell
@@ -108,7 +131,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       >
         <div
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Evita que o clique na linha seja acionado
             onToggleStatus(transaction.id, transaction.type, newStatus);
           }}
           className={cn(
@@ -131,6 +154,37 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           {transaction.status === "Recebida" ? "✓" : ""}
         </div>
       </TableCell>
+
+      {/* 📌 AÇÕES (Editar/Excluir) */}
+      {!isMobile && (
+        <TableCell className="py-2 px-2 text-center">
+          <div className="flex items-center justify-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation(); // Evita que o clique na linha seja acionado
+                onEditTransaction(transaction);
+              }}
+              className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation(); // Evita que o clique na linha seja acionado
+                // Para a exclusão, o escopo será determinado no modal de confirmação
+                onDeleteTransaction(transaction.id, transaction.type, "oneOff"); // Passa "oneOff" como default, será ajustado no modal
+              }}
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
