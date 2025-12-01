@@ -1,7 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Check } from "lucide-react";
 
 interface TransactionStatusToggleProps {
   isPaid: boolean;
@@ -13,64 +13,81 @@ export const TransactionStatusToggle: React.FC<
   TransactionStatusToggleProps
 > = ({ isPaid, setIsPaid, isMobile }) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full flex justify-center">
       <RadioGroup
         value={isPaid ? "paid" : "pending"}
         onValueChange={(value) => setIsPaid(value === "paid")}
-        className="flex items-center justify-center gap-6"
+        className="flex items-center gap-8"
       >
-        <div className="flex items-center space-x-2">
+        {/* === PAGO === */}
+        <label
+          htmlFor="status-paid"
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <RadioGroupItem
             value="paid"
             id="status-paid"
             className={cn(
-              isMobile && "h-3.5 w-3.5",
-              "peer",
-              // Borda verde quando selecionado
-              "data-[state=checked]:border-success",
-              // Bolinha interna verde sólida
-              "data-[state=checked]:after:bg-success",
-              // Anel do foco também verde
-              "data-[state=checked]:ring-success"
-            )}
-          />
-          <Label
-            htmlFor="status-paid"
-            className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-success peer-data-[state=checked]:font-bold"
+              "relative flex items-center justify-center transition-all",
+              "w-[18px] h-[18px] rounded-full border",
+              isPaid
+                ? "bg-[#25D366] border-[#25D366]"
+                : "border-gray-400 bg-white"
             )}
           >
-            Pago!
-          </Label>
-        </div>
-        <div className="flex items-center space-x-2">
+            {isPaid && (
+              <Check
+                className="absolute text-white w-[13px] h-[13px]"
+                strokeWidth={4}
+              />
+            )}
+          </RadioGroupItem>
+
+          <span
+            className={cn(
+              "text-sm font-extrabold",
+              isPaid ? "text-[#1DA554]" : "text-gray-500",
+              isMobile && "text-xs"
+            )}
+          >
+            Pago
+          </span>
+        </label>
+
+        {/* === PENDENTE === */}
+        <label
+          htmlFor="status-pending"
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <RadioGroupItem
             value="pending"
             id="status-pending"
             className={cn(
-              isMobile && "h-3.5 w-3.5",
-              "peer",
-              // Borda vermelha quando selecionado
-              "data-[state=checked]:border-destructive",
-              // Bolinha interna vermelha sólida
-              "data-[state=checked]:after:bg-destructive",
-              // Anel do foco também vermelho
-              "data-[state=checked]:ring-destructive"
+              "relative flex items-center justify-center transition-all",
+              "w-[18px] h-[18px] rounded-full border",
+              !isPaid
+                ? "bg-[#FF6D6D] border-[#FF6D6D]"
+                : "border-gray-400 bg-white"
             )}
-          />
-          <Label
-            htmlFor="status-pending"
+          >
+            {!isPaid && (
+              <Check
+                className="absolute text-white w-[13px] h-[13px]"
+                strokeWidth={4}
+              />
+            )}
+          </RadioGroupItem>
+
+          <span
             className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-destructive peer-data-[state=checked]:font-bold"
+              "text-sm font-extrabold",
+              !isPaid ? "text-[#E84F4F]" : "text-gray-500",
+              isMobile && "text-xs"
             )}
           >
             Pendente
-          </Label>
-        </div>
+          </span>
+        </label>
       </RadioGroup>
     </div>
   );
