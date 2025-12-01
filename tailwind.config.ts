@@ -95,6 +95,9 @@ export default {
         "lancamentos-mobile-bg": { // New color for Lancamentos mobile background
           DEFAULT: "hsl(var(--lancamentos-mobile-bg))",
         },
+        "soft-red-background": { // NEW: Cor de fundo para o card de despesas
+          DEFAULT: "hsl(var(--soft-red-background))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',

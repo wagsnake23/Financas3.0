@@ -14,7 +14,7 @@ export const TotalExpensesCard = ({ expenseInstallments, isMobile }: TotalExpens
 
   return (
     <Card className={cn(
-      "p-6 animate-fade-in rounded-3xl card-3d", // Aplicado card-3d e rounded-3xl
+      "p-6 animate-fade-in rounded-3xl card-3d bg-soft-red-background", // Aplicado card-3d, rounded-3xl e a nova cor de fundo
       isMobile ? "p-4 h-24" : "h-auto"
     )}>
       <div className="flex items-center justify-between">

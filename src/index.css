@@ -72,6 +72,7 @@ All colors MUST be HSL.
     --app-purple: 270 70% 58%; /* NOVO: Roxo mais forte para botões */
 
     --lancamentos-mobile-bg: 0 0% 100%; /* Alterado para branco */
+    --soft-red-background: 0 6% 97%; /* NEW: Cor de fundo para o card de despesas (#FFEFEF) */
   }
 
   .dark {
@@ -130,6 +131,7 @@ All colors MUST be HSL.
     --app-purple: 270 70% 60%; /* NOVO: Roxo mais forte para botões em dark mode */
 
     --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD - Keep it light as requested */
+    --soft-red-background: 0 6% 20%; /* NEW: Cor de fundo para o card de despesas em dark mode */
   }
 }
 
