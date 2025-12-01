@@ -8,10 +8,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DynamicIcon from "./DynamicIcon";
-import { cn, isValidUuid, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
+import { cn, formatCurrency } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
 import { format, isWithinInterval, startOfMonth, endOfMonth } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -38,13 +37,7 @@ const UNSELECTED_VALUE = "unselected";
 
 export const MobileCreditCardExpenses: React.FC<
   MobileCreditCardExpensesProps
-> = ({
-  cartoes,
-  expenseInstallments,
-  allCategories,
-  isMobile,
-  selectedMonth,
-}) => {
+> = ({ cartoes, expenseInstallments, isMobile, selectedMonth }) => {
   const navigate = useNavigate();
   const [selectedCardId, setSelectedCardId] =
     useState<string>(UNSELECTED_VALUE);
@@ -108,187 +101,89 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn(
-        "p-4 animate-fade-in rounded-3xl card-3d",
-        isMobile && "p-3"
-      )}
-      style={{ backgroundColor: "#F7F2FF" }} // 💜 lilás suave aplicado
+      className={cn("p-3 animate-fade-in rounded-3xl card-3d")}
+      style={{ backgroundColor: "#F7F2FF" }}
     >
-      <h2
-        className={cn(
-          "text-lg font-bold mb-2",
-          isMobile &&
-            "text-xs font-semibold text-muted-foreground font-roboto mt-0"
-        )}
-      >
+      <h2 className="text-xs font-semibold text-muted-foreground">
         Cartões de Crédito
       </h2>
 
-      <div className={cn("space-y-2", isMobile && "space-y-2")}>
-        {cartoes.length === 0 ? (
-          <p className="text-muted-foreground text-center py-2 text-sm">
-            Nenhum cartão de crédito cadastrado.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-2">
-            <Select
-              value={selectedCardId}
-              onValueChange={setSelectedCardId}
-              className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
-            >
-              <SelectTrigger
-                className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}
-              >
-                <SelectValue placeholder="Selecione um cartão" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  value={UNSELECTED_VALUE}
-                  disabled
-                  className={cn(isMobile && "text-sm")}
-                >
-                  Selecione um cartão
-                </SelectItem>
-                {cartoes.map((card) => (
-                  <SelectItem
-                    key={card.id}
-                    value={card.id}
-                    className={cn(isMobile && "text-sm")}
-                  >
-                    {card.nome} (****{card.ultimos_digitos})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              className={cn(
-                "btn-3d",
-                "rounded-xl w-full",
-                isMobile ? "h-9 text-sm" : "w-auto px-4 h-9 text-xs"
-              )}
-              style={
-                {
-                  "--cor-topo": "#B27CFF",
-                  "--cor-base": "#7B4ED6",
-                } as React.CSSProperties
-              }
-              onClick={handlePayMonthlyBill}
-              disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
-            >
-              <>
-                <DynamicIcon
-                  name="CreditCard"
-                  className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")}
-                />
-                <span className="ml-2">Ver Fatura</span>
-              </>
-            </Button>
-          </div>
-        )}
+      <div className="space-y-2">
+        <Select value={selectedCardId} onValueChange={setSelectedCardId}>
+          <SelectTrigger className="rounded-xl w-full h-9 text-sm">
+            <SelectValue placeholder="Selecione um cartão" />
+          </SelectTrigger>
+          <SelectContent>
+            {cartoes.map((card) => (
+              <SelectItem key={card.id} value={card.id} className="text-sm">
+                {card.nome} (****{card.ultimos_digitos})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
+        <Button
+          className="btn-3d rounded-xl w-full h-9 text-sm"
+          style={
+            {
+              "--cor-topo": "#B27CFF",
+              "--cor-base": "#7B4ED6",
+            } as React.CSSProperties
+          }
+          onClick={handlePayMonthlyBill}
+          disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
+        >
+          <DynamicIcon name="CreditCard" className="h-3.5 w-3.5" />
+          <span className="ml-2">Ver Fatura</span>
+        </Button>
+
+        {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div
-            className={cn(
-              "grid grid-cols-3 gap-2 text-center mt-2",
-              isMobile && "gap-1 mt-1"
-            )}
-          >
-            <div
-              className={cn(
-                "flex flex-col items-center justify-center p-1",
-                isMobile && "p-0.5"
-              )}
-            >
-              <DynamicIcon
-                name="CheckCircle"
-                className={cn(
-                  "h-5 w-5 text-success mb-1",
-                  isMobile && "h-4 w-4 mb-0.5"
-                )}
-              />
-              <p
-                className={cn(
-                  "text-xs text-muted-foreground",
-                  isMobile && "text-[0.6rem]"
-                )}
+          <div className="grid grid-cols-3 gap-1 text-center mt-1">
+            {/* Pago */}
+            <div className="flex flex-col items-center justify-center p-0.5">
+              <div
+                className="flex items-center justify-center rounded-full bg-[#44E37F] text-white font-black"
+                style={{ height: 17, width: 17, fontSize: 9 }}
               >
-                Pago
-              </p>
-              <p
-                className={cn(
-                  "text-sm font-bold text-success",
-                  isMobile && "text-xs"
-                )}
-              >
+                ✓
+              </div>
+              <p className="text-[0.7rem] text-muted-foreground">Pago</p>
+              <p className="text-xs font-bold text-success">
                 {formatCurrency(totalPaid)}
               </p>
             </div>
-            <div
-              className={cn(
-                "flex flex-col items-center justify-center p-1",
-                isMobile && "p-0.5"
-              )}
-            >
+
+            {/* Pendente */}
+            <div className="flex flex-col items-center justify-center p-0.5">
               <DynamicIcon
                 name="Circle"
-                className={cn(
-                  "h-5 w-5 text-destructive mb-1",
-                  isMobile && "h-4 w-4 mb-0.5"
-                )}
+                className="h-4 w-4 text-destructive mb-0.5"
               />
-              <p
-                className={cn(
-                  "text-xs text-muted-foreground",
-                  isMobile && "text-[0.6rem]"
-                )}
-              >
-                Pendente
-              </p>
-              <p
-                className={cn(
-                  "text-sm font-bold text-destructive",
-                  isMobile && "text-xs"
-                )}
-              >
+              <p className="text-[0.7rem] text-muted-foreground">Pendente</p>
+              <p className="text-xs font-bold text-destructive">
                 {formatCurrency(totalPending)}
               </p>
             </div>
-            <div
-              className={cn(
-                "flex flex-col items-center justify-center p-1",
-                isMobile && "p-0.5"
-              )}
-            >
+
+            {/* Total Mês */}
+            <div className="flex flex-col items-center justify-center p-0.5">
               <DynamicIcon
                 name="CreditCard"
-                className={cn(
-                  "h-5 w-5 text-foreground mb-1",
-                  isMobile && "h-4 w-4 mb-0.5"
-                )}
+                className="h-4 w-4 text-foreground mb-0.5"
               />
-              <p
-                className={cn(
-                  "text-xs text-muted-foreground",
-                  isMobile && "text-[0.6rem]"
-                )}
-              >
-                Total Mês
-              </p>
-              <p
-                className={cn(
-                  "text-sm font-bold text-foreground",
-                  isMobile && "text-xs"
-                )}
-              >
+              <p className="text-[0.7rem] text-muted-foreground">Total Mês</p>
+              <p className="text-xs font-bold text-foreground">
                 {formatCurrency(totalCardExpenses)}
               </p>
             </div>
           </div>
         )}
+
         {selectedCardId !== UNSELECTED_VALUE &&
           filteredExpenses.length === 0 && (
             <p className="text-muted-foreground text-center py-2 text-sm">
-              Nenhuma despesa encontrada para este cartão no mês selecionado.
+              Nenhuma despesa no mês selecionado.
             </p>
           )}
       </div>
