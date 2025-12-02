@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Label } from "@/components/ui/label"; // Adicionado import do Label
+import { Label } from "@/components/ui/label";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -58,8 +58,8 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
   const [isScanning, setIsScanning] = useState(false);
   const [loadingApi, setLoadingApi] = useState(false);
   const qrReaderRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null); // Ref para o input de arquivo
-  const canvasRef = useRef<HTMLCanvasElement>(null); // Ref para o canvas oculto
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -125,15 +125,18 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
 
   const handleError = (err: any) => {
     console.error("QR Code Scanner Error:", err);
-    if (isScanning) { // Only show error if actively scanning
+    if (isScanning) {
       toast.error("Erro ao acessar a câmera ou escanear QR Code.", { duration: toastDuration, style: toastErrorStyle });
-      setIsScanning(false); // Stop scanning on error
+      setIsScanning(false);
     }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      if (fileInputRef.current) fileInputRef.current.value = ''; // Limpa o input se nenhum arquivo for selecionado
+      return;
+    }
 
     setLoadingApi(true);
     toast.info("Processando imagem do QR Code...", { duration: toastDuration });
@@ -144,24 +147,38 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
       img.onload = () => {
         const canvas = canvasRef.current;
         if (!canvas) {
+          console.error("handleImageUpload: Canvas ref is null.");
           toast.error("Erro interno: Canvas não disponível.", { duration: toastDuration, style: toastErrorStyle });
           setLoadingApi(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
           return;
         }
         const ctx = canvas.getContext("2d");
         if (!ctx) {
+          console.error("handleImageUpload: Canvas context is null.");
           toast.error("Erro interno: Contexto do canvas não disponível.", { duration: toastDuration, style: toastErrorStyle });
           setLoadingApi(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
           return;
         }
 
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0, img.width, img.height);
+        // Verifica se a imagem carregou com dimensões válidas
+        if (img.width === 0 || img.height === 0) {
+          console.error("handleImageUpload: Imagem inválida ou não carregada corretamente (dimensões zero).");
+          toast.error("Erro: Imagem inválida ou não carregada corretamente.", { duration: toastDuration, style: toastErrorStyle });
+          setLoadingApi(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
 
         try {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+          console.log("handleImageUpload: Imagem desenhada no canvas com sucesso.");
+
           // --- AQUI VOCÊ USARIA UMA BIBLIOTECA COMO jsQR ---
-          // Exemplo de uso com jsQR (certifique-se de importá-lo):
+          // Exemplo de uso com jsQR (certifique-se de importá-lo e instalá-lo: npm install jsqr):
           // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           // const code = jsQR(imageData.data, imageData.width, imageData.height, {
           //   inversionAttempts: "dontInvert",
@@ -181,13 +198,27 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
           handleScan(simulatedQrCodeData);
           // FIM DO PLACEHOLDER
 
-        } catch (error) {
-          console.error("Erro ao decodificar QR Code da imagem:", error);
-          toast.error("Erro ao decodificar QR Code da imagem.", { duration: toastDuration, style: toastErrorStyle });
+        } catch (drawOrDecodeError: any) {
+          console.error("handleImageUpload: Erro ao desenhar ou decodificar QR Code da imagem:", drawOrDecodeError);
+          toast.error("Erro ao processar imagem do QR Code.", { description: drawOrDecodeError.message, duration: toastDuration, style: toastErrorStyle });
           setLoadingApi(false);
+        } finally {
+          if (fileInputRef.current) fileInputRef.current.value = ''; // Limpa o input de arquivo
         }
       };
+      img.onerror = () => {
+        console.error("handleImageUpload: Erro ao carregar a imagem.");
+        toast.error("Erro ao carregar a imagem selecionada.", { duration: toastDuration, style: toastErrorStyle });
+        setLoadingApi(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      };
       img.src = e.target?.result as string;
+    };
+    reader.onerror = (error) => {
+      console.error("handleImageUpload: Erro ao ler o arquivo:", error);
+      toast.error("Erro ao ler o arquivo de imagem.", { duration: toastDuration, style: toastErrorStyle });
+      setLoadingApi(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     };
     reader.readAsDataURL(file);
   };
@@ -243,6 +274,7 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className="rounded-xl"
                 variant="outline"
+                disabled={loadingApi} // Desabilita o botão enquanto a API está carregando
               >
                 <DynamicIcon name="🖼️" className="mr-2 h-4 w-4" />
                 Buscar na Galeria
