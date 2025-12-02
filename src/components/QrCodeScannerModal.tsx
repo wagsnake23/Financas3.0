@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Label } from "@/components/ui/label"; // Adicionado import do Label
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { QrReader } from "react-qr-reader";
 import { toast } from "sonner";
+// Importe jsQR se estiver usando: import jsQR from "jsqr";
 
 interface ProductItem {
   description: string;
@@ -56,6 +58,8 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
   const [isScanning, setIsScanning] = useState(false);
   const [loadingApi, setLoadingApi] = useState(false);
   const qrReaderRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref para o input de arquivo
+  const canvasRef = useRef<HTMLCanvasElement>(null); // Ref para o canvas oculto
 
   useEffect(() => {
     if (isOpen) {
@@ -127,6 +131,67 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
     }
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setLoadingApi(true);
+    toast.info("Processando imagem do QR Code...", { duration: toastDuration });
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) {
+          toast.error("Erro interno: Canvas não disponível.", { duration: toastDuration, style: toastErrorStyle });
+          setLoadingApi(false);
+          return;
+        }
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          toast.error("Erro interno: Contexto do canvas não disponível.", { duration: toastDuration, style: toastErrorStyle });
+          setLoadingApi(false);
+          return;
+        }
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        try {
+          // --- AQUI VOCÊ USARIA UMA BIBLIOTECA COMO jsQR ---
+          // Exemplo de uso com jsQR (certifique-se de importá-lo):
+          // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          // const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          //   inversionAttempts: "dontInvert",
+          // });
+
+          // if (code) {
+          //   handleScan(code.data);
+          // } else {
+          //   toast.error("Nenhum QR Code encontrado na imagem.", { duration: toastDuration, style: toastErrorStyle });
+          //   setLoadingApi(false);
+          // }
+          // --- FIM DO EXEMPLO jsQR ---
+
+          // Placeholder para simular o resultado de um QR Code da galeria
+          // REMOVA ESTE BLOCO E DESCOMENTE O CÓDIGO jsQR ACIMA QUANDO TIVER A BIBLIOTECA
+          const simulatedQrCodeData = "https://www.fazenda.pr.gov.br/nfce/qrcode?p=41230176483817000100650010000000011000000001|2|1|1|1234567890";
+          handleScan(simulatedQrCodeData);
+          // FIM DO PLACEHOLDER
+
+        } catch (error) {
+          console.error("Erro ao decodificar QR Code da imagem:", error);
+          toast.error("Erro ao decodificar QR Code da imagem.", { duration: toastDuration, style: toastErrorStyle });
+          setLoadingApi(false);
+        }
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleImport = () => {
     if (scannedData) {
       onImportData(scannedData);
@@ -168,6 +233,28 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
                 videoContainerStyle={{ padding: '0' }}
                 videoStyle={{ objectFit: 'cover' }}
               />
+            </div>
+          )}
+
+          {!isScanning && !loadingApi && !scannedData && (
+            <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-gray-50 text-center">
+              <p className="text-muted-foreground mb-4">Ou</p>
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                className="rounded-xl"
+                variant="outline"
+              >
+                <DynamicIcon name="🖼️" className="mr-2 h-4 w-4" />
+                Buscar na Galeria
+              </Button>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <canvas ref={canvasRef} className="hidden"></canvas> {/* Canvas oculto para decodificação */}
             </div>
           )}
 
