@@ -58,6 +58,11 @@ interface ExpenseFormProps {
   isMobile: boolean;
   isRecurring: boolean;
   setIsRecurring: (value: boolean) => void; // NOVA PROP
+  // NOVAS PROPS PARA DADOS DA NFC-e
+  initialValor?: number;
+  initialFormaPagamento?: "dinheiro" | "pix" | "cartao" | "boleto";
+  initialCartaoId?: string;
+  initialDescricao?: string;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -75,6 +80,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   isMobile,
   isRecurring,
   setIsRecurring, // NOVA PROP
+  initialValor, // NOVO
+  initialFormaPagamento, // NOVO
+  initialCartaoId, // NOVO
+  initialDescricao, // NOVO
 }) => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
@@ -104,6 +113,15 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       (cat) => cat.parent_id !== "receitas_e_investimentos"
     );
   }, [allSubcategories]);
+
+  // Efeito para aplicar os dados iniciais da NFC-e
+  useEffect(() => {
+    if (initialValor !== undefined) setValor(initialValor);
+    if (initialFormaPagamento !== undefined) setFormaPagamento(initialFormaPagamento);
+    if (initialCartaoId !== undefined) setCartaoId(initialCartaoId);
+    if (initialDescricao !== undefined) setDescricao(initialDescricao);
+  }, [initialValor, initialFormaPagamento, initialCartaoId, initialDescricao]);
+
 
   useEffect(() => {
     if (isRecurring) {

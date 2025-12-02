@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
+import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
 
 interface Cartao {
   id: string;
@@ -37,6 +38,13 @@ export default function Despesas() {
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
+
+  // Estados para preencher o formulário com dados da NFC-e
+  const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
+  const [nfceFormaPagamento, setNfceFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
+  const [nfceCartaoId, setNfceCartaoId] = useState(UNSELECTED_VALUE);
+  const [nfceDescricao, setNfceDescricao] = useState(""); // Para itens da nota
 
   const {
     allSubcategories,
@@ -83,6 +91,33 @@ export default function Despesas() {
     }
   };
 
+  const handleImportNfceData = (data: { totalAmount: number; paymentMethod: string; items: { description: string; quantity: number; unitValue: number; total: number; }[] }) => {
+    setNfceValor(data.totalAmount);
+    // Mapear a forma de pagamento da API para o formato do formulário
+    let mappedPaymentMethod: "dinheiro" | "pix" | "cartao" | "boleto" = "dinheiro";
+    if (data.paymentMethod === "pix") mappedPaymentMethod = "pix";
+    else if (data.paymentMethod === "credit_card" || data.paymentMethod === "debit_card") mappedPaymentMethod = "cartao";
+    else if (data.paymentMethod === "cash") mappedPaymentMethod = "dinheiro";
+    else if (data.paymentMethod === "boleto") mappedPaymentMethod = "boleto";
+    
+    setNfceFormaPagamento(mappedPaymentMethod);
+
+    // Se for cartão, tentar encontrar um cartão existente ou deixar para o usuário selecionar
+    if (mappedPaymentMethod === "cartao" && cartoes.length > 0) {
+      // TODO: Lógica mais sofisticada para tentar preencher o cartaoId automaticamente
+      // Por enquanto, apenas seleciona o primeiro ou deixa UNSELECTED_VALUE
+      setNfceCartaoId(cartoes[0].id); 
+    } else {
+      setNfceCartaoId(UNSELECTED_VALUE);
+    }
+
+    // Concatenar descrições dos itens para o campo de descrição
+    const itemsDescription = data.items.map(item => `${item.description} (x${item.quantity})`).join(", ");
+    setNfceDescricao(`NFC-e: ${itemsDescription}`);
+
+    toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
+  };
+
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -103,6 +138,11 @@ export default function Despesas() {
       isMobile={isMobile}
       isRecurring={isRecurring}
       setIsRecurring={setIsRecurring}
+      // Passar dados da NFC-e para o formulário
+      initialValor={nfceValor}
+      initialFormaPagamento={nfceFormaPagamento}
+      initialCartaoId={nfceCartaoId}
+      initialDescricao={nfceDescricao}
     />
   );
 
@@ -136,15 +176,26 @@ export default function Despesas() {
 
         {isMobile ? (
           <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
-              <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                <DynamicIcon
-                  name="TrendingDown"
-                  className="h-6 w-6 text-destructive"
-                />
-              </div>
-              Nova Despesa
-            </h2>
+            <div className="flex items-center justify-between"> {/* Flex container for title and button */}
+              <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
+                <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                  <DynamicIcon
+                    name="TrendingDown"
+                    className="h-6 w-6 text-destructive"
+                  />
+                </div>
+                Nova Despesa
+              </h2>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => setIsQrScannerOpen(true)}
+                className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
+              >
+                <DynamicIcon name="📷" className="w-4 h-4" />
+              </Button>
+            </div>
 
             {formContent}
 
@@ -154,15 +205,26 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-6">
               <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-destructive">
-                  <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                    <DynamicIcon
-                      name="TrendingDown"
-                      className="h-6 w-6 text-destructive"
-                    />
-                  </div>
-                  Nova Despesa
-                </h2>
+                <div className="flex items-center justify-between mb-4"> {/* Flex container for title and button */}
+                  <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
+                    <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
+                      <DynamicIcon
+                        name="TrendingDown"
+                        className="h-6 w-6 text-destructive"
+                      />
+                    </div>
+                    Nova Despesa
+                  </h2>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setIsQrScannerOpen(true)}
+                    className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
+                  >
+                    <DynamicIcon name="📷" className="w-4 h-4" />
+                  </Button>
+                </div>
                 {formContent}
               </Card>
 
@@ -187,6 +249,12 @@ export default function Despesas() {
       </div>
 
       {!isMobile && <Footer isMobile={isMobile} user={user} />}
+
+      <QrCodeScannerModal
+        isOpen={isQrScannerOpen}
+        onOpenChange={setIsQrScannerOpen}
+        onImportData={handleImportNfceData}
+      />
     </div>
   );
 }
