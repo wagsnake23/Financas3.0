@@ -65,6 +65,7 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
     if (isOpen) {
       setScanResult(null);
       setScannedData(null);
+      // Quando o modal abre, queremos que a câmera esteja ativa por padrão
       setIsScanning(true);
       setLoadingApi(false);
     } else {
@@ -75,7 +76,7 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
   const handleScan = async (result: string | null) => {
     if (result && !scanResult) {
       setScanResult(result);
-      setIsScanning(false);
+      setIsScanning(false); // Para de escanear com a câmera após encontrar um QR Code
       setLoadingApi(true);
       toast.info("QR Code escaneado! Processando dados da nota fiscal...", { duration: toastDuration });
 
@@ -134,7 +135,7 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
-      if (fileInputRef.current) fileInputRef.current.value = ''; // Limpa o input se nenhum arquivo for selecionado
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
@@ -162,7 +163,6 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
           return;
         }
 
-        // Verifica se a imagem carregou com dimensões válidas
         if (img.width === 0 || img.height === 0) {
           console.error("handleImageUpload: Imagem inválida ou não carregada corretamente (dimensões zero).");
           toast.error("Erro: Imagem inválida ou não carregada corretamente.", { duration: toastDuration, style: toastErrorStyle });
@@ -203,7 +203,7 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
           toast.error("Erro ao processar imagem do QR Code.", { description: drawOrDecodeError.message, duration: toastDuration, style: toastErrorStyle });
           setLoadingApi(false);
         } finally {
-          if (fileInputRef.current) fileInputRef.current.value = ''; // Limpa o input de arquivo
+          if (fileInputRef.current) fileInputRef.current.value = '';
         }
       };
       img.onerror = () => {
@@ -271,10 +271,14 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
             <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-gray-50 text-center">
               <p className="text-muted-foreground mb-4">Ou</p>
               <Button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => {
+                  // Ao clicar no botão, desativa o scanner da câmera para evitar conflitos
+                  setIsScanning(false);
+                  fileInputRef.current?.click();
+                }}
                 className="rounded-xl"
                 variant="outline"
-                disabled={loadingApi} // Desabilita o botão enquanto a API está carregando
+                disabled={loadingApi}
               >
                 <DynamicIcon name="🖼️" className="mr-2 h-4 w-4" />
                 Buscar na Galeria
@@ -282,11 +286,12 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
               <input
                 type="file"
                 accept="image/*"
+                capture="environment" // Adicionado para abrir a câmera no mobile e galeria
                 ref={fileInputRef}
                 onChange={handleImageUpload}
                 className="hidden"
               />
-              <canvas ref={canvasRef} className="hidden"></canvas> {/* Canvas oculto para decodificação */}
+              <canvas ref={canvasRef} className="hidden"></canvas>
             </div>
           )}
 
