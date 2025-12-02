@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { CategoryForm } from "@/components/CategoryForm";
-import { CategoryList } from "@/components/CategoryList";
+import { CategoryList } => "@/components/CategoryList";
 import DynamicIcon from "@/components/DynamicIcon";
 
 export default function Categorias() {
@@ -91,7 +91,7 @@ export default function Categorias() {
                   className="h-6 w-6 text-primary"
                 />
               </div>
-              🗂️Nova Categoria
+              🗂️Nova Subcategoria
             </h2>
             <CategoryForm user={user} queryClient={queryClient} />
 
@@ -122,7 +122,7 @@ export default function Categorias() {
                     className="h-6 w-6 text-primary"
                   />
                 </div>
-                🗂️Nova Categoria
+                🗂️Nova Subcategoria
               </h2>
               <CategoryForm user={user} queryClient={queryClient} />
             </Card>
