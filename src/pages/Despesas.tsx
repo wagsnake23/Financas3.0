@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
 import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
+import { Button } from "@/components/ui/button"; // Adicionado: Importação do componente Button
 
 interface Cartao {
   id: string;
