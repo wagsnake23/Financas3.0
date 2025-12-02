@@ -18,8 +18,8 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
-import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
-import { Button } from "@/components/ui/button"; // Adicionado: Importação do componente Button
+// Removed: import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
+// Removed: import { Button } from "@/components/ui/button"; // Adicionado: Importação do componente Button
 
 interface Cartao {
   id: string;
@@ -39,13 +39,13 @@ export default function Despesas() {
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
+  // Removed: const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
 
-  // Estados para preencher o formulário com dados da NFC-e
-  const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
-  const [nfceFormaPagamento, setNfceFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
-  const [nfceCartaoId, setNfceCartaoId] = useState(UNSELECTED_VALUE);
-  const [nfceDescricao, setNfceDescricao] = useState(""); // Para itens da nota
+  // Removed: Estados para preencher o formulário com dados da NFC-e
+  // Removed: const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
+  // Removed: const [nfceFormaPagamento, setNfceFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
+  // Removed: const [nfceCartaoId, setNfceCartaoId] = useState(UNSELECTED_VALUE);
+  // Removed: const [nfceDescricao, setNfceDescricao] = useState(""); // Para itens da nota
 
   const {
     allSubcategories,
@@ -55,7 +55,7 @@ export default function Despesas() {
   } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading);
 
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<
-    AppCategory[]
+    AppCategory
   >({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -92,32 +92,32 @@ export default function Despesas() {
     }
   };
 
-  const handleImportNfceData = (data: { totalAmount: number; paymentMethod: string; items: { description: string; quantity: number; unitValue: number; total: number; }[] }) => {
-    setNfceValor(data.totalAmount);
-    // Mapear a forma de pagamento da API para o formato do formulário
-    let mappedPaymentMethod: "dinheiro" | "pix" | "cartao" | "boleto" = "dinheiro";
-    if (data.paymentMethod === "pix") mappedPaymentMethod = "pix";
-    else if (data.paymentMethod === "credit_card" || data.paymentMethod === "debit_card") mappedPaymentMethod = "cartao";
-    else if (data.paymentMethod === "cash") mappedPaymentMethod = "dinheiro";
-    else if (data.paymentMethod === "boleto") mappedPaymentMethod = "boleto";
+  // Removed: const handleImportNfceData = (data: { totalAmount: number; paymentMethod: string; items: { description: string; quantity: number; unitValue: number; total: number; }[] }) => {
+  // Removed:   setNfceValor(data.totalAmount);
+  // Removed:   // Mapear a forma de pagamento da API para o formato do formulário
+  // Removed:   let mappedPaymentMethod: "dinheiro" | "pix" | "cartao" | "boleto" = "dinheiro";
+  // Removed:   if (data.paymentMethod === "pix") mappedPaymentMethod = "pix";
+  // Removed:   else if (data.paymentMethod === "credit_card" || data.paymentMethod === "debit_card") mappedPaymentMethod = "cartao";
+  // Removed:   else if (data.paymentMethod === "cash") mappedPaymentMethod = "dinheiro";
+  // Removed:   else if (data.paymentMethod === "boleto") mappedPaymentMethod = "boleto";
     
-    setNfceFormaPagamento(mappedPaymentMethod);
+  // Removed:   setNfceFormaPagamento(mappedPaymentMethod);
 
-    // Se for cartão, tentar encontrar um cartão existente ou deixar para o usuário selecionar
-    if (mappedPaymentMethod === "cartao" && cartoes.length > 0) {
-      // TODO: Lógica mais sofisticada para tentar preencher o cartaoId automaticamente
-      // Por enquanto, apenas seleciona o primeiro ou deixa UNSELECTED_VALUE
-      setNfceCartaoId(cartoes[0].id); 
-    } else {
-      setNfceCartaoId(UNSELECTED_VALUE);
-    }
+  // Removed:   // Se for cartão, tentar encontrar um cartão existente ou deixar para o usuário selecionar
+  // Removed:   if (mappedPaymentMethod === "cartao" && cartoes.length > 0) {
+  // Removed:     // TODO: Lógica mais sofisticada para tentar preencher o cartaoId automaticamente
+  // Removed:     // Por enquanto, apenas seleciona o primeiro ou deixa UNSELECTED_VALUE
+  // Removed:     setNfceCartaoId(cartoes[0].id); 
+  // Removed:   } else {
+  // Removed:     setNfceCartaoId(UNSELECTED_VALUE);
+  // Removed:   }
 
-    // Concatenar descrições dos itens para o campo de descrição
-    const itemsDescription = data.items.map(item => `${item.description} (x${item.quantity})`).join(", ");
-    setNfceDescricao(`NFC-e: ${itemsDescription}`);
+  // Removed:   // Concatenar descrições dos itens para o campo de descrição
+  // Removed:   const itemsDescription = data.items.map(item => `${item.description} (x${item.quantity})`).join(", ");
+  // Removed:   setNfceDescricao(`NFC-e: ${itemsDescription}`);
 
-    toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
-  };
+  // Removed:   toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
+  // Removed: };
 
   if (authLoading || isLoadingExpenseData || isLoadingCategories) {
     return (
@@ -139,11 +139,11 @@ export default function Despesas() {
       isMobile={isMobile}
       isRecurring={isRecurring}
       setIsRecurring={setIsRecurring}
-      // Passar dados da NFC-e para o formulário
-      initialValor={nfceValor}
-      initialFormaPagamento={nfceFormaPagamento}
-      initialCartaoId={nfceCartaoId}
-      initialDescricao={nfceDescricao}
+      // Removed: Passar dados da NFC-e para o formulário
+      // Removed: initialValor={nfceValor}
+      // Removed: initialFormaPagamento={nfceFormaPagamento}
+      // Removed: initialCartaoId={nfceCartaoId}
+      // Removed: initialDescricao={nfceDescricao}
     />
   );
 
@@ -187,7 +187,7 @@ export default function Despesas() {
                 </div>
                 Nova Despesa
               </h2>
-              <Button
+              {/* Removed: <Button
                 type="button"
                 variant="outline"
                 size="icon"
@@ -195,7 +195,7 @@ export default function Despesas() {
                 className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
               >
                 <DynamicIcon name="📷" className="w-4 h-4" />
-              </Button>
+              </Button> */}
             </div>
 
             {formContent}
@@ -216,7 +216,7 @@ export default function Despesas() {
                     </div>
                     Nova Despesa
                   </h2>
-                  <Button
+                  {/* Removed: <Button
                     type="button"
                     variant="outline"
                     size="icon"
@@ -224,7 +224,7 @@ export default function Despesas() {
                     className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
                   >
                     <DynamicIcon name="📷" className="w-4 h-4" />
-                  </Button>
+                  </Button> */}
                 </div>
                 {formContent}
               </Card>
@@ -251,11 +251,11 @@ export default function Despesas() {
 
       {!isMobile && <Footer isMobile={isMobile} user={user} />}
 
-      <QrCodeScannerModal
+      {/* Removed: <QrCodeScannerModal
         isOpen={isQrScannerOpen}
         onOpenChange={setIsQrScannerOpen}
         onImportData={handleImportNfceData}
-      />
+      /> */}
     </div>
   );
 }
