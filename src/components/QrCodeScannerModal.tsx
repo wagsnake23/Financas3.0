@@ -39,6 +39,12 @@ const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
+// --- PLACEHOLDERS PARA A API DA NUVEM FISCAL ---
+// Você precisará substituir estes valores pelos reais da sua integração.
+// Recomenda-se usar variáveis de ambiente para a chave da API (ex: import.meta.env.VITE_NUVEM_FISCAL_API_KEY)
+const NUVEM_FISCAL_API_URL = "https://api.nuvemfiscal.com.br/v1/nfce/scan"; // Exemplo de URL
+const NUVEM_FISCAL_API_KEY = "YOUR_NUVEM_FISCAL_API_KEY"; // Substitua pela sua chave real da API
+
 export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
   isOpen,
   onOpenChange,
@@ -62,34 +68,54 @@ export const QrCodeScannerModal: React.FC<QrCodeScannerModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleScan = (result: string | null) => {
+  const handleScan = async (result: string | null) => {
     if (result && !scanResult) {
       setScanResult(result);
       setIsScanning(false);
       setLoadingApi(true);
       toast.info("QR Code escaneado! Processando dados da nota fiscal...", { duration: toastDuration });
 
-      // TODO: Implement API call to Nuvem Fiscal here
-      // Example placeholder for API response:
-      setTimeout(() => {
-        const dummyData: ScannedNfceData = {
-          totalAmount: 125.75,
-          paymentMethod: "pix", // or "cartao", "dinheiro", "boleto"
-          items: [
-            { description: "Pão de Forma", quantity: 1, unitValue: 8.50, total: 8.50 },
-            { description: "Leite Integral", quantity: 2, unitValue: 4.25, total: 8.50 },
-            { description: "Queijo Minas", quantity: 0.300, unitValue: 45.00, total: 13.50 },
-            { description: "Café Torrado", quantity: 1, unitValue: 18.99, total: 18.99 },
-            { description: "Frutas Variadas", quantity: 1.2, unitValue: 10.00, total: 12.00 },
-            { description: "Sabonete Líquido", quantity: 1, unitValue: 15.00, total: 15.00 },
-            { description: "Shampoo", quantity: 1, unitValue: 25.00, total: 25.00 },
-            { description: "Condicionador", quantity: 1, unitValue: 24.26, total: 24.26 },
-          ],
+      try {
+        const response = await fetch(NUVEM_FISCAL_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${NUVEM_FISCAL_API_KEY}`, // Ou o método de autenticação da Nuvem Fiscal
+          },
+          body: JSON.stringify({ qrCodeUrl: result }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Erro na API da Nuvem Fiscal: ${response.status}`);
+        }
+
+        const apiData = await response.json();
+
+        // --- PARSE A RESPOSTA DA API AQUI ---
+        // Você precisará adaptar esta lógica para a estrutura exata da resposta da Nuvem Fiscal.
+        const parsedData: ScannedNfceData = {
+          totalAmount: apiData.totalAmount, // Exemplo: apiData.valorTotal
+          paymentMethod: apiData.paymentMethod, // Exemplo: apiData.formaPagamento
+          items: apiData.items.map((item: any) => ({ // Exemplo: apiData.produtos
+            description: item.description, // Exemplo: item.nomeProduto
+            quantity: item.quantity,     // Exemplo: item.quantidade
+            unitValue: item.unitValue,   // Exemplo: item.valorUnitario
+            total: item.total,           // Exemplo: item.valorTotalItem
+          })),
         };
-        setScannedData(dummyData);
-        setLoadingApi(false);
+        // --- FIM DO PARSE ---
+
+        setScannedData(parsedData);
         toast.success("Dados da nota fiscal carregados!", { duration: toastDuration, style: toastSuccessStyle });
-      }, 2000);
+
+      } catch (error: any) {
+        console.error("Erro ao processar QR Code com a Nuvem Fiscal:", error);
+        toast.error("Erro ao carregar dados da nota fiscal.", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+        setScannedData(null); // Limpa dados em caso de erro
+      } finally {
+        setLoadingApi(false);
+      }
     }
   };
 
