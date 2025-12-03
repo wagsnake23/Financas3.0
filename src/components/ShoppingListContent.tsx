@@ -345,7 +345,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
                     className={cn(
                       "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
-                      item.status && "line-through text-gray-400"
+                      item.status && "text-gray-400" // Removed line-through here
                     )}
                     value={item.product}
                     onChange={(e) => handleProductChange(index, e.target.value)}
