@@ -7,7 +7,7 @@ import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox"; // Removed Checkbox import
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
@@ -266,15 +266,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     }
   };
 
-  const handleMarkAll = (status: boolean) => {
-    const newItems = items.map(item => ({
-      ...item,
-      status: item.product.trim() !== "" ? status : false, // Only mark non-empty items
-      date: item.product.trim() !== "" && status ? format(new Date(), "MMM/dd", { locale: ptBR }) : "",
-    }));
-    setItems(newItems);
-  };
-
   const handleCancel = () => {
     // Reset to the last fetched state + one empty row
     if (fetchedItems.length === 0) {
@@ -324,10 +315,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
             <TableBody>
               {items.map((item, index) => (
                 <TableRow key={item.id} className={cn("shadow-sm hover:bg-gray-50")}>
-                  <TableCell className="py-2 px-2 text-center text-sm font-medium">
+                  <TableCell className="py-[6px] min-h-[42px] flex items-center justify-center text-sm font-medium">
                     {index + 1}
                   </TableCell>
-                  <TableCell className="py-2 px-2">
+                  <TableCell className="py-[6px] min-h-[42px] flex items-center">
                     <Input
                       ref={el => (inputRefs.current[index] = el)}
                       type="text"
@@ -335,21 +326,27 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                       onChange={(e) => handleProductChange(index, e.target.value)}
                       onKeyDown={(e) => handleInputKeyDown(index, e)}
                       placeholder="Adicionar item..."
-                      className="border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto text-base"
+                      className="border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto text-base w-full"
                     />
                   </TableCell>
-                  <TableCell className="py-2 px-2 text-center">
-                    <div className="flex flex-col items-center justify-center gap-1">
-                      <Checkbox
-                        checked={item.status}
-                        onCheckedChange={(checked: boolean) => handleStatusChange(index, checked)}
-                        className="h-6 w-6 rounded-md border-2 data-[state=checked]:bg-success data-[state=checked]:text-success-foreground"
-                      />
-                      {/* Removed "Comprado" and "Pendente" badges */}
-                      {item.date && <span className="text-xs text-muted-foreground">{item.date}</span>}
+                  <TableCell className="py-[6px] min-h-[42px] flex flex-col items-center justify-center">
+                    <div
+                      onClick={() => handleStatusChange(index, !item.status)}
+                      className={cn(
+                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
+                        item.status
+                          ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
+                          : "bg-transparent border-destructive text-transparent",
+                        isMobile
+                          ? "h-[17px] w-[17px] text-[8px]"
+                          : "h-[21px] w-[21px] text-[10px]"
+                      )}
+                    >
+                      {item.status && "✓"}
                     </div>
+                    {item.date && <span className="text-xs text-muted-foreground mt-1">{item.date}</span>}
                   </TableCell>
-                  <TableCell className="py-2 px-2 text-center">
+                  <TableCell className="py-[6px] min-h-[42px] flex items-center justify-center">
                     {item.product.trim() !== "" && (
                       <Button
                         variant="ghost"
