@@ -6,9 +6,9 @@ import { ShoppingItem } from "@/types/finance";
 import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input"; // Removed Input component import, using native input
 // import { Checkbox } from "@/components/ui/checkbox"; // Removed Checkbox import
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"; // Removed Table component imports
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
@@ -145,12 +145,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     const newItems = items.filter((_, i) => i !== index);
 
     // If the item had an ID (was saved to DB), mark for deletion
-    if (itemToRemove.product.trim() === "" && itemToRemove.id && itemToRemove.id !== newItems[newItems.length -1].id) {
-      // Only remove if it's an empty row and not the last empty row
+    if (itemToRemove.product.trim() === "" && itemToRemove.id && fetchedItems.some(fi => fi.id === itemToRemove.id)) {
+      // Only remove if it's an empty row and was a fetched item
       setItems(newItems);
+      if (itemToRemove.id) {
+        deleteItemsMutation.mutate([itemToRemove.id]);
+      }
     } else if (itemToRemove.product.trim() !== "") {
       // If it's a non-empty item, allow deletion
       setItems(newItems);
+      if (itemToRemove.id) {
+        deleteItemsMutation.mutate([itemToRemove.id]);
+      }
     }
   };
 
@@ -296,72 +302,89 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
         <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>Lista de Compras</h2>
-        {/* Removed "Marcar tudo comprado" and "Marcar tudo pendente" buttons for desktop */}
       </div>
 
-      {/* Removed "Comprado" and "Pendente" buttons for mobile */}
-
       <div className="overflow-x-auto">
-        <div className="max-h-[350px] overflow-y-auto rounded-md border">
-          <Table className="min-w-full">
-            <TableHeader className="sticky top-0 z-10 bg-slate-200 rounded-t-md">
-              <TableRow>
-                <TableHead className="text-slate-800 font-bold w-[5%] text-center">Nº</TableHead>
-                <TableHead className="text-slate-800 font-bold w-[55%]">Produto</TableHead>
-                <TableHead className="text-slate-800 font-bold w-[25%] text-center">Status</TableHead>
-                <TableHead className="text-slate-800 font-bold w-[15%] text-center">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((item, index) => (
-                <TableRow key={item.id} className={cn("shadow-sm hover:bg-gray-50")}>
-                  <TableCell className="py-[6px] min-h-[42px] flex items-center justify-center text-sm font-medium">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell className="py-[6px] min-h-[42px] flex items-center">
-                    <Input
-                      ref={el => (inputRefs.current[index] = el)}
-                      type="text"
-                      value={item.product}
-                      onChange={(e) => handleProductChange(index, e.target.value)}
-                      onKeyDown={(e) => handleInputKeyDown(index, e)}
-                      placeholder="Adicionar item..."
-                      className="border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto text-base w-full"
-                    />
-                  </TableCell>
-                  <TableCell className="py-[6px] min-h-[42px] flex flex-col items-center justify-center">
-                    <div
-                      onClick={() => handleStatusChange(index, !item.status)}
-                      className={cn(
-                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
-                        item.status
-                          ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
-                          : "bg-transparent border-destructive text-transparent",
-                        isMobile
-                          ? "h-[17px] w-[17px] text-[8px]"
-                          : "h-[21px] w-[21px] text-[10px]"
-                      )}
-                    >
-                      {item.status && "✓"}
-                    </div>
-                    {item.date && <span className="text-xs text-muted-foreground mt-1">{item.date}</span>}
-                  </TableCell>
-                  <TableCell className="py-[6px] min-h-[42px] flex items-center justify-center">
-                    {item.product.trim() !== "" && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteRow(item.id)}
-                        className="text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
-                      >
-                        <DynamicIcon name="Trash2" className="h-5 w-5" />
-                      </Button>
+        <div className="rounded-md border">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-md grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200">
+            <div className="col-span-1 text-slate-800 font-bold text-center">Nº</div>
+            <div className="col-span-7 text-slate-800 font-bold">Produto</div>
+            <div className="col-span-2 text-slate-800 font-bold text-center">Status</div>
+            <div className="col-span-2 text-slate-800 font-bold text-center">Ações</div>
+          </div>
+
+          {/* LISTA COM SCROLL */}
+          <div className="max-h-[350px] overflow-y-auto bg-white divide-y divide-gray-200">
+            {items.map((item, index) => (
+              <div
+                key={item.id}
+                className={cn(
+                  "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
+                  item.status && "bg-soft-green/20"
+                )}
+              >
+
+                {/* Nº */}
+                <div className="col-span-1 text-center font-medium">
+                  {index + 1}
+                </div>
+
+                {/* Produto + Data */}
+                <div className="col-span-7">
+                  <input
+                    ref={el => (inputRefs.current[index] = el)}
+                    onKeyDown={(e) => handleInputKeyDown(index, e)}
+                    className={cn(
+                      "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
+                      item.status && "line-through text-gray-400"
                     )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    value={item.product}
+                    onChange={(e) => handleProductChange(index, e.target.value)}
+                  />
+
+                  {item.date && (
+                    <p className="text-[10px] text-gray-500 mt-[1px]">
+                      {item.date}
+                    </p>
+                  )}
+                </div>
+
+                {/* Status */}
+                <div className="col-span-2 flex justify-center">
+                  <button
+                    onClick={() => handleStatusChange(index, !item.status)}
+                    className={cn(
+                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
+
+                      item.status
+                        ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
+                        : "bg-transparent border-destructive text-transparent",
+
+                      isMobile
+                        ? "h-[17px] w-[17px] text-[8px]"
+                        : "h-[21px] w-[21px] text-[10px]"
+                    )}
+                  >
+                    {item.status && "✓"}
+                  </button>
+                </div>
+
+                {/* Ações - Excluir */}
+                <div className="col-span-2 flex justify-center">
+                  {item.product.trim() !== "" && ( // Only show trash icon for non-empty items
+                    <button
+                      onClick={() => handleDeleteRow(item.id)}
+                      className="text-destructive hover:text-red-700"
+                    >
+                      <DynamicIcon name="Trash2" className="h-5 w-5" />
+                    </button>
+                  )}
+                </div>
+
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
