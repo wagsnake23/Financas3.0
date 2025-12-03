@@ -14,7 +14,7 @@ import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Badge } from "@/components/ui/badge"; // Importar Badge
+// import { Badge } from "@/components/ui/badge"; // Importar Badge - REMOVED
 
 interface ShoppingListContentProps {
   user: User | null;
@@ -305,36 +305,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
         <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>Lista de Compras</h2>
-        {!isMobile && (
-          <div className="flex gap-2">
-            <Button onClick={() => handleMarkAll(true)} variant="outline" className="rounded-xl">
-              <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4 text-success" /> Marcar tudo comprado
-            </Button>
-            <Button onClick={() => handleMarkAll(false)} variant="outline" className="rounded-xl">
-              <DynamicIcon name="Circle" className="mr-2 h-4 w-4 text-destructive" /> Marcar tudo pendente
-            </Button>
-          </div>
-        )}
+        {/* Removed "Marcar tudo comprado" and "Marcar tudo pendente" buttons for desktop */}
       </div>
 
-      {isMobile && (
-        <div className="flex justify-center gap-2 mb-4">
-          <Button onClick={() => handleMarkAll(true)} variant="outline" className="rounded-xl h-9 text-sm flex-1">
-            <DynamicIcon name="CheckCircle" className="mr-1 h-4 w-4 text-success" /> Comprado
-          </Button>
-          <Button onClick={() => handleMarkAll(false)} variant="outline" className="rounded-xl h-9 text-sm flex-1">
-            <DynamicIcon name="Circle" className="mr-1 h-4 w-4 text-destructive" /> Pendente
-          </Button>
-        </div>
-      )}
+      {/* Removed "Comprado" and "Pendente" buttons for mobile */}
 
       <div className="overflow-x-auto">
         <div className="max-h-[350px] overflow-y-auto rounded-md border">
           <Table className="min-w-full">
-            <TableHeader className="sticky top-0 z-10 bg-slate-200 rounded-t-md"> {/* Updated header styling and rounded corners */}
+            <TableHeader className="sticky top-0 z-10 bg-slate-200 rounded-t-md">
               <TableRow>
-                <TableHead className="text-slate-800 font-bold w-[5%] text-center">Nº</TableHead> {/* Changed title */}
-                <TableHead className="text-slate-800 font-bold w-[55%]">Produto</TableHead> {/* Changed title */}
+                <TableHead className="text-slate-800 font-bold w-[5%] text-center">Nº</TableHead>
+                <TableHead className="text-slate-800 font-bold w-[55%]">Produto</TableHead>
                 <TableHead className="text-slate-800 font-bold w-[25%] text-center">Status</TableHead>
                 <TableHead className="text-slate-800 font-bold w-[15%] text-center">Ações</TableHead>
               </TableRow>
@@ -363,16 +345,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                         onCheckedChange={(checked: boolean) => handleStatusChange(index, checked)}
                         className="h-6 w-6 rounded-md border-2 data-[state=checked]:bg-success data-[state=checked]:text-success-foreground"
                       />
-                      {item.product.trim() !== "" && (
-                        <Badge
-                          className={cn(
-                            "px-2 py-1 text-xs font-semibold rounded-full",
-                            item.status ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground"
-                          )}
-                        >
-                          {item.status ? "Comprado" : "Pendente"}
-                        </Badge>
-                      )}
+                      {/* Removed "Comprado" and "Pendente" badges */}
                       {item.date && <span className="text-xs text-muted-foreground">{item.date}</span>}
                     </div>
                   </TableCell>
