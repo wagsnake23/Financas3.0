@@ -3,7 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
@@ -14,8 +20,13 @@ import { cn } from "@/lib/utils"; // Importar cn
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 
 interface CategoryFormProps {
-  onAddCategory: (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
-  onUpdateCategory?: (id: string, category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
+  onAddCategory: (
+    category: Omit<AppCategory, "id" | "user_id" | "created_at">
+  ) => void;
+  onUpdateCategory?: (
+    id: string,
+    category: Omit<AppCategory, "id" | "user_id" | "created_at">
+  ) => void;
   editingCategory?: AppCategory | null;
   onCancelEdit?: () => void;
   allCategories: AppCategory[]; // Agora recebe todas as categorias (principais e sub)
@@ -24,16 +35,16 @@ interface CategoryFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
-const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
-const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const toastSuccessStyle = { backgroundColor: "#F3FFF3", color: "#006000" };
+const toastErrorStyle = { backgroundColor: "#F3FFF3", color: "#FF2929" };
 
-export const CategoryForm = ({ 
-  onAddCategory, 
+export const CategoryForm = ({
+  onAddCategory,
   onUpdateCategory,
   editingCategory,
   onCancelEdit,
   allCategories,
-  hideCardWrapper = false // Valor padrão é false
+  hideCardWrapper = false, // Valor padrão é false
 }: CategoryFormProps) => {
   const [nome, setNome] = useState("");
   const [icone, setIcone] = useState("😀");
@@ -62,7 +73,10 @@ export const CategoryForm = ({
   // Close emoji picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
         setShowEmojiPicker(false);
       }
     };
@@ -78,14 +92,20 @@ export const CategoryForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!selectedParentId || selectedParentId === UNSELECTED_VALUE) {
-      toast.error("Selecione uma Categoria Principal para a subcategoria.", { duration: toastDuration, style: toastErrorStyle });
+      toast.error("Selecione uma Categoria Principal para a subcategoria.", {
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       return;
     }
 
     if (!nome.trim()) {
-      toast.error("Preencha o nome da subcategoria", { duration: toastDuration, style: toastErrorStyle });
+      toast.error("Preencha o nome da subcategoria", {
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       return;
     }
 
@@ -117,7 +137,7 @@ export const CategoryForm = ({
 
   // Filter categories that can be selected as a parent (only root categories)
   const possibleParentCategories = useMemo(() => {
-    return allCategories.filter(cat => cat.parent_id === null);
+    return allCategories.filter((cat) => cat.parent_id === null);
   }, [allCategories]);
 
   const formContent = (
@@ -125,7 +145,7 @@ export const CategoryForm = ({
       {!hideCardWrapper && ( // Renderiza o título apenas se não estiver escondendo o Card Wrapper
         <div className="flex items-center justify-between mb-6">
           <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-            {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
+            🗂️ {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
           </h2>
           {editingCategory && (
             <Button
@@ -140,34 +160,56 @@ export const CategoryForm = ({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "space-y-2")}>
+      <form
+        onSubmit={handleSubmit}
+        className={cn("space-y-4", isMobile && "space-y-2")}
+      >
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>Categoria Principal</Label>
-          <Select 
-            value={selectedParentId || UNSELECTED_VALUE} 
-            onValueChange={(value) => setSelectedParentId(value === UNSELECTED_VALUE ? null : value)}
+          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>
+            Categoria Principal
+          </Label>
+          <Select
+            value={selectedParentId || UNSELECTED_VALUE}
+            onValueChange={(value) =>
+              setSelectedParentId(value === UNSELECTED_VALUE ? null : value)
+            }
             disabled={editingCategory?.user_id === null}
           >
-            <SelectTrigger id="parent_id" className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectTrigger
+              id="parent_id"
+              className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
             <SelectContent>
               {possibleParentCategories
-                .filter(cat => cat.id !== editingCategory?.id && cat.id !== "") 
+                .filter(
+                  (cat) => cat.id !== editingCategory?.id && cat.id !== ""
+                )
                 .map((cat) => (
-                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                  <span className="flex items-center gap-2">
-                    <DynamicIcon name={cat.icone} className="h-4 w-4" color={cat.cor} />
-                    {cat.nome}
-                  </span>
-                </SelectItem>
-              ))}
+                  <SelectItem
+                    key={cat.id}
+                    value={cat.id}
+                    className={cn(isMobile && "text-sm")}
+                  >
+                    <span className="flex items-center gap-2">
+                      <DynamicIcon
+                        name={cat.icone}
+                        className="h-4 w-4"
+                        color={cat.cor}
+                      />
+                      {cat.nome}
+                    </span>
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>
 
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>Nome da Subcategoria</Label>
+          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>
+            Nome da Subcategoria
+          </Label>
           <Input
             id="nome"
             type="text"
@@ -175,11 +217,11 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")} 
+            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
             disabled={editingCategory?.user_id === null}
           />
         </div>
-        
+
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
@@ -194,7 +236,7 @@ export const CategoryForm = ({
             >
               {icone}
             </button>
-            
+
             {showEmojiPicker && (
               <div ref={emojiPickerRef} className="absolute z-50 mt-2">
                 <EmojiPicker
@@ -221,10 +263,10 @@ export const CategoryForm = ({
               Cancelar
             </Button>
           )}
-          <Button 
-            type="submit" 
-            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")} 
-            size="lg" 
+          <Button
+            type="submit"
+            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}
+            size="lg"
             disabled={editingCategory?.user_id === null}
           >
             {editingCategory ? "Atualizar" : "Adicionar Subcategoria"}
@@ -237,7 +279,13 @@ export const CategoryForm = ({
   return hideCardWrapper ? (
     formContent
   ) : (
-    <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile && "p-4", !isMobile && "max-w-[700px] mx-auto")}>
+    <Card
+      className={cn(
+        "p-6 animate-fade-in rounded-xl shadow-sm",
+        isMobile && "p-4",
+        !isMobile && "max-w-[700px] mx-auto"
+      )}
+    >
       {formContent}
     </Card>
   );
