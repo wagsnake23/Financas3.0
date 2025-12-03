@@ -46,6 +46,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
 
   // Contagens (ignorando linhas vazias)
   const filledItems = items.filter((item) => item.product.trim() !== "");
@@ -81,7 +82,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       if (fetchedItems.length === 0) {
         setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
       } else {
-        // ✅ aqui era o bug: id estava como "fetchedItems.length + 1" (número)
         setItems([
           ...fetchedItems,
           {
@@ -369,6 +369,42 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   };
 
+  // Function to toggle pending items sort
+  const handleTogglePendingSort = () => {
+    setSortPendingFirst((prev) => {
+      const next = !prev;
+
+      // Ativar ordenação: pendentes primeiro
+      if (next) {
+        setItems((prevItems) => {
+          const nonEmpty = prevItems.filter(
+            (item) => item.product.trim() !== ""
+          );
+          const empty = prevItems.filter(
+            (item) => item.product.trim() === ""
+          );
+
+          // Pendentes (status === false) primeiro, depois comprados (true)
+          const sortedNonEmpty = [...nonEmpty].sort((a, b) => {
+            if (a.status === b.status) return 0;
+            return a.status ? 1 : -1; // false (pendente) vem antes de true (comprado)
+          });
+
+          return [...sortedNonEmpty, ...empty];
+        });
+      } else {
+        // Desativar ordenação: voltar para ordem original (campo 'order')
+        setItems((prevItems) => {
+          const cloned = [...prevItems];
+          cloned.sort((a, b) => (a.order || 0) - (b.order || 0));
+          return cloned;
+        });
+      }
+
+      return next;
+    });
+  };
+
   if (isLoading) {
     return (
       <div className={cn("p-6", isMobile && "p-4")}>
@@ -405,7 +441,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <p className="text-sm text-muted-foreground">
           Total de itens: <span className="font-semibold">{totalItems}</span>{" "}
           • Pendentes:{" "}
-          <span className="font-semibold text-destructive">{pendingItems}</span>
+          <button
+            type="button"
+            onClick={handleTogglePendingSort}
+            className={cn(
+              "font-semibold underline-offset-2",
+              sortPendingFirst
+                ? "text-destructive underline"
+                : "text-destructive hover:underline"
+            )}
+          >
+            {pendingItems}
+          </button>
         </p>
       </div>
 
@@ -461,7 +508,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                     className={cn(
                       "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
                       item.status
-                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold" // Changed from font-black to font-extrabold
+                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
                         : "border-destructive bg-transparent text-transparent",
                       isMobile
                         ? "h-[17px] w-[17px] text-[8px]"
