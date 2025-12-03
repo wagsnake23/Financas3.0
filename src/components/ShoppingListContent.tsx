@@ -12,8 +12,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge"; // Importar Badge
 
 interface ShoppingListContentProps {
   user: User | null;
@@ -266,7 +267,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   }
 
   return (
-    <Card className={cn("p-6 rounded-xl shadow-sm bg-white", isMobile && "p-4")}>
+    <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}> {/* REMOVIDO: bg-white */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
         <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>Lista de Compras</h2>
         {!isMobile && (
@@ -303,7 +304,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
           </TableHeader>
           <TableBody>
             {items.map((item, index) => (
-              <TableRow key={item.id} className={cn("bg-white shadow-sm", item.status && "line-through text-muted-foreground")}>
+              <TableRow key={item.id} className={cn("shadow-sm")}> {/* REMOVIDO: bg-white, line-through, text-muted-foreground */}
                 <TableCell className="py-2 px-2 text-center text-sm font-medium">
                   {index + 1}
                 </TableCell>
@@ -319,12 +320,22 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                   />
                 </TableCell>
                 <TableCell className="py-2 px-2 text-center">
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex flex-col items-center justify-center gap-1"> {/* Alterado para flex-col para melhor empilhamento */}
                     <Checkbox
                       checked={item.status}
                       onCheckedChange={(checked: boolean) => handleStatusChange(index, checked)}
                       className="h-6 w-6 rounded-md border-2 data-[state=checked]:bg-success data-[state=checked]:text-success-foreground"
                     />
+                    {item.product.trim() !== "" && ( // Só mostra o Badge para itens não vazios
+                      <Badge
+                        className={cn(
+                          "px-2 py-1 text-xs font-semibold rounded-full",
+                          item.status ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground"
+                        )}
+                      >
+                        {item.status ? "Comprado" : "Pendente"}
+                      </Badge>
+                    )}
                     {item.date && <span className="text-xs text-muted-foreground">{item.date}</span>}
                   </div>
                 </TableCell>
