@@ -6,15 +6,11 @@ import { ShoppingItem } from "@/types/finance";
 import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input"; // Removed Input component import, using native input
-// import { Checkbox } from "@/components/ui/checkbox"; // Removed Checkbox import
-// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"; // Removed Table component imports
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-// import { Badge } from "@/components/ui/badge"; // Importar Badge - REMOVED
 
 interface ShoppingListContentProps {
   user: User | null;
@@ -51,14 +47,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id, // This ensures it waits for the user
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
   });
 
-  // Initialize items state from fetched data
+  // Initialize items state from fetched data when user is available and data is loaded
   useEffect(() => {
-    if (fetchedItems && !initialLoadComplete) {
+    if (user && !isLoading && !isError && !initialLoadComplete) {
       if (fetchedItems.length === 0) {
         setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
       } else {
@@ -66,7 +62,19 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       }
       setInitialLoadComplete(true);
     }
-  }, [fetchedItems, initialLoadComplete]);
+    // If user logs out, reset initialLoadComplete to allow re-initialization on next login
+    if (!user && initialLoadComplete) {
+      setInitialLoadComplete(false);
+      setItems([]); // Clear items when user logs out
+    }
+  }, [user, fetchedItems, isLoading, isError, initialLoadComplete]);
+
+  // Focus on the first input if it's an empty item and it's the only item
+  useEffect(() => {
+    if (items.length === 1 && items[0].product === "" && inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, [items]);
 
   // Mutations for Supabase operations
   const upsertItemsMutation = useMutation({
@@ -308,8 +316,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         <div className="rounded-md border">
           {/* Sticky Header */}
           <div className="sticky top-0 z-10 bg-slate-200 rounded-t-md grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200">
-            <div className="col-span-2 text-slate-800 font-bold text-center">Nº</div> {/* Changed from col-span-1 to col-span-2 */}
-            <div className="col-span-6 text-slate-800 font-bold">Produto</div> {/* Changed from col-span-7 to col-span-6 */}
+            <div className="col-span-2 text-slate-800 font-bold text-center">Nº</div>
+            <div className="col-span-6 text-slate-800 font-bold">Produto</div>
             <div className="col-span-2 text-slate-800 font-bold text-center">Status</div>
             <div className="col-span-2 text-slate-800 font-bold text-center">Ações</div>
           </div>
@@ -326,12 +334,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
               >
 
                 {/* Nº */}
-                <div className="col-span-2 text-center font-medium"> {/* Changed from col-span-1 to col-span-2 */}
+                <div className="col-span-2 text-center font-medium">
                   {index + 1}
                 </div>
 
                 {/* Produto + Data */}
-                <div className="col-span-6"> {/* Changed from col-span-7 to col-span-6 */}
+                <div className="col-span-6">
                   <input
                     ref={el => (inputRefs.current[index] = el)}
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
