@@ -461,7 +461,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                     className={cn(
                       "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
                       item.status
-                        ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
+                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold" // Changed from font-black to font-extrabold
                         : "border-destructive bg-transparent text-transparent",
                       isMobile
                         ? "h-[17px] w-[17px] text-[8px]"
@@ -473,7 +473,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 </div>
 
                 {/* Ações - Excluir */}
-                <div className="col-span-3 flex justify-center pr-4">
+                <div className="col-span-3 flex justify-end pr-4">
                   {item.product.trim() !== "" && (
                     <button
                       onClick={() => handleDeleteRow(item.id)}
