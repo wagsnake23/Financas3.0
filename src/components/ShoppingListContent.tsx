@@ -137,7 +137,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     setItems(newItems);
   };
 
-  const handleRemoveItem = (index: number) => {
+  // This function is for backspace on empty input
+  const handleRemoveItemOnBackspace = (index: number) => {
     if (items.length === 1) return; // Don't remove the last item
 
     const itemToRemove = items[index];
@@ -156,13 +157,36 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   const handleInputKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && items[index].product === "" && items.length > 1 && index !== items.length - 1) {
       e.preventDefault(); // Prevent default backspace behavior
-      handleRemoveItem(index);
+      handleRemoveItemOnBackspace(index);
       // Focus on the previous input if available
       if (inputRefs.current[index - 1]) {
         inputRefs.current[index - 1]?.focus();
       }
     }
   };
+
+  // New function for trash icon deletion
+  const handleDeleteRow = async (itemId: string) => {
+    const itemToDelete = items.find(item => item.id === itemId);
+    if (!itemToDelete) return;
+
+    const newItems = items.filter(item => item.id !== itemId);
+
+    // If the item was saved to DB, trigger deletion mutation
+    if (itemToDelete.id && fetchedItems.some(fi => fi.id === itemToDelete.id)) {
+      await deleteItemsMutation.mutateAsync([itemToDelete.id]);
+    }
+
+    // Ensure there's always at least one empty row if all non-empty items are gone
+    if (newItems.filter(item => item.product.trim() !== "").length === 0) {
+      // If all remaining items are empty, or if newItems is completely empty,
+      // ensure there's exactly one empty row.
+      setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
+    } else {
+      setItems(newItems);
+    }
+  };
+
 
   const handleSaveList = async () => {
     if (!user?.id) {
@@ -267,7 +291,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   }
 
   return (
-    <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}> {/* REMOVIDO: bg-white */}
+    <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
         <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>Lista de Compras</h2>
         {!isMobile && (
@@ -294,55 +318,70 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       )}
 
       <div className="overflow-x-auto">
-        <Table className="min-w-full">
-          <TableHeader className="bg-slate-800">
-            <TableRow>
-              <TableHead className="text-white font-bold w-[10%] text-center">#</TableHead>
-              <TableHead className="text-white font-bold w-[60%]">Item</TableHead>
-              <TableHead className="text-white font-bold w-[30%] text-center">Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {items.map((item, index) => (
-              <TableRow key={item.id} className={cn("shadow-sm")}> {/* REMOVIDO: bg-white, line-through, text-muted-foreground */}
-                <TableCell className="py-2 px-2 text-center text-sm font-medium">
-                  {index + 1}
-                </TableCell>
-                <TableCell className="py-2 px-2">
-                  <Input
-                    ref={el => (inputRefs.current[index] = el)}
-                    type="text"
-                    value={item.product}
-                    onChange={(e) => handleProductChange(index, e.target.value)}
-                    onKeyDown={(e) => handleInputKeyDown(index, e)}
-                    placeholder="Adicionar item..."
-                    className="border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto text-base"
-                  />
-                </TableCell>
-                <TableCell className="py-2 px-2 text-center">
-                  <div className="flex flex-col items-center justify-center gap-1"> {/* Alterado para flex-col para melhor empilhamento */}
-                    <Checkbox
-                      checked={item.status}
-                      onCheckedChange={(checked: boolean) => handleStatusChange(index, checked)}
-                      className="h-6 w-6 rounded-md border-2 data-[state=checked]:bg-success data-[state=checked]:text-success-foreground"
-                    />
-                    {item.product.trim() !== "" && ( // Só mostra o Badge para itens não vazios
-                      <Badge
-                        className={cn(
-                          "px-2 py-1 text-xs font-semibold rounded-full",
-                          item.status ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground"
-                        )}
-                      >
-                        {item.status ? "Comprado" : "Pendente"}
-                      </Badge>
-                    )}
-                    {item.date && <span className="text-xs text-muted-foreground">{item.date}</span>}
-                  </div>
-                </TableCell>
+        <div className="max-h-[350px] overflow-y-auto rounded-md border"> {/* Added max-height and overflow-y */}
+          <Table className="min-w-full">
+            <TableHeader className="sticky top-0 z-10 bg-slate-800"> {/* Added sticky header */}
+              <TableRow>
+                <TableHead className="text-white font-bold w-[5%] text-center">#</TableHead>
+                <TableHead className="text-white font-bold w-[55%]">Item</TableHead>
+                <TableHead className="text-white font-bold w-[25%] text-center">Status</TableHead>
+                <TableHead className="text-white font-bold w-[15%] text-center">Ações</TableHead> {/* New column for delete */}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {items.map((item, index) => (
+                <TableRow key={item.id} className={cn("shadow-sm hover:bg-gray-50")}> {/* Added hover effect */}
+                  <TableCell className="py-2 px-2 text-center text-sm font-medium">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell className="py-2 px-2">
+                    <Input
+                      ref={el => (inputRefs.current[index] = el)}
+                      type="text"
+                      value={item.product}
+                      onChange={(e) => handleProductChange(index, e.target.value)}
+                      onKeyDown={(e) => handleInputKeyDown(index, e)}
+                      placeholder="Adicionar item..."
+                      className="border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto text-base"
+                    />
+                  </TableCell>
+                  <TableCell className="py-2 px-2 text-center">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <Checkbox
+                        checked={item.status}
+                        onCheckedChange={(checked: boolean) => handleStatusChange(index, checked)}
+                        className="h-6 w-6 rounded-md border-2 data-[state=checked]:bg-success data-[state=checked]:text-success-foreground"
+                      />
+                      {item.product.trim() !== "" && (
+                        <Badge
+                          className={cn(
+                            "px-2 py-1 text-xs font-semibold rounded-full",
+                            item.status ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground"
+                          )}
+                        >
+                          {item.status ? "Comprado" : "Pendente"}
+                        </Badge>
+                      )}
+                      {item.date && <span className="text-xs text-muted-foreground">{item.date}</span>}
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-2 px-2 text-center">
+                    {item.product.trim() !== "" && ( // Only show trash icon for non-empty items
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteRow(item.id)}
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
+                      >
+                        <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-2">
