@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -35,17 +35,25 @@ const EMPTY_ITEM: Omit<ShoppingItem, "id" | "created_at" | "updated_at"> = {
 };
 
 const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
-const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const toastSuccessStyle = { backgroundColor: "#F3FFF3", color: "#006000" };
+const toastErrorStyle = { backgroundColor: "#F3FFF3", color: "#FF2929" };
 
-export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, isMobile }) => {
+export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
+  user,
+  isMobile,
+}) => {
   const queryClient = useQueryClient();
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   // Fetch shopping items
-  const { data: fetchedItems = [], isLoading, isError, error } = useQuery<ShoppingItem[]>({
+  const {
+    data: fetchedItems = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery<ShoppingItem[]>({
     queryKey: ["shopping_items", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
@@ -68,7 +76,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       if (fetchedItems.length === 0) {
         setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
       } else {
-        setItems([...fetchedItems, { ...EMPTY_ITEM, id: fetchedItems.length + 1, order: fetchedItems.length + 1 }]);
+        // ✅ aqui era o bug: id estava como "fetchedItems.length + 1" (número)
+        setItems([
+          ...fetchedItems,
+          {
+            ...EMPTY_ITEM,
+            id: crypto.randomUUID(),
+            order: fetchedItems.length + 1,
+          },
+        ]);
       }
       setInitialLoadComplete(true);
     }
@@ -88,27 +104,39 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
 
   // Mutations for Supabase operations
   const upsertItemsMutation = useMutation({
-    mutationFn: async (itemsToUpsert: (TablesInsert<'shopping_items'> | TablesUpdate<'shopping_items'>)[]) => {
+    mutationFn: async (
+      itemsToUpsert: (
+        | TablesInsert<"shopping_items">
+        | TablesUpdate<"shopping_items">
+      )[]
+    ) => {
       if (!user?.id) throw new Error("Usuário não autenticado.");
 
-      const itemsWithUserId = itemsToUpsert.map(item => ({
+      const itemsWithUserId = itemsToUpsert.map((item) => ({
         ...item,
         user_id: user.id,
       }));
 
       const { data, error } = await supabase
         .from("shopping_items")
-        .upsert(itemsWithUserId, { onConflict: 'id' })
+        .upsert(itemsWithUserId, { onConflict: "id" })
         .select();
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
-      toast.success("Lista de compras salva!", { duration: toastDuration, style: toastSuccessStyle });
+      toast.success("Lista de compras salva!", {
+        duration: toastDuration,
+        style: toastSuccessStyle,
+      });
     },
     onError: (err) => {
-      toast.error("Erro ao salvar lista de compras", { description: err.message, duration: toastDuration, style: toastErrorStyle });
+      toast.error("Erro ao salvar lista de compras", {
+        description: err.message,
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       console.error("Supabase error saving shopping list:", err);
     },
   });
@@ -125,10 +153,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
-      toast.success("Item removido com sucesso!", { duration: toastDuration, style: toastSuccessStyle, className: "shopping-list-toast-success" });
+      toast.success("Item removido com sucesso!", {
+        duration: toastDuration,
+        style: toastSuccessStyle,
+        className: "shopping-list-toast-success",
+      });
     },
     onError: (err) => {
-      toast.error("Erro ao remover itens", { description: err.message, duration: toastDuration, style: toastErrorStyle });
+      toast.error("Erro ao remover itens", {
+        description: err.message,
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       console.error("Supabase error deleting shopping items:", err);
     },
   });
@@ -136,22 +172,32 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   const handleProductChange = (index: number, value: string) => {
     const newItems = [...items];
     // Auto-capitalize first letter, rest lowercase
-    const formattedValue = value.length > 0
-      ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
-      : "";
+    const formattedValue =
+      value.length > 0
+        ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+        : "";
     newItems[index].product = formattedValue;
     setItems(newItems);
 
     // If typing in the last (empty) row, add a new empty row below
     if (index === items.length - 1 && formattedValue.length > 0) {
-      setItems([...newItems, { ...EMPTY_ITEM, id: crypto.randomUUID(), order: items.length + 1 }]);
+      setItems([
+        ...newItems,
+        {
+          ...EMPTY_ITEM,
+          id: crypto.randomUUID(),
+          order: items.length + 1,
+        },
+      ]);
     }
   };
 
   const handleStatusChange = (index: number, checked: boolean) => {
     const newItems = [...items];
     newItems[index].status = checked;
-    newItems[index].date = checked ? format(new Date(), "MMM/dd", { locale: ptBR }) : "";
+    newItems[index].date = checked
+      ? format(new Date(), "MMM/dd", { locale: ptBR })
+      : "";
     setItems(newItems);
   };
 
@@ -163,7 +209,11 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     const newItems = items.filter((_, i) => i !== index);
 
     // If the item had an ID (was saved to DB), mark for deletion
-    if (itemToRemove.product.trim() === "" && itemToRemove.id && fetchedItems.some(fi => fi.id === itemToRemove.id)) {
+    if (
+      itemToRemove.product.trim() === "" &&
+      itemToRemove.id &&
+      fetchedItems.some((fi) => fi.id === itemToRemove.id)
+    ) {
       // Only remove if it's an empty row and was a fetched item
       setItems(newItems);
       if (itemToRemove.id) {
@@ -178,8 +228,16 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     }
   };
 
-  const handleInputKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && items[index].product === "" && items.length > 1 && index !== items.length - 1) {
+  const handleInputKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (
+      e.key === "Backspace" &&
+      items[index].product === "" &&
+      items.length > 1 &&
+      index !== items.length - 1
+    ) {
       e.preventDefault(); // Prevent default backspace behavior
       handleRemoveItemOnBackspace(index);
       // Focus on the previous input if available
@@ -189,7 +247,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     } else if (e.key === "Enter") {
       e.preventDefault(); // Prevent default form submission or new line
       // If not the last item, or if it's the last item and it has content (meaning a new empty row was just added by handleProductChange)
-      if (index < items.length - 1 || (index === items.length - 1 && items[index].product.trim() !== "")) {
+      if (
+        index < items.length - 1 ||
+        (index === items.length - 1 && items[index].product.trim() !== "")
+      ) {
         // Focus the next input. If a new row was added, this will be the input in that new row.
         // Using setTimeout to ensure the DOM element is rendered before attempting to focus.
         setTimeout(() => {
@@ -202,77 +263,90 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
 
   // New function for trash icon deletion
   const handleDeleteRow = async (itemId: string) => {
-    const itemToDelete = items.find(item => item.id === itemId);
+    const itemToDelete = items.find((item) => item.id === itemId);
     if (!itemToDelete) return;
 
-    const newItems = items.filter(item => item.id !== itemId);
+    const newItems = items.filter((item) => item.id !== itemId);
 
     // If the item was saved to DB, trigger deletion mutation
-    if (itemToDelete.id && fetchedItems.some(fi => fi.id === itemToDelete.id)) {
+    if (
+      itemToDelete.id &&
+      fetchedItems.some((fi) => fi.id === itemToDelete.id)
+    ) {
       await deleteItemsMutation.mutateAsync([itemToDelete.id]);
     }
 
     // Ensure there's always at least one empty row if all non-empty items are gone
-    if (newItems.filter(item => item.product.trim() !== "").length === 0) {
-      // If all remaining items are empty, or if newItems is completely empty,
-      // ensure there's exactly one empty row.
+    if (newItems.filter((item) => item.product.trim() !== "").length === 0) {
       setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
     } else {
       setItems(newItems);
     }
   };
 
-
+  // ✅ handleSaveList corrigido para não gerar mais erro de UUID
   const handleSaveList = async () => {
     if (!user?.id) {
-      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
+      toast.error("Usuário não autenticado.", {
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       return;
     }
 
-    const itemsToSave: TablesInsert<'shopping_items'>[] = [];
-    const itemsToUpdate: TablesUpdate<'shopping_items'>[] = [];
-    const existingItemIds = new Set(fetchedItems.map(item => item.id));
-    let currentOrder = 1;
+    // Só trabalha com itens preenchidos
+    const filteredItems = items.filter((item) => item.product.trim() !== "");
 
-    items.forEach(item => {
-      if (item.product.trim() !== "") { // Only save non-empty items
-        const itemData = {
-          ...item,
-          user_id: user.id,
-          order: currentOrder++,
-        };
-        if (existingItemIds.has(item.id)) {
-          itemsToUpdate.push(itemData);
-        } else {
-          itemsToSave.push(itemData);
-        }
-      }
-    });
+    // Monta objetos para upsert (mantendo sempre o UUID original)
+    const itemsToUpsert: (
+      | TablesInsert<"shopping_items">
+      | TablesUpdate<"shopping_items">
+    )[] = filteredItems.map((item, index) => ({
+      id: item.id, // mantém UUID
+      product: item.product,
+      status: item.status,
+      date: item.date,
+      order: index + 1, // renumera ordem
+    }));
 
+    // Tudo que existe no banco mas não está mais na lista → deletar
     const idsToDelete = fetchedItems
-      .filter(fetchedItem => !items.some(currentItem => currentItem.id === fetchedItem.id && currentItem.product.trim() !== ""))
-      .map(item => item.id);
+      .filter(
+        (fetchedItem) =>
+          !filteredItems.some(
+            (currentItem) => currentItem.id === fetchedItem.id
+          )
+      )
+      .map((item) => item.id);
 
     try {
-      if (itemsToSave.length > 0 || itemsToUpdate.length > 0) {
-        await upsertItemsMutation.mutateAsync([...itemsToSave, ...itemsToUpdate]);
+      if (itemsToUpsert.length > 0) {
+        await upsertItemsMutation.mutateAsync(itemsToUpsert);
       }
+
       if (idsToDelete.length > 0) {
         await deleteItemsMutation.mutateAsync(idsToDelete);
       }
-      // After saving, re-initialize the list to ensure a single empty row at the end
-      queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
+
+      // Recarrega do banco
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_items", user?.id],
+      });
     } catch (error) {
-      // Error handled by mutations' onError
+      // onError das mutations já trata toast
+      console.error("Erro ao salvar lista de compras:", error);
     }
   };
 
   const handleClearList = () => {
     if (!user?.id) {
-      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
+      toast.error("Usuário não autenticado.", {
+        duration: toastDuration,
+        style: toastErrorStyle,
+      });
       return;
     }
-    const idsToDelete = fetchedItems.map(item => item.id);
+    const idsToDelete = fetchedItems.map((item) => item.id);
     if (idsToDelete.length > 0) {
       deleteItemsMutation.mutate(idsToDelete, {
         onSuccess: () => {
@@ -280,7 +354,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
           if (inputRefs.current[0]) {
             inputRefs.current[0].focus();
           }
-        }
+        },
       });
     } else {
       setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
@@ -293,7 +367,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   if (isLoading) {
     return (
       <div className={cn("p-6", isMobile && "p-4")}>
-        <div className="animate-pulse text-muted-foreground text-center py-8">Carregando lista de compras...</div>
+        <div className="animate-pulse text-muted-foreground text-center py-8">
+          Carregando lista de compras...
+        </div>
       </div>
     );
   }
@@ -301,25 +377,35 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   if (isError) {
     return (
       <div className={cn("p-6", isMobile && "p-4")}>
-        <div className="text-destructive text-center py-8">Erro ao carregar lista: {error?.message}</div>
+        <div className="text-destructive text-center py-8">
+          Erro ao carregar lista: {error?.message}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={cn("w-full p-4 lg:p-6")}> {/* Main container with padding */}
+    <div className={cn("w-full p-4 lg:p-6")}>
+      {/* Main container with padding */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
-        <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>🛒 Lista de Compras</h2>
+        <h2
+          className={cn(
+            "text-2xl font-bold text-primary",
+            isMobile && "text-xl"
+          )}
+        >
+          🛒 Lista de Compras
+        </h2>
       </div>
 
       <div className="overflow-x-auto">
-        <div className="rounded-xl border"> {/* Applied rounded-xl here */}
+        <div className="rounded-xl border">
           {/* Sticky Header */}
-          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-xl grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700"> {/* Adjusted font size and color */}
+          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-xl grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700">
             <div className="col-span-2 text-center font-bold">Nº</div>
-            <div className="col-span-5 font-bold">Produto</div> {/* Adjusted col-span */}
+            <div className="col-span-5 font-bold">Produto</div>
             <div className="col-span-2 text-center font-bold">Status</div>
-            <div className="col-span-3 text-right font-bold pr-4">Ações</div> {/* Adjusted col-span and alignment */}
+            <div className="col-span-3 text-right font-bold pr-4">Ações</div>
           </div>
 
           {/* LISTA COM SCROLL */}
@@ -332,16 +418,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                   item.status && "bg-soft-green/20"
                 )}
               >
-
                 {/* Nº */}
                 <div className="col-span-2 text-center font-medium">
                   {index + 1}
                 </div>
 
                 {/* Produto + Data */}
-                <div className="col-span-5"> {/* Adjusted col-span */}
+                <div className="col-span-5">
                   <input
-                    ref={el => (inputRefs.current[index] = el)}
+                    ref={(el) => (inputRefs.current[index] = el)}
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
                     className={cn(
                       "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
@@ -364,11 +449,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                     onClick={() => handleStatusChange(index, !item.status)}
                     className={cn(
                       "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
-
                       item.status
                         ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
                         : "border-destructive bg-transparent text-transparent",
-
                       isMobile
                         ? "h-[17px] w-[17px] text-[8px]"
                         : "h-[21px] w-[21px] text-[10px]"
@@ -379,8 +462,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                 </div>
 
                 {/* Ações - Excluir */}
-                <div className="col-span-3 flex justify-center pr-4"> {/* Adjusted col-span and alignment */}
-                  {item.product.trim() !== "" && ( // Only show trash icon for non-empty items
+                <div className="col-span-3 flex justify-center pr-4">
+                  {item.product.trim() !== "" && (
                     <button
                       onClick={() => handleDeleteRow(item.id)}
                       className="text-destructive hover:text-red-700"
@@ -389,7 +472,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                     </button>
                   )}
                 </div>
-
               </div>
             ))}
           </div>
@@ -401,11 +483,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="rounded-xl flex-1"
-            >
-              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
+            <Button variant="destructive" className="rounded-xl flex-1">
+              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar
+              Lista
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -417,7 +497,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleClearList} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction
+                onClick={handleClearList}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
                 Confirmar
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -425,10 +508,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         </AlertDialog>
 
         {/* Salvar Button */}
-        <Button
-          onClick={handleSaveList}
-          className="rounded-xl flex-1"
-        >
+        <Button onClick={handleSaveList} className="rounded-xl flex-1">
           <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
         </Button>
       </div>
