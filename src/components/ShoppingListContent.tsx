@@ -396,16 +396,49 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-2">
-        <Button onClick={handleClearList} variant="destructive" className="rounded-xl w-full sm:w-auto">
-          <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
+      {/* Buttons Container */}
+      <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center">
+        {/* Salvar Button */}
+        <Button
+          onClick={handleSaveList}
+          className={cn(
+            "rounded-xl",
+            "w-full order-1", // Mobile
+            "lg:order-3 lg:w-auto" // Desktop
+          )}
+        >
+          <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
         </Button>
-        <div className="flex gap-2 w-full sm:w-auto">
-          <Button onClick={handleCancel} variant="outline" className="rounded-xl flex-1">
-            <DynamicIcon name="XCircle" className="mr-2 h-4 w-4" /> Cancelar
+
+        {/* Limpar Lista and Cancelar Buttons Container */}
+        <div
+          className={cn(
+            "flex gap-3 w-full order-2", // Mobile
+            "lg:flex-row lg:w-auto" // Desktop
+          )}
+        >
+          {/* Limpar Lista Button */}
+          <Button
+            onClick={handleClearList}
+            variant="destructive"
+            className={cn(
+              "rounded-xl flex-1", // Mobile
+              "lg:order-1" // Desktop
+            )}
+          >
+            <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
           </Button>
-          <Button onClick={handleSaveList} className="rounded-xl flex-1">
-            <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
+
+          {/* Cancelar Button */}
+          <Button
+            onClick={handleCancel}
+            variant="outline"
+            className={cn(
+              "rounded-xl flex-1", // Mobile
+              "lg:order-2" // Desktop
+            )}
+          >
+            <DynamicIcon name="XCircle" className="mr-2 h-4 w-4" /> Cancelar
           </Button>
         </div>
       </div>
