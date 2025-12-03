@@ -4,13 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { ShoppingItem } from "@/types/finance";
 import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ShoppingListContentProps {
   user: User | null;
@@ -280,26 +290,24 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     }
   };
 
-  // Removed handleCancel function as the button is being removed.
-
   if (isLoading) {
     return (
-      <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+      <div className={cn("p-6", isMobile && "p-4")}>
         <div className="animate-pulse text-muted-foreground text-center py-8">Carregando lista de compras...</div>
-      </Card>
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+      <div className={cn("p-6", isMobile && "p-4")}>
         <div className="text-destructive text-center py-8">Erro ao carregar lista: {error?.message}</div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+    <div className={cn("w-full p-4 lg:p-6")}> {/* Main container with padding */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
         <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>🛒 Lista de Compras</h2>
       </div>
@@ -390,14 +398,31 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
 
       {/* Buttons Container */}
       <div className="mt-6 flex w-full gap-3 justify-between">
-        {/* Limpar Lista Button */}
-        <Button
-          onClick={handleClearList}
-          variant="destructive"
-          className="rounded-xl flex-1"
-        >
-          <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
-        </Button>
+        {/* Limpar Lista Button with Confirmation Modal */}
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              className="rounded-xl flex-1"
+            >
+              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmação</AlertDialogTitle>
+              <AlertDialogDescription>
+                Deseja realmente excluir todos os itens da lista?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearList} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Confirmar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Salvar Button */}
         <Button
@@ -407,6 +432,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
           <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
         </Button>
       </div>
-    </Card>
+    </div>
   );
 };
