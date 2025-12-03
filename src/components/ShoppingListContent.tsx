@@ -309,7 +309,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
   return (
     <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
-        <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>Lista de Compras</h2>
+        <h2 className={cn("text-2xl font-bold text-primary", isMobile && "text-xl")}>🛒 Lista de Compras</h2>
       </div>
 
       <div className="overflow-x-auto">
@@ -345,7 +345,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
                     className={cn(
                       "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
-                      item.status && "text-gray-400" // Removed line-through here
+                      item.status && "text-gray-400"
                     )}
                     value={item.product}
                     onChange={(e) => handleProductChange(index, e.target.value)}
