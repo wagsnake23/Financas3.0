@@ -46,6 +46,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [showOnlyPending, setShowOnlyPending] = useState(false); // New state for filter
 
   // Contagens (ignorando linhas vazias)
   const filledItems = items.filter((item) => item.product.trim() !== "");
@@ -405,7 +406,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <p className="text-sm text-muted-foreground">
           Total de itens: <span className="font-semibold">{totalItems}</span>{" "}
           • Pendentes:{" "}
-          <span className="font-semibold text-destructive">{pendingItems}</span>
+          <button
+            type="button"
+            onClick={() => setShowOnlyPending((prev) => !prev)}
+            className={cn(
+              "font-semibold underline-offset-2",
+              showOnlyPending
+                ? "text-destructive underline"
+                : "text-destructive hover:underline"
+            )}
+          >
+            {pendingItems}
+          </button>
         </p>
       </div>
 
@@ -421,70 +433,82 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
           {/* LISTA COM SCROLL */}
           <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-200 bg-white">
-            {items.map((item, index) => (
-              <div
-                key={item.id}
-                className={cn(
-                  "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                  item.status && "bg-soft-green/20"
-                )}
-              >
-                {/* Nº */}
-                <div className="col-span-2 text-center font-medium">
-                  {index + 1}
-                </div>
+            {items.map((item, index) => {
+              const isEmpty = item.product.trim() === "";
+              const isPending = !item.status && !isEmpty;
 
-                {/* Produto + Data */}
-                <div className="col-span-5">
-                  <input
-                    ref={(el) => (inputRefs.current[index] = el)}
-                    onKeyDown={(e) => handleInputKeyDown(index, e)}
-                    className={cn(
-                      "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
-                      item.status && "text-gray-400"
-                    )}
-                    value={item.product}
-                    onChange={(e) => handleProductChange(index, e.target.value)}
-                  />
+              // Se estiver filtrando pendentes → ocultar tudo que não for pendente
+              if (showOnlyPending && !isPending) {
+                return null;
+              }
 
-                  {item.date && (
-                    <p className="mt-[1px] text-[10px] text-gray-500">
-                      {item.date}
-                    </p>
+              return (
+                <div
+                  key={item.id}
+                  className={cn(
+                    "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
+                    item.status && "bg-soft-green/20"
                   )}
-                </div>
+                >
+                  {/* Nº */}
+                  <div className="col-span-2 text-center font-medium">
+                    {index + 1}
+                  </div>
 
-                {/* Status */}
-                <div className="col-span-2 flex justify-center">
-                  <button
-                    onClick={() => handleStatusChange(index, !item.status)}
-                    className={cn(
-                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
-                      item.status
-                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold" // Changed from font-black to font-extrabold
-                        : "border-destructive bg-transparent text-transparent",
-                      isMobile
-                        ? "h-[17px] w-[17px] text-[8px]"
-                        : "h-[21px] w-[21px] text-[10px]"
+                  {/* Produto + Data */}
+                  <div className="col-span-5">
+                    <input
+                      ref={(el) => (inputRefs.current[index] = el)}
+                      onKeyDown={(e) => handleInputKeyDown(index, e)}
+                      className={cn(
+                        "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
+                        item.status && "text-gray-400"
+                      )}
+                      value={item.product}
+                      onChange={(e) =>
+                        handleProductChange(index, e.target.value)
+                      }
+                    />
+
+                    {item.date && (
+                      <p className="mt-[1px] text-[10px] text-gray-500">
+                        {item.date}
+                      </p>
                     )}
-                  >
-                    {item.status && "✓"}
-                  </button>
-                </div>
+                  </div>
 
-                {/* Ações - Excluir */}
-                <div className="col-span-3 flex justify-end pr-4">
-                  {item.product.trim() !== "" && (
+                  {/* Status */}
+                  <div className="col-span-2 flex justify-center">
                     <button
-                      onClick={() => handleDeleteRow(item.id)}
-                      className="text-destructive hover:text-red-700"
+                      onClick={() => handleStatusChange(index, !item.status)}
+                      className={cn(
+                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
+                        item.status
+                          ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
+                          : "border-destructive bg-transparent text-transparent",
+                        isMobile
+                          ? "h-[17px] w-[17px] text-[8px]"
+                          : "h-[21px] w-[21px] text-[10px]"
+                      )}
                     >
-                      <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      {item.status && "✓"}
                     </button>
-                  )}
+                  </div>
+
+                  {/* Ações - Excluir */}
+                  <div className="col-span-3 flex justify-end pr-4">
+                    {item.product.trim() !== "" && (
+                      <button
+                        onClick={() => handleDeleteRow(item.id)}
+                        className="text-destructive hover:text-red-700"
+                      >
+                        <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
