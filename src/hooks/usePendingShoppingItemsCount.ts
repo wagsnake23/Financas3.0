@@ -13,12 +13,12 @@ export function usePendingShoppingItemsCount(user: User | null) {
         .from("shopping_items")
         .select("id", { count: "exact", head: true })
         .eq("user_id", user.id)
-        .eq("status", false); // apenas pendentes
+        .eq("status", false); // só pendentes
 
       if (error) throw error;
       return count ?? 0;
     },
-    staleTime: 60 * 1000, // 1 minuto
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
   });
 }

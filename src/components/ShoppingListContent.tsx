@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -131,6 +131,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
+      // atualiza também o badge do carrinho
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_items_pending_count", user?.id],
+      });
       toast.success("Lista de compras salva!", {
         duration: toastDuration,
         style: toastSuccessStyle,
@@ -158,6 +162,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_items_pending_count", user?.id],
+      });
       toast.success("Item removido com sucesso!", {
         duration: toastDuration,
         style: toastSuccessStyle,
@@ -197,6 +204,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   };
 
+  // ✅ Agora o toggle salva imediatamente no banco
   const handleStatusChange = (index: number, checked: boolean) => {
     const newItems = [...items];
     newItems[index].status = checked;
@@ -204,6 +212,20 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       ? format(new Date(), "MMM/dd", { locale: ptBR })
       : "";
     setItems(newItems);
+
+    const item = newItems[index];
+
+    // só salva se tiver produto preenchido
+    if (item.product.trim() !== "") {
+      const itemToUpsert: TablesUpdate<"shopping_items"> = {
+        id: item.id,
+        product: item.product,
+        status: item.status,
+        date: item.date,
+        order: item.order || index + 1,
+      };
+      upsertItemsMutation.mutate([itemToUpsert]);
+    }
   };
 
   // This function is for backspace on empty input
@@ -257,7 +279,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         (index === items.length - 1 && items[index].product.trim() !== "")
       ) {
         // Focus the next input. If a new row was added, this will be the input in that new row.
-        // Using setTimeout to ensure the DOM element is rendered before attempting to focus.
         setTimeout(() => {
           inputRefs.current[index + 1]?.focus();
         }, 0);
@@ -289,7 +310,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   };
 
-  // ✅ handleSaveList corrigido para não gerar mais erro de UUID
+  // ✅ handleSaveList mantém comportamento de salvar tudo de uma vez
   const handleSaveList = async () => {
     if (!user?.id) {
       toast.error("Usuário não autenticado.", {
@@ -337,8 +358,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["shopping_items", user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_items_pending_count", user?.id],
+      });
     } catch (error) {
-      // onError das mutations já trata toast
       console.error("Erro ao salvar lista de compras:", error);
     }
   };
@@ -380,9 +403,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           const nonEmpty = prevItems.filter(
             (item) => item.product.trim() !== ""
           );
-          const empty = prevItems.filter(
-            (item) => item.product.trim() === ""
-          );
+          const empty = prevItems.filter((item) => item.product.trim() === "");
 
           // Pendentes (status === false) primeiro, depois comprados (true)
           const sortedNonEmpty = [...nonEmpty].sort((a, b) => {
@@ -439,8 +460,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </h2>
 
         <p className="text-sm text-muted-foreground">
-          Total de itens: <span className="font-semibold">{totalItems}</span>{" "}
-          • Pendentes:{" "}
+          Total de itens: <span className="font-semibold">{totalItems}</span> •
+          Pendentes:{" "}
           <button
             type="button"
             onClick={handleTogglePendingSort}
@@ -506,13 +527,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   <button
                     onClick={() => handleStatusChange(index, !item.status)}
                     className={cn(
-                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border",
+                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
                       item.status
                         ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
-                        : "border-destructive bg-transparent text-transparent",
+                        : "border-gray-400 bg-transparent text-transparent",
                       isMobile
-                        ? "h-[17px] w-[17px] text-[8px]"
-                        : "h-[21px] w-[21px] text-[10px]"
+                        ? "h-[20px] w-[20px] text-[10px]"
+                        : "h-[24px] w-[24px] text-[12px]"
                     )}
                   >
                     {item.status && "✓"}

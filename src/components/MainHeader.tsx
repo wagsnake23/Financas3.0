@@ -2,45 +2,49 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
-import { useAuth } from "@/hooks/useAuth"; // Assuming this hook provides the user
-import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount"; // New import
+import { useAuth } from "@/hooks/useAuth";
+import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
 
 interface MainHeaderProps {
   toggleSidebar: () => void;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
-  const { user } = useAuth(); // Get user from auth context
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user); // Use the new hook
+  const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user);
 
   const handleOpenShoppingList = () => {
-    navigate("/lista-compras"); // Navigate to the shopping list route
+    navigate("/lista-compras");
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent">
-      <div className="flex items-center justify-between w-full">
-        {/* Left side: Logo/Title */}
-        <Link to="/" className="flex items-center gap-2 text-lg font-semibold">
+    <header className="sticky top-0 z-30 w-full border-b bg-primary text-primary-foreground sm:bg-background sm:text-foreground sm:border-b sm:px-4">
+      <div className="flex h-14 items-center justify-between px-4 sm:px-0">
+        {/* ESQUERDA: Logo / Título */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-base font-semibold sm:text-lg"
+        >
           <DynamicIcon name="Wallet" className="h-6 w-6" />
           <span>Finanças Pessoais</span>
         </Link>
 
-        {/* Right side: Shopping Cart Button + Hamburger Menu */}
+        {/* DIREITA: Carrinho + Menu */}
         <div className="flex items-center gap-3">
-          {/* 🛒 Botão da lista de compras */}
+          {/* 🛒 Lista de Compras */}
           <button
             type="button"
             onClick={handleOpenShoppingList}
-            className="relative flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 px-2 py-1 transition"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 sm:bg-muted sm:hover:bg-muted/80 transition"
             title={
               pendingCount > 0
                 ? `Lista de compras (${pendingCount} itens pendentes)`
                 : "Lista de compras"
             }
+            aria-label="Abrir lista de compras"
           >
-            <span className="text-xl">🛒</span>
+            <span className="text-xl leading-none">🛒</span>
 
             {pendingCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-[5px] text-[10px] font-bold text-white">
@@ -49,12 +53,13 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
             )}
           </button>
 
-          {/* Existing Hamburger Menu Button */}
+          {/* Botão Menu (hambúrguer) */}
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9"
+            className="h-9 w-9 bg-white/5 border-white/40 text-primary-foreground hover:bg-white/15 sm:bg-transparent sm:border-input sm:text-foreground"
             onClick={toggleSidebar}
+            aria-label="Abrir menu de navegação"
           >
             <DynamicIcon name="Menu" className="h-4 w-4" />
             <span className="sr-only">Toggle navigation menu</span>
