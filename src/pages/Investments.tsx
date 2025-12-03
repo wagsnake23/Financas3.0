@@ -301,7 +301,7 @@ export default function Investments() { // Alterado para export default function
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
             <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
-              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
+              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -555,7 +555,7 @@ export default function Investments() { // Alterado para export default function
               {/* Form */}
               <div>
                 <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile ? "p-4 bg-lancamentos-mobile-bg" : "max-w-[700px] mx-auto")}>
-                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
+                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -748,6 +748,19 @@ export default function Investments() { // Alterado para export default function
                                   Rentabilidade
                                 </p>
                                 <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
+                              </div>
+                              <div>
+                                <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
+                                  <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                  Data
+                                </p>
+                                <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
+                                  {(() => {
+                                    const [year, month, day] = investment.data.split('-').map(Number);
+                                    const localDate = new Date(year, month - 1, day);
+                                    return localDate.toLocaleDateString('pt-BR');
+                                  })()}
+                                </p>
                               </div>
                             </div>
                           </div>
