@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -46,6 +46,11 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  // Contagens (ignorando linhas vazias)
+  const filledItems = items.filter((item) => item.product.trim() !== "");
+  const totalItems = filledItems.length;
+  const pendingItems = filledItems.filter((item) => !item.status).length;
 
   // Fetch shopping items
   const {
@@ -387,7 +392,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   return (
     <div className={cn("w-full p-4 lg:p-6")}>
       {/* Main container with padding */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
+      <div className="flex flex-col items-start mb-4 gap-1">
         <h2
           className={cn(
             "text-2xl font-bold text-primary",
@@ -396,6 +401,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         >
           🛒 Lista de Compras
         </h2>
+
+        <p className="text-sm text-muted-foreground">
+          Total de itens: <span className="font-semibold">{totalItems}</span>{" "}
+          • Pendentes:{" "}
+          <span className="font-semibold text-destructive">{pendingItems}</span>
+        </p>
       </div>
 
       <div className="overflow-x-auto">
