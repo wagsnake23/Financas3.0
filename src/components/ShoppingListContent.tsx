@@ -68,7 +68,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       if (fetchedItems.length === 0) {
         setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
       } else {
-        setItems([...fetchedItems, { ...EMPTY_ITEM, id: crypto.randomUUID(), order: fetchedItems.length + 1 }]);
+        setItems([...fetchedItems, { ...EMPTY_ITEM, id: fetchedItems.length + 1, order: fetchedItems.length + 1 }]);
       }
       setInitialLoadComplete(true);
     }
@@ -125,7 +125,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shopping_items", user?.id] });
-      toast.success("Itens removidos!", { duration: toastDuration, style: toastSuccessStyle });
+      toast.success("Item removido com sucesso!", { duration: toastDuration, style: toastSuccessStyle, className: "shopping-list-toast-success" });
     },
     onError: (err) => {
       toast.error("Erro ao remover itens", { description: err.message, duration: toastDuration, style: toastErrorStyle });
@@ -313,13 +313,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       </div>
 
       <div className="overflow-x-auto">
-        <div className="rounded-md border">
+        <div className="rounded-xl border"> {/* Applied rounded-xl here */}
           {/* Sticky Header */}
-          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-md grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200">
-            <div className="col-span-2 text-center font-bold text-slate-800">Nº</div>
-            <div className="col-span-6 font-bold text-slate-800">Produto</div>
-            <div className="col-span-2 text-center font-bold text-slate-800">Status</div>
-            <div className="col-span-2 text-center font-bold text-slate-800">Ações</div>
+          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-xl grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700"> {/* Adjusted font size and color */}
+            <div className="col-span-2 text-center font-bold">Nº</div>
+            <div className="col-span-5 font-bold">Produto</div> {/* Adjusted col-span */}
+            <div className="col-span-2 text-center font-bold">Status</div>
+            <div className="col-span-3 text-right font-bold pr-4">Ações</div> {/* Adjusted col-span and alignment */}
           </div>
 
           {/* LISTA COM SCROLL */}
@@ -339,7 +339,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                 </div>
 
                 {/* Produto + Data */}
-                <div className="col-span-6">
+                <div className="col-span-5"> {/* Adjusted col-span */}
                   <input
                     ref={el => (inputRefs.current[index] = el)}
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
@@ -379,7 +379,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                 </div>
 
                 {/* Ações - Excluir */}
-                <div className="col-span-2 flex justify-center">
+                <div className="col-span-3 flex justify-center pr-4"> {/* Adjusted col-span and alignment */}
                   {item.product.trim() !== "" && ( // Only show trash icon for non-empty items
                     <button
                       onClick={() => handleDeleteRow(item.id)}
