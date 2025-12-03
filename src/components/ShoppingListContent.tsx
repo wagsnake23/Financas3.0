@@ -308,8 +308,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         <div className="rounded-md border">
           {/* Sticky Header */}
           <div className="sticky top-0 z-10 bg-slate-200 rounded-t-md grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200">
-            <div className="col-span-1 text-slate-800 font-bold text-center">Nº</div>
-            <div className="col-span-7 text-slate-800 font-bold">Produto</div>
+            <div className="col-span-2 text-slate-800 font-bold text-center">Nº</div> {/* Changed from col-span-1 to col-span-2 */}
+            <div className="col-span-6 text-slate-800 font-bold">Produto</div> {/* Changed from col-span-7 to col-span-6 */}
             <div className="col-span-2 text-slate-800 font-bold text-center">Status</div>
             <div className="col-span-2 text-slate-800 font-bold text-center">Ações</div>
           </div>
@@ -326,12 +326,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
               >
 
                 {/* Nº */}
-                <div className="col-span-1 text-center font-medium">
+                <div className="col-span-2 text-center font-medium"> {/* Changed from col-span-1 to col-span-2 */}
                   {index + 1}
                 </div>
 
                 {/* Produto + Data */}
-                <div className="col-span-7">
+                <div className="col-span-6"> {/* Changed from col-span-7 to col-span-6 */}
                   <input
                     ref={el => (inputRefs.current[index] = el)}
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
