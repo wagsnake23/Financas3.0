@@ -15,6 +15,7 @@ import Lancamentos from "./pages/Lancamentos";
 import Charts from "./components/Charts";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import ShoppingList from "./pages/ShoppingList"; // NOVO: Importar ShoppingList
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/despesas" element={<ProtectedRoute><Despesas /></ProtectedRoute>} />
           <Route path="/lancamentos" element={<ProtectedRoute><Lancamentos /></ProtectedRoute>} />
           <Route path="/charts" element={<ProtectedRoute><Charts /></ProtectedRoute>} />
+          <Route path="/lista-de-compras" element={<ProtectedRoute><ShoppingList /></ProtectedRoute>} /> {/* NOVO: Rota para Lista de Compras */}
           {/* Removed duplicate Dashboard route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

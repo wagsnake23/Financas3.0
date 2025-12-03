@@ -16,6 +16,7 @@ export const Navigation = () => {
     { to: "/lancamentos", label: "Lançamentos", icon: "📝", color: "hsl(45, 90%, 55%)" }, // Amarelo Ouro
     { to: "/categorias", label: "Categorias", icon: "🗂️", color: "hsl(285, 70%, 55%)" }, // Púrpura
     { to: "/investimentos", label: "Investimentos", icon: "📈", color: "hsl(180, 70%, 50%)" }, // Ciano
+    { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒", color: "hsl(270, 70%, 58%)" }, // NOVO: Lista de Compras
   ];
 
   const handleNavClick = () => {

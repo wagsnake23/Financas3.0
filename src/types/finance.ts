@@ -45,3 +45,14 @@ export interface Investment {
   rentabilidade: number;
   created_at?: string | null;
 }
+
+// NOVO: Interface para Itens da Lista de Compras
+export interface ShoppingItem {
+  id: string;
+  product: string;
+  status: boolean;
+  date: string; // Formato: mmm/dd
+  order: number;
+  created_at?: string;
+  updated_at?: string;
+}
