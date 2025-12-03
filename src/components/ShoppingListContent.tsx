@@ -280,15 +280,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
     }
   };
 
-  const handleCancel = () => {
-    // Reset to the last fetched state + one empty row
-    if (fetchedItems.length === 0) {
-      setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
-    } else {
-      setItems([...fetchedItems, { ...EMPTY_ITEM, id: crypto.randomUUID(), order: fetchedItems.length + 1 }]);
-    }
-    toast.info("Alterações canceladas.", { duration: toastDuration });
-  };
+  // Removed handleCancel function as the button is being removed.
 
   if (isLoading) {
     return (
@@ -316,14 +308,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
         <div className="rounded-md border">
           {/* Sticky Header */}
           <div className="sticky top-0 z-10 bg-slate-200 rounded-t-md grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200">
-            <div className="col-span-2 text-slate-800 font-bold text-center">Nº</div>
-            <div className="col-span-6 text-slate-800 font-bold">Produto</div>
-            <div className="col-span-2 text-slate-800 font-bold text-center">Status</div>
-            <div className="col-span-2 text-slate-800 font-bold text-center">Ações</div>
+            <div className="col-span-2 text-center font-bold text-slate-800">Nº</div>
+            <div className="col-span-6 font-bold text-slate-800">Produto</div>
+            <div className="col-span-2 text-center font-bold text-slate-800">Status</div>
+            <div className="col-span-2 text-center font-bold text-slate-800">Ações</div>
           </div>
 
           {/* LISTA COM SCROLL */}
-          <div className="max-h-[350px] overflow-y-auto bg-white divide-y divide-gray-200">
+          <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-200 bg-white">
             {items.map((item, index) => (
               <div
                 key={item.id}
@@ -352,7 +344,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                   />
 
                   {item.date && (
-                    <p className="text-[10px] text-gray-500 mt-[1px]">
+                    <p className="mt-[1px] text-[10px] text-gray-500">
                       {item.date}
                     </p>
                   )}
@@ -367,7 +359,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
 
                       item.status
                         ? "bg-[#44E37F] border-[#44E37F] text-white font-black"
-                        : "bg-transparent border-destructive text-transparent",
+                        : "border-destructive bg-transparent text-transparent",
 
                       isMobile
                         ? "h-[17px] w-[17px] text-[8px]"
@@ -397,50 +389,23 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       </div>
 
       {/* Buttons Container */}
-      <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center">
+      <div className="mt-6 flex w-full gap-3 justify-between">
+        {/* Limpar Lista Button */}
+        <Button
+          onClick={handleClearList}
+          variant="destructive"
+          className="rounded-xl flex-1"
+        >
+          <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
+        </Button>
+
         {/* Salvar Button */}
         <Button
           onClick={handleSaveList}
-          className={cn(
-            "rounded-xl",
-            "w-full order-1", // Mobile
-            "lg:order-3 lg:w-auto" // Desktop
-          )}
+          className="rounded-xl flex-1"
         >
           <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
         </Button>
-
-        {/* Limpar Lista and Cancelar Buttons Container */}
-        <div
-          className={cn(
-            "flex gap-3 w-full order-2", // Mobile
-            "lg:flex-row lg:w-auto" // Desktop
-          )}
-        >
-          {/* Limpar Lista Button */}
-          <Button
-            onClick={handleClearList}
-            variant="destructive"
-            className={cn(
-              "rounded-xl flex-1", // Mobile
-              "lg:order-1" // Desktop
-            )}
-          >
-            <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
-          </Button>
-
-          {/* Cancelar Button */}
-          <Button
-            onClick={handleCancel}
-            variant="outline"
-            className={cn(
-              "rounded-xl flex-1", // Mobile
-              "lg:order-2" // Desktop
-            )}
-          >
-            <DynamicIcon name="XCircle" className="mr-2 h-4 w-4" /> Cancelar
-          </Button>
-        </div>
       </div>
     </Card>
   );
