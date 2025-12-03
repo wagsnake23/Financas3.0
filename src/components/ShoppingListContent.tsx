@@ -162,6 +162,17 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       if (inputRefs.current[index - 1]) {
         inputRefs.current[index - 1]?.focus();
       }
+    } else if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default form submission or new line
+      // If not the last item, or if it's the last item and it has content (meaning a new empty row was just added by handleProductChange)
+      if (index < items.length - 1 || (index === items.length - 1 && items[index].product.trim() !== "")) {
+        // Focus the next input. If a new row was added, this will be the input in that new row.
+        // Using setTimeout to ensure the DOM element is rendered before attempting to focus.
+        setTimeout(() => {
+          inputRefs.current[index + 1]?.focus();
+        }, 0);
+      }
+      // If it's the last item and it's empty, do nothing.
     }
   };
 
@@ -318,19 +329,19 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
       )}
 
       <div className="overflow-x-auto">
-        <div className="max-h-[350px] overflow-y-auto rounded-md border"> {/* Added max-height and overflow-y */}
+        <div className="max-h-[350px] overflow-y-auto rounded-md border">
           <Table className="min-w-full">
-            <TableHeader className="sticky top-0 z-10 bg-slate-800"> {/* Added sticky header */}
+            <TableHeader className="sticky top-0 z-10 bg-slate-200 rounded-t-md"> {/* Updated header styling and rounded corners */}
               <TableRow>
-                <TableHead className="text-white font-bold w-[5%] text-center">#</TableHead>
-                <TableHead className="text-white font-bold w-[55%]">Item</TableHead>
-                <TableHead className="text-white font-bold w-[25%] text-center">Status</TableHead>
-                <TableHead className="text-white font-bold w-[15%] text-center">Ações</TableHead> {/* New column for delete */}
+                <TableHead className="text-slate-800 font-bold w-[5%] text-center">Nº</TableHead> {/* Changed title */}
+                <TableHead className="text-slate-800 font-bold w-[55%]">Produto</TableHead> {/* Changed title */}
+                <TableHead className="text-slate-800 font-bold w-[25%] text-center">Status</TableHead>
+                <TableHead className="text-slate-800 font-bold w-[15%] text-center">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((item, index) => (
-                <TableRow key={item.id} className={cn("shadow-sm hover:bg-gray-50")}> {/* Added hover effect */}
+                <TableRow key={item.id} className={cn("shadow-sm hover:bg-gray-50")}>
                   <TableCell className="py-2 px-2 text-center text-sm font-medium">
                     {index + 1}
                   </TableCell>
@@ -366,7 +377,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({ user, 
                     </div>
                   </TableCell>
                   <TableCell className="py-2 px-2 text-center">
-                    {item.product.trim() !== "" && ( // Only show trash icon for non-empty items
+                    {item.product.trim() !== "" && (
                       <Button
                         variant="ghost"
                         size="icon"
