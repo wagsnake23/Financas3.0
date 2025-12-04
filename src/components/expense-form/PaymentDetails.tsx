@@ -73,6 +73,16 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
   };
 
+  // NEW: Effect to auto-select card if only one is available
+  useEffect(() => {
+    if (formaPagamento === "cartao" && cartoes.length === 1) {
+      setCartaoId(cartoes[0].id);
+    } else if (formaPagamento === "cartao" && cartoes.length === 0) {
+      // If "cartao" is selected but no cards are available, ensure UNSELECTED_VALUE
+      setCartaoId(UNSELECTED_VALUE);
+    }
+  }, [formaPagamento, cartoes, setCartaoId, UNSELECTED_VALUE]);
+
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
