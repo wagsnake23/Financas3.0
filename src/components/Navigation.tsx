@@ -112,11 +112,11 @@ export const Navigation = () => {
               </Button>
             </div>
 
-            {/* 🛒 Carrinho com badge (Desktop + Mobile) */}
+            {/* 🛒 Carrinho com badge (APENAS Mobile) */}
             <button
               type="button"
               onClick={() => navigate("/lista-de-compras")}
-              className="relative flex items-center justify-center text-2xl"
+              className="relative flex items-center justify-center text-2xl md:hidden"
               title="Ir para Lista de Compras"
             >
               🛒
