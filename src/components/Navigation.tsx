@@ -116,10 +116,10 @@ export const Navigation = () => {
             <button
               type="button"
               onClick={() => navigate("/lista-de-compras")}
-              className="relative flex items-center justify-center text-2xl"
+              className="relative flex items-center justify-center"
               title="Ir para Lista de Compras"
             >
-              🛒
+              <DynamicIcon name="🛒" className="h-6 w-6 text-primary-foreground" />
               {pendingCount > 0 && (
                 <span className="absolute -top-1 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-[5px] text-[10px] font-bold text-white">
                   {pendingCount}
