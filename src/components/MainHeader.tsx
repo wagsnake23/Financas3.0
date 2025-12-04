@@ -44,7 +44,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
             }
             aria-label="Abrir lista de compras"
           >
-            <DynamicIcon name="🛒" className="h-6 w-6 text-primary" />
+            <span className="text-xl leading-none">🛒</span>
 
             {pendingCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-[5px] text-[10px] font-bold text-white">
