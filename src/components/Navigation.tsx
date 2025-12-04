@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import DynamicIcon from "./DynamicIcon";
 import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
+import { ShoppingCart } from 'lucide-react'; // Importar ShoppingCart
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
@@ -55,7 +56,7 @@ export const Navigation = () => {
     {
       to: "/lista-de-compras",
       label: "Lista de Compras",
-      icon: "🛒",
+      icon: "🛒", // Este ícone será renderizado pelo DynamicIcon no SheetContent
       color: "hsl(270, 70%, 58%)",
     }, // Lista de Compras
   ];
@@ -116,12 +117,13 @@ export const Navigation = () => {
             <button
               type="button"
               onClick={() => navigate("/lista-de-compras")}
-              className="relative flex items-center justify-center text-2xl md:hidden"
+              className="relative flex items-center justify-center h-9 w-9 rounded-full bg-white/15 hover:bg-white/25 sm:bg-muted sm:hover:bg-muted/80 transition md:hidden"
               title="Ir para Lista de Compras"
             >
-              🛒
+              <ShoppingCart className="h-6 w-6 text-white" /> {/* NOVO ÍCONE */}
+
               {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-600 px-[5px] text-[10px] font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-[5px] text-[10px] font-bold text-white">
                   {pendingCount}
                 </span>
               )}
