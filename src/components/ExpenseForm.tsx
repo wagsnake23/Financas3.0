@@ -178,7 +178,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setNumeroParcelas(1); // Avista always has 1 installment
         setIsPaid(true); // Avista is usually paid immediately
       } else if (tipoPagamento === "parcelado") {
-        // When switching to "parcelado" from "fixo", reset to 1.
+        // When switching to "parcelado" from "fixo, reset to 1.
         // Otherwise, if it was "avista" (numeroParcelas was 1) or user input, keep it.
         if (numeroParcelas === RECURRING_INSTALLMENTS_COUNT) {
           setNumeroParcelas(1);
@@ -449,7 +449,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               ) : (
                 "Selecione a subcategoria..."
               )}
-              {/* Removido o ícone ChevronDown explícito aqui */}
             </Button>
           </PopoverTrigger>
           <PopoverContent className={cn("w-full p-0", isMobile && "w-[95vw]")}>
@@ -459,7 +458,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 value={commandSearch}
                 onValueChange={setCommandSearch}
               />
-              <CommandList>
+              <CommandList className="max-h-[10rem] overflow-y-auto"> {/* Adicionado max-h e overflow-y-auto */}
                 <CommandGroup>
                   {expenseSubcategories.length === 0 ? (
                     <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
