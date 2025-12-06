@@ -451,7 +451,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}> {/* Largura ajustada aqui */}
+          <PopoverContent 
+            side="bottom" // Adicionado para forçar a abertura para baixo
+            className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
+          >
             <Command>
               <CommandInput
                 placeholder="Buscar subcategoria..."
