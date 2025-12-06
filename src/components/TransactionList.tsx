@@ -412,7 +412,7 @@ export const TransactionList = ({
             selectedMonth={selectedMonth} /* Passando selectedMonth */
             onPayInvoice={handlePayInvoice}
             loadingPayInvoice={loadingPayInvoice}
-            disablePayInvoiceButton={disablePayPayInvoiceButton}
+            disablePayInvoiceButton={disablePayInvoiceButton}
           />
         </div>
       )}
@@ -442,13 +442,14 @@ export const TransactionList = ({
                     Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
-                <TableHead className={cn("text-right", !isMobile && "w-[15%]")} data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none"> {/* Largura para desktop */}
+                <TableHead data-order-col="amount" onClick={() => handleSort("amount")} 
+                  className={cn("text-right cursor-pointer select-none", !isMobile && "w-[15%]")}> {/* Largura para desktop */}
                   Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Status</TableHead> {/* Largura para desktop */}
+                <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Status</TableHead>
                 {/* Coluna Ações apenas em desktop */}
                 {!isMobile && (
-                  <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Ações</TableHead> {/* Largura para desktop */}
+                  <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Ações</TableHead>
                 )}
               </TableRow>
             </TableHeader>
