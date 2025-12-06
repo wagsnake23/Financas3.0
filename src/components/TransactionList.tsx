@@ -428,6 +428,7 @@ export const TransactionList = ({
                 <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
+                {/* Exibir coluna Tipo apenas em desktop */}
                 {!isMobile && (
                   <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none text-center">
                     Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
@@ -445,6 +446,7 @@ export const TransactionList = ({
                   Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 <TableHead className="text-center">Status</TableHead>
+                {/* Coluna Ações apenas em desktop */}
                 {!isMobile && (
                   <TableHead className="text-center">Ações</TableHead>
                 )}

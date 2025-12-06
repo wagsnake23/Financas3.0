@@ -155,7 +155,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         </div>
       </TableCell>
 
-      {/* 📌 AÇÕES (Editar/Excluir) */}
+      {/* 📌 AÇÕES (Editar) */}
       {!isMobile && (
         <TableCell className="py-2 px-2 text-center">
           <div className="flex items-center justify-center gap-1">
@@ -166,21 +166,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 e.stopPropagation(); // Evita que o clique na linha seja acionado
                 onEditTransaction(transaction);
               }}
-              className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
+              className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
             >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation(); // Evita que o clique na linha seja acionado
-                // Para a exclusão, o escopo será determinado no modal de confirmação
-                onDeleteTransaction(transaction.id, transaction.type, "oneOff"); // Passa "oneOff" como default, será ajustado no modal
-              }}
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="h-4 w-4" />
+              <DynamicIcon name="✏️" className="h-4 w-4" />
             </Button>
           </div>
         </TableCell>
