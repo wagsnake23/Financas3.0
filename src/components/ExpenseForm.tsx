@@ -25,7 +25,7 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react"; // Adicionado Search e ChevronsUpDown
 import {
   cn,
   getBorderClass,
@@ -108,17 +108,21 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     Record<string, boolean>
   >({});
 
+  // NOVO: Estados para o Command Menu
   const [openCommand, setOpenCommand] = useState(false);
-  const [commandSearch, setCommandSearch] = useState(""); // Este estado agora reflete o que está no Input
+  const [commandSearch, setCommandSearch] = useState("");
 
   const expenseSubcategories = React.useMemo(() => {
+    // Filtrar as subcategorias com base no termo de busca
     const filtered = allSubcategories.filter(
       (cat) => cat.parent_id !== "receitas_e_investimentos" &&
                cat.nome.toLowerCase().includes(commandSearch.toLowerCase())
     );
+    // Ordenar por nome
     return filtered.sort((a, b) => a.nome.localeCompare(b.nome));
   }, [allSubcategories, commandSearch]);
 
+  // Encontrar a subcategoria selecionada para exibição
   const selectedCategory = React.useMemo(() => {
     return expenseSubcategories.find(
       (cat) => cat.id === selectedSubcategoryId
@@ -146,6 +150,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [formaPagamento, tipoPagamento, isRecurring]);
 
+  // NOVO useEffect isolado para sincronizar isRecurring com tipoPagamento
   useEffect(() => {
     if (typeof setIsRecurring === "function") {
       if (tipoPagamento === "fixo") {
@@ -161,19 +166,24 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [tipoPagamento, setIsRecurring]);
 
+  // Effect for handling recurrence logic and setting numeroParcelas
   useEffect(() => {
     if (isRecurring) {
+      // If "Recorrente" is selected (tipoPagamento === "fixo")
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
-      setIsPaid(false);
+      setIsPaid(false); // Recurring expenses are initially pending
     } else {
+      // If "Avulsa" is selected (tipoPagamento === "avista" or "parcelado")
       if (tipoPagamento === "avista") {
-        setNumeroParcelas(1);
-        setIsPaid(true);
+        setNumeroParcelas(1); // Avista always has 1 installment
+        setIsPaid(true); // Avista is usually paid immediately
       } else if (tipoPagamento === "parcelado") {
+        // When switching to "parcelado" from "fixo, reset to 1.
+        // Otherwise, if it was "avista" (numeroParcelas was 1) or user input, keep it.
         if (numeroParcelas === RECURRING_INSTALLMENTS_COUNT) {
           setNumeroParcelas(1);
         }
-        setIsPaid(false);
+        setIsPaid(false); // Parcelado is initially pending
       }
     }
   }, [
@@ -184,6 +194,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     numeroParcelas,
   ]);
 
+  // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
     if (isRecurring) return;
 
@@ -192,6 +203,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [tipoPagamento, isRecurring, setFormaPagamento]);
 
+  // Funções para sincronização inversa (botão -> tipoPagamento)
   const handleSelectAvulsa = () => {
     setIsRecurring(false);
     setTipoPagamento("avista");
@@ -416,43 +428,43 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </Label>
         <Popover open={openCommand} onOpenChange={setOpenCommand}>
           <PopoverTrigger asChild>
-            <div className="relative w-full">
-              <Input
-                id="subcategoria"
-                placeholder="Buscar subcategoria..."
-                value={selectedSubcategoryId !== UNSELECTED_VALUE && selectedCategory ? selectedCategory.nome : commandSearch}
-                onChange={(e) => {
-                  setCommandSearch(e.target.value);
-                  if (selectedSubcategoryId !== UNSELECTED_VALUE) {
-                    setSelectedSubcategoryId(UNSELECTED_VALUE); // Clear selection when typing
-                  }
-                  if (!openCommand) {
-                    setOpenCommand(true); // Open popover on type
-                  }
-                  setValidationErrors((prev) => ({
-                    ...prev,
-                    selectedSubcategoryId: false,
-                  }));
-                }}
-                onClick={() => setOpenCommand(true)} // Open popover on click
-                className={cn(
-                  "w-full rounded-xl pr-10", // Adicionado pr-10 para espaço para o ícone
-                  isMobile && "h-9 text-sm",
-                  getBorderClass({
-                    isInvalid: validationErrors.selectedSubcategoryId,
-                    isValid: validationErrors.selectedSubcategoryId === false,
-                  })
-                )}
-              />
-              <ChevronsUpDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 shrink-0 opacity-50" />
-            </div>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openCommand}
+              className={cn(
+                "w-full justify-between rounded-xl",
+                isMobile && "h-9 text-sm",
+                getBorderClass({
+                  isInvalid: validationErrors.selectedSubcategoryId,
+                  isValid: validationErrors.selectedSubcategoryId === false,
+                })
+              )}
+            >
+              {selectedCategory ? (
+                <span className="flex items-center gap-2">
+                  <span>{selectedCategory.icone}</span>
+                  <span>{selectedCategory.nome}</span>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <Search className="h-4 w-4 shrink-0 opacity-50" /> {/* Ícone de lupa */}
+                  <span>Buscar subcategoria...</span>
+                </span>
+              )}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
           </PopoverTrigger>
           <PopoverContent 
             side="bottom"
             className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
           >
             <Command>
-              {/* CommandInput removido, pois o Input principal já faz a busca */}
+              <CommandInput
+                placeholder="Buscar subcategoria..."
+                value={commandSearch}
+                onValueChange={setCommandSearch}
+              />
               <CommandList className="max-h-[10rem] overflow-y-auto">
                 <CommandGroup>
                   {expenseSubcategories.length === 0 ? (
@@ -464,8 +476,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                         value={cat.nome}
                         onSelect={() => {
                           setSelectedSubcategoryId(cat.id);
-                          setCommandSearch(cat.nome); // Atualiza o Input com o nome selecionado
                           setOpenCommand(false);
+                          setCommandSearch("");
                           setValidationErrors((prev) => ({
                             ...prev,
                             selectedSubcategoryId: false,
