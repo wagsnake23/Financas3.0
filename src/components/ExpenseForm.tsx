@@ -25,7 +25,7 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Check } from "lucide-react"; // Adicionado Check
+import { CalendarIcon, Check } from "lucide-react";
 import {
   cn,
   getBorderClass,
@@ -33,7 +33,7 @@ import {
   TARGET_TIMEZONE,
 } from "@/lib/utils";
 import CurrencyBR from "@/components/ui/currency-br";
-import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command"; // Novos imports
+import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";
@@ -121,6 +121,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     // Ordenar por nome
     return filtered.sort((a, b) => a.nome.localeCompare(b.nome));
   }, [allSubcategories, commandSearch]);
+
+  // Encontrar a subcategoria selecionada para exibição
+  const selectedCategory = React.useMemo(() => {
+    return expenseSubcategories.find(
+      (cat) => cat.id === selectedSubcategoryId
+    );
+  }, [selectedSubcategoryId, expenseSubcategories]);
 
   // Efeito para aplicar os dados iniciais da NFC-e
   useEffect(() => {
@@ -434,12 +441,15 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 })
               )}
             >
-              {selectedSubcategoryId !== UNSELECTED_VALUE
-                ? expenseSubcategories.find(
-                    (cat) => cat.id === selectedSubcategoryId
-                  )?.nome
-                : "Selecione a subcategoria..."}
-              <DynamicIcon name="ChevronDown" className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              {selectedCategory ? (
+                <span className="flex items-center gap-2">
+                  <span>{selectedCategory.icone}</span>
+                  <span>{selectedCategory.nome}</span>
+                </span>
+              ) : (
+                "Selecione a subcategoria..."
+              )}
+              {/* Removido o ícone ChevronDown explícito aqui */}
             </Button>
           </PopoverTrigger>
           <PopoverContent className={cn("w-full p-0", isMobile && "w-[95vw]")}>
@@ -457,11 +467,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                     expenseSubcategories.map((cat) => (
                       <CommandItem
                         key={cat.id}
-                        value={cat.nome} // Usar o nome para a busca
+                        value={cat.nome}
                         onSelect={() => {
                           setSelectedSubcategoryId(cat.id);
                           setOpenCommand(false);
-                          setCommandSearch(""); // Limpar busca ao selecionar
+                          setCommandSearch("");
                           setValidationErrors((prev) => ({
                             ...prev,
                             selectedSubcategoryId: false,
