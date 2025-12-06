@@ -25,7 +25,7 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Check } from "lucide-react";
+import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react"; // Adicionado Search e ChevronsUpDown
 import {
   cn,
   getBorderClass,
@@ -447,12 +447,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   <span>{selectedCategory.nome}</span>
                 </span>
               ) : (
-                "Selecione a subcategoria..."
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <Search className="h-4 w-4 shrink-0 opacity-50" /> {/* Ícone de lupa */}
+                  <span>Buscar subcategoria...</span>
+                </span>
               )}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent 
-            side="bottom" // Adicionado para forçar a abertura para baixo
+            side="bottom"
             className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
           >
             <Command>
