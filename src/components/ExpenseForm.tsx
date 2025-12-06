@@ -451,14 +451,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className={cn("w-full p-0", isMobile && "w-[95vw]")}>
+          <PopoverContent className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}> {/* Largura ajustada aqui */}
             <Command>
               <CommandInput
                 placeholder="Buscar subcategoria..."
                 value={commandSearch}
                 onValueChange={setCommandSearch}
               />
-              <CommandList className="max-h-[10rem] overflow-y-auto"> {/* Adicionado max-h e overflow-y-auto */}
+              <CommandList className="max-h-[10rem] overflow-y-auto">
                 <CommandGroup>
                   {expenseSubcategories.length === 0 ? (
                     <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
