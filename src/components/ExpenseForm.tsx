@@ -25,20 +25,21 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check } from "lucide-react"; // Adicionado Check
 import {
   cn,
   getBorderClass,
   formatInTimeZone,
   TARGET_TIMEZONE,
-} from "@/lib/utils"; // Importar formatInTimeZone e TARGET_TIMEZONE
-import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
+} from "@/lib/utils";
+import CurrencyBR from "@/components/ui/currency-br";
+import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command"; // Novos imports
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";
 import { TransactionStatusToggle } from "./expense-form/TransactionStatusToggle";
 import { InstallmentPreview } from "./expense-form/InstallmentPreview";
-import { TransactionTypeToggle } from "./expense-form/TransactionTypeToggle"; // Importar o novo componente
+import { TransactionTypeToggle } from "./expense-form/TransactionTypeToggle";
 
 interface Cartao {
   id: string;
@@ -57,8 +58,7 @@ interface ExpenseFormProps {
   queryClient: ReturnType<typeof useQueryClient>;
   isMobile: boolean;
   isRecurring: boolean;
-  setIsRecurring: (value: boolean) => void; // NOVA PROP
-  // NOVAS PROPS PARA DADOS DA NFC-e
+  setIsRecurring: (value: boolean) => void;
   initialValor?: number;
   initialFormaPagamento?: "dinheiro" | "pix" | "cartao" | "boleto";
   initialCartaoId?: string;
@@ -67,7 +67,7 @@ interface ExpenseFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: "#F3FFF3", color: "#006000" };
 const toastErrorStyle = { backgroundColor: "#F3FFF3", color: "#FF2929" };
 
@@ -79,11 +79,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   queryClient,
   isMobile,
   isRecurring,
-  setIsRecurring, // NOVA PROP
-  initialValor, // NOVO
-  initialFormaPagamento, // NOVO
-  initialCartaoId, // NOVO
-  initialDescricao, // NOVO
+  setIsRecurring,
+  initialValor,
+  initialFormaPagamento,
+  initialCartaoId,
+  initialDescricao,
 }) => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
@@ -108,11 +108,19 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     Record<string, boolean>
   >({});
 
+  // NOVO: Estados para o Command Menu
+  const [openCommand, setOpenCommand] = useState(false);
+  const [commandSearch, setCommandSearch] = useState("");
+
   const expenseSubcategories = React.useMemo(() => {
-    return allSubcategories.filter(
-      (cat) => cat.parent_id !== "receitas_e_investimentos"
+    // Filtrar as subcategorias com base no termo de busca
+    const filtered = allSubcategories.filter(
+      (cat) => cat.parent_id !== "receitas_e_investimentos" &&
+               cat.nome.toLowerCase().includes(commandSearch.toLowerCase())
     );
-  }, [allSubcategories]);
+    // Ordenar por nome
+    return filtered.sort((a, b) => a.nome.localeCompare(b.nome));
+  }, [allSubcategories, commandSearch]);
 
   // Efeito para aplicar os dados iniciais da NFC-e
   useEffect(() => {
@@ -177,23 +185,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setNumeroParcelas,
     setIsPaid,
     numeroParcelas,
-  ]); // Removido numeroParcelas das dependências para evitar loop
+  ]);
 
   // Effect for handling tipoPagamento changes (and its impact on formaPagamento and numeroParcelas)
   useEffect(() => {
-    // A lógica para definir setIsRecurring com base em tipoPagamento está agora em seu useEffect dedicado.
-    // Este useEffect deve apenas lidar com efeitos colaterais de tipoPagamento em outros campos,
-    // mas apenas se isRecurring NÃO estiver controlando tipoPagamento (o que não deve mais acontecer).
-    if (isRecurring) return; // Se for recorrente, este efeito não deve sobrescrever
+    if (isRecurring) return;
 
     if (tipoPagamento === "parcelado") {
       setFormaPagamento("cartao");
-      // setNumeroParcelas(1); // Removido para permitir que o usuário defina o número de parcelas
-    } else if (tipoPagamento === "avista") {
-      // setNumeroParcelas(1); // Removido para permitir que o usuário defina o número de parcelas
     }
-    // Não há necessidade de um caso 'fixo' aqui, pois ele é tratado pelo efeito isRecurring
-  }, [tipoPagamento, isRecurring, setFormaPagamento]); // Removido setNumeroParcelas das dependências
+  }, [tipoPagamento, isRecurring, setFormaPagamento]);
 
   // Funções para sincronização inversa (botão -> tipoPagamento)
   const handleSelectAvulsa = () => {
@@ -243,7 +244,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       tipoPagamento === "parcelado" &&
       (numeroParcelas <= 0 || !Number.isInteger(numeroParcelas))
     ) {
-      // Alterado para numeroParcelas <= 0
       newErrors.numeroParcelas = true;
       hasError = true;
     }
@@ -264,7 +264,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       new Date(),
       TARGET_TIMEZONE,
       "yyyy-MM-dd HH:mm:ss"
-    ); // Usar formatInTimeZone
+    );
     const recurrenceDay = getDate(dataVencimento as Date);
 
     try {
@@ -279,9 +279,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           forma_pagamento: formaPagamento,
           tipo_pagamento: isRecurring ? "fixo" : tipoPagamento,
           cartao_id: formaPagamento === "cartao" ? cartaoId : null,
-          // Para despesas recorrentes, o valor_total e numero_parcelas serão atualizados pela RPC
-          valor_total: isRecurring ? 0 : valorTotal, // Inicializa com 0, RPC irá somar
-          numero_parcelas: isRecurring ? 0 : numeroParcelas, // Inicializa com 0, RPC irá contar
+          valor_total: isRecurring ? 0 : valorTotal,
+          numero_parcelas: isRecurring ? 0 : numeroParcelas,
           descricao,
           is_recurring_master: isRecurring,
         })
@@ -300,10 +299,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         dataVencimento as Date,
         TARGET_TIMEZONE,
         "yyyy-MM-dd"
-      ); // Usar formatInTimeZone
+      );
 
       if (isRecurring) {
-        // A RPC agora gera TODAS as parcelas, incluindo a primeira
         const { error: rpcError } = await supabase.rpc(
           "generate_recurring_entries",
           {
@@ -317,9 +315,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 ? null
                 : selectedSubcategoryId,
             p_description: descricao,
-            p_status: "Pendente", // Default status for expenses, as it's a required enum
+            p_status: "Pendente",
             p_recurrence_day: recurrenceDay,
-            p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Gerar todas as 120 parcelas
+            p_total_installments: RECURRING_INSTALLMENTS_COUNT,
             p_forma_pagamento: formaPagamento,
             p_cartao_id: formaPagamento === "cartao" ? cartaoId : null,
             p_tipo_pagamento: tipoPagamento,
@@ -328,7 +326,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
         if (rpcError) throw rpcError;
       } else {
-        // Lógica para despesas avulsas e parceladas (não recorrentes) permanece a mesma
         const installmentsToInsert = [];
         installmentsToInsert.push({
           despesa_id: despesaData.id,
@@ -343,7 +340,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   TARGET_TIMEZONE,
                   "yyyy-MM-dd HH:mm:ss"
                 )
-              : null, // NOVO: Directly use new Date()
+              : null,
         });
 
         for (let i = 1; i < numeroParcelas; i++) {
@@ -352,7 +349,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             installmentDate,
             TARGET_TIMEZONE,
             "yyyy-MM-dd"
-          ); // Usar formatInTimeZone
+          );
 
           installmentsToInsert.push({
             despesa_id: despesaData.id,
@@ -409,7 +406,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {/* Toggle Avulsa / Recorrente */}
       <div className={cn(isMobile && "mt-0")}>
         {" "}
-        {/* Adicionado mt-0 para mobile */}
         <TransactionTypeToggle
           isRecurring={isRecurring}
           onSelectAvulsa={handleSelectAvulsa}
@@ -418,64 +414,81 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         />
       </div>
 
+      {/* Subcategoria com Command Menu */}
       <div>
         <Label htmlFor="subcategoria" className={cn(isMobile && "text-xs")}>
           Subcategoria
         </Label>
-        <Select
-          value={selectedSubcategoryId}
-          onValueChange={(value) => {
-            setSelectedSubcategoryId(value);
-            setValidationErrors((prev) => ({
-              ...prev,
-              selectedSubcategoryId: false,
-            }));
-          }}
-        >
-          <SelectTrigger
-            className={cn(
-              "rounded-xl",
-              isMobile && "h-9 text-sm",
-              getBorderClass({
-                isInvalid: validationErrors.selectedSubcategoryId,
-                isValid: validationErrors.selectedSubcategoryId === false,
-              })
-            )}
-          >
-            <SelectValue placeholder="Selecione a subcategoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem
-              value={UNSELECTED_VALUE}
-              disabled
-              className={cn(isMobile && "text-sm")}
+        <Popover open={openCommand} onOpenChange={setOpenCommand}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openCommand}
+              className={cn(
+                "w-full justify-between rounded-xl",
+                isMobile && "h-9 text-sm",
+                getBorderClass({
+                  isInvalid: validationErrors.selectedSubcategoryId,
+                  isValid: validationErrors.selectedSubcategoryId === false,
+                })
+              )}
             >
-              Selecione a subcategoria
-            </SelectItem>
-            {expenseSubcategories.length === 0 ? (
-              <SelectItem
-                value={UNSELECTED_VALUE}
-                disabled
-                className={cn(isMobile && "text-sm")}
-              >
-                Nenhuma subcategoria disponível
-              </SelectItem>
-            ) : (
-              expenseSubcategories.map((cat) => (
-                <SelectItem
-                  key={cat.id}
-                  value={cat.id}
-                  className={cn(isMobile && "text-sm")}
-                >
-                  <span className="flex items-center gap-2">
-                    <span>{cat.icone}</span>
-                    <span>{cat.nome}</span>
-                  </span>
-                </SelectItem>
-              ))
-            )}
-          </SelectContent>
-        </Select>
+              {selectedSubcategoryId !== UNSELECTED_VALUE
+                ? expenseSubcategories.find(
+                    (cat) => cat.id === selectedSubcategoryId
+                  )?.nome
+                : "Selecione a subcategoria..."}
+              <DynamicIcon name="ChevronDown" className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className={cn("w-full p-0", isMobile && "w-[95vw]")}>
+            <Command>
+              <CommandInput
+                placeholder="Buscar subcategoria..."
+                value={commandSearch}
+                onValueChange={setCommandSearch}
+              />
+              <CommandList>
+                <CommandGroup>
+                  {expenseSubcategories.length === 0 ? (
+                    <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
+                  ) : (
+                    expenseSubcategories.map((cat) => (
+                      <CommandItem
+                        key={cat.id}
+                        value={cat.nome} // Usar o nome para a busca
+                        onSelect={() => {
+                          setSelectedSubcategoryId(cat.id);
+                          setOpenCommand(false);
+                          setCommandSearch(""); // Limpar busca ao selecionar
+                          setValidationErrors((prev) => ({
+                            ...prev,
+                            selectedSubcategoryId: false,
+                          }));
+                        }}
+                        className={cn(isMobile && "text-sm")}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedSubcategoryId === cat.id
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        <span className="flex items-center gap-2">
+                          <span>{cat.icone}</span>
+                          <span>{cat.nome}</span>
+                        </span>
+                      </CommandItem>
+                    ))
+                  )}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
 
       <PaymentDetails
@@ -497,7 +510,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         numeroParcelas={numeroParcelas}
         setNumeroParcelas={setNumeroParcelas}
         isRecurring={isRecurring}
-        setIsRecurring={setIsRecurring} // NOVA PROP
+        setIsRecurring={setIsRecurring}
       />
 
       {tipoPagamento === "parcelado" && numeroParcelas > 1 && !isRecurring && (
@@ -529,7 +542,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
-          rows={isMobile ? 2 : 3} // Ajuste condicional do número de linhas
+          rows={isMobile ? 2 : 3}
           className={cn("rounded-xl", isMobile && "text-sm")}
         />
       </div>
@@ -537,7 +550,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {!isRecurring && tipoPagamento === "avista" && (
         <div className={cn(isMobile && "mt-2")}>
           {" "}
-          {/* Adicionado mt-2 para mobile */}
           <TransactionStatusToggle
             isPaid={isPaid}
             setIsPaid={setIsPaid}
