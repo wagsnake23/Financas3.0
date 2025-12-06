@@ -151,7 +151,7 @@ export default function Despesas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-lancamentos-mobile-bg"
+        isMobile && "bg-[var(--module-expenses-background)]"
       )}
     >
       <Navigation />

@@ -73,6 +73,9 @@ All colors MUST be HSL.
 
     --lancamentos-mobile-bg: 0 0% 100%; /* Alterado para branco */
     --soft-red-background: 0 6% 97%; /* NEW: Cor de fundo para o card de despesas (#FFEFEF) */
+
+    --module-expenses-background: var(--soft-red-background); /* Cor de fundo para o módulo de despesas */
+    --module-income-background: var(--soft-green); /* Cor de fundo para o módulo de receitas */
   }
 
   .dark {
@@ -126,6 +129,9 @@ All colors MUST be HSL.
 
     --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD - Keep it light as requested */
     --soft-red-background: 0 6% 20%; /* NEW: Cor de fundo para o card de despesas em dark mode */
+
+    --module-expenses-background: var(--soft-red-background); /* Cor de fundo para o módulo de despesas em dark mode */
+    --module-income-background: var(--soft-green); /* Cor de fundo para o módulo de receitas em dark mode */
   }
 }
 
