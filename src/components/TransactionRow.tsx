@@ -78,13 +78,23 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* 📌 TIPO (Receita/Despesa) */}
       {!isMobile && (
         <TableCell className="py-2 px-2 text-center">
-          <DynamicIcon
-            name={transaction.type === "income" ? "ArrowUp" : "ArrowDown"}
-            className={cn(
-              "h-4 w-4",
-              transaction.type === "income" ? "text-success" : "text-destructive"
-            )}
-          />
+          <div className="flex items-center justify-center gap-1">
+            <DynamicIcon
+              name={transaction.type === "income" ? "ArrowUp" : "ArrowDown"}
+              className={cn(
+                "h-4 w-4",
+                transaction.type === "income" ? "text-success" : "text-destructive"
+              )}
+            />
+            <span
+              className={cn(
+                "text-sm font-medium",
+                transaction.type === "income" ? "text-success" : "text-destructive"
+              )}
+            >
+              {transaction.type === "income" ? "Receita" : "Despesa"}
+            </span>
+          </div>
         </TableCell>
       )}
 
