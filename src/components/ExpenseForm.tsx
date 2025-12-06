@@ -25,7 +25,7 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react"; // Adicionado Search e ChevronsUpDown
+import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react";
 import {
   cn,
   getBorderClass,
@@ -448,7 +448,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 </span>
               ) : (
                 <span className="flex items-center gap-2 text-muted-foreground">
-                  <Search className="h-4 w-4 shrink-0 opacity-50" /> {/* Ícone de lupa */}
+                  <Search className="h-4 w-4 shrink-0 opacity-50" />
                   <span>Buscar subcategoria...</span>
                 </span>
               )}
@@ -465,7 +465,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 value={commandSearch}
                 onValueChange={setCommandSearch}
               />
-              <CommandList className="max-h-[10rem] overflow-y-auto">
+              <CommandList className="max-h-[5rem] overflow-y-auto"> {/* Altura máxima ajustada aqui */}
                 <CommandGroup>
                   {expenseSubcategories.length === 0 ? (
                     <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
