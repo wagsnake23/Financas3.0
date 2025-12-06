@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    --primary: 210 89% 47%; /* Novo azul para o botão Entrar */
+    --primary: 215 96% 39%; /* Novo azul para o botão Entrar: #0556C3 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
@@ -53,9 +53,9 @@ All colors MUST be HSL.
 
     --border: 215 20% 88%;
     --input: 215 20% 88%;
-    --ring: 210 89% 47%; /* Ajustado para o novo primary */
+    --ring: 215 96% 39%; /* Ajustado para o novo primary */
 
-    --gradient-primary: linear-gradient(135deg, hsl(210, 89%, 47%), hsl(210, 94%, 52%)); /* Gradiente com o novo azul */
+    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%)); /* Gradiente com o novo azul */
     --gradient-secondary: linear-gradient(135deg, hsl(210, 70%, 50%), hsl(210, 75%, 60%));
     --gradient-card: linear-gradient(135deg, hsl(0, 0%, 100%), hsl(210, 20%, 98%));
     
@@ -85,7 +85,7 @@ All colors MUST be HSL.
     --popover: 215 25% 15%;
     --popover-foreground: 210 20% 95%;
 
-    --primary: 210 89% 37%; /* Azul para dark mode */
+    --primary: 215 96% 39%; /* Azul para dark mode */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
@@ -104,9 +104,9 @@ All colors MUST be HSL.
 
     --border: 215 25% 25%;
     --input: 215 25% 25%;
-    --ring: 210 89% 37%; /* Ajustado para o novo primary em dark mode */
+    --ring: 215 96% 39%; /* Ajustado para o novo primary em dark mode */
 
-    --gradient-primary: linear-gradient(135deg, hsl(210, 89%, 37%), hsl(210, 94%, 42%)); /* Gradiente com o novo azul para dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%)); /* Gradiente com o novo azul para dark mode */
     --gradient-secondary: linear-gradient(135deg, hsl(210, 70%, 50%), hsl(210, 75%, 60%));
     --gradient-card: linear-gradient(135deg, hsl(215, 25%, 15%), hsl(215, 25%, 18%));
     
