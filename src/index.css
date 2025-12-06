@@ -49,7 +49,7 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --app-title: 210 89% 47%; /* Cor para o título 'Minhas Finanças' */
+    --app-title: 215 96% 32%; /* Cor para o título 'Minhas Finanças' - #04469E */
 
     --border: 215 20% 88%;
     --input: 215 20% 88%;
@@ -91,12 +91,6 @@ All colors MUST be HSL.
     --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 215 25% 20%;
-    --muted-foreground: 215 15% 65%;
-
-    --accent: 150 65% 55%;
-    --accent-foreground: 0 0% 100%;
-
     --destructive: 0 70% 59%; /* Cor atualizada para #E85454 em dark mode */
     --destructive-foreground: 0 0% 100%;
     --destructive-darker: 0 100% 71%; /* Nova cor mais escura para #FF6D6D em dark mode */
@@ -121,7 +115,7 @@ All colors MUST be HSL.
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
-    --app-title: 210 89% 47%; /* Cor para o título 'Minhas Finanças' */
+    --app-title: 215 96% 32%; /* Cor para o título 'Minhas Finanças' - #04469E em dark mode */
 
     --soft-yellow: 45 60% 20%; /* Darker soft yellow for dark mode */
     --soft-blue: 210 60% 20%; /* Nova cor azul suave para dark mode */
