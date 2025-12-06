@@ -412,7 +412,7 @@ export const TransactionList = ({
             selectedMonth={selectedMonth} /* Passando selectedMonth */
             onPayInvoice={handlePayInvoice}
             loadingPayInvoice={loadingPayInvoice}
-            disablePayInvoiceButton={disablePayInvoiceButton}
+            disablePayInvoiceButton={disablePayPayInvoiceButton}
           />
         </div>
       )}
@@ -422,33 +422,33 @@ export const TransactionList = ({
         isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible max-w-[95vw] mx-auto" // Ajustado max-w para mobile
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
-          <Table className="lancamentos-table">
+          <Table className={cn("lancamentos-table", !isMobile && "table-fixed")}> {/* Adicionado table-fixed */}
             <TableHeader className="lancamentos-table-header">
               <TableRow>
-                <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none">
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className={cn("cursor-pointer select-none", !isMobile && "w-[12%]")}> {/* Largura para desktop */}
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 {/* Exibir coluna Tipo apenas em desktop */}
                 {!isMobile && (
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none text-center">
+                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[8%]")}> {/* Largura para desktop */}
                     Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
-                <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none">
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className={cn("cursor-pointer select-none", !isMobile && "w-[15%]")}> {/* Largura para desktop */}
                   Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 {!isMobile && (
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none text-left">
+                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[30%]")}> {/* Largura para desktop */}
                     Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
-                <TableHead className="text-right" data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none">
+                <TableHead className={cn("text-right", !isMobile && "w-[15%]")} data-order-col="amount" onClick={() => handleSort("amount")} className="cursor-pointer select-none"> {/* Largura para desktop */}
                   Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                <TableHead className="text-center">Status</TableHead>
+                <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Status</TableHead> {/* Largura para desktop */}
                 {/* Coluna Ações apenas em desktop */}
                 {!isMobile && (
-                  <TableHead className="text-center">Ações</TableHead>
+                  <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Ações</TableHead> {/* Largura para desktop */}
                 )}
               </TableRow>
             </TableHeader>

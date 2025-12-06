@@ -67,7 +67,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell
         className={cn(
           "py-2 px-2 text-left",
-          isMobile ? "min-w-[55px] text-sm" : "min-w-[70px] text-base"
+          isMobile ? "min-w-[55px] text-sm" : "text-base" // Removido min-w para desktop
         )}
       >
         {format(transactionDate, isMobile ? "dd/MMM" : "dd/MM/yyyy", {
@@ -102,7 +102,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell
         className={cn(
           "py-2 px-2 flex items-center gap-1 text-left",
-          isMobile ? "min-w-[85px] text-sm" : "min-w-[90px] text-base"
+          isMobile ? "min-w-[85px] text-sm" : "text-base" // Removido min-w para desktop
         )}
       >
         {categoryIcon && (
@@ -125,7 +125,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell
         className={cn(
           "py-2 px-2 text-right font-semibold",
-          isMobile ? "min-w-[75px] text-xs" : "min-w-[90px] text-base",
+          isMobile ? "min-w-[75px] text-xs" : "text-base", // Removido min-w para desktop
           transaction.type === "income" ? "text-success" : "text-destructive"
         )}
       >
@@ -136,7 +136,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell
         className={cn(
           "py-2 px-2 text-center",
-          isMobile ? "min-w-[25px]" : "min-w-[45px]"
+          isMobile ? "min-w-[25px]" : "" // Removido min-w para desktop
         )}
       >
         <div
