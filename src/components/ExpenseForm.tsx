@@ -465,7 +465,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 value={commandSearch}
                 onValueChange={setCommandSearch}
               />
-              <CommandList className="max-h-[7rem] overflow-y-auto"> {/* Altura máxima ajustada aqui */}
+              <CommandList className="max-h-[6rem] overflow-y-auto"> {/* Altura máxima ajustada aqui */}
                 <CommandGroup>
                   {expenseSubcategories.length === 0 ? (
                     <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
