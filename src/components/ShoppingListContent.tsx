@@ -49,9 +49,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
   const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredItems, setFilteredItems] = useState<ShoppingItem[] | null>(
-    null
-  );
+
   const newItemInputRef = useRef<HTMLInputElement>(null);
 
   // Contagens (ignorando linhas vazias)
@@ -178,21 +176,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
         : "";
     setSearchTerm(formattedValue);
-
-    if (formattedValue.length === 0) {
-      setFilteredItems(null);
-    }
   };
 
   const handleSearchClick = () => {
-    if (searchTerm.trim() === "") {
-      setFilteredItems(null);
-      return;
-    }
-    const filtered = items.filter((item) =>
-      item.product.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredItems(filtered);
+    // A busca agora é "live" (conforme digita),
+    // mas mantemos a função caso queira focar no input ou outra lógica futura.
+    newItemInputRef.current?.focus();
   };
 
   const handleNewItemSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -230,7 +219,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
         setItems((prev) => [...prev, optimisticItem]);
         setSearchTerm(""); // Clear input
-        setFilteredItems(null); // Clear filter
 
         // Save to Supabase
         await upsertItemsMutation.mutateAsync([newItem]);
@@ -260,24 +248,34 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   };
 
   // Status toggle handler
-  const handleStatusChange = (index: number, checked: boolean) => {
-    const newItems = [...items];
-    newItems[index].status = checked;
-    newItems[index].date = checked
-      ? format(new Date(), "MMM/dd", { locale: ptBR })
-      : "";
-    setItems(newItems);
+  // Status toggle handler
+  const handleStatusChange = (id: string, checked: boolean) => {
+    // Atualiza localmente usando ID
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? {
+            ...item,
+            status: checked,
+            date: checked
+              ? format(new Date(), "MMM/dd", { locale: ptBR })
+              : "",
+          }
+          : item
+      )
+    );
 
-    const item = newItems[index];
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
 
     // Update in Supabase
     if (item.product.trim() !== "") {
       const itemToUpsert: TablesUpdate<"shopping_items"> = {
         id: item.id,
         product: item.product,
-        status: item.status,
-        date: item.date,
-        order: item.order || index + 1,
+        status: checked,
+        date: checked ? format(new Date(), "MMM/dd", { locale: ptBR }) : "",
+        order: item.order, // Mantém a ordem original
       };
       upsertItemsMutation.mutate([itemToUpsert]);
     }
@@ -392,6 +390,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     });
   };
 
+  // FILTERED ITEMS (DERIVED STATE)
+  const filteredItems = searchTerm
+    ? items.filter((item) =>
+      item.product.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    : items;
+
   if (isLoading) {
     return (
       <div className={cn("p-6", isMobile && "p-4")}>
@@ -484,75 +489,73 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
           {/* LISTA COM SCROLL */}
           <div className="divide-y divide-gray-200 bg-white">
-            {(filteredItems !== null ? filteredItems : items).length === 0 &&
-              filteredItems !== null && (
-                <div className="p-4 text-center text-sm text-gray-500">
-                  Nenhum item encontrado
+            {filteredItems.length === 0 && (
+              <div className="p-4 text-center text-sm text-gray-500">
+                {searchTerm ? "Nenhum item encontrado" : "Lista vazia"}
+              </div>
+            )}
+            {filteredItems.map((item, index) => (
+              <div
+                key={item.id}
+                className={cn(
+                  "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
+                  item.status && "bg-green-50"
+                )}
+              >
+                {/* Nº */}
+                <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
+                  {index + 1}
                 </div>
-              )}
-            {(filteredItems !== null ? filteredItems : items).map(
-              (item, index) => (
-                <div
-                  key={item.id}
-                  className={cn(
-                    "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                    item.status && "bg-green-50"
+
+                {/* Produto + Data */}
+                <div className="col-span-5">
+                  <span
+                    className={cn(
+                      "text-sm",
+                      item.status && "text-gray-400"
+                    )}
+                  >
+                    {item.product}
+                  </span>
+
+                  {item.status && item.date && (
+                    <p className="mt-[1px] text-[10px] text-gray-500">
+                      {item.date}
+                    </p>
                   )}
-                >
-                  {/* Nº */}
-                  <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
-                    {index + 1}
-                  </div>
-
-                  {/* Produto + Data */}
-                  <div className="col-span-5">
-                    <span
-                      className={cn(
-                        "text-sm",
-                        item.status && "text-gray-400"
-                      )}
-                    >
-                      {item.product}
-                    </span>
-
-                    {item.status && item.date && (
-                      <p className="mt-[1px] text-[10px] text-gray-500">
-                        {item.date}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Status */}
-                  <div className="col-span-2 flex justify-center">
-                    <button
-                      onClick={() => handleStatusChange(index, !item.status)}
-                      className={cn(
-                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
-                        item.status
-                          ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
-                          : "border-gray-400 bg-transparent text-transparent",
-                        isMobile
-                          ? "h-[20px] w-[20px] text-[10px]"
-                          : "h-[24px] w-[24px] text-[12px]"
-                      )}
-                    >
-                      {item.status && "✓"}
-                    </button>
-                  </div>
-
-                  {/* Ações - Excluir */}
-                  <div className="col-span-3 flex justify-end pr-4">
-                    {item.product.trim() !== "" && (
-                      <button
-                        onClick={() => handleDeleteRow(item.id)}
-                        className="text-destructive hover:text-red-700"
-                      >
-                        <DynamicIcon name="Trash2" className="h-5 w-5" />
-                      </button>
-                    )}
-                  </div>
                 </div>
-              ))}
+
+                {/* Status */}
+                <div className="col-span-2 flex justify-center">
+                  <button
+                    onClick={() => handleStatusChange(index, !item.status)}
+                    className={cn(
+                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
+                      item.status
+                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
+                        : "border-gray-400 bg-transparent text-transparent",
+                      isMobile
+                        ? "h-[20px] w-[20px] text-[10px]"
+                        : "h-[24px] w-[24px] text-[12px]"
+                    )}
+                  >
+                    {item.status && "✓"}
+                  </button>
+                </div>
+
+                {/* Ações - Excluir */}
+                <div className="col-span-3 flex justify-end pr-4">
+                  {item.product.trim() !== "" && (
+                    <button
+                      onClick={() => handleDeleteRow(item.id)}
+                      className="text-destructive hover:text-red-700"
+                    >
+                      <DynamicIcon name="Trash2" className="h-5 w-5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
