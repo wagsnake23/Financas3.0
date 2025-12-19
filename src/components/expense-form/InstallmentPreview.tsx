@@ -35,7 +35,7 @@ export const InstallmentPreview: React.FC<InstallmentPreviewProps> = ({
 
   return (
     <Card className={cn(
-      "py-2 animate-fade-in rounded-xl shadow-sm bg-soft-blue/20 border border-soft-blue flex flex-col gap-1", // Reduzido py- e gap
+      "py-2 animate-fade-in rounded-xl shadow-sm bg-soft-red/20 border border-soft-red flex flex-col gap-1", // Alterado de blue para red
       isMobile && "py-1" // Reduzido py- para mobile
     )}>
       {/* Título centralizado e menor */}
@@ -43,8 +43,8 @@ export const InstallmentPreview: React.FC<InstallmentPreviewProps> = ({
         Pré-visualização das Parcelas
       </h3>
       <div className="flex items-center justify-center gap-1"> {/* Conteúdo original centralizado, gap menor */}
-        <DynamicIcon name="CreditCard" className={cn("h-6 w-6 text-primary", isMobile && "h-5 w-5")} />
-        <p className={cn("font-semibold text-primary text-lg", isMobile && "text-base")}>
+        <DynamicIcon name="CreditCard" className={cn("h-6 w-6 text-destructive", isMobile && "h-5 w-5")} />
+        <p className={cn("font-semibold text-destructive text-lg", isMobile && "text-base")}>
           {summary.totalInstallments}x de R$ {summary.valuePerInstallment.toFixed(2)}
         </p>
       </div>
