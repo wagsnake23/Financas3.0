@@ -528,7 +528,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 {/* Status */}
                 <div className="col-span-2 flex justify-center">
                   <button
-                    onClick={() => handleStatusChange(index, !item.status)}
+                    onClick={() => handleStatusChange(item.id, !item.status)}
                     className={cn(
                       "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
                       item.status
