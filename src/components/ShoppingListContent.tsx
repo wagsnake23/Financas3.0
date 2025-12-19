@@ -47,6 +47,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
+  const originalValueRef = useRef<string>("");
 
   // Contagens (ignorando linhas vazias)
   const filledItems = items.filter((item) => item.product.trim() !== "");
@@ -135,7 +136,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["shopping_items_pending_count", user?.id],
       });
-      toast.success("Lista de compras salva!", {
+      toast.success("Atualizado com sucesso", {
         duration: toastDuration,
         style: toastSuccessStyle,
       });
@@ -255,6 +256,45 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   };
 
+  const saveItem = (item: ShoppingItem, index: number) => {
+    // Basic validation
+    if (item.product.trim() === "") return;
+
+    const itemToUpsert: TablesUpdate<"shopping_items"> = {
+      id: item.id,
+      product: item.product,
+      status: item.status,
+      date: item.date,
+      order: item.order || index + 1,
+    };
+    upsertItemsMutation.mutate([itemToUpsert]);
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    originalValueRef.current = e.target.value;
+  };
+
+  const handleInputBlur = (index: number, e: React.FocusEvent<HTMLInputElement>) => {
+    const currentValue = e.target.value;
+    const originalValue = originalValueRef.current;
+
+    // If empty, restore original value
+    if (currentValue.trim() === "") {
+      if (originalValue.trim() !== "") {
+        const newItems = [...items];
+        newItems[index].product = originalValue;
+        setItems(newItems);
+      }
+      // If both were empty (new row), do nothing
+      return;
+    }
+
+    // If changed, save
+    if (currentValue !== originalValue) {
+      saveItem(items[index], index);
+    }
+  };
+
   const handleInputKeyDown = (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
@@ -273,6 +313,16 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       }
     } else if (e.key === "Enter") {
       e.preventDefault(); // Prevent default form submission or new line
+
+      // Save current item immediately on Enter if it has content
+      const currentValue = items[index].product;
+      // Only save if it's not empty and has changed (optimization)
+      if (currentValue.trim() !== "" && currentValue !== originalValueRef.current) {
+        saveItem(items[index], index);
+        // Update ref to avoid double save on blur
+        originalValueRef.current = currentValue;
+      }
+
       // If not the last item, or if it's the last item and it has content (meaning a new empty row was just added by handleProductChange)
       if (
         index < items.length - 1 ||
@@ -507,6 +557,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   <input
                     ref={(el) => (inputRefs.current[index] = el)}
                     onKeyDown={(e) => handleInputKeyDown(index, e)}
+                    onFocus={handleInputFocus}
+                    onBlur={(e) => handleInputBlur(index, e)}
                     className={cn(
                       "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
                       item.status && "text-gray-400"
@@ -587,9 +639,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </AlertDialog>
 
         {/* Salvar Button */}
-        <Button onClick={handleSaveList} className="rounded-xl flex-1">
-          <DynamicIcon name="CheckCircle" className="mr-2 h-4 w-4" /> Salvar
-        </Button>
+        {/* Salvar Button (Removed) */}
       </div>
     </div>
   );
