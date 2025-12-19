@@ -290,7 +290,7 @@ export default function Receitas() {
             value="avulsa"
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border",
-              "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+              "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-success-foreground data-[state=on]:font-bold",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
@@ -299,7 +299,7 @@ export default function Receitas() {
               name="⚡"
               className={cn(
                 "mr-2 h-4 w-4",
-                "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
+                "data-[state=on]:text-success-foreground data-[state=off]:text-muted-foreground"
               )}
             />{" "}
             Avulsa
@@ -308,7 +308,7 @@ export default function Receitas() {
             value="recorrente"
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border",
-              "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
+              "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-success-foreground data-[state=on]:font-bold",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
@@ -317,7 +317,7 @@ export default function Receitas() {
               name="🔁"
               className={cn(
                 "mr-2 h-4 w-4",
-                "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
+                "data-[state=on]:text-success-foreground data-[state=off]:text-muted-foreground"
               )}
             />{" "}
             Recorrente
@@ -479,6 +479,7 @@ export default function Receitas() {
 
       <Button
         type="submit"
+        variant="success"
         className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
         disabled={loading}
       >
