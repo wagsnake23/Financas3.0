@@ -48,7 +48,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
-  const [newItemInput, setNewItemInput] = useState(""); // State for new item input
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredItems, setFilteredItems] = useState<ShoppingItem[] | null>(
+    null
+  );
   const newItemInputRef = useRef<HTMLInputElement>(null);
 
   // Contagens (ignorando linhas vazias)
@@ -168,19 +171,34 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     },
   });
 
-  const handleNewItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const formattedValue =
       value.length > 0
         ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
         : "";
-    setNewItemInput(formattedValue);
+    setSearchTerm(formattedValue);
+
+    if (formattedValue.length === 0) {
+      setFilteredItems(null);
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (searchTerm.trim() === "") {
+      setFilteredItems(null);
+      return;
+    }
+    const filtered = items.filter((item) =>
+      item.product.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredItems(filtered);
   };
 
   const handleNewItemSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const product = newItemInput.trim();
+      const product = searchTerm.trim();
       if (!product) return;
 
       if (!user?.id) {
@@ -211,7 +229,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         } as ShoppingItem;
 
         setItems((prev) => [...prev, optimisticItem]);
-        setNewItemInput(""); // Clear input
+        setSearchTerm(""); // Clear input
+        setFilteredItems(null); // Clear filter
 
         // Save to Supabase
         await upsertItemsMutation.mutateAsync([newItem]);
@@ -430,16 +449,23 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
-        <div className="w-full mb-4 shrink-0">
+        <div className="w-full mb-4 shrink-0 relative">
           <input
             ref={newItemInputRef}
             type="text"
-            placeholder="Digite um produto e pressione Enter..."
-            value={newItemInput}
-            onChange={handleNewItemChange}
+            placeholder="Digite para adicionar… Enter salvar…"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
             onKeyDown={handleNewItemSubmit}
-            className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full p-3 pr-11 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
+          <button
+            onClick={handleSearchClick}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xl select-none cursor-pointer hover:scale-110 transition-transform"
+            title="Pesquisar"
+          >
+            🔎
+          </button>
         </div>
 
         <div
@@ -458,68 +484,75 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
           {/* LISTA COM SCROLL */}
           <div className="divide-y divide-gray-200 bg-white">
-            {items.map((item, index) => (
-              <div
-                key={item.id}
-                className={cn(
-                  "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                  item.status && "bg-green-50"
-                )}
-              >
-                {/* Nº */}
-                <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
-                  {index + 1}
+            {(filteredItems !== null ? filteredItems : items).length === 0 &&
+              filteredItems !== null && (
+                <div className="p-4 text-center text-sm text-gray-500">
+                  Nenhum item encontrado
                 </div>
-
-                {/* Produto + Data */}
-                <div className="col-span-5">
-                  <span
-                    className={cn(
-                      "text-sm",
-                      item.status && "text-gray-400"
-                    )}
-                  >
-                    {item.product}
-                  </span>
-
-                  {item.status && item.date && (
-                    <p className="mt-[1px] text-[10px] text-gray-500">
-                      {item.date}
-                    </p>
+              )}
+            {(filteredItems !== null ? filteredItems : items).map(
+              (item, index) => (
+                <div
+                  key={item.id}
+                  className={cn(
+                    "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
+                    item.status && "bg-green-50"
                   )}
-                </div>
+                >
+                  {/* Nº */}
+                  <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
+                    {index + 1}
+                  </div>
 
-                {/* Status */}
-                <div className="col-span-2 flex justify-center">
-                  <button
-                    onClick={() => handleStatusChange(index, !item.status)}
-                    className={cn(
-                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
-                      item.status
-                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
-                        : "border-gray-400 bg-transparent text-transparent",
-                      isMobile
-                        ? "h-[20px] w-[20px] text-[10px]"
-                        : "h-[24px] w-[24px] text-[12px]"
-                    )}
-                  >
-                    {item.status && "✓"}
-                  </button>
-                </div>
-
-                {/* Ações - Excluir */}
-                <div className="col-span-3 flex justify-end pr-4">
-                  {item.product.trim() !== "" && (
-                    <button
-                      onClick={() => handleDeleteRow(item.id)}
-                      className="text-destructive hover:text-red-700"
+                  {/* Produto + Data */}
+                  <div className="col-span-5">
+                    <span
+                      className={cn(
+                        "text-sm",
+                        item.status && "text-gray-400"
+                      )}
                     >
-                      <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      {item.product}
+                    </span>
+
+                    {item.status && item.date && (
+                      <p className="mt-[1px] text-[10px] text-gray-500">
+                        {item.date}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Status */}
+                  <div className="col-span-2 flex justify-center">
+                    <button
+                      onClick={() => handleStatusChange(index, !item.status)}
+                      className={cn(
+                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
+                        item.status
+                          ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
+                          : "border-gray-400 bg-transparent text-transparent",
+                        isMobile
+                          ? "h-[20px] w-[20px] text-[10px]"
+                          : "h-[24px] w-[24px] text-[12px]"
+                      )}
+                    >
+                      {item.status && "✓"}
                     </button>
-                  )}
+                  </div>
+
+                  {/* Ações - Excluir */}
+                  <div className="col-span-3 flex justify-end pr-4">
+                    {item.product.trim() !== "" && (
+                      <button
+                        onClick={() => handleDeleteRow(item.id)}
+                        className="text-destructive hover:text-red-700"
+                      >
+                        <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
