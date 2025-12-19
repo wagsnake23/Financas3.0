@@ -433,7 +433,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               role="combobox"
               aria-expanded={openCommand}
               className={cn(
-                "w-full justify-between rounded-xl bg-white",
+                "w-full justify-between rounded-xl bg-[#F5F5F5]",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
@@ -559,7 +559,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
           rows={isMobile ? 2 : 3}
-          className={cn("rounded-xl bg-white", isMobile && "text-sm")}
+          className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
         />
       </div>
 

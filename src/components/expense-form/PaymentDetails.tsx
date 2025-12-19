@@ -95,7 +95,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            className={cn(isMobile && "h-9 text-sm", "bg-white", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
+            className={cn(isMobile && "h-9 text-sm", "bg-[#F5F5F5]", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
           />
         </div>
 
@@ -109,7 +109,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               // REMOVIDO: A lógica de setIsRecurring foi movida para o ExpenseForm.tsx
             }}
           >
-            <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -141,7 +141,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }
             }}
           >
-            <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -175,7 +175,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
-              className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
+              className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
             />
           </div>
         )}
@@ -192,7 +192,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
