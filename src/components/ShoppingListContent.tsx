@@ -111,7 +111,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
       const { data, error } = await supabase
         .from("shopping_items")
-        .upsert(itemsWithUserId, { onConflict: "id" })
+        .upsert(itemsWithUserId as any, { onConflict: "id" })
         .select();
       if (error) throw error;
       return data;
@@ -394,9 +394,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   }
 
   return (
-    <div className={cn("w-full p-4 lg:p-6")}>
+    <div
+      className={cn(
+        "w-full flex flex-col",
+        isMobile ? "h-full overflow-hidden p-2" : "h-full p-6"
+      )}
+    >
       {/* Main container with padding */}
-      <div className="flex flex-col items-start mb-4 gap-1">
+      <div className={cn("flex flex-col items-start gap-1", isMobile ? "mb-2" : "mb-4")}>
         <h2
           className={cn(
             "text-2xl font-bold text-primary",
@@ -424,22 +429,27 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </p>
       </div>
 
-      <div className="w-full mb-4">
-        <input
-          ref={newItemInputRef}
-          type="text"
-          placeholder="Digite um produto e pressione Enter..."
-          value={newItemInput}
-          onChange={handleNewItemChange}
-          onKeyDown={handleNewItemSubmit}
-          className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-        />
-      </div>
+      <div className="flex-1 flex flex-col w-full min-h-0">
+        <div className="w-full mb-4 shrink-0">
+          <input
+            ref={newItemInputRef}
+            type="text"
+            placeholder="Digite um produto e pressione Enter..."
+            value={newItemInput}
+            onChange={handleNewItemChange}
+            onKeyDown={handleNewItemSubmit}
+            className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          />
+        </div>
 
-      <div className="overflow-x-auto">
-        <div className="rounded-xl border">
+        <div
+          className={cn(
+            "w-full rounded-xl border flex-1 min-h-0 overflow-y-auto",
+            isMobile ? "bg-white" : ""
+          )}
+        >
           {/* Sticky Header */}
-          <div className="sticky top-0 z-10 bg-slate-200 rounded-t-xl grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700">
+          <div className="sticky top-0 z-10 bg-slate-200 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700">
             <div className="col-span-2 text-center font-bold">Nº</div>
             <div className="col-span-5 font-bold">Produto</div>
             <div className="col-span-2 text-center font-bold">Status</div>
@@ -447,7 +457,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           </div>
 
           {/* LISTA COM SCROLL */}
-          <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-200 bg-white">
+          <div className="divide-y divide-gray-200 bg-white">
             {items.map((item, index) => (
               <div
                 key={item.id}
@@ -515,7 +525,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       </div>
 
       {/* Buttons Container */}
-      <div className="mt-6 flex w-full gap-3 justify-between">
+      <div className={cn("shrink-0 flex w-full gap-3 justify-between", isMobile ? "mt-2 mb-2" : "mt-4")}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
