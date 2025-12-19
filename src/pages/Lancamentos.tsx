@@ -131,7 +131,7 @@ const Lancamentos = () => {
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
             editingTransaction?.type === "expense" && "bg-soft-red-background", // Aplica a cor de fundo para despesas
-            editingTransaction?.type === "revenue" && "bg-soft-green-background" // Esta linha garante a aplicação da cor para receitas
+            editingTransaction?.type === "revenue" && "bg-soft-green-background" // Aplica a cor de fundo para receitas
           )}
         >
           <DialogHeader
