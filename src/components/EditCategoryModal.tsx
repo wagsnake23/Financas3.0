@@ -32,6 +32,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
+        "rounded-xl",
         isMobile ? "dialog-mobile" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
       )}>
         <DialogHeader className={cn(isMobile && "absolute top-4 left-4 right-12 text-left")}>
@@ -42,7 +43,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         <div className={cn(isMobile && "form-body")}>
           {editingCategory && (
             <CategoryForm
-              onAddCategory={() => {}} // Não usado no modo de edição
+              onAddCategory={() => { }} // Não usado no modo de edição
               onUpdateCategory={onUpdateCategory}
               editingCategory={editingCategory}
               onCancelEdit={onCancelEdit}

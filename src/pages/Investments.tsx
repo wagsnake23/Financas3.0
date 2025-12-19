@@ -195,7 +195,7 @@ export default function Investments() { // Alterado para export default function
       setLoadingForm(false);
       return;
     }
-    
+
     if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE) {
       newErrors.selectedInvestmentCategoryId = true;
       hasError = true;
@@ -221,7 +221,7 @@ export default function Investments() { // Alterado para export default function
     }
 
     // Formatar a data usando os componentes locais para evitar problemas de fuso horário
-    const formattedDate = date 
+    const formattedDate = date
       ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
       : "";
 
@@ -274,7 +274,7 @@ export default function Investments() { // Alterado para export default function
     const avgProfitability = investments.length > 0
       ? investments.reduce((sum, inv) => sum + inv.rentabilidade, 0) / investments.length
       : 0;
-    
+
     return { totalInvested, avgProfitability };
   }, [investments]);
 
@@ -295,7 +295,7 @@ export default function Investments() { // Alterado para export default function
         {!isMobile && (
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
-        
+
         {/* REMOVIDO: MonthNavigator global */}
 
         {isMobile ? (
@@ -305,12 +305,12 @@ export default function Investments() { // Alterado para export default function
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                  <Select 
-                    value={selectedInvestmentCategoryId} 
+                  <Select
+                    value={selectedInvestmentCategoryId}
                     onValueChange={(value) => {
                       setSelectedInvestmentCategoryId(value);
                       setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-                    }} 
+                    }}
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
@@ -445,7 +445,7 @@ export default function Investments() { // Alterado para export default function
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                       const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
                       const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
-                      
+
                       return (
                         <div
                           key={investment.id}
@@ -478,7 +478,7 @@ export default function Investments() { // Alterado para export default function
                               </Button>
                             </div>
                           </div>
-                          
+
                           <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
                             <div>
                               <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
@@ -559,12 +559,12 @@ export default function Investments() { // Alterado para export default function
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-                      <Select 
-                        value={selectedInvestmentCategoryId} 
+                      <Select
+                        value={selectedInvestmentCategoryId}
                         onValueChange={(value) => {
                           setSelectedInvestmentCategoryId(value);
                           setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-                        }} 
+                        }}
                         disabled={loadingForm}
                       >
                         <SelectTrigger id="investment-category" className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
@@ -700,7 +700,7 @@ export default function Investments() { // Alterado para export default function
                         const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                         const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
                         const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
-                        
+
                         return (
                           <div
                             key={investment.id}
@@ -733,7 +733,7 @@ export default function Investments() { // Alterado para export default function
                                 </Button>
                               </div>
                             </div>
-                            
+
                             <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
                               <div>
                                 <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
@@ -790,7 +790,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className={cn("w-full", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
+        <DialogContent className={cn("w-full rounded-xl", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Editar Investimento</DialogTitle>
           </DialogHeader>

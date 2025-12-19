@@ -157,15 +157,15 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </DialogDescription>
       <div className={cn("space-y-2")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
-        <Select 
-          value={selectedInvestmentCategoryId} 
+        <Select
+          value={selectedInvestmentCategoryId}
           onValueChange={(value) => {
             setSelectedInvestmentCategoryId(value);
             setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-          }} 
+          }}
           disabled={loading}
         >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -189,7 +189,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <div className={cn("space-y-2")}>
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl w-full", isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl w-full bg-[#F5F5F5]", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -212,7 +212,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             disabled={loading}
-            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl w-full bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -227,7 +227,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             }}
             required
             disabled={loading}
-            className={cn("rounded-xl w-full", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+            className={cn("rounded-xl w-full bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
           />
         </div>
       </div>
@@ -239,7 +239,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -269,24 +269,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       <div className={cn("flex gap-2 justify-center")}>
-        <Button 
-          type="submit" 
-          className={cn(
-            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground", 
-            isMobile && "h-9 text-sm"
-          )} 
-          size="lg" 
-          disabled={loading}
-        >
-          <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-          {loading ? "Salvando..." : "Salvar"}
-        </Button>
         <Button
           type="button"
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground", 
+            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
@@ -294,6 +282,18 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         >
           <DynamicIcon name="XCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
           Cancelar
+        </Button>
+        <Button
+          type="submit"
+          className={cn(
+            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground",
+            isMobile && "h-9 text-sm"
+          )}
+          size="lg"
+          disabled={loading}
+        >
+          <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          {loading ? "Salvando..." : "Salvar"}
         </Button>
       </div>
     </form>

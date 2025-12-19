@@ -177,7 +177,7 @@ export const CategoryForm = ({
           >
             <SelectTrigger
               id="parent_id"
-              className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl", isMobile && "h-9 text-sm", hideCardWrapper && "bg-[#F5F5F5]")}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
@@ -217,7 +217,7 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm")}
+            className={cn("rounded-xl", isMobile && "h-9 text-sm", hideCardWrapper && "bg-[#F5F5F5]")}
             disabled={editingCategory?.user_id === null}
           />
         </div>
@@ -229,7 +229,8 @@ export const CategoryForm = ({
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
-                "w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl bg-background",
+                "w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl",
+                hideCardWrapper ? "bg-[#F5F5F5]" : "bg-background",
                 isMobile && "p-2 text-3xl"
               )}
               disabled={editingCategory?.user_id === null}

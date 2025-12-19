@@ -136,7 +136,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
@@ -169,7 +169,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -191,24 +191,24 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {transactionType === "expense" && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-          <Select 
-            value={selectValue} 
+          <Select
+            value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
-          <SelectContent>
-            {paymentOptions.map((option) => (
-              <SelectItem 
-                key={option.value} 
-                value={option.value} 
-                disabled={option.disabled} 
-                className={cn(isMobile && "text-sm")}
-              >
-                {option.label}
-              </SelectItem>
-            ))}
+            <SelectContent>
+              {paymentOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={option.disabled}
+                  className={cn(isMobile && "text-sm")}
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -219,14 +219,14 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
-            <Select 
-              value={cartaoId} 
+            <Select
+              value={cartaoId}
               onValueChange={(value: string) => {
                 setCartaoId(value);
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
@@ -252,7 +252,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -284,11 +284,11 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
-          value={description} 
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
           rows={3}
-          className={cn("rounded-xl", isMobile && "text-sm")}
+          className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
           disabled={false} // Garantindo que não esteja desabilitado
         />
       </div>
@@ -308,14 +308,14 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               <Input
                 id="paidAt"
                 type="text"
-                value={paidAtTimestamp 
-                    ? formatInTimeZone(
-                        paidAtTimestamp, // Simplificado para passar a string diretamente
-                        TARGET_TIMEZONE, 
-                        "dd/MM/yyyy HH:mm", 
-                        { locale: ptBR }
-                      ) 
-                    : ''
+                value={paidAtTimestamp
+                  ? formatInTimeZone(
+                    paidAtTimestamp, // Simplificado para passar a string diretamente
+                    TARGET_TIMEZONE,
+                    "dd/MM/yyyy HH:mm",
+                    { locale: ptBR }
+                  )
+                  : ''
                 }
                 readOnly
                 disabled
