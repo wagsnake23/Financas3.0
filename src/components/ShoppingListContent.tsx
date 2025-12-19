@@ -432,7 +432,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           value={newItemInput}
           onChange={handleNewItemChange}
           onKeyDown={handleNewItemSubmit}
-          className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
 
@@ -453,34 +453,26 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 key={item.id}
                 className={cn(
                   "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                  item.status && "bg-soft-green/20"
+                  item.status && "bg-green-50"
                 )}
               >
                 {/* Nº */}
-                <div className="col-span-2 text-center font-medium">
+                <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
                   {index + 1}
                 </div>
 
                 {/* Produto + Data */}
                 <div className="col-span-5">
-                  <div className="col-span-5">
-                    <span
-                      className={cn(
-                        "text-sm",
-                        item.status && "text-gray-400 line-through"
-                      )}
-                    >
-                      {item.product}
-                    </span>
-
-                    {item.date && (
-                      <p className="mt-[1px] text-[10px] text-gray-500">
-                        {item.date}
-                      </p>
+                  <span
+                    className={cn(
+                      "text-sm",
+                      item.status && "text-gray-400"
                     )}
-                  </div>
+                  >
+                    {item.product}
+                  </span>
 
-                  {item.date && (
+                  {item.status && item.date && (
                     <p className="mt-[1px] text-[10px] text-gray-500">
                       {item.date}
                     </p>
