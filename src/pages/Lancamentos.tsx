@@ -129,7 +129,8 @@ const Lancamentos = () => {
             "rounded-xl", // Adicionado rounded-xl aqui
             isMobile
               ? "w-full dialog-mobile"
-              : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto"
+              : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
+            editingTransaction?.type === "expense" && "bg-soft-red-background" // Aplica a cor de fundo para despesas
           )}
         >
           <DialogHeader
