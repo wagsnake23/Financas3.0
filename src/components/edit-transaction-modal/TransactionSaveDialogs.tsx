@@ -43,7 +43,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
     >
       <AlertDialogContent
         className={cn(
-          "w-full",
+          "w-full rounded-xl",
           isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
         )}
       >
