@@ -38,20 +38,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         Excluir
       </Button>
       <Button 
-        type="submit" 
-        className={cn(
-          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
-        )} 
-        disabled={loading} 
-        onClick={onSave}
-      >
-        <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
-        {loading ? "Salvando..." : "Salvar"}
-      </Button>
-      <Button 
-        type="button" 
+        type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel} 
         className={cn(
           "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90 hover:text-primary-foreground", // Cores personalizadas e hover
@@ -62,6 +49,19 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       >
         <DynamicIcon name="XCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
         Cancelar
+      </Button>
+      <Button 
+        type="submit" // Mantido como type="submit"
+        className={cn(
+          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
+          "text-sm", // Aumenta a fonte para 'sm'
+          isMobile && "h-9" // Mantém a altura para mobile
+        )} 
+        disabled={loading} 
+        onClick={onSave}
+      >
+        <DynamicIcon name="CheckCircle" className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")} />
+        {loading ? "Salvando..." : "Salvar"}
       </Button>
     </div>
   );
