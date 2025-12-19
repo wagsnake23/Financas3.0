@@ -338,7 +338,7 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl bg-white",
+              "w-full rounded-xl bg-[#F5F5F5]",
               isMobile && "h-9 text-sm",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
@@ -391,7 +391,7 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
                 !data && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
@@ -443,7 +443,7 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-white",
+            "w-full rounded-xl bg-[#F5F5F5]",
             isMobile && "h-9 text-sm",
             getBorderClass({
               isInvalid: validationErrors.valor,
@@ -463,7 +463,7 @@ export default function Receitas() {
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a receita..."
           rows={3}
-          className={cn("w-full rounded-xl bg-white", isMobile && "text-sm")}
+          className={cn("w-full rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
         />
       </div>
 
@@ -502,7 +502,7 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-soft-green-background"
+        isMobile && "bg-white"
       )}
     >
       <Navigation />
@@ -525,7 +525,7 @@ export default function Receitas() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           {isMobile ? (
-            <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-soft-green-background">
+            <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-white">
               {oneOffFormContent}
               <Footer isMobile={isMobile} className="pt-2" user={user} />
             </Card>
