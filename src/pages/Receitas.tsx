@@ -338,7 +338,7 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl",
+              "w-full rounded-xl bg-white",
               isMobile && "h-9 text-sm",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
@@ -391,7 +391,7 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white",
                 !data && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
@@ -443,7 +443,7 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl",
+            "w-full rounded-xl bg-white",
             isMobile && "h-9 text-sm",
             getBorderClass({
               isInvalid: validationErrors.valor,
@@ -463,7 +463,7 @@ export default function Receitas() {
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a receita..."
           rows={3}
-          className={cn("w-full rounded-xl", isMobile && "text-sm")}
+          className={cn("w-full rounded-xl bg-white", isMobile && "text-sm")}
         />
       </div>
 
@@ -501,7 +501,7 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-lancamentos-mobile-bg"
+        isMobile && "bg-soft-green-background"
       )}
     >
       <Navigation />
@@ -524,7 +524,7 @@ export default function Receitas() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           {isMobile ? (
-            <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
+            <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-soft-green-background">
               {oneOffFormContent}
               <Footer isMobile={isMobile} className="pt-2" user={user} />
             </Card>
@@ -557,6 +557,6 @@ export default function Receitas() {
         </div>
       </div>
       {!isMobile && <Footer isMobile={isMobile} user={user} />}
-    </div>
+    </div >
   );
 }

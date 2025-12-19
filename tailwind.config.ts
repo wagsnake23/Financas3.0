@@ -98,6 +98,9 @@ export default {
         "soft-red-background": { // NEW: Cor de fundo para o card de despesas
           DEFAULT: "hsl(var(--soft-red-background))",
         },
+        "soft-green-background": { // NEW: Cor de fundo para o card de receitas
+          DEFAULT: "hsl(var(--soft-green-background))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',

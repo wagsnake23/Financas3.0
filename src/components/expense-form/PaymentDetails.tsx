@@ -95,21 +95,21 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            className={cn(isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
+            className={cn(isMobile && "h-9 text-sm", "bg-white", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
           />
         </div>
 
         {/* Tipo de Pagamento (À vista / Parcelado / Fixo) */}
         <div>
           <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
-          <Select 
-            value={tipoPagamento} 
+          <Select
+            value={tipoPagamento}
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
               setTipoPagamento(v);
               // REMOVIDO: A lógica de setIsRecurring foi movida para o ExpenseForm.tsx
             }}
           >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -132,8 +132,8 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Forma de Pagamento */}
         <div>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-          <Select 
-            value={formaPagamento} 
+          <Select
+            value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => { // Tipo explícito para 'value'
               setFormaPagamento(value);
               if (value !== "cartao") { // Se a forma de pagamento não for cartão, resetar o cartão selecionado
@@ -141,7 +141,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }
             }}
           >
-            <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -175,7 +175,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
-              className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
+              className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
             />
           </div>
         )}
@@ -185,14 +185,14 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div className="col-span-full">
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
-            <Select 
-              value={cartaoId} 
+            <Select
+              value={cartaoId}
               onValueChange={(value: string) => { // Apenas atualiza o cartaoId
                 setCartaoId(value);
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
@@ -206,10 +206,10 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               </SelectContent>
             </Select>
             <AddCardDialog user={user} onCardAdded={loadCartoes} />
-            <ManageCardsDialog 
-              cards={cartoes} 
-              onCardUpdated={loadCartoes} 
-              onCardDeleted={loadCartoes} 
+            <ManageCardsDialog
+              cards={cartoes}
+              onCardUpdated={loadCartoes}
+              onCardDeleted={loadCartoes}
             />
           </div>
         </div>

@@ -17,19 +17,24 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    --primary: 215 96% 39%; /* Novo azul para o botão Entrar: #0556C3 */
+    --primary: 215 96% 39%;
+    /* Novo azul para o botão Entrar: #0556C3 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 59%; /* Cor atualizada para #E85454 */
+    --destructive: 0 70% 59%;
+    /* Cor atualizada para #E85454 */
     --destructive-foreground: 0 0% 100%;
-    --destructive-darker: 0 100% 71%; /* Nova cor mais escura para #FF6D6D */
+    --destructive-darker: 0 100% 71%;
+    /* Nova cor mais escura para #FF6D6D */
 
-    --success: 150 65% 40%; /* Verde mais escuro */
+    --success: 150 65% 40%;
+    /* Verde mais escuro */
     --success-foreground: 0 0% 100%;
-    --success-darker: 150 65% 30%; /* Verde ainda mais escuro para texto */
+    --success-darker: 150 65% 30%;
+    /* Verde ainda mais escuro para texto */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;
@@ -49,30 +54,43 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --app-title: 215 96% 32%; /* Cor para o título 'Minhas Finanças' - #04469E */
+    --app-title: 215 96% 32%;
+    /* Cor para o título 'Minhas Finanças' - #04469E */
 
     --border: 215 20% 88%;
     --input: 215 20% 88%;
-    --ring: 215 96% 39%; /* Ajustado para o novo primary */
+    --ring: 215 96% 39%;
+    /* Ajustado para o novo primary */
 
-    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%)); /* Gradiente com o novo azul */
+    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%));
+    /* Gradiente com o novo azul */
     --gradient-secondary: linear-gradient(135deg, hsl(210, 70%, 50%), hsl(210, 75%, 60%));
     --gradient-card: linear-gradient(135deg, hsl(0, 0%, 100%), hsl(210, 20%, 98%));
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
-    --soft-yellow: 45 60% 90%; /* New soft yellow color */
-    --soft-blue: 210 60% 90%; /* Nova cor azul suave */
-    --soft-green: 150 60% 90%; /* Nova cor verde suave */
-    --soft-red: 0 70% 90%; /* Nova cor vermelho suave */
-    --soft-purple: 280 60% 90%; /* Nova cor roxo suave */
-    --app-purple: 270 70% 58%; /* NOVO: Roxo mais forte para botões */
+    --soft-yellow: 45 60% 90%;
+    /* New soft yellow color */
+    --soft-blue: 210 60% 90%;
+    /* Nova cor azul suave */
+    --soft-green: 150 60% 90%;
+    /* Nova cor verde suave */
+    --soft-red: 0 70% 90%;
+    /* Nova cor vermelho suave */
+    --soft-purple: 280 60% 90%;
+    /* Nova cor roxo suave */
+    --app-purple: 270 70% 58%;
+    /* NOVO: Roxo mais forte para botões */
 
-    --lancamentos-mobile-bg: 0 0% 100%; /* Alterado para branco */
-    --soft-red-background: 0 6% 97%; /* NEW: Cor de fundo para o card de despesas (#FFEFEF) */
+    --lancamentos-mobile-bg: 0 0% 100%;
+    /* Alterado para branco */
+    --soft-red-background: 353 100% 98.5%;
+    /* Updated: Cor de fundo para o card de despesas (#FFF7F8) */
+    --soft-green-background: 162 100% 97.5%;
+    /* NEW: Cor de fundo para o card de receitas (#F2FFFB) */
   }
 
   .dark {
@@ -85,47 +103,65 @@ All colors MUST be HSL.
     --popover: 215 25% 15%;
     --popover-foreground: 210 20% 95%;
 
-    --primary: 215 96% 39%; /* Azul para dark mode */
+    --primary: 215 96% 39%;
+    /* Azul para dark mode */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 59%; /* Cor atualizada para #E85454 em dark mode */
+    --destructive: 0 70% 59%;
+    /* Cor atualizada para #E85454 em dark mode */
     --destructive-foreground: 0 0% 100%;
-    --destructive-darker: 0 100% 71%; /* Nova cor mais escura para #FF6D6D em dark mode */
+    --destructive-darker: 0 100% 71%;
+    /* Nova cor mais escura para #FF6D6D em dark mode */
 
-    --success: 150 65% 30%; /* Verde mais escuro para dark mode */
+    --success: 150 65% 30%;
+    /* Verde mais escuro para dark mode */
     --success-foreground: 0 0% 100%;
-    --success-darker: 150 65% 20%; /* Verde ainda mais escuro para texto em dark mode */
+    --success-darker: 150 65% 20%;
+    /* Verde ainda mais escuro para texto em dark mode */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;
 
     --border: 215 25% 25%;
     --input: 215 25% 25%;
-    --ring: 215 96% 39%; /* Ajustado para o novo primary em dark mode */
+    --ring: 215 96% 39%;
+    /* Ajustado para o novo primary em dark mode */
 
-    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%)); /* Gradiente com o novo azul para dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(215, 96%, 39%), hsl(215, 96%, 44%));
+    /* Gradiente com o novo azul para dark mode */
     --gradient-secondary: linear-gradient(135deg, hsl(210, 70%, 50%), hsl(210, 75%, 60%));
     --gradient-card: linear-gradient(135deg, hsl(215, 25%, 15%), hsl(215, 25%, 18%));
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
-    --app-title: 215 96% 32%; /* Cor para o título 'Minhas Finanças' - #04469E em dark mode */
+    --app-title: 215 96% 32%;
+    /* Cor para o título 'Minhas Finanças' - #04469E em dark mode */
 
-    --soft-yellow: 45 60% 20%; /* Darker soft yellow for dark mode */
-    --soft-blue: 210 60% 20%; /* Nova cor azul suave para dark mode */
-    --soft-green: 150 60% 20%; /* Darker soft green for dark mode */
-    --soft-red: 0 70% 20%; /* Darker soft red for dark mode */
-    --soft-purple: 280 60% 20%; /* Darker soft purple for dark mode */
-    --app-purple: 270 70% 60%; /* NOVO: Roxo mais forte para botões em dark mode */
+    --soft-yellow: 45 60% 20%;
+    /* Darker soft yellow for dark mode */
+    --soft-blue: 210 60% 20%;
+    /* Nova cor azul suave para dark mode */
+    --soft-green: 150 60% 20%;
+    /* Darker soft green for dark mode */
+    --soft-red: 0 70% 20%;
+    /* Darker soft red for dark mode */
+    --soft-purple: 280 60% 20%;
+    /* Darker soft purple for dark mode */
+    --app-purple: 270 70% 60%;
+    /* NOVO: Roxo mais forte para botões em dark mode */
 
-    --lancamentos-mobile-bg: 210 60% 97%; /* #F1F9FD - Keep it light as requested */
-    --soft-red-background: 0 6% 20%; /* NEW: Cor de fundo para o card de despesas em dark mode */
+    --lancamentos-mobile-bg: 210 60% 97%;
+    /* #F1F9FD - Keep it light as requested */
+    --soft-red-background: 0 6% 20%;
+    /* NEW: Cor de fundo para o card de despesas em dark mode */
+    --soft-green-background: 162 30% 20%;
+    /* NEW: Cor de fundo para o card de receitas em dark mode */
   }
 }
 
@@ -146,11 +182,13 @@ All colors MUST be HSL.
 
 /* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */
 .radio-fix-click [role="radio"] {
-  pointer-events: auto; /* Garante que o botão de rádio seja clicável */
+  pointer-events: auto;
+  /* Garante que o botão de rádio seja clicável */
 }
 
 .radio-fix-click [role="radio"]::after {
-  pointer-events: none; /* Impede que o pseudo-elemento bloqueie os cliques */
+  pointer-events: none;
+  /* Impede que o pseudo-elemento bloqueie os cliques */
 }
 
 /* Removidas as classes anteriores de modal fullscreen */
@@ -158,18 +196,24 @@ All colors MUST be HSL.
 
 @media (max-width: 767px) {
   .dialog-mobile {
-    padding-top: 0.75rem !important;   /* Aumentado para descer o título */
-    padding-bottom: 0 !important;  /* remove faixa preta inferior */
-    top: 55% !important; /* NEW: Move the modal down slightly */
+    padding-top: 0.75rem !important;
+    /* Aumentado para descer o título */
+    padding-bottom: 0 !important;
+    /* remove faixa preta inferior */
+    top: 55% !important;
+    /* NEW: Move the modal down slightly */
   }
 
   .dialog-mobile .form-body {
-    margin-top: 2.5rem !important;      /* sobe Subcategoria */
-    padding-bottom: 1rem !important;  /* Ajustado para aproximar os botões do rodapé */
+    margin-top: 2.5rem !important;
+    /* sobe Subcategoria */
+    padding-bottom: 1rem !important;
+    /* Ajustado para aproximar os botões do rodapé */
   }
 
   .dialog-mobile .dialog-title {
-    /* margin-top: 0 !important; */   /* ajuste fino do título */
+    /* margin-top: 0 !important; */
+    /* ajuste fino do título */
   }
 
   /* Ocultar o cabeçalho da tabela em mobile */
@@ -178,7 +222,8 @@ All colors MUST be HSL.
   }
 }
 
-html, body {
+html,
+body {
   height: 100%;
   /* Removido overflow: hidden para permitir pull-to-refresh e scroll da página de fundo */
 }
@@ -192,7 +237,8 @@ html, body {
 
   /* Área rolável apenas no corpo da tabela */
   .lancamentos-scroll-container {
-    max-height: calc(100vh - 300px); /* ajuste mínimo para rolar */
+    max-height: calc(100vh - 300px);
+    /* ajuste mínimo para rolar */
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -201,16 +247,19 @@ html, body {
   .lancamentos-table {
     width: 100%;
     max-width: 1200px;
-    table-layout: fixed !important; /* Alterado para fixed para controle de largura */
+    table-layout: fixed !important;
+    /* Alterado para fixed para controle de largura */
     margin: 0 auto;
   }
 
   /* Cabeçalho fixo (sticky) */
-  .lancamentos-table-header th { /* Aplicado diretamente ao th */
+  .lancamentos-table-header th {
+    /* Aplicado diretamente ao th */
     position: sticky;
     top: 0;
     z-index: 50;
-    background: #F5F6FA; /* mesma cor atual do cabeçalho */
+    background: #F5F6FA;
+    /* mesma cor atual do cabeçalho */
   }
 
   /* Propriedades para o thead container (lancamentos-table-header) */
@@ -220,7 +269,7 @@ html, body {
     font-size: 15px;
     font-weight: 600;
     color: #222;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   }
 
   /* Zebra striping suave */
@@ -237,44 +286,52 @@ html, body {
   /* Distribuição de colunas */
   .lancamentos-table th:nth-child(1),
   .lancamentos-table td:nth-child(1) {
-    width: 100px; /* Data */
+    width: 100px;
+    /* Data */
     text-align: left;
   }
 
   .lancamentos-table th:nth-child(2),
   .lancamentos-table td:nth-child(2) {
-    width: 70px; /* Tipo */
+    width: 70px;
+    /* Tipo */
     text-align: center;
   }
 
   .lancamentos-table th:nth-child(3),
   .lancamentos-table td:nth-child(3) {
-    width: 180px; /* Subcategoria */
+    width: 180px;
+    /* Subcategoria */
     text-align: left;
   }
 
   .lancamentos-table th:nth-child(4),
   .lancamentos-table td:nth-child(4) {
-    width: auto; /* Descrição - auto-fit */
+    width: auto;
+    /* Descrição - auto-fit */
     text-align: left;
     padding: 10px 12px 10px 32px !important;
   }
 
   .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
-    width: 120px; /* Valor */
-    text-align: right; /* Alterado para alinhar à direita */
+    width: 120px;
+    /* Valor */
+    text-align: right;
+    /* Alterado para alinhar à direita */
   }
 
   .lancamentos-table th:nth-child(6),
   .lancamentos-table td:nth-child(6) {
-    width: 70px; /* Status */
+    width: 70px;
+    /* Status */
     text-align: center;
   }
-  
+
   .lancamentos-table th:nth-child(7),
   .lancamentos-table td:nth-child(7) {
-    width: 100px; /* Ações */
+    width: 100px;
+    /* Ações */
     text-align: center;
   }
 
@@ -304,60 +361,92 @@ html, body {
 
   /* Ícones de seta com animação suave */
   .arrow-icon {
-    /* margin-left: 4px; */ /* Removed as it's now absolutely positioned */
+    /* margin-left: 4px; */
+    /* Removed as it's now absolutely positioned */
     transition: transform 0.15s ease-in-out, opacity 0.15s;
   }
+
   @keyframes rotateArrow {
-    from { opacity: 0; transform: translateY(-2px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Desktop Dialog Adjustments for Edit Form */
-  div[role="dialog"] > div:last-child { /* Targets the DialogContent */
-    max-height: 80vh; /* Reduzido para 80vh */
-    padding-top: 0.75rem !important; /* Reduzido o padding superior */
-    padding-bottom: 0.75rem !important; /* Reduzido o padding inferior */
+  div[role="dialog"]>div:last-child {
+    /* Targets the DialogContent */
+    max-height: 80vh;
+    /* Reduzido para 80vh */
+    padding-top: 0.75rem !important;
+    /* Reduzido o padding superior */
+    padding-bottom: 0.75rem !important;
+    /* Reduzido o padding inferior */
   }
 
-  div[role="dialog"] > div:last-child form { /* Targets the form within DialogContent */
-    padding-top: 0.25rem !important; /* Reduzido o padding superior do formulário */
-    padding-bottom: 0.25rem !important; /* Reduzido o padding inferior do formulário */
+  div[role="dialog"]>div:last-child form {
+    /* Targets the form within DialogContent */
+    padding-top: 0.25rem !important;
+    /* Reduzido o padding superior do formulário */
+    padding-bottom: 0.25rem !important;
+    /* Reduzido o padding inferior do formulário */
   }
 
-  div[role="dialog"] > div:last-child form > div { /* Reduz o espaçamento vertical entre os grupos de campos */
-    margin-bottom: 0.5rem !important; /* Reduzido para 0.5rem */
+  div[role="dialog"]>div:last-child form>div {
+    /* Reduz o espaçamento vertical entre os grupos de campos */
+    margin-bottom: 0.5rem !important;
+    /* Reduzido para 0.5rem */
   }
 
-  div[role="dialog"] > div:last-child .dialog-header { /* Reduz o padding inferior do cabeçalho do diálogo */
-    padding-bottom: 0.25rem !important; /* Reduzido para 0.25rem */
+  div[role="dialog"]>div:last-child .dialog-header {
+    /* Reduz o padding inferior do cabeçalho do diálogo */
+    padding-bottom: 0.25rem !important;
+    /* Reduzido para 0.25rem */
   }
 
-  div[role="dialog"] > div:last-child .dialog-footer { /* Reduz o padding superior do rodapé do diálogo */
-    padding-top: 0.5rem !important; /* Reduzido para 0.5rem */
+  div[role="dialog"]>div:last-child .dialog-footer {
+    /* Reduz o padding superior do rodapé do diálogo */
+    padding-top: 0.5rem !important;
+    /* Reduzido para 0.5rem */
   }
 
-  div[role="dialog"] > div:last-child input, /* Ajusta a altura de inputs, selects e botões */
-  div[role="dialog"] > div:last-child select,
-  div[role="dialog"] > div:last-child button {
-    height: 2rem !important; /* Reduzido para 2rem */
-    min-height: 2rem !important; /* Reduzido para 2rem */
-    padding-top: 0.2rem !important; /* Ajustado padding */
-    padding-bottom: 0.2rem !important; /* Ajustado padding */
+  div[role="dialog"]>div:last-child input,
+  /* Ajusta a altura de inputs, selects e botões */
+  div[role="dialog"]>div:last-child select,
+  div[role="dialog"]>div:last-child button {
+    height: 2rem !important;
+    /* Reduzido para 2rem */
+    min-height: 2rem !important;
+    /* Reduzido para 2rem */
+    padding-top: 0.2rem !important;
+    /* Ajustado padding */
+    padding-bottom: 0.2rem !important;
+    /* Ajustado padding */
   }
 
-  div[role="dialog"] > div:last-child textarea { /* Ajusta a altura mínima de textareas */
-    min-height: 3.5rem !important; /* Reduzido para 3.5rem */
+  div[role="dialog"]>div:last-child textarea {
+    /* Ajusta a altura mínima de textareas */
+    min-height: 3.5rem !important;
+    /* Reduzido para 3.5rem */
   }
 }
 
 /* 3D Card Style (previously .card-neumorphism) */
 .card-3d {
   background: #ffffff;
-  border-radius: 22px; /* Ajustado para 22px */
+  border-radius: 22px;
+  /* Ajustado para 22px */
   box-shadow:
-    0px 10px 22px rgba(0, 0, 0, 0.10), /* profundidade mais suave */
+    0px 10px 22px rgba(0, 0, 0, 0.10),
+    /* profundidade mais suave */
     inset 0px -1px 4px rgba(0, 0, 0, 0.05),
-    inset 0px 2px 8px rgba(255, 255, 255, 0.50); /* luz suave */
+    inset 0px 2px 8px rgba(255, 255, 255, 0.50);
+  /* luz suave */
   transition: box-shadow 0.25s ease;
 }
 
@@ -373,18 +462,22 @@ html, body {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.20); /* luz bem mais sutil */
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  /* luz bem mais sutil */
 
   background: linear-gradient(180deg,
-    var(--cor-topo) 0%,
-    var(--cor-base) 100%
-  );
+      var(--cor-topo) 0%,
+      var(--cor-base) 100%);
 
   box-shadow:
-    0px 5px 12px rgba(0, 0, 0, 0.12), /* sombra suave */
-    inset 0px 1px 2px rgba(255, 255, 255, 0.25), /* highlight leve */
-    inset 0px -2px 3px rgba(0, 0, 0, 0.15); /* relevo inferior */
-  transition: box-shadow 0.2s ease, transform 0.1s ease; /* Adicionado transform para transição suave */
+    0px 5px 12px rgba(0, 0, 0, 0.12),
+    /* sombra suave */
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
+    /* highlight leve */
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
+  /* relevo inferior */
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+  /* Adicionado transform para transição suave */
 }
 
 .btn-3d:hover {
@@ -395,9 +488,12 @@ html, body {
 }
 
 .btn-3d:active {
-  transform: none; /* sem movimento */
+  transform: none;
+  /* sem movimento */
 
   box-shadow:
-    inset 0px 4px 8px rgba(0, 0, 0, 0.30), /* afundamento principal */
-    inset 0px -2px 4px rgba(255, 255, 255, 0.15); /* luz interna suave */
+    inset 0px 4px 8px rgba(0, 0, 0, 0.30),
+    /* afundamento principal */
+    inset 0px -2px 4px rgba(255, 255, 255, 0.15);
+  /* luz interna suave */
 }

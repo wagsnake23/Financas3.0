@@ -116,7 +116,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     // Filtrar as subcategorias com base no termo de busca
     const filtered = allSubcategories.filter(
       (cat) => cat.parent_id !== "receitas_e_investimentos" &&
-               cat.nome.toLowerCase().includes(commandSearch.toLowerCase())
+        cat.nome.toLowerCase().includes(commandSearch.toLowerCase())
     );
     // Ordenar por nome
     return filtered.sort((a, b) => a.nome.localeCompare(b.nome));
@@ -299,8 +299,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       const valorParcela = isRecurring
         ? valorTotal
         : tipoPagamento === "parcelado"
-        ? valorTotal / numeroParcelas
-        : valorTotal;
+          ? valorTotal / numeroParcelas
+          : valorTotal;
 
       const formattedFirstInstallmentDate = formatInTimeZone(
         dataVencimento as Date,
@@ -343,10 +343,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           data_pagamento:
             tipoPagamento === "avista" && isPaid
               ? formatInTimeZone(
-                  new Date(),
-                  TARGET_TIMEZONE,
-                  "yyyy-MM-dd HH:mm:ss"
-                )
+                new Date(),
+                TARGET_TIMEZONE,
+                "yyyy-MM-dd HH:mm:ss"
+              )
               : null,
         });
 
@@ -433,7 +433,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               role="combobox"
               aria-expanded={openCommand}
               className={cn(
-                "w-full justify-between rounded-xl",
+                "w-full justify-between rounded-xl bg-white",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
@@ -455,7 +455,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent 
+          <PopoverContent
             side="bottom"
             className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
           >
@@ -559,7 +559,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
           rows={isMobile ? 2 : 3}
-          className={cn("rounded-xl", isMobile && "text-sm")}
+          className={cn("rounded-xl bg-white", isMobile && "text-sm")}
         />
       </div>
 
