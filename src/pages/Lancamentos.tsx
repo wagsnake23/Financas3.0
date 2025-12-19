@@ -139,7 +139,7 @@ const Lancamentos = () => {
               isMobile && "absolute top-4 left-4 right-12 text-left"
             )}
           >
-            <DialogTitle>✏️ Editar Lançamento</DialogTitle>
+            <DialogTitle className="text-center w-full">✏️ Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
