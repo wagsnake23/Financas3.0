@@ -22,9 +22,9 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
       {!isMobile && ( // Renderiza o Label apenas se NÃO for mobile
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
       )}
-      <ToggleGroup 
-        type="single" 
-        value={isRecurring ? "recorrente" : "avulsa"} 
+      <ToggleGroup
+        type="single"
+        value={isRecurring ? "recorrente" : "avulsa"}
         onValueChange={(value) => {
           if (value === "recorrente") {
             onSelectRecorrente();
@@ -34,38 +34,38 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
         }}
         className={cn("w-full justify-center", isMobile && "gap-x-2")}
       >
-        <ToggleGroupItem 
-          value="avulsa" 
+        <ToggleGroupItem
+          value="avulsa"
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
+            "data-[state=on]:bg-destructive data-[state=on]:text-destructive-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-destructive/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
             isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
           )}
         >
-          <DynamicIcon 
-            name="⚡" 
+          <DynamicIcon
+            name="⚡"
             className={cn(
               "mr-1 h-3.5 w-3.5",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
-            )} 
+            )}
           /> Avulsa
         </ToggleGroupItem>
-        <ToggleGroupItem 
-          value="recorrente" 
+        <ToggleGroupItem
+          value="recorrente"
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-primary/90", // Ajustado para corresponder ao botão Salvar
+            "data-[state=on]:bg-destructive data-[state=on]:text-destructive-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-destructive/90", // Ajustado para corresponder ao botão Salvar
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
             isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
           )}
         >
-          <DynamicIcon 
-            name="🔁" 
+          <DynamicIcon
+            name="🔁"
             className={cn(
               "mr-1 h-3.5 w-3.5",
               "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
-            )} 
+            )}
           /> Recorrente
         </ToggleGroupItem>
       </ToggleGroup>

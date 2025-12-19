@@ -576,6 +576,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <Button
         type="submit"
+        variant="destructive"
         className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
         disabled={loading}
       >
