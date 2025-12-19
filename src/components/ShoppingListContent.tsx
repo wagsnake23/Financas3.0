@@ -46,8 +46,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
   const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
-  const originalValueRef = useRef<string>("");
+  const [newItemInput, setNewItemInput] = useState(""); // State for new item input
+  const newItemInputRef = useRef<HTMLInputElement>(null);
 
   // Contagens (ignorando linhas vazias)
   const filledItems = items.filter((item) => item.product.trim() !== "");
@@ -80,18 +82,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   // Initialize items state from fetched data when user is available and data is loaded
   useEffect(() => {
     if (user && !isLoading && !isError && !initialLoadComplete) {
-      if (fetchedItems.length === 0) {
-        setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
-      } else {
-        setItems([
-          ...fetchedItems,
-          {
-            ...EMPTY_ITEM,
-            id: crypto.randomUUID(),
-            order: fetchedItems.length + 1,
-          },
-        ]);
-      }
+      setItems(fetchedItems); // Just set fetched items, no empty row needed
       setInitialLoadComplete(true);
     }
     // If user logs out, reset initialLoadComplete to allow re-initialization on next login
@@ -101,12 +92,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   }, [user, fetchedItems, isLoading, isError, initialLoadComplete]);
 
-  // Focus on the first input if it's an empty item and it's the only item
-  useEffect(() => {
-    if (items.length === 1 && items[0].product === "" && inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-    }
-  }, [items]);
+
 
   // Mutations for Supabase operations
   const upsertItemsMutation = useMutation({
@@ -182,158 +168,58 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     },
   });
 
-  const handleProductChange = (index: number, value: string) => {
-    const newItems = [...items];
-    // Auto-capitalize first letter, rest lowercase
+  const handleNewItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     const formattedValue =
       value.length > 0
         ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
         : "";
-    newItems[index].product = formattedValue;
-    setItems(newItems);
-
-    // If typing in the last (empty) row, add a new empty row below
-    if (index === items.length - 1 && formattedValue.length > 0) {
-      setItems([
-        ...newItems,
-        {
-          ...EMPTY_ITEM,
-          id: crypto.randomUUID(),
-          order: items.length + 1,
-        },
-      ]);
-    }
+    setNewItemInput(formattedValue);
   };
 
-  // ✅ Agora o toggle salva imediatamente no banco
-  const handleStatusChange = (index: number, checked: boolean) => {
-    const newItems = [...items];
-    newItems[index].status = checked;
-    newItems[index].date = checked
-      ? format(new Date(), "MMM/dd", { locale: ptBR })
-      : "";
-    setItems(newItems);
+  const handleNewItemSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const product = newItemInput.trim();
+      if (!product) return;
 
-    const item = newItems[index];
+      if (!user?.id) {
+        toast.error("Usuário não autenticado.");
+        return;
+      }
 
-    // só salva se tiver produto preenchido
-    if (item.product.trim() !== "") {
-      const itemToUpsert: TablesUpdate<"shopping_items"> = {
-        id: item.id,
-        product: item.product,
-        status: item.status,
-        date: item.date,
-        order: item.order || index + 1,
+      // Calculate new order
+      const maxOrder = items.length > 0 ? Math.max(...items.map((i) => i.order || 0)) : 0;
+      const newOrder = maxOrder + 1;
+
+      const newItem: TablesInsert<"shopping_items"> = {
+        user_id: user.id,
+        product: product,
+        status: false,
+        date: "",
+        order: newOrder,
       };
-      upsertItemsMutation.mutate([itemToUpsert]);
-    }
-  };
 
-  // This function is for backspace on empty input
-  const handleRemoveItemOnBackspace = (index: number) => {
-    if (items.length === 1) return; // Don't remove the last item
+      try {
+        // Optimistic update
+        const optimisticId = crypto.randomUUID();
+        const optimisticItem: ShoppingItem = {
+          id: optimisticId,
+          ...newItem,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as ShoppingItem;
 
-    const itemToRemove = items[index];
-    const newItems = items.filter((_, i) => i !== index);
+        setItems((prev) => [...prev, optimisticItem]);
+        setNewItemInput(""); // Clear input
 
-    // If the item had an ID (was saved to DB), mark for deletion
-    if (
-      itemToRemove.product.trim() === "" &&
-      itemToRemove.id &&
-      fetchedItems.some((fi) => fi.id === itemToRemove.id)
-    ) {
-      // Only remove if it's an empty row and was a fetched item
-      setItems(newItems);
-      if (itemToRemove.id) {
-        deleteItemsMutation.mutate([itemToRemove.id]);
+        // Save to Supabase
+        await upsertItemsMutation.mutateAsync([newItem]);
+
+      } catch (error) {
+        console.error("Error adding item:", error);
+        // Revert on error (optional, complex to implement perfectly without refetch)
       }
-    } else if (itemToRemove.product.trim() !== "") {
-      // If it's a non-empty item, allow deletion
-      setItems(newItems);
-      if (itemToRemove.id) {
-        deleteItemsMutation.mutate([itemToRemove.id]);
-      }
-    }
-  };
-
-  const saveItem = (item: ShoppingItem, index: number) => {
-    // Basic validation
-    if (item.product.trim() === "") return;
-
-    const itemToUpsert: TablesUpdate<"shopping_items"> = {
-      id: item.id,
-      product: item.product,
-      status: item.status,
-      date: item.date,
-      order: item.order || index + 1,
-    };
-    upsertItemsMutation.mutate([itemToUpsert]);
-  };
-
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    originalValueRef.current = e.target.value;
-  };
-
-  const handleInputBlur = (index: number, e: React.FocusEvent<HTMLInputElement>) => {
-    const currentValue = e.target.value;
-    const originalValue = originalValueRef.current;
-
-    // If empty, restore original value
-    if (currentValue.trim() === "") {
-      if (originalValue.trim() !== "") {
-        const newItems = [...items];
-        newItems[index].product = originalValue;
-        setItems(newItems);
-      }
-      // If both were empty (new row), do nothing
-      return;
-    }
-
-    // If changed, save
-    if (currentValue !== originalValue) {
-      saveItem(items[index], index);
-    }
-  };
-
-  const handleInputKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (
-      e.key === "Backspace" &&
-      items[index].product === "" &&
-      items.length > 1 &&
-      index !== items.length - 1
-    ) {
-      e.preventDefault(); // Prevent default backspace behavior
-      handleRemoveItemOnBackspace(index);
-      // Focus on the previous input if available
-      if (inputRefs.current[index - 1]) {
-        inputRefs.current[index - 1]?.focus();
-      }
-    } else if (e.key === "Enter") {
-      e.preventDefault(); // Prevent default form submission or new line
-
-      // Save current item immediately on Enter if it has content
-      const currentValue = items[index].product;
-      // Only save if it's not empty and has changed (optimization)
-      if (currentValue.trim() !== "" && currentValue !== originalValueRef.current) {
-        saveItem(items[index], index);
-        // Update ref to avoid double save on blur
-        originalValueRef.current = currentValue;
-      }
-
-      // If not the last item, or if it's the last item and it has content (meaning a new empty row was just added by handleProductChange)
-      if (
-        index < items.length - 1 ||
-        (index === items.length - 1 && items[index].product.trim() !== "")
-      ) {
-        // Focus the next input. If a new row was added, this will be the input in that new row.
-        setTimeout(() => {
-          inputRefs.current[index + 1]?.focus();
-        }, 0);
-      }
-      // If it's the last item and it's empty, do nothing.
     }
   };
 
@@ -351,12 +237,30 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     ) {
       await deleteItemsMutation.mutateAsync([itemToDelete.id]);
     }
+    setItems(newItems);
+  };
 
-    // Ensure there's always at least one empty row if all non-empty items are gone
-    if (newItems.filter((item) => item.product.trim() !== "").length === 0) {
-      setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
-    } else {
-      setItems(newItems);
+  // Status toggle handler
+  const handleStatusChange = (index: number, checked: boolean) => {
+    const newItems = [...items];
+    newItems[index].status = checked;
+    newItems[index].date = checked
+      ? format(new Date(), "MMM/dd", { locale: ptBR })
+      : "";
+    setItems(newItems);
+
+    const item = newItems[index];
+
+    // Update in Supabase
+    if (item.product.trim() !== "") {
+      const itemToUpsert: TablesUpdate<"shopping_items"> = {
+        id: item.id,
+        product: item.product,
+        status: item.status,
+        date: item.date,
+        order: item.order || index + 1,
+      };
+      upsertItemsMutation.mutate([itemToUpsert]);
     }
   };
 
@@ -428,17 +332,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     if (idsToDelete.length > 0) {
       deleteItemsMutation.mutate(idsToDelete, {
         onSuccess: () => {
-          setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
-          if (inputRefs.current[0]) {
-            inputRefs.current[0].focus();
-          }
+          setItems([]);
         },
       });
-    } else {
-      setItems([{ ...EMPTY_ITEM, id: crypto.randomUUID(), order: 1 }]);
-      if (inputRefs.current[0]) {
-        inputRefs.current[0].focus();
-      }
+      setItems([]);
     }
   };
 
@@ -527,6 +424,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </p>
       </div>
 
+      <div className="w-full mb-4">
+        <input
+          ref={newItemInputRef}
+          type="text"
+          placeholder="Digite um produto e pressione Enter..."
+          value={newItemInput}
+          onChange={handleNewItemChange}
+          onKeyDown={handleNewItemSubmit}
+          className="w-full p-3 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        />
+      </div>
+
       <div className="overflow-x-auto">
         <div className="rounded-xl border">
           {/* Sticky Header */}
@@ -554,18 +463,22 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
                 {/* Produto + Data */}
                 <div className="col-span-5">
-                  <input
-                    ref={(el) => (inputRefs.current[index] = el)}
-                    onKeyDown={(e) => handleInputKeyDown(index, e)}
-                    onFocus={handleInputFocus}
-                    onBlur={(e) => handleInputBlur(index, e)}
-                    className={cn(
-                      "w-full bg-transparent outline-none text-sm border-none focus-visible:ring-0 focus-visible:outline-none px-0 py-0 h-auto",
-                      item.status && "text-gray-400"
+                  <div className="col-span-5">
+                    <span
+                      className={cn(
+                        "text-sm",
+                        item.status && "text-gray-400 line-through"
+                      )}
+                    >
+                      {item.product}
+                    </span>
+
+                    {item.date && (
+                      <p className="mt-[1px] text-[10px] text-gray-500">
+                        {item.date}
+                      </p>
                     )}
-                    value={item.product}
-                    onChange={(e) => handleProductChange(index, e.target.value)}
-                  />
+                  </div>
 
                   {item.date && (
                     <p className="mt-[1px] text-[10px] text-gray-500">
