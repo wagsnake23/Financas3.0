@@ -52,7 +52,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
-    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[]
+    (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master' | 'numero_parcelas' | 'valor_total'> | null })[]
   >({
     queryKey: ["expenseInstallments", user?.id, format(selectedMonth, 'yyyy-MM')],
     queryFn: async () => {
@@ -63,7 +63,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
       const { data, error } = await supabase
         .from("despesas_parcelas")
-        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master)")
+        .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas, valor_total)")
         .filter("despesas.user_id", "eq", user.id)
         .gte("vencimento", startOfMonthStr)
         .lt("vencimento", nextMonthStr)
@@ -90,16 +90,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     enabled: enabled,
   });
 
-  const totalInstallmentsMap = useMemo(() => {
-    const map = new Map<string, number>();
-    expenseInstallments.forEach(p => {
-      if (p.despesas) {
-        const despesaId = p.despesas.id;
-        map.set(despesaId, (map.get(despesaId) || 0) + 1);
-      }
-    });
-    return map;
-  }, [expenseInstallments]);
+  // Removido totalInstallmentsMap pois agora buscamos numero_parcelas da despesa mestre
 
 
   const monthlyFilteredTransactions = useMemo(() => {
@@ -134,8 +125,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       .filter(p => p.vencimento >= startStr && p.vencimento < nextMonthStr)
       .map(p => {
         const parentDespesa = p.despesas;
-        const despesaId = parentDespesa?.id;
-        const totalForNonFixed = despesaId ? totalInstallmentsMap.get(despesaId) : 1;
         const transaction: Transaction = {
           id: p.id,
           type: "expense",
@@ -145,7 +134,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           description: parentDespesa?.descricao || "Despesa",
           status: p.pago ? 'Recebida' : 'Pendente',
           installmentNumber: p.numero_parcela,
-          totalInstallments: totalForNonFixed,
+          totalInstallments: parentDespesa?.numero_parcelas || 1,
           forma_pagamento: parentDespesa?.forma_pagamento,
           cartao_id: parentDespesa?.cartao_id,
           despesa_id: parentDespesa?.id,
@@ -174,7 +163,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     console.log("useTransactionsData: Combined monthlyFilteredTransactions count:", combined.length);
 
     return combined;
-  }, [selectedMonth, revenues, expenseInstallments, totalInstallmentsMap, enabled]);
+  }, [selectedMonth, revenues, expenseInstallments, enabled]);
 
   const isLoading = isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingCartoes;
 

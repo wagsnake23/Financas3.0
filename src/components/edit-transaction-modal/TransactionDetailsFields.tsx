@@ -79,7 +79,9 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   cartoes,
   refetchCartoes,
 }) => {
-  const isExpenseInstallment = transactionType === "expense" && totalInstallments && totalInstallments > 1;
+  const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
+  const isRecurringIncome = (transactionType === "income" && totalInstallments && totalInstallments > 1);
+  const showInstallmentField = isExpenseInstallment || isRecurringIncome;
   const dummyUser: User = { id: "dummy-user-id", email: "dummy@example.com", app_metadata: {}, user_metadata: {}, aud: "", created_at: "" };
 
   const paymentOptions = useMemo(() => {
@@ -174,11 +176,11 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         </div>
 
         {/* Parcela (condicional) */}
-        {isExpenseInstallment && (
+        {showInstallmentField && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
             <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
             <Input
-              value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
+              value={`${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
               className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
@@ -298,7 +300,6 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
-            transactionType={transactionType}
             onToggle={() => setIsPaid(!isPaid)}
             isMobile={isMobile}
           />
