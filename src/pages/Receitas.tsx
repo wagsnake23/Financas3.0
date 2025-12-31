@@ -533,21 +533,21 @@ export default function Receitas() {
             <Footer isMobile={isMobile} className="pt-2" user={user} />
           </Card>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <div className="space-y-6">
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-success">
-                  <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-                    <DynamicIcon
-                      name="TrendingUp"
-                      className="h-6 w-6 text-success"
-                    />
-                  </div>
-                  Nova Receita
-                </h2>
-                {oneOffFormContent}
-              </Card>
+          <div className="flex flex-col space-y-6">
+            <Card className="p-6 rounded-xl shadow-sm w-full">
+              <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">
+                <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
+                  <DynamicIcon
+                    name="TrendingUp"
+                    className="h-6 w-6 text-success"
+                  />
+                </div>
+                Nova Receita
+              </h2>
+              {oneOffFormContent}
+            </Card>
 
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <TotalRevenueCard
                 revenues={revenues}
                 chartContent={
@@ -563,9 +563,7 @@ export default function Receitas() {
                   .reduce((sum, r) => sum + r.valor, 0)
                 }
               />
-            </div>
 
-            <div className="space-y-6">
               <RevenueByTypeChart
                 revenues={revenues}
                 revenueTypes={incomeSubcategories}
