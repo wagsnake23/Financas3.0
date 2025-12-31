@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
@@ -28,6 +28,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data as AppCategory[];
     },
     enabled: enabled,
+    placeholderData: keepPreviousData,
   });
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
@@ -49,6 +50,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled: enabled,
+    placeholderData: keepPreviousData,
   });
 
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
@@ -73,6 +75,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled: enabled,
+    placeholderData: keepPreviousData,
   });
 
   const { data: cartoes = [], isLoading: isLoadingCartoes, refetch: refetchCartoes } = useQuery<Tables<'cartoes'>[]>({
@@ -88,6 +91,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       return data;
     },
     enabled: enabled,
+    placeholderData: keepPreviousData,
   });
 
   // Removido totalInstallmentsMap pois agora buscamos numero_parcelas da despesa mestre

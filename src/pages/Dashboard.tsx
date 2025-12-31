@@ -145,6 +145,12 @@ export default function Dashboard() {
     isLoadingAllExpenses ||
     isLoadingCategories;
 
+  const isInitialLoad =
+    authLoading ||
+    (isLoadingCategories && allSubcategories.length === 0) ||
+    (isLoadingAllRevenues && allRevenues.length === 0) ||
+    (isLoadingAllExpenses && allExpenseInstallments.length === 0);
+
   const handlePreviousMonth = () => {
     setSelectedMonth((prev) => subMonths(prev, 1));
   };
@@ -157,7 +163,7 @@ export default function Dashboard() {
     setSelectedMonth(date);
   };
 
-  if (isLoading) {
+  if (isInitialLoad) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">
