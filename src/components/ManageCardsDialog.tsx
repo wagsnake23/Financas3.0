@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input }
- from "@/components/ui/input";
+  from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
@@ -164,7 +164,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       setIsConfirmDeleteOpen(false);
       return;
     }
-    
+
     // If no associated expenses, proceed with deletion
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
@@ -187,10 +187,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     <>
       <Dialog open={isManageCardsOpen} onOpenChange={setIsManageCardsOpen}>
         <DialogTrigger asChild>
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="icon" 
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
             className={cn(
               "rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80", // Adicionado bg-soft-blue e hover
               isMobile && "h-9 w-9" // Ajuste de tamanho para mobile
@@ -199,7 +199,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <DynamicIcon name="✏️" className="w-4 h-4" /> {/* Ícone de emoji de lápis */}
           </Button>
         </DialogTrigger>
-        <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
+        <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
           <DialogHeader>
             <DialogTitle>Gerenciar Cartões</DialogTitle>
           </DialogHeader>
@@ -250,31 +250,31 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
-        <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
+        <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
           <DialogHeader>
             <DialogTitle>Editar Cartão</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <Label>Nome do Cartão</Label>
-              <Input 
-                value={nomeCartao} 
+              <Input
+                value={nomeCartao}
                 onChange={(e) => {
                   setNomeCartao(e.target.value);
                   setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
-                }} 
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))} 
+                }}
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
               />
             </div>
             <div>
               <Label>Banco</Label>
-              <Input 
-                value={banco} 
+              <Input
+                value={banco}
                 onChange={(e) => {
                   setBanco(e.target.value);
                   setValidationErrors(prev => ({ ...prev, banco: false }));
-                }} 
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))} 
+                }}
+                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
               />
             </div>
             <div>
@@ -328,7 +328,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
+        <AlertDialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>

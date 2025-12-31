@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory, Transaction } from "@/types/finance";
-import { format, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import { format, startOfMonth, endOfMonth, isWithinInterval, addMonths } from "date-fns";
 import { isValidUuid } from "@/lib/utils";
 
 interface UseTransactionsDataProps {
@@ -31,13 +31,19 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   });
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
-    queryKey: ["revenues", user?.id],
+    queryKey: ["revenues", user?.id, format(selectedMonth, 'yyyy-MM')],
     queryFn: async () => {
       if (!user?.id) return [];
+
+      const startOfMonthStr = format(startOfMonth(selectedMonth), "yyyy-MM-01");
+      const nextMonthStr = format(addMonths(startOfMonth(selectedMonth), 1), "yyyy-MM-01");
+
       const { data, error } = await supabase
         .from("receitas")
         .select("*, status, is_recurring_master, recurrence_id, recurrence_day")
         .eq("user_id", user.id)
+        .gte("data", startOfMonthStr)
+        .lt("data", nextMonthStr)
         .order("data", { ascending: false });
       if (error) throw error;
       return data;
@@ -48,13 +54,19 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
     (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master'> | null })[]
   >({
-    queryKey: ["expenseInstallments", user?.id],
+    queryKey: ["expenseInstallments", user?.id, format(selectedMonth, 'yyyy-MM')],
     queryFn: async () => {
       if (!user?.id) return [];
+
+      const startOfMonthStr = format(startOfMonth(selectedMonth), "yyyy-MM-01");
+      const nextMonthStr = format(addMonths(startOfMonth(selectedMonth), 1), "yyyy-MM-01");
+
       const { data, error } = await supabase
         .from("despesas_parcelas")
         .select("*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master)")
         .filter("despesas.user_id", "eq", user.id)
+        .gte("vencimento", startOfMonthStr)
+        .lt("vencimento", nextMonthStr)
         .order("vencimento", { ascending: true });
       if (error) throw error;
       console.log("useTransactionsData: Raw expenseInstallments fetched:", data.map(p => ({ id: p.id, despesa_id: p.despesas?.id, forma_pagamento: p.despesas?.forma_pagamento, cartao_id: p.despesas?.cartao_id })));
@@ -95,10 +107,11 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     if (!enabled) return [];
 
     const startOfSelectedMonth = startOfMonth(selectedMonth);
-    const endOfSelectedMonth = endOfMonth(selectedMonth);
+    const startStr = format(startOfSelectedMonth, "yyyy-MM-01");
+    const nextMonthStr = format(addMonths(startOfSelectedMonth, 1), "yyyy-MM-01");
 
     const monthlyIncomeTransactions: Transaction[] = revenues
-      .filter(r => isWithinInterval(new Date(r.data), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
+      .filter(r => r.data >= startStr && r.data < nextMonthStr)
       .map(r => ({
         id: r.id,
         type: "income",
@@ -118,7 +131,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
-      .filter(p => isWithinInterval(new Date(p.vencimento), { start: startOfSelectedMonth, end: endOfSelectedMonth }))
+      .filter(p => p.vencimento >= startStr && p.vencimento < nextMonthStr)
       .map(p => {
         const parentDespesa = p.despesas;
         const despesaId = parentDespesa?.id;
@@ -139,7 +152,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           is_recurring_master: Boolean(parentDespesa?.is_recurring_master), // Garante que seja boolean
           recurrence_id: parentDespesa?.id ?? null, // Para despesas, o recurrence_id é o id da despesa mestra, garante null se parentDespesa.id for null
           recurrence_day: null,
-          tipo_pagamento: parentDespesa?.tipo_pagamento, // NOVO: Incluído tipo_pagamento
+          tipo_pagamento: parentDespesa?.tipo_pagamento as "avista" | "parcelado" | "fixo", // NOVO: Incluído tipo_pagamento com cast
           paymentTimestamp: p.data_pagamento, // NOVO: Popula paymentTimestamp
         };
         console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id });
@@ -155,11 +168,11 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       }
       return a.id.localeCompare(b.id);
     });
-    
+
     console.log("useTransactionsData: Monthly Income transactions count:", monthlyIncomeTransactions.length);
     console.log("useTransactionsData: Monthly Expense transactions count:", monthlyExpenseTransactions.length);
     console.log("useTransactionsData: Combined monthlyFilteredTransactions count:", combined.length);
-    
+
     return combined;
   }, [selectedMonth, revenues, expenseInstallments, totalInstallmentsMap, enabled]);
 

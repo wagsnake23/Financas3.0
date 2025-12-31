@@ -92,10 +92,10 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   return (
     <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogTrigger asChild>
-        <Button 
-          type="button" 
-          variant="outline" 
-          size="icon" 
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
           className={cn(
             "rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80", // Adicionado bg-soft-blue e hover
             isMobile && "h-9 w-9" // Ajuste de tamanho para mobile
@@ -104,37 +104,37 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           <DynamicIcon name="➕" className="w-4 h-4" /> {/* Ícone de emoji de adição */}
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn("w-full sm:max-w-[425px]")}> {/* Revertido para o estado anterior */}
+      <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
         <DialogHeader>
           <DialogTitle>Cadastrar Novo Cartão</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
             <Label>Nome do Cartão</Label>
-            <Input 
-              value={newCardNome} 
+            <Input
+              value={newCardNome}
               onChange={(e) => {
                 setNewCardNome(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardNome: false }));
-              }} 
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))} 
+              }}
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))}
             />
           </div>
           <div>
             <Label>Banco</Label>
-            <Input 
-              value={newCardBanco} 
+            <Input
+              value={newCardBanco}
               onChange={(e) => {
                 setNewCardBanco(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardBanco: false }));
-              }} 
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))} 
+              }}
+              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))}
             />
           </div>
           <div>
             <Label>Últimos 4 Dígitos</Label>
-            <Input 
-              value={newCardUltimosDigitos} 
+            <Input
+              value={newCardUltimosDigitos}
               onChange={(e) => {
                 setNewCardUltimosDigitos(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardUltimosDigitos: false }));
@@ -146,11 +146,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Dia Fechamento</Label>
-              <Input 
-                type="number" 
-                min="1" 
+              <Input
+                type="number"
+                min="1"
                 max="31"
-                value={newCardDiaFechamento} 
+                value={newCardDiaFechamento}
                 onChange={(e) => {
                   setNewCardDiaFechamento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaFechamento: false }));
@@ -160,11 +160,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             </div>
             <div>
               <Label>Dia Vencimento</Label>
-              <Input 
-                type="number" 
-                min="1" 
+              <Input
+                type="number"
+                min="1"
                 max="31"
-                value={newCardDiaVencimento} 
+                value={newCardDiaVencimento}
                 onChange={(e) => {
                   setNewCardDiaVencimento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaVencimento: false }));

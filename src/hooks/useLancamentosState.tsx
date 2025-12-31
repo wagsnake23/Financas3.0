@@ -13,7 +13,10 @@ export const useLancamentosState = () => {
     let dateToReturn: Date;
     if (monthParam) {
       try {
-        const parsedDate = parseISO(monthParam);
+        // Parse ISO date-only string as local date to avoid UTC shift issues
+        const [year, month, day] = monthParam.split('-').map(Number);
+        const parsedDate = new Date(year, month - 1, day || 1);
+
         if (isValid(parsedDate)) {
           dateToReturn = parsedDate;
         } else {
