@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
+import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -341,7 +342,7 @@ export default function Dashboard() {
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
                     currentDate={selectedMonth}
-                    isMobile={isMobile}
+                    isMobile={true}
                     onMonthClick={handleMonthClick}
                   />
                 }
@@ -389,7 +390,7 @@ export default function Dashboard() {
                   <MonthlyExpenseBarChart
                     expenseInstallments={allExpenseInstallments}
                     currentDate={selectedMonth}
-                    isMobile={isMobile}
+                    isMobile={true}
                     onMonthClick={handleMonthClick}
                   />
                 }
@@ -424,13 +425,6 @@ export default function Dashboard() {
                 allExpenseInstallments={allExpenseInstallments}
                 allCategories={allSubcategories}
                 isLoading={isLoading}
-                isMobile={isMobile}
-              />
-            </div>
-
-            <div className="grid grid-cols-1">
-              <TotalExpensesCard
-                expenseInstallments={allExpenseInstallments}
                 isMobile={isMobile}
               />
             </div>

@@ -41,6 +41,7 @@ import { Footer } from "@/components/Footer";
 import CurrencyBR from "@/components/ui/currency-br";
 
 import { Database } from "@/integrations/supabase/types";
+import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { RevenueStatusToggle } from "@/components/revenue-form/RevenueStatusToggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
@@ -265,21 +266,9 @@ export default function Receitas() {
   const oneOffFormContent = (
     <form
       onSubmit={handleSubmitOneOff}
-      className={cn("w-full", isMobile ? "space-y-3 w-[95%]" : "space-y-4")}
+      className={cn("w-full", isMobile ? "space-y-4" : "space-y-4")}
     >
-      {isMobile && (
-        <h2
-          className={cn(
-            "text-xl font-semibold mb-4 flex items-center gap-2 text-success"
-          )}
-        >
-          <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-            <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
-          </div>
-          Nova Receita
-        </h2>
-      )}
-      <div className="space-y-2">
+      <div className={cn("space-y-2", isMobile && "w-[92%] mx-auto")}>
         <ToggleGroup
           type="single"
           value={isRecurring ? "recorrente" : "avulsa"}
@@ -325,7 +314,7 @@ export default function Receitas() {
         </ToggleGroup>
       </div>
 
-      <div>
+      <div className={cn(isMobile && "w-[92%] mx-auto")}>
         <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>
           Subcategoria de Receita
         </Label>
@@ -382,7 +371,7 @@ export default function Receitas() {
         </Select>
       </div>
 
-      <div>
+      <div className={cn(isMobile && "w-[92%] mx-auto")}>
         <Label htmlFor="data" className={cn(isMobile && "text-xs")}>
           Data
         </Label>
@@ -432,7 +421,7 @@ export default function Receitas() {
         </Popover>
       </div>
 
-      <div>
+      <div className={cn(isMobile && "w-[92%] mx-auto")}>
         <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>
           Valor (R$)
         </Label>
@@ -453,7 +442,7 @@ export default function Receitas() {
         />
       </div>
 
-      <div>
+      <div className={cn(isMobile && "w-[92%] mx-auto")}>
         <Label htmlFor="descricao" className={cn(isMobile && "text-xs")}>
           Descrição
         </Label>
@@ -468,10 +457,10 @@ export default function Receitas() {
       </div>
 
       {!isRecurring && (
-        <div className="space-y-2">
+        <div className={cn("space-y-2", isMobile && "w-[92%] mx-auto")}>
           <RevenueStatusToggle
             status={status}
-            setStatus={setStatus}
+            setStatus={(val) => setStatus(val as ReceitaStatus)}
             isMobile={isMobile}
           />
         </div>
@@ -480,7 +469,7 @@ export default function Receitas() {
       <Button
         type="submit"
         variant="success"
-        className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
+        className={cn("w-full rounded-xl", isMobile && "h-9 text-sm w-[92%] mx-auto")}
         disabled={loading}
       >
         {loading ? "Salvando..." : "Salvar Receita"}
@@ -502,14 +491,14 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-white"
+        isMobile && "bg-[#F1F9FD]"
       )}
     >
       <Navigation />
       <div
         className={cn(
           "space-y-6 flex-grow",
-          isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8"
+          isMobile ? "w-full px-0 pt-0 pb-6" : "mx-auto max-w-[1200px] px-6 py-8"
         )}
       >
         {!isMobile && (
@@ -523,41 +512,64 @@ export default function Receitas() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-          {isMobile ? (
-            <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-white">
-              {oneOffFormContent}
-              <Footer isMobile={isMobile} className="pt-2" user={user} />
-            </Card>
-          ) : (
-            <Card className="p-6 rounded-xl shadow-sm">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+        {isMobile ? (
+          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-[#F1F9FD]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold flex items-center gap-2 text-success">
                 <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-                  <DynamicIcon
-                    name="TrendingUp"
-                    className="h-6 w-6 text-success"
-                  />
+                  <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
                 </div>
                 Nova Receita
               </h2>
-              {oneOffFormContent}
-            </Card>
-          )}
+            </div>
 
-          {!isMobile && (
-            <div className="flex flex-col h-full">
-              <TotalRevenueCard revenues={revenues} />
-              <div className="h-6" />
-              <div className="flex-grow" />
+            {oneOffFormContent}
+
+            <Footer isMobile={isMobile} className="pt-2" user={user} />
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div className="space-y-6">
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-success">
+                  <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
+                    <DynamicIcon
+                      name="TrendingUp"
+                      className="h-6 w-6 text-success"
+                    />
+                  </div>
+                  Nova Receita
+                </h2>
+                {oneOffFormContent}
+              </Card>
+
+              <TotalRevenueCard
+                revenues={revenues}
+                chartContent={
+                  <MonthlyRevenueBarChart
+                    revenues={revenues}
+                    currentDate={new Date()} // Or selected month if available
+                    isMobile={true}
+                    onMonthClick={() => { }} // No action for now
+                  />
+                }
+                annualTotalValue={revenues
+                  .filter(r => new Date(r.data).getFullYear() === new Date().getFullYear())
+                  .reduce((sum, r) => sum + r.valor, 0)
+                }
+              />
+            </div>
+
+            <div className="space-y-6">
               <RevenueByTypeChart
                 revenues={revenues}
                 revenueTypes={incomeSubcategories}
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
+        {!isMobile && <Footer isMobile={isMobile} user={user} />}
       </div>
-      {!isMobile && <Footer isMobile={isMobile} user={user} />}
-    </div >
+    </div>
   );
 }

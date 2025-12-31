@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { Tables, TablesUpdate } from "@/integrations/supabase/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { Transaction, TransactionType } from "@/types/finance";
-import { TablesUpdate } from "@/integrations/supabase/types";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
 
 // Importar os novos hooks modulares
@@ -78,6 +78,32 @@ export const useLancamentosLogic = (
     setEditingTransaction,
     setIsEditModalOpen,
     selectedMonth,
+  });
+
+  // Fetch all revenues and installments for historical charts
+  const { data: allRevenues = [] } = useQuery<Tables<'receitas'>[]>({
+    queryKey: ["allRevenues", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase.from("receitas").select("*").eq("user_id", user.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !authLoading,
+  });
+
+  const { data: allExpenseInstallments = [] } = useQuery<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>({
+    queryKey: ["allExpenseInstallments", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("despesas_parcelas")
+        .select("*, despesas(categoria_id, user_id)")
+        .filter("despesas.user_id", "eq", user.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !authLoading,
   });
 
   // Lógica para carregar dados completos da transação para edição (mantida aqui, pois depende de queryClient e setStates específicos)
@@ -182,5 +208,7 @@ export const useLancamentosLogic = (
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus, // NOVO RETORNO
     refetchCartoes, // NOVO: Retornar refetchCartoes
+    allRevenues,
+    allExpenseInstallments,
   };
 };

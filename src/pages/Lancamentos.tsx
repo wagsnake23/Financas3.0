@@ -16,6 +16,10 @@ import {
 import { TransactionEditForm } from "@/components/TransactionEditForm";
 import { cn } from "@/lib/utils";
 import { LancamentosContent } from "@/components/LancamentosContent";
+import { TotalRevenueCard } from "@/components/TotalRevenueCard";
+import { TotalExpensesCard } from "@/components/TotalExpensesCard";
+import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
+import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -51,6 +55,8 @@ const Lancamentos = () => {
     setFilterPaymentOptionId,
     handleOptimisticToggleStatus,
     refetchCartoes,
+    allRevenues,
+    allExpenseInstallments,
   } = useLancamentosLogic(user, authLoading);
 
   console.log(
@@ -131,7 +137,7 @@ const Lancamentos = () => {
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
             editingTransaction?.type === "expense" && "bg-soft-red-background", // Aplica a cor de fundo para despesas
-            editingTransaction?.type === "revenue" && "bg-soft-green-background" // Aplica a cor de fundo para receitas
+            editingTransaction?.type === "income" && "bg-soft-green-background" // Aplica a cor de fundo para receitas
           )}
         >
           <DialogHeader

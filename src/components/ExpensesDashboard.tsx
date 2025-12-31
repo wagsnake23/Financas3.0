@@ -3,6 +3,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recha
 import { Tables } from "@/integrations/supabase/types";
 import DynamicIcon from "./DynamicIcon";
 import { AppCategory } from "@/types/finance";
+import { TotalExpensesCard } from "./TotalExpensesCard";
+import { MonthlyExpenseBarChart } from "./MonthlyExpenseBarChart";
 
 interface ExpensesDashboardProps {
   expenses: Tables<'despesas'>[];
@@ -21,7 +23,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
       const category = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryNome = category?.nome || "Outros";
       const categoryCor = category?.cor || "hsl(215, 15%, 50%)";
-      
+
       if (!acc[categoryNome]) {
         acc[categoryNome] = { value: 0, color: categoryCor };
       }
@@ -37,15 +39,22 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-8">
-      <Card className="p-6 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20 animate-fade-in rounded-xl shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Total de Despesas</p>
-            <p className="text-3xl font-bold text-foreground">R$ {totalExpenses.toFixed(2)}</p>
-          </div>
-          <DynamicIcon name="DollarSign" className="h-12 w-12 text-destructive" />
-        </div>
-      </Card>
+      <TotalExpensesCard
+        expenseInstallments={expenseInstallments}
+        isMobile={isMobile}
+        chartContent={
+          <MonthlyExpenseBarChart
+            expenseInstallments={expenseInstallments}
+            currentDate={new Date()}
+            isMobile={true}
+            onMonthClick={() => { }}
+          />
+        }
+        annualTotalValue={expenseInstallments
+          .filter(p => new Date(p.vencimento).getFullYear() === new Date().getFullYear())
+          .reduce((sum, p) => sum + p.valor_parcela, 0)
+        }
+      />
 
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Despesas por Subcategoria</h2>
@@ -70,9 +79,9 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number) => `R$ ${value.toFixed(2)}`}
-                contentStyle={{ 
+                contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "var(--radius)",
