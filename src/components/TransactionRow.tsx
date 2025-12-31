@@ -130,7 +130,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.type === "income" ? "text-success" : "text-destructive"
         )}
       >
-        {formatCurrency(transaction.amount)}
+        {formatCurrency(transaction.amount, !isMobile)}
       </TableCell>
 
       {/* 🔥 BOTÃO DE STATUS ATUALIZADO */}

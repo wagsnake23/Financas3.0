@@ -14,10 +14,18 @@ export const isValidUuid = (value: string | null | undefined): boolean => {
 };
 
 // 🔥 Correção aplicada aqui
-export const formatCurrency = (value?: number | null) => {
+export const formatCurrency = (value?: number | null, showSymbol: boolean = true) => {
   if (typeof value !== "number" || isNaN(value)) {
-    return "R$ 0,00";
+    return showSymbol ? "R$ 0,00" : "0,00";
   }
+
+  if (!showSymbol) {
+    return value.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
   return value.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",

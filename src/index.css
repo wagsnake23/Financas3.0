@@ -85,8 +85,8 @@ All colors MUST be HSL.
     --app-purple: 270 70% 58%;
     /* NOVO: Roxo mais forte para botões */
 
-    --lancamentos-mobile-bg: 0 0% 100%;
-    /* Alterado para branco */
+    --lancamentos-mobile-bg: 210 100% 98.5%;
+    /* Azul muito claro suave para mobile */
     --soft-red-background: 353 100% 98.5%;
     /* Updated: Cor de fundo para o card de despesas (#FFF7F8) */
     --soft-green-background: 162 100% 97.5%;
