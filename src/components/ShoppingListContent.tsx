@@ -199,7 +199,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       const maxOrder = items.length > 0 ? Math.max(...items.map((i) => i.order || 0)) : 0;
       const newOrder = maxOrder + 1;
 
+      const optimisticId = crypto.randomUUID();
       const newItem: TablesInsert<"shopping_items"> = {
+        id: optimisticId,
         user_id: user.id,
         product: product,
         status: false,
@@ -208,8 +210,6 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       };
 
       try {
-        // Optimistic update
-        const optimisticId = crypto.randomUUID();
         const optimisticItem: ShoppingItem = {
           id: optimisticId,
           ...newItem,
@@ -222,6 +222,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
         // Save to Supabase
         await upsertItemsMutation.mutateAsync([newItem]);
+
+        // Invalidate queries to sync with DB
+        queryClient.invalidateQueries({
+          queryKey: ["shopping_items", user?.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["shopping_items_pending_count", user?.id],
+        });
 
       } catch (error) {
         console.error("Error adding item:", error);
@@ -277,7 +285,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         date: checked ? format(new Date(), "MMM/dd", { locale: ptBR }) : "",
         order: item.order, // Mantém a ordem original
       };
-      upsertItemsMutation.mutate([itemToUpsert]);
+      upsertItemsMutation.mutate([itemToUpsert], {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["shopping_items_pending_count", user?.id],
+          });
+        }
+      });
     }
   };
 

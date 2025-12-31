@@ -18,7 +18,7 @@ export function usePendingShoppingItemsCount(user: User | null) {
       if (error) throw error;
       return count ?? 0;
     },
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
+    staleTime: 5 * 1000,
+    refetchOnWindowFocus: true,
   });
 }
