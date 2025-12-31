@@ -427,7 +427,7 @@ export const TransactionList = ({
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 {!isMobile && (
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[8%]")}>
+                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[11%]")}>
                     Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
@@ -435,7 +435,7 @@ export const TransactionList = ({
                   Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 {!isMobile && (
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[24%]")}>
+                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[21%]")}>
                     Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
