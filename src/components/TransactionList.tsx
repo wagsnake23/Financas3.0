@@ -43,6 +43,7 @@ interface TransactionListProps {
   setFilterPaymentOptionId: (cardId: string) => void;
   loadingPayInvoice: boolean;
   setLoadingPayInvoice: (loading: boolean) => void;
+  selectedMonth: Date;
   setSelectedMonth: (month: Date) => void;
   onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
 }
@@ -53,9 +54,9 @@ const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
 const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
 
 export const TransactionList = ({
-  transactions, 
-  onDeleteTransaction, 
-  onEditTransaction, 
+  transactions,
+  onDeleteTransaction,
+  onEditTransaction,
   allCategories,
   cartoes,
   isMobile,
@@ -106,12 +107,12 @@ export const TransactionList = ({
 
   const filteredTransactions = useMemo(() => {
     console.log("TransactionList: filteredTransactions useMemo re-running...");
-    
+
     return transactions.filter(transaction => {
       const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
-      
+
       let matchesPaymentOption = true;
       if (filterPaymentOptionId !== "all") {
         if (filterPaymentOptionId === "dinheiro") {
@@ -218,7 +219,7 @@ export const TransactionList = ({
   }, [allCategories, filterType]);
 
   const handlePayInvoice = async () => {
-    const monthToValidate = new Date(selectedMonth); 
+    const monthToValidate = new Date(selectedMonth);
 
     console.log("handlePayInvoice: monthToValidate:", monthToValidate);
     console.log("handlePayInvoice: isValid(monthToValidate):", isValid(monthToValidate));
@@ -270,7 +271,7 @@ export const TransactionList = ({
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      
+
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
       toast.error("Erro ao pagar fatura.", { description: error.message, duration: toastDuration, style: toastErrorStyle });
@@ -280,7 +281,7 @@ export const TransactionList = ({
   };
 
   const cardDetails = useMemo(() => {
-    const monthForCardDetails = new Date(selectedMonth); 
+    const monthForCardDetails = new Date(selectedMonth);
     console.log("cardDetails useMemo: monthForCardDetails:", monthForCardDetails);
     console.log("cardDetails useMemo: isValid(monthForCardDetails):", isValid(monthForCardDetails));
 
@@ -322,10 +323,10 @@ export const TransactionList = ({
   const disablePayInvoiceButton = useMemo(() => {
     if (!isValidUuid(filterPaymentOptionId)) return true;
     if (loadingPayInvoice) return true;
-    const hasPendingExpenses = filteredTransactions.some(t => 
-      t.type === "expense" && 
-      t.status !== "Recebida" && 
-      t.forma_pagamento === "cartao" && 
+    const hasPendingExpenses = filteredTransactions.some(t =>
+      t.type === "expense" &&
+      t.status !== "Recebida" &&
+      t.forma_pagamento === "cartao" &&
       t.cartao_id === filterPaymentOptionId
     );
     return !hasPendingExpenses;
@@ -338,11 +339,10 @@ export const TransactionList = ({
 
   return (
     <div className={cn("p-6", isMobile && "p-0")}>
-      
+
       <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center max-w-[95vw] mx-auto" : "grid-cols-4")}> {/* Ajustado aqui */}
-        <Select value={filterType} onValueChange={setFilterType} 
-                className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full")}> {/* Removido max-w */}
-          <SelectTrigger className="rounded-xl">
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full")}>
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -362,15 +362,14 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterCategory} onValueChange={setFilterCategory} 
-                className={cn("rounded-xl", isMobile && "w-full")}> {/* Removido max-w */}
-          <SelectTrigger className="rounded-xl">
+        <Select value={filterCategory} onValueChange={setFilterCategory}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "w-full")}>
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Subcategoria</SelectItem>
             {selectableCategories
-              .filter(cat => cat.id !== "") 
+              .filter(cat => cat.id !== "")
               .map((cat) => (
                 <SelectItem key={cat.id} value={cat.id}>
                   <span className="flex items-center gap-2">
@@ -382,9 +381,8 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId} 
-                className={cn("rounded-xl", isMobile && "w-full")}> {/* Removido max-w */}
-          <SelectTrigger className="rounded-xl">
+        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
+          <SelectTrigger className={cn("rounded-xl", isMobile && "w-full")}>
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
           <SelectContent>
@@ -396,7 +394,7 @@ export const TransactionList = ({
           </SelectContent>
         </Select>
 
-        <div className={cn("hidden", !isMobile && "block")}></div> 
+        <div className={cn("hidden", !isMobile && "block")}></div>
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
@@ -422,32 +420,30 @@ export const TransactionList = ({
         isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible max-w-[95vw] mx-auto" // Ajustado max-w para mobile
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
-          <Table className={cn("lancamentos-table", !isMobile && "table-fixed")}> {/* Adicionado table-fixed */}
+          <Table className={cn("lancamentos-table", !isMobile && "table-fixed border-separate border-spacing-0")}> {/* Adicionado table-fixed e border-separate */}
             <TableHeader className="lancamentos-table-header">
               <TableRow>
-                <TableHead data-order-col="date" onClick={() => handleSort("date")} className={cn("cursor-pointer select-none", !isMobile && "w-[12%]")}> {/* Largura para desktop */}
+                <TableHead data-order-col="date" onClick={() => handleSort("date")} className={cn("cursor-pointer select-none", !isMobile && "w-[12%]")}>
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
-                {/* Exibir coluna Tipo apenas em desktop */}
                 {!isMobile && (
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[8%]")}> {/* Largura para desktop */}
+                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[8%]")}>
                     Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
-                <TableHead data-order-col="category" onClick={() => handleSort("category")} className={cn("cursor-pointer select-none", !isMobile && "w-[15%]")}> {/* Largura para desktop */}
+                <TableHead data-order-col="category" onClick={() => handleSort("category")} className={cn("cursor-pointer select-none", !isMobile && "w-[18%]")}>
                   Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 {!isMobile && (
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[30%]")}> {/* Largura para desktop */}
+                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[24%]")}>
                     Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
                 )}
-                <TableHead data-order-col="amount" onClick={() => handleSort("amount")} 
-                  className={cn("text-right cursor-pointer select-none", !isMobile && "w-[15%]")}> {/* Largura para desktop */}
+                <TableHead data-order-col="amount" onClick={() => handleSort("amount")}
+                  className={cn("text-right cursor-pointer select-none", !isMobile && "w-[18%]")}>
                   Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                 </TableHead>
                 <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Status</TableHead>
-                {/* Coluna Ações apenas em desktop */}
                 {!isMobile && (
                   <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Ações</TableHead>
                 )}

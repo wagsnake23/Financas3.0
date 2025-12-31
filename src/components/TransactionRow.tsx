@@ -57,9 +57,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       className={cn(
         "cursor-pointer hover:bg-soft-blue/30",
         transaction.status === "Recebida" &&
-          "bg-soft-green/30 hover:bg-soft-green/50",
+        "bg-soft-green/30 hover:bg-soft-green/50",
         transaction.status === "Cancelada" &&
-          "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
+        "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
       )}
       onClick={isMobile ? () => onEditTransaction(transaction) : undefined} // Reintroduzido onClick condicional
     >
@@ -98,20 +98,21 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         </TableCell>
       )}
 
-      {/* 📌 SUBCATEGORIA */}
       <TableCell
         className={cn(
-          "py-2 px-2 flex items-center gap-1 text-left",
-          isMobile ? "min-w-[85px] text-sm" : "text-base" // Removido min-w para desktop
+          "py-2 px-2 text-left",
+          isMobile ? "min-w-[85px] text-sm" : "text-base"
         )}
       >
-        {categoryIcon && (
-          <DynamicIcon
-            name={categoryIcon}
-            className={cn("h-4 w-4", isMobile && "h-4 w-4")}
-          />
-        )}
-        {categoryName}
+        <div className="flex items-center gap-1">
+          {categoryIcon && (
+            <DynamicIcon
+              name={categoryIcon}
+              className={cn("h-4 w-4", isMobile && "h-4 w-4")}
+            />
+          )}
+          {categoryName}
+        </div>
       </TableCell>
 
       {/* 📌 DESCRIÇÃO */}
@@ -149,16 +150,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
             // Pago → ✓ branco mais forte + tamanho maior
             transaction.status === "Recebida" &&
-              "bg-[#44E37F] border border-[#44E37F] text-white font-extrabold" +
-                (isMobile
-                  ? " h-[17px] w-[17px] text-[10px]"
-                  : " h-[21px] w-[21px] text-[12px]"),
+            "bg-[#44E37F] border border-[#44E37F] text-white font-extrabold" +
+            (isMobile
+              ? " h-[17px] w-[17px] text-[10px]"
+              : " h-[21px] w-[21px] text-[12px]"),
 
             // Pendente → só borda vermelha, fundo transparente e sem ícone
             (transaction.status === "Pendente" ||
               transaction.status === "Prevista") &&
-              "bg-transparent border border-destructive text-transparent" +
-                (isMobile ? " h-[17px] w-[17px]" : " h-[21px] w-[21px]")
+            "bg-transparent border border-destructive text-transparent" +
+            (isMobile ? " h-[17px] w-[17px]" : " h-[21px] w-[21px]")
           )}
         >
           {transaction.status === "Recebida" ? "✓" : ""}

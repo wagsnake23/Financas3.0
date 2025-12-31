@@ -237,10 +237,16 @@ body {
 
   /* Área rolável apenas no corpo da tabela */
   .lancamentos-scroll-container {
-    max-height: calc(100vh - 300px);
-    /* ajuste mínimo para rolar */
+    max-height: calc(100vh - 360px);
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
+    /* Permitir scroll horizontal se necessário */
+    position: relative;
+  }
+
+  /* Desabilitar o overflow do wrapper interno do Shadcn para não quebrar o sticky */
+  .lancamentos-scroll-container>div {
+    overflow: visible !important;
   }
 
   /* Tabela com layout fluido e centralizada */
@@ -254,12 +260,11 @@ body {
 
   /* Cabeçalho fixo (sticky) */
   .lancamentos-table-header th {
-    /* Aplicado diretamente ao th */
     position: sticky;
     top: 0;
     z-index: 50;
     background: #F5F6FA;
-    /* mesma cor atual do cabeçalho */
+    border-bottom: 1px solid hsl(var(--border));
   }
 
   /* Propriedades para o thead container (lancamentos-table-header) */
@@ -283,67 +288,25 @@ body {
     transition: background-color 0.15s ease-in-out;
   }
 
-  /* Distribuição de colunas */
-  .lancamentos-table th:nth-child(1),
-  .lancamentos-table td:nth-child(1) {
-    width: 100px;
-    /* Data */
-    text-align: left;
-  }
-
+  /* Remover larguras fixas daqui para usar as definidas no componente TSX */
   .lancamentos-table th:nth-child(2),
-  .lancamentos-table td:nth-child(2) {
-    width: 70px;
-    /* Tipo */
+  .lancamentos-table td:nth-child(2),
+  .lancamentos-table th:nth-child(6),
+  .lancamentos-table td:nth-child(6),
+  .lancamentos-table th:nth-child(7),
+  .lancamentos-table td:nth-child(7) {
     text-align: center;
-  }
-
-  .lancamentos-table th:nth-child(3),
-  .lancamentos-table td:nth-child(3) {
-    width: 180px;
-    /* Subcategoria */
-    text-align: left;
-  }
-
-  .lancamentos-table th:nth-child(4),
-  .lancamentos-table td:nth-child(4) {
-    width: auto;
-    /* Descrição - auto-fit */
-    text-align: left;
-    padding: 10px 12px 10px 32px !important;
   }
 
   .lancamentos-table th:nth-child(5),
   .lancamentos-table td:nth-child(5) {
-    width: 120px;
-    /* Valor */
     text-align: right;
-    /* Alterado para alinhar à direita */
   }
 
-  .lancamentos-table th:nth-child(6),
-  .lancamentos-table td:nth-child(6) {
-    width: 70px;
-    /* Status */
-    text-align: center;
-  }
-
-  .lancamentos-table th:nth-child(7),
-  .lancamentos-table td:nth-child(7) {
-    width: 100px;
-    /* Ações */
-    text-align: center;
-  }
-
-  /* Mesmo padding nas células */
+  /* Padding geral */
   .lancamentos-table th,
   .lancamentos-table td {
-    padding: 10px 12px !important;
-  }
-
-  /* Cabeçalho usa mesma largura das colunas */
-  .lancamentos-table-header th {
-    width: inherit;
+    padding: 12px 16px !important;
   }
 
   /* Remover estilos que Shadcn coloca e que causam desalinhamento */
