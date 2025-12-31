@@ -146,7 +146,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             onToggleStatus(transaction.id, transaction.type, newStatus);
           }}
           className={cn(
-            "flex items-center justify-center rounded-full cursor-pointer select-none transition-all",
+            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all",
 
             // Pago → ✓ branco mais forte + tamanho maior
             transaction.status === "Recebida" &&
