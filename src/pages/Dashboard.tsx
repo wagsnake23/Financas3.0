@@ -316,60 +316,6 @@ export default function Dashboard() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <StatCard
-                mainStatTitle="Saldo Atual"
-                mainStatValue={stats.balance}
-                icon="Wallet"
-                variant="balance"
-                trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
-                isMobile={isMobile}
-              />
-              <StatCard
-                mainStatTitle="Total de Receitas"
-                mainStatValue={stats.totalIncome}
-                icon="TrendingUp"
-                variant="income"
-                isMobile={isMobile}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="income"
-                  />
-                }
-                chartContent={
-                  <MonthlyRevenueBarChart
-                    revenues={allRevenues}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={totalAnnualRevenues}
-                neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] px-4 h-9 text-sm rounded-xl font-bold" // Consolidated px-3 and px-4 to just px-4, ensured w-auto
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#38C97C",
-                        "--cor-base": "#26A765",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/receitas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Receita
-                  </Button>
-                </div>
-              </StatCard>
-              <StatCard
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
                 icon="TrendingDown"
@@ -417,6 +363,62 @@ export default function Dashboard() {
                   </Button>
                 </div>
               </StatCard>
+
+              <StatCard
+                mainStatTitle="Total de Receitas"
+                mainStatValue={stats.totalIncome}
+                icon="TrendingUp"
+                variant="income"
+                isMobile={isMobile}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="income"
+                  />
+                }
+                chartContent={
+                  <MonthlyRevenueBarChart
+                    revenues={allRevenues}
+                    currentDate={selectedMonth}
+                    isMobile={true}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+                annualTotalLabel="Total Anual"
+                annualTotalValue={totalAnnualRevenues}
+                neumorphism={true}
+              >
+                <div className="flex justify-end mt-4">
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] px-4 h-9 text-sm rounded-xl font-bold" // Consolidated px-3 and px-4 to just px-4, ensured w-auto
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#38C97C",
+                        "--cor-base": "#26A765",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/receitas")}
+                  >
+                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                    Nova Receita
+                  </Button>
+                </div>
+              </StatCard>
+
+              <StatCard
+                mainStatTitle="Saldo Atual"
+                mainStatValue={stats.balance}
+                icon="Wallet"
+                variant="balance"
+                trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
+                isMobile={isMobile}
+              />
             </div>
 
             <div className="grid grid-cols-1">

@@ -73,7 +73,7 @@ export const StatCard = ({
   const backgroundColors: Record<StatCardProps["variant"], string> = {
     income: "#F2FFFB", // Verde água ainda mais claro
     expense: "#FFF7F8", // Rosa ainda mais claro
-    balance: "", // Mantém o padrão do balanço
+    balance: "#F0F7FF", // Azul bem claro
   };
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
@@ -93,9 +93,9 @@ export const StatCard = ({
         isMobile && "min-h-[90px]", // Reduzido de 110px para 90px
         neumorphism
           ? cn(
-              "rounded-3xl",
-              "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]"
-            )
+            "rounded-3xl",
+            "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]"
+          )
           : cn(variantStyles[variant], "rounded-xl shadow-sm")
       )}
     >
@@ -139,8 +139,8 @@ export const StatCard = ({
                 variant === "income"
                   ? "text-success"
                   : variant === "expense"
-                  ? "text-destructive"
-                  : "text-primary", // Cor consistente
+                    ? "text-destructive"
+                    : "text-primary", // Cor consistente
                 "font-roboto" // Fonte Roboto
               )}
             >
@@ -206,7 +206,7 @@ export const StatCard = ({
 
       {/* Bottom-left content (Icon + Annual Total) */}
       {(!hideMainIcon && icon) ||
-      (annualTotalValue !== undefined && annualTotalLabel) ? (
+        (annualTotalValue !== undefined && annualTotalLabel) ? (
         <div
           className={cn(
             "absolute flex items-center gap-2", // Use flex to align icon and text
