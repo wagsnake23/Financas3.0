@@ -315,7 +315,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="tipo" className={cn(isMobile && "text-xs text-gray-600")}>
           Subcategoria de Receita
         </Label>
         <Select
@@ -327,8 +327,8 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl bg-[#F5F5F5]",
-              isMobile && "h-9 text-sm",
+              "w-full rounded-xl",
+              isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
                 isValid: validationErrors.tipoReceitaId === false,
@@ -372,7 +372,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="data" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="data" className={cn(isMobile && "text-xs text-gray-600")}>
           Data
         </Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -380,9 +380,9 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
+                "w-full justify-start text-left font-normal h-10 rounded-xl",
+                isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
                 !data && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
                 getBorderClass({
                   isInvalid: validationErrors.data,
                   isValid: validationErrors.data === false,
@@ -422,7 +422,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="valor" className={cn(isMobile && "text-xs text-gray-600")}>
           Valor (R$)
         </Label>
         <CurrencyBR
@@ -432,8 +432,8 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-[#F5F5F5]",
-            isMobile && "h-9 text-sm",
+            "w-full rounded-xl",
+            isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
             getBorderClass({
               isInvalid: validationErrors.valor,
               isValid: validationErrors.valor === false,
@@ -443,7 +443,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="descricao" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="descricao" className={cn(isMobile && "text-xs text-gray-600")}>
           Descrição
         </Label>
         <Textarea
@@ -452,7 +452,10 @@ export default function Receitas() {
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a receita..."
           rows={3}
-          className={cn("w-full rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
+          className={cn(
+            "w-full rounded-xl placeholder:text-gray-400",
+            isMobile ? "bg-white text-sm" : "bg-[#F5F5F5]"
+          )}
         />
       </div>
 
@@ -466,14 +469,16 @@ export default function Receitas() {
         </div>
       )}
 
-      <Button
-        type="submit"
-        variant="success"
-        className={cn("w-full rounded-xl", isMobile && "h-9 text-sm w-[92%] mx-auto")}
-        disabled={loading}
-      >
-        {loading ? "Salvando..." : "Salvar Receita"}
-      </Button>
+      <div className={cn(isMobile && "w-[92%] mx-auto")}>
+        <Button
+          type="submit"
+          variant="success"
+          className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
+          disabled={loading}
+        >
+          {loading ? "Salvando..." : "Salvar Receita"}
+        </Button>
+      </div>
     </form>
   );
 
