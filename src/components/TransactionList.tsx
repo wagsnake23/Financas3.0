@@ -526,13 +526,13 @@ export const TransactionList = ({
         )}
       </div>
 
-      {/* Barra de Resumo Estilo Fintech - Unificada em uma Linha */}
+      {/* Barra de Resumo Estilo Card Cinza - Ajustada */}
       <div className={cn(
-        "mt-4 px-4 pb-4",
-        isMobile ? "w-full px-2" : "w-full px-6 mb-6"
+        "mt-auto px-4 pb-0 bg-transparent",
+        isMobile ? "w-full mb-6" : "w-full px-6 mb-8"
       )}>
         <div className={cn(
-          "bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between w-full gap-2",
+          "bg-gray-50 rounded-2xl flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-100",
           !isMobile && "max-w-[1200px] mx-auto"
         )}>
           {/* 1: Lançamentos */}
@@ -542,19 +542,19 @@ export const TransactionList = ({
           </div>
 
           {/* 2: Receitas */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Receitas</span>
             <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">+ {formatCurrency(summary.income, !isMobile)}</span>
           </div>
 
           {/* 3: Despesas */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Despesas</span>
             <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">- {formatCurrency(summary.expense, !isMobile)}</span>
           </div>
 
           {/* 4: Saldo */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Saldo</span>
             <span className={cn(
               "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
