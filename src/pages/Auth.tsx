@@ -292,7 +292,7 @@ export default function Auth() {
 
   const formContent = (
     <>
-      <div className="mb-6 text-center">
+      <div className={cn("mb-6 text-center", isMobile && "-mt-8")}>
         <img src="/favicon.ico" alt="Controle Financeiro Logo" className="mx-auto h-20 w-20" />
         <h1 className="text-3xl font-bold text-app-title">
           Minhas Finanças
