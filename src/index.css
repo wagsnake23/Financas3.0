@@ -178,6 +178,16 @@ All colors MUST be HSL.
   .emoji {
     vertical-align: middle;
   }
+
+  /* Ocultar barra de rolagem mas manter funcionalidade */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */

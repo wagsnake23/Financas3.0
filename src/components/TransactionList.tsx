@@ -89,7 +89,7 @@ export const TransactionList = ({
     cartoes.forEach(card => {
       options.push({
         value: card.id,
-        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})`
+        label: `Cartão: ${card.nome} ${card.ultimos_digitos}`
       });
     });
     return options;
@@ -340,52 +340,73 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
 
-      <div className={cn("grid gap-3 mb-0", isMobile ? "grid-cols-1 w-full px-4 mb-2" : "sm:grid-cols-3")}>
+      {/* Filtros em Estilo Chips/Pills - App Bancário Moderno */}
+      <div className={cn(
+        "flex items-center gap-2 mb-4 px-4 overflow-x-auto no-scrollbar py-2 flex-nowrap shrink-0",
+        !isMobile && "px-6 mb-6"
+      )}>
+        {/* Chip: Tipo */}
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className={cn("rounded-xl w-full", hideTypeFilter && "hidden")}>
-            <SelectValue placeholder="Tipo" />
+          <SelectTrigger
+            className={cn(
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              filterType !== "all"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+              hideTypeFilter && "hidden"
+            )}
+          >
+            <div className="flex items-center gap-1.5">
+              <SelectValue placeholder="Todos os tipos" />
+            </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-2xl border-none shadow-xl">
             <SelectItem value="all">Todos os tipos</SelectItem>
-            <SelectItem value="income">
-              <span className="flex items-center gap-2">
-                <DynamicIcon name="💰" className="h-4 w-4" />
-                Receita
-              </span>
-            </SelectItem>
-            <SelectItem value="expense">
-              <span className="flex items-center gap-2">
-                <DynamicIcon name="💸" className="h-4 w-4" />
-                Despesa
-              </span>
-            </SelectItem>
+            <SelectItem value="income">Receitas</SelectItem>
+            <SelectItem value="expense">Despesas</SelectItem>
           </SelectContent>
         </Select>
 
+        {/* Chip: Subcategoria */}
         <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="rounded-xl w-full">
+          <SelectTrigger
+            className={cn(
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              filterCategory !== "all"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            )}
+          >
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-2xl border-none shadow-xl">
             <SelectItem value="all">Subcategoria</SelectItem>
             {selectableCategories
               .filter(cat => cat.id !== "")
               .map((cat) => (
                 <SelectItem key={cat.id} value={cat.id}>
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <span>{cat.icone}</span>
                     <span>{getCategoryDisplayName(cat.id)}</span>
-                  </span>
+                  </div>
                 </SelectItem>
               ))}
           </SelectContent>
         </Select>
 
+        {/* Chip: Forma de Pagamento */}
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
-          <SelectTrigger className="rounded-xl w-full">
+          <SelectTrigger
+            className={cn(
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              filterPaymentOptionId !== "all"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            )}
+          >
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-2xl border-none shadow-xl">
             {paymentFilterOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
