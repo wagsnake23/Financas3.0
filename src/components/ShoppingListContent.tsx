@@ -589,18 +589,21 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="rounded-xl">
             <AlertDialogHeader>
-              <AlertDialogTitle>Confirmação</AlertDialogTitle>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
+                Confirmação
+              </AlertDialogTitle>
               <AlertDialogDescription>
                 Deseja realmente excluir todos os itens da lista?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearList}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
               >
                 Confirmar
               </AlertDialogAction>
