@@ -143,7 +143,7 @@ export const Navigation = () => {
 
               <SheetContent
                 side="right"
-                className="w-[280px] sm:w-[350px] bg-[#F1F9FD]"
+                className="w-[280px] sm:w-[350px] bg-white"
               >
                 <SheetHeader className="text-left pt-12">
                   <div className="flex items-center gap-2 mb-1">
@@ -165,7 +165,7 @@ export const Navigation = () => {
                       end={item.to === "/"}
                       onClick={handleNavClick}
                       className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-                      activeClassName="bg-soft-blue text-foreground font-medium"
+                      activeClassName="bg-[#E3F2FD] text-[#0A4A9B] font-semibold"
                     >
                       <DynamicIcon
                         name={item.icon}
