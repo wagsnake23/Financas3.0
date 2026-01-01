@@ -525,14 +525,14 @@ export const TransactionList = ({
         )}
       </div>
 
-      {/* Barra de Resumo Estilo Card Cinza - Ajustada */}
+      {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
-        "mt-auto px-4 pb-0 bg-transparent",
-        isMobile ? "w-full mb-6" : "w-full px-6 mb-8"
+        "mt-auto pb-0 bg-transparent relative z-20",
+        isMobile ? "w-full px-2 mb-10" : "px-4 w-full px-6 mb-8"
       )}>
         <div className={cn(
-          "bg-gray-50 rounded-2xl flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-100",
-          !isMobile && "max-w-[1200px] mx-auto"
+          "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-100 rounded-2xl",
+          !isMobile && "!max-w-[1200px] mx-auto"
         )}>
           {/* 1: Lançamentos */}
           <div className="flex flex-col items-center justify-center flex-1">
