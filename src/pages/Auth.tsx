@@ -28,7 +28,7 @@ export default function Auth() {
   const [viewMode, setViewMode] = useState<ViewMode>("login");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirm] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const isMobile = useIsMobile();
 
   // Form states
@@ -47,7 +47,7 @@ export default function Auth() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
 
@@ -84,8 +84,8 @@ export default function Auth() {
 
     if (error) {
       toast.error("Erro ao fazer login", {
-        description: error.message === "Invalid login credentials" 
-          ? "Email ou senha inválidos" 
+        description: error.message === "Invalid login credentials"
+          ? "Email ou senha inválidos"
           : error.message,
         duration: toastDuration, style: toastErrorStyle
       });
@@ -102,7 +102,7 @@ export default function Auth() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
 
@@ -176,12 +176,12 @@ export default function Auth() {
         console.error("Erro ao definir permissões para o novo usuário:", roleError.message);
         // We still show the success message about email activation, but log the role error internally.
       }
-      
+
       toast.success("Conta criada com sucesso! Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.", {
         style: toastSuccessStyle,
         duration: toastDuration
       });
-      
+
       // After successful signup, clear the form and switch to login view.
       setEmail("");
       setPassword("");
@@ -196,7 +196,7 @@ export default function Auth() {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
 
@@ -356,10 +356,10 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full rounded-2xl text-base font-bold shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
-            size="lg" 
+          <Button
+            type="submit"
+            className="w-full rounded-2xl text-base font-bold shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            size="lg"
             disabled={loading}
           >
             {loading ? "Entrando..." : "Entrar"}
@@ -376,17 +376,17 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center">
+          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center items-center gap-1" style={{ marginTop: "20px" }}>
+            <span className="text-gray-600 font-medium">Não possui uma conta?</span>
             <button
               type="button"
               onClick={() => {
                 setViewMode("signup");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block font-bold" 
-              style={{ marginTop: "20px" }}
+              className="text-primary hover:underline font-bold"
             >
-              Criar conta
+              Cadastre-se
             </button>
           </div>
         </form>
@@ -489,10 +489,10 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
-            size="lg" 
+          <Button
+            type="submit"
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            size="lg"
             disabled={loading}
           >
             {loading ? "Criando conta..." : "Cadastrar"}
@@ -535,10 +535,10 @@ export default function Auth() {
               />
             </div>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
-            size="lg" 
+          <Button
+            type="submit"
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            size="lg"
             disabled={loading}
           >
             {loading ? "Enviando..." : "Enviar link de recuperação"}
@@ -616,10 +616,10 @@ export default function Auth() {
               </button>
             </div>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100" 
-            size="lg" 
+          <Button
+            type="submit"
+            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            size="lg"
             disabled={loading}
           >
             {loading ? "Redefinindo..." : "Redefinir senha"}
@@ -632,21 +632,24 @@ export default function Auth() {
   return (
     <div className={cn(
       "min-h-screen flex flex-col items-center justify-center p-4",
-      isMobile ? "bg-lancamentos-mobile-bg" : "bg-gradient-to-br from-background via-background to-secondary/20"
+      isMobile ? "bg-white" : "bg-gradient-to-br from-background via-background to-secondary/20"
     )}>
       {isMobile ? (
-        <div className="w-full max-w-md p-4 flex flex-col">
+        <div className="w-full max-w-md p-4 flex flex-col pb-16">
           {formContent}
-          <Footer isMobile={isMobile} className="mt-8" user={null} /> {/* Passando user={null} para a página de autenticação */}
         </div>
       ) : (
         <Card className="w-full max-w-md p-8 shadow-xl rounded-xl flex flex-col"> {/* Adicionado flex flex-col */}
           <div className="flex-grow"> {/* Envolve o formContent em uma div que cresce */}
             {formContent}
           </div>
-          <Footer isMobile={isMobile} className="mt-auto" user={null} /> {/* Passando user={null} para a página de autenticação */}
         </Card>
       )}
+      <Footer
+        isMobile={isMobile}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm border-t z-50 m-0" : "mt-8")}
+        user={null}
+      />
     </div>
   );
 }
