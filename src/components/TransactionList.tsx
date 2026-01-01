@@ -189,11 +189,22 @@ export const TransactionList = ({
     return sorted;
   }, [filteredTransactions, sortColumn, sortDirection, allCategories]);
 
-  const accumulatedValue = useMemo(() => {
-    return filteredTransactions.reduce((sum, transaction) => {
-      return sum + (transaction.type === "income" ? transaction.amount : -transaction.amount);
-    }, 0);
+  const summary = useMemo(() => {
+    return filteredTransactions.reduce(
+      (acc, t) => {
+        if (t.type === "income") {
+          acc.income += t.amount;
+        } else {
+          acc.expense += t.amount;
+        }
+        acc.count += 1;
+        return acc;
+      },
+      { income: 0, expense: 0, count: 0 }
+    );
   }, [filteredTransactions]);
+
+  const accumulatedValue = summary.income - summary.expense;
 
   const { totalPaidCard, totalPendingCard, totalCardExpenses } = useMemo(() => {
     let paid = 0;
@@ -515,15 +526,43 @@ export const TransactionList = ({
         )}
       </div>
 
-      <div className={cn("flex justify-end mb-0 mt-2 pr-5", isMobile && "bg-white pb-2")}>
-        <div className="text-right">
-          <p className="text-xs text-muted-foreground">Valor Total:</p>
-          <p className={cn(
-            "text-sm font-bold",
-            accumulatedValue >= 0 ? "text-success" : "text-destructive"
-          )}>
-            {formatCurrency(accumulatedValue)}
-          </p>
+      {/* Barra de Resumo Estilo Fintech - Unificada em uma Linha */}
+      <div className={cn(
+        "mt-4 px-4 pb-4",
+        isMobile ? "w-full px-2" : "w-full px-6 mb-6"
+      )}>
+        <div className={cn(
+          "bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between w-full gap-2",
+          !isMobile && "max-w-[1200px] mx-auto"
+        )}>
+          {/* 1: Lançamentos */}
+          <div className="flex flex-col items-center justify-center flex-1">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Lançamentos</span>
+            <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
+          </div>
+
+          {/* 2: Receitas */}
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Receitas</span>
+            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">+ {formatCurrency(summary.income, !isMobile)}</span>
+          </div>
+
+          {/* 3: Despesas */}
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Despesas</span>
+            <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">- {formatCurrency(summary.expense, !isMobile)}</span>
+          </div>
+
+          {/* 4: Saldo */}
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-50">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Saldo</span>
+            <span className={cn(
+              "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
+              accumulatedValue >= 0 ? "text-primary" : "text-destructive"
+            )}>
+              {formatCurrency(accumulatedValue, !isMobile)}
+            </span>
+          </div>
         </div>
       </div>
     </div>
