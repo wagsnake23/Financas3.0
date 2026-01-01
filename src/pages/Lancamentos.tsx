@@ -120,7 +120,7 @@ const Lancamentos = () => {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm border-t z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
         user={user}
       />{" "}
       {/* Passando a prop user */}
