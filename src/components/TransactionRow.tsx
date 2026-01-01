@@ -52,138 +52,179 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     return new Date(y, m - 1, d);
   })();
 
+  if (isMobile) {
+    return (
+      <div
+        onClick={() => onEditTransaction(transaction)}
+        className={cn(
+          "bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between mb-3 animate-fade-in active:bg-gray-50 transition-all",
+          transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
+        )}
+      >
+        <div className="flex items-center gap-3">
+          <div className={cn(
+            "h-11 w-11 rounded-full flex items-center justify-center shadow-inner",
+            transaction.type === 'income' ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+          )}>
+            <DynamicIcon
+              name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
+              className="h-5 w-5"
+            />
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="font-bold text-gray-800 text-[0.95rem] leading-tight text-left">
+              {categoryName}
+            </span>
+            <div className="flex flex-col items-start text-left">
+              <span className="text-[0.7rem] text-muted-foreground font-medium uppercase tracking-wider">
+                {format(transactionDate, "dd 'de' MMM", { locale: ptBR })}
+              </span>
+              {transaction.description && (
+                <span className="text-[0.75rem] text-gray-500 line-clamp-1 italic text-left">
+                  {transaction.description}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end gap-2">
+          <span className={cn(
+            "font-extrabold text-sm tracking-tight",
+            transaction.type === 'income' ? "text-success" : "text-destructive"
+          )}>
+            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount)}
+          </span>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleStatus(transaction.id, transaction.type, newStatus);
+            }}
+            className={cn(
+              "h-6 w-6 rounded-full flex items-center justify-center transition-all border-2 shadow-sm",
+              transaction.status === "Recebida"
+                ? "bg-success border-success text-white scale-110"
+                : "bg-white border-gray-200 text-transparent hover:border-success/50"
+            )}
+          >
+            {transaction.status === "Recebida" ? (
+              <span className="text-[12px] font-black">✓</span>
+            ) : (
+              <div className="h-1 w-1 rounded-full bg-gray-200" />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <TableRow
       className={cn(
-        "cursor-pointer hover:bg-soft-blue/30",
-        transaction.status === "Recebida" &&
-        "bg-soft-green/30 hover:bg-soft-green/50",
-        transaction.status === "Cancelada" &&
-        "bg-muted/20 hover:bg-muted/40 text-muted-foreground"
+        "group cursor-pointer transition-colors border-b border-gray-50",
+        transaction.status === "Recebida" ? "bg-success/[0.02] hover:bg-success/[0.05]" : "hover:bg-gray-50/80"
       )}
-      onClick={isMobile ? () => onEditTransaction(transaction) : undefined} // Reintroduzido onClick condicional
+      onClick={() => onEditTransaction(transaction)}
     >
       {/* 📌 DATA */}
-      <TableCell
-        className={cn(
-          "py-2 px-2 text-left",
-          isMobile ? "min-w-[55px] text-sm" : "text-base" // Removido min-w para desktop
-        )}
-      >
-        {format(transactionDate, isMobile ? "dd/MMM" : "dd/MM/yyyy", {
-          locale: ptBR,
-        })}
+      <TableCell className="py-4 px-4 text-left font-medium text-gray-600 font-roboto">
+        {format(transactionDate, "dd/MM/yyyy", { locale: ptBR })}
       </TableCell>
 
       {/* 📌 TIPO (Receita/Despesa) */}
-      {!isMobile && (
-        <TableCell className="py-2 px-2 text-center">
-          <div className="flex items-center justify-center gap-1">
-            <DynamicIcon
-              name={transaction.type === "income" ? "ArrowUp" : "ArrowDown"}
-              className={cn(
-                "h-4 w-4",
-                transaction.type === "income" ? "text-success" : "text-destructive"
-              )}
-            />
-            <span
-              className={cn(
-                "text-sm font-medium",
-                transaction.type === "income" ? "text-success" : "text-destructive"
-              )}
-            >
-              {transaction.type === "income" ? "Receita" : "Despesa"}
-            </span>
-          </div>
-        </TableCell>
-      )}
+      <TableCell className="py-4 px-4 text-center">
+        <div className={cn(
+          "inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border",
+          transaction.type === "income"
+            ? "bg-success/10 text-success border-success/20"
+            : "bg-destructive/10 text-destructive border-destructive/20"
+        )}>
+          <DynamicIcon
+            name={transaction.type === "income" ? "ArrowUpCircle" : "ArrowDownCircle"}
+            className="h-3.5 w-3.5"
+          />
+          {transaction.type === "income" ? "Receita" : "Despesa"}
+        </div>
+      </TableCell>
 
-      <TableCell
-        className={cn(
-          "py-2 px-2 text-left",
-          isMobile ? "min-w-[85px] text-sm" : "text-base"
-        )}
-      >
-        <div className="flex items-center gap-1">
-          {categoryIcon && (
-            <DynamicIcon
-              name={categoryIcon}
-              className={cn("h-4 w-4", isMobile && "h-4 w-4")}
-            />
-          )}
+      {/* 📌 CATEGORIA */}
+      <TableCell className="py-4 px-4 text-left">
+        <div className="flex items-center gap-2 font-semibold text-gray-700 font-roboto">
+          <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white transition-colors shadow-inner">
+            {categoryIcon ? (
+              <DynamicIcon name={categoryIcon} className="h-4 w-4" />
+            ) : (
+              <div className="h-2 w-2 rounded-full bg-gray-300" />
+            )}
+          </div>
           {categoryName}
         </div>
       </TableCell>
 
       {/* 📌 DESCRIÇÃO */}
-      {!isMobile && (
-        <TableCell className="py-2 px-2 text-left">
-          {transaction.description || "-"}
-        </TableCell>
-      )}
+      <TableCell className="py-4 px-4 text-left text-gray-500 italic max-w-[200px] truncate font-roboto">
+        {transaction.description || "-"}
+      </TableCell>
 
       {/* 📌 VALOR */}
       <TableCell
         className={cn(
-          "py-2 px-2 text-right font-semibold",
-          isMobile ? "min-w-[75px] text-xs" : "text-base", // Removido min-w para desktop
+          "py-4 px-4 text-right font-bold text-base tracking-tight font-roboto",
           transaction.type === "income" ? "text-success" : "text-destructive"
         )}
       >
-        {formatCurrency(transaction.amount, !isMobile)}
+        {formatCurrency(transaction.amount, true)}
       </TableCell>
 
-      {/* 🔥 BOTÃO DE STATUS ATUALIZADO */}
-      <TableCell
-        className={cn(
-          "py-2 px-2 text-center",
-          isMobile ? "min-w-[25px]" : "" // Removido min-w para desktop
-        )}
-      >
+      {/* 📌 STATUS */}
+      <TableCell className="py-4 px-4 text-center font-roboto">
         <div
           onClick={(e) => {
-            e.stopPropagation(); // Evita que o clique na linha seja acionado
+            e.stopPropagation();
             onToggleStatus(transaction.id, transaction.type, newStatus);
           }}
           className={cn(
-            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all",
-
-            // Pago → ✓ branco mais forte + tamanho maior
-            transaction.status === "Recebida" &&
-            "bg-[#44E37F] border border-[#44E37F] text-white font-extrabold" +
-            (isMobile
-              ? " h-[17px] w-[17px] text-[10px]"
-              : " h-[21px] w-[21px] text-[12px]"),
-
-            // Pendente → só borda vermelha, fundo transparente e sem ícone
-            (transaction.status === "Pendente" ||
-              transaction.status === "Prevista") &&
-            "bg-transparent border border-destructive text-transparent" +
-            (isMobile ? " h-[17px] w-[17px]" : " h-[21px] w-[21px]")
+            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2 shadow-sm",
+            transaction.status === "Recebida"
+              ? "bg-success border-success text-white h-[24px] w-[24px] scale-110 shadow-success/20"
+              : "bg-white border-gray-200 text-transparent h-[24px] w-[24px] hover:border-success/50"
           )}
         >
-          {transaction.status === "Recebida" ? "✓" : ""}
+          {transaction.status === "Recebida" ? (
+            <span className="text-[12px] font-black">✓</span>
+          ) : (
+            <div className="h-1.5 w-1.5 rounded-full bg-gray-200" />
+          )}
         </div>
       </TableCell>
 
-      {/* 📌 AÇÕES (Editar) */}
-      {!isMobile && (
-        <TableCell className="py-2 px-2 text-center">
-          <div className="flex items-center justify-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation(); // Evita que o clique na linha seja acionado
-                onEditTransaction(transaction);
-              }}
-              className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
-            >
-              <DynamicIcon name="✏️" className="h-4 w-4" />
-            </Button>
-          </div>
-        </TableCell>
-      )}
+      {/* 📌 AÇÕES */}
+      <TableCell className="py-4 px-4 text-center font-roboto">
+        <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditTransaction(transaction);
+            }}
+            className="h-9 w-9 text-primary hover:bg-primary/10 rounded-xl"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteTransaction(transaction.id, transaction.type, "oneOff");
+            }}
+            className="h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </TableCell>
     </TableRow>
   );
 };

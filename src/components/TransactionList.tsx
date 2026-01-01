@@ -435,65 +435,84 @@ export const TransactionList = ({
       )}
 
       <div className={cn(
-        "rounded-xl border shadow-sm bg-white lancamentos-wrapper",
-        isMobile ? "flex-1 overflow-y-auto pr-2 w-[90%] mx-auto mt-2" : "mt-4"
+        !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
+        isMobile ? "flex-1 overflow-y-auto w-[92%] mx-auto mt-4 px-1 no-scrollbar" : ""
       )}>
-        <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
-          <Table className={cn("lancamentos-table", !isMobile && "table-fixed border-separate border-spacing-0")}> {/* Adicionado table-fixed e border-separate */}
-            <TableHeader className={cn("lancamentos-table-header", isMobile && "sticky top-0 z-10 bg-white")}>
-              <TableRow>
-                <TableHead data-order-col="date" onClick={() => handleSort("date")} className={cn("cursor-pointer select-none", !isMobile && "w-[12%]")}>
-                  Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
-                </TableHead>
-                {!isMobile && (
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className={cn("cursor-pointer select-none text-center", !isMobile && "w-[11%]")}>
+        {isMobile ? (
+          <div className="flex flex-col gap-1 pb-4">
+            {transactionsToDisplay.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
+                <p className="text-muted-foreground font-medium">Nenhum lançamento encontrado</p>
+              </div>
+            ) : (
+              transactionsToDisplay.map((transaction) => (
+                <TransactionRow
+                  key={transaction.id}
+                  transaction={transaction}
+                  onDeleteTransaction={onDeleteTransaction}
+                  onEditTransaction={onEditTransaction}
+                  allCategories={allCategories}
+                  cartoes={cartoes}
+                  isMobile={isMobile}
+                  queryClient={queryClient}
+                  user={user}
+                  onToggleStatus={onToggleTransactionStatus}
+                />
+              ))
+            )}
+          </div>
+        ) : (
+          <div className="lancamentos-scroll-container">
+            <Table className="lancamentos-table table-fixed border-separate border-spacing-0">
+              <TableHeader className="lancamentos-table-header">
+                <TableRow>
+                  <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none w-[12%] py-4">
+                    Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  </TableHead>
+                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none text-center w-[12%] py-4">
                     Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
-                )}
-                <TableHead data-order-col="category" onClick={() => handleSort("category")} className={cn("cursor-pointer select-none", !isMobile && "w-[18%]")}>
-                  Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
-                </TableHead>
-                {!isMobile && (
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className={cn("cursor-pointer select-none text-left", !isMobile && "w-[21%]")}>
+                  <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none w-[18%] py-4">
+                    Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  </TableHead>
+                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none text-left w-[20%] py-4">
                     Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
                   </TableHead>
-                )}
-                <TableHead data-order-col="amount" onClick={() => handleSort("amount")}
-                  className={cn("text-right cursor-pointer select-none", !isMobile && "w-[18%]")}>
-                  Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
-                </TableHead>
-                <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Status</TableHead>
-                {!isMobile && (
-                  <TableHead className={cn("text-center", !isMobile && "w-[10%]")}>Ações</TableHead>
-                )}
-              </TableRow>
-            </TableHeader>
-            <TableBody className="lancamentos-table-body">
-              {transactionsToDisplay.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={isMobile ? 4 : 7} className="text-center py-8 text-muted-foreground">
-                    Nenhum lançamento encontrado
-                  </TableCell>
+                  <TableHead data-order-col="amount" onClick={() => handleSort("amount")}
+                    className="text-right cursor-pointer select-none w-[15%] py-4">
+                    Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  </TableHead>
+                  <TableHead className="text-center w-[10%] py-4">Status</TableHead>
+                  <TableHead className="text-center w-[13%] py-4">Ações</TableHead>
                 </TableRow>
-              ) : (
-                transactionsToDisplay.map((transaction) => (
-                  <TransactionRow
-                    key={transaction.id}
-                    transaction={transaction}
-                    onDeleteTransaction={onDeleteTransaction}
-                    onEditTransaction={onEditTransaction}
-                    allCategories={allCategories}
-                    cartoes={cartoes}
-                    isMobile={isMobile}
-                    queryClient={queryClient}
-                    user={user}
-                    onToggleStatus={onToggleTransactionStatus}
-                  />
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody className="lancamentos-table-body">
+                {transactionsToDisplay.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-12 text-muted-foreground font-medium">
+                      Nenhum lançamento encontrado
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  transactionsToDisplay.map((transaction) => (
+                    <TransactionRow
+                      key={transaction.id}
+                      transaction={transaction}
+                      onDeleteTransaction={onDeleteTransaction}
+                      onEditTransaction={onEditTransaction}
+                      allCategories={allCategories}
+                      cartoes={cartoes}
+                      isMobile={isMobile}
+                      queryClient={queryClient}
+                      user={user}
+                      onToggleStatus={onToggleTransactionStatus}
+                    />
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
 
       <div className={cn("flex justify-end mb-0 mt-2 pr-5", isMobile && "bg-white pb-2")}>
