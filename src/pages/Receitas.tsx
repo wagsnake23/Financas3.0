@@ -327,8 +327,8 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl",
-              isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
+              "rounded-xl bg-[#F5F5F5]",
+              isMobile ? "h-9 text-sm" : "",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
                 isValid: validationErrors.tipoReceitaId === false,
@@ -380,8 +380,8 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
-                isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
+                isMobile ? "h-9 text-sm" : "",
                 !data && "text-muted-foreground",
                 getBorderClass({
                   isInvalid: validationErrors.data,
@@ -432,8 +432,8 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl",
-            isMobile ? "bg-white h-9 text-sm" : "bg-[#F5F5F5]",
+            "w-full rounded-xl bg-[#F5F5F5]",
+            isMobile ? "h-9 text-sm" : "",
             getBorderClass({
               isInvalid: validationErrors.valor,
               isValid: validationErrors.valor === false,
@@ -453,8 +453,8 @@ export default function Receitas() {
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn(
-            "w-full rounded-xl placeholder:text-gray-400",
-            isMobile ? "bg-white text-sm" : "bg-[#F5F5F5]"
+            "w-full rounded-xl bg-[#F5F5F5] placeholder:text-gray-400",
+            isMobile ? "text-sm" : "",
           )}
         />
       </div>
@@ -496,7 +496,7 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-[#F8FBFF]"
+        isMobile && "bg-white text-black"
       )}
     >
       <Navigation />
@@ -518,7 +518,7 @@ export default function Receitas() {
         )}
 
         {isMobile ? (
-          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-[#F8FBFF]">
+          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-white">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold flex items-center gap-2 text-success">
                 <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
