@@ -490,7 +490,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <div
           className={cn(
             "w-full rounded-xl border flex-1 min-h-0 overflow-y-auto",
-            isMobile ? "bg-white mb-20" : ""
+            isMobile ? "bg-white mb-2" : ""
           )}
         >
           {/* Sticky Header */}
