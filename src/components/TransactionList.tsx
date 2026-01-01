@@ -332,7 +332,7 @@ export const TransactionList = ({
     return !hasPendingExpenses;
   }, [filterPaymentOptionId, loadingPayInvoice, filteredTransactions]);
 
-  const hideTypeFilter = isMobile && isValidUuid(filterPaymentOptionId);
+  const hideTypeFilter = isMobile && filterPaymentOptionId !== "all";
 
   // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
   const transactionsToDisplay = sortedTransactions;

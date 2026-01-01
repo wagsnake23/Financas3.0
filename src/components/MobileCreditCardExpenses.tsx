@@ -116,7 +116,7 @@ export const MobileCreditCardExpenses: React.FC<
           <SelectContent>
             {cartoes.map((card) => (
               <SelectItem key={card.id} value={card.id} className="text-sm">
-                {card.nome} (****{card.ultimos_digitos})
+                Cartão: {card.nome} {card.ultimos_digitos}
               </SelectItem>
             ))}
           </SelectContent>
