@@ -100,10 +100,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           </span>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className={cn(
-              "text-[0.65rem] font-bold tracking-tight",
-              transaction.status === "Recebida" ? "text-success/70" : "text-destructive/70"
+              "text-[0.75rem] tracking-tight",
+              transaction.status === "Recebida"
+                ? "text-success font-bold"
+                : "text-gray-400 italic"
             )}>
-              {transaction.status === "Recebida" ? (transaction.type === "income" ? "Recebido" : "Pago") : "Pendente"}
+              {transaction.status === "Recebida"
+                ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
+                : "Pendente"}
             </span>
             <div
               onClick={(e) => {
@@ -118,7 +122,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               )}
             >
               {transaction.status === "Recebida" && (
-                <span className="text-[10px] font-black">✓</span>
+                <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
               )}
             </div>
           </div>
