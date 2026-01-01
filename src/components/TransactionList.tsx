@@ -360,10 +360,10 @@ export const TransactionList = ({
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterType !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300",
               hideTypeFilter && "hidden"
             )}
           >
@@ -382,10 +382,10 @@ export const TransactionList = ({
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterCategory !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
             )}
           >
             <SelectValue placeholder="Subcategoria" />
@@ -409,10 +409,10 @@ export const TransactionList = ({
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterPaymentOptionId !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
             )}
           >
             <SelectValue placeholder="Forma de Pagamento" />

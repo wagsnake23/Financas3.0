@@ -98,21 +98,29 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           )}>
             {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
           </span>
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleStatus(transaction.id, transaction.type, newStatus);
-            }}
-            className={cn(
-              "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
-              transaction.status === "Recebida"
-                ? "bg-success border-success text-white scale-110"
-                : "bg-white border-destructive/50 text-transparent hover:border-success/50"
-            )}
-          >
-            {transaction.status === "Recebida" && (
-              <span className="text-[10px] font-black">✓</span>
-            )}
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className={cn(
+              "text-[0.65rem] font-bold tracking-tight",
+              transaction.status === "Recebida" ? "text-success/70" : "text-destructive/70"
+            )}>
+              {transaction.status === "Recebida" ? (transaction.type === "income" ? "Recebido" : "Pago") : "Pendente"}
+            </span>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleStatus(transaction.id, transaction.type, newStatus);
+              }}
+              className={cn(
+                "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
+                transaction.status === "Recebida"
+                  ? "bg-success border-success text-white scale-110"
+                  : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+              )}
+            >
+              {transaction.status === "Recebida" && (
+                <span className="text-[10px] font-black">✓</span>
+              )}
+            </div>
           </div>
         </div>
       </div >
