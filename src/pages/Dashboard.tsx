@@ -188,8 +188,8 @@ export default function Dashboard() {
       <Navigation />
       <main
         className={cn(
-          "container mx-auto",
-          isMobile ? "pt-4 px-4" : "py-8 max-w-[1200px] px-6"
+          "container mx-auto flex-grow",
+          isMobile ? "pt-4 px-4 pb-16" : "py-8 max-w-[1200px] px-6"
         )}
       >
         {!isMobile && (
@@ -308,11 +308,6 @@ export default function Dashboard() {
               allCategories={allSubcategories}
               isMobile={isMobile}
               selectedMonth={selectedMonth}
-            />
-            <Footer
-              isMobile={isMobile}
-              className={cn(isMobile && "mt-[-2rem]")}
-              user={user}
             />
           </div>
         ) : (
@@ -439,10 +434,14 @@ export default function Dashboard() {
                 Mais conteúdo do Dashboard virá aqui.
               </p>
             </Card>
-            <Footer isMobile={isMobile} className="mt-8" user={user} />
           </>
         )}
       </main>
+      <Footer
+        isMobile={isMobile}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
+        user={user}
+      />
     </div>
   );
 }

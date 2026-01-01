@@ -104,7 +104,7 @@ export const MobileCreditCardExpenses: React.FC<
       className={cn("p-3 animate-fade-in rounded-3xl card-3d")}
       style={{ backgroundColor: "#F7F2FF" }}
     >
-      <h2 className="text-xs font-semibold text-muted-foreground">
+      <h2 className="text-xs font-semibold text-muted-foreground -mt-1 mb-1.5 ml-1">
         Cartões de Crédito
       </h2>
 
