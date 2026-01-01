@@ -61,34 +61,37 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
         )}
       >
-        <div className="flex-1 min-w-0 flex items-center gap-2.5">
-          <div className={cn(
-            "flex items-center justify-center shrink-0",
-            transaction.type === 'income' ? "text-success" : "text-destructive"
-          )}>
-            <DynamicIcon
-              name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-              className="h-5 w-5"
-            />
+        <div className="flex-1 min-w-0 flex gap-3">
+          {/* Coluna da Esquerda: Data e Ícone */}
+          <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5 min-w-[45px]">
+            <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap leading-none">
+              {format(transactionDate, "ddMMM", { locale: ptBR }).toUpperCase()}
+            </span>
+            <div className={cn(
+              "flex items-center justify-center h-5 w-5",
+              transaction.type === 'income' ? "text-success" : "text-destructive"
+            )}>
+              <DynamicIcon
+                name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
+                className="h-4 w-4"
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="font-bold text-gray-800 text-[0.95rem] leading-tight text-left truncate">
+
+          {/* Coluna Central: Nome e Descrição */}
+          <div className="flex flex-col min-w-0 justify-center">
+            <span className="font-bold text-gray-800 text-[0.9rem] leading-tight truncate">
               {categoryName}
             </span>
-            <div className="flex flex-col items-start text-left">
-              <span className="text-[0.7rem] text-muted-foreground font-medium uppercase tracking-wider">
-                {format(transactionDate, "dd 'de' MMM", { locale: ptBR })}
+            {transaction.description && (
+              <span className="text-[0.75rem] text-gray-400 line-clamp-1 italic truncate w-full mt-0.5">
+                {transaction.description}
               </span>
-              {transaction.description && (
-                <span className="text-[0.75rem] text-gray-500 line-clamp-1 italic text-left truncate w-full">
-                  {transaction.description}
-                </span>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
+        <div className="flex flex-col items-end gap-1.5 shrink-0 ml-3">
           <span className={cn(
             "font-extrabold text-sm tracking-tight whitespace-nowrap",
             transaction.type === 'income' ? "text-success" : "text-destructive"
@@ -101,14 +104,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               onToggleStatus(transaction.id, transaction.type, newStatus);
             }}
             className={cn(
-              "h-6 w-6 rounded-full flex items-center justify-center transition-all border-2 shadow-sm",
+              "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
               transaction.status === "Recebida"
                 ? "bg-success border-success text-white scale-110"
                 : "bg-white border-gray-200 text-transparent hover:border-success/50"
             )}
           >
             {transaction.status === "Recebida" ? (
-              <span className="text-[12px] font-black">✓</span>
+              <span className="text-[10px] font-black">✓</span>
             ) : (
               <div className="h-1 w-1 rounded-full bg-gray-200" />
             )}
