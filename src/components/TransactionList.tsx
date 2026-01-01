@@ -338,7 +338,7 @@ export const TransactionList = ({
   const transactionsToDisplay = sortedTransactions;
 
   return (
-    <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0" : "")}>
+    <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
 
       <div className={cn("grid gap-3 mb-0", isMobile ? "grid-cols-1 w-full px-4 mb-4" : "sm:grid-cols-3")}>
         <Select value={filterType} onValueChange={setFilterType}>
@@ -414,8 +414,8 @@ export const TransactionList = ({
       )}
 
       <div className={cn(
-        "rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper",
-        isMobile && "flex-1 overflow-y-auto pr-2 max-w-[95vw] mx-auto" // Reintroduzida a rolagem interna no mobile
+        "rounded-xl border shadow-sm bg-white lancamentos-wrapper",
+        isMobile ? "flex-1 overflow-y-auto pr-2 max-w-[95vw] mx-auto mt-2" : "mt-4"
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className={cn("lancamentos-table", !isMobile && "table-fixed border-separate border-spacing-0")}> {/* Adicionado table-fixed e border-separate */}
