@@ -119,7 +119,7 @@ export const StatCard = ({
           {/* Main Stat Block */}
           <div
             className={cn(
-              "flex flex-col items-start pl-2 pt-2",
+              "flex flex-col items-start pl-2 pt-1",
               contentSpacingClass
             )}
           >
@@ -156,7 +156,7 @@ export const StatCard = ({
           {secondaryStatTitle && secondaryStatValue !== undefined && (
             <div
               className={cn(
-                "flex flex-col items-start pl-2 pt-2",
+                "flex flex-col items-start pl-2 pt-1",
                 contentSpacingClass
               )}
             >
