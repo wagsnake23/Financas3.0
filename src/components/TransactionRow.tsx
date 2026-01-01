@@ -61,69 +61,79 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
         )}
       >
-        <div className="flex-1 min-w-0 flex gap-3">
-          {/* Coluna da Esquerda: Data e Ícone */}
-          <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5 min-w-[45px]">
-            <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap leading-none">
-              {format(transactionDate, "ddMMM", { locale: ptBR }).toUpperCase()}
-            </span>
-            <div className={cn(
-              "flex items-center justify-center h-5 w-5",
+        <div className="flex flex-col w-full gap-1">
+          {/* 📌 PRIMEIRA LINHA: Data, Subcategoria e Valor */}
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3 min-w-0">
+              {/* Data */}
+              <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap min-w-[38px] text-center">
+                {format(transactionDate, "ddMMM", { locale: ptBR }).toUpperCase()}
+              </span>
+              {/* Subcategoria */}
+              <span className="font-bold text-gray-800 text-[0.85rem] leading-tight truncate">
+                {categoryName}
+              </span>
+            </div>
+            {/* Valor */}
+            <span className={cn(
+              "font-extrabold text-sm tracking-tight whitespace-nowrap",
               transaction.type === 'income' ? "text-success" : "text-destructive"
             )}>
-              <DynamicIcon
-                name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                className="h-4 w-4"
-              />
+              {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
+            </span>
+          </div>
+
+          {/* 📌 SEGUNDA LINHA: Ícone, Descrição e Status */}
+          <div className="flex items-start justify-between w-full">
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              {/* Ícone (abaixo da data) */}
+              <div className={cn(
+                "flex items-center justify-center h-4 w-4 shrink-0 min-w-[38px]",
+                transaction.type === 'income' ? "text-success" : "text-destructive"
+              )}>
+                <DynamicIcon
+                  name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
+                  className="h-3.5 w-3.5"
+                />
+              </div>
+              {/* Descrição */}
+              <div className="min-w-0 flex-1">
+                {transaction.description && (
+                  <span className="text-[0.75rem] text-gray-400 line-clamp-1 italic truncate block">
+                    {transaction.description}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Coluna Central: Nome e Descrição */}
-          <div className="flex flex-col min-w-0 justify-center">
-            <span className="font-bold text-gray-800 text-[0.9rem] leading-tight truncate">
-              {categoryName}
-            </span>
-            {transaction.description && (
-              <span className="text-[0.75rem] text-gray-400 line-clamp-1 italic truncate w-full mt-0.5">
-                {transaction.description}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col items-end gap-1.5 shrink-0 ml-3">
-          <span className={cn(
-            "font-extrabold text-sm tracking-tight whitespace-nowrap",
-            transaction.type === 'income' ? "text-success" : "text-destructive"
-          )}>
-            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
-          </span>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span className={cn(
-              "text-[0.75rem] tracking-tight",
-              transaction.status === "Recebida"
-                ? "text-success font-bold"
-                : "text-gray-400 italic"
-            )}>
-              {transaction.status === "Recebida"
-                ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
-                : "Pendente"}
-            </span>
-            <div
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleStatus(transaction.id, transaction.type, newStatus);
-              }}
-              className={cn(
-                "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
+            {/* Status Group (Label + Botão) */}
+            <div className="flex items-center gap-1.5 shrink-0 ml-3">
+              <span className={cn(
+                "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
-                  ? "bg-success border-success text-white scale-110"
-                  : "bg-white border-destructive/50 text-transparent hover:border-success/50"
-              )}
-            >
-              {transaction.status === "Recebida" && (
-                <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
-              )}
+                  ? "text-success font-bold"
+                  : "text-gray-400 italic"
+              )}>
+                {transaction.status === "Recebida"
+                  ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
+                  : "Pendente"}
+              </span>
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleStatus(transaction.id, transaction.type, newStatus);
+                }}
+                className={cn(
+                  "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
+                  transaction.status === "Recebida"
+                    ? "bg-success border-success text-white scale-110"
+                    : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+                )}
+              >
+                {transaction.status === "Recebida" && (
+                  <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
