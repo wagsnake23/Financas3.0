@@ -353,7 +353,7 @@ export const TransactionList = ({
 
       {/* Filtros em Estilo Chips/Pills - App Bancário Moderno */}
       <div className={cn(
-        "flex items-center gap-2 mb-4 px-4 overflow-x-auto no-scrollbar py-1 flex-nowrap shrink-0",
+        "flex items-center gap-2 mb-2 px-4 overflow-x-auto no-scrollbar py-0.5 flex-nowrap shrink-0",
         !isMobile && "px-6 mb-6"
       )}>
         {/* Chip: Tipo */}
@@ -447,7 +447,7 @@ export const TransactionList = ({
 
       <div className={cn(
         !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-        isMobile ? "flex-1 overflow-y-auto w-[92%] mx-auto mt-4 px-1 no-scrollbar" : ""
+        isMobile ? "flex-1 overflow-y-auto w-[92%] mx-auto mt-1 px-1 no-scrollbar" : ""
       )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
