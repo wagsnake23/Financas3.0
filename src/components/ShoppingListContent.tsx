@@ -591,7 +591,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           </AlertDialogTrigger>
           <AlertDialogContent className="rounded-xl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
+              <AlertDialogTitle className="flex items-center justify-center gap-2">
                 <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
                 Confirmação
               </AlertDialogTitle>
