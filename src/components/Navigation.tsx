@@ -157,14 +157,14 @@ export const Navigation = () => {
                   </p>
                 </SheetHeader>
 
-                <div className="flex flex-col gap-2 mt-4">
+                <div className="flex flex-col gap-1 mt-4">
                   {navItems.map((item) => (
                     <NavLink
                       key={item.to}
                       to={item.to}
                       end={item.to === "/"}
                       onClick={handleNavClick}
-                      className="flex items-center gap-3 px-4 py-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                      className="flex items-center gap-3 px-4 py-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
                       activeClassName="bg-[#E3F2FD] text-[#0A4A9B] font-semibold"
                     >
                       <DynamicIcon
@@ -183,7 +183,7 @@ export const Navigation = () => {
                       handleNavClick();
                       signOut();
                     }}
-                    className="justify-start px-4 py-3 h-auto text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="justify-start px-4 py-2 mt-1 h-auto text-muted-foreground hover:text-foreground hover:bg-muted border-t border-gray-100 rounded-none w-full"
                   >
                     <DynamicIcon name="❌" className="h-5 w-5 mr-3" />
                     Sair
