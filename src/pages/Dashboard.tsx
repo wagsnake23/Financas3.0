@@ -182,11 +182,8 @@ export default function Dashboard() {
     <div
       className={cn(
         "flex flex-col min-h-screen pt-16",
-        isMobile && "bg-lancamentos-mobile-bg"
+        isMobile ? "bg-white" : "bg-[#F6FAFF]"
       )}
-      style={{
-        backgroundColor: "#F6FAFF",
-      }}
     >
       <Navigation />
       <main
