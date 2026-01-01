@@ -81,7 +81,7 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container mx-auto flex-grow",
-          isMobile ? "px-0 py-4 pb-14 flex flex-col min-h-0" : "max-w-[1200px] px-6 py-8"
+          isMobile ? "px-0 py-4 pb-10 flex flex-col min-h-0" : "max-w-[1200px] px-6 py-8"
         )}
       >
         {!isMobile && (
