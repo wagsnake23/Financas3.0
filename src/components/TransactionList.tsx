@@ -528,7 +528,7 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto pb-0 bg-transparent relative z-20",
-        isMobile ? "w-full px-2 mb-10" : "px-4 w-full px-6 mb-8"
+        isMobile ? "w-full px-2 mb-6" : "px-4 w-full px-6 mb-8"
       )}>
         <div className={cn(
           "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-100 rounded-2xl",
