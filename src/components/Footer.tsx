@@ -17,7 +17,7 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
 
   return (
     <footer className={cn(
-      "py-6 text-center text-muted-foreground font-roboto bg-gray-50", // Centralizado, fonte Roboto e fundo cinza claro
+      "py-6 text-center text-muted-foreground font-roboto", // Centralizado e fonte Roboto
       isMobile ? "text-xs" : "text-sm",
       className
     )}>

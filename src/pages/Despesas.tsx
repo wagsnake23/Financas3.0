@@ -55,7 +55,7 @@ export default function Despesas() {
   } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading);
 
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<
-    AppCategory
+    AppCategory[]
   >({
     queryKey: ["categories", user?.id],
     queryFn: async () => {
@@ -150,7 +150,7 @@ export default function Despesas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background pt-16",
+        "flex flex-col min-h-screen bg-white pt-16",
         isMobile && "bg-white"
       )}
     >
@@ -205,7 +205,7 @@ export default function Despesas() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-6">
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto bg-white">
                 <div className="flex items-center justify-between mb-4"> {/* Flex container for title and button */}
                   <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
                     <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
@@ -242,7 +242,6 @@ export default function Despesas() {
                 expenses={expenses}
                 categories={allSubcategories}
                 isMobile={isMobile}
-                className="h-[200px]"
               />
             </div>
           </div>

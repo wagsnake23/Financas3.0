@@ -9,6 +9,15 @@ import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 
+interface Cartao {
+  id: string;
+  nome: string;
+  banco: string;
+  ultimos_digitos: string;
+  dia_fechamento: number;
+  dia_vencimento: number;
+}
+
 interface PaymentDetailsProps {
   valor: number | undefined; // Alterado para number | undefined
   setValor: (value: number | undefined) => void; // Alterado para number | undefined
@@ -16,7 +25,7 @@ interface PaymentDetailsProps {
   setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
   cartaoId: string;
   setCartaoId: (value: string) => void;
-  cartoes: Tables<'cartoes'>[];
+  cartoes: Cartao[];
   loadCartoes: () => void;
   user: User | null;
   validationErrors: Record<string, boolean>;
@@ -88,20 +97,25 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div>
-          <Label htmlFor="valor" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={valor}
             onChange={(v) => {
               setValor(v);
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
-            className={cn(isMobile && "h-9 text-sm", "bg-[#F5F5F5]", getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false }))}
+            className={cn(
+              isMobile && "h-11 text-sm",
+              "bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+              getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
+            )}
           />
         </div>
 
         {/* Tipo de Pagamento (À vista / Parcelado / Fixo) */}
         <div>
-          <Label className={cn(isMobile && "text-xs")}>Tipo de Pagamento</Label>
+          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Tipo de Pagamento</Label>
           <Select
             value={tipoPagamento}
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
@@ -109,7 +123,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               // REMOVIDO: A lógica de setIsRecurring foi movida para o ExpenseForm.tsx
             }}
           >
-            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn(
+              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+              isMobile && "h-11 text-sm"
+            )}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -131,7 +149,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", tipoPagamento === "parcelado" && !isRecurring ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
         {/* Forma de Pagamento */}
         <div>
-          <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => { // Tipo explícito para 'value'
@@ -141,7 +159,11 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }
             }}
           >
-            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn(
+              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+              isMobile && "h-11 text-sm"
+            )}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -164,7 +186,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado" E NÃO for recorrente) */}
         {tipoPagamento === "parcelado" && !isRecurring && ( // Condição atualizada
           <div>
-            <Label htmlFor="numeroParcelas" className={cn(isMobile && "text-xs")}>
+            <Label htmlFor="numeroParcelas" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
               Número de Parcelas
             </Label>
             <Input
@@ -175,7 +197,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
-              className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false }))}
+              className={cn(
+                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+                isMobile && "h-11 text-sm",
+                getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
+              )}
             />
           </div>
         )}
@@ -183,7 +210,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
       {formaPagamento === "cartao" && (
         <div className="col-span-full">
-          <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
@@ -192,7 +219,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn(
+                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                isMobile && "h-11 text-sm",
+                getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
+              )}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>

@@ -423,7 +423,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       {/* Subcategoria com Command Menu */}
       <div>
-        <Label htmlFor="subcategoria" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="subcategoria" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria
         </Label>
         <Popover open={openCommand} onOpenChange={setOpenCommand}>
@@ -433,8 +433,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               role="combobox"
               aria-expanded={openCommand}
               className={cn(
-                "w-full justify-between rounded-xl bg-[#F5F5F5]",
-                isMobile && "h-9 text-sm",
+                "w-full justify-between rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                isMobile && "h-11 text-sm",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
                   isValid: validationErrors.selectedSubcategoryId === false,
@@ -459,11 +460,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             side="bottom"
             className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
           >
-            <Command>
+            <Command className="rounded-xl border-[#E5E7EB]">
               <CommandInput
                 placeholder="Buscar subcategoria..."
                 value={commandSearch}
                 onValueChange={setCommandSearch}
+                className="bg-[#F9FAFB] text-gray-800 placeholder:text-gray-400"
               />
               <CommandList className="max-h-[6rem] overflow-y-auto"> {/* Altura máxima ajustada aqui */}
                 <CommandGroup>
@@ -529,14 +531,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setIsRecurring={setIsRecurring}
       />
 
-      {tipoPagamento === "parcelado" && numeroParcelas > 1 && !isRecurring && (
-        <InstallmentPreview
-          valor={valor}
-          numeroParcelas={numeroParcelas}
-          dataVencimento={dataVencimento}
-          isMobile={isMobile}
-        />
-      )}
+      {
+        tipoPagamento === "parcelado" && numeroParcelas > 1 && !isRecurring && (
+          <InstallmentPreview
+            valor={valor}
+            numeroParcelas={numeroParcelas}
+            dataVencimento={dataVencimento}
+            isMobile={isMobile}
+          />
+        )
+      }
 
       <DateAndInstallmentFields
         dataVencimento={dataVencimento}
@@ -550,7 +554,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       />
 
       <div>
-        <Label htmlFor="descricao" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Descrição
         </Label>
         <Textarea
@@ -559,20 +563,26 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
           rows={isMobile ? 2 : 3}
-          className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
+          className={cn(
+            "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
+            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
+            isMobile && "text-sm p-4"
+          )}
         />
       </div>
 
-      {!isRecurring && tipoPagamento === "avista" && (
-        <div className={cn(isMobile && "mt-2")}>
-          {" "}
-          <TransactionStatusToggle
-            isPaid={isPaid}
-            setIsPaid={setIsPaid}
-            isMobile={isMobile}
-          />
-        </div>
-      )}
+      {
+        !isRecurring && tipoPagamento === "avista" && (
+          <div className={cn(isMobile && "mt-2")}>
+            {" "}
+            <TransactionStatusToggle
+              isPaid={isPaid}
+              setIsPaid={setIsPaid}
+              isMobile={isMobile}
+            />
+          </div>
+        )
+      }
 
       <Button
         type="submit"
@@ -582,6 +592,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       >
         {loading ? "Salvando..." : "Salvar Despesa"}
       </Button>
-    </form>
+    </form >
   );
 };

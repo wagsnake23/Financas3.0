@@ -315,7 +315,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="tipo" className={cn(isMobile && "text-xs text-gray-600")}>
+        <Label htmlFor="tipo" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria de Receita
         </Label>
         <Select
@@ -327,8 +327,9 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "rounded-xl bg-[#F5F5F5]",
-              isMobile ? "h-9 text-sm" : "",
+              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+              isMobile ? "h-11 text-sm" : "h-10",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
                 isValid: validationErrors.tipoReceitaId === false,
@@ -372,7 +373,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="data" className={cn(isMobile && "text-xs text-gray-600")}>
+        <Label htmlFor="data" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Data
         </Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -380,8 +381,10 @@ export default function Receitas() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
-                isMobile ? "h-9 text-sm" : "",
+                "w-full justify-start text-left font-normal transition-all duration-200",
+                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
+                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                isMobile ? "h-11 text-sm" : "h-10",
                 !data && "text-muted-foreground",
                 getBorderClass({
                   isInvalid: validationErrors.data,
@@ -392,8 +395,8 @@ export default function Receitas() {
               <DynamicIcon
                 name="📅"
                 className={cn(
-                  "mr-2 h-4 w-4 text-primary",
-                  isMobile && "h-3.5 w-3.5"
+                  "mr-2 h-4 w-4 text-gray-500",
+                  isMobile && "h-4 w-4"
                 )}
               />
               {data ? (
@@ -422,7 +425,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="valor" className={cn(isMobile && "text-xs text-gray-600")}>
+        <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Valor (R$)
         </Label>
         <CurrencyBR
@@ -432,8 +435,9 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-[#F5F5F5]",
-            isMobile ? "h-9 text-sm" : "",
+            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+            isMobile ? "h-11 text-sm" : "h-10",
             getBorderClass({
               isInvalid: validationErrors.valor,
               isValid: validationErrors.valor === false,
@@ -443,7 +447,7 @@ export default function Receitas() {
       </div>
 
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Label htmlFor="descricao" className={cn(isMobile && "text-xs text-gray-600")}>
+        <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Descrição
         </Label>
         <Textarea
@@ -453,8 +457,9 @@ export default function Receitas() {
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn(
-            "w-full rounded-xl bg-[#F5F5F5] placeholder:text-gray-400",
-            isMobile ? "text-sm" : "",
+            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
+            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
+            isMobile ? "text-sm p-4" : "",
           )}
         />
       </div>

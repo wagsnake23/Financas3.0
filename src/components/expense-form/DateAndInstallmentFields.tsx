@@ -17,7 +17,7 @@ interface DateAndInstallmentFieldsProps {
   validationErrors: Record<string, boolean>;
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
-  tipoPagamento: "avista" | "parcelado"; // Nova prop
+  tipoPagamento: "avista" | "parcelado" | "fixo"; // Nova prop (incluindo fixo para compatibilidade)
   // Removido: numeroParcelas: number;
   // Removido: setNumeroParcelas: (value: number) => void;
 }
@@ -39,7 +39,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   return (
     <div className={cn("grid gap-4", "grid-cols-1")}> {/* Ajustado para sempre 1 coluna */}
       <div>
-        <Label htmlFor="dataVencimento" className={cn(isMobile && "text-xs")}>
+        <Label htmlFor="dataVencimento" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           {dateLabel}
         </Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -47,13 +47,15 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
+                "w-full justify-start text-left font-normal transition-all duration-200",
+                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
+                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 !dataVencimento && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
+                isMobile && "h-11 text-sm",
                 getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
               )}
             >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-gray-500", isMobile && "h-4 w-4")} />
               {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
