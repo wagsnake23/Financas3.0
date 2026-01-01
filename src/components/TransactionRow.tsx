@@ -107,13 +107,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
               transaction.status === "Recebida"
                 ? "bg-success border-success text-white scale-110"
-                : "bg-white border-destructive/30 text-transparent hover:border-success/50"
+                : "bg-white border-destructive/50 text-transparent hover:border-success/50"
             )}
           >
-            {transaction.status === "Recebida" ? (
+            {transaction.status === "Recebida" && (
               <span className="text-[10px] font-black">✓</span>
-            ) : (
-              <div className="h-1 w-1 rounded-full bg-gray-200" />
             )}
           </div>
         </div>
@@ -186,13 +184,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2 shadow-sm",
             transaction.status === "Recebida"
               ? "bg-success border-success text-white h-[24px] w-[24px] scale-110 shadow-success/20"
-              : "bg-white border-destructive/30 text-transparent h-[24px] w-[24px] hover:border-success/50"
+              : "bg-white border-destructive/50 text-transparent h-[24px] w-[24px] hover:border-success/50"
           )}
         >
-          {transaction.status === "Recebida" ? (
+          {transaction.status === "Recebida" && (
             <span className="text-[12px] font-black">✓</span>
-          ) : (
-            <div className="h-1.5 w-1.5 rounded-full bg-gray-200" />
           )}
         </div>
       </TableCell>
