@@ -494,7 +494,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           )}
         >
           {/* Sticky Header */}
-          <div className="sticky top-0 z-10 bg-slate-200 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-gray-700">
+          <div
+            className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-[#0A4A9B]"
+            style={{
+              background: "linear-gradient(135deg, #E3F2FD 0%, #F1F9FF 100%)"
+            }}
+          >
             <div className="col-span-2 text-center font-bold">Nº</div>
             <div className="col-span-5 font-bold">Produto</div>
             <div className="col-span-2 text-center font-bold">Status</div>
