@@ -5,6 +5,7 @@ import { Tables } from "@/integrations/supabase/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+import { cn } from "@/lib/utils";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -58,7 +59,6 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       queryClient={queryClient}
       user={user}
       selectedMonth={selectedMonth}
-      disableFilters={disableFilters}
       filterPaymentOptionId={filterPaymentOptionId}
       setFilterPaymentOptionId={setFilterPaymentOptionId}
       loadingPayInvoice={loadingPayInvoice} // NOVO
@@ -68,5 +68,9 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
     />
   );
 
-  return content;
+  return (
+    <div className={cn(isMobile ? "flex-1 flex flex-col min-h-0" : "")}>
+      {content}
+    </div>
+  );
 };

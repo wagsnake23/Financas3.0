@@ -338,11 +338,11 @@ export const TransactionList = ({
   const transactionsToDisplay = sortedTransactions;
 
   return (
-    <div className={cn("p-6", isMobile && "p-0")}>
+    <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0" : "")}>
 
-      <div className={cn("grid gap-2 mb-0", isMobile ? "grid-cols-1 place-items-center max-w-[95vw] mx-auto" : "grid-cols-4")}> {/* Ajustado aqui */}
+      <div className={cn("grid gap-3 mb-0", isMobile ? "grid-cols-1 w-full px-4 mb-4" : "sm:grid-cols-3")}>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className={cn("rounded-xl", hideTypeFilter && "hidden", isMobile && "w-full")}>
+          <SelectTrigger className={cn("rounded-xl w-full", hideTypeFilter && "hidden")}>
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -363,7 +363,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "w-full")}>
+          <SelectTrigger className="rounded-xl w-full">
             <SelectValue placeholder="Subcategoria" />
           </SelectTrigger>
           <SelectContent>
@@ -382,7 +382,7 @@ export const TransactionList = ({
         </Select>
 
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
-          <SelectTrigger className={cn("rounded-xl", isMobile && "w-full")}>
+          <SelectTrigger className="rounded-xl w-full">
             <SelectValue placeholder="Forma de Pagamento" />
           </SelectTrigger>
           <SelectContent>
@@ -393,8 +393,6 @@ export const TransactionList = ({
             ))}
           </SelectContent>
         </Select>
-
-        <div className={cn("hidden", !isMobile && "block")}></div>
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
@@ -417,11 +415,11 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border shadow-sm mt-4 bg-white lancamentos-wrapper",
-        isMobile && "max-h-[350px] overflow-y-auto pr-2 md:max-h-none md:overflow-visible max-w-[95vw] mx-auto" // Ajustado max-w para mobile
+        isMobile && "flex-1 overflow-y-auto pr-2 max-w-[95vw] mx-auto" // Reintroduzida a rolagem interna no mobile
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className={cn("lancamentos-table", !isMobile && "table-fixed border-separate border-spacing-0")}> {/* Adicionado table-fixed e border-separate */}
-            <TableHeader className="lancamentos-table-header">
+            <TableHeader className={cn("lancamentos-table-header", isMobile && "sticky top-0 z-10 bg-white")}>
               <TableRow>
                 <TableHead data-order-col="date" onClick={() => handleSort("date")} className={cn("cursor-pointer select-none", !isMobile && "w-[12%]")}>
                   Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
@@ -477,7 +475,7 @@ export const TransactionList = ({
         </div>
       </div>
 
-      <div className="flex justify-end mb-0 mt-0 pr-5">
+      <div className={cn("flex justify-end mb-0 mt-2 pr-5", isMobile && "bg-white pb-2")}>
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Valor Total:</p>
           <p className={cn(

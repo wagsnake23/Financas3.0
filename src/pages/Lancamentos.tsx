@@ -74,14 +74,14 @@ const Lancamentos = () => {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16 relative",
-        isMobile ? "bg-white text-black" : "bg-background"
+        isMobile ? "bg-white text-black h-screen overflow-hidden" : "bg-background"
       )}
     >
       <Navigation />
       <main
         className={cn(
           "container mx-auto flex-grow",
-          isMobile ? "px-0 py-4 pb-24" : "max-w-[1200px] px-6 py-8"
+          isMobile ? "px-0 py-4 pb-20 flex flex-col min-h-0 shrink" : "max-w-[1200px] px-6 py-8"
         )}
       >
         {!isMobile && (

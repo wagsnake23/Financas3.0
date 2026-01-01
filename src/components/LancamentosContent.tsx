@@ -5,6 +5,7 @@ import { Tables } from "@/integrations/supabase/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types"; // Importar Database para ReceitaStatus
+import { cn } from "@/lib/utils";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -63,23 +64,25 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // Removido: const disableFilters = !!editingTransaction;
 
   return (
-    <TransactionView
-      transactions={monthlyFilteredTransactions}
-      onDeleteTransaction={onDeleteTransaction}
-      onEditTransaction={onEditTransaction}
-      allCategories={allCategories}
-      cartoes={cartoes}
-      isMobile={isMobile}
-      queryClient={queryClient}
-      user={user}
-      selectedMonth={selectedMonth}
-      // Removido: disableFilters={disableFilters}
-      filterPaymentOptionId={filterPaymentOptionId}
-      setFilterPaymentOptionId={setFilterPaymentOptionId}
-      loadingPayInvoice={loadingPayInvoice} // NOVO
-      setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
-      setSelectedMonth={setSelectedMonth} // Adicionado
-      onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
-    />
+    <div className={cn(isMobile ? "flex-1 flex flex-col min-h-0" : "")}>
+      <TransactionView
+        transactions={monthlyFilteredTransactions}
+        onDeleteTransaction={onDeleteTransaction}
+        onEditTransaction={onEditTransaction}
+        allCategories={allCategories}
+        cartoes={cartoes}
+        isMobile={isMobile}
+        queryClient={queryClient}
+        user={user}
+        selectedMonth={selectedMonth}
+        // Removido: disableFilters={disableFilters}
+        filterPaymentOptionId={filterPaymentOptionId}
+        setFilterPaymentOptionId={setFilterPaymentOptionId}
+        loadingPayInvoice={loadingPayInvoice} // NOVO
+        setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
+        setSelectedMonth={setSelectedMonth} // Adicionado
+        onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
+      />
+    </div>
   );
 };
