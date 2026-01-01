@@ -73,15 +73,15 @@ const Lancamentos = () => {
   return (
     <div
       className={cn(
-        "min-h-screen bg-background pt-16 relative",
-        isMobile && "bg-lancamentos-mobile-bg"
+        "flex flex-col min-h-screen bg-background pt-16 relative",
+        isMobile ? "bg-white text-black" : "bg-background"
       )}
     >
       <Navigation />
       <main
         className={cn(
-          "container mx-auto",
-          isMobile ? "px-0 py-4" : "max-w-[1200px] px-6 py-8"
+          "container mx-auto flex-grow",
+          isMobile ? "px-0 py-4 pb-24" : "max-w-[1200px] px-6 py-8"
         )}
       >
         {!isMobile && (
@@ -120,7 +120,7 @@ const Lancamentos = () => {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile && "mt-0 py-0")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-4 bg-white/80 backdrop-blur-sm border-t z-50 m-0" : "mt-8")}
         user={user}
       />{" "}
       {/* Passando a prop user */}
