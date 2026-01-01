@@ -57,14 +57,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between mb-3 animate-fade-in active:bg-gray-50 transition-all",
+          "bg-white rounded-2xl py-2.5 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
           transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
         )}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <div className={cn(
-            "h-11 w-11 rounded-full flex items-center justify-center shadow-inner",
-            transaction.type === 'income' ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+            "flex items-center justify-center",
+            transaction.type === 'income' ? "text-success" : "text-destructive"
           )}>
             <DynamicIcon
               name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}

@@ -342,14 +342,14 @@ export const TransactionList = ({
 
       {/* Filtros em Estilo Chips/Pills - App Bancário Moderno */}
       <div className={cn(
-        "flex items-center gap-2 mb-4 px-4 overflow-x-auto no-scrollbar py-2 flex-nowrap shrink-0",
+        "flex items-center gap-2 mb-4 px-4 overflow-x-auto no-scrollbar py-1 flex-nowrap shrink-0",
         !isMobile && "px-6 mb-6"
       )}>
         {/* Chip: Tipo */}
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger
             className={cn(
-              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
               filterType !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200",
@@ -371,7 +371,7 @@ export const TransactionList = ({
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger
             className={cn(
-              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
               filterCategory !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -398,7 +398,7 @@ export const TransactionList = ({
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
           <SelectTrigger
             className={cn(
-              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
+              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all border-none shadow-none",
               filterPaymentOptionId !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
