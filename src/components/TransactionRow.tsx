@@ -63,10 +63,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       >
         <div className="flex flex-col w-full gap-1">
           {/* 📌 PRIMEIRA LINHA: Data, Subcategoria e Valor */}
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-start justify-between w-full">
+            <div className="flex items-start gap-3 min-w-0">
               {/* Data */}
-              <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap min-w-[38px] text-center">
+              <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap min-w-[38px] text-center pt-0.5">
                 {format(transactionDate, "ddMMM", { locale: ptBR }).toUpperCase()}
               </span>
               {/* Subcategoria */}
@@ -76,7 +76,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </div>
             {/* Valor */}
             <span className={cn(
-              "font-extrabold text-sm tracking-tight whitespace-nowrap",
+              "font-extrabold text-sm tracking-tight whitespace-nowrap leading-tight pt-0.5",
               transaction.type === 'income' ? "text-success" : "text-destructive"
             )}>
               {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
