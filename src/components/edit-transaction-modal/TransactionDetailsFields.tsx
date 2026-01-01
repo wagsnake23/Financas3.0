@@ -138,14 +138,9 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}>
       {/* Subcategoria */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="category" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
+        <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn(
-            "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
-            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-            isMobile && "h-11 text-sm",
-            getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false })
-          )}>
+          <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
@@ -171,31 +166,26 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="amount" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
             onChange={(v) => {
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn(
-              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-              isMobile && "h-11 text-sm",
-              getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
-            )}
+            className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
         {/* Parcela (condicional) */}
         {showInstallmentField && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
-            <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
+            <Label className={cn(isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
-              className={cn("rounded-xl bg-gray-50 border-[#F3F4F6] text-gray-400 font-medium", isMobile && "h-11 text-sm")}
+              className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
             />
           </div>
         )}
@@ -204,17 +194,12 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Forma de Pagamento */}
       {transactionType === "expense" && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn(
-              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-              isMobile && "h-11 text-sm",
-              getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false })
-            )}>
+            <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent>
@@ -236,7 +221,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Seleção de Cartão de Crédito (condicional - APENAS DESKTOP) */}
       {transactionType === "expense" && formaPagamento === "cartao" && !isMobile && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
@@ -245,12 +230,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn(
-                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
-                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-                isMobile && "h-11 text-sm",
-                getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
-              )}>
+              <SelectTrigger className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
@@ -270,21 +250,19 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="date" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Data</Label>
+        <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
-                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-[#F5F5F5]",
                 !date && "text-muted-foreground",
-                isMobile && "h-11 text-sm",
+                isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
               )}
             >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-gray-400", isMobile && "h-4 w-4")} /> {/* Ícone de emoji colorido */}
+              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
               {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
@@ -307,24 +285,20 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="description" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Descrição</Label>
+        <Label htmlFor="description" className={cn(isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
           rows={3}
-          className={cn(
-            "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
-            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
-            isMobile && "text-sm p-4"
-          )}
+          className={cn("rounded-xl bg-[#F5F5F5]", isMobile && "text-sm")}
           disabled={false} // Garantindo que não esteja desabilitado
         />
       </div>
 
-      <div className={cn("flex flex-col items-start space-y-1.5", isMobile && "pb-6")}>
-        <Label className={cn("text-gray-500 font-medium", isMobile && "text-xs")}>Status</Label>
+      <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
+        <Label className={cn(isMobile && "text-xs")}>Status</Label>
         <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
@@ -333,12 +307,13 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           />
           {paidAtTimestamp && (
             <div className="flex-1">
+              <Label htmlFor="paidAt" className={cn(isMobile && "text-xs", "sr-only")}>Data/Hora Pagamento</Label>
               <Input
                 id="paidAt"
                 type="text"
                 value={paidAtTimestamp
                   ? formatInTimeZone(
-                    paidAtTimestamp,
+                    paidAtTimestamp, // Simplificado para passar a string diretamente
                     TARGET_TIMEZONE,
                     "dd/MM/yyyy HH:mm",
                     { locale: ptBR }
@@ -347,7 +322,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 }
                 readOnly
                 disabled
-                className={cn("rounded-xl bg-transparent border-none text-gray-400 font-medium text-right", isMobile && "h-11 text-xs px-0")}
+                className={cn("rounded-xl bg-muted/50 text-muted-foreground border-none", isMobile && "h-9 text-sm")}
               />
             </div>
           )}
