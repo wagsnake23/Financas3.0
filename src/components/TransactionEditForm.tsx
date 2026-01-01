@@ -29,7 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 }
-from "@/components/ui/alert-dialog";
+  from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -154,7 +154,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setDate={setDate}
             category={category}
             setCategory={setCategory}
-            description={description} 
+            description={description}
             setDescription={setDescription}
             isCalendarOpen={isCalendarOpen}
             setIsCalendarOpen={setIsCalendarOpen}
@@ -166,6 +166,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setIsPaid={setIsPaid}
             installmentNumber={editingTransaction?.installmentNumber}
             totalInstallments={editingTransaction?.totalInstallments}
+            tipoPagamento={editingTransaction?.tipo_pagamento}
             validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
             paidAtTimestamp={paidAtTimestamp}

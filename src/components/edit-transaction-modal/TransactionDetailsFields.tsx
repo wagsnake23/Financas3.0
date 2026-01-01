@@ -48,6 +48,7 @@ interface TransactionDetailsFieldsProps {
   setCartaoId: (value: string) => void;
   cartoes: Tables<'cartoes'>[];
   refetchCartoes: () => void;
+  tipoPagamento?: "avista" | "parcelado" | "fixo";
 }
 
 export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> = ({
@@ -78,6 +79,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   setCartaoId,
   cartoes,
   refetchCartoes,
+  tipoPagamento,
 }) => {
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
   const isRecurringIncome = (transactionType === "income" && totalInstallments && totalInstallments > 1);
@@ -178,9 +180,9 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         {/* Parcela (condicional) */}
         {showInstallmentField && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
-            <Label className={cn(isMobile && "text-xs")}>Parcela</Label>
+            <Label className={cn(isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
-              value={`${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
+              value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
               className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
