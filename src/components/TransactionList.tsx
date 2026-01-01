@@ -531,7 +531,7 @@ export const TransactionList = ({
         isMobile ? "w-full px-2 mb-6" : "px-4 w-full px-6 mb-8"
       )}>
         <div className={cn(
-          "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-100 rounded-2xl",
+          "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-300 rounded-2xl",
           !isMobile && "!max-w-[1200px] mx-auto"
         )}>
           {/* 1: Lançamentos */}
@@ -541,19 +541,19 @@ export const TransactionList = ({
           </div>
 
           {/* 2: Receitas */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Receitas</span>
             <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">+ {formatCurrency(summary.income, !isMobile)}</span>
           </div>
 
           {/* 3: Despesas */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Despesas</span>
             <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">- {formatCurrency(summary.expense, !isMobile)}</span>
           </div>
 
           {/* 4: Saldo */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-200/50">
+          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Saldo</span>
             <span className={cn(
               "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
