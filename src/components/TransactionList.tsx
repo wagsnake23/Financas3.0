@@ -340,7 +340,7 @@ export const TransactionList = ({
   return (
     <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
 
-      <div className={cn("grid gap-3 mb-0", isMobile ? "grid-cols-1 w-full px-4 mb-4" : "sm:grid-cols-3")}>
+      <div className={cn("grid gap-3 mb-0", isMobile ? "grid-cols-1 w-full px-4 mb-2" : "sm:grid-cols-3")}>
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger className={cn("rounded-xl w-full", hideTypeFilter && "hidden")}>
             <SelectValue placeholder="Tipo" />
@@ -396,7 +396,7 @@ export const TransactionList = ({
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
-        <div className={cn("mt-4", isMobile && "w-[90%] mx-auto")}> {/* Ajustado para 90% de largura no mobile */}
+        <div className={cn("mt-4", isMobile && "w-[90%] mx-auto mt-0")}> {/* Removido a margem superior no mobile para aproximar dos filtros */}
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
