@@ -496,14 +496,14 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-[#F1F9FD]"
+        isMobile && "bg-[#F8FBFF]"
       )}
     >
       <Navigation />
       <div
         className={cn(
           "space-y-6 flex-grow",
-          isMobile ? "w-full px-0 pt-0 pb-6" : "mx-auto max-w-[1200px] px-6 py-8"
+          isMobile ? "w-full px-0 pt-0 pb-20" : "mx-auto max-w-[1200px] px-6 py-8"
         )}
       >
         {!isMobile && (
@@ -518,7 +518,7 @@ export default function Receitas() {
         )}
 
         {isMobile ? (
-          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-[#F1F9FD]">
+          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-[#F8FBFF]">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold flex items-center gap-2 text-success">
                 <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
@@ -529,8 +529,6 @@ export default function Receitas() {
             </div>
 
             {oneOffFormContent}
-
-            <Footer isMobile={isMobile} className="pt-2" user={user} />
           </Card>
         ) : (
           <div className="flex flex-col space-y-6">
@@ -571,8 +569,12 @@ export default function Receitas() {
             </div>
           </div>
         )}
-        {!isMobile && <Footer isMobile={isMobile} user={user} />}
       </div>
+      <Footer
+        isMobile={isMobile}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm border-t z-50 m-0" : "mt-8")}
+        user={user}
+      />
     </div>
   );
 }
