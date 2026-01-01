@@ -61,9 +61,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
         )}
       >
-        <div className="flex items-center gap-2.5">
+        <div className="flex-1 min-w-0 flex items-center gap-2.5">
           <div className={cn(
-            "flex items-center justify-center",
+            "flex items-center justify-center shrink-0",
             transaction.type === 'income' ? "text-success" : "text-destructive"
           )}>
             <DynamicIcon
@@ -71,8 +71,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               className="h-5 w-5"
             />
           </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="font-bold text-gray-800 text-[0.95rem] leading-tight text-left">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="font-bold text-gray-800 text-[0.95rem] leading-tight text-left truncate">
               {categoryName}
             </span>
             <div className="flex flex-col items-start text-left">
@@ -80,7 +80,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 {format(transactionDate, "dd 'de' MMM", { locale: ptBR })}
               </span>
               {transaction.description && (
-                <span className="text-[0.75rem] text-gray-500 line-clamp-1 italic text-left">
+                <span className="text-[0.75rem] text-gray-500 line-clamp-1 italic text-left truncate w-full">
                   {transaction.description}
                 </span>
               )}
@@ -88,12 +88,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-2 shrink-0 ml-3">
           <span className={cn(
-            "font-extrabold text-sm tracking-tight",
+            "font-extrabold text-sm tracking-tight whitespace-nowrap",
             transaction.type === 'income' ? "text-success" : "text-destructive"
           )}>
-            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount)}
+            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, true)}
           </span>
           <div
             onClick={(e) => {
