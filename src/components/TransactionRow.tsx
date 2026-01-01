@@ -134,15 +134,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* 📌 TIPO (Receita/Despesa) */}
       <TableCell className="py-4 px-4 text-center">
         <div className={cn(
-          "inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border",
+          "inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border",
           transaction.type === "income"
             ? "bg-success/10 text-success border-success/20"
             : "bg-destructive/10 text-destructive border-destructive/20"
         )}>
-          <DynamicIcon
-            name={transaction.type === "income" ? "ArrowUpCircle" : "ArrowDownCircle"}
-            className="h-3.5 w-3.5"
-          />
           {transaction.type === "income" ? "Receita" : "Despesa"}
         </div>
       </TableCell>

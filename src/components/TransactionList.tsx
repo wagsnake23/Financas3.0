@@ -477,21 +477,20 @@ export const TransactionList = ({
             <Table className="lancamentos-table table-fixed border-separate border-spacing-0">
               <TableHeader className="lancamentos-table-header">
                 <TableRow>
-                  <TableHead data-order-col="date" onClick={() => handleSort("date")} className="cursor-pointer select-none w-[12%] py-4">
-                    Data {sortColumn === "date" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  <TableHead className="w-[12%] py-4">
+                    Data
                   </TableHead>
-                  <TableHead data-order-col="type" onClick={() => handleSort("type")} className="cursor-pointer select-none text-center w-[12%] py-4">
-                    Tipo {sortColumn === "type" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  <TableHead className="text-center w-[12%] py-4">
+                    Tipo
                   </TableHead>
-                  <TableHead data-order-col="category" onClick={() => handleSort("category")} className="cursor-pointer select-none w-[18%] py-4">
-                    Subcategoria {sortColumn === "category" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  <TableHead className="w-[18%] py-4">
+                    Subcategoria
                   </TableHead>
-                  <TableHead data-order-col="description" onClick={() => handleSort("description")} className="cursor-pointer select-none text-left w-[20%] py-4">
-                    Descrição {sortColumn === "description" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  <TableHead className="text-left w-[20%] py-4">
+                    Descrição
                   </TableHead>
-                  <TableHead data-order-col="amount" onClick={() => handleSort("amount")}
-                    className="text-right cursor-pointer select-none w-[15%] py-4">
-                    Valor {sortColumn === "amount" && (sortDirection === "asc" ? <ArrowUp className="inline-block h-4 w-4 ml-1" /> : <ArrowDown className="inline-block h-4 w-4 ml-1" />)}
+                  <TableHead className="text-right w-[15%] py-4">
+                    Valor
                   </TableHead>
                   <TableHead className="text-center w-[10%] py-4">Status</TableHead>
                   <TableHead className="text-center w-[13%] py-4">Ações</TableHead>
