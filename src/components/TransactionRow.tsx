@@ -96,7 +96,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             "font-extrabold text-sm tracking-tight whitespace-nowrap",
             transaction.type === 'income' ? "text-success" : "text-destructive"
           )}>
-            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, true)}
+            {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
           </span>
           <div
             onClick={(e) => {
@@ -107,7 +107,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
               transaction.status === "Recebida"
                 ? "bg-success border-success text-white scale-110"
-                : "bg-white border-gray-200 text-transparent hover:border-success/50"
+                : "bg-white border-destructive/30 text-transparent hover:border-success/50"
             )}
           >
             {transaction.status === "Recebida" ? (
@@ -117,7 +117,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             )}
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 
@@ -186,7 +186,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2 shadow-sm",
             transaction.status === "Recebida"
               ? "bg-success border-success text-white h-[24px] w-[24px] scale-110 shadow-success/20"
-              : "bg-white border-gray-200 text-transparent h-[24px] w-[24px] hover:border-success/50"
+              : "bg-white border-destructive/30 text-transparent h-[24px] w-[24px] hover:border-success/50"
           )}
         >
           {transaction.status === "Recebida" ? (
