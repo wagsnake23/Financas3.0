@@ -19,11 +19,11 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   isMobile,
 }) => {
   return (
-    <div className={cn("flex items-center justify-center", isMobile ? "gap-2 mb-4" : "gap-4 mb-6")}> {/* Alterado para justify-center e adicionado gap responsivo */}
-      <Button 
-        variant="outline" 
-        size="icon" 
-        onClick={onPreviousMonth} 
+    <div className={cn("flex items-center justify-center", isMobile ? "gap-6 mb-4" : "gap-10 mb-6")}> {/* Aumentado significativamente o gap para dar mais 'respiro' */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={onPreviousMonth}
         className={cn(
           "rounded-xl", // Cantos arredondados
           isMobile && "h-8 w-8",
@@ -35,10 +35,10 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
       <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg")}> {/* Adicionado tamanho de fonte responsivo */}
         {format(selectedMonth, "MMMM yyyy", { locale: ptBR })}
       </h2>
-      <Button 
-        variant="outline" 
-        size="icon" 
-        onClick={onNextMonth} 
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={onNextMonth}
         className={cn(
           "rounded-xl", // Cantos arredondados
           isMobile && "h-8 w-8",
