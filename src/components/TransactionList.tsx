@@ -396,7 +396,7 @@ export const TransactionList = ({
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
-        <div className={cn("mt-4", isMobile && "max-w-[95vw] mx-auto")}> {/* Ajustado max-w para mobile */}
+        <div className={cn("mt-4", isMobile && "w-[90%] mx-auto")}> {/* Ajustado para 90% de largura no mobile */}
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
@@ -415,7 +415,7 @@ export const TransactionList = ({
 
       <div className={cn(
         "rounded-xl border shadow-sm bg-white lancamentos-wrapper",
-        isMobile ? "flex-1 overflow-y-auto pr-2 max-w-[95vw] mx-auto mt-2" : "mt-4"
+        isMobile ? "flex-1 overflow-y-auto pr-2 w-[90%] mx-auto mt-2" : "mt-4"
       )}>
         <div className={!isMobile ? "lancamentos-scroll-container" : ""}>
           <Table className={cn("lancamentos-table", !isMobile && "table-fixed border-separate border-spacing-0")}> {/* Adicionado table-fixed e border-separate */}

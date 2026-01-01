@@ -38,53 +38,53 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   return (
     <Card className={cn(
       "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
-      isMobile && "p-3 space-y-2 max-w-[98vw] mx-auto" // Adicionado max-w e mx-auto para mobile
+      isMobile ? "p-3 space-y-2 w-full" : "" // Parent handles max-w
     )}>
       {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      {/* Ajustado o gap para diminuir o espaçamento */}
       <div className={cn(
-        "flex items-center w-full", 
-        isMobile ? "gap-0 justify-between" : "gap-4 justify-between" // Ajustado gap e justify para desktop
+        "flex items-center w-full",
+        isMobile ? "gap-1 justify-between" : "gap-4 justify-between"
       )}>
         {/* Pago */}
-        <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}> {/* Removido flex-1 */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
           <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
           <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
           <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
         </div>
+
         {/* Pendente */}
-        <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}> {/* Removido flex-1 */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
           <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
           <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
           <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
         </div>
+
         {/* Total Fatura */}
-        <div className={cn("flex flex-col items-center justify-center", isMobile && "p-0.5")}> {/* Removido flex-1 */}
+        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
           <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total Fatura</p>
+          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total</p>
           <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
         </div>
 
-        {/* Badge (agora ao lado dos valores) */}
+        {/* Badge / Datas (4º item) */}
         <div className={cn(
-          "flex flex-col items-end text-right gap-0 flex-none",
-          isMobile && "items-center text-center" // Removido space-y-0.5
+          "flex flex-col items-center justify-center flex-1",
+          isMobile && "p-0"
         )}>
-          {/* NOVO: Ícone de calendário Lucide com cor primária */}
-          <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} />
-          <span className={cn(
-            "text-xs font-bold uppercase text-primary px-2 py-0.5 rounded-md",
-            isMobile && "text-[0.6rem] px-1.5 py-0.5"
+          <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary mb-1", isMobile && "h-4 w-4 mb-0.5")} />
+          <p className={cn(
+            "text-[0.6rem] font-bold uppercase text-primary leading-none",
+            !isMobile && "text-xs"
           )}>
             {formattedBadgeMonth}
-          </span>
+          </p>
           {formattedDueDate && (
-            <span className={cn(
-              "text-[10px] text-muted-foreground leading-none mt-[2px]",
-              isMobile && "text-xs mt-0"
+            <p className={cn(
+              "text-[0.6rem] text-muted-foreground leading-none mt-0.5",
+              !isMobile && "text-[10px]"
             )}>
               Venc. {formattedDueDate}
-            </span>
+            </p>
           )}
         </div>
 
