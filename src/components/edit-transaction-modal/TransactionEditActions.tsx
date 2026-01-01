@@ -23,14 +23,14 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   className, // Receber a prop className
 }) => {
   return (
-    <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
+    <div className={cn("flex gap-3 px-6 pb-6 pt-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
       <Button
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl bg-soft-red text-destructive hover:bg-destructive/90 hover:text-primary-foreground", // Cores personalizadas e hover
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-2xl bg-[#FFF5F5] text-[#FF4D4D] border border-[#FFD6D6] hover:bg-[#FF4D4D] hover:text-white transition-all duration-300 shadow-sm",
+          "text-sm font-semibold",
+          isMobile && "h-12"
         )}
         disabled={loading}
       >
@@ -41,9 +41,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90 hover:text-primary-foreground", // Cores personalizadas e hover
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-2xl bg-[#F8FAFC] text-[#64748B] border border-[#E2E8F0] hover:bg-[#64748B] hover:text-white transition-all duration-300 shadow-sm",
+          "text-sm font-semibold",
+          isMobile && "h-12"
         )}
         disabled={loading}
       >
@@ -53,9 +53,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground", // Cores personalizadas e hover
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-2xl bg-[#F0FDF4] text-[#22C55E] border border-[#BBF7D0] hover:bg-[#22C55E] hover:text-white transition-all duration-300 shadow-sm",
+          "text-sm font-semibold",
+          isMobile && "h-12"
         )}
         disabled={loading}
         onClick={onSave}
