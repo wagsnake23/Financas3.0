@@ -127,14 +127,14 @@ export default function Dashboard() {
   const totalAnnualExpenses = useMemo(() => {
     if (!allExpenseInstallments) return 0;
     return allExpenseInstallments
-      .filter((p) => getYear(new Date(p.vencimento)) === currentYear)
+      .filter((p) => Number(p.vencimento.substring(0, 4)) === currentYear)
       .reduce((sum, p) => sum + p.valor_parcela, 0);
   }, [allExpenseInstallments, currentYear]);
 
   const totalAnnualRevenues = useMemo(() => {
     if (!allRevenues) return 0;
     return allRevenues
-      .filter((r) => getYear(new Date(r.data)) === currentYear)
+      .filter((r) => Number(r.data.substring(0, 4)) === currentYear)
       .reduce((sum, r) => sum + r.valor, 0);
   }, [allRevenues, currentYear]);
 

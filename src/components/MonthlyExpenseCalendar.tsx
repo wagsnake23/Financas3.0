@@ -14,9 +14,9 @@ interface MonthlyExpenseCalendarProps {
   hideNavigation?: boolean;
 }
 
-export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({ 
-  transactions, 
-  isMobile, 
+export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
+  transactions,
+  isMobile,
   currentMonth: propCurrentMonth,
   hideNavigation = false,
 }) => {
@@ -24,14 +24,15 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
   const displayMonth = propCurrentMonth || internalCurrentMonth;
 
   const totalMonthlyExpenses = useMemo(() => {
-    const startOfCurrentMonth = startOfMonth(displayMonth);
-    const endOfCurrentMonth = endOfMonth(displayMonth);
+    const monthStart = startOfMonth(displayMonth);
+    const startStr = format(monthStart, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
     return transactions
       .filter(t => t.type === "expense")
       .filter(t => {
-        const transactionDate = new Date(t.date);
-        return isWithinInterval(transactionDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
+        const dateStr = t.date.substring(0, 10);
+        return dateStr >= startStr && dateStr < nextMonthStartStr;
       })
       .reduce((sum, t) => sum + t.amount, 0);
   }, [transactions, displayMonth]);

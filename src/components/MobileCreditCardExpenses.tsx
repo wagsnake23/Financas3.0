@@ -10,9 +10,10 @@ import {
 import DynamicIcon from "./DynamicIcon";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Tables } from "@/integrations/supabase/types";
-import { format, isWithinInterval, startOfMonth, endOfMonth } from "date-fns";
+import { format, startOfMonth, addMonths } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { AppCategory } from "@/types/finance";
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<"cartoes">[];
@@ -54,7 +55,8 @@ export const MobileCreditCardExpenses: React.FC<
     if (selectedCardId === UNSELECTED_VALUE) return [];
 
     const monthStart = startOfMonth(selectedMonth);
-    const monthEnd = endOfMonth(selectedMonth);
+    const startStr = format(monthStart, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
     return expenseInstallments
       .filter(
@@ -62,12 +64,10 @@ export const MobileCreditCardExpenses: React.FC<
           p.despesas?.forma_pagamento === "cartao" &&
           p.despesas.cartao_id === selectedCardId
       )
-      .filter((p) =>
-        isWithinInterval(new Date(p.vencimento), {
-          start: monthStart,
-          end: monthEnd,
-        })
-      )
+      .filter((p) => {
+        const vencimentoDate = p.vencimento.substring(0, 10);
+        return vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr;
+      })
       .sort(
         (a, b) =>
           new Date(a.vencimento).getTime() - new Date(b.vencimento).getTime()

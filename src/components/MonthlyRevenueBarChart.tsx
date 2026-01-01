@@ -31,10 +31,15 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
     }
 
     revenues.forEach(revenue => {
-      const revenueDate = new Date(revenue.data);
-      const revenueYear = getYear(revenueDate);
+      const data = revenue.data;
+      const revenueYear = Number(data.substring(0, 4));
+      const revenueMonthIndex = Number(data.substring(5, 7)) - 1;
+
       if (revenueYear === currentYear) {
-        const monthKey = format(revenueDate, "MMM", { locale: ptBR });
+        // Find the month name for the key
+        const monthDate = new Date(currentYear, revenueMonthIndex, 1);
+        const monthKey = format(monthDate, "MMM", { locale: ptBR });
+
         if (dataMap[monthKey]) {
           dataMap[monthKey].revenues += revenue.valor;
         }
@@ -60,12 +65,12 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          interval={0} 
+          interval={0}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
             return (
-              <text 
+              <text
                 x={x}
                 y={y}
                 dy={10} /* Ajustado para aproximar os meses das barras */

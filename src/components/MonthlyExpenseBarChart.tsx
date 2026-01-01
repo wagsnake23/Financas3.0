@@ -32,12 +32,16 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
     }
 
     expenseInstallments.forEach(installment => {
-      const installmentDate = new Date(installment.vencimento);
-      const installmentYear = getYear(installmentDate);
+      const vencimento = installment.vencimento;
+      const installmentYear = Number(vencimento.substring(0, 4));
+      const installmentMonthIndex = Number(vencimento.substring(5, 7)) - 1;
 
       // Only include installments from the current year (based on currentDate)
       if (installmentYear === currentYear) {
-        const monthKey = format(installmentDate, "MMM", { locale: ptBR });
+        // Find the month name for the key
+        const monthDate = new Date(currentYear, installmentMonthIndex, 1);
+        const monthKey = format(monthDate, "MMM", { locale: ptBR });
+
         if (dataMap[monthKey]) {
           dataMap[monthKey].expenses += installment.valor_parcela;
         }
@@ -64,17 +68,17 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           dataKey="month"
           axisLine={false}
           tickLine={false}
-          interval={0} 
+          interval={0}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))";
             return (
-              <text 
-                x={x} 
-                y={y} 
-                dy={16} 
-                textAnchor="middle" 
-                fill={color} 
+              <text
+                x={x}
+                y={y}
+                dy={16}
+                textAnchor="middle"
+                fill={color}
                 style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >

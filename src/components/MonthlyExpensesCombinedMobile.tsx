@@ -28,14 +28,15 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
     }
 
     const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(currentMonth);
+    const startStr = format(monthStart, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
     let paid = 0;
     let pending = 0;
 
     expenseInstallments.forEach(installment => {
-      const installmentDate = new Date(installment.vencimento);
-      if (isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
+      const vencimentoDate = installment.vencimento.substring(0, 10);
+      if (vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr) {
         if (installment.pago) {
           paid += installment.valor_parcela;
         } else {
@@ -48,14 +49,15 @@ export const MonthlyExpensesCombinedMobile: React.FC<MonthlyExpensesCombinedMobi
   }, [expenseInstallments, currentMonth]);
 
   const totalMonthlyExpenses = useMemo(() => {
-    const startOfCurrentMonth = startOfMonth(currentMonth);
-    const endOfCurrentMonth = endOfMonth(currentMonth);
+    const monthStart = startOfMonth(currentMonth);
+    const startStr = format(monthStart, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
     return transactions
       .filter(t => t.type === "expense")
       .filter(t => {
-        const transactionDate = new Date(t.date);
-        return isWithinInterval(transactionDate, { start: startOfCurrentMonth, end: endOfCurrentMonth });
+        const dateStr = t.date.substring(0, 10);
+        return dateStr >= startStr && dateStr < nextMonthStartStr;
       })
       .reduce((sum, t) => sum + t.amount, 0);
   }, [transactions, currentMonth]);

@@ -106,7 +106,10 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     const nextMonthStr = format(addMonths(startOfSelectedMonth, 1), "yyyy-MM-01");
 
     const monthlyIncomeTransactions: Transaction[] = revenues
-      .filter(r => r.data >= startStr && r.data < nextMonthStr)
+      .filter(r => {
+        const dateStr = r.data.substring(0, 10);
+        return dateStr >= startStr && dateStr < nextMonthStr;
+      })
       .map(r => ({
         id: r.id,
         type: "income",
@@ -126,7 +129,10 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
-      .filter(p => p.vencimento >= startStr && p.vencimento < nextMonthStr)
+      .filter(p => {
+        const dateStr = p.vencimento.substring(0, 10);
+        return dateStr >= startStr && dateStr < nextMonthStr;
+      })
       .map(p => {
         const parentDespesa = p.despesas;
         const transaction: Transaction = {

@@ -39,10 +39,14 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 
   // Filtrar parcelas de despesas para o mês selecionado internamente
   const monthlyExpenseInstallments = useMemo(() => {
-    return allExpenseInstallments.filter(p =>
-      isWithinInterval(new Date(p.vencimento), { start: startOfCurrentMonth, end: endOfCurrentMonth })
-    );
-  }, [allExpenseInstallments, startOfCurrentMonth, endOfCurrentMonth]);
+    const startStr = format(startOfCurrentMonth, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(startOfCurrentMonth, 1), "yyyy-MM-01");
+
+    return allExpenseInstallments.filter(p => {
+      const vencimentoDate = p.vencimento.substring(0, 10);
+      return vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr;
+    });
+  }, [allExpenseInstallments, startOfCurrentMonth]);
 
   // Calcular totais de resumo (Pago/Pendente)
   const { totalPaid, totalPending } = useMemo(() => {
@@ -99,7 +103,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 
       const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
       const displayCategoryColor = parentCategory?.cor || subcategory?.cor || "hsl(215, 15%, 50%)";
-      
+
       if (!acc[displayCategoryName]) {
         acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
       }
@@ -138,14 +142,14 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       {/* Parte do Resumo Mensal de Despesas */}
       <div className="grid grid-cols-2 gap-4 text-center mb-6">
         <div className={cn(
-          "p-3 border rounded-lg", 
+          "p-3 border rounded-lg",
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pago</p>
           <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>{formatCurrency(totalPaid)}</p>
         </div>
         <div className={cn(
-          "p-3 border rounded-lg", 
+          "p-3 border rounded-lg",
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pendente</p>
@@ -176,9 +180,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               formatter={(value: number) => formatCurrency(value)}
-              contentStyle={{ 
+              contentStyle={{
                 backgroundColor: "hsl(var(--card))",
                 border: "1px solid hsl(var(--border))",
                 borderRadius: "var(--radius)",

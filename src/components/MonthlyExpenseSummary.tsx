@@ -31,14 +31,15 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
     }
 
     const monthStart = startOfMonth(displayMonth);
-    const monthEnd = endOfMonth(displayMonth);
+    const startStr = format(monthStart, "yyyy-MM-01");
+    const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
     let paid = 0;
     let pending = 0;
 
     expenseInstallments.forEach(installment => {
-      const installmentDate = new Date(installment.vencimento);
-      if (isWithinInterval(installmentDate, { start: monthStart, end: monthEnd })) {
+      const vencimentoDate = installment.vencimento.substring(0, 10);
+      if (vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr) {
         if (installment.pago) {
           paid += installment.valor_parcela;
         } else {
@@ -86,14 +87,14 @@ export const MonthlyExpenseSummary: React.FC<MonthlyExpenseSummaryProps> = ({
       )}
       <div className="grid grid-cols-2 gap-4 text-center">
         <div className={cn(
-          "p-3 border rounded-lg", 
+          "p-3 border rounded-lg",
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pago</p>
           <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>{formatCurrency(totalPaid)}</p>
         </div>
         <div className={cn(
-          "p-3 border rounded-lg", 
+          "p-3 border rounded-lg",
           isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
         )}>
           <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>Pendente</p>
