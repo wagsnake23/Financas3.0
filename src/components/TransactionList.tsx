@@ -531,8 +531,8 @@ export const TransactionList = ({
         isMobile ? "w-full px-2 mb-6" : "px-4 w-full px-6 mb-8"
       )}>
         <div className={cn(
-          "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border border-gray-300 rounded-2xl",
-          !isMobile && "!max-w-[1200px] mx-auto"
+          "bg-gray-50 flex items-center justify-between w-full gap-2 py-4 px-4 shadow-sm border-t border-gray-300",
+          !isMobile && "!max-w-[1200px] mx-auto rounded-none"
         )}>
           {/* 1: Lançamentos */}
           <div className="flex flex-col items-center justify-center flex-1">
