@@ -496,21 +496,21 @@ export default function Investments() { // Alterado para export default function
                           <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
                             <div>
                               <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="DollarSign" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                <DynamicIcon name="💰" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
                                 Valor
                               </p>
                               <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
                             </div>
                             <div>
                               <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="Percent" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                Rentabilidade
+                                <DynamicIcon name="📈" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                Porcentagem
                               </p>
                               <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
                             </div>
                             <div>
                               <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                <DynamicIcon name="📅" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
                                 Data
                               </p>
                               <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
@@ -767,21 +767,21 @@ export default function Investments() { // Alterado para export default function
                             <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
                               <div>
                                 <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="DollarSign" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                  <DynamicIcon name="💰" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
                                   Valor
                                 </p>
                                 <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
                               </div>
                               <div>
                                 <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="Percent" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                  Rentabilidade
+                                  <DynamicIcon name="📈" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                  Porcentagem
                                 </p>
                                 <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
                               </div>
                               <div>
                                 <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="Calendar" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
+                                  <DynamicIcon name="📅" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
                                   Data
                                 </p>
                                 <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
@@ -820,7 +820,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className={cn("w-full rounded-xl", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
+        <DialogContent className={cn("w-full rounded-xl bg-gradient-to-br from-[#E3F2FD] to-white border-blue-100", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
           <DialogHeader>
             <DialogTitle>Editar Investimento</DialogTitle>
           </DialogHeader>
