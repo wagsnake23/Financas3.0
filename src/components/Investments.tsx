@@ -211,7 +211,7 @@ const Investments = () => {
         <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
           {/* Form */}
           <div>
-            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
+            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm bg-white", isMobile && "p-4")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -224,14 +224,20 @@ const Investments = () => {
                     placeholder="Ex: Tesouro Direto"
                     required
                     disabled={loadingForm}
-                    className={cn(isMobile && "h-9 text-sm")}
+                    className={cn(
+                      "bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                      isMobile && "h-9 text-sm"
+                    )}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
                   <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                    <SelectTrigger className={cn(isMobile && "h-9 text-sm")}>
+                    <SelectTrigger className={cn(
+                      "bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                      isMobile && "h-9 text-sm"
+                    )}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -257,7 +263,10 @@ const Investments = () => {
                       placeholder="0,00"
                       required
                       disabled={loadingForm}
-                      className={cn(isMobile && "h-9 text-sm")}
+                      className={cn(
+                        "bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                        isMobile && "h-9 text-sm"
+                      )}
                     />
                   </div>
 
@@ -272,7 +281,10 @@ const Investments = () => {
                       placeholder="Ex: 13.75"
                       required
                       disabled={loadingForm}
-                      className={cn(isMobile && "h-9 text-sm")}
+                      className={cn(
+                        "bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                        isMobile && "h-9 text-sm"
+                      )}
                     />
                   </div>
                 </div>
@@ -284,7 +296,8 @@ const Investments = () => {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full justify-start text-left font-normal h-10",
+                          "w-full justify-start text-left font-medium h-10",
+                          "bg-white border-[#D1D5DB] transition-all duration-200",
                           !date && "text-muted-foreground",
                           isMobile && "h-9 text-sm"
                         )}
