@@ -25,7 +25,7 @@ import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Check, Search, ChevronsUpDown } from "lucide-react";
+// Removido ícones lucide não utilizados
 import {
   cn,
   getBorderClass,
@@ -108,26 +108,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     Record<string, boolean>
   >({});
 
-  // NOVO: Estados para o Command Menu
-  const [openCommand, setOpenCommand] = useState(false);
-  const [commandSearch, setCommandSearch] = useState("");
-
   const expenseSubcategories = React.useMemo(() => {
-    // Filtrar as subcategorias com base no termo de busca
-    const filtered = allSubcategories.filter(
-      (cat) => cat.parent_id !== "receitas_e_investimentos" &&
-        cat.nome.toLowerCase().includes(commandSearch.toLowerCase())
-    );
-    // Ordenar por nome
-    return filtered.sort((a, b) => a.nome.localeCompare(b.nome));
-  }, [allSubcategories, commandSearch]);
-
-  // Encontrar a subcategoria selecionada para exibição
-  const selectedCategory = React.useMemo(() => {
-    return expenseSubcategories.find(
-      (cat) => cat.id === selectedSubcategoryId
-    );
-  }, [selectedSubcategoryId, expenseSubcategories]);
+    return allSubcategories
+      .filter((cat) => cat.parent_id !== "receitas_e_investimentos")
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+  }, [allSubcategories]);
 
   // Efeito para aplicar os dados iniciais da NFC-e
   useEffect(() => {
@@ -421,92 +406,54 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         />
       </div>
 
-      {/* Subcategoria com Command Menu */}
+      {/* Subcategoria */}
       <div>
         <Label htmlFor="subcategoria" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria
         </Label>
-        <Popover open={openCommand} onOpenChange={setOpenCommand}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={openCommand}
-              className={cn(
-                "w-full justify-between rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
-                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-                isMobile && "h-9 text-sm",
-                getBorderClass({
-                  isInvalid: validationErrors.selectedSubcategoryId,
-                  isValid: validationErrors.selectedSubcategoryId === false,
-                })
-              )}
-            >
-              {selectedCategory ? (
-                <span className="flex items-center gap-2">
-                  <span>{selectedCategory.icone}</span>
-                  <span>{selectedCategory.nome}</span>
-                </span>
-              ) : (
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <Search className="h-4 w-4 shrink-0 opacity-50" />
-                  <span>Buscar subcategoria...</span>
-                </span>
-              )}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            side="bottom"
-            className={cn("p-0", "w-[var(--radix-popover-trigger-width)]")}
+        <Select
+          value={selectedSubcategoryId}
+          onValueChange={(value) => {
+            setSelectedSubcategoryId(value);
+            setValidationErrors((prev) => ({
+              ...prev,
+              selectedSubcategoryId: false,
+            }));
+          }}
+        >
+          <SelectTrigger
+            className={cn(
+              "w-full rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+              isMobile && "h-9 text-sm",
+              getBorderClass({
+                isInvalid: validationErrors.selectedSubcategoryId,
+                isValid: validationErrors.selectedSubcategoryId === false,
+              })
+            )}
           >
-            <Command className="rounded-xl border-[#E5E7EB]">
-              <CommandInput
-                placeholder="Buscar subcategoria..."
-                value={commandSearch}
-                onValueChange={setCommandSearch}
-                className="bg-[#F9FAFB] text-gray-800 placeholder:text-gray-400"
-              />
-              <CommandList className="max-h-[6rem] overflow-y-auto"> {/* Altura máxima ajustada aqui */}
-                <CommandGroup>
-                  {expenseSubcategories.length === 0 ? (
-                    <CommandItem disabled>Nenhuma subcategoria encontrada.</CommandItem>
-                  ) : (
-                    expenseSubcategories.map((cat) => (
-                      <CommandItem
-                        key={cat.id}
-                        value={cat.nome}
-                        onSelect={() => {
-                          setSelectedSubcategoryId(cat.id);
-                          setOpenCommand(false);
-                          setCommandSearch("");
-                          setValidationErrors((prev) => ({
-                            ...prev,
-                            selectedSubcategoryId: false,
-                          }));
-                        }}
-                        className={cn(isMobile && "text-sm")}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedSubcategoryId === cat.id
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        <span className="flex items-center gap-2">
-                          <span>{cat.icone}</span>
-                          <span>{cat.nome}</span>
-                        </span>
-                      </CommandItem>
-                    ))
-                  )}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+            <SelectValue placeholder="Selecione a subcategoria" />
+          </SelectTrigger>
+          <SelectContent className="max-h-[280px]">
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
+              Selecione a subcategoria
+            </SelectItem>
+            {expenseSubcategories.length === 0 ? (
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
+                Nenhuma subcategoria encontrada
+              </SelectItem>
+            ) : (
+              expenseSubcategories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                  <span className="flex items-center gap-2">
+                    <span>{cat.icone}</span>
+                    <span>{cat.nome}</span>
+                  </span>
+                </SelectItem>
+              ))
+            )}
+          </SelectContent>
+        </Select>
       </div>
 
       <PaymentDetails
