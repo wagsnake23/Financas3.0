@@ -98,7 +98,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       // On mobile, integrate credit cards directly
       const cardOptions = cartoes.map(card => ({
         value: card.id, // Use card ID as value
-        label: `💳 Cartão: ${card.nome} (****${card.ultimos_digitos})`
+        label: `💳 Cartão: ${card.nome} ${card.ultimos_digitos}`
       }));
       return [...baseOptions, { value: "cartao", label: "💳 Cartão" }, ...cardOptions]; // Adicionado "Cartão" como opção genérica para mobile
     } else {
@@ -237,7 +237,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o cartão</SelectItem>
                 {cartoes.map((card) => (
                   <SelectItem key={card.id} value={card.id} className={cn(isMobile && "text-sm")}>
-                    {card.nome} - {card.banco} (****{card.ultimos_digitos})
+                    Cartão: {card.nome} {card.ultimos_digitos}
                   </SelectItem>
                 ))}
               </SelectContent>
