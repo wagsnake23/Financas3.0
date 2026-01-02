@@ -106,7 +106,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
             className={cn(
               isMobile && "h-9 text-sm",
-              "bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+              "bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )}
@@ -124,7 +124,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+              "rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
               isMobile && "h-9 text-sm"
             )}>
@@ -160,7 +160,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+              "rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
               isMobile && "h-9 text-sm"
             )}>
@@ -198,7 +198,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
               className={cn(
-                "rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+                "rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
@@ -220,7 +220,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }}
             >
               <SelectTrigger className={cn(
-                "rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
+                "rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })

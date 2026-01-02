@@ -327,7 +327,7 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({
@@ -382,7 +382,7 @@ export default function Receitas() {
               variant={"outline"}
               className={cn(
                 "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
+                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 isMobile ? "h-9 text-sm" : "h-10",
                 !data && "text-muted-foreground",
@@ -435,7 +435,7 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
+            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
             isMobile ? "h-9 text-sm" : "h-10",
             getBorderClass({
@@ -457,7 +457,7 @@ export default function Receitas() {
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn(
-            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
+            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
             isMobile ? "text-sm p-4" : "",
           )}
