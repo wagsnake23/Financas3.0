@@ -363,7 +363,7 @@ export const TransactionList = ({
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterType !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300",
+                : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
               hideTypeFilter && "hidden"
             )}
           >
@@ -385,7 +385,7 @@ export const TransactionList = ({
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterCategory !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >
             <SelectValue placeholder="Subcategoria" />
@@ -412,7 +412,7 @@ export const TransactionList = ({
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterPaymentOptionId !== "all"
                 ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >
             <SelectValue placeholder="Forma de Pagamento" />
@@ -536,25 +536,25 @@ export const TransactionList = ({
         )}>
           {/* 1: Lançamentos */}
           <div className="flex flex-col items-center justify-center flex-1">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Lançamentos</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Lançamentos</span>
             <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
           </div>
 
           {/* 2: Receitas */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Receitas</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Receitas</span>
             <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">+ {formatCurrency(summary.income, !isMobile)}</span>
           </div>
 
           {/* 3: Despesas */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Despesas</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Despesas</span>
             <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">- {formatCurrency(summary.expense, !isMobile)}</span>
           </div>
 
           {/* 4: Saldo */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground font-bold whitespace-nowrap">Saldo</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Saldo</span>
             <span className={cn(
               "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
               accumulatedValue >= 0 ? "text-primary" : "text-destructive"

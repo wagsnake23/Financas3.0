@@ -32,7 +32,7 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
       >
         <DynamicIcon name="ChevronLeft" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} /> {/* Ajustado tamanho do ícone para mobile */}
       </Button>
-      <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg")}> {/* Adicionado tamanho de fonte responsivo */}
+      <h2 className={cn("text-xl font-bold capitalize text-gray-700", isMobile && "text-lg")}> {/* Adicionado tamanho de fonte responsivo e cor cinza escuro */}
         {format(selectedMonth, "MMMM yyyy", { locale: ptBR })}
       </h2>
       <Button
