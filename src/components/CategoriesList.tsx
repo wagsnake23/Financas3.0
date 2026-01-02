@@ -67,7 +67,7 @@ const CategoryItem = ({
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border rounded-lg hover:border-primary/50 transition-all",
+          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all",
           level > 0 && "bg-muted/30"
         )}
         style={{

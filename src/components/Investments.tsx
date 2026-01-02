@@ -132,7 +132,7 @@ const Investments = () => {
       setLoadingForm(false);
       return;
     }
-    
+
     if (!name || !amount || !profitability || !date) { // Adicionado validação para 'date'
       toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
       setLoadingForm(false);
@@ -140,8 +140,8 @@ const Investments = () => {
     }
 
     // Formatar a data usando os componentes locais para evitar problemas de fuso horário
-    const formattedDate = date 
-      ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}` 
+    const formattedDate = date
+      ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
       : "";
 
     const newInvestmentData: TablesInsert<'investimentos'> = {
@@ -165,7 +165,7 @@ const Investments = () => {
     const avgProfitability = investments.length > 0
       ? investments.reduce((sum, inv) => sum + inv.rentabilidade, 0) / investments.length
       : 0;
-    
+
     return { totalInvested, avgProfitability };
   }, [investments]);
 
@@ -330,11 +330,11 @@ const Investments = () => {
                 ) : (
                   investments.map((investment) => {
                     const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
-                    
+
                     return (
                       <div
                         key={investment.id}
-                        className={cn("p-4 border border-border rounded-lg hover:border-primary/50 transition-all", isMobile && "p-3")}
+                        className={cn("p-4 border border-border rounded-xl hover:border-primary/50 transition-all", isMobile && "p-3")}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
@@ -350,7 +350,7 @@ const Investments = () => {
                             <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
                           </Button>
                         </div>
-                        
+
                         <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
                           <div>
                             <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
@@ -390,7 +390,7 @@ const Investments = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} />
+      <Footer isMobile={isMobile} user={user} />
     </div>
   );
 };
