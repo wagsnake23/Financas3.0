@@ -329,7 +329,7 @@ export default function Receitas() {
             className={cn(
               "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-              isMobile ? "h-11 text-sm" : "h-10",
+              isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({
                 isInvalid: validationErrors.tipoReceitaId,
                 isValid: validationErrors.tipoReceitaId === false,
@@ -384,7 +384,7 @@ export default function Receitas() {
                 "w-full justify-start text-left font-normal transition-all duration-200",
                 "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-                isMobile ? "h-11 text-sm" : "h-10",
+                isMobile ? "h-9 text-sm" : "h-10",
                 !data && "text-muted-foreground",
                 getBorderClass({
                   isInvalid: validationErrors.data,
@@ -437,7 +437,7 @@ export default function Receitas() {
           className={cn(
             "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
-            isMobile ? "h-11 text-sm" : "h-10",
+            isMobile ? "h-9 text-sm" : "h-10",
             getBorderClass({
               isInvalid: validationErrors.valor,
               isValid: validationErrors.valor === false,

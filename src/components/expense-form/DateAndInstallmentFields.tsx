@@ -48,10 +48,10 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
               variant={"outline"}
               className={cn(
                 "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800",
+                "rounded-xl bg-white border-[#BFC2C8] text-gray-800",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 !dataVencimento && "text-muted-foreground",
-                isMobile && "h-11 text-sm",
+                isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
               )}
             >

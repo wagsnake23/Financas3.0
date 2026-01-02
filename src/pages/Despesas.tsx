@@ -150,8 +150,8 @@ export default function Despesas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-white pt-16",
-        isMobile && "bg-white"
+        "flex flex-col min-h-screen bg-[#F9FAFB] pt-16",
+        isMobile && "bg-[#F9FAFB]"
       )}
     >
       <Navigation />
@@ -176,7 +176,7 @@ export default function Despesas() {
         )}
 
         {isMobile ? (
-          <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-white">
+          <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-[#F9FAFB]">
             <div className="flex items-center justify-between"> {/* Flex container for title and button */}
               <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
                 <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
@@ -205,7 +205,7 @@ export default function Despesas() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-6">
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto bg-white">
+              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto bg-[#F9FAFB]">
                 <div className="flex items-center justify-between mb-4"> {/* Flex container for title and button */}
                   <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
                     <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
