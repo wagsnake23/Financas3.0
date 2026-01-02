@@ -20,26 +20,44 @@ export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
   disabled = false,
 }) => {
   const isPaidOrReceived = currentStatus === "Recebida";
-  
-  const buttonClasses = cn(
-    "h-9 px-3 text-sm rounded-xl",
-    isMobile && "h-8 px-2 text-xs",
-    // Removido as classes de background e hover background para deixar o fundo transparente
-    isPaidOrReceived ? "text-success hover:bg-transparent" : "text-destructive hover:bg-transparent",
-  );
 
   const label = isPaidOrReceived ? "Pago/Recebido" : "Pendente";
 
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      onClick={onToggle}
-      className={buttonClasses}
-      disabled={disabled}
+    <div
+      onClick={!disabled ? onToggle : undefined}
+      className={cn(
+        "flex items-center gap-2 cursor-pointer select-none transition-all",
+        disabled && "opacity-50 cursor-not-allowed",
+        isMobile ? "h-8" : "h-9"
+      )}
     >
-      <DynamicIcon name={isPaidOrReceived ? "CheckCircle" : "Circle"} className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
-      {label}
-    </Button>
+      <div
+        className={cn(
+          "rounded-full flex items-center justify-center transition-all border shadow-sm",
+          isMobile ? "h-5 w-5" : "h-6 w-6",
+          isPaidOrReceived
+            ? "bg-success border-success text-white scale-110 shadow-success/20"
+            : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+        )}
+      >
+        {isPaidOrReceived && (
+          <span className={cn(
+            "font-black drop-shadow-sm",
+            isMobile ? "text-[12px]" : "text-sm"
+          )}>✓</span>
+        )}
+      </div>
+
+      <span className={cn(
+        "tracking-tight transition-all",
+        isMobile ? "text-[0.75rem]" : "text-sm",
+        isPaidOrReceived
+          ? "text-success font-bold"
+          : "text-gray-400 italic"
+      )}>
+        {label}
+      </span>
+    </div>
   );
 };
