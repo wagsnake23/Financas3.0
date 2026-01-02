@@ -106,7 +106,7 @@ export const useTransactionMutations = ({
               // Se a transação original era a mestra e estamos deletando a partir dela,
               // a mestra também deve ser desvinculada ou atualizada.
               if (transactionToDelete.is_recurring_master) {
-                 const { error: updateMasterError } = await supabase
+                const { error: updateMasterError } = await supabase
                   .from("receitas")
                   .update({ is_recurring_master: false, recurrence_id: null, recurrence_day: null })
                   .eq("id", masterRecurrenceId);
@@ -167,7 +167,7 @@ export const useTransactionMutations = ({
             }
             const currentInstallmentDate = parseISO(transactionToDelete.date);
             console.log(`[DEBUG] Deleting expense installments from 'despesas_parcelas' for parent ${parentDespesaId} from ${formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd')} onwards.`); // Usar formatInTimeZone
-            
+
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
               .delete()
@@ -293,9 +293,9 @@ export const useTransactionMutations = ({
 
               // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
               const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
-              
+
               console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
-              
+
               const { error: deleteFutureError } = await supabase
                 .from("receitas")
                 .delete()
@@ -370,14 +370,16 @@ export const useTransactionMutations = ({
           const newPagoDate = newPagoStatus ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null; // Usa formatInTimeZone
           const newRecurrenceDay = getDate(parseISO(updatedTransaction.date));
 
-          // Atualizar o registro mestre de despesa com as novas informações de categoria e descrição
+          // Atualizar o registro mestre de despesa com as novas informações de categoria, descrição, forma de pagamento e cartão
           const { error: updateDespesaParentError } = await supabase
             .from("despesas")
             .update({
               categoria_id: updatedTransaction.category === null ? null : updatedTransaction.category,
               descricao: updatedTransaction.description,
               is_recurring_master: originalTransaction?.is_recurring_master,
-              tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Incluído tipo_pagamento
+              tipo_pagamento: updatedTransaction.tipo_pagamento,
+              forma_pagamento: updatedTransaction.forma_pagamento,
+              cartao_id: updatedTransaction.cartao_id,
             })
             .eq("id", parentDespesaId)
             .eq("user_id", user.id);
@@ -401,7 +403,7 @@ export const useTransactionMutations = ({
           } else if (saveScope === "thisMonthForward" || saveScope === "all") {
             // 1. Deletar todas as parcelas a partir da data de atualização (inclusive)
             const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
-            
+
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
               .delete()
@@ -422,17 +424,17 @@ export const useTransactionMutations = ({
               p_status: 'Pendente', // Default status for expenses, as it's a required enum
               p_recurrence_day: newRecurrenceDay,
               p_total_installments: RECURRING_INSTALLMENTS_COUNT, // Regenerar todas as 120
-              p_forma_pagamento: originalTransaction.forma_pagamento,
-              p_cartao_id: originalTransaction.cartao_id,
+              p_forma_pagamento: updatedTransaction.forma_pagamento,
+              p_cartao_id: updatedTransaction.cartao_id,
               p_tipo_pagamento: updatedTransaction.tipo_pagamento, // NOVO: Passando tipo_pagamento
             });
             if (rpcError) throw rpcError;
 
             // 3. Recalcular valor_total e numero_parcelas para o registro mestre de despesa
             const { data: allInstallments, error: fetchAllInstallmentsError } = await supabase
-                .from("despesas_parcelas")
-                .select("valor_parcela")
-                .eq("despesa_id", parentDespesaId);
+              .from("despesas_parcelas")
+              .select("valor_parcela")
+              .eq("despesa_id", parentDespesaId);
 
             if (fetchAllInstallmentsError) throw fetchAllInstallmentsError;
 
@@ -441,19 +443,19 @@ export const useTransactionMutations = ({
 
             console.log(`[DEBUG] Recalculating parent despesa (ID: ${parentDespesaId}): newValorTotal=${newParentValorTotal}, newNumeroParcelas=${newParentNumeroParcelas}`);
             const { error: updateParentDespesaTotalError } = await supabase
-                .from("despesas")
-                .update({
-                    valor_total: newParentValorTotal,
-                    numero_parcelas: newParentNumeroParcelas,
-                })
-                .eq("id", parentDespesaId)
-                .eq("user_id", user.id);
+              .from("despesas")
+              .update({
+                valor_total: newParentValorTotal,
+                numero_parcelas: newParentNumeroParcelas,
+              })
+              .eq("id", parentDespesaId)
+              .eq("user_id", user.id);
 
             if (updateParentDespesaTotalError) throw updateParentDespesaTotalError;
 
             toast.success("Lançamento e parcelas futuras atualizadas!", {
-                style: toastSuccessStyle,
-                duration: toastDuration
+              style: toastSuccessStyle,
+              duration: toastDuration
             });
 
           } else {
