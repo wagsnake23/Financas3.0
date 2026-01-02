@@ -66,8 +66,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           <div className="flex items-start justify-between w-full">
             <div className="flex items-start gap-3 min-w-0">
               {/* Data */}
-              <span className="text-[0.65rem] text-muted-foreground font-black uppercase whitespace-nowrap min-w-[38px] text-center pt-0.5">
-                {format(transactionDate, "ddMMM", { locale: ptBR }).toUpperCase()}
+              <span className="text-[0.72rem] text-gray-600 font-black whitespace-nowrap min-w-[38px] text-center pt-0.5">
+                {format(transactionDate, "dd", { locale: ptBR })}/
+                {format(transactionDate, "MMM", { locale: ptBR }).charAt(0).toUpperCase() + format(transactionDate, "MMM", { locale: ptBR }).slice(1).replace(".", "")}
               </span>
               {/* Subcategoria */}
               <span className="font-bold text-gray-800 text-[0.85rem] leading-tight truncate">
