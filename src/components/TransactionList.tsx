@@ -543,13 +543,13 @@ export const TransactionList = ({
           {/* 2: Receitas */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Receitas</span>
-            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">+ {formatCurrency(summary.income, !isMobile)}</span>
+            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">{formatCurrency(summary.income, !isMobile)}</span>
           </div>
 
           {/* 3: Despesas */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Despesas</span>
-            <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">- {formatCurrency(summary.expense, !isMobile)}</span>
+            <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">{formatCurrency(summary.expense, !isMobile)}</span>
           </div>
 
           {/* 4: Saldo */}
