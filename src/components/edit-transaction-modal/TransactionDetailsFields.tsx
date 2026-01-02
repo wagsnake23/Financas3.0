@@ -304,6 +304,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             currentStatus={isPaid ? "Recebida" : "Pendente"}
             onToggle={() => setIsPaid(!isPaid)}
             isMobile={isMobile}
+            transactionType={transactionType}
           />
           {paidAtTimestamp && (
             <div className="flex-1">
@@ -322,7 +323,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 }
                 readOnly
                 disabled
-                className={cn("rounded-xl bg-muted/50 text-muted-foreground border-none", isMobile && "h-9 text-sm")}
+                className={cn("rounded-xl bg-muted/40 text-gray-900 font-bold border-none", isMobile && "h-9 text-sm")}
               />
             </div>
           )}

@@ -11,6 +11,7 @@ interface StatusToggleButtonProps {
   onToggle: () => void;
   isMobile: boolean;
   disabled?: boolean;
+  transactionType?: "income" | "expense";
 }
 
 export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
@@ -18,10 +19,13 @@ export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
   onToggle,
   isMobile,
   disabled = false,
+  transactionType = "expense",
 }) => {
   const isPaidOrReceived = currentStatus === "Recebida";
 
-  const label = isPaidOrReceived ? "Pago/Recebido" : "Pendente";
+  const label = isPaidOrReceived
+    ? (transactionType === "income" ? "RECEBIDO!" : "PAGO!")
+    : "Pendente";
 
   return (
     <div

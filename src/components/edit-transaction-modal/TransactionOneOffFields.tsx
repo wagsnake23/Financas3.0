@@ -153,8 +153,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       {transactionType === "expense" && ( // Apenas para despesas
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Forma de Pagamento</Label>
-          <Select 
-            value={formaPagamento} 
+          <Select
+            value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => {
               setFormaPagamento(value);
               if (value !== "cartao") {
@@ -166,8 +166,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             <SelectTrigger className={cn("rounded-xl", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
+            <SelectContent>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a forma de pagamento</SelectItem>
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
@@ -190,8 +190,8 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label className={cn(isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
-            <Select 
-              value={cartaoId} 
+            <Select
+              value={cartaoId}
               onValueChange={(value: string) => {
                 setCartaoId(value);
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
@@ -277,18 +277,18 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               <Input
                 id="paidAt"
                 type="text"
-                value={paidAtTimestamp 
-                    ? formatInTimeZone(
-                        paidAtTimestamp, // Simplificado para passar a string diretamente
-                        TARGET_TIMEZONE, 
-                        "dd/MM/yyyy HH:mm", 
-                        { locale: ptBR }
-                      ) 
-                    : ''
+                value={paidAtTimestamp
+                  ? formatInTimeZone(
+                    paidAtTimestamp, // Simplificado para passar a string diretamente
+                    TARGET_TIMEZONE,
+                    "dd/MM/yyyy HH:mm",
+                    { locale: ptBR }
+                  )
+                  : ''
                 }
                 readOnly
                 disabled
-                className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+                className={cn("rounded-xl bg-muted/40 text-gray-900 font-bold", isMobile && "h-9 text-sm")}
               />
             </div>
           )}
