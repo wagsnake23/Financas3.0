@@ -47,6 +47,10 @@ export const useLancamentosLogic = (
     setIsEditModalOpen,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    filterType,
+    setFilterType,
+    filterCategory,
+    setFilterCategory,
     handleCancelEdit,
     isValidUuid,
   } = useLancamentosState();
@@ -206,6 +210,10 @@ export const useLancamentosLogic = (
     queryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    filterType,
+    setFilterType,
+    filterCategory,
+    setFilterCategory,
     handleOptimisticToggleStatus, // NOVO RETORNO
     refetchCartoes, // NOVO: Retornar refetchCartoes
     allRevenues,

@@ -47,6 +47,8 @@ export const useLancamentosState = () => {
   const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // NOVO ESTADO
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
+  const [filterType, setFilterType] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const handlePreviousMonth = useCallback(() => {
     setSelectedMonth((prevMonth) => subMonths(prevMonth, 1));
@@ -82,6 +84,10 @@ export const useLancamentosState = () => {
     setIsEditModalOpen,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    filterType,
+    setFilterType,
+    filterCategory,
+    setFilterCategory,
     handleCancelEdit,
     isValidUuid,
   };

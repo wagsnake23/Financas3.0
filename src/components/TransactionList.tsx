@@ -17,7 +17,7 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
-import { ArrowUp, ArrowDown } from "lucide-react"; // Importar ícones de seta
+import { ArrowUp, ArrowDown, X } from "lucide-react"; // Importar ícones de seta, X
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -46,6 +46,10 @@ interface TransactionListProps {
   selectedMonth: Date;
   setSelectedMonth: (month: Date) => void;
   onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
+  filterType: string;
+  setFilterType: (type: string) => void;
+  filterCategory: string;
+  setFilterCategory: (category: string) => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -69,14 +73,16 @@ export const TransactionList = ({
   setLoadingPayInvoice,
   setSelectedMonth,
   onToggleTransactionStatus,
+  filterType,
+  setFilterType,
+  filterCategory,
+  setFilterCategory,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<string>("all");
-  const [filterCategory, setFilterCategory] = useState<string>("all");
   const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc"); // Default sort direction
 
@@ -362,7 +368,7 @@ export const TransactionList = ({
             className={cn(
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterType !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
               hideTypeFilter && "hidden"
             )}
@@ -384,7 +390,7 @@ export const TransactionList = ({
             className={cn(
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterCategory !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >
@@ -411,7 +417,7 @@ export const TransactionList = ({
             className={cn(
               "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterPaymentOptionId !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent"
+                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >

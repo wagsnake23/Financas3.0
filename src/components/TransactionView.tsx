@@ -25,7 +25,11 @@ interface TransactionViewProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
-  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
+  filterType: string;
+  setFilterType: (type: string) => void;
+  filterCategory: string;
+  setFilterCategory: (category: string) => void;
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -45,6 +49,10 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
   onToggleTransactionStatus, // NOVA PROP
+  filterType,
+  setFilterType,
+  filterCategory,
+  setFilterCategory,
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -64,7 +72,11 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       loadingPayInvoice={loadingPayInvoice} // NOVO
       setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
       setSelectedMonth={setSelectedMonth} // Adicionado
-      onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
+      onToggleTransactionStatus={onToggleTransactionStatus}
+      filterType={filterType}
+      setFilterType={setFilterType}
+      filterCategory={filterCategory}
+      setFilterCategory={setFilterCategory}
     />
   );
 

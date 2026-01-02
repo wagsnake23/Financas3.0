@@ -53,6 +53,10 @@ const Lancamentos = () => {
     queryClient: logicQueryClient,
     filterPaymentOptionId,
     setFilterPaymentOptionId,
+    filterType,
+    setFilterType,
+    filterCategory,
+    setFilterCategory,
     handleOptimisticToggleStatus,
     refetchCartoes,
     allRevenues,
@@ -92,6 +96,12 @@ const Lancamentos = () => {
           onPreviousMonth={handlePreviousMonth}
           onNextMonth={handleNextMonth}
           isMobile={isMobile}
+          hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all"}
+          onClearFilters={() => {
+            setFilterType("all");
+            setFilterCategory("all");
+            setFilterPaymentOptionId("all");
+          }}
         />
 
         <LancamentosContent
@@ -115,6 +125,10 @@ const Lancamentos = () => {
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
           onToggleTransactionStatus={handleOptimisticToggleStatus}
+          filterType={filterType}
+          setFilterType={setFilterType}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
         />
       </main>
       <Footer

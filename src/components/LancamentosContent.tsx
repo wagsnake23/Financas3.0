@@ -34,7 +34,11 @@ interface LancamentosContentProps {
   loadingPayInvoice: boolean; // NOVA PROP
   setLoadingPayInvoice: (loading: boolean) => void; // NOVA PROP
   setSelectedMonth: (month: Date) => void; // Adicionado
-  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void; // NOVA PROP
+  onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
+  filterType: string;
+  setFilterType: (type: string) => void;
+  filterCategory: string;
+  setFilterCategory: (category: string) => void;
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -58,6 +62,10 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   setLoadingPayInvoice, // NOVO
   setSelectedMonth, // Adicionado
   onToggleTransactionStatus, // NOVA PROP
+  filterType,
+  setFilterType,
+  filterCategory,
+  setFilterCategory,
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -81,7 +89,11 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
         loadingPayInvoice={loadingPayInvoice} // NOVO
         setLoadingPayInvoice={setLoadingPayInvoice} // NOVO
         setSelectedMonth={setSelectedMonth} // Adicionado
-        onToggleTransactionStatus={onToggleTransactionStatus} // Passando a nova prop
+        onToggleTransactionStatus={onToggleTransactionStatus}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        filterCategory={filterCategory}
+        setFilterCategory={setFilterCategory}
       />
     </div>
   );
