@@ -433,7 +433,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               role="combobox"
               aria-expanded={openCommand}
               className={cn(
-                "w-full justify-between rounded-xl bg-white border-[#BFC2C8] text-gray-800 transition-all duration-200",
+                "w-full justify-between rounded-xl bg-white border-[#D1D5DB] text-gray-800 transition-all duration-200",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
@@ -564,7 +564,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           placeholder="Detalhes sobre a despesa..."
           rows={isMobile ? 2 : 3}
           className={cn(
-            "rounded-xl bg-white border-[#BFC2C8] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
+            "rounded-xl bg-white border-[#D1D5DB] text-gray-800 placeholder:text-gray-400 transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
             isMobile && "text-sm p-4"
           )}
