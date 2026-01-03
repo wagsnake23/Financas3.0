@@ -139,6 +139,12 @@ export default function Dashboard() {
       .reduce((sum, r) => sum + r.valor, 0);
   }, [allRevenues, currentYear]);
 
+  const overallBalance = useMemo(() => {
+    const totalAllRevenues = allRevenues.reduce((sum, r) => sum + r.valor, 0);
+    const totalAllExpenses = allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+    return totalAllRevenues - totalAllExpenses;
+  }, [allRevenues, allExpenseInstallments]);
+
   const isLoading =
     authLoading ||
     isLoadingTransactionsData ||
@@ -306,6 +312,8 @@ export default function Dashboard() {
             <StatCard
               mainStatTitle="Saldo Mensal"
               mainStatValue={stats.balance}
+              secondaryStatTitle="Saldo Projetado"
+              secondaryStatValue={overallBalance}
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -327,7 +335,7 @@ export default function Dashboard() {
                   onMonthClick={handleMonthClick}
                 />
               }
-              annualTotalLabel="Saldo Anual Projetado"
+              annualTotalLabel="Saldo Anual"
               annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
               neumorphism={true}
             >
@@ -462,6 +470,8 @@ export default function Dashboard() {
               <StatCard
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
+                secondaryStatTitle="Saldo Projetado"
+                secondaryStatValue={overallBalance}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -482,7 +492,7 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Saldo Anual Projetado"
+                annualTotalLabel="Saldo Anual"
                 annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 neumorphism={true}
               >

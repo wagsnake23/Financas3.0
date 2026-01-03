@@ -175,7 +175,11 @@ export const StatCard = ({
                   isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
                   secondaryStatTitle === "Pago este mês"
                     ? "text-success"
-                    : "text-primary", // Cor consistente
+                    : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual")
+                      ? (secondaryStatValue >= 0
+                        ? (variant === "balance" ? "text-primary" : "text-success")
+                        : "text-destructive")
+                      : "text-primary", // Cor consistente
                   "font-roboto" // Fonte Roboto
                 )}
               >
