@@ -10,7 +10,7 @@ interface MonthNavigatorCompactProps {
   onPreviousMonth: () => void;
   onNextMonth: () => void;
   isMobile?: boolean;
-  variant: "income" | "expense";
+  variant: "income" | "expense" | "balance";
 }
 
 export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
@@ -20,9 +20,9 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   isMobile,
   variant,
 }) => {
-  const textColorClass = variant === "income" ? "text-success" : "text-destructive";
-  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : "hover:bg-destructive/10";
-  const hoverTextColorClass = variant === "income" ? "hover:text-success" : "hover:text-destructive";
+  const textColorClass = variant === "income" ? "text-success" : variant === "expense" ? "text-destructive" : "text-primary";
+  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : variant === "expense" ? "hover:bg-destructive/10" : "hover:bg-primary/10";
+  const hoverTextColorClass = variant === "income" ? "hover:text-success" : variant === "expense" ? "hover:text-destructive" : "hover:text-primary";
 
   return (
     <div className={cn(

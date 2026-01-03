@@ -140,7 +140,7 @@ export const StatCard = ({
                   ? "text-success"
                   : variant === "expense"
                     ? "text-destructive"
-                    : "text-primary", // Cor consistente
+                    : mainStatValue >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
                 "font-roboto" // Fonte Roboto
               )}
             >
@@ -244,7 +244,9 @@ export const StatCard = ({
                 className={cn(
                   "font-bold leading-none",
                   isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
-                  variant === "income" ? "text-success" : "text-destructive", // Cor consistente
+                  variant === "income" ? "text-success" :
+                    variant === "expense" ? "text-destructive" :
+                      (annualTotalValue || 0) >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
                   "font-roboto" // Fonte Roboto
                 )}
               >

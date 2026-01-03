@@ -31,6 +31,7 @@ import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard";
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
+import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 
 export default function Dashboard() {
@@ -302,6 +303,55 @@ export default function Dashboard() {
               </div>
             </StatCard>
 
+            <StatCard
+              mainStatTitle="Saldo Mensal"
+              mainStatValue={stats.balance}
+              topRightContent={
+                <MonthNavigatorCompact
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="balance"
+                />
+              }
+              variant="balance"
+              isMobile={isMobile}
+              childrenAlignment="start"
+              chartContent={
+                <MonthlyBalanceBarChart
+                  revenues={allRevenues}
+                  expenseInstallments={allExpenseInstallments}
+                  currentDate={selectedMonth}
+                  isMobile={isMobile}
+                  onMonthClick={handleMonthClick}
+                />
+              }
+              annualTotalLabel="Saldo Anual Projetado"
+              annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+              neumorphism={true}
+            >
+              <div className={cn("flex flex-col w-full h-full")}>
+                <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#3B82F6",
+                        "--cor-base": "#2563EB",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/lancamentos")}
+                  >
+                    Lançamentos
+                  </Button>
+                </div>
+              </div>
+            </StatCard>
+
             <MobileCreditCardExpenses
               cartoes={cartoes}
               expenseInstallments={allExpenseInstallments}
@@ -410,13 +460,50 @@ export default function Dashboard() {
               </StatCard>
 
               <StatCard
-                mainStatTitle="Saldo Atual"
+                mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
-                icon="Wallet"
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="balance"
+                  />
+                }
                 variant="balance"
-                trend={stats.balance >= 0 ? "Positivo" : "Negativo"}
                 isMobile={isMobile}
-              />
+                chartContent={
+                  <MonthlyBalanceBarChart
+                    revenues={allRevenues}
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={true}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+                annualTotalLabel="Saldo Anual Projetado"
+                annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                neumorphism={true}
+              >
+                <div className="flex justify-end mt-4">
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#3B82F6",
+                        "--cor-base": "#2563EB",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/lancamentos")}
+                  >
+                    Lançamentos
+                  </Button>
+                </div>
+              </StatCard>
             </div>
 
             <div className="grid grid-cols-1">
