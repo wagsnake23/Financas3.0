@@ -165,9 +165,8 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       icone: data.icone,
     }));
 
-    const limit = 10;
-    return groupSubcategories(rawData, limit);
-  }, [expensesBySubcategory, isMobile]);
+    return rawData.sort((a, b) => b.value - a.value);
+  }, [expensesBySubcategory]);
 
   const totalMonthlyExpense = useMemo(() => {
     return chartData.reduce((sum, item) => sum + item.value, 0);
@@ -231,7 +230,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <p className="text-sm font-medium">Nenhuma despesa para este período</p>
               </div>
             ) : (
-              <div className={cn("h-[350px] w-full", isMobile && "h-[420px]")}>
+              <div className={cn("h-[350px] w-full", isMobile && "h-[320px]")}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart margin={{ top: 10, right: 25, left: 25, bottom: 10 }}>
                     <Pie
@@ -322,13 +321,20 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <p className="text-sm font-medium">Nenhuma subcategoria para este período</p>
               </div>
             ) : (
-              <div className={cn("h-[350px] w-full", isMobile && "h-[420px]")}>
+              <div
+                className="w-full"
+                style={{
+                  height: isMobile
+                    ? Math.max(200, subcategoryChartData.length * 35)
+                    : Math.max(350, subcategoryChartData.length * 40)
+                }}
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={subcategoryChartData}
                     layout="vertical"
                     margin={{ left: isMobile ? 0 : 30, right: isMobile ? 0 : 40, top: 0, bottom: 0 }}
-                    barGap={8}
+                    barGap={2}
                   >
                     <XAxis type="number" hide />
                     <YAxis
@@ -379,7 +385,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     <Bar
                       dataKey="value"
                       radius={[0, 8, 8, 0]}
-                      barSize={isMobile ? 14 : 18}
+                      barSize={isMobile ? 18 : 22}
                     >
                       {subcategoryChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.9} />
