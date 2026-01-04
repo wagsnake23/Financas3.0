@@ -91,6 +91,13 @@ All colors MUST be HSL.
     /* Updated: Cor de fundo para o card de despesas (#FFF7F8) */
     --soft-green-background: 162 100% 97.5%;
     /* NEW: Cor de fundo para o card de receitas (#F2FFFB) */
+
+    --yield: 24 95% 53%;
+    /* #F97316 */
+    --soft-orange: 24 100% 90%;
+    /* Light orange for bars */
+    --soft-orange-background: 24 100% 98.5%;
+    /* #FFF8F1 */
   }
 
   .dark {
@@ -121,6 +128,13 @@ All colors MUST be HSL.
     --success-foreground: 0 0% 100%;
     --success-darker: 150 65% 20%;
     /* Verde ainda mais escuro para texto em dark mode */
+
+    --yield: 24 95% 43%;
+    /* Darker orange for dark mode */
+    --soft-orange: 24 60% 20%;
+    /* Darker soft orange for dark mode */
+    --soft-orange-background: 24 30% 20%;
+    /* Dark background for yield card */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;

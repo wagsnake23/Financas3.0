@@ -17,7 +17,7 @@ interface StatCardProps {
 
   // Existing props, adjusted
   icon?: string; // Make icon optional, as it might be hidden
-  variant: "income" | "expense" | "balance";
+  variant: "income" | "expense" | "balance" | "yield";
   trend?: string; // Still for main stat
 
   // Content for the top-right corner (e.g., MonthBadge or MonthNavigatorCompact)
@@ -61,12 +61,15 @@ export const StatCard = ({
       "bg-gradient-to-br from-destructive/8 to-destructive/4 border-destructive/20",
     balance:
       "bg-gradient-to-br from-secondary/8 to-secondary/4 border-secondary/20",
+    yield:
+      "bg-gradient-to-br from-yield/8 to-yield/4 border-yield/20",
   };
 
   const iconStyles = {
     income: "bg-success/10 text-success",
     expense: "bg-destructive/10 text-destructive",
     balance: "bg-secondary/10 text-secondary",
+    yield: "bg-yield/10 text-yield",
   };
 
   // 🔹 NOVO: mapa de cores de fundo, sem remover nada do seu código
@@ -74,6 +77,7 @@ export const StatCard = ({
     income: "#F2FFFB", // Verde água ainda mais claro
     expense: "#FFF7F8", // Rosa ainda mais claro
     balance: "#F0F7FF", // Azul bem claro
+    yield: "#FFF8F1", // Laranja bem claro
   };
 
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
@@ -91,12 +95,13 @@ export const StatCard = ({
         cardPaddingClass,
         "transition-all duration-300 animate-fade-in flex flex-col h-full relative", // Adicionado 'relative' aqui
         isMobile && "min-h-[90px]", // Reduzido de 110px para 90px
+        variantStyles[variant],
         neumorphism
           ? cn(
             "rounded-3xl",
             "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]"
           )
-          : cn(variantStyles[variant], "rounded-xl shadow-sm")
+          : cn("rounded-xl shadow-sm")
       )}
     >
       {/* Top-right content (MonthNavigatorCompact or MonthBadge) */}
@@ -140,7 +145,9 @@ export const StatCard = ({
                   ? "text-success"
                   : variant === "expense"
                     ? "text-destructive"
-                    : mainStatValue >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
+                    : variant === "yield"
+                      ? "text-yield"
+                      : mainStatValue >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
                 "font-roboto" // Fonte Roboto
               )}
             >
@@ -175,11 +182,13 @@ export const StatCard = ({
                   isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
                   secondaryStatTitle === "Pago este mês" || secondaryStatTitle === "Receita Atual"
                     ? "text-success"
-                    : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual" || secondaryStatTitle === "Saldo Anual")
-                      ? (secondaryStatValue >= 0
-                        ? (variant === "balance" ? "text-primary" : "text-success")
-                        : "text-destructive")
-                      : "text-primary", // Cor consistente
+                    : variant === "yield"
+                      ? "text-yield"
+                      : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual" || secondaryStatTitle === "Saldo Anual")
+                        ? (secondaryStatValue >= 0
+                          ? (variant === "balance" ? "text-primary" : "text-success")
+                          : "text-destructive")
+                        : "text-primary", // Cor consistente
                   "font-roboto" // Fonte Roboto
                 )}
               >
@@ -250,7 +259,8 @@ export const StatCard = ({
                   isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
                   variant === "income" ? "text-success" :
                     variant === "expense" ? "text-destructive" :
-                      (annualTotalValue || 0) >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
+                      variant === "yield" ? "text-yield" :
+                        (annualTotalValue || 0) >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
                   "font-roboto" // Fonte Roboto
                 )}
               >

@@ -101,6 +101,15 @@ export default {
         "soft-green-background": { // NEW: Cor de fundo para o card de receitas
           DEFAULT: "hsl(var(--soft-green-background))",
         },
+        "yield": {
+          DEFAULT: "hsl(var(--yield))",
+        },
+        "soft-orange": {
+          DEFAULT: "hsl(var(--soft-orange))",
+        },
+        "soft-orange-background": {
+          DEFAULT: "hsl(var(--soft-orange-background))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',

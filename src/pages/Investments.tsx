@@ -15,7 +15,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; /
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar cn, getBorderClass E formatCurrency, formatInTimeZone, TARGET_TIMEZONE
-import { format } from "date-fns"; // Importar format
+import { format, getYear, subMonths, addMonths } from "date-fns"; // Importar format, getYear, subMonths, addMonths
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
@@ -34,6 +34,9 @@ import {
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 import { StatCard } from "@/components/StatCard"; // Importar StatCard
+import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact"; // NOVO: Importar MonthNavigatorCompact
+import { MonthlyYieldsBarChart } from "@/components/MonthlyYieldsBarChart"; // NOVO: Importar MonthlyYieldsBarChart
+import { useNavigate } from "react-router-dom"; // NOVO: Importar useNavigate
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,6 +57,37 @@ export default function Investments() { // Alterado para export default function
   const { user, loading: authLoading } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+
+  const handlePreviousMonth = () => {
+    setSelectedMonth((prev) => subMonths(prev, 1));
+  };
+
+  const handleNextMonth = () => {
+    setSelectedMonth((prev) => addMonths(prev, 1));
+  };
+
+  const handleMonthClick = (date: Date) => {
+    setSelectedMonth(date);
+  };
+
+  // Fetch all revenues to calculate yields
+  const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<Tables<"receitas">[]>({
+    queryKey: ["allRevenues", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("receitas")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("data", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !authLoading,
+  });
 
   // Fetch all subcategories
   const { data: allSubcategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -267,6 +301,19 @@ export default function Investments() { // Alterado para export default function
     handleCancelEdit();
   };
 
+  const totalProjectedAnnualYield = useMemo(() => {
+    return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
+  }, [investments]);
+
+  const currentYieldStats = useMemo(() => {
+    // Rendimento Mensal Médio = Total Anual / 12
+    const monthYields = totalProjectedAnnualYield / 12;
+    return {
+      monthYields,
+      annualYields: totalProjectedAnnualYield
+    };
+  }, [totalProjectedAnnualYield]);
+
   const stats = useMemo(() => {
     const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
     const avgProfitability = investments.length > 0
@@ -276,7 +323,7 @@ export default function Investments() { // Alterado para export default function
     return { totalInvested, avgProfitability };
   }, [investments]);
 
-  if (authLoading || isLoadingInvestments || isLoadingCategories) { // Incluindo isLoadingCategories
+  if (authLoading || isLoadingInvestments || isLoadingCategories || isLoadingAllRevenues) { // Incluindo isLoadingCategories e isLoadingAllRevenues
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
@@ -297,7 +344,56 @@ export default function Investments() { // Alterado para export default function
         {/* REMOVIDO: MonthNavigator global */}
 
         {isMobile ? (
-          <div className="grid grid-cols-1 gap-4"> {/* Removido mb-4 */}
+          <div className="grid grid-cols-1 gap-4">
+            <StatCard
+              mainStatTitle="Total de Rendimentos"
+              mainStatValue={currentYieldStats.monthYields}
+              topRightContent={
+                <MonthNavigatorCompact
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="balance" // Using balance variant for navigaton style
+                />
+              }
+              variant="yield"
+              isMobile={isMobile}
+              childrenAlignment="start"
+              chartContent={
+                <MonthlyYieldsBarChart
+                  revenues={[]} // Not used anymore for now
+                  currentDate={selectedMonth}
+                  isMobile={isMobile}
+                  onMonthClick={handleMonthClick}
+                  projectedAnnualYield={currentYieldStats.annualYields}
+                />
+              }
+              annualTotalLabel="Total Anual"
+              annualTotalValue={currentYieldStats.annualYields}
+              neumorphism={true}
+            >
+              <div className={cn("flex flex-col w-full h-full")}>
+                <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#FB923C",
+                        "--cor-base": "#F97316",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/investments")}
+                  >
+                    Investimentos
+                  </Button>
+                </div>
+              </div>
+            </StatCard>
+
             <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm bg-white", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -543,26 +639,74 @@ export default function Investments() { // Alterado para export default function
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <Card className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 rounded-xl shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Total Investido</p>
-                    <p className="text-3xl font-bold text-foreground">{formatCurrency(stats.totalInvested)}</p>
-                  </div>
-                  <DynamicIcon name="DollarSign" className="h-12 w-12 text-primary" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+              <StatCard
+                mainStatTitle="Total de Rendimentos"
+                mainStatValue={currentYieldStats.monthYields}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="balance"
+                  />
+                }
+                variant="yield"
+                isMobile={isMobile}
+                chartContent={
+                  <MonthlyYieldsBarChart
+                    revenues={[]} // Not used anymore for now
+                    currentDate={selectedMonth}
+                    isMobile={false}
+                    onMonthClick={handleMonthClick}
+                    projectedAnnualYield={currentYieldStats.annualYields}
+                  />
+                }
+                annualTotalLabel="Total Anual"
+                annualTotalValue={currentYieldStats.annualYields}
+                neumorphism={true}
+              >
+                <div className="flex justify-end mt-4">
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#FB923C",
+                        "--cor-base": "#F97316",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/investments")}
+                  >
+                    Investimentos
+                  </Button>
                 </div>
-              </Card>
+              </StatCard>
 
-              <Card className="p-6 bg-gradient-to-br from-success/10 to-success/5 border-success/20 rounded-xl shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Rentabilidade Média</p>
-                    <p className="text-3xl font-bold text-foreground">{stats.avgProfitability.toFixed(2)}%</p>
-                  </div>
-                  <DynamicIcon name="Percent" className="h-12 w-12 text-success" />
-                </div>
-              </Card>
+              <div className="grid grid-cols-1 gap-4">
+                <StatCard
+                  mainStatTitle="Total Investido"
+                  mainStatValue={stats.totalInvested}
+                  icon="DollarSign"
+                  variant="income"
+                  isMobile={isMobile}
+                  neumorphism={true}
+                />
+
+                <StatCard
+                  mainStatTitle="Rentabilidade Média"
+                  mainStatValue={stats.avgProfitability}
+                  secondaryStatTitle="Média Geral"
+                  secondaryStatValue={stats.avgProfitability}
+                  icon="Percent"
+                  variant="income"
+                  isMobile={isMobile}
+                  neumorphism={true}
+                />
+              </div>
             </div>
 
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
