@@ -239,10 +239,10 @@ export const CategoryForm = ({
             </button>
 
             {showEmojiPicker && (
-              <div ref={emojiPickerRef} className="absolute z-50 mt-2">
+              <div ref={emojiPickerRef} className="absolute z-50 mt-2 w-full left-0">
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
-                  width={isMobile ? 280 : 350}
+                  width="100%"
                   height={isMobile ? 300 : 400}
                   searchPlaceHolder="Buscar emoji..."
                   previewConfig={{ showPreview: false }}
