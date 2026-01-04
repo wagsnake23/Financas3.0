@@ -169,6 +169,10 @@ export default function Dashboard() {
     return totalAllRevenues - totalAllExpenses;
   }, [allRevenues, allExpenseInstallments]);
 
+  const totalOverallExpenses = useMemo(() => {
+    return allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+  }, [allExpenseInstallments]);
+
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
     return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
@@ -635,6 +639,20 @@ export default function Dashboard() {
                   </Button>
                 </div>
               </StatCard>
+
+              <TotalExpensesCard
+                expenseInstallments={allExpenseInstallments}
+                isMobile={isMobile}
+                annualTotalValue={totalAnnualExpenses}
+                chartContent={
+                  <MonthlyExpenseBarChart
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={true}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+              />
 
               <StatCard
                 mainStatTitle="Rendimento Mensal"

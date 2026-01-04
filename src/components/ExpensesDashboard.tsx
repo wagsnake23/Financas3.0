@@ -39,22 +39,24 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-8">
-      <TotalExpensesCard
-        expenseInstallments={expenseInstallments}
-        isMobile={isMobile}
-        chartContent={
-          <MonthlyExpenseBarChart
-            expenseInstallments={expenseInstallments}
-            currentDate={new Date()}
-            isMobile={true}
-            onMonthClick={() => { }}
-          />
-        }
-        annualTotalValue={expenseInstallments
-          .filter(p => new Date(p.vencimento).getFullYear() === new Date().getFullYear())
-          .reduce((sum, p) => sum + p.valor_parcela, 0)
-        }
-      />
+      {isMobile && (
+        <TotalExpensesCard
+          expenseInstallments={expenseInstallments}
+          isMobile={isMobile}
+          chartContent={
+            <MonthlyExpenseBarChart
+              expenseInstallments={expenseInstallments}
+              currentDate={new Date()}
+              isMobile={true}
+              onMonthClick={() => { }}
+            />
+          }
+          annualTotalValue={expenseInstallments
+            .filter(p => new Date(p.vencimento).getFullYear() === new Date().getFullYear())
+            .reduce((sum, p) => sum + p.valor_parcela, 0)
+          }
+        />
+      )}
 
       <Card className="p-6 animate-fade-in rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Despesas por Subcategoria</h2>
