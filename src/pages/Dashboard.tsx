@@ -24,6 +24,7 @@ import {
   subMonths,
   getYear,
 } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
@@ -123,6 +124,12 @@ export default function Dashboard() {
       .reduce((sum, t) => sum + t.amount, 0);
   }, [monthlyFilteredTransactions]);
 
+  const totalReceivedMonthlyIncome = useMemo(() => {
+    return monthlyFilteredTransactions
+      .filter((t) => t.type === "income" && t.status === "Recebida")
+      .reduce((sum, t) => sum + t.amount, 0);
+  }, [monthlyFilteredTransactions]);
+
   const currentYear = getYear(selectedMonth);
 
   const totalAnnualExpenses = useMemo(() => {
@@ -143,6 +150,22 @@ export default function Dashboard() {
     const totalAllRevenues = allRevenues.reduce((sum, r) => sum + r.valor, 0);
     const totalAllExpenses = allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
     return totalAllRevenues - totalAllExpenses;
+  }, [allRevenues, allExpenseInstallments]);
+
+  const projectedEndDate = useMemo(() => {
+    if (allRevenues.length === 0 && allExpenseInstallments.length === 0) return "";
+
+    const dates = [
+      ...allRevenues.map((r) => new Date(r.data).getTime()),
+      ...allExpenseInstallments.map((p) => new Date(p.vencimento).getTime()),
+    ].filter((t) => !isNaN(t));
+
+    if (dates.length === 0) return "";
+
+    const maxDate = new Date(Math.max(...dates));
+    return format(maxDate, "MMM/yyyy", { locale: ptBR })
+      .replace(".", "")
+      .toUpperCase();
   }, [allRevenues, allExpenseInstallments]);
 
   const isLoading =
@@ -260,8 +283,8 @@ export default function Dashboard() {
             <StatCard
               mainStatTitle="Total de Receitas"
               mainStatValue={stats.totalIncome}
-              secondaryStatTitle="Saldo Atual"
-              secondaryStatValue={stats.balance}
+              secondaryStatTitle="Receita Atual"
+              secondaryStatValue={totalReceivedMonthlyIncome}
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -312,8 +335,8 @@ export default function Dashboard() {
             <StatCard
               mainStatTitle="Saldo Mensal"
               mainStatValue={stats.balance}
-              secondaryStatTitle="Saldo Projetado"
-              secondaryStatValue={overallBalance}
+              secondaryStatTitle="Saldo Anual"
+              secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -335,8 +358,8 @@ export default function Dashboard() {
                   onMonthClick={handleMonthClick}
                 />
               }
-              annualTotalLabel="Saldo Anual"
-              annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+              annualTotalLabel={`Projetado ${projectedEndDate}`}
+              annualTotalValue={overallBalance}
               neumorphism={true}
             >
               <div className={cn("flex flex-col w-full h-full")}>
@@ -426,6 +449,8 @@ export default function Dashboard() {
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
+                secondaryStatTitle="Receita Atual"
+                secondaryStatValue={totalReceivedMonthlyIncome}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -470,8 +495,8 @@ export default function Dashboard() {
               <StatCard
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
-                secondaryStatTitle="Saldo Projetado"
-                secondaryStatValue={overallBalance}
+                secondaryStatTitle="Saldo Anual"
+                secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -492,8 +517,8 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Saldo Anual"
-                annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                annualTotalLabel={`Projetado ${projectedEndDate}`}
+                annualTotalValue={overallBalance}
                 neumorphism={true}
               >
                 <div className="flex justify-end mt-4">

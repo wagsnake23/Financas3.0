@@ -173,9 +173,9 @@ export const StatCard = ({
                 className={cn(
                   "font-bold leading-none",
                   isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
-                  secondaryStatTitle === "Pago este mês"
+                  secondaryStatTitle === "Pago este mês" || secondaryStatTitle === "Receita Atual"
                     ? "text-success"
-                    : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual")
+                    : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual" || secondaryStatTitle === "Saldo Anual")
                       ? (secondaryStatValue >= 0
                         ? (variant === "balance" ? "text-primary" : "text-success")
                         : "text-destructive")
