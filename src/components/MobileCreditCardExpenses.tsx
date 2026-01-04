@@ -14,6 +14,7 @@ import { format, startOfMonth, addMonths } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { AppCategory } from "@/types/finance";
+import { ptBR } from "date-fns/locale";
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<"cartoes">[];
@@ -97,16 +98,26 @@ export const MobileCreditCardExpenses: React.FC<
     navigate(`/lancamentos?cardId=${selectedCardId}&month=${formattedMonth}`);
   };
 
-  if (!isMobile) return null;
 
   return (
     <Card
       className={cn("p-3 animate-fade-in rounded-3xl card-3d")}
-      style={{ backgroundColor: "#F7F2FF" }}
+      style={{ background: "linear-gradient(135deg, #E6D8FF 0%, #F7F2FF 100%)" }}
     >
-      <h2 className="text-xs font-semibold text-muted-foreground -mt-1 mb-1.5 ml-1">
-        Cartões de Crédito
-      </h2>
+      <div className="flex items-center justify-between -mt-1 mb-1.5 px-1">
+        <h2
+          className="text-xs font-bold"
+          style={{ color: "#5429A6" }}
+        >
+          Cartões de Crédito
+        </h2>
+        <span
+          className="text-[0.65rem] font-bold uppercase"
+          style={{ color: "#5429A6" }}
+        >
+          {format(selectedMonth, "MMM/yyyy", { locale: ptBR })}
+        </span>
+      </div>
 
       <div className="space-y-2">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>

@@ -265,6 +265,13 @@ export default function Dashboard() {
 
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
+            <MobileCreditCardExpenses
+              cartoes={cartoes}
+              expenseInstallments={allExpenseInstallments}
+              allCategories={allSubcategories}
+              isMobile={isMobile}
+              selectedMonth={selectedMonth}
+            />
             <StatCard
               mainStatTitle="Total de Despesas"
               mainStatValue={stats.totalExpenses}
@@ -420,13 +427,7 @@ export default function Dashboard() {
               </div>
             </StatCard>
 
-            <MobileCreditCardExpenses
-              cartoes={cartoes}
-              expenseInstallments={allExpenseInstallments}
-              allCategories={allSubcategories}
-              isMobile={isMobile}
-              selectedMonth={selectedMonth}
-            />
+
 
             <StatCard
               mainStatTitle="Rendimento Mensal"
@@ -481,7 +482,14 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+              <MobileCreditCardExpenses
+                cartoes={cartoes}
+                expenseInstallments={allExpenseInstallments}
+                allCategories={allSubcategories}
+                isMobile={isMobile}
+                selectedMonth={selectedMonth}
+              />
               <StatCard
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
