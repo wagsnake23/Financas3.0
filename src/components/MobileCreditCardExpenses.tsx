@@ -101,7 +101,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-3 animate-fade-in rounded-3xl card-3d")}
+      className={cn("p-3 animate-fade-in rounded-3xl card-3d border border-[#DCD2FF]")}
       style={{ background: "linear-gradient(135deg, #E6D8FF 0%, #F7F2FF 100%)" }}
     >
       <div className="flex items-center justify-between -mt-1 mb-1.5 px-1">
@@ -121,7 +121,7 @@ export const MobileCreditCardExpenses: React.FC<
 
       <div className="space-y-2">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-9 text-sm">
+          <SelectTrigger className="rounded-xl w-full h-9 text-sm border-[#DCD2FF] bg-[#FDFBFF]">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent>
