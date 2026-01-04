@@ -483,6 +483,13 @@ export default function Dashboard() {
                 </div>
               </div>
             </StatCard>
+            <CombinedMonthlyExpensesDashboard
+              allRevenues={allRevenues}
+              allExpenseInstallments={allExpenseInstallments}
+              allCategories={allSubcategories}
+              isLoading={isLoading}
+              isMobile={isMobile}
+            />
           </div>
         ) : (
           <>

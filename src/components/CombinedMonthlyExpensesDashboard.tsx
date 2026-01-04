@@ -165,7 +165,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       icone: data.icone,
     }));
 
-    const limit = isMobile ? 5 : 8;
+    const limit = 10;
     return groupSubcategories(rawData, limit);
   }, [expensesBySubcategory, isMobile]);
 
@@ -183,7 +183,10 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 
   return (
     <div className="space-y-6">
-      <Card className={cn("p-6 animate-slide-up rounded-2xl shadow-sm border-0 bg-white/50 backdrop-blur-sm", isMobile && "p-4")}>
+      <Card className={cn(
+        "p-6 animate-slide-up rounded-2xl shadow-sm border-0 bg-white/50 backdrop-blur-sm",
+        isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
+      )}>
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
@@ -211,33 +214,12 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           </Button>
         </div>
 
-        {/* Resumo Mensal */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="relative overflow-hidden p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100 group transition-all hover:shadow-md">
-            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
-              <DynamicIcon name="CheckCircle2" className="h-12 w-12 text-emerald-600" />
-            </div>
-            <p className="text-sm font-semibold text-emerald-700/70 mb-1 uppercase tracking-wider">Pago</p>
-            <p className="text-3xl font-black text-emerald-600 tracking-tighter">
-              {formatCurrency(totalPaid)}
-            </p>
-          </div>
 
-          <div className="relative overflow-hidden p-6 rounded-2xl bg-rose-50/50 border border-rose-100 group transition-all hover:shadow-md">
-            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
-              <DynamicIcon name="Clock" className="h-12 w-12 text-rose-600" />
-            </div>
-            <p className="text-sm font-semibold text-rose-700/70 mb-1 uppercase tracking-wider">Pendente</p>
-            <p className="text-3xl font-black text-rose-600 tracking-tighter">
-              {formatCurrency(totalPending)}
-            </p>
-          </div>
-        </div>
 
         {/* Gráficos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-8", isMobile && "gap-4")}>
           {/* Donut de Categorias */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
             <div className="flex items-center gap-2 mb-6">
               <div className="h-8 w-1.5 bg-primary rounded-full" />
               <h3 className="text-lg font-bold text-gray-800">Despesas por Categoria</h3>
@@ -249,7 +231,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <p className="text-sm font-medium">Nenhuma despesa para este período</p>
               </div>
             ) : (
-              <div className="h-[350px] w-full">
+              <div className={cn("h-[350px] w-full", isMobile && "h-[420px]")}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -262,6 +244,8 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       dataKey="value"
                       animationBegin={0}
                       animationDuration={1200}
+                      label={isMobile ? ({ percent }) => `${(percent * 100).toFixed(0)}%` : false}
+                      labelLine={false}
                     >
                       {chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
@@ -324,7 +308,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           </div>
 
           {/* Barras de Subcategorias */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
             <div className="flex items-center gap-2 mb-6">
               <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
               <h3 className="text-lg font-bold text-gray-800">Despesas por Subcategoria</h3>
@@ -336,7 +320,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <p className="text-sm font-medium">Nenhuma subcategoria para este período</p>
               </div>
             ) : (
-              <div className="h-[350px] w-full">
+              <div className={cn("h-[350px] w-full", isMobile && "h-[420px]")}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={subcategoryChartData}
@@ -351,19 +335,22 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       width={isMobile ? 100 : 130}
                       axisLine={false}
                       tickLine={false}
-                      tick={({ x, y, payload }) => (
-                        <g transform={`translate(${x},${y})`}>
-                          <text
-                            x={-10}
-                            y={0}
-                            dy={4}
-                            textAnchor="end"
-                            className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
-                          >
-                            {payload.value.length > 15 ? `${payload.value.substring(0, 13)}...` : payload.value}
-                          </text>
-                        </g>
-                      )}
+                      tick={({ x, y, payload }) => {
+                        const item = subcategoryChartData.find(d => d.name === payload.value);
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            <text
+                              x={isMobile ? -5 : -10}
+                              y={0}
+                              dy={4}
+                              textAnchor="end"
+                              className="fill-gray-600 text-[10px] md:text-[13px] font-bold"
+                            >
+                              {item?.icone} {isMobile && payload.value.length > 12 ? `${payload.value.substring(0, 10)}..` : payload.value}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                     <Tooltip
                       cursor={{ fill: 'rgba(0,0,0,0.02)' }}
