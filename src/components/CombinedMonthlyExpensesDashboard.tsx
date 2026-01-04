@@ -257,9 +257,19 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <p className="text-sm font-medium">Nenhuma despesa para este período</p>
               </div>
             ) : (
-              <div className={cn("h-[350px] w-full", isMobile && "h-[320px]")}>
+              <div
+                className={cn(
+                  "h-[350px] w-full outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                  "select-none [&_*]:outline-none [&_*]:focus:outline-none [&_*]:focus-visible:outline-none",
+                  isMobile && "h-[320px]"
+                )}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 10, right: 25, left: 25, bottom: 10 }}>
+                  <PieChart
+                    margin={{ top: 10, right: 25, left: 25, bottom: 10 }}
+                    style={{ outline: 'none' }}
+                  >
                     <defs>
                       <filter id="shadow3d" x="-20%" y="-20%" width="140%" height="140%">
                         <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
@@ -345,10 +355,11 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     />
                     {!isMobile && (
                       <Legend
-                        verticalAlign="middle"
-                        align="right"
-                        layout="vertical"
+                        verticalAlign="bottom"
+                        align="center"
+                        layout="horizontal"
                         iconType="circle"
+                        wrapperStyle={{ paddingTop: '20px' }}
                         formatter={(value, entry: any) => {
                           const payload = entry.payload;
                           const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
@@ -524,6 +535,5 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         </div>
       </Card>
     </div>
-
   );
 };
