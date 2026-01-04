@@ -186,32 +186,34 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         "p-6 animate-slide-up rounded-2xl shadow-sm border-0 bg-white/50 backdrop-blur-sm",
         isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
       )}>
-        <div className="flex items-center justify-between mb-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handlePreviousMonth}
-            className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
-          >
-            <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
-          </Button>
+        {!isMobile && (
+          <div className="flex items-center justify-between mb-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handlePreviousMonth}
+              className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
+            </Button>
 
-          <div className="text-center">
-            <h2 className="text-2xl font-bold capitalize text-gray-800 tracking-tight">
-              {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
-            </h2>
-            <div className="h-1 w-12 bg-primary/20 rounded-full mx-auto mt-1" />
+            <div className="text-center">
+              <h2 className="text-2xl font-bold capitalize text-gray-800 tracking-tight">
+                {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
+              </h2>
+              <div className="h-1 w-12 bg-primary/20 rounded-full mx-auto mt-1" />
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNextMonth}
+              className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
+            </Button>
           </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleNextMonth}
-            className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
-          >
-            <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
-          </Button>
-        </div>
+        )}
 
 
 
@@ -219,9 +221,28 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-8", isMobile && "gap-4")}>
           {/* Donut de Categorias */}
           <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-8 w-1.5 bg-primary rounded-full" />
-              <h3 className="text-lg font-bold text-gray-800">Despesas por Categoria</h3>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-1.5 bg-primary rounded-full" />
+                <h3 className="text-lg font-bold text-gray-800">Despesas por Categoria</h3>
+              </div>
+
+              {isMobile && (
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={handlePreviousMonth} className="h-8 w-8 text-gray-400">
+                    <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
+                  </Button>
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">Mês</span>
+                    <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5">
+                      {format(currentMonth, "MMM/yy", { locale: ptBR })}
+                    </span>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-gray-400">
+                    <DynamicIcon name="ChevronRight" className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
 
             {chartData.length === 0 ? (
@@ -310,9 +331,28 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 
           {/* Barras de Subcategorias */}
           <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
-              <h3 className="text-lg font-bold text-gray-800">Despesas por Subcategoria</h3>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
+                <h3 className="text-lg font-bold text-gray-800">Despesas por Subcategoria</h3>
+              </div>
+
+              {isMobile && (
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={handlePreviousMonth} className="h-8 w-8 text-gray-400">
+                    <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
+                  </Button>
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">Mês</span>
+                    <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5">
+                      {format(currentMonth, "MMM/yy", { locale: ptBR })}
+                    </span>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-gray-400">
+                    <DynamicIcon name="ChevronRight" className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
 
             {subcategoryChartData.length === 0 ? (
