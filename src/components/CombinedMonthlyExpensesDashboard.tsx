@@ -233,13 +233,13 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
             ) : (
               <div className={cn("h-[350px] w-full", isMobile && "h-[420px]")}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 10, right: 25, left: 25, bottom: 10 }}>
                     <Pie
                       data={chartData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={isMobile ? "65%" : "70%"}
-                      outerRadius={isMobile ? "85%" : "90%"}
+                      innerRadius={isMobile ? "55%" : "70%"}
+                      outerRadius={isMobile ? "78%" : "90%"}
                       paddingAngle={4}
                       dataKey="value"
                       animationBegin={0}
@@ -286,21 +286,23 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         return null;
                       }}
                     />
-                    <Legend
-                      verticalAlign={isMobile ? "bottom" : "middle"}
-                      align={isMobile ? "center" : "right"}
-                      layout={isMobile ? "horizontal" : "vertical"}
-                      iconType="circle"
-                      formatter={(value, entry: any) => {
-                        const payload = entry.payload;
-                        const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
-                        return (
-                          <span className="text-sm font-semibold text-gray-600 pl-2">
-                            {value} <span className="text-primary/60 ml-1">{percentage}%</span>
-                          </span>
-                        );
-                      }}
-                    />
+                    {!isMobile && (
+                      <Legend
+                        verticalAlign="middle"
+                        align="right"
+                        layout="vertical"
+                        iconType="circle"
+                        formatter={(value, entry: any) => {
+                          const payload = entry.payload;
+                          const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
+                          return (
+                            <span className="text-sm font-semibold text-gray-600 pl-2">
+                              {value} <span className="text-primary/60 ml-1">{percentage}%</span>
+                            </span>
+                          );
+                        }}
+                      />
+                    )}
                   </PieChart>
                 </ResponsiveContainer>
               </div>
