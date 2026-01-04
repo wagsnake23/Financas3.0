@@ -2,12 +2,32 @@ import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Label } from "recharts";
 import { Transaction, AppCategory } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency } from "@/lib/utils";
+import { getCategoryColor } from "@/lib/categoryColors";
+
+// Helper for subcategory grouping logic
+const groupSubcategories = (data: any[], limit: number) => {
+  if (data.length <= limit) return data;
+  const sorted = [...data].sort((a, b) => b.value - a.value);
+  const top = sorted.slice(0, limit);
+  const others = sorted.slice(limit);
+  const totalOthers = others.reduce((acc, curr) => acc + curr.value, 0);
+
+  return [
+    ...top,
+    {
+      name: "Outros",
+      value: totalOthers,
+      color: "#94a3b8",
+      icone: "📁"
+    }
+  ];
+};
 
 interface CombinedMonthlyExpensesDashboardProps {
   allRevenues: Tables<'receitas'>[]; // Todas as receitas, não filtradas por mês
@@ -102,20 +122,56 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       }
 
       const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
-      const displayCategoryColor = parentCategory?.cor || subcategory?.cor || "hsl(215, 15%, 50%)";
+      const displayCategoryColor = subcategory ? getCategoryColor(subcategory, allCategories) : (parentCategory ? getCategoryColor(parentCategory, allCategories) : "hsl(215, 15%, 50%)");
+      const displayCategoryIcon = parentCategory?.icone || subcategory?.icone || "📁";
 
       if (!acc[displayCategoryName]) {
-        acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
+        acc[displayCategoryName] = { value: 0, color: displayCategoryColor, icone: displayCategoryIcon };
       }
       acc[displayCategoryName].value += transaction.amount;
       return acc;
-    }, {} as Record<string, { value: number; color: string }>);
+    }, {} as Record<string, { value: number; color: string; icone: string }>);
 
-  const chartData = Object.entries(expensesByCategory).map(([name, data]) => ({
-    name,
-    value: data.value,
-    color: data.color,
-  }));
+  const expensesBySubcategory = expensesForPieChart
+    .filter(t => t.type === "expense")
+    .reduce((acc, transaction) => {
+      const subcategory = allCategories.find(c => c.id === transaction.category);
+
+      const name = subcategory?.nome || "Outros";
+      const color = subcategory ? getCategoryColor(subcategory, allCategories) : "hsl(215, 15%, 50%)";
+      const icon = subcategory?.icone || "📁";
+
+      if (!acc[name]) {
+        acc[name] = { value: 0, color, icone: icon };
+      }
+      acc[name].value += transaction.amount;
+      return acc;
+    }, {} as Record<string, { value: number; color: string; icone: string }>);
+
+  const chartData = useMemo(() => {
+    return Object.entries(expensesByCategory).map(([name, data]) => ({
+      name,
+      value: data.value,
+      color: data.color,
+      icone: data.icone,
+    })).sort((a, b) => b.value - a.value);
+  }, [expensesByCategory]);
+
+  const subcategoryChartData = useMemo(() => {
+    const rawData = Object.entries(expensesBySubcategory).map(([name, data]) => ({
+      name,
+      value: data.value,
+      color: data.color,
+      icone: data.icone,
+    }));
+
+    const limit = isMobile ? 5 : 8;
+    return groupSubcategories(rawData, limit);
+  }, [expensesBySubcategory, isMobile]);
+
+  const totalMonthlyExpense = useMemo(() => {
+    return chartData.reduce((sum, item) => sum + item.value, 0);
+  }, [chartData]);
 
   if (isLoading) {
     return (
@@ -126,72 +182,228 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   }
 
   return (
-    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-      <div className="flex items-center justify-between mb-4">
-        <Button variant="outline" size="icon" onClick={handlePreviousMonth} className={cn(isMobile && "h-6 w-6")}>
-          <DynamicIcon name="ChevronLeft" className={cn("h-5 w-5", isMobile && "h-2.5 w-2.5")} />
-        </Button>
-        <h2 className={cn("text-xl font-bold capitalize", isMobile && "text-lg", "font-roboto")}>
-          {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
-        </h2>
-        <Button variant="outline" size="icon" onClick={handleNextMonth} className={cn(isMobile && "h-6 w-6")}>
-          <DynamicIcon name="ChevronRight" className={cn("h-5 w-5", isMobile && "h-2.5 w-2.5")} />
-        </Button>
-      </div>
+    <div className="space-y-6">
+      <Card className={cn("p-6 animate-slide-up rounded-2xl shadow-sm border-0 bg-white/50 backdrop-blur-sm", isMobile && "p-4")}>
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handlePreviousMonth}
+            className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
+          </Button>
 
-      {/* Parte do Resumo Mensal de Despesas */}
-      <div className="grid grid-cols-2 gap-4 text-center mb-6">
-        <div className={cn(
-          "p-3 border rounded-lg",
-          isMobile ? "p-2 border-transparent bg-transparent" : "bg-success/5 border-success/20"
-        )}>
-          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pago</p>
-          <p className={cn("text-xl font-bold text-success", isMobile && "text-base")}>{formatCurrency(totalPaid)}</p>
-        </div>
-        <div className={cn(
-          "p-3 border rounded-lg",
-          isMobile ? "p-2 border-transparent bg-transparent" : "bg-destructive/5 border-destructive/20"
-        )}>
-          <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs", "font-roboto")}>Pendente</p>
-          <p className={cn("text-xl font-bold text-destructive", isMobile && "text-base")}>{formatCurrency(totalPending)}</p>
-        </div>
-      </div>
+          <div className="text-center">
+            <h2 className="text-2xl font-bold capitalize text-gray-800 tracking-tight">
+              {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
+            </h2>
+            <div className="h-1 w-12 bg-primary/20 rounded-full mx-auto mt-1" />
+          </div>
 
-      {/* Parte do Gráfico de Pizza de Despesas por Categoria */}
-      <h3 className={cn("text-xl font-semibold mb-4", isMobile && "text-lg mb-3", "font-roboto")}>Despesas por Categoria</h3>
-      {chartData.length === 0 ? (
-        <div className={cn("h-60 flex items-center justify-center text-muted-foreground", isMobile && "h-48", "font-roboto")}>
-          Nenhuma despesa registrada
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleNextMonth}
+            className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
+          </Button>
         </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={isMobile ? 60 : 100}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              formatter={(value: number) => formatCurrency(value)}
-              contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "var(--radius)",
-              }}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      )}
-    </Card>
+
+        {/* Resumo Mensal */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="relative overflow-hidden p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100 group transition-all hover:shadow-md">
+            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
+              <DynamicIcon name="CheckCircle2" className="h-12 w-12 text-emerald-600" />
+            </div>
+            <p className="text-sm font-semibold text-emerald-700/70 mb-1 uppercase tracking-wider">Pago</p>
+            <p className="text-3xl font-black text-emerald-600 tracking-tighter">
+              {formatCurrency(totalPaid)}
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden p-6 rounded-2xl bg-rose-50/50 border border-rose-100 group transition-all hover:shadow-md">
+            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
+              <DynamicIcon name="Clock" className="h-12 w-12 text-rose-600" />
+            </div>
+            <p className="text-sm font-semibold text-rose-700/70 mb-1 uppercase tracking-wider">Pendente</p>
+            <p className="text-3xl font-black text-rose-600 tracking-tighter">
+              {formatCurrency(totalPending)}
+            </p>
+          </div>
+        </div>
+
+        {/* Gráficos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Donut de Categorias */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-8 w-1.5 bg-primary rounded-full" />
+              <h3 className="text-lg font-bold text-gray-800">Despesas por Categoria</h3>
+            </div>
+
+            {chartData.length === 0 ? (
+              <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+                <DynamicIcon name="PieChart" className="h-12 w-12 mb-2 opacity-20" />
+                <p className="text-sm font-medium">Nenhuma despesa para este período</p>
+              </div>
+            ) : (
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={chartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={isMobile ? "65%" : "70%"}
+                      outerRadius={isMobile ? "85%" : "90%"}
+                      paddingAngle={4}
+                      dataKey="value"
+                      animationBegin={0}
+                      animationDuration={1200}
+                    >
+                      {chartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                      <Label
+                        content={({ viewBox }) => {
+                          const { cx, cy } = viewBox as any;
+                          return (
+                            <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
+                              <tspan x={cx} dy="-0.5em" className="fill-muted-foreground text-[12px] font-semibold uppercase tracking-widest">
+                                Total
+                              </tspan>
+                              <tspan x={cx} dy="1.5em" className="fill-foreground text-xl font-black">
+                                {formatCurrency(totalMonthlyExpense)}
+                              </tspan>
+                            </text>
+                          );
+                        }}
+                      />
+                    </Pie>
+                    <Tooltip
+                      cursor={{ fill: 'transparent' }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-4 shadow-xl border border-gray-100 rounded-xl">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xl">{data.icone}</span>
+                                <span className="font-bold text-gray-800">{data.name}</span>
+                              </div>
+                              <div className="text-lg font-black text-primary">
+                                {formatCurrency(data.value)}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend
+                      verticalAlign={isMobile ? "bottom" : "middle"}
+                      align={isMobile ? "center" : "right"}
+                      layout={isMobile ? "horizontal" : "vertical"}
+                      iconType="circle"
+                      formatter={(value, entry: any) => {
+                        const payload = entry.payload;
+                        const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
+                        return (
+                          <span className="text-sm font-semibold text-gray-600 pl-2">
+                            {value} <span className="text-primary/60 ml-1">{percentage}%</span>
+                          </span>
+                        );
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+
+          {/* Barras de Subcategorias */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
+              <h3 className="text-lg font-bold text-gray-800">Despesas por Subcategoria</h3>
+            </div>
+
+            {subcategoryChartData.length === 0 ? (
+              <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+                <DynamicIcon name="BarChart2" className="h-12 w-12 mb-2 opacity-20" />
+                <p className="text-sm font-medium">Nenhuma subcategoria para este período</p>
+              </div>
+            ) : (
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={subcategoryChartData}
+                    layout="vertical"
+                    margin={{ left: isMobile ? 0 : 30, right: isMobile ? 0 : 40, top: 0, bottom: 0 }}
+                    barGap={8}
+                  >
+                    <XAxis type="number" hide />
+                    <YAxis
+                      dataKey="name"
+                      type="category"
+                      width={isMobile ? 100 : 130}
+                      axisLine={false}
+                      tickLine={false}
+                      tick={({ x, y, payload }) => (
+                        <g transform={`translate(${x},${y})`}>
+                          <text
+                            x={-10}
+                            y={0}
+                            dy={4}
+                            textAnchor="end"
+                            className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
+                          >
+                            {payload.value.length > 15 ? `${payload.value.substring(0, 13)}...` : payload.value}
+                          </text>
+                        </g>
+                      )}
+                    />
+                    <Tooltip
+                      cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
+                          return (
+                            <div className="bg-white p-4 shadow-xl border border-gray-100 rounded-xl">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xl">{data.icone}</span>
+                                <span className="font-bold text-gray-800">{data.name}</span>
+                              </div>
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-lg font-black text-indigo-600">{formatCurrency(data.value)}</span>
+                                <span className="text-xs font-bold text-gray-400">({perc}%)</span>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar
+                      dataKey="value"
+                      radius={[0, 8, 8, 0]}
+                      barSize={isMobile ? 14 : 18}
+                    >
+                      {subcategoryChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.9} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    </div>
+
   );
 };

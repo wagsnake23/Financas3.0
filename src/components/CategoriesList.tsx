@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette";
 import { cn } from "@/lib/utils";
+import { getCategoryColor } from "@/lib/categoryColors";
 
 // Helper interface for hierarchical categories
 interface HierarchicalCategory extends AppCategory {
@@ -54,14 +55,8 @@ const CategoryItem = ({
 
   // Determine the effective color based on level and parent
   const effectiveColor = useMemo(() => {
-    if (level > 0 && category.parent_id) {
-      const parent = allFlatCategories.find(
-        (cat) => cat.id === category.parent_id
-      );
-      return parent?.cor || category.cor; // Use parent's color, fallback to own color
-    }
-    return category.cor; // Use own color for main categories
-  }, [category, level, allFlatCategories]);
+    return getCategoryColor(category, allFlatCategories);
+  }, [category, allFlatCategories]);
 
   return (
     <>

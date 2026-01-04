@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recha
 import { Transaction } from "@/types/finance";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils"; // Importar formatCurrency
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface ExpensesPieChartProps {
   transactions: Transaction[];
@@ -23,8 +24,8 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
 
       // Usar o nome e a cor da categoria pai, se existir, caso contrário, usar a subcategoria ou um fallback
       const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
-      const displayCategoryColor = parentCategory?.cor || subcategory?.cor || "hsl(215, 15%, 50%)";
-      
+      const displayCategoryColor = displayCategoryName === "Outros" ? "hsl(215, 15%, 50%)" : (parentCategory ? getCategoryColor(parentCategory, allCategories) : (subcategory ? getCategoryColor(subcategory, allCategories) : "hsl(215, 15%, 50%)"));
+
       if (!acc[displayCategoryName]) {
         acc[displayCategoryName] = { value: 0, color: displayCategoryColor };
       }
@@ -68,9 +69,9 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          <Tooltip 
+          <Tooltip
             formatter={(value: number) => `R$ ${value.toFixed(2)}`}
-            contentStyle={{ 
+            contentStyle={{
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
               borderRadius: "var(--radius)",

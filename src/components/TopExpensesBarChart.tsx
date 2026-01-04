@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface TopExpensesBarChartProps {
   expenses: Tables<'despesas'>[];
@@ -19,7 +20,7 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
     expenses.forEach(expense => {
       const subcategory = allSubcategories.find(c => c.id === expense.categoria_id);
       const categoryName = subcategory?.nome || "Outros";
-      const categoryColor = subcategory?.cor || "hsl(215, 15%, 50%)"; // Default color
+      const categoryColor = subcategory ? getCategoryColor(subcategory, allSubcategories) : "hsl(215, 15%, 50%)"; // Default color
 
       if (!categoryTotals[categoryName]) {
         categoryTotals[categoryName] = { name: categoryName, value: 0, color: categoryColor };
@@ -81,7 +82,11 @@ export const TopExpensesBarChart: React.FC<TopExpensesBarChartProps> = ({ expens
               borderRadius: "var(--radius)",
             }}
           />
-          <Bar dataKey="value" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </Card>

@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface MostUsedCategoriesProps {
   expenses: Tables<'despesas'>[];
@@ -28,7 +29,7 @@ export const MostUsedCategories = ({ expenses, categories }: MostUsedCategoriesP
       const categoryId = expense.categoria_id || "outros_diversos";
       const categoryNome = category?.nome || "Outros";
       const categoryIcone = category?.icone || "MoreHorizontal";
-      const categoryCor = category?.cor || "hsl(215, 15%, 50%)";
+      const categoryCor = category ? getCategoryColor(category, allSubcategories) : "hsl(215, 15%, 50%)";
 
       if (!categoryUsage[categoryId]) {
         categoryUsage[categoryId] = {
@@ -64,7 +65,7 @@ export const MostUsedCategories = ({ expenses, categories }: MostUsedCategoriesP
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm">
                   {index + 1}
                 </div>
-                <div 
+                <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
                   style={{ backgroundColor: category.cor, opacity: 0.2 }}
                 >

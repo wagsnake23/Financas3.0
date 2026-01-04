@@ -18,6 +18,7 @@ import { X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
 import { cn } from "@/lib/utils"; // Importar cn
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface CategoryFormProps {
   onAddCategory: (
@@ -170,9 +171,18 @@ export const CategoryForm = ({
           </Label>
           <Select
             value={selectedParentId || UNSELECTED_VALUE}
-            onValueChange={(value) =>
-              setSelectedParentId(value === UNSELECTED_VALUE ? null : value)
-            }
+            onValueChange={(value) => {
+              const newParentId = value === UNSELECTED_VALUE ? null : value;
+              setSelectedParentId(newParentId);
+
+              // NEW: Automatically match the parent's color for the subcategory
+              if (newParentId) {
+                const parent = allCategories.find(c => c.id === newParentId);
+                if (parent) {
+                  setCor(getCategoryColor(parent, allCategories));
+                }
+              }
+            }}
             disabled={editingCategory?.user_id === null}
           >
             <SelectTrigger
@@ -196,7 +206,7 @@ export const CategoryForm = ({
                       <DynamicIcon
                         name={cat.icone}
                         className="h-4 w-4"
-                        color={cat.cor}
+                        color={getCategoryColor(cat, allCategories)}
                       />
                       {cat.nome}
                     </span>

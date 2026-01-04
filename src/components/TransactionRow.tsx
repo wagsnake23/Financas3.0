@@ -231,7 +231,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell className="py-4 px-4 text-center font-roboto">
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="flex items-center justify-center gap-2"
         >
           <Button
             variant="ghost"

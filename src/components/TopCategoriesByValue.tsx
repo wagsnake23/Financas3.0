@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface TopCategoriesByValueProps {
   expenses: Tables<'despesas'>[];
@@ -31,7 +32,7 @@ export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByVa
       const categoryId = expense.categoria_id || "outros_diversos";
       const categoryNome = category?.nome || "Outros";
       const categoryIcone = category?.icone || "MoreHorizontal";
-      const categoryCor = category?.cor || "hsl(215, 15%, 50%)";
+      const categoryCor = category ? getCategoryColor(category, allSubcategories) : "hsl(215, 15%, 50%)";
 
       if (!categoryUsage[categoryId]) {
         categoryUsage[categoryId] = {
@@ -71,7 +72,7 @@ export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByVa
             <div key={category.id} className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div 
+                  <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-lg"
                     style={{ backgroundColor: category.cor, opacity: 0.2 }}
                   >
@@ -91,12 +92,12 @@ export const TopCategoriesByValue = ({ expenses, categories }: TopCategoriesByVa
                   <p className="text-xs text-muted-foreground">{category.percentage.toFixed(1)}%</p>
                 </div>
               </div>
-              <Progress 
-                value={category.percentage} 
+              <Progress
+                value={category.percentage}
                 className="h-2"
-                style={{ 
+                style={{
                   // @ts-ignore
-                  '--progress-background': category.cor 
+                  '--progress-background': category.cor
                 }}
               />
             </div>

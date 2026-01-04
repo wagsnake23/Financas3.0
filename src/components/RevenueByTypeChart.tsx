@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recha
 import { Tables } from "@/integrations/supabase/types";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
+import { getCategoryColor } from "@/lib/categoryColors";
 
 interface RevenueByTypeChartProps {
   revenues: Tables<'receitas'>[];
@@ -14,7 +15,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
     .reduce((acc, revenue) => {
       const type = revenueTypes.find(t => t.id === revenue.tipo_receita_id);
       const typeName = type?.nome || "Outros";
-      const typeColor = type?.cor || `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
+      const typeColor = type ? getCategoryColor(type, revenueTypes) : `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
 
       if (!acc[typeName]) {
         acc[typeName] = { value: 0, color: typeColor };
@@ -59,9 +60,9 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes }: RevenueByTypeChar
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          <Tooltip 
+          <Tooltip
             formatter={(value: number) => `R$ ${value.toFixed(2)}`}
-            contentStyle={{ 
+            contentStyle={{
               backgroundColor: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
               borderRadius: "var(--radius)",
