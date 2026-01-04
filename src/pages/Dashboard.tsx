@@ -174,13 +174,18 @@ export default function Dashboard() {
     return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
   }, [investments]);
 
+  const totalInvested = useMemo(() => {
+    return investments.reduce((sum, inv) => sum + inv.valor, 0);
+  }, [investments]);
+
   const currentYieldStats = useMemo(() => {
     const monthYields = totalProjectedAnnualYield / 12;
     return {
       monthYields,
-      annualYields: totalProjectedAnnualYield
+      annualYields: totalProjectedAnnualYield,
+      totalInvested
     };
-  }, [totalProjectedAnnualYield]);
+  }, [totalProjectedAnnualYield, totalInvested]);
 
   const projectedEndDate = useMemo(() => {
     if (allRevenues.length === 0 && allExpenseInstallments.length === 0) return "";
@@ -424,8 +429,10 @@ export default function Dashboard() {
             />
 
             <StatCard
-              mainStatTitle="Total de Rendimentos"
+              mainStatTitle="Rendimento Mensal"
               mainStatValue={currentYieldStats.monthYields}
+              secondaryStatTitle="Total Anual"
+              secondaryStatValue={currentYieldStats.annualYields}
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -447,8 +454,8 @@ export default function Dashboard() {
                   projectedAnnualYield={currentYieldStats.annualYields}
                 />
               }
-              annualTotalLabel="Total Anual"
-              annualTotalValue={currentYieldStats.annualYields}
+              annualTotalLabel="Patrimônio"
+              annualTotalValue={currentYieldStats.totalInvested}
               neumorphism={true}
             >
               <div className={cn("flex flex-col w-full h-full")}>
@@ -622,8 +629,10 @@ export default function Dashboard() {
               </StatCard>
 
               <StatCard
-                mainStatTitle="Total de Rendimentos"
+                mainStatTitle="Rendimento Mensal"
                 mainStatValue={currentYieldStats.monthYields}
+                secondaryStatTitle="Total Anual"
+                secondaryStatValue={currentYieldStats.annualYields}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -644,8 +653,8 @@ export default function Dashboard() {
                     projectedAnnualYield={currentYieldStats.annualYields}
                   />
                 }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={currentYieldStats.annualYields}
+                annualTotalLabel="Patrimônio"
+                annualTotalValue={currentYieldStats.totalInvested}
                 neumorphism={true}
               >
                 <div className="flex justify-end mt-4">
