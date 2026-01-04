@@ -73,21 +73,12 @@ export default function Investments() { // Alterado para export default function
     setSelectedMonth(date);
   };
 
-  // Fetch all revenues to calculate yields
+  // No longer needed here as yields are calculated from investments
+  /*
   const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<Tables<"receitas">[]>({
-    queryKey: ["allRevenues", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("receitas")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("data", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user && !authLoading,
+    ...
   });
+  */
 
   // Fetch all subcategories
   const { data: allSubcategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
@@ -305,15 +296,6 @@ export default function Investments() { // Alterado para export default function
     return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
   }, [investments]);
 
-  const currentYieldStats = useMemo(() => {
-    // Rendimento Mensal Médio = Total Anual / 12
-    const monthYields = totalProjectedAnnualYield / 12;
-    return {
-      monthYields,
-      annualYields: totalProjectedAnnualYield
-    };
-  }, [totalProjectedAnnualYield]);
-
   const stats = useMemo(() => {
     const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
     const avgProfitability = investments.length > 0
@@ -323,7 +305,7 @@ export default function Investments() { // Alterado para export default function
     return { totalInvested, avgProfitability };
   }, [investments]);
 
-  if (authLoading || isLoadingInvestments || isLoadingCategories || isLoadingAllRevenues) { // Incluindo isLoadingCategories e isLoadingAllRevenues
+  if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
@@ -345,54 +327,6 @@ export default function Investments() { // Alterado para export default function
 
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
-            <StatCard
-              mainStatTitle="Total de Rendimentos"
-              mainStatValue={currentYieldStats.monthYields}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="balance" // Using balance variant for navigaton style
-                />
-              }
-              variant="yield"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyYieldsBarChart
-                  revenues={[]} // Not used anymore for now
-                  currentDate={selectedMonth}
-                  isMobile={isMobile}
-                  onMonthClick={handleMonthClick}
-                  projectedAnnualYield={currentYieldStats.annualYields}
-                />
-              }
-              annualTotalLabel="Total Anual"
-              annualTotalValue={currentYieldStats.annualYields}
-              neumorphism={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FB923C",
-                        "--cor-base": "#F97316",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/investments")}
-                  >
-                    Investimentos
-                  </Button>
-                </div>
-              </div>
-            </StatCard>
 
             <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm bg-white", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
@@ -639,74 +573,26 @@ export default function Investments() { // Alterado para export default function
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <StatCard
-                mainStatTitle="Total de Rendimentos"
-                mainStatValue={currentYieldStats.monthYields}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="balance"
-                  />
-                }
-                variant="yield"
+                mainStatTitle="Total Investido"
+                mainStatValue={stats.totalInvested}
+                icon="DollarSign"
+                variant="income"
                 isMobile={isMobile}
-                chartContent={
-                  <MonthlyYieldsBarChart
-                    revenues={[]} // Not used anymore for now
-                    currentDate={selectedMonth}
-                    isMobile={false}
-                    onMonthClick={handleMonthClick}
-                    projectedAnnualYield={currentYieldStats.annualYields}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={currentYieldStats.annualYields}
                 neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FB923C",
-                        "--cor-base": "#F97316",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/investments")}
-                  >
-                    Investimentos
-                  </Button>
-                </div>
-              </StatCard>
+              />
 
-              <div className="grid grid-cols-1 gap-4">
-                <StatCard
-                  mainStatTitle="Total Investido"
-                  mainStatValue={stats.totalInvested}
-                  icon="DollarSign"
-                  variant="income"
-                  isMobile={isMobile}
-                  neumorphism={true}
-                />
-
-                <StatCard
-                  mainStatTitle="Rentabilidade Média"
-                  mainStatValue={stats.avgProfitability}
-                  secondaryStatTitle="Média Geral"
-                  secondaryStatValue={stats.avgProfitability}
-                  icon="Percent"
-                  variant="income"
-                  isMobile={isMobile}
-                  neumorphism={true}
-                />
-              </div>
+              <StatCard
+                mainStatTitle="Rentabilidade Média"
+                mainStatValue={stats.avgProfitability}
+                secondaryStatTitle="Média Geral"
+                secondaryStatValue={stats.avgProfitability}
+                icon="Percent"
+                variant="income"
+                isMobile={isMobile}
+                neumorphism={true}
+              />
             </div>
 
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
@@ -985,6 +871,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* NOVO: AlertDialog para confirmação de exclusão */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+        <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
         <AlertDialogContent className={cn("w-full rounded-xl", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">

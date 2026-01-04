@@ -10,7 +10,7 @@ interface MonthNavigatorCompactProps {
   onPreviousMonth: () => void;
   onNextMonth: () => void;
   isMobile?: boolean;
-  variant: "income" | "expense" | "balance";
+  variant: "income" | "expense" | "balance" | "yield";
 }
 
 export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
@@ -20,9 +20,9 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   isMobile,
   variant,
 }) => {
-  const textColorClass = variant === "income" ? "text-success" : variant === "expense" ? "text-destructive" : "text-primary";
-  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : variant === "expense" ? "hover:bg-destructive/10" : "hover:bg-primary/10";
-  const hoverTextColorClass = variant === "income" ? "hover:text-success" : variant === "expense" ? "hover:text-destructive" : "hover:text-primary";
+  const textColorClass = variant === "income" ? "text-success" : variant === "expense" ? "text-destructive" : variant === "yield" ? "text-yield" : "text-primary";
+  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : variant === "expense" ? "hover:bg-destructive/10" : variant === "yield" ? "hover:bg-yield/10" : "hover:bg-primary/10";
+  const hoverTextColorClass = variant === "income" ? "hover:text-success" : variant === "expense" ? "hover:text-destructive" : variant === "yield" ? "hover:text-yield" : "hover:text-primary";
 
   return (
     <div className={cn(
