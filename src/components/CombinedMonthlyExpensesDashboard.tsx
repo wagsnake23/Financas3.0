@@ -293,7 +293,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                           key={`cell-${index}`}
                           fill={entry.color}
                           filter="url(#shadow3d)"
-                          className="transition-all duration-300 hover:opacity-80 cursor-pointer outline-none"
+                          className="transition-all duration-300 cursor-pointer outline-none"
                           style={{ filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.15))' }}
                         />
                       ))}
@@ -454,7 +454,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       }}
                     />
                     <Tooltip
-                      cursor={{ fill: 'rgba(255,255,255,0.2)' }}
+                      cursor={{ fill: 'transparent' }}
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;

@@ -198,7 +198,12 @@ export const StatCard = ({
           )}
         </div>
 
-        {/* REMOVIDO: O ícone principal não é mais renderizado aqui */}
+        {/* Optional Icon as Badge (Top Right) - Only if no topRightContent and not mobile */}
+        {!hideMainIcon && icon && !topRightContent && !isMobile && (
+          <div className={cn("p-2 rounded-xl h-fit shadow-sm", iconStyles[variant])}>
+            <DynamicIcon name={icon} className="h-6 w-6" />
+          </div>
+        )}
       </div>
       {chartContent && (
         <div className={cn("mt-2", isMobile && "mt-1")}>{chartContent}</div>
@@ -226,10 +231,10 @@ export const StatCard = ({
             isMobile ? "bottom-2 left-[14px]" : "bottom-4 left-8"
           )}
         >
-          {!hideMainIcon && icon && (
+          {!hideMainIcon && icon && (topRightContent || isMobile) && (
             <div
               className={cn(
-                `rounded-xl`,
+                `rounded-xl shadow-sm`,
                 iconStyles[variant],
                 isMobile ? "p-1" : "p-2"
               )}

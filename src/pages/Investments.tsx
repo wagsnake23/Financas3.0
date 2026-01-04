@@ -397,7 +397,7 @@ export default function Investments() { // Alterado para export default function
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                    <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                     <NumericInput
                       id="profitability"
                       value={profitability}
@@ -667,7 +667,7 @@ export default function Investments() { // Alterado para export default function
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                        <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                         <NumericInput
                           id="profitability"
                           value={profitability}
