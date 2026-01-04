@@ -95,7 +95,6 @@ export default function Receitas() {
           .from("categorias")
           .select("*")
           .or(`user_id.eq.${user.id},user_id.is.null`)
-          .not("parent_id", "is", null)
           .order("nome");
         if (error) throw error;
         return data as AppCategory[];

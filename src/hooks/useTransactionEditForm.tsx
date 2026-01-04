@@ -97,7 +97,7 @@ export const useTransactionEditForm = ({
       );
     } else {
       baseCategories = allCategories.filter(
-        (cat) => cat.parent_id !== "receitas_e_investimentos"
+        (cat) => cat.parent_id !== null && cat.parent_id !== "receitas_e_investimentos"
       );
     }
 
@@ -129,7 +129,7 @@ export const useTransactionEditForm = ({
       ];
       const initialStatus =
         editingTransaction.status &&
-        validStatuses.includes(editingTransaction.status)
+          validStatuses.includes(editingTransaction.status)
           ? editingTransaction.status
           : "Pendente";
       setStatus(initialStatus);
@@ -222,10 +222,10 @@ export const useTransactionEditForm = ({
       let finalStatus: ReceitaStatus = isPaid
         ? "Recebida"
         : editingTransaction.status === "Cancelada"
-        ? "Cancelada"
-        : editingTransaction.status === "Prevista"
-        ? "Prevista"
-        : "Pendente";
+          ? "Cancelada"
+          : editingTransaction.status === "Prevista"
+            ? "Prevista"
+            : "Pendente";
 
       const updatedTransaction: Omit<Transaction, "id"> = {
         type,
@@ -287,10 +287,6 @@ export const useTransactionEditForm = ({
     }
     if (category === UNSELECTED_VALUE) {
       newErrors.category = true;
-      hasError = true;
-    }
-    if (formaPagamento === UNSELECTED_VALUE) {
-      newErrors.formaPagamento = true;
       hasError = true;
     }
     if (formaPagamento === "cartao" && cartaoId === UNSELECTED_VALUE) {

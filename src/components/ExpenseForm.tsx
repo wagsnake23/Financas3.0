@@ -110,7 +110,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   const expenseSubcategories = React.useMemo(() => {
     return allSubcategories
-      .filter((cat) => cat.parent_id !== "receitas_e_investimentos")
+      .filter((cat) => cat.parent_id !== null && cat.parent_id !== "receitas_e_investimentos")
       .sort((a, b) => a.nome.localeCompare(b.nome));
   }, [allSubcategories]);
 

@@ -34,8 +34,6 @@ import {
 } from "@/components/ui/dialog"; // Importar Dialog components
 import { EditInvestmentDialog } from "@/components/EditInvestmentDialog"; // Importar o novo componente de diálogo
 import { StatCard } from "@/components/StatCard"; // Importar StatCard
-import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact"; // NOVO: Importar MonthNavigatorCompact
-import { MonthlyYieldsBarChart } from "@/components/MonthlyYieldsBarChart"; // NOVO: Importar MonthlyYieldsBarChart
 import { useNavigate } from "react-router-dom"; // NOVO: Importar useNavigate
 import {
   AlertDialog,
@@ -59,19 +57,7 @@ export default function Investments() { // Alterado para export default function
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-  const handlePreviousMonth = () => {
-    setSelectedMonth((prev) => subMonths(prev, 1));
-  };
-
-  const handleNextMonth = () => {
-    setSelectedMonth((prev) => addMonths(prev, 1));
-  };
-
-  const handleMonthClick = (date: Date) => {
-    setSelectedMonth(date);
-  };
 
   // No longer needed here as yields are calculated from investments
   /*
