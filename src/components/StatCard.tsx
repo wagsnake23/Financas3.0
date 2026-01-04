@@ -214,7 +214,7 @@ export const StatCard = ({
         <div
           className={cn(
             "absolute flex items-center gap-2", // Use flex to align icon and text
-            isMobile ? "bottom-2 left-2" : "bottom-4 left-4"
+            isMobile ? "bottom-2 left-[14px]" : "bottom-4 left-8"
           )}
         >
           {!hideMainIcon && icon && (
