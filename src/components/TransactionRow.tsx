@@ -11,6 +11,17 @@ import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 
@@ -218,7 +229,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
       {/* 📌 AÇÕES */}
       <TableCell className="py-4 px-4 text-center font-roboto">
-        <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
           <Button
             variant="ghost"
             size="icon"
@@ -230,17 +244,38 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           >
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDeleteTransaction(transaction.id, transaction.type, "oneOff");
-            }}
-            className="h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => e.stopPropagation()}
+                className="h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="rounded-xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja excluir esta {transaction.type === 'income' ? 'receita' : 'despesa'}? Esta ação não pode ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteTransaction(transaction.id, transaction.type, "oneOff");
+                  }}
+                  className="bg-destructive text-white hover:bg-destructive/90 rounded-xl border-none"
+                >
+                  Excluir
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </TableCell>
     </TableRow>
