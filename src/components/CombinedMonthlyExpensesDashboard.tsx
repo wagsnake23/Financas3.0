@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Label } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Label, LabelList } from "recharts";
 import { Transaction, AppCategory } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
@@ -12,8 +12,9 @@ import { getCategoryColor } from "@/lib/categoryColors";
 
 // Helper for subcategory grouping logic
 const groupSubcategories = (data: any[], limit: number) => {
-  if (data.length <= limit) return data;
   const sorted = [...data].sort((a, b) => b.value - a.value);
+  if (sorted.length <= limit) return sorted;
+
   const top = sorted.slice(0, limit);
   const others = sorted.slice(limit);
   const totalOthers = others.reduce((acc, curr) => acc + curr.value, 0);
@@ -165,8 +166,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       icone: data.icone,
     }));
 
-    return rawData.sort((a, b) => b.value - a.value);
-  }, [expensesBySubcategory]);
+    const limit = isMobile ? rawData.length : 8; // Top 8 for desktop, all for mobile
+    return groupSubcategories(rawData, limit);
+  }, [expensesBySubcategory, isMobile]);
 
   const totalMonthlyExpense = useMemo(() => {
     return chartData.reduce((sum, item) => sum + item.value, 0);
@@ -183,32 +185,32 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   return (
     <div className="space-y-6">
       <Card className={cn(
-        "p-6 animate-slide-up rounded-2xl shadow-sm border-0 bg-white/50 backdrop-blur-sm",
+        "p-6 animate-slide-up rounded-[2xl] border border-white/20 bg-white/75 backdrop-blur-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.08)]",
         isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
-      )}>
+      )} style={{ WebkitBackdropFilter: 'blur(10px)' }}>
         {!isMobile && (
           <div className="flex items-center justify-between mb-8">
             <Button
               variant="ghost"
               size="icon"
               onClick={handlePreviousMonth}
-              className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+              className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
             >
               <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
             </Button>
 
-            <div className="text-center">
-              <h2 className="text-2xl font-bold capitalize text-gray-800 tracking-tight">
+            <div className="text-center group">
+              <h2 className="text-2xl font-black capitalize text-gray-800 tracking-tight transition-all group-hover:scale-105">
                 {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
               </h2>
-              <div className="h-1 w-12 bg-primary/20 rounded-full mx-auto mt-1" />
+              <div className="h-1.5 w-16 bg-primary/30 rounded-full mx-auto mt-2 transition-all group-hover:w-24 group-hover:bg-primary/50" />
             </div>
 
             <Button
               variant="ghost"
               size="icon"
               onClick={handleNextMonth}
-              className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
+              className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
             >
               <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
             </Button>
@@ -220,11 +222,15 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         {/* Gráficos */}
         <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-8", isMobile && "gap-4")}>
           {/* Donut de Categorias */}
-          <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
+          <div className={cn(
+            "bg-gradient-to-br from-gray-50/90 to-gray-200/60 p-6 rounded-[24px] border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
+            "backdrop-blur-[8px]",
+            isMobile && "px-3 py-5"
+          )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-1.5 bg-primary rounded-full" />
-                <h3 className="text-lg font-bold text-gray-800">Despesas por Categoria</h3>
+                <div className="h-8 w-2 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.3)]" />
+                <h3 className="text-lg font-black text-gray-800 tracking-tight">Despesas por Categoria</h3>
               </div>
 
               {isMobile && (
@@ -254,34 +260,58 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               <div className={cn("h-[350px] w-full", isMobile && "h-[320px]")}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart margin={{ top: 10, right: 25, left: 25, bottom: 10 }}>
+                    <defs>
+                      <filter id="shadow3d" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+                        <feOffset in="blur" dx="2" dy="4" result="offsetBlur" />
+                        <feFlood floodColor="#000" floodOpacity="0.2" result="offsetColor" />
+                        <feComposite in="offsetColor" in2="offsetBlur" operator="in" result="offsetBlur" />
+                        <feBlend in="SourceGraphic" in2="offsetBlur" mode="normal" />
+                      </filter>
+                      <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.2)" />
+                        <stop offset="100%" stopColor="rgba(0,0,0,0.1)" />
+                      </linearGradient>
+                    </defs>
                     <Pie
                       data={chartData}
                       cx="50%"
                       cy="50%"
                       innerRadius={isMobile ? "55%" : "70%"}
                       outerRadius={isMobile ? "78%" : "90%"}
-                      paddingAngle={4}
+                      paddingAngle={5}
                       dataKey="value"
                       animationBegin={0}
-                      animationDuration={1200}
+                      animationDuration={1500}
                       label={isMobile ? ({ percent }) => `${(percent * 100).toFixed(0)}%` : false}
                       labelLine={false}
+                      stroke="none"
+                      isAnimationActive={true}
                     >
                       {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.color}
+                          filter="url(#shadow3d)"
+                          className="transition-all duration-300 hover:opacity-80 cursor-pointer outline-none"
+                          style={{ filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.15))' }}
+                        />
                       ))}
                       <Label
                         content={({ viewBox }) => {
                           const { cx, cy } = viewBox as any;
                           return (
-                            <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
-                              <tspan x={cx} dy="-0.5em" className="fill-muted-foreground text-[12px] font-semibold uppercase tracking-widest">
-                                Total
-                              </tspan>
-                              <tspan x={cx} dy="1.5em" className="fill-foreground text-xl font-black">
-                                {formatCurrency(totalMonthlyExpense)}
-                              </tspan>
-                            </text>
+                            <g>
+                              <circle cx={cx} cy={cy} r={isMobile ? "50" : "60"} fill="white" fillOpacity="0.6" style={{ filter: 'blur(2px)' }} />
+                              <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
+                                <tspan x={cx} dy="-0.6em" className="fill-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                                  Total
+                                </tspan>
+                                <tspan x={cx} dy="1.6em" className="fill-gray-800 text-xl font-black tracking-tighter">
+                                  {formatCurrency(totalMonthlyExpense)}
+                                </tspan>
+                              </text>
+                            </g>
                           );
                         }}
                       />
@@ -291,14 +321,21 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
+                          const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
                           return (
-                            <div className="bg-white p-4 shadow-xl border border-gray-100 rounded-xl">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xl">{data.icone}</span>
-                                <span className="font-bold text-gray-800">{data.name}</span>
+                            <div className="bg-white/90 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.15)] border border-white/60 rounded-2xl animate-in zoom-in-95" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-2xl drop-shadow-sm">{data.icone}</span>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Categoria</span>
+                                  <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
+                                </div>
                               </div>
-                              <div className="text-lg font-black text-primary">
-                                {formatCurrency(data.value)}
+                              <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
+                                <span className="text-xl font-black text-primary tracking-tighter">
+                                  {formatCurrency(data.value)}
+                                </span>
+                                <span className="text-xs font-bold text-gray-400">({perc}%)</span>
                               </div>
                             </div>
                           );
@@ -330,11 +367,15 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           </div>
 
           {/* Barras de Subcategorias */}
-          <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm", isMobile && "px-3 py-5")}>
+          <div className={cn(
+            "bg-gradient-to-br from-gray-50/90 to-gray-200/60 p-6 rounded-[24px] border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
+            "backdrop-blur-[8px]",
+            isMobile && "px-3 py-5"
+          )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
-                <h3 className="text-lg font-bold text-gray-800">Despesas por Subcategoria</h3>
+                <div className="h-8 w-2 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.3)]" />
+                <h3 className="text-lg font-black text-gray-800 tracking-tight">Despesas por Subcategoria</h3>
               </div>
 
               {isMobile && (
@@ -373,14 +414,26 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                   <BarChart
                     data={subcategoryChartData}
                     layout="vertical"
-                    margin={{ left: isMobile ? 0 : 30, right: isMobile ? 0 : 40, top: 0, bottom: 0 }}
+                    margin={{ left: isMobile ? 0 : 30, right: 45, top: 0, bottom: 0 }}
                     barGap={2}
                   >
+                    <defs>
+                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+                        <stop offset="50%" stopColor="rgba(255,255,255,0)" />
+                        <stop offset="100%" stopColor="rgba(0,0,0,0.1)" />
+                      </linearGradient>
+                      <filter id="barShadow" x="-2%" y="-2%" width="120%" height="120%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur" />
+                        <feOffset in="blur" dx="1" dy="1" result="offsetBlur" />
+                        <feComposite in="SourceGraphic" in2="offsetBlur" operator="over" />
+                      </filter>
+                    </defs>
                     <XAxis type="number" hide />
                     <YAxis
                       dataKey="name"
                       type="category"
-                      width={isMobile ? 100 : 130}
+                      width={isMobile ? 110 : 140}
                       axisLine={false}
                       tickLine={false}
                       tick={({ x, y, payload }) => {
@@ -388,32 +441,37 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         return (
                           <g transform={`translate(${x},${y})`}>
                             <text
-                              x={isMobile ? -5 : -10}
+                              x={isMobile ? -8 : -15}
                               y={0}
                               dy={4}
                               textAnchor="end"
-                              className="fill-gray-600 text-[10px] md:text-[13px] font-bold"
+                              className="fill-gray-500 text-[10px] md:text-[12px] font-black uppercase tracking-tight"
                             >
-                              {item?.icone} {isMobile && payload.value.length > 12 ? `${payload.value.substring(0, 10)}..` : payload.value}
+                              {item?.icone} {isMobile && payload.value.length > 13 ? `${payload.value.substring(0, 11)}..` : payload.value}
                             </text>
                           </g>
                         );
                       }}
                     />
                     <Tooltip
-                      cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                      cursor={{ fill: 'rgba(255,255,255,0.2)' }}
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
                           return (
-                            <div className="bg-white p-4 shadow-xl border border-gray-100 rounded-xl">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xl">{data.icone}</span>
-                                <span className="font-bold text-gray-800">{data.name}</span>
+                            <div className="bg-white/90 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.15)] border border-white/60 rounded-2xl animate-in zoom-in-95" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-2xl drop-shadow-sm">{data.icone}</span>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
+                                  <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
+                                </div>
                               </div>
-                              <div className="flex items-baseline gap-2">
-                                <span className="text-lg font-black text-indigo-600">{formatCurrency(data.value)}</span>
+                              <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
+                                <span className="text-xl font-black text-indigo-600 tracking-tighter">
+                                  {formatCurrency(data.value)}
+                                </span>
                                 <span className="text-xs font-bold text-gray-400">({perc}%)</span>
                               </div>
                             </div>
@@ -424,12 +482,39 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     />
                     <Bar
                       dataKey="value"
-                      radius={[0, 8, 8, 0]}
-                      barSize={isMobile ? 18 : 22}
+                      radius={[0, 10, 10, 0]}
+                      barSize={isMobile ? 20 : 26}
+                      className="cursor-pointer transition-all duration-300"
+                      isAnimationActive={true}
                     >
                       {subcategoryChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.9} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.color}
+                        />
                       ))}
+                      <LabelList
+                        dataKey="value"
+                        position="right"
+                        content={(props: any) => {
+                          const { x, y, width, value } = props;
+                          const percentage = totalMonthlyExpense > 0
+                            ? `${((value / totalMonthlyExpense) * 100).toFixed(1)}%`
+                            : "0%";
+                          return (
+                            <text
+                              x={x + width + 10}
+                              y={y + (isMobile ? 14 : 18)}
+                              fill="#334155"
+                              fontSize={isMobile ? 11 : 12}
+                              fontWeight="900"
+                              className="font-roboto"
+                            >
+                              {percentage}
+                            </text>
+                          );
+                        }}
+                      />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
