@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { parse, isValid as isValidDate } from "date-fns";
 
 interface ShoppingListContentProps {
   user: User | null;
@@ -267,7 +268,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             ...item,
             status: checked,
             date: checked
-              ? format(new Date(), "MMM/dd", { locale: ptBR })
+              ? format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
               : "",
           }
           : item
@@ -283,7 +284,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         id: item.id,
         product: item.product,
         status: checked,
-        date: checked ? format(new Date(), "MMM/dd", { locale: ptBR }) : "",
+        date: checked ? format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : "",
         order: item.order, // Mantém a ordem original
       };
       upsertItemsMutation.mutate([itemToUpsert], {
@@ -524,15 +525,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 >
                   <div className="flex flex-col w-full gap-1">
                     {/* 📌 PRIMEIRA LINHA: Nº e Produto */}
-                    <div className="flex items-start justify-between w-full">
-                      <div className="flex items-start gap-3 min-w-0">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-3 min-w-0">
                         {/* Nº */}
-                        <span className="text-[0.72rem] text-gray-600 font-black whitespace-nowrap min-w-[28px] text-center pt-0.5">
+                        <span className="text-[0.80rem] text-primary font-black whitespace-nowrap min-w-[28px] text-center leading-none">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {/* Produto */}
                         <span className={cn(
-                          "font-bold text-gray-800 text-[0.85rem] leading-tight truncate",
+                          "font-bold text-gray-700 text-[0.80rem] leading-none truncate",
                           item.status && "text-gray-400"
                         )}>
                           {item.product}
@@ -540,7 +541,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       </div>
                       {/* Status Label */}
                       <span className={cn(
-                        "text-[0.75rem] tracking-tight shrink-0 ml-3 pt-0.5",
+                        "text-[0.75rem] tracking-tight shrink-0 ml-3 leading-none",
                         item.status ? "text-success font-bold" : "text-gray-400 italic"
                       )}>
                         {item.status ? "COMPRADO" : "Pendente"}
@@ -555,8 +556,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                         {/* Data de Compra */}
                         <div className="min-w-0 flex-1">
                           {item.status && item.date && (
-                            <span className="text-[0.75rem] text-gray-400 italic truncate block">
-                              Comprado em {item.date}
+                            <span className="text-[0.75rem] text-gray-400 truncate block">
+                              {item.date}
                             </span>
                           )}
                         </div>
@@ -596,7 +597,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   )}
                 >
                   {/* Nº */}
-                  <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
+                  <div className={cn("col-span-2 text-center font-bold text-primary text-base", item.status && "opacity-60")}>
                     {index + 1}
                   </div>
 
