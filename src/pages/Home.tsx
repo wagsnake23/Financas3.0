@@ -244,7 +244,7 @@ export default function Home() {
                             <button onClick={handlePrevMonth} className="text-primary hover:bg-primary/10 rounded-full p-1 transition-all">
                                 <DynamicIcon name="ChevronLeft" className="h-4 w-4" strokeWidth={3} />
                             </button>
-                            <span className="text-[11px] font-black text-primary px-1 flex-1 text-center uppercase tracking-tight">
+                            <span className="text-[12px] font-black text-primary px-1 flex-1 text-center uppercase tracking-tight">
                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                             </span>
                             <button onClick={handleNextMonth} className="text-primary hover:bg-primary/10 rounded-full p-1 transition-all">
@@ -254,7 +254,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex flex-col -mt-1">
-                        <p className="text-[20px] font-black text-gray-800 tracking-tight mb-0.5">
+                        <p className="text-[18px] font-black text-gray-800 tracking-tight mb-0.5">
                             {formatCurrency(stats.currentBalance)}
                         </p>
                         <div className="flex items-center gap-2">
