@@ -189,25 +189,25 @@ export default function Home() {
                 {/* CARD PRINCIPAL — SALDO MENSAL */}
                 <Card
                     className="p-3 mb-3 rounded-2xl border-none shadow-md relative overflow-hidden animate-slide-up"
-                    style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F2FFFB 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%)" }}
                 >
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-1.5">
-                            <div className="p-1.5 bg-success/10 rounded-xl text-success">
+                            <div className="p-1.5 bg-primary/10 rounded-xl text-primary">
                                 <DynamicIcon name="Wallet" className="h-4 w-4" />
                             </div>
-                            <h2 className="text-[11px] font-extrabold text-success/70 uppercase tracking-widest">Saldo Mensal</h2>
+                            <h2 className="text-[11px] font-extrabold text-primary/70 uppercase tracking-widest">Saldo Mensal</h2>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center gap-1 bg-success/10 px-2 py-0.5 rounded-full transition-colors border-none shadow-none">
-                            <button onClick={handlePrevMonth} className="text-success/80 hover:scale-110 transition-transform p-0.5">
+                        <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full transition-colors border-none shadow-none">
+                            <button onClick={handlePrevMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" />
                             </button>
-                            <span className="text-[9px] font-bold text-success/90 uppercase min-w-[50px] text-center">
+                            <span className="text-[9px] font-bold text-primary/90 uppercase min-w-[50px] text-center">
                                 {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-success/80 hover:scale-110 transition-transform p-0.5">
+                            <button onClick={handleNextMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
                                 <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" />
                             </button>
                         </div>
@@ -230,7 +230,6 @@ export default function Home() {
                 </Card>
 
                 <div className="grid grid-cols-1 gap-3 mb-3">
-                    {/* CARD DE DESPESAS */}
                     <Card
                         className="p-3 rounded-2xl border-none shadow-sm relative animate-slide-up delay-100"
                         style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)" }}
@@ -262,11 +261,8 @@ export default function Home() {
                                     {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}% vs ant.
                                 </p>
                             </div>
-                        </div>
-
-                        <div className="mt-2.5">
                             <Button
-                                className="btn-3d w-full h-[32px] rounded-xl font-bold text-xs shadow-md"
+                                className="btn-3d h-[30px] px-4 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[100px]"
                                 style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
                                 onClick={() => navigate("/despesas")}
                             >
@@ -308,11 +304,8 @@ export default function Home() {
                                     {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}% vs ant.
                                 </p>
                             </div>
-                        </div>
-
-                        <div className="mt-2.5">
                             <Button
-                                className="btn-3d w-full h-[32px] rounded-xl font-bold text-xs shadow-md"
+                                className="btn-3d h-[30px] px-4 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[100px]"
                                 style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
                                 onClick={() => navigate("/receitas")}
                             >
