@@ -172,7 +172,7 @@ export default function Home() {
     const todayStr = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
     return (
-        <div className={cn("flex flex-col min-h-screen pt-14", isMobile ? "bg-lancamentos-mobile-bg" : "bg-[#F6FAFF]")}>
+        <div className={cn("flex flex-col min-h-screen pt-14 bg-white")}>
             <Navigation />
             <main className={cn("container mx-auto flex-grow", isMobile ? "px-3 pt-5 pb-20" : "max-w-[1200px] px-6 py-6")}>
 
@@ -244,12 +244,12 @@ export default function Home() {
                                 </button>
                                 <h2 className="text-[11px] font-extrabold text-destructive/60 uppercase tracking-wider">Despesas</h2>
                             </div>
-                            <button
+                            <Button
+                                className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-destructive text-destructive hover:bg-destructive/5 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=expense")}
-                                className="px-2.5 py-0.5 rounded-full bg-destructive/10 text-[9px] font-bold text-destructive/80 hover:bg-destructive/20 transition-colors flex items-center gap-1"
                             >
-                                Ver Gastos <DynamicIcon name="ChevronRight" className="h-2.5 w-2.5" />
-                            </button>
+                                Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                            </Button>
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -262,7 +262,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="btn-3d h-[30px] px-4 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[100px]"
+                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[115px]"
                                 style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
                                 onClick={() => navigate("/despesas")}
                             >
@@ -287,12 +287,12 @@ export default function Home() {
                                 </button>
                                 <h2 className="text-[11px] font-extrabold text-success/60 uppercase tracking-wider">Receitas</h2>
                             </div>
-                            <button
+                            <Button
+                                className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-success text-success hover:bg-success/5 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=income")}
-                                className="px-2.5 py-0.5 rounded-full bg-success/15 text-[9px] font-bold text-success/80 hover:bg-success/25 transition-colors flex items-center gap-1"
                             >
-                                Ver Receitas <DynamicIcon name="ChevronRight" className="h-2.5 w-2.5" />
-                            </button>
+                                Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                            </Button>
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -305,7 +305,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="btn-3d h-[30px] px-4 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[100px]"
+                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[115px]"
                                 style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
                                 onClick={() => navigate("/receitas")}
                             >
