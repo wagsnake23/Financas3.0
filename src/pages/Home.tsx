@@ -229,15 +229,15 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="px-5 py-3 mb-4 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
+                    className="px-5 py-2.5 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
                 >
-                    <div className="flex justify-between items-start mb-3">
+                    <div className="flex justify-between items-start mb-2.5">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-50 rounded-2xl text-primary">
                                 <Wallet className="h-6 w-6" />
                             </div>
                             <div className="flex flex-col">
-                                <h2 className="text-[13px] font-black text-primary uppercase tracking-widest">Saldo Mensal</h2>
+                                <h2 className="text-[13px] font-black text-primary uppercase tracking-tight">Saldo Mensal</h2>
                             </div>
                         </div>
 
@@ -256,7 +256,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex flex-col">
-                        <p className="text-[22px] font-black text-gray-800 tracking-tight mb-1">
+                        <p className="text-[20px] font-black text-gray-800 tracking-tight mb-0.5">
                             {formatCurrency(stats.currentBalance)}
                         </p>
                         <div className="flex items-center gap-2">
@@ -274,10 +274,10 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="p-4 rounded-[24px] border-none shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
+                        className="p-3.5 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFF9F9 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex justify-between items-center mb-3">
                             <div className="flex items-center gap-3">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
@@ -286,7 +286,7 @@ export default function Home() {
                                 >
                                     <TrendingDown className="h-5 w-5 text-white" />
                                 </Button>
-                                <h2 className="text-[13px] font-black text-rose-600 uppercase tracking-widest">Despesas</h2>
+                                <h2 className="text-[13px] font-black text-rose-600 uppercase tracking-tight">Despesas</h2>
                             </div>
                             <Button
                                 className="h-9 px-3 rounded-2xl font-bold text-[11px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors"
@@ -298,7 +298,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
+                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none mb-0.5">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                                 <div className={cn(
@@ -321,10 +321,10 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="p-4 rounded-[24px] border-none shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
+                        className="p-3.5 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FFFA 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex justify-between items-center mb-3">
                             <div className="flex items-center gap-3">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
@@ -333,7 +333,7 @@ export default function Home() {
                                 >
                                     <TrendingUp className="h-5 w-5 text-white" />
                                 </Button>
-                                <h2 className="text-[13px] font-black text-emerald-600 uppercase tracking-widest">Receitas</h2>
+                                <h2 className="text-[13px] font-black text-emerald-600 uppercase tracking-tight">Receitas</h2>
                             </div>
                             <Button
                                 className="h-9 px-3 rounded-2xl font-bold text-[11px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-emerald-200 text-emerald-500 hover:bg-emerald-50 transition-colors"
@@ -345,7 +345,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
+                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none mb-0.5">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                                 <div className={cn(
