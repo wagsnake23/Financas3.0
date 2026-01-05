@@ -469,7 +469,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
-        <div className="w-full mb-4 shrink-0 relative">
+        <div className={cn("mb-4 shrink-0 relative", isMobile ? "w-full px-1" : "w-full")}>
           <input
             ref={newItemInputRef}
             type="text"
