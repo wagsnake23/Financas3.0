@@ -101,10 +101,10 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-4 animate-fade-in rounded-2xl shadow-sm border-none relative overflow-hidden")}
+      className={cn("p-3 animate-fade-in rounded-2xl shadow-sm border-none relative overflow-hidden")}
       style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F9F7FF 100%)" }}
     >
-      <div className="flex items-center justify-between mb-3 px-1">
+      <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-2">
           <div className="p-1.5 bg-[#5429A6]/10 rounded-lg text-[#5429A6]">
             <DynamicIcon name="CreditCard" className="h-4 w-4" />
@@ -124,7 +124,7 @@ export const MobileCreditCardExpenses: React.FC<
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
           <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#DCD2FF] bg-white/60 backdrop-blur-sm">
             <SelectValue placeholder="Selecione um cartão" />
@@ -139,7 +139,7 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-[34px] text-xs font-bold shadow-md"
+          className="btn-3d rounded-xl w-full h-[32px] text-xs font-bold shadow-md"
           style={
             {
               "--cor-topo": "#B27CFF",
@@ -155,7 +155,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-2 text-center mt-2 border-t border-[#DCD2FF]/30 pt-3">
+          <div className="grid grid-cols-3 gap-2 text-center mt-1 border-t border-[#DCD2FF]/30 pt-2.5">
             {/* Pago */}
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-1.5 mb-1">
@@ -204,7 +204,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {selectedCardId !== UNSELECTED_VALUE &&
           filteredExpenses.length === 0 && (
-            <p className="text-muted-foreground text-center py-2 text-sm">
+            <p className="text-muted-foreground text-center py-1 text-xs">
               Nenhuma despesa no mês selecionado.
             </p>
           )}
