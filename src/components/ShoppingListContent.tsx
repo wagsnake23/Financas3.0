@@ -656,14 +656,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       {/* Buttons Container */}
       <div className={cn(
         "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-[42px] left-0 right-0 px-4 py-2 bg-transparent backdrop-blur-sm z-40 mb-0" : "mt-4 mb-2"
+        isMobile ? "fixed bottom-[34px] left-0 right-0 px-4 py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
       )}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="rounded-xl flex-1">
-              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar
-              Lista
+            <Button variant="destructive" className="rounded-xl flex-1 h-9 text-xs">
+              <DynamicIcon name="Trash2" className="mr-2 h-3.5 w-3.5" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="rounded-xl">
