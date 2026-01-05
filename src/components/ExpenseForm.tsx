@@ -378,6 +378,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["expenseInstallments", user?.id],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments"] });
     } catch (error: any) {
       toast.error("Erro ao adicionar despesa", {
         description: error.message,

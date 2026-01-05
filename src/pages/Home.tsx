@@ -51,7 +51,6 @@ export default function Home() {
         },
         enabled: !!user && !authLoading,
         placeholderData: keepPreviousData,
-        staleTime: 1000 * 60 * 5, // 5 minutos de cache "fresco"
     });
 
     // Fetch all expense installments for memory-based filtering and Credit Card card
@@ -90,7 +89,6 @@ export default function Home() {
             },
             enabled: !!user && !authLoading,
             placeholderData: keepPreviousData,
-            staleTime: 1000 * 60 * 5, // 5 minutos de cache "fresco"
         });
 
     // Fetch cards

@@ -250,6 +250,7 @@ export default function Receitas() {
       setIsRecurring(false);
       setValidationErrors({});
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["allRevenues"] });
     } catch (error: any) {
       toast.error("Erro ao adicionar receita", {
         description: error.message,
