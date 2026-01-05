@@ -63,7 +63,7 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
           title="Limpar todos os filtros"
           className={cn(
             "absolute right-0 rounded-xl text-destructive bg-soft-red/50 hover:bg-soft-red/70 transition-all",
-            isMobile ? "h-8 w-8 right-2" : "h-10 w-10 right-4"
+            isMobile ? "h-8 w-8 right-4" : "h-10 w-10 right-10"
           )}
         >
           <FilterX className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} />

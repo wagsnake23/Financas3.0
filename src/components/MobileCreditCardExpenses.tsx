@@ -134,8 +134,8 @@ export const MobileCreditCardExpenses: React.FC<
           className="btn-3d rounded-xl w-full h-[32px] text-xs font-bold shadow-md"
           style={
             {
-              "--cor-topo": "#B27CFF",
-              "--cor-base": "#8E5CFF",
+              "--cor-topo": "#9d50ff",
+              "--cor-base": "#8235ff",
             } as React.CSSProperties
           }
           onClick={handlePayMonthlyBill}

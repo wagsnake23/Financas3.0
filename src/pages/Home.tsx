@@ -301,9 +301,12 @@ export default function Home() {
                                 <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
-                                <p className="text-[10px] text-rose-400 font-bold uppercase">
-                                    {stats.expenseVar >= 0 ? "↑ aumentou" : "↓ diminuiu"} {Math.abs(stats.expenseVar).toFixed(1)}%
-                                </p>
+                                <div className={cn(
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-1",
+                                    stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                )}>
+                                    {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
+                                </div>
                             </div>
                             <Button
                                 className="h-9 px-4 rounded-2xl font-bold text-xs shadow-md bg-gradient-to-r from-rose-500 to-rose-600 text-white border-none hover:shadow-lg transition-all active:scale-95 w-[135px]"
@@ -345,9 +348,12 @@ export default function Home() {
                                 <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
-                                <p className="text-[10px] text-emerald-400 font-bold uppercase">
-                                    {stats.incomeVar >= 0 ? "↑ aumentou" : "↓ diminuiu"} {Math.abs(stats.incomeVar).toFixed(1)}%
-                                </p>
+                                <div className={cn(
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-1",
+                                    stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                )}>
+                                    {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
+                                </div>
                             </div>
                             <Button
                                 className="h-9 px-4 rounded-2xl font-bold text-xs shadow-md bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-none hover:shadow-lg transition-all active:scale-95 w-[135px]"
