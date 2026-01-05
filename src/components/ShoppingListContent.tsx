@@ -489,91 +489,168 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
         <div
           className={cn(
-            "w-full rounded-xl border flex-1 min-h-0 overflow-y-auto",
-            isMobile ? "bg-white mb-2" : ""
+            "w-full flex-1 min-h-0 overflow-y-auto no-scrollbar",
+            isMobile ? "px-1" : "rounded-xl border bg-white mb-2"
           )}
         >
-          {/* Sticky Header */}
-          <div
-            className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-[#0A4A9B]"
-            style={{
-              background: "linear-gradient(135deg, #E3F2FD 0%, #F1F9FF 100%)"
-            }}
-          >
-            <div className="col-span-2 text-center font-bold">Nº</div>
-            <div className="col-span-5 font-bold">Produto</div>
-            <div className="col-span-2 text-center font-bold">Status</div>
-            <div className="col-span-3 text-right font-bold pr-4">Ações</div>
-          </div>
+          {/* Sticky Header - Oculto em mobile */}
+          {!isMobile && (
+            <div
+              className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-[#0A4A9B]"
+              style={{
+                background: "linear-gradient(135deg, #E3F2FD 0%, #F1F9FF 100%)"
+              }}
+            >
+              <div className="col-span-2 text-center font-bold">Nº</div>
+              <div className="col-span-5 font-bold">Produto</div>
+              <div className="col-span-2 text-center font-bold">Status</div>
+              <div className="col-span-3 text-right font-bold pr-4">Ações</div>
+            </div>
+          )}
 
           {/* LISTA COM SCROLL */}
-          <div className="divide-y divide-gray-200 bg-white">
+          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-white")}>
             {filteredItems.length === 0 && (
               <div className="p-4 text-center text-sm text-gray-500">
                 {searchTerm ? "Nenhum item encontrado" : "Lista vazia"}
               </div>
             )}
             {filteredItems.map((item, index) => (
-              <div
-                key={item.id}
-                className={cn(
-                  "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
-                  item.status && "bg-green-50"
-                )}
-              >
-                {/* Nº */}
-                <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
-                  {index + 1}
-                </div>
-
-                {/* Produto + Data */}
-                <div className="col-span-5">
-                  <span
-                    className={cn(
-                      "text-sm",
-                      item.status && "text-gray-400"
-                    )}
-                  >
-                    {item.product}
-                  </span>
-
-                  {item.status && item.date && (
-                    <p className="mt-[1px] text-[10px] text-gray-500">
-                      {item.date}
-                    </p>
+              isMobile ? (
+                <div
+                  key={item.id}
+                  className={cn(
+                    "bg-white rounded-2xl py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
+                    item.status ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
                   )}
-                </div>
+                >
+                  <div className="flex flex-col w-full gap-1">
+                    {/* 📌 PRIMEIRA LINHA: Nº e Produto */}
+                    <div className="flex items-start justify-between w-full">
+                      <div className="flex items-start gap-3 min-w-0">
+                        {/* Nº */}
+                        <span className="text-[0.72rem] text-gray-600 font-black whitespace-nowrap min-w-[28px] text-center pt-0.5">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        {/* Produto */}
+                        <span className={cn(
+                          "font-bold text-gray-800 text-[0.85rem] leading-tight truncate",
+                          item.status && "text-gray-400"
+                        )}>
+                          {item.product}
+                        </span>
+                      </div>
+                      {/* Status Label */}
+                      <span className={cn(
+                        "text-[0.75rem] tracking-tight shrink-0 ml-3 pt-0.5",
+                        item.status ? "text-success font-bold" : "text-gray-400 italic"
+                      )}>
+                        {item.status ? "COMPRADO" : "Pendente"}
+                      </span>
+                    </div>
 
-                {/* Status */}
-                <div className="col-span-2 flex justify-center">
-                  <button
-                    onClick={() => handleStatusChange(item.id, !item.status)}
-                    className={cn(
-                      "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
-                      item.status
-                        ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
-                        : "border-gray-400 bg-transparent text-transparent",
-                      isMobile
-                        ? "h-[20px] w-[20px] text-[10px]"
-                        : "h-[24px] w-[24px] text-[12px]"
-                    )}
-                  >
-                    {item.status && "✓"}
-                  </button>
-                </div>
+                    {/* 📌 SEGUNDA LINHA: Data e Ações */}
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
+                        {/* Espaço reservado para o Nº */}
+                        <div className="min-w-[28px] shrink-0" />
+                        {/* Data de Compra */}
+                        <div className="min-w-0 flex-1">
+                          {item.status && item.date && (
+                            <span className="text-[0.75rem] text-gray-400 italic truncate block">
+                              Comprado em {item.date}
+                            </span>
+                          )}
+                        </div>
+                      </div>
 
-                {/* Ações - Excluir */}
-                <div className="col-span-3 flex justify-end pr-4">
-                  {item.product.trim() !== "" && (
-                    <button
-                      onClick={() => handleDeleteRow(item.id)}
-                      className="text-destructive hover:text-red-700"
+                      {/* Ações Group (Toggle + Delete) */}
+                      <div className="flex items-center gap-2 shrink-0 ml-3">
+                        <div
+                          onClick={() => handleStatusChange(item.id, !item.status)}
+                          className={cn(
+                            "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm cursor-pointer",
+                            item.status
+                              ? "bg-success border-success text-white scale-110"
+                              : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+                          )}
+                        >
+                          {item.status && (
+                            <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleDeleteRow(item.id)}
+                          className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-colors"
+                        >
+                          <DynamicIcon name="Trash2" className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  key={item.id}
+                  className={cn(
+                    "grid grid-cols-12 items-center py-[6px] min-h-[50px] hover:bg-slate-50",
+                    item.status && "bg-green-50"
+                  )}
+                >
+                  {/* Nº */}
+                  <div className={cn("col-span-2 text-center font-medium", item.status && "text-gray-400")}>
+                    {index + 1}
+                  </div>
+
+                  {/* Produto + Data */}
+                  <div className="col-span-5">
+                    <span
+                      className={cn(
+                        "text-sm",
+                        item.status && "text-gray-400"
+                      )}
                     >
-                      <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      {item.product}
+                    </span>
+
+                    {item.status && item.date && (
+                      <p className="mt-[1px] text-[10px] text-gray-500">
+                        {item.date}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Status */}
+                  <div className="col-span-2 flex justify-center">
+                    <button
+                      onClick={() => handleStatusChange(item.id, !item.status)}
+                      className={cn(
+                        "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2",
+                        item.status
+                          ? "bg-[#44E37F] border-[#44E37F] text-white font-extrabold"
+                          : "border-gray-400 bg-transparent text-transparent",
+                        isMobile
+                          ? "h-[20px] w-[20px] text-[10px]"
+                          : "h-[24px] w-[24px] text-[12px]"
+                      )}
+                    >
+                      {item.status && "✓"}
                     </button>
-                  )}
+                  </div>
+
+                  {/* Ações - Excluir */}
+                  <div className="col-span-3 flex justify-end pr-4">
+                    {item.product.trim() !== "" && (
+                      <button
+                        onClick={() => handleDeleteRow(item.id)}
+                        className="text-destructive hover:text-red-700"
+                      >
+                        <DynamicIcon name="Trash2" className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )
             ))}
           </div>
         </div>
@@ -582,7 +659,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       {/* Buttons Container */}
       <div className={cn(
         "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-12 left-0 right-0 px-4 py-2 bg-white/80 backdrop-blur-sm z-40 mb-0" : "mt-4 mb-2"
+        isMobile ? "fixed bottom-12 left-0 right-0 px-4 py-2 bg-transparent backdrop-blur-sm z-40 mb-0" : "mt-4 mb-2"
       )}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>

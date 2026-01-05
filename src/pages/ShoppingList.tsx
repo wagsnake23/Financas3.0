@@ -16,7 +16,7 @@ export default function ShoppingList() {
   }
 
   return (
-    <div className={cn("flex flex-col bg-background pt-16", isMobile ? "h-screen overflow-hidden bg-white" : "min-h-screen")}>
+    <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-16", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
       <Navigation />
       <main className={cn("container mx-auto flex-grow", isMobile ? "px-0 py-4 pb-32 flex flex-col min-h-0 shrink" : "max-w-[1200px] px-6 py-8")}>
         {!isMobile && (
