@@ -35,8 +35,8 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         "rounded-xl",
         isMobile ? "dialog-mobile" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
       )}>
-        <DialogHeader className={cn(isMobile && "absolute top-4 left-4 right-12 text-left")}>
-          <DialogTitle className={cn(isMobile && "text-xl")}>
+        <DialogHeader className={cn(isMobile && "text-center")}>
+          <DialogTitle className={cn("flex items-center justify-center gap-2 w-full", isMobile && "text-xl")}>
             ✏️ Editar Subcategoria
           </DialogTitle>
         </DialogHeader>
