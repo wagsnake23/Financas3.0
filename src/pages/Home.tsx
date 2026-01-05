@@ -217,14 +217,12 @@ export default function Home() {
                 >
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-1.5">
-                            <div className="p-1.5 bg-primary/10 rounded-xl text-primary">
-                                <DynamicIcon name="Wallet" className="h-4.5 w-4.5" />
-                            </div>
+                            <DynamicIcon name="Wallet" className="h-5 w-5 text-[#2563EB]" />
                             <h2 className="text-[12px] font-extrabold text-primary uppercase tracking-widest">Saldo Mensal</h2>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center justify-between gap-1 bg-white px-2 rounded-full border border-primary/30 shadow-sm transition-all min-w-[115px] h-[30px]">
+                        <div className="flex items-center justify-between gap-1 bg-white px-2 rounded-full border border-primary/30 shadow-sm transition-all min-w-[125px] h-[30px]">
                             <button onClick={handlePrevMonth} className="text-primary hover:scale-110 transition-transform p-0.5">
                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                             </button>
@@ -237,20 +235,16 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-[17px] font-bold text-gray-700 tracking-tight">
-                            {formatCurrency(stats.currentBalance)}
-                        </span>
-                        <div className={cn(
-                            "flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold",
-                            stats.balanceVar >= 0 ? "bg-success/10 text-success/80" : "bg-destructive/10 text-destructive/80"
-                        )}>
-                            {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(0)}%
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-[17px] font-bold text-gray-700 mb-0.5 leading-none">
+                                {formatCurrency(stats.currentBalance)}
+                            </p>
+                            <p className="text-[10px] text-gray-400 font-semibold">
+                                {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}% vs ant.
+                            </p>
                         </div>
                     </div>
-                    <p className="text-[10px] text-gray-400 font-medium">
-                        {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}% vs ant.
-                    </p>
                 </Card>
 
                 <div className="grid grid-cols-1 gap-3 mb-3">
@@ -260,16 +254,17 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-2">
-                                <button
+                                <Button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="p-1.5 bg-destructive/10 rounded-xl text-destructive hover:bg-destructive/20 active:scale-95 transition-all"
+                                    className="btn-3d w-8 h-8 p-0 flex items-center justify-center rounded-xl shadow-sm border border-destructive/30"
+                                    style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
                                 >
                                     <DynamicIcon name="TrendingDown" className="h-4 w-4" />
-                                </button>
+                                </Button>
                                 <h2 className="text-[12px] font-extrabold text-destructive uppercase tracking-wider">Despesas</h2>
                             </div>
                             <Button
-                                className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-destructive text-destructive hover:bg-destructive/5 transition-colors"
+                                className="h-[30px] px-3 rounded-xl font-bold text-[11px] shadow-sm whitespace-nowrap min-w-[125px] bg-white border border-destructive text-destructive hover:bg-destructive/5 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=expense")}
                             >
                                 Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -286,7 +281,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[115px]"
+                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[11px] shadow-sm ml-2 whitespace-nowrap min-w-[125px]"
                                 style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
                                 onClick={() => navigate("/despesas")}
                             >
@@ -303,16 +298,17 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-2">
-                                <button
+                                <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="p-1.5 bg-success/15 rounded-xl text-success hover:bg-success/25 active:scale-95 transition-all"
+                                    className="btn-3d w-8 h-8 p-0 flex items-center justify-center rounded-xl shadow-sm border border-success/30"
+                                    style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
                                 >
                                     <DynamicIcon name="TrendingUp" className="h-4 w-4" />
-                                </button>
+                                </Button>
                                 <h2 className="text-[12px] font-extrabold text-success uppercase tracking-wider">Receitas</h2>
                             </div>
                             <Button
-                                className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-success text-success hover:bg-success/5 transition-colors"
+                                className="h-[30px] px-3 rounded-xl font-bold text-[11px] shadow-sm whitespace-nowrap min-w-[125px] bg-white border border-success text-success hover:bg-success/5 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=income")}
                             >
                                 Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -329,7 +325,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm ml-2 whitespace-nowrap min-w-[115px]"
+                                className="btn-3d h-[30px] px-3 rounded-xl font-bold text-[11px] shadow-sm ml-2 whitespace-nowrap min-w-[125px]"
                                 style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
                                 onClick={() => navigate("/receitas")}
                             >
