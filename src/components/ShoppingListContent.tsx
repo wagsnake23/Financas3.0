@@ -578,12 +578,33 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
                           )}
                         </div>
-                        <button
-                          onClick={() => handleDeleteRow(item.id)}
-                          className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-colors"
-                        >
-                          <DynamicIcon name="Trash2" className="h-4 w-4" />
-                        </button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-colors">
+                              <DynamicIcon name="Trash2" className="h-4 w-4" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="max-w-[320px] rounded-2xl">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="flex items-center justify-center gap-2">
+                                <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
+                                Excluir Item?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="text-center">
+                                Deseja remover "{item.product}" da sua lista?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="flex-row gap-2">
+                              <AlertDialogCancel className="flex-1 rounded-xl mt-0">Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteRow(item.id)}
+                                className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                              >
+                                Excluir
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                   </div>
@@ -640,12 +661,33 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   {/* Ações - Excluir */}
                   <div className="col-span-3 flex justify-end pr-4">
                     {item.product.trim() !== "" && (
-                      <button
-                        onClick={() => handleDeleteRow(item.id)}
-                        className="text-destructive hover:text-red-700"
-                      >
-                        <DynamicIcon name="Trash2" className="h-5 w-5" />
-                      </button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button className="text-destructive hover:text-red-700">
+                            <DynamicIcon name="Trash2" className="h-5 w-5" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="rounded-xl">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2">
+                              <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
+                              Excluir Item
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Deseja realmente excluir o produto "{item.product}" da lista?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteRow(item.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                            >
+                              Confirmar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     )}
                   </div>
                 </div>
