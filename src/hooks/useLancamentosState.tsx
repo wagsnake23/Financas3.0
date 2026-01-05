@@ -39,6 +39,11 @@ export const useLancamentosState = () => {
     return cardIdParam && isValidUuid(cardIdParam) ? cardIdParam : "all";
   }, [searchParams]);
 
+  const initialFilterType = useMemo(() => {
+    const typeParam = searchParams.get("type");
+    return typeParam === "income" || typeParam === "expense" ? typeParam : "all";
+  }, [searchParams]);
+
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [fullEditingRevenue, setFullEditingRevenue] = useState<Tables<"receitas"> | null>(null);
@@ -47,7 +52,7 @@ export const useLancamentosState = () => {
   const [loadingPayInvoice, setLoadingPayInvoice] = useState(false); // NOVO ESTADO
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
-  const [filterType, setFilterType] = useState<string>("all");
+  const [filterType, setFilterType] = useState<string>(initialFilterType);
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   const handlePreviousMonth = useCallback(() => {

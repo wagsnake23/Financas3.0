@@ -14,6 +14,7 @@ import Despesas from "./pages/Despesas";
 import Lancamentos from "./pages/Lancamentos";
 import Charts from "./components/Charts";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home"; // NOVO: Importar Home
 import NotFound from "./pages/NotFound";
 import ShoppingList from "./pages/ShoppingList"; // NOVO: Importar ShoppingList
 
@@ -27,7 +28,8 @@ const App = () => (
       <BrowserRouter>
         {/* Removido React.Suspense para as rotas principais para diagnóstico */}
         <Routes>
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/* Set Dashboard as the root page */}
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} /> {/* Set Home as the root page */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/* Move Dashboard to /dashboard */}
           <Route path="/auth" element={<Auth />} />
           <Route path="/categorias" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
           <Route path="/investimentos" element={<ProtectedRoute><Investments /></ProtectedRoute>} />

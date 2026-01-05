@@ -22,7 +22,8 @@ export const Navigation = () => {
   const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user);
 
   const navItems = [
-    { to: "/", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Azul
+    { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" }, // Novo root: Home
+    { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Dashboard secundário
     {
       to: "/despesas",
       label: "Despesas",

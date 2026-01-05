@@ -14,7 +14,7 @@ import { AppCategory } from "@/types/finance";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   format,
   startOfMonth,
@@ -42,6 +42,18 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const filter = searchParams.get("filter");
+    if (filter === "expenses") {
+      const el = document.getElementById("stat-expenses");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (filter === "revenues") {
+      const el = document.getElementById("stat-revenues");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [searchParams]);
 
   const { data: allRevenues = [], isLoading: isLoadingAllRevenues } = useQuery<
     Tables<"receitas">[]
@@ -269,14 +281,8 @@ export default function Dashboard() {
 
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
-            <MobileCreditCardExpenses
-              cartoes={cartoes}
-              expenseInstallments={allExpenseInstallments}
-              allCategories={allSubcategories}
-              isMobile={isMobile}
-              selectedMonth={selectedMonth}
-            />
             <StatCard
+              id="stat-expenses"
               mainStatTitle="Total de Despesas"
               mainStatValue={stats.totalExpenses}
               secondaryStatTitle="Pago este mês"
@@ -329,6 +335,7 @@ export default function Dashboard() {
             </StatCard>
 
             <StatCard
+              id="stat-revenues"
               mainStatTitle="Total de Receitas"
               mainStatValue={stats.totalIncome}
               secondaryStatTitle="Receita Atual"
@@ -493,15 +500,9 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-              <MobileCreditCardExpenses
-                cartoes={cartoes}
-                expenseInstallments={allExpenseInstallments}
-                allCategories={allSubcategories}
-                isMobile={isMobile}
-                selectedMonth={selectedMonth}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <StatCard
+                id="stat-expenses"
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
                 icon="TrendingDown"
@@ -551,6 +552,7 @@ export default function Dashboard() {
               </StatCard>
 
               <StatCard
+                id="stat-revenues"
                 mainStatTitle="Total de Receitas"
                 mainStatValue={stats.totalIncome}
                 icon="TrendingUp"

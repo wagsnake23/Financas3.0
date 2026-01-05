@@ -101,90 +101,101 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-3 animate-fade-in rounded-3xl card-3d border border-[#DCD2FF]")}
+      className={cn("p-4 animate-fade-in rounded-2xl shadow-sm border border-[#DCD2FF] relative overflow-hidden")}
       style={{ background: "linear-gradient(135deg, #E6D8FF 0%, #F7F2FF 100%)" }}
     >
-      <div className="flex items-center justify-between -mt-1 mb-1.5 px-1">
-        <h2
-          className="text-xs font-bold"
-          style={{ color: "#5429A6" }}
-        >
-          Cartões de Crédito
-        </h2>
+      <div className="flex items-center justify-between mb-3 px-1">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-[#5429A6]/10 rounded-lg text-[#5429A6]">
+            <DynamicIcon name="CreditCard" className="h-4 w-4" />
+          </div>
+          <h2
+            className="text-[10px] font-bold uppercase tracking-wider"
+            style={{ color: "#5429A6" }}
+          >
+            Cartões
+          </h2>
+        </div>
         <span
-          className="text-[0.65rem] font-bold uppercase"
-          style={{ color: "#5429A6" }}
+          className="text-[9px] font-bold uppercase"
+          style={{ color: "#5429A6/70" }}
         >
-          {format(selectedMonth, "MMM/yyyy", { locale: ptBR })}
+          {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
         </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-9 text-sm border-[#DCD2FF] bg-[#FDFBFF]">
+          <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#DCD2FF] bg-white/60 backdrop-blur-sm">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent>
             {cartoes.map((card) => (
               <SelectItem key={card.id} value={card.id} className="text-sm">
-                Cartão: {card.nome} {card.ultimos_digitos}
+                {card.nome} {card.ultimos_digitos}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-9 text-sm"
+          className="btn-3d rounded-xl w-full h-[34px] text-xs font-bold shadow-md"
           style={
             {
               "--cor-topo": "#B27CFF",
-              "--cor-base": "#7B4ED6",
+              "--cor-base": "#8E5CFF",
             } as React.CSSProperties
           }
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
         >
-          <DynamicIcon name="CreditCard" className="h-3.5 w-3.5" />
-          <span className="ml-2">Ver Fatura</span>
+          <DynamicIcon name="Eye" className="h-3.5 w-3.5 mr-2" />
+          <span>Ver Fatura</span>
         </Button>
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-1 text-center mt-1">
+          <div className="grid grid-cols-3 gap-2 text-center mt-2 border-t border-[#DCD2FF]/30 pt-3">
             {/* Pago */}
-            <div className="flex flex-col items-center justify-center p-0.5">
-              <div
-                className="flex items-center justify-center rounded-full bg-[#44E37F] text-white font-black"
-                style={{ height: 17, width: 17, fontSize: 9 }}
-              >
-                ✓
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div
+                  className="flex items-center justify-center rounded-full bg-[#44E37F]/90 text-white font-black"
+                  style={{ height: 14, width: 14, fontSize: 7 }}
+                >
+                  ✓
+                </div>
+                <p className="text-[0.65rem] text-gray-400 font-medium">Pago</p>
               </div>
-              <p className="text-[0.7rem] text-muted-foreground">Pago</p>
-              <p className="text-xs font-bold text-success">
+              <p className="text-[11px] font-bold text-success/80">
                 {formatCurrency(totalPaid)}
               </p>
             </div>
 
             {/* Pendente */}
-            <div className="flex flex-col items-center justify-center p-0.5">
-              <DynamicIcon
-                name="Circle"
-                className="h-4 w-4 text-destructive mb-0.5"
-              />
-              <p className="text-[0.7rem] text-muted-foreground">Pendente</p>
-              <p className="text-xs font-bold text-destructive">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-1.5 mb-1">
+                <DynamicIcon
+                  name="Circle"
+                  className="h-3.5 w-3.5 text-destructive/70"
+                />
+                <p className="text-[0.65rem] text-gray-400 font-medium">Pendente</p>
+              </div>
+              <p className="text-[11px] font-bold text-destructive/80">
                 {formatCurrency(totalPending)}
               </p>
             </div>
 
             {/* Total Mês */}
-            <div className="flex flex-col items-center justify-center p-0.5">
-              <DynamicIcon
-                name="CreditCard"
-                className="h-4 w-4 text-foreground mb-0.5"
-              />
-              <p className="text-[0.7rem] text-muted-foreground">Total Mês</p>
-              <p className="text-xs font-bold text-foreground">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-1.5 mb-1">
+                <DynamicIcon
+                  name="CreditCard"
+                  className="h-3.5 w-3.5 text-gray-400"
+                />
+                <p className="text-[0.65rem] text-gray-400 font-medium">Total</p>
+              </div>
+              <p className="text-[11px] font-bold text-gray-700">
                 {formatCurrency(totalCardExpenses)}
               </p>
             </div>

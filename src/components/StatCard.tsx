@@ -34,6 +34,7 @@ interface StatCardProps {
   annualTotalValue?: number; // NEW: Prop for the annual total value
   annualTotalLabel?: string; // NEW: Prop for the annual total label (e.g., "Total Anual")
   neumorphism?: boolean; // NEW PROP for Neumorphism style
+  id?: string; // NEW: Prop for accessibility and scrolling
 }
 
 export const StatCard = ({
@@ -53,6 +54,7 @@ export const StatCard = ({
   annualTotalValue, // Destructure new prop
   annualTotalLabel, // Destructure new prop
   neumorphism = false, // Default to false
+  id, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -87,6 +89,7 @@ export const StatCard = ({
 
   return (
     <Card
+      id={id}
       // 🔹 NOVO: apenas cor de fundo controlada aqui
       style={{
         backgroundColor: backgroundColors[variant] || undefined,
