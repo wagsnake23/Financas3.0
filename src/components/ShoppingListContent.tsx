@@ -56,6 +56,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const filledItems = items.filter((item) => item.product.trim() !== "");
   const totalItems = filledItems.length;
   const pendingItems = filledItems.filter((item) => !item.status).length;
+  const boughtItems = filledItems.filter((item) => item.status).length;
 
   // Fetch shopping items
   const {
@@ -439,10 +440,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       )}
     >
       {/* Main container with padding */}
-      <div className={cn("flex flex-col items-start gap-1", isMobile ? "mb-2" : "mb-4")}>
+      <div className={cn("flex flex-col items-center gap-1 w-full text-center", isMobile ? "mb-2" : "mb-4")}>
         <h2
           className={cn(
-            "text-2xl font-bold text-primary",
+            "text-2xl font-bold text-primary w-full",
             isMobile && "text-xl"
           )}
         >
@@ -450,7 +451,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </h2>
 
         <p className="text-sm text-muted-foreground">
-          Total de itens: <span className="font-semibold">{totalItems}</span> •
+          Total Itens: <span className="font-semibold">{totalItems}</span> •
           Pendentes:{" "}
           <button
             type="button"
@@ -463,7 +464,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             )}
           >
             {pendingItems}
-          </button>
+          </button> • Comprados: <span className="font-semibold text-success">{boughtItems}</span>
         </p>
       </div>
 
