@@ -146,16 +146,13 @@ export const Navigation = () => {
                 side="right"
                 className="w-[280px] sm:w-[350px] bg-white"
               >
-                <SheetHeader className="text-left pt-12">
-                  <div className="flex items-center gap-2 mb-1">
+                <SheetHeader className="text-left pt-12 pb-2">
+                  <div className="flex items-center gap-2">
                     <img src="/favicon.ico" alt="Logo" className="h-6 w-6" />
                     <SheetTitle className="text-primary font-bold text-xl">
                       Minhas Finanças
                     </SheetTitle>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1 pb-4 border-b border-gray-200">
-                    Olá, <span className="font-medium text-foreground">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Usuário"}</span>
-                  </p>
                 </SheetHeader>
 
                 <div className="flex flex-col gap-1 mt-4">

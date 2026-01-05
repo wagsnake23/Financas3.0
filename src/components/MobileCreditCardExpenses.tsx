@@ -101,7 +101,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-3 animate-fade-in rounded-2xl shadow-sm border-none relative overflow-hidden")}
+      className={cn("p-3 animate-fade-in rounded-2xl shadow-sm border border-[#5429A6]/10 relative overflow-hidden")}
       style={{ background: "linear-gradient(180deg, #EBE0FF 0%, #FFFFFF 100%)" }}
     >
       <div className="flex items-center justify-between mb-2 px-1">

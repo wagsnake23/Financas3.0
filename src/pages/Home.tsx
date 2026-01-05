@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import {
@@ -49,6 +49,8 @@ export default function Home() {
             return data;
         },
         enabled: !!user && !authLoading,
+        placeholderData: keepPreviousData,
+        staleTime: 1000 * 60 * 5, // 5 minutos de cache "fresco"
     });
 
     // Fetch all expense installments for memory-based filtering and Credit Card card
@@ -86,6 +88,8 @@ export default function Home() {
                 return data;
             },
             enabled: !!user && !authLoading,
+            placeholderData: keepPreviousData,
+            staleTime: 1000 * 60 * 5, // 5 minutos de cache "fresco"
         });
 
     // Fetch cards
@@ -115,6 +119,22 @@ export default function Home() {
                 .or(`user_id.eq.${user.id},user_id.is.null`)
                 .order("nome");
             if (error) throw error;
+            return data;
+        },
+        enabled: !!user && !authLoading,
+    });
+
+    // Fetch profile data
+    const { data: profile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return null;
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("nome")
+                .eq("id", user.id)
+                .single();
+            if (error) return null;
             return data;
         },
         enabled: !!user && !authLoading,
@@ -159,14 +179,18 @@ export default function Home() {
         };
     }, [allRevenues, allExpenseInstallments, selectedMonth]);
 
-    if (authLoading || isLoadingRevenues || isLoadingExpenses || isLoadingCartoes) {
+    // Só mostra o Loading se for o carregamento inicial (sem dados de receitas ou despesas ainda)
+    const isInitialLoad = (isLoadingRevenues && allRevenues.length === 0) || (isLoadingExpenses && allExpenseInstallments.length === 0);
+
+    if (authLoading || (isInitialLoad && !allRevenues.length && !allExpenseInstallments.length)) {
         return <Loading />;
     }
 
     const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
     const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
 
-    const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+    const fullName = profile?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+    const userName = fullName.trim().split(" ")[0];
     const formattedDate = format(new Date(), "eee, dd MMM yyyy", { locale: ptBR });
     // Capitalize first letter of abbreviated weekday
     const todayStr = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
@@ -178,17 +202,17 @@ export default function Home() {
 
                 {/* TOPO DA HOME */}
                 <div className="mb-2 animate-fade-in px-1">
-                    <h1 className="text-base font-bold text-gray-800">
+                    <h1 className="text-base font-bold text-gray-900">
                         Olá, {userName} 👋
                     </h1>
-                    <p className="text-[10px] text-gray-400 font-medium">
+                    <p className="text-[10px] text-gray-500 font-medium">
                         {todayStr}
                     </p>
                 </div>
 
                 {/* CARD PRINCIPAL — SALDO MENSAL */}
                 <Card
-                    className="p-3 mb-3 rounded-2xl border-none shadow-md relative overflow-hidden animate-slide-up"
+                    className="p-3 mb-3 rounded-2xl border border-primary/20 shadow-sm relative overflow-hidden animate-slide-up"
                     style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%)" }}
                 >
                     <div className="flex justify-between items-start mb-2">
@@ -200,15 +224,15 @@ export default function Home() {
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full transition-colors border-none shadow-none">
-                            <button onClick={handlePrevMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
-                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" />
+                        <div className="flex items-center justify-between gap-1 bg-white px-2 rounded-full border border-primary/30 shadow-sm transition-all min-w-[115px] h-[30px]">
+                            <button onClick={handlePrevMonth} className="text-primary hover:scale-110 transition-transform p-0.5">
+                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                             </button>
-                            <span className="text-[9px] font-bold text-primary/90 uppercase min-w-[50px] text-center">
+                            <span className="text-[11px] font-extrabold text-primary uppercase min-w-[65px] text-center tracking-tight leading-none">
                                 {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
-                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" />
+                            <button onClick={handleNextMonth} className="text-primary hover:scale-110 transition-transform p-0.5">
+                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                             </button>
                         </div>
                     </div>
@@ -231,7 +255,7 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 gap-3 mb-3">
                     <Card
-                        className="p-3 rounded-2xl border-none shadow-sm relative animate-slide-up delay-100"
+                        className="p-3 rounded-2xl border border-destructive/10 shadow-sm relative animate-slide-up delay-100"
                         style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)" }}
                     >
                         <div className="flex justify-between items-center mb-2">
@@ -274,7 +298,7 @@ export default function Home() {
 
                     {/* CARD DE RECEITAS */}
                     <Card
-                        className="p-3 rounded-2xl border-none shadow-sm relative animate-slide-up delay-200"
+                        className="p-3 rounded-2xl border border-success/10 shadow-sm relative animate-slide-up delay-200"
                         style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F4FFF9 100%)" }}
                     >
                         <div className="flex justify-between items-center mb-2">
