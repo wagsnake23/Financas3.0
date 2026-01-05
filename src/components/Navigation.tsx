@@ -79,7 +79,7 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-bold text-lg tracking-tight",
-                isMobile ? "text-gray-900" : "text-white"
+                isMobile ? "text-primary" : "text-white"
               )}>Minhas Finanças</span>
             </div>
 
@@ -122,11 +122,11 @@ export const Navigation = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate("/lista-de-compras")}
-                    className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                    className="relative p-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
                   >
-                    <ShoppingCart className="h-5 w-5" />
+                    <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
                     {pendingCount > 0 && (
-                      <span className="absolute top-1 right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white">
+                      <span className="absolute top-0.5 right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white border-2 border-white">
                         {pendingCount}
                       </span>
                     )}
@@ -135,15 +135,15 @@ export const Navigation = () => {
                   {/* Menu Lateral redundante para outras opções */}
                   <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
-                      <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
-                        <DynamicIcon name="Menu" className="h-5 w-5" />
+                      <button className="p-2 text-primary hover:bg-primary/5 rounded-full transition-colors">
+                        <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />
                       </button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-[280px] bg-white border-l-0">
                       <SheetHeader className="text-left pt-10 pb-6 border-b border-gray-100">
                         <div className="flex items-center gap-3">
                           <img src="/favicon.ico" alt="Logo" className="h-8 w-8" />
-                          <SheetTitle className="text-xl font-bold text-gray-900">Configurações</SheetTitle>
+                          <SheetTitle className="text-xl font-bold text-primary">Minhas Finanças</SheetTitle>
                         </div>
                       </SheetHeader>
                       <div className="flex flex-col gap-1 mt-6">
