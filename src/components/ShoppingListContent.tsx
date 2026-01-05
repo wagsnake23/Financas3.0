@@ -476,7 +476,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             value={searchTerm}
             onChange={handleSearchTermChange}
             onKeyDown={handleNewItemSubmit}
-            className="w-full p-3 pr-11 rounded-xl border border-input bg-lancamentos-mobile-bg ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full p-3 pr-11 rounded-xl border border-input bg-white ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
           <button
             onClick={handleSearchClick}
