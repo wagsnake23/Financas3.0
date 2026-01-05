@@ -268,31 +268,29 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Popover>
       </div>
 
-      <div className={cn("flex gap-2 justify-center")}>
+      <div className={cn("grid grid-cols-2 gap-2 w-full")}>
         <Button
           type="button"
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground",
+            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground border border-destructive",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
           disabled={loading}
         >
-          <DynamicIcon name="XCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
           Cancelar
         </Button>
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground",
+            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground border border-success",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
           disabled={loading}
         >
-          <DynamicIcon name="CheckCircle" className={cn("mr-2 h-4 w-4", isMobile && "h-3.5 w-3.5")} />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
       </div>

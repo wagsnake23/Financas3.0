@@ -838,7 +838,7 @@ export default function Investments() { // Alterado para export default function
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className={cn("w-full rounded-xl bg-gradient-to-br from-[#E3F2FD] to-white border-blue-100", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
           <DialogHeader>
-            <DialogTitle>Editar Investimento</DialogTitle>
+            <DialogTitle className="flex items-center justify-center gap-2 w-full">📝 Editar Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
