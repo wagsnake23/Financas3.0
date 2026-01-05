@@ -101,7 +101,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("px-5 pt-3 pb-4 animate-fade-in rounded-[24px] border-none shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden bg-white mb-4")}
+      className={cn("px-5 pt-3 pb-4 animate-fade-in rounded-[24px] border border-[#E2D3FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden bg-white mb-4")}
       style={{ background: "linear-gradient(180deg, #E2D3FF 0%, #FFFFFF 100%)" }}
     >
       <div className="flex items-center justify-between mb-2">
@@ -118,7 +118,7 @@ export const MobileCreditCardExpenses: React.FC<
 
       <div className="space-y-1.5">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#DCD2FF] bg-white/60 backdrop-blur-sm">
+          <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#B299FF] bg-white shadow-sm">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent>
@@ -157,7 +157,7 @@ export const MobileCreditCardExpenses: React.FC<
                 >
                   ✓
                 </div>
-                <p className="text-[0.65rem] text-gray-400 font-medium">Pago</p>
+                <p className="text-[0.65rem] text-gray-500 font-bold">Pago</p>
               </div>
               <p className="text-[11px] font-bold text-success/80">
                 {formatCurrency(totalPaid)}
@@ -171,7 +171,7 @@ export const MobileCreditCardExpenses: React.FC<
                   name="Circle"
                   className="h-3.5 w-3.5 text-destructive/70"
                 />
-                <p className="text-[0.65rem] text-gray-400 font-medium">Pendente</p>
+                <p className="text-[0.65rem] text-gray-500 font-bold">Pendente</p>
               </div>
               <p className="text-[11px] font-bold text-destructive/80">
                 {formatCurrency(totalPending)}
@@ -183,9 +183,9 @@ export const MobileCreditCardExpenses: React.FC<
               <div className="flex items-center gap-1.5 mb-1">
                 <DynamicIcon
                   name="CreditCard"
-                  className="h-3.5 w-3.5 text-gray-400"
+                  className="h-3.5 w-3.5 text-gray-500"
                 />
-                <p className="text-[0.65rem] text-gray-400 font-medium">Total</p>
+                <p className="text-[0.65rem] text-gray-500 font-bold">Total</p>
               </div>
               <p className="text-[11px] font-bold text-gray-700">
                 {formatCurrency(totalCardExpenses)}

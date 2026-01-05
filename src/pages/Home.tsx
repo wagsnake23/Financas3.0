@@ -225,19 +225,19 @@ export default function Home() {
                 </div>
             </div>
 
-            <main className={cn("container mx-auto px-4 -mt-20 relative z-20 max-w-[1200px]")}>
+            <main className={cn("container mx-auto px-4 -mt-24 relative z-20 max-w-[1200px]")}>
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="px-5 py-4 mb-4 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
+                    className="px-5 py-3 mb-4 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
                 >
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-blue-50 rounded-2xl text-primary">
+                            <div className="p-2 bg-blue-50 rounded-2xl text-primary">
                                 <Wallet className="h-6 w-6" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[15px] font-black text-primary/90 uppercase tracking-tighter">Saldo Mensal</span>
+                                <h2 className="text-[13px] font-black text-primary uppercase tracking-widest">Saldo Mensal</h2>
                             </div>
                         </div>
 
@@ -256,7 +256,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex flex-col">
-                        <p className="text-[26px] font-black text-gray-800 tracking-tight mb-1">
+                        <p className="text-[22px] font-black text-gray-800 tracking-tight mb-1">
                             {formatCurrency(stats.currentBalance)}
                         </p>
                         <div className="flex items-center gap-2">
@@ -298,7 +298,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[22px] font-black text-gray-800 tracking-tight leading-none mb-1">
+                                <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                                 <p className="text-[10px] text-rose-400 font-bold uppercase">
@@ -342,7 +342,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[22px] font-black text-gray-800 tracking-tight leading-none mb-1">
+                                <p className="text-[19px] font-black text-gray-800 tracking-tight leading-none mb-1">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                                 <p className="text-[10px] text-emerald-400 font-bold uppercase">
