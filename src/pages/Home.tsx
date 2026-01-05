@@ -200,7 +200,7 @@ export default function Home() {
     const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
     const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
 
-    const fullName = profile?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+    const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
     const userName = fullName.trim().split(" ")[0];
     const formattedDate = format(new Date(), "eee, dd MMM yyyy", { locale: ptBR });
     // Capitalize first letter of abbreviated weekday
@@ -229,20 +229,18 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="px-5 py-2.5 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
+                    className="px-5 pt-2.5 pb-2 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
                 >
-                    <div className="flex justify-between items-start mb-2.5">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-2xl text-primary">
-                                <Wallet className="h-6 w-6" />
-                            </div>
+                    <div className="flex justify-between items-start mb-0">
+                        <div className="flex items-center gap-2">
+                            <Wallet className="h-6 w-6 text-primary" />
                             <div className="flex flex-col">
                                 <h2 className="text-[13px] font-black text-primary uppercase tracking-tight">Saldo Mensal</h2>
                             </div>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center justify-between bg-white p-1 rounded-full border-2 border-primary/20 shadow-sm transition-all h-9 w-[135px]">
+                        <div className="flex items-center justify-between bg-white p-1 rounded-full border border-primary/30 shadow-sm transition-all h-9 w-[135px]">
                             <button onClick={handlePrevMonth} className="text-primary hover:bg-primary/10 rounded-full p-1 transition-all">
                                 <DynamicIcon name="ChevronLeft" className="h-4 w-4" strokeWidth={3} />
                             </button>
@@ -255,7 +253,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col -mt-1">
                         <p className="text-[20px] font-black text-gray-800 tracking-tight mb-0.5">
                             {formatCurrency(stats.currentBalance)}
                         </p>
@@ -274,10 +272,10 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="p-3.5 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
+                        className="px-4 py-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFF9F9 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-3">
+                        <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-3">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
@@ -289,7 +287,7 @@ export default function Home() {
                                 <h2 className="text-[13px] font-black text-rose-600 uppercase tracking-tight">Despesas</h2>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-bold text-[11px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors"
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=expense")}
                             >
                                 Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -302,7 +300,7 @@ export default function Home() {
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                                 <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-1",
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-0.5",
                                     stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
                                 )}>
                                     {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
@@ -321,10 +319,10 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="p-3.5 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
+                        className="px-4 py-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FFFA 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-3">
+                        <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-3">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
@@ -336,7 +334,7 @@ export default function Home() {
                                 <h2 className="text-[13px] font-black text-emerald-600 uppercase tracking-tight">Receitas</h2>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-bold text-[11px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-emerald-200 text-emerald-500 hover:bg-emerald-50 transition-colors"
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-emerald-300 text-emerald-600 hover:bg-emerald-50 transition-colors"
                                 onClick={() => navigate("/lancamentos?type=income")}
                             >
                                 Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -349,7 +347,7 @@ export default function Home() {
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                                 <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-1",
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-0.5",
                                     stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                 )}>
                                     {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
