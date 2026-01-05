@@ -33,13 +33,18 @@ export default function Home() {
     const { data: allRevenues = [], isLoading: isLoadingRevenues } = useQuery<
         Tables<"receitas">[]
     >({
-        queryKey: ["allRevenues", user?.id],
+        queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy-MM")],
         queryFn: async () => {
             if (!user?.id) return [];
+            // Fetch current and previous month to calculate variations
+            const startRange = format(startOfMonth(subMonths(selectedMonth, 1)), "yyyy-MM-01");
+            const endRange = format(endOfMonth(selectedMonth), "yyyy-MM-dd");
             const { data, error } = await supabase
                 .from("receitas")
                 .select("*")
-                .eq("user_id", user.id);
+                .eq("user_id", user.id)
+                .gte("data", startRange)
+                .lte("data", endRange);
             if (error) throw error;
             return data;
         },
@@ -64,15 +69,19 @@ export default function Home() {
                 > | null;
             })[]
         >({
-            queryKey: ["allExpenseInstallments", user?.id],
+            queryKey: ["allExpenseInstallments", user?.id, format(selectedMonth, "yyyy-MM")],
             queryFn: async () => {
                 if (!user?.id) return [];
+                const startRange = format(startOfMonth(subMonths(selectedMonth, 1)), "yyyy-MM-01");
+                const endRange = format(endOfMonth(selectedMonth), "yyyy-MM-dd");
                 const { data, error } = await supabase
                     .from("despesas_parcelas")
                     .select(
                         "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)"
                     )
-                    .filter("despesas.user_id", "eq", user.id);
+                    .filter("despesas.user_id", "eq", user.id)
+                    .gte("vencimento", startRange)
+                    .lte("vencimento", endRange);
                 if (error) throw error;
                 return data;
             },
@@ -112,35 +121,27 @@ export default function Home() {
     });
 
     const stats = useMemo(() => {
-        const currentStart = startOfMonth(selectedMonth);
-        const currentEnd = endOfMonth(selectedMonth);
-        const prevStart = startOfMonth(subMonths(selectedMonth, 1));
-        const prevEnd = endOfMonth(subMonths(selectedMonth, 1));
+        const currentMonthStr = format(selectedMonth, "yyyy-MM");
+        const prevMonthStr = format(subMonths(selectedMonth, 1), "yyyy-MM");
 
-        const calculateIncome = (start: Date, end: Date) => {
+        const calculateIncome = (monthStr: string) => {
             return allRevenues
-                .filter((r) => {
-                    const d = new Date(r.data);
-                    return isWithinInterval(d, { start, end });
-                })
+                .filter((r) => r.data.startsWith(monthStr))
                 .reduce((sum, r) => sum + r.valor, 0);
         };
 
-        const calculateExpenses = (start: Date, end: Date) => {
+        const calculateExpenses = (monthStr: string) => {
             return allExpenseInstallments
-                .filter((p) => {
-                    const d = new Date(p.vencimento);
-                    return isWithinInterval(d, { start, end });
-                })
+                .filter((p) => p.vencimento.startsWith(monthStr))
                 .reduce((sum, p) => sum + p.valor_parcela, 0);
         };
 
-        const currentIncome = calculateIncome(currentStart, currentEnd);
-        const currentExpenses = calculateExpenses(currentStart, currentEnd);
+        const currentIncome = calculateIncome(currentMonthStr);
+        const currentExpenses = calculateExpenses(currentMonthStr);
         const currentBalance = currentIncome - currentExpenses;
 
-        const previousIncome = calculateIncome(prevStart, prevEnd);
-        const previousExpenses = calculateExpenses(prevStart, prevEnd);
+        const previousIncome = calculateIncome(prevMonthStr);
+        const previousExpenses = calculateExpenses(prevMonthStr);
         const previousBalance = previousIncome - previousExpenses;
 
         const calculateVar = (curr: number, prev: number) => {
@@ -188,25 +189,25 @@ export default function Home() {
                 {/* CARD PRINCIPAL — SALDO MENSAL */}
                 <Card
                     className="p-4 mb-5 rounded-2xl border-none shadow-md relative overflow-hidden animate-slide-up"
-                    style={{ background: "linear-gradient(135deg, #F0F7FF 0%, #E3F2FD 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F2FFFB 100%)" }}
                 >
                     <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-2.5">
-                            <div className="p-2 bg-primary/10 rounded-xl text-primary">
+                            <div className="p-2 bg-success/10 rounded-xl text-success">
                                 <DynamicIcon name="Wallet" className="h-5 w-5" />
                             </div>
-                            <h2 className="text-[11px] font-extrabold text-primary/70 uppercase tracking-widest">Saldo Mensal</h2>
+                            <h2 className="text-[11px] font-extrabold text-success/70 uppercase tracking-widest">Saldo Mensal</h2>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center gap-1.5 bg-primary/10 px-2.5 py-1 rounded-full transition-colors border-none shadow-none">
-                            <button onClick={handlePrevMonth} className="text-primary/80 hover:scale-110 transition-transform p-1">
+                        <div className="flex items-center gap-1.5 bg-success/10 px-2.5 py-1 rounded-full transition-colors border-none shadow-none">
+                            <button onClick={handlePrevMonth} className="text-success/80 hover:scale-110 transition-transform p-1">
                                 <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
                             </button>
-                            <span className="text-[10px] font-bold text-primary/90 uppercase min-w-[55px] text-center">
+                            <span className="text-[10px] font-bold text-success/90 uppercase min-w-[55px] text-center">
                                 {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-primary/80 hover:scale-110 transition-transform p-1">
+                            <button onClick={handleNextMonth} className="text-success/80 hover:scale-110 transition-transform p-1">
                                 <DynamicIcon name="ChevronRight" className="h-4 w-4" />
                             </button>
                         </div>
@@ -230,7 +231,10 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 gap-4 mb-5">
                     {/* CARD DE DESPESAS */}
-                    <Card className="p-4 rounded-2xl border-none shadow-sm bg-soft-red-background relative animate-slide-up delay-100">
+                    <Card
+                        className="p-4 rounded-2xl border-none shadow-sm relative animate-slide-up delay-100"
+                        style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 100%)" }}
+                    >
                         <div className="flex justify-between items-center mb-3">
                             <div className="flex items-center gap-2.5">
                                 <button
@@ -273,7 +277,10 @@ export default function Home() {
                     </Card>
 
                     {/* CARD DE RECEITAS */}
-                    <Card className="p-4 rounded-2xl border-none shadow-sm bg-soft-green-background relative animate-slide-up delay-200">
+                    <Card
+                        className="p-4 rounded-2xl border-none shadow-sm relative animate-slide-up delay-200"
+                        style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F4FFF9 100%)" }}
+                    >
                         <div className="flex justify-between items-center mb-3">
                             <div className="flex items-center gap-2.5">
                                 <button
