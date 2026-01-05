@@ -102,23 +102,23 @@ export const MobileCreditCardExpenses: React.FC<
   return (
     <Card
       className={cn("p-3 animate-fade-in rounded-2xl shadow-sm border-none relative overflow-hidden")}
-      style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #F9F7FF 100%)" }}
+      style={{ background: "linear-gradient(180deg, #EBE0FF 0%, #FFFFFF 100%)" }}
     >
       <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-[#5429A6]/10 rounded-lg text-[#5429A6]">
-            <DynamicIcon name="CreditCard" className="h-4 w-4" />
+          <div className="p-1.5 bg-[#5429A6]/10 rounded-full text-[#5429A6]">
+            <DynamicIcon name="CreditCard" className="h-4.5 w-4.5" />
           </div>
           <h2
-            className="text-[11px] font-extrabold uppercase tracking-wider"
+            className="text-[12px] font-extrabold uppercase tracking-wider"
             style={{ color: "#5429A6" }}
           >
             Cartões
           </h2>
         </div>
         <span
-          className="text-[9px] font-bold uppercase"
-          style={{ color: "#5429A6/70" }}
+          className="text-[10px] font-bold uppercase"
+          style={{ color: "#5429A6" }}
         >
           {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
         </span>

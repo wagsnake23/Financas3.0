@@ -194,9 +194,9 @@ export default function Home() {
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-1.5">
                             <div className="p-1.5 bg-primary/10 rounded-xl text-primary">
-                                <DynamicIcon name="Wallet" className="h-4 w-4" />
+                                <DynamicIcon name="Wallet" className="h-4.5 w-4.5" />
                             </div>
-                            <h2 className="text-[11px] font-extrabold text-primary/70 uppercase tracking-widest">Saldo Mensal</h2>
+                            <h2 className="text-[12px] font-extrabold text-primary uppercase tracking-widest">Saldo Mensal</h2>
                         </div>
 
                         {/* Seletor de Mês */}
@@ -214,7 +214,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xl font-bold text-gray-700 tracking-tight">
+                        <span className="text-[17px] font-bold text-gray-700 tracking-tight">
                             {formatCurrency(stats.currentBalance)}
                         </span>
                         <div className={cn(
@@ -238,11 +238,11 @@ export default function Home() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="p-1.5 bg-destructive/10 rounded-xl text-destructive/80 hover:bg-destructive/20 active:scale-95 transition-all"
+                                    className="p-1.5 bg-destructive/10 rounded-xl text-destructive hover:bg-destructive/20 active:scale-95 transition-all"
                                 >
-                                    <DynamicIcon name="TrendingDown" className="h-3.5 w-3.5" />
+                                    <DynamicIcon name="TrendingDown" className="h-4 w-4" />
                                 </button>
-                                <h2 className="text-[11px] font-extrabold text-destructive/60 uppercase tracking-wider">Despesas</h2>
+                                <h2 className="text-[12px] font-extrabold text-destructive uppercase tracking-wider">Despesas</h2>
                             </div>
                             <Button
                                 className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-destructive text-destructive hover:bg-destructive/5 transition-colors"
@@ -254,7 +254,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-lg font-bold text-gray-700 mb-0.5 leading-none">
+                                <p className="text-[17px] font-bold text-gray-700 mb-0.5 leading-none">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                                 <p className="text-[10px] text-destructive/70 font-semibold">
@@ -281,11 +281,11 @@ export default function Home() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="p-1.5 bg-success/15 rounded-xl text-success/80 hover:bg-success/25 active:scale-95 transition-all"
+                                    className="p-1.5 bg-success/15 rounded-xl text-success hover:bg-success/25 active:scale-95 transition-all"
                                 >
-                                    <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                    <DynamicIcon name="TrendingUp" className="h-4 w-4" />
                                 </button>
-                                <h2 className="text-[11px] font-extrabold text-success/60 uppercase tracking-wider">Receitas</h2>
+                                <h2 className="text-[12px] font-extrabold text-success uppercase tracking-wider">Receitas</h2>
                             </div>
                             <Button
                                 className="h-[30px] px-3 rounded-xl font-bold text-[10px] shadow-sm whitespace-nowrap min-w-[115px] bg-white border border-success text-success hover:bg-success/5 transition-colors"
@@ -297,7 +297,7 @@ export default function Home() {
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-lg font-bold text-gray-700 mb-0.5 leading-none">
+                                <p className="text-[17px] font-bold text-gray-700 mb-0.5 leading-none">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                                 <p className="text-[10px] text-success/70 font-semibold">
