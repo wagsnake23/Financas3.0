@@ -60,7 +60,7 @@ export const Navigation = () => {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[60]",
         isMobile
           ? "h-14 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-none"
           : "h-16 bg-gradient-primary text-primary-foreground shadow-lg"

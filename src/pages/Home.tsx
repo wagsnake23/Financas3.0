@@ -214,7 +214,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full bg-gradient-to-b from-[#0A4A9B] via-[#1E6BCE] to-[#F8FAFC] overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
                 <div className="container mx-auto px-6 pt-16 relative z-10">
-                    <div className="animate-fade-in">
+                    <div>
                         <h1 className="text-xl font-bold text-white tracking-tight">
                             Olá, {userName} 👋
                         </h1>
@@ -229,7 +229,7 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="px-5 pt-2.5 pb-2 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden animate-slide-up bg-white"
+                    className="px-5 pt-2.5 pb-2 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden bg-white"
                 >
                     <div className="flex justify-between items-start mb-0">
                         <div className="flex items-center gap-2">
@@ -272,7 +272,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
+                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFF9F9 100%)" }}
                     >
                         <div className="flex justify-between items-start mb-2">
@@ -321,7 +321,7 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
+                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FFFA 100%)" }}
                     >
                         <div className="flex justify-between items-start mb-2">
@@ -368,7 +368,7 @@ export default function Home() {
                     </Card>
 
                     {/* CARD DE CARTÃO DE CRÉDITO */}
-                    <div id="cartoes-section" className="animate-slide-up delay-300">
+                    <div id="cartoes-section">
                         <MobileCreditCardExpenses
                             cartoes={cartoes}
                             expenseInstallments={allExpenseInstallments}
