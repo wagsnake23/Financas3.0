@@ -294,10 +294,10 @@ export default function Home() {
                             <div className="flex items-start gap-2">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-300 transition-all active:scale-90"
+                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-300 transition-all active:scale-90"
                                     style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
                                 >
-                                    <TrendingDown className="h-5 w-5 text-white" />
+                                    <TrendingDown className="h-[18px] w-[18px] text-white" />
                                 </Button>
                                 <div className={cn(
                                     "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
@@ -341,10 +341,10 @@ export default function Home() {
                             <div className="flex items-start gap-2">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-300 transition-all active:scale-90"
+                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-300 transition-all active:scale-90"
                                     style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
                                 >
-                                    <TrendingUp className="h-5 w-5 text-white" />
+                                    <TrendingUp className="h-[18px] w-[18px] text-white" />
                                 </Button>
                                 <div className={cn(
                                     "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
