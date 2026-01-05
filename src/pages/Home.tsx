@@ -195,25 +195,25 @@ export default function Home() {
                             <div className="p-2 bg-primary/10 rounded-xl text-primary">
                                 <DynamicIcon name="Wallet" className="h-5 w-5" />
                             </div>
-                            <h2 className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">Saldo Mensal</h2>
+                            <h2 className="text-[11px] font-extrabold text-primary/70 uppercase tracking-widest">Saldo Mensal</h2>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full transition-colors border-none shadow-none">
-                            <button onClick={handlePrevMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
-                                <DynamicIcon name="ChevronLeft" className="h-3 w-3" />
+                        <div className="flex items-center gap-1.5 bg-primary/10 px-2.5 py-1 rounded-full transition-colors border-none shadow-none">
+                            <button onClick={handlePrevMonth} className="text-primary/80 hover:scale-110 transition-transform p-1">
+                                <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
                             </button>
-                            <span className="text-[9px] font-bold text-primary/90 uppercase min-w-[50px] text-center">
+                            <span className="text-[10px] font-bold text-primary/90 uppercase min-w-[55px] text-center">
                                 {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-primary/80 hover:scale-110 transition-transform p-0.5">
-                                <DynamicIcon name="ChevronRight" className="h-3 w-3" />
+                            <button onClick={handleNextMonth} className="text-primary/80 hover:scale-110 transition-transform p-1">
+                                <DynamicIcon name="ChevronRight" className="h-4 w-4" />
                             </button>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2.5 mb-0.5">
-                        <span className="text-2xl font-bold text-gray-700 tracking-tight">
+                        <span className="text-xl font-bold text-gray-700 tracking-tight">
                             {formatCurrency(stats.currentBalance)}
                         </span>
                         <div className={cn(
@@ -239,19 +239,19 @@ export default function Home() {
                                 >
                                     <DynamicIcon name="TrendingDown" className="h-4 w-4" />
                                 </button>
-                                <h2 className="text-[10px] font-bold text-destructive/60 uppercase tracking-wider">Despesas</h2>
+                                <h2 className="text-[11px] font-extrabold text-destructive/60 uppercase tracking-wider">Despesas</h2>
                             </div>
                             <button
                                 onClick={() => navigate("/lancamentos?type=expense")}
-                                className="px-2 py-0.5 rounded-full bg-destructive/10 text-[9px] font-bold text-destructive/80 hover:bg-destructive/20 transition-colors flex items-center gap-1"
+                                className="px-3 py-1 rounded-full bg-destructive/10 text-[10px] font-bold text-destructive/80 hover:bg-destructive/20 transition-colors flex items-center gap-1.5"
                             >
-                                Ver Gastos <DynamicIcon name="ChevronRight" className="h-2.5 w-2.5" />
+                                Ver Gastos <DynamicIcon name="ChevronRight" className="h-3 w-3" />
                             </button>
                         </div>
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[1.35rem] font-bold text-gray-700 mb-0.5 leading-none">
+                                <p className="text-lg font-bold text-gray-700 mb-0.5 leading-none">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                                 <p className="text-[10px] text-destructive/70 font-semibold">
@@ -282,19 +282,19 @@ export default function Home() {
                                 >
                                     <DynamicIcon name="TrendingUp" className="h-4 w-4" />
                                 </button>
-                                <h2 className="text-[10px] font-bold text-success/60 uppercase tracking-wider">Receitas</h2>
+                                <h2 className="text-[11px] font-extrabold text-success/60 uppercase tracking-wider">Receitas</h2>
                             </div>
                             <button
                                 onClick={() => navigate("/lancamentos?type=income")}
-                                className="px-2 py-0.5 rounded-full bg-success/15 text-[9px] font-bold text-success/80 hover:bg-success/25 transition-colors flex items-center gap-1"
+                                className="px-3 py-1 rounded-full bg-success/15 text-[10px] font-bold text-success/80 hover:bg-success/25 transition-colors flex items-center gap-1.5"
                             >
-                                Ver Receitas <DynamicIcon name="ChevronRight" className="h-2.5 w-2.5" />
+                                Ver Receitas <DynamicIcon name="ChevronRight" className="h-3 w-3" />
                             </button>
                         </div>
 
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[1.35rem] font-bold text-gray-700 mb-0.5 leading-none">
+                                <p className="text-lg font-bold text-gray-700 mb-0.5 leading-none">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                                 <p className="text-[10px] text-success/70 font-semibold">

@@ -101,7 +101,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-4 animate-fade-in rounded-2xl shadow-sm border border-[#DCD2FF] relative overflow-hidden")}
+      className={cn("p-4 animate-fade-in rounded-2xl shadow-sm border-none relative overflow-hidden")}
       style={{ background: "linear-gradient(135deg, #E6D8FF 0%, #F7F2FF 100%)" }}
     >
       <div className="flex items-center justify-between mb-3 px-1">
@@ -110,7 +110,7 @@ export const MobileCreditCardExpenses: React.FC<
             <DynamicIcon name="CreditCard" className="h-4 w-4" />
           </div>
           <h2
-            className="text-[10px] font-bold uppercase tracking-wider"
+            className="text-[11px] font-extrabold uppercase tracking-wider"
             style={{ color: "#5429A6" }}
           >
             Cartões
