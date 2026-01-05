@@ -235,7 +235,7 @@ export default function Home() {
                         <div className="flex items-center gap-2">
                             <Wallet className="h-6 w-6 text-primary" />
                             <div className="flex flex-col">
-                                <h2 className="text-[13px] font-black text-primary uppercase tracking-tight">Saldo Mensal</h2>
+                                <h2 className="text-[15px] font-black text-primary tracking-tight">Saldo Mensal</h2>
                             </div>
                         </div>
 
@@ -272,19 +272,15 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="px-4 py-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
+                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-100 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFF9F9 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-2">
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-300 transition-all active:scale-90"
-                                    style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
-                                >
-                                    <TrendingDown className="h-5 w-5 text-white" />
-                                </Button>
-                                <h2 className="text-[13px] font-black text-rose-600 uppercase tracking-tight">Despesas</h2>
+                        <div className="flex justify-between items-start mb-2">
+                            <div className="flex flex-col">
+                                <h2 className="text-[15px] font-black text-rose-600 tracking-tight mb-1">Despesas</h2>
+                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none">
+                                    {formatCurrency(stats.currentExpenses)}
+                                </p>
                             </div>
                             <Button
                                 className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors"
@@ -294,13 +290,17 @@ export default function Home() {
                             </Button>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none mb-0.5">
-                                    {formatCurrency(stats.currentExpenses)}
-                                </p>
+                        <div className="flex items-center justify-between mt-1">
+                            <div className="flex items-start gap-2">
+                                <Button
+                                    onClick={() => navigate("/dashboard?filter=expenses")}
+                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-300 transition-all active:scale-90"
+                                    style={{ "--cor-topo": "#FF8A8A", "--cor-base": "#F06666" } as any}
+                                >
+                                    <TrendingDown className="h-5 w-5 text-white" />
+                                </Button>
                                 <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-0.5",
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
                                     stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
                                 )}>
                                     {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
@@ -319,19 +319,15 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="px-4 py-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
+                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative animate-slide-up delay-200 bg-white"
                         style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FFFA 100%)" }}
                     >
-                        <div className="flex justify-between items-center mb-2">
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-300 transition-all active:scale-90"
-                                    style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
-                                >
-                                    <TrendingUp className="h-5 w-5 text-white" />
-                                </Button>
-                                <h2 className="text-[13px] font-black text-emerald-600 uppercase tracking-tight">Receitas</h2>
+                        <div className="flex justify-between items-start mb-2">
+                            <div className="flex flex-col">
+                                <h2 className="text-[15px] font-black text-emerald-600 tracking-tight mb-0.5">Receitas</h2>
+                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none">
+                                    {formatCurrency(stats.currentIncome)}
+                                </p>
                             </div>
                             <Button
                                 className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white border border-emerald-300 text-emerald-600 hover:bg-emerald-50 transition-colors"
@@ -341,13 +337,17 @@ export default function Home() {
                             </Button>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none mb-0.5">
-                                    {formatCurrency(stats.currentIncome)}
-                                </p>
+                        <div className="flex items-center justify-between mt-1">
+                            <div className="flex items-start gap-2">
+                                <Button
+                                    onClick={() => navigate("/dashboard?filter=revenues")}
+                                    className="btn-3d w-10 h-10 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-300 transition-all active:scale-90"
+                                    style={{ "--cor-topo": "#52DCA2", "--cor-base": "#38C48B" } as any}
+                                >
+                                    <TrendingUp className="h-5 w-5 text-white" />
+                                </Button>
                                 <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold w-fit mt-0.5",
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
                                     stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                 )}>
                                     {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
@@ -377,7 +377,7 @@ export default function Home() {
             </main>
             <Footer
                 isMobile={isMobile}
-                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
+                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0" : "mt-8")}
                 user={user}
             />
         </div>
