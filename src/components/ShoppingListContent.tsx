@@ -476,7 +476,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             value={searchTerm}
             onChange={handleSearchTermChange}
             onKeyDown={handleNewItemSubmit}
-            className="w-full p-3 pr-11 rounded-xl border border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full p-3 pr-11 rounded-xl border border-input bg-lancamentos-mobile-bg ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium text-sm font-normal placeholder:text-gray-400 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
           <button
             onClick={handleSearchClick}
@@ -490,16 +490,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <div
           className={cn(
             "w-full flex-1 min-h-0 overflow-y-auto no-scrollbar",
-            isMobile ? "px-1" : "rounded-xl border bg-white mb-2"
+            isMobile ? "px-1" : "rounded-xl border bg-lancamentos-mobile-bg mb-2 font-roboto"
           )}
         >
           {/* Sticky Header - Oculto em mobile */}
           {!isMobile && (
             <div
-              className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-200 text-sm text-[#0A4A9B]"
-              style={{
-                background: "linear-gradient(135deg, #E3F2FD 0%, #F1F9FF 100%)"
-              }}
+              className="sticky top-0 z-10 grid grid-cols-12 py-[6px] min-h-[42px] items-center border-b border-gray-300 text-sm text-gray-700 bg-gray-100"
             >
               <div className="col-span-2 text-center font-bold">Nº</div>
               <div className="col-span-5 font-bold">Produto</div>
@@ -509,7 +506,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           )}
 
           {/* LISTA COM SCROLL */}
-          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-white")}>
+          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-lancamentos-mobile-bg")}>
             {filteredItems.length === 0 && (
               <div className="p-4 text-center text-sm text-gray-500">
                 {searchTerm ? "Nenhum item encontrado" : "Lista vazia"}
@@ -659,7 +656,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       {/* Buttons Container */}
       <div className={cn(
         "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-12 left-0 right-0 px-4 py-2 bg-transparent backdrop-blur-sm z-40 mb-0" : "mt-4 mb-2"
+        isMobile ? "fixed bottom-[42px] left-0 right-0 px-4 py-2 bg-transparent backdrop-blur-sm z-40 mb-0" : "mt-4 mb-2"
       )}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>

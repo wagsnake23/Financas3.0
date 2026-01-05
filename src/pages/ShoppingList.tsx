@@ -18,7 +18,7 @@ export default function ShoppingList() {
   return (
     <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-16", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
       <Navigation />
-      <main className={cn("container mx-auto flex-grow", isMobile ? "px-0 py-4 pb-32 flex flex-col min-h-0 shrink" : "max-w-[1200px] px-6 py-8")}>
+      <main className={cn("container mx-auto flex-grow", isMobile ? "px-0 py-4 pb-20 flex flex-col min-h-0 shrink" : "max-w-[1200px] px-6 py-8")}>
         {!isMobile && (
           <h1 className="text-3xl font-bold mb-6">Lista de Compras</h1>
         )}
@@ -27,7 +27,7 @@ export default function ShoppingList() {
       <Footer
         isMobile={isMobile}
         user={user}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-lancamentos-mobile-bg/95 backdrop-blur-sm z-50 m-0 shadow-[0_-4px_12px_rgba(0,0,0,0.01)]" : "mt-8")}
       />
     </div>
   );
