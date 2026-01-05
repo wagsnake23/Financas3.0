@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { NavLink } from "@/components/NavLink";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { NavLink as RouterNavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,186 +11,176 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import DynamicIcon from "./DynamicIcon";
 import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
-import { ShoppingCart } from 'lucide-react'; // Importar ShoppingCart
+import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const location = useLocation();
 
   const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user);
 
   const navItems = [
-    { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" }, // Novo root: Home
-    { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" }, // Dashboard secundário
-    {
-      to: "/despesas",
-      label: "Despesas",
-      icon: "💸",
-      color: "hsl(0, 70%, 55%)",
-    }, // Vermelho
-    {
-      to: "/receitas",
-      label: "Receitas",
-      icon: "💰",
-      color: "hsl(150, 65%, 50%)",
-    }, // Verde
-    {
-      to: "/lancamentos",
-      label: "Lançamentos",
-      icon: "📝",
-      color: "hsl(45, 90%, 55%)",
-    }, // Amarelo
-    {
-      to: "/categorias",
-      label: "Categorias",
-      icon: "🗂️",
-      color: "hsl(285, 70%, 55%)",
-    }, // Roxo
-    {
-      to: "/investimentos",
-      label: "Investimentos",
-      icon: "📈",
-      color: "hsl(180, 70%, 50%)",
-    }, // Ciano
-    {
-      to: "/lista-de-compras",
-      label: "Lista de Compras",
-      icon: "🛒", // Este ícone será renderizado pelo DynamicIcon no SheetContent
-      color: "hsl(270, 70%, 58%)",
-    }, // Lista de Compras
+    { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" },
+    { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" },
+    { to: "/despesas", label: "Despesas", icon: "💸", color: "hsl(0, 70%, 55%)" },
+    { to: "/receitas", label: "Receitas", icon: "💰", color: "hsl(150, 65%, 50%)" },
+    { to: "/lancamentos", label: "Lançamentos", icon: "📝", color: "hsl(45, 90%, 55%)" },
+    { to: "/categorias", label: "Categorias", icon: "🗂️", color: "hsl(285, 70%, 55%)" },
+    { to: "/investimentos", label: "Investimentos", icon: "📈", color: "hsl(180, 70%, 50%)" },
+    { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒", color: "hsl(270, 70%, 58%)" },
+  ];
+
+  const bottomNavItems = [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "#plus", label: "Ação", icon: Plus, isAction: true },
+    { to: "/#cartoes", label: "Cartões", icon: CreditCard },
+    { to: "/configurações", label: "Perfil", icon: User }, // Redirecionando para algo seguro ou placeholder
   ];
 
   const handleNavClick = () => {
     setIsOpen(false);
   };
 
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/" && !location.hash;
+    if (path.includes("#")) {
+      const [p, h] = path.split("#");
+      const normalizedP = p === "" ? "/" : p;
+      return location.pathname === normalizedP && location.hash === `#${h}`;
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[60] bg-gradient-primary text-primary-foreground shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo / Título */}
-          <div
-            className="flex items-center gap-4 cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <img
-              src="/favicon.ico"
-              alt="Controle Financeiro Logo"
-              className="h-8 w-8"
-            />
-            <span className="font-bold text-xl">Minhas Finanças</span>
-          </div>
-
-          {/* Área da direita: Desktop menu + carrinho + menu mobile */}
-          <div className="flex items-center gap-3">
-            {/* Navegação Desktop */}
-            <div className="hidden md:flex items-center gap-2">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  className="px-3 py-2 rounded-md text-primary-foreground hover:bg-primary-foreground/10 transition-all"
-                  activeClassName="bg-primary-foreground/20 text-primary-foreground font-medium"
-                >
-                  <div className="flex items-center gap-2">
-                    <DynamicIcon name={item.icon} className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </div>
-                </NavLink>
-              ))}
-
-              {/* Botão Sair (Desktop) */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={signOut}
-                className="ml-2 text-primary-foreground hover:bg-primary-foreground/10"
-              >
-                <DynamicIcon name="❌" className="h-4 w-4 mr-2" />
-                Sair
-              </Button>
+    <>
+      <nav className={cn(
+        "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
+        isMobile
+          ? "h-14 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-none"
+          : "h-16 bg-gradient-primary text-primary-foreground shadow-lg"
+      )}>
+        <div className="container mx-auto px-4 h-full">
+          <div className="flex items-center justify-between h-full">
+            {/* Logo / Título */}
+            <div
+              className="flex items-center gap-2.5 cursor-pointer group"
+              onClick={() => navigate("/")}
+            >
+              <img
+                src="/favicon.ico"
+                alt="Logo"
+                className="h-8 w-8 transition-transform group-hover:scale-110"
+              />
+              <span className={cn(
+                "font-bold text-lg tracking-tight",
+                isMobile ? "text-gray-900" : "text-white"
+              )}>Minhas Finanças</span>
             </div>
 
-            {/* 🛒 Carrinho com badge (APENAS Mobile) */}
-            <button
-              type="button"
-              onClick={() => navigate("/lista-de-compras")}
-              className="relative flex items-center justify-center h-9 w-9 rounded-full bg-white/15 hover:bg-white/25 sm:bg-muted sm:hover:bg-muted/80 transition md:hidden"
-              title="Ir para Lista de Compras"
-            >
-              <ShoppingCart className="h-6 w-6 text-white" /> {/* NOVO ÍCONE */}
-
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-[5px] text-[10px] font-bold text-white">
-                  {pendingCount}
-                </span>
-              )}
-            </button>
-
-            {/* Navegação Mobile (Hamburger + Sheet) */}
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild className="md:hidden">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-primary-foreground"
-                >
-                  <DynamicIcon name="Menu" className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-
-              <SheetContent
-                side="right"
-                className="w-[280px] sm:w-[350px] bg-white"
-              >
-                <SheetHeader className="text-left pt-12 pb-2">
-                  <div className="flex items-center gap-2">
-                    <img src="/favicon.ico" alt="Logo" className="h-6 w-6" />
-                    <SheetTitle className="text-primary font-bold text-xl">
-                      Minhas Finanças
-                    </SheetTitle>
-                  </div>
-                </SheetHeader>
-
-                <div className="flex flex-col gap-1 mt-4">
+            {/* Área da direita */}
+            <div className="flex items-center gap-3">
+              {/* Navegação Desktop */}
+              {!isMobile && (
+                <div className="hidden md:flex items-center gap-1">
                   {navItems.map((item) => (
-                    <NavLink
+                    <RouterNavLink
                       key={item.to}
                       to={item.to}
                       end={item.to === "/"}
-                      onClick={handleNavClick}
-                      className="flex items-center gap-3 px-4 py-2 rounded-md text-gray-600 hover:text-foreground hover:bg-muted transition-all"
-                      activeClassName="bg-[#E3F2FD] text-[#0A4A9B] font-semibold"
+                      className={({ isActive }) => cn(
+                        "px-3 py-2 rounded-xl text-sm transition-all flex items-center gap-2",
+                        isActive
+                          ? "bg-white/20 text-white font-bold"
+                          : "text-white/80 hover:bg-white/10 hover:text-white"
+                      )}
                     >
-                      <DynamicIcon
-                        name={item.icon}
-                        className="h-5 w-5"
-                        color={item.color}
-                      />
+                      <DynamicIcon name={item.icon} className="h-4 w-4" />
                       <span>{item.label}</span>
-                    </NavLink>
+                    </RouterNavLink>
                   ))}
 
-                  {/* Botão Sair (Mobile) */}
                   <Button
                     variant="ghost"
-                    onClick={() => {
-                      handleNavClick();
-                      signOut();
-                    }}
-                    className="justify-start px-4 py-2 mt-1 h-auto text-gray-600 hover:text-destructive hover:bg-soft-red/30 border-t border-gray-100 rounded-none w-full"
+                    size="sm"
+                    onClick={signOut}
+                    className="ml-2 text-white/80 hover:bg-white/10 hover:text-white rounded-xl"
                   >
-                    <DynamicIcon name="LogOut" className="h-5 w-5 mr-3" color="#E85454" />
+                    <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </Button>
                 </div>
-              </SheetContent>
-            </Sheet>
+              )}
+
+              {/* Icones Mobile Topo - Apenas se necessário (ex: notificações ou carrinho) */}
+              {isMobile && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => navigate("/lista-de-compras")}
+                    className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    {pendingCount > 0 && (
+                      <span className="absolute top-1 right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white">
+                        {pendingCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Menu Lateral redundante para outras opções */}
+                  <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                    <SheetTrigger asChild>
+                      <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+                        <DynamicIcon name="Menu" className="h-5 w-5" />
+                      </button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[280px] bg-white border-l-0">
+                      <SheetHeader className="text-left pt-10 pb-6 border-b border-gray-100">
+                        <div className="flex items-center gap-3">
+                          <img src="/favicon.ico" alt="Logo" className="h-8 w-8" />
+                          <SheetTitle className="text-xl font-bold text-gray-900">Configurações</SheetTitle>
+                        </div>
+                      </SheetHeader>
+                      <div className="flex flex-col gap-1 mt-6">
+                        {navItems.map((item) => (
+                          <RouterNavLink
+                            key={item.to}
+                            to={item.to}
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) => cn(
+                              "flex items-center gap-4 px-4 py-2.5 rounded-2xl transition-all",
+                              isActive ? "bg-primary/10 text-primary font-bold" : "text-gray-600 hover:bg-gray-50"
+                            )}
+                          >
+                            <span className="text-xl">{item.icon}</span>
+                            <span className="text-sm font-medium">{item.label}</span>
+                          </RouterNavLink>
+                        ))}
+                        <div className="h-px bg-gray-100 my-2 mx-4" />
+                        <Button
+                          variant="ghost"
+                          onClick={signOut}
+                          className="justify-start px-4 py-2.5 text-destructive hover:bg-destructive/5 hover:text-destructive rounded-2xl"
+                        >
+                          <LogOut className="h-5 w-5 mr-4" strokeWidth={2.5} />
+                          <span className="font-bold">Sair da Conta</span>
+                        </Button>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </nav >
+      </nav>
+
+      {/* BOTTOM NAVIGATION REMOVIDO A PEDIDO DO USUÁRIO */}
+    </>
   );
 };

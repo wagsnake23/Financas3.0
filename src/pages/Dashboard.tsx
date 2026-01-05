@@ -43,6 +43,7 @@ export default function Dashboard() {
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [searchParams] = useSearchParams();
+  const filter = searchParams.get("filter");
 
   useEffect(() => {
     const filter = searchParams.get("filter");
@@ -281,222 +282,231 @@ export default function Dashboard() {
 
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
-            <StatCard
-              id="stat-expenses"
-              mainStatTitle="Total de Despesas"
-              mainStatValue={stats.totalExpenses}
-              secondaryStatTitle="Pago este mês"
-              secondaryStatValue={totalPaidMonthlyExpenses}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="expense"
-                />
-              }
-              icon="TrendingDown"
-              variant="expense"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyExpenseBarChart
-                  expenseInstallments={allExpenseInstallments}
-                  currentDate={selectedMonth}
-                  isMobile={isMobile}
-                  onMonthClick={handleMonthClick}
-                />
-              }
-              annualTotalLabel="Total Anual"
-              annualTotalValue={totalAnnualExpenses}
-              neumorphism={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FF6D6D",
-                        "--cor-base": "#E85454",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/despesas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Despesa
-                  </Button>
+            {(!filter || filter === "expenses") && (
+              <StatCard
+                id="stat-expenses"
+                mainStatTitle="Total de Despesas"
+                mainStatValue={stats.totalExpenses}
+                secondaryStatTitle="Pago este mês"
+                secondaryStatValue={totalPaidMonthlyExpenses}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="expense"
+                  />
+                }
+                icon="TrendingDown"
+                variant="expense"
+                isMobile={isMobile}
+                childrenAlignment="start"
+                chartContent={
+                  <MonthlyExpenseBarChart
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+                annualTotalLabel="Total Anual"
+                annualTotalValue={totalAnnualExpenses}
+                neumorphism={true}
+              >
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#FF6D6D",
+                          "--cor-base": "#E85454",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/despesas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Despesa
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </StatCard>
+              </StatCard>
+            )}
 
-            <StatCard
-              id="stat-revenues"
-              mainStatTitle="Total de Receitas"
-              mainStatValue={stats.totalIncome}
-              secondaryStatTitle="Receita Atual"
-              secondaryStatValue={totalReceivedMonthlyIncome}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="income"
-                />
-              }
-              icon="TrendingUp"
-              variant="income"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyRevenueBarChart
-                  revenues={allRevenues}
-                  currentDate={selectedMonth}
-                  isMobile={isMobile}
-                  onMonthClick={handleMonthClick}
-                />
-              }
-              annualTotalLabel="Total Anual"
-              annualTotalValue={totalAnnualRevenues}
-              neumorphism={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#38C97C",
-                        "--cor-base": "#26A765",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/receitas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Receita
-                  </Button>
+            {(!filter || filter === "revenues") && (
+              <StatCard
+                id="stat-revenues"
+                mainStatTitle="Total de Receitas"
+                mainStatValue={stats.totalIncome}
+                secondaryStatTitle="Receita Atual"
+                secondaryStatValue={totalReceivedMonthlyIncome}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="income"
+                  />
+                }
+                icon="TrendingUp"
+                variant="income"
+                isMobile={isMobile}
+                childrenAlignment="start"
+                chartContent={
+                  <MonthlyRevenueBarChart
+                    revenues={allRevenues}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+                annualTotalLabel="Total Anual"
+                annualTotalValue={totalAnnualRevenues}
+                neumorphism={true}
+              >
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#38C97C",
+                          "--cor-base": "#26A765",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/receitas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Receita
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </StatCard>
+              </StatCard>
+            )}
 
-            <StatCard
-              mainStatTitle="Saldo Mensal"
-              mainStatValue={stats.balance}
-              secondaryStatTitle="Saldo Anual"
-              secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="balance"
-                />
-              }
-              variant="balance"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyBalanceBarChart
-                  revenues={allRevenues}
-                  expenseInstallments={allExpenseInstallments}
-                  currentDate={selectedMonth}
-                  isMobile={isMobile}
-                  onMonthClick={handleMonthClick}
-                />
-              }
-              annualTotalLabel={`Projetado ${projectedEndDate}`}
-              annualTotalValue={overallBalance}
-              neumorphism={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#3B82F6",
-                        "--cor-base": "#2563EB",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/lancamentos")}
-                  >
-                    Lançamentos
-                  </Button>
+            {(!filter || filter === "revenues") && (
+              <StatCard
+                mainStatTitle="Saldo Mensal"
+                mainStatValue={stats.balance}
+                secondaryStatTitle="Saldo Anual"
+                secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="balance"
+                  />
+                }
+                variant="balance"
+                isMobile={isMobile}
+                childrenAlignment="start"
+                chartContent={
+                  <MonthlyBalanceBarChart
+                    revenues={allRevenues}
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                    onMonthClick={handleMonthClick}
+                  />
+                }
+                annualTotalLabel={`Projetado ${projectedEndDate}`}
+                annualTotalValue={overallBalance}
+                neumorphism={true}
+              >
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#3B82F6",
+                          "--cor-base": "#2563EB",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/lancamentos")}
+                    >
+                      Lançamentos
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </StatCard>
+              </StatCard>
+            )}
 
-
-
-            <StatCard
-              mainStatTitle="Rendimento Mensal"
-              mainStatValue={currentYieldStats.monthYields}
-              secondaryStatTitle="Total Anual"
-              secondaryStatValue={currentYieldStats.annualYields}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="yield"
-                />
-              }
-              variant="yield"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyYieldsBarChart
-                  revenues={[]}
-                  currentDate={selectedMonth}
-                  isMobile={isMobile}
-                  onMonthClick={handleMonthClick}
-                  projectedAnnualYield={currentYieldStats.annualYields}
-                />
-              }
-              annualTotalLabel="Patrimônio"
-              annualTotalValue={currentYieldStats.totalInvested}
-              neumorphism={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FB923C",
-                        "--cor-base": "#F97316",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/investimentos")}
-                  >
-                    Investimentos
-                  </Button>
+            {(!filter || filter === "revenues") && (
+              <StatCard
+                mainStatTitle="Rendimento Mensal"
+                mainStatValue={currentYieldStats.monthYields}
+                secondaryStatTitle="Total Anual"
+                secondaryStatValue={currentYieldStats.annualYields}
+                topRightContent={
+                  <MonthNavigatorCompact
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
+                    isMobile={isMobile}
+                    variant="yield"
+                  />
+                }
+                variant="yield"
+                isMobile={isMobile}
+                childrenAlignment="start"
+                chartContent={
+                  <MonthlyYieldsBarChart
+                    revenues={[]}
+                    currentDate={selectedMonth}
+                    isMobile={isMobile}
+                    onMonthClick={handleMonthClick}
+                    projectedAnnualYield={currentYieldStats.annualYields}
+                  />
+                }
+                annualTotalLabel="Patrimônio"
+                annualTotalValue={currentYieldStats.totalInvested}
+                neumorphism={true}
+              >
+                <div className={cn("flex flex-col w-full h-full")}>
+                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#FB923C",
+                          "--cor-base": "#F97316",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/investimentos")}
+                    >
+                      Investimentos
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </StatCard>
-            <CombinedMonthlyExpensesDashboard
-              allRevenues={allRevenues}
-              allExpenseInstallments={allExpenseInstallments}
-              allCategories={allSubcategories}
-              isLoading={isLoading}
-              isMobile={isMobile}
-            />
+              </StatCard>
+            )}
+
+            {(!filter || filter === "expenses") && (
+              <CombinedMonthlyExpensesDashboard
+                allRevenues={allRevenues}
+                allExpenseInstallments={allExpenseInstallments}
+                allCategories={allSubcategories}
+                isLoading={isLoading}
+                isMobile={isMobile}
+              />
+            )}
           </div>
         ) : (
           <>

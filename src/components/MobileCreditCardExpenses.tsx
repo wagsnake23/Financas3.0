@@ -101,28 +101,22 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("p-3 animate-fade-in rounded-2xl shadow-sm border border-[#5429A6]/10 relative overflow-hidden")}
-      style={{ background: "linear-gradient(180deg, #EBE0FF 0%, #FFFFFF 100%)" }}
+      className={cn("px-5 pt-3 pb-4 animate-fade-in rounded-[24px] border-none shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden bg-white mb-4")}
+      style={{ background: "linear-gradient(180deg, #E2D3FF 0%, #FFFFFF 100%)" }}
     >
-      <div className="flex items-center justify-between mb-2 px-1">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <DynamicIcon name="CreditCard" className="h-5 w-5 text-[#5429A6]" />
-          <h2
-            className="text-[12px] font-extrabold uppercase tracking-wider"
-            style={{ color: "#5429A6" }}
-          >
+          <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#5429A6]" />
+          <h2 className="text-[13px] font-black text-[#5429A6] uppercase tracking-widest">
             Cartões
           </h2>
         </div>
-        <span
-          className="text-[10px] font-bold uppercase"
-          style={{ color: "#5429A6" }}
-        >
-          {format(selectedMonth, "MMM/yyyy", { locale: ptBR }).replace(".", "")}
+        <span className="text-[12px] font-black text-[#5429A6] uppercase tracking-tight">
+          {format(selectedMonth, "MMM / yyyy", { locale: ptBR }).replace(".", "")}
         </span>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-1.5">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
           <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#DCD2FF] bg-white/60 backdrop-blur-sm">
             <SelectValue placeholder="Selecione um cartão" />
