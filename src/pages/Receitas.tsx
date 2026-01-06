@@ -510,7 +510,7 @@ export default function Receitas() {
       <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
-      <div className="relative h-[200px] w-full bg-gradient-to-b from-[#2ABF78] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
+      <div className="relative h-[200px] w-full bg-gradient-to-b from-[#1AA361] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
         <div className="container mx-auto px-6 pt-3 md:pt-7 relative z-10">
           <div>
             <div className="flex items-start gap-3">
