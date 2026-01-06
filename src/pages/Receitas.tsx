@@ -513,25 +513,29 @@ export default function Receitas() {
       <div className="relative h-[200px] w-full bg-gradient-to-b from-[#2ABF78] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
         <div className="container mx-auto px-6 pt-3 md:pt-7 relative z-10">
           <div>
-            <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20 mt-1.5">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20 mt-1">
                 <DynamicIcon
                   name="TrendingUp"
                   className="h-5 w-5 text-[#25AF6A]"
                 />
               </div>
-              Nova Receita
-            </h1>
-            <p className="text-sm text-white font-medium -mt-0.5 leading-none ml-12">
-              Registre suas entradas financeiras
-            </p>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-black text-white tracking-tight -mt-0.5">
+                  Nova Receita
+                </h1>
+                <p className="text-sm text-white font-medium mt-0.5 leading-none">
+                  Registre suas entradas financeiras
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <main
         className={cn(
-          "container mx-auto px-4 -mt-28 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6 pb-20",
           !isMobile && "px-6"
         )}
       >
@@ -582,7 +586,7 @@ export default function Receitas() {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-[#F9FAFB] z-50 m-0" : "mt-8")}
         user={user}
       />
     </div>
