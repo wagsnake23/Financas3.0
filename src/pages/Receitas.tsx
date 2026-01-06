@@ -542,7 +542,7 @@ export default function Receitas() {
         <div className="flex flex-col space-y-6">
           <Card className={cn(
             "p-6 rounded-2xl shadow-sm w-full bg-[#FCFCFD] border border-gray-200",
-            isMobile && "rounded-2xl max-h-[calc(100vh-150px)] overflow-y-auto"
+            isMobile && "rounded-2xl max-h-[calc(100dvh-160px)] overflow-y-auto [&::-webkit-scrollbar]:hidden"
           )}>
             {!isMobile && (
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">

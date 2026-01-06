@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,6 +64,7 @@ interface ExpenseFormProps {
   initialFormaPagamento?: "dinheiro" | "pix" | "cartao" | "boleto";
   initialCartaoId?: string;
   initialDescricao?: string;
+  submitPortalRef?: HTMLDivElement | null;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -84,6 +86,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialFormaPagamento,
   initialCartaoId,
   initialDescricao,
+  submitPortalRef,
 }) => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
@@ -393,6 +396,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
   return (
     <form
+      id="expense-form"
       onSubmit={handleSubmit}
       className={cn(isMobile ? "space-y-3 w-full" : "space-y-4 w-full")}
     >
@@ -500,6 +504,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         tipoPagamento={tipoPagamento}
       />
 
+      {createPortal && <></>} {/* Dummy usage to ensure import is used if tree-shaking is aggressive? No need. */}
+
       <div>
         <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Descrição
@@ -531,17 +537,28 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         )
       }
 
-      <Button
-        type="submit"
-        className={cn(
-          "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
-          isMobile ? "h-9 text-sm" : "h-11 text-base"
-        )}
-        style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
-        disabled={loading}
-      >
-        {loading ? "Salvando..." : "Salvar Despesa"}
-      </Button>
+
+      {/* Submit Button Logic */}
+      {(() => {
+        const SubmitButton = (
+          <Button
+            type="submit"
+            form="expense-form"
+            className={cn(
+              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
+              isMobile ? "h-11 text-base" : "h-11 text-base"
+            )}
+            style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+            disabled={loading}
+          >
+            {loading ? "Salvando..." : "Salvar Despesa"}
+          </Button>
+        );
+
+        return isMobile && submitPortalRef
+          ? createPortal(SubmitButton, submitPortalRef)
+          : SubmitButton;
+      })()}
     </form >
   );
 };

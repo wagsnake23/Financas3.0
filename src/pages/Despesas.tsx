@@ -39,6 +39,7 @@ export default function Despesas() {
 
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [submitPortalRef, setSubmitPortalRef] = useState<HTMLDivElement | null>(null);
   // Removed: const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
 
   // Removed: Estados para preencher o formulário com dados da NFC-e
@@ -138,6 +139,7 @@ export default function Despesas() {
       isMobile={isMobile}
       isRecurring={isRecurring}
       setIsRecurring={setIsRecurring}
+      submitPortalRef={submitPortalRef}
     // Removed: Passar dados da NFC-e para o formulário
     // Removed: initialValor={nfceValor}
     // Removed: initialFormaPagamento={nfceFormaPagamento}
@@ -187,9 +189,10 @@ export default function Despesas() {
       >
         {isMobile ? (
           <div className="space-y-6">
-            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-200 space-y-4 bg-[#FCFCFD] max-h-[calc(100vh-150px)] overflow-y-auto">
+            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-200 space-y-4 bg-[#FCFCFD] max-h-[calc(100dvh-260px)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
               {formContent}
             </Card>
+            <div ref={setSubmitPortalRef} className="px-1 mt-4" />
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
