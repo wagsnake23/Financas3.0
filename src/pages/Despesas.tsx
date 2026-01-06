@@ -181,20 +181,20 @@ export default function Despesas() {
 
       <main
         className={cn(
-          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6 pb-2",
           !isMobile && "px-6"
         )}
       >
         {isMobile ? (
           <div className="space-y-6">
-            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#F8F9FA]">
+            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-200 space-y-4 bg-[#FCFCFD]">
               {formContent}
             </Card>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-6">
-              <Card className="p-6 rounded-2xl shadow-sm border-none bg-[#F8F9FA]">
+              <Card className="p-6 rounded-2xl shadow-sm border border-gray-200 bg-[#FCFCFD]">
                 {formContent}
               </Card>
 

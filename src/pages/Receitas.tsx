@@ -268,7 +268,7 @@ export default function Receitas() {
       onSubmit={handleSubmitOneOff}
       className={cn("w-full", isMobile ? "space-y-4" : "space-y-4")}
     >
-      <div className={cn("space-y-2", isMobile && "w-[92%] mx-auto")}>
+      <div className={cn("space-y-2 -mt-1", isMobile && "w-[92%] mx-auto")}>
         <ToggleGroup
           type="single"
           value={isRecurring ? "recorrente" : "avulsa"}
@@ -541,7 +541,7 @@ export default function Receitas() {
       >
         <div className="flex flex-col space-y-6">
           <Card className={cn(
-            "p-6 rounded-2xl shadow-sm w-full bg-[#F8F9FA] border-none",
+            "p-6 rounded-2xl shadow-sm w-full bg-[#FCFCFD] border border-gray-200",
             isMobile && "rounded-2xl"
           )}>
             {!isMobile && (

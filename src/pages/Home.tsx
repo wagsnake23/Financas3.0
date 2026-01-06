@@ -231,28 +231,31 @@ export default function Home() {
                 >
                     <div className="flex justify-between items-start mb-0">
                         <div className="flex items-center gap-2">
-                            <Wallet className="h-6 w-6 text-primary" />
+                            <Wallet className="h-6 w-6 text-[#1E6BCE]" />
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black text-primary tracking-tight">Saldo Mensal</h2>
+                                <h2 className="text-[15px] font-black text-[#1E6BCE] tracking-tight">Saldo Mensal</h2>
                             </div>
                         </div>
 
                         {/* Seletor de Mês */}
-                        <div className="flex items-center justify-between bg-white p-1 rounded-full border border-primary/30 shadow-sm transition-all h-9 w-[135px]">
-                            <button onClick={handlePrevMonth} className="text-primary hover:bg-primary/10 rounded-full p-1 transition-all">
+                        <div
+                            className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none"
+                            style={{ "--cor-topo": "#3B82F6", "--cor-base": "#1E6BCE", cursor: "default" } as any}
+                        >
+                            <button onClick={handlePrevMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
                                 <DynamicIcon name="ChevronLeft" className="h-4 w-4" strokeWidth={3} />
                             </button>
-                            <span className="text-[12px] font-black text-primary px-1 flex-1 text-center uppercase tracking-tight">
+                            <span className="text-[12px] font-black text-white px-1 flex-1 text-center uppercase tracking-tight">
                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-primary hover:bg-primary/10 rounded-full p-1 transition-all">
+                            <button onClick={handleNextMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
                                 <DynamicIcon name="ChevronRight" className="h-4 w-4" strokeWidth={3} />
                             </button>
                         </div>
                     </div>
 
                     <div className="flex flex-col -mt-1">
-                        <p className="text-[18px] font-black text-gray-800 tracking-tight mb-0.5">
+                        <p className="text-[18px] font-black text-gray-700 tracking-tight mb-0.5">
                             {formatCurrency(stats.currentBalance)}
                         </p>
                         <div className="flex items-center gap-2">
@@ -275,8 +278,8 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none">
+                                <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#DC2626" }}>Despesas</h2>
+                                <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
                             </div>
@@ -324,8 +327,8 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none">
+                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#16A34A" }}>Receitas</h2>
+                                <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                             </div>
