@@ -149,82 +149,48 @@ export default function Despesas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-[#F9FAFB] pt-16",
+        "flex flex-col min-h-screen bg-[#F9FAFB] pt-14 md:pt-16",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
       <Navigation />
 
-      {/* CONTAINER AJUSTADO */}
-      <div
+      {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
+      <div className="relative h-[200px] w-full bg-gradient-to-b from-[#E54D4D] via-[#FF6B6B] to-[#F9FAFB] overflow-hidden">
+        <div className="container mx-auto px-6 pt-3 md:pt-7 relative z-10">
+          <div>
+            <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-[#FFF5F5] shadow-sm flex items-center justify-center border border-[#E55B5B]/20 mt-1.5">
+                <DynamicIcon
+                  name="TrendingDown"
+                  className="h-5 w-5 text-[#E55B5B]"
+                />
+              </div>
+              Nova Despesa
+            </h1>
+            <p className="text-sm text-white font-medium -mt-0.5 leading-none ml-12">
+              Registre suas saídas financeiras
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <main
         className={cn(
-          "mx-auto space-y-6",
-          !isMobile && "flex-grow", // flex-grow apenas no desktop
-          isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8"
+          "container mx-auto px-4 -mt-28 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          !isMobile && "px-6"
         )}
       >
-        {!isMobile && (
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Despesas</h1>
-              <p className="text-muted-foreground">
-                Registre suas saídas financeiras
-              </p>
-            </div>
-          </div>
-        )}
-
         {isMobile ? (
-          <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4 bg-[#F9FAFB]">
-            <div className="flex items-center justify-between"> {/* Flex container for title and button */}
-              <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
-                <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                  <DynamicIcon
-                    name="TrendingDown"
-                    className="h-6 w-6 text-destructive"
-                  />
-                </div>
-                Nova Despesa
-              </h2>
-              {/* Removed: <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => setIsQrScannerOpen(true)}
-                className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
-              >
-                <DynamicIcon name="📷" className="w-4 h-4" />
-              </Button> */}
-            </div>
-
-            {formContent}
-
-            <Footer isMobile={isMobile} className="pt-2" user={user} />
-          </Card>
+          <div className="space-y-6">
+            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#F8F9FA]">
+              {formContent}
+            </Card>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-6">
-              <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto bg-[#F9FAFB]">
-                <div className="flex items-center justify-between mb-4"> {/* Flex container for title and button */}
-                  <h2 className="text-xl font-semibold flex items-center gap-2 text-destructive">
-                    <div className="p-2 rounded-full bg-soft-red/50 flex items-center justify-center">
-                      <DynamicIcon
-                        name="TrendingDown"
-                        className="h-6 w-6 text-destructive"
-                      />
-                    </div>
-                    Nova Despesa
-                  </h2>
-                  {/* Removed: <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setIsQrScannerOpen(true)}
-                    className="rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80 h-9 w-9"
-                  >
-                    <DynamicIcon name="📷" className="w-4 h-4" />
-                  </Button> */}
-                </div>
+              <Card className="p-6 rounded-2xl shadow-sm border-none bg-[#F8F9FA]">
                 {formContent}
               </Card>
 
@@ -245,15 +211,9 @@ export default function Despesas() {
             </div>
           </div>
         )}
-      </div>
+      </main>
 
-      {!isMobile && <Footer isMobile={isMobile} user={user} />}
-
-      {/* Removed: <QrCodeScannerModal
-        isOpen={isQrScannerOpen}
-        onOpenChange={setIsQrScannerOpen}
-        onImportData={handleImportNfceData}
-      /> */}
+      <Footer isMobile={isMobile} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-white/80 backdrop-blur-md" : "mt-8")} user={user} />
     </div>
   );
 }

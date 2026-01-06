@@ -43,15 +43,18 @@ export const getBorderClass = ({
 }: GetBorderClassProps): string => {
   let borderClass = "";
   if (isInvalid) {
-    borderClass = "border-destructive";
+    borderClass = "border-destructive focus:border-destructive focus:ring-destructive/10";
   } else if (isValid) {
-    borderClass = "border-success";
+    borderClass = "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
+  } else {
+    // Default focus state for fields without validation status
+    borderClass = "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   }
-  // Always apply focus styles to override default blue rings/outlines
+
   return cn(
     borderClass,
-    "focus-visible:ring-0 focus-visible:outline-none focus-visible:border-success",
-    "focus:ring-0 focus:outline-none focus:border-success" // For non-focus-visible elements
+    "focus-visible:ring-4 focus-visible:outline-none transition-all duration-200",
+    "focus:ring-4 focus:outline-none"
   );
 };
 

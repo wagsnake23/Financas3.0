@@ -424,8 +424,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+              "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
               isMobile && "h-9 text-sm",
               getBorderClass({
                 isInvalid: validationErrors.selectedSubcategoryId,
@@ -512,9 +511,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           placeholder="Detalhes sobre a despesa..."
           rows={isMobile ? 2 : 3}
           className={cn(
-            "rounded-xl bg-white border-[#D1D5DB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
-            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
-            isMobile && "text-sm p-4"
+            "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none",
+            isMobile && "text-sm p-4",
+            getBorderClass({})
           )}
         />
       </div>
@@ -534,8 +533,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <Button
         type="submit"
-        variant="destructive"
-        className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
+        className={cn(
+          "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
+          isMobile ? "h-9 text-sm" : "h-11 text-base"
+        )}
+        style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
         disabled={loading}
       >
         {loading ? "Salvando..." : "Salvar Despesa"}

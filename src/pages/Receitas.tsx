@@ -278,8 +278,8 @@ export default function Receitas() {
           <ToggleGroupItem
             value="avulsa"
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border",
-              "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-success-foreground data-[state=on]:font-bold",
+              "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+              "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
@@ -287,8 +287,8 @@ export default function Receitas() {
             <DynamicIcon
               name="⚡"
               className={cn(
-                "mr-2 h-4 w-4",
-                "data-[state=on]:text-success-foreground data-[state=off]:text-muted-foreground"
+                "mr-2 h-4 w-4 transition-colors",
+                !isRecurring ? "text-white" : "text-muted-foreground"
               )}
             />{" "}
             Avulsa
@@ -296,8 +296,8 @@ export default function Receitas() {
           <ToggleGroupItem
             value="recorrente"
             className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border",
-              "data-[state=on]:bg-success data-[state=on]:border-success data-[state=on]:text-success-foreground data-[state=on]:font-bold",
+              "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+              "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
               "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
@@ -305,8 +305,8 @@ export default function Receitas() {
             <DynamicIcon
               name="🔁"
               className={cn(
-                "mr-2 h-4 w-4",
-                "data-[state=on]:text-success-foreground data-[state=off]:text-muted-foreground"
+                "mr-2 h-4 w-4 transition-colors",
+                isRecurring ? "text-white" : "text-muted-foreground"
               )}
             />{" "}
             Recorrente
@@ -327,7 +327,7 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
+              "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({
@@ -382,7 +382,7 @@ export default function Receitas() {
               variant={"outline"}
               className={cn(
                 "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium",
+                "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 isMobile ? "h-9 text-sm" : "h-10",
                 !data && "text-muted-foreground",
@@ -435,7 +435,7 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
+            "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
             isMobile ? "h-9 text-sm" : "h-10",
             getBorderClass({
@@ -457,7 +457,7 @@ export default function Receitas() {
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn(
-            "w-full rounded-xl bg-[#F9FAFB] border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
+            "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
             isMobile ? "text-sm p-4" : "",
           )}
@@ -477,8 +477,11 @@ export default function Receitas() {
       <div className={cn(isMobile && "w-[92%] mx-auto")}>
         <Button
           type="submit"
-          variant="success"
-          className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")}
+          className={cn(
+            "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
+            isMobile ? "h-9 text-sm" : "h-11 text-base"
+          )}
+          style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
           disabled={loading}
         >
           {loading ? "Salvando..." : "Salvar Receita"}
@@ -500,44 +503,44 @@ export default function Receitas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background pt-16",
-        isMobile && "bg-white text-black"
+        "flex flex-col min-h-screen bg-[#F9FAFB] pt-14 md:pt-16",
+        isMobile && "bg-[#F9FAFB]"
       )}
     >
       <Navigation />
-      <div
+
+      {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
+      <div className="relative h-[200px] w-full bg-gradient-to-b from-[#2ABF78] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
+        <div className="container mx-auto px-6 pt-3 md:pt-7 relative z-10">
+          <div>
+            <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20 mt-1.5">
+                <DynamicIcon
+                  name="TrendingUp"
+                  className="h-5 w-5 text-[#25AF6A]"
+                />
+              </div>
+              Nova Receita
+            </h1>
+            <p className="text-sm text-white font-medium -mt-0.5 leading-none ml-12">
+              Registre suas entradas financeiras
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <main
         className={cn(
-          "space-y-6 flex-grow",
-          isMobile ? "w-full px-0 pt-0 pb-20" : "mx-auto max-w-[1200px] px-6 py-8"
+          "container mx-auto px-4 -mt-28 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          !isMobile && "px-6"
         )}
       >
-        {!isMobile && (
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Receitas</h1>
-              <p className="text-muted-foreground">
-                Registre suas entradas financeiras
-              </p>
-            </div>
-          </div>
-        )}
-
-        {isMobile ? (
-          <Card className="w-full !max-w-full m-0 p-6 rounded-none shadow-none border-none space-y-6 bg-white">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold flex items-center gap-2 text-success">
-                <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-                  <DynamicIcon name="TrendingUp" className="h-6 w-6 text-success" />
-                </div>
-                Nova Receita
-              </h2>
-            </div>
-
-            {oneOffFormContent}
-          </Card>
-        ) : (
-          <div className="flex flex-col space-y-6">
-            <Card className="p-6 rounded-xl shadow-sm w-full">
+        <div className="flex flex-col space-y-6">
+          <Card className={cn(
+            "p-6 rounded-2xl shadow-sm w-full bg-[#F8F9FA] border-none",
+            isMobile && "rounded-2xl"
+          )}>
+            {!isMobile && (
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">
                 <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
                   <DynamicIcon
@@ -547,9 +550,11 @@ export default function Receitas() {
                 </div>
                 Nova Receita
               </h2>
-              {oneOffFormContent}
-            </Card>
+            )}
+            {oneOffFormContent}
+          </Card>
 
+          {!isMobile && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <TotalRevenueCard
                 revenues={revenues}
@@ -572,9 +577,9 @@ export default function Receitas() {
                 revenueTypes={incomeSubcategories}
               />
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </main>
       <Footer
         isMobile={isMobile}
         className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}

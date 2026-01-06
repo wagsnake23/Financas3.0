@@ -449,22 +449,19 @@ body {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  /* luz bem mais sutil */
-
+  border: none;
   background: linear-gradient(180deg,
       var(--cor-topo) 0%,
       var(--cor-base) 100%);
 
   box-shadow:
-    0px 5px 12px rgba(0, 0, 0, 0.12),
-    /* sombra suave */
-    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
-    /* highlight leve */
-    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
+    0px 4px 10px rgba(0, 0, 0, 0.15),
+    /* sombra externa */
+    inset 0px 1px 1px rgba(255, 255, 255, 0.3),
+    /* luz superior sutil */
+    inset 0px -2px 0px rgba(0, 0, 0, 0.1);
   /* relevo inferior */
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
-  /* Adicionado transform para transição suave */
+  transition: all 0.2s ease;
 }
 
 .btn-3d:hover {

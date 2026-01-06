@@ -437,7 +437,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     <div
       className={cn(
         "w-full flex flex-col",
-        isMobile ? "h-full overflow-hidden p-2" : "h-full p-6"
+        isMobile ? "h-full overflow-hidden pt-0 px-2 pb-2" : "h-full p-6"
       )}
     >
       {/* Main container with padding */}

@@ -37,34 +37,34 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
         <ToggleGroupItem
           value="avulsa"
           className={cn(
-            "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-destructive data-[state=on]:text-destructive-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-destructive/90", // Ajustado para corresponder ao botão Salvar
+            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+            "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-            isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
+            isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
           )}
         >
           <DynamicIcon
             name="⚡"
             className={cn(
-              "mr-1 h-3.5 w-3.5",
-              "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
+              "mr-1.5 h-3.5 w-3.5 transition-colors",
+              isRecurring ? "text-muted-foreground" : "text-white"
             )}
           /> Avulsa
         </ToggleGroupItem>
         <ToggleGroupItem
           value="recorrente"
           className={cn(
-            "flex-1 rounded-xl flex items-center justify-center border",
-            "data-[state=on]:bg-destructive data-[state=on]:text-destructive-foreground data-[state=on]:font-medium data-[state=on]:border-transparent data-[state=on]:hover:bg-destructive/90", // Ajustado para corresponder ao botão Salvar
+            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+            "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
             "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
-            isMobile && "h-8 py-0.5 text-sm" // Aumentado o tamanho da fonte para mobile
+            isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
           )}
         >
           <DynamicIcon
             name="🔁"
             className={cn(
-              "mr-1 h-3.5 w-3.5",
-              "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
+              "mr-1.5 h-3.5 w-3.5 transition-colors",
+              isRecurring ? "text-white" : "text-muted-foreground"
             )}
           /> Recorrente
         </ToggleGroupItem>

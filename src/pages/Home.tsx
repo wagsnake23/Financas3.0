@@ -324,14 +324,14 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#2ABF78" }}>Receitas</h2>
+                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
                                 <p className="text-[17px] font-black text-gray-800 tracking-tight leading-none">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#2ABF78] hover:bg-[#2ABF78] hover:text-white hover:border-[#2ABF78]"
-                                style={{ borderColor: "rgba(42, 191, 120, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#1AA361] hover:bg-[#1AA361] hover:text-white hover:border-[#1AA361]"
+                                style={{ borderColor: "rgba(26, 163, 97, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
                                 onClick={() => navigate("/lancamentos?type=income")}
                             >
                                 Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -343,7 +343,7 @@ export default function Home() {
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
                                     className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-300 transition-all active:scale-90"
-                                    style={{ "--cor-topo": "#48DE95", "--cor-base": "#2ABF78" } as any}
+                                    style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
                                 >
                                     <TrendingUp className="h-[18px] w-[18px] text-white" />
                                 </Button>
@@ -356,7 +356,7 @@ export default function Home() {
                             </div>
                             <Button
                                 className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px]"
-                                style={{ "--cor-topo": "#48DE95", "--cor-base": "#2ABF78" } as any}
+                                style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
                                 onClick={() => navigate("/receitas")}
                             >
                                 <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />

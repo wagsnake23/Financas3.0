@@ -57,12 +57,19 @@ export const Navigation = () => {
     return location.pathname.startsWith(path);
   };
 
+  const isDespesas = location.pathname === "/despesas";
+
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[60]",
+        "fixed top-0 left-0 right-0 z-[60] transition-colors duration-300",
         isMobile
-          ? "h-14 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-none"
+          ? cn(
+            "h-14 backdrop-blur-md border-b shadow-none",
+            isDespesas
+              ? "bg-gradient-to-b from-[#FFF1F1]/95 to-[#FFF1F1]/80 border-rose-100/50"
+              : "bg-gradient-to-b from-[#E0F2FE]/90 to-[#F8FAFC]/80 border-blue-100/50"
+          )
           : "h-16 bg-gradient-primary text-primary-foreground shadow-lg"
       )}>
         <div className="container mx-auto px-4 h-full">
@@ -79,7 +86,9 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-bold text-lg tracking-tight",
-                isMobile ? "text-primary" : "text-white"
+                isMobile
+                  ? "text-primary"
+                  : "text-white"
               )}>Minhas Finanças</span>
             </div>
 

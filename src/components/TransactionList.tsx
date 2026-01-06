@@ -366,9 +366,9 @@ export const TransactionList = ({
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterType !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
+                ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
               hideTypeFilter && "hidden"
             )}
@@ -388,9 +388,9 @@ export const TransactionList = ({
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterCategory !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
+                ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >
@@ -415,9 +415,12 @@ export const TransactionList = ({
         <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
           <SelectTrigger
             className={cn(
-              "h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+              "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterPaymentOptionId !== "all"
-                ? "bg-[#26A765] text-white hover:bg-[#26A765]/90 border-transparent font-bold"
+                ? (isValidUuid(filterPaymentOptionId)
+                  ? "bg-[#8257E5] hover:bg-[#8257E5]/90"
+                  : (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90")
+                ) + " text-white border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
             )}
           >
