@@ -183,16 +183,17 @@ export default function Despesas() {
 
       <main
         className={cn(
-          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6",
+          isMobile ? "pb-6" : "pb-20",
           !isMobile && "px-6"
         )}
       >
         {isMobile ? (
-          <div className="space-y-6">
+          <div className="space-y-1">
             <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-200 space-y-4 bg-[#FCFCFD] max-h-[calc(100dvh-260px)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
               {formContent}
             </Card>
-            <div ref={setSubmitPortalRef} className="px-1 mt-4" />
+            <div ref={setSubmitPortalRef} className="px-1" />
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
