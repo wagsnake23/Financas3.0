@@ -189,8 +189,8 @@ export default function Despesas() {
         )}
       >
         {isMobile ? (
-          <div className="space-y-0.5">
-            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-200 space-y-4 bg-[#FCFCFD] max-h-[calc(100dvh-175px)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+          <div className="space-y-4">
+            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] max-h-[calc(100dvh-175px)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
               {formContent}
             </Card>
             <div ref={setSubmitPortalRef} className="px-1" />
