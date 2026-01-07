@@ -518,7 +518,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           placeholder="Detalhes sobre a despesa..."
-          rows={isMobile ? 2 : 3}
+          rows={isMobile ? 1 : 3}
+          maxLength={50}
           className={cn(
             "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none",
             isMobile && "text-sm p-4",
@@ -548,8 +549,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             type="submit"
             form="expense-form"
             className={cn(
-              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
-              isMobile ? "h-11 text-base" : "h-11 text-base"
+              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+              isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
             )}
             style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             disabled={loading}
