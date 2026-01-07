@@ -56,8 +56,8 @@ const buildCategoryHierarchy = (flatCategories: AppCategory[]): HierarchicalCate
 };
 
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
-const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
-const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
+const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
 const Categories = () => {
   const { user, loading: authLoading } = useAuth();
@@ -253,7 +253,7 @@ const Categories = () => {
       <main className={cn("container mx-auto", isMobile ? "px-4 py-4 flex-grow" : "max-w-[1200px] px-6 py-8")}> {/* Ajustado py-4 e adicionado flex-grow para mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"> {/* Revertido para lg:grid-cols-2 */}
           <div> {/* Removido lg:col-span-2 */}
-            <CategoryForm 
+            <CategoryForm
               onAddCategory={handleAddCategory}
               onUpdateCategory={handleUpdateCategory} // Passar para o formulário principal também
               editingCategory={null} // O formulário principal é sempre para adicionar
@@ -271,11 +271,11 @@ const Categories = () => {
                 <div className="p-6 text-center text-muted-foreground">Carregando lista de categorias...</div>
               </Card>
             }>
-              <CategoriesList 
+              <CategoriesList
                 categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}
                 onEditCategory={handleEditCategory} // Passar a função que abre o modal
-                isMobile={isMobile} 
+                isMobile={isMobile}
                 allFlatCategories={allCategories} // NEW: Pass allCategories here
               />
             </React.Suspense>

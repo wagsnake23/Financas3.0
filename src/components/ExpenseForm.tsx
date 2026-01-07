@@ -70,8 +70,8 @@ interface ExpenseFormProps {
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
 const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: "#F3FFF3", color: "#006000" };
-const toastErrorStyle = { backgroundColor: "#F3FFF3", color: "#FF2929" };
+const toastSuccessStyle = { backgroundColor: "#FFFFFF", color: "#006000", border: "1px solid #E5FFE5" };
+const toastErrorStyle = { backgroundColor: "#FFFFFF", color: "#FF2929", border: "1px solid #FFE5E5" };
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   user,

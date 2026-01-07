@@ -25,8 +25,8 @@ interface TransactionFormProps {
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120; // 120 meses
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
-const toastSuccessStyle = { backgroundColor: '#F3FFF3', color: '#006000' };
-const toastErrorStyle = { backgroundColor: '#F3FFF3', color: '#FF2929' };
+const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
+const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
@@ -93,7 +93,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
 
@@ -135,7 +135,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
               tipo_receita_id: category === UNSELECTED_VALUE ? null : category,
               valor: amount as number,
               data: date,
-              descricao,
+              descricao: description,
               status: 'Prevista', // Master is always 'Prevista'
               is_recurring_master: true,
               recurrence_day: recurrenceDay,
@@ -151,7 +151,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
             .from("receitas")
             .update({ recurrence_id: masterRevenueId })
             .eq("id", masterRevenueId);
-          
+
           if (updateMasterError) throw updateMasterError;
 
           // 2. Call RPC to generate future occurrences in background
@@ -212,7 +212,7 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
       setIsRecurring(false); // Reset toggle
       setStatus("Pendente"); // Reset status
       setValidationErrors({}); // Clear errors on success
-      
+
       toast.success(type === "income" ? "Receita adicionada!" : "Despesa adicionada!", {
         style: toastSuccessStyle,
         duration: toastDuration
@@ -230,42 +230,42 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
         {/* Toggle Avulsa / Recorrente */}
         <div className="space-y-2">
           <Label>Tipo de Lançamento</Label>
-          <ToggleGroup 
-            type="single" 
-            value={isRecurring ? "recorrente" : "avulsa"} 
+          <ToggleGroup
+            type="single"
+            value={isRecurring ? "recorrente" : "avulsa"}
             onValueChange={handleToggleChange}
             className="w-full justify-center"
           >
-            <ToggleGroupItem 
-              value="avulsa" 
+            <ToggleGroupItem
+              value="avulsa"
               className={cn(
                 "flex-1 rounded-xl flex items-center justify-center border",
                 "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
                 "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
               )}
             >
-              <DynamicIcon 
-                name="Zap" 
+              <DynamicIcon
+                name="Zap"
                 className={cn(
                   "mr-2 h-4 w-4",
                   "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
-                )} 
+                )}
               /> Avulsa
             </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="recorrente" 
+            <ToggleGroupItem
+              value="recorrente"
               className={cn(
                 "flex-1 rounded-xl flex items-center justify-center border",
                 "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground data-[state=on]:font-bold",
                 "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground"
               )}
             >
-              <DynamicIcon 
-                name="Repeat" 
+              <DynamicIcon
+                name="Repeat"
                 className={cn(
                   "mr-2 h-4 w-4",
                   "data-[state=on]:text-primary-foreground data-[state=off]:text-muted-foreground"
-                )} 
+                )}
               /> Recorrente
             </ToggleGroupItem>
           </ToggleGroup>
