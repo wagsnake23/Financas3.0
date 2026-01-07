@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,7 @@ export default function Receitas() {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
+  const [submitPortalRef, setSubmitPortalRef] = useState<HTMLDivElement | null>(null);
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [data, setData] = useState<Date | undefined>(new Date());
@@ -265,10 +267,11 @@ export default function Receitas() {
 
   const oneOffFormContent = (
     <form
+      id="revenue-form"
       onSubmit={handleSubmitOneOff}
-      className={cn("w-full", isMobile ? "space-y-4" : "space-y-4")}
+      className={cn("w-full", isMobile ? "space-y-4" : "space-y-6")}
     >
-      <div className={cn("space-y-2 -mt-1", isMobile && "w-[92%] mx-auto")}>
+      <div className={cn("space-y-2 pt-2", isMobile && "w-full mx-auto")}>
         <ToggleGroup
           type="single"
           value={isRecurring ? "recorrente" : "avulsa"}
@@ -314,7 +317,7 @@ export default function Receitas() {
         </ToggleGroup>
       </div>
 
-      <div className={cn(isMobile && "w-[92%] mx-auto")}>
+      <div className={cn(isMobile && "w-full mx-auto")}>
         <Label htmlFor="tipo" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria de Receita
         </Label>
@@ -372,7 +375,7 @@ export default function Receitas() {
         </Select>
       </div>
 
-      <div className={cn(isMobile && "w-[92%] mx-auto")}>
+      <div className={cn(isMobile && "w-full mx-auto")}>
         <Label htmlFor="data" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Data
         </Label>
@@ -424,7 +427,7 @@ export default function Receitas() {
         </Popover>
       </div>
 
-      <div className={cn(isMobile && "w-[92%] mx-auto")}>
+      <div className={cn(isMobile && "w-full mx-auto")}>
         <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Valor (R$)
         </Label>
@@ -446,7 +449,7 @@ export default function Receitas() {
         />
       </div>
 
-      <div className={cn(isMobile && "w-[92%] mx-auto")}>
+      <div className={cn(isMobile && "w-full mx-auto")}>
         <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Descrição
         </Label>
@@ -465,7 +468,7 @@ export default function Receitas() {
       </div>
 
       {!isRecurring && (
-        <div className={cn("space-y-2", isMobile && "w-[92%] mx-auto")}>
+        <div className={cn("space-y-2", isMobile && "w-full mx-auto")}>
           <RevenueStatusToggle
             status={status}
             setStatus={(val) => setStatus(val as ReceitaStatus)}
@@ -474,19 +477,31 @@ export default function Receitas() {
         </div>
       )}
 
-      <div className={cn(isMobile && "w-[92%] mx-auto")}>
-        <Button
-          type="submit"
-          className={cn(
-            "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-md",
-            isMobile ? "h-9 text-sm" : "h-11 text-base"
-          )}
-          style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
-          disabled={loading}
-        >
-          {loading ? "Salvando..." : "Salvar Receita"}
-        </Button>
-      </div>
+      {/* Submit Button Logic */}
+      {(() => {
+        const SubmitButton = (
+          <Button
+            type="submit"
+            form="revenue-form"
+            className={cn(
+              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+              isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+            )}
+            style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
+            disabled={loading}
+          >
+            {loading ? "Salvando..." : "Salvar Receita"}
+          </Button>
+        );
+
+        return isMobile && submitPortalRef
+          ? createPortal(SubmitButton, submitPortalRef)
+          : (
+            <div className={cn(isMobile && "w-full mx-auto")}>
+              {SubmitButton}
+            </div>
+          );
+      })()}
     </form>
   );
 
@@ -511,20 +526,23 @@ export default function Receitas() {
 
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
       <div className="relative h-[200px] w-full bg-gradient-to-b from-[#1AA361] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
-        <div className="container mx-auto px-6 pt-3 md:pt-7 relative z-10">
+        <div className={cn(
+          "container mx-auto px-6 relative z-10",
+          isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#1AA361]/0" : "pt-3 md:pt-7"
+        )}>
           <div>
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20 mt-1">
+              <div className={cn("p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20", isMobile ? "mt-0" : "mt-1")}>
                 <DynamicIcon
                   name="TrendingUp"
-                  className="h-5 w-5 text-[#25AF6A]"
+                  className={cn("text-[#25AF6A]", isMobile ? "h-4 w-4" : "h-5 w-5")}
                 />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-xl font-black text-white tracking-tight -mt-0.5">
+                <h1 className={cn("font-black text-white tracking-tight -mt-0.5", isMobile ? "text-xl" : "text-xl")}>
                   Nova Receita
                 </h1>
-                <p className="text-sm text-white font-medium mt-0.5 leading-none">
+                <p className={cn("text-white font-medium mt-0.5 leading-none", isMobile ? "text-xs" : "text-sm")}>
                   Registre suas entradas financeiras
                 </p>
               </div>
@@ -535,30 +553,44 @@ export default function Receitas() {
 
       <main
         className={cn(
-          "container mx-auto px-4 -mt-32 relative z-20 max-w-[1200px] space-y-6 pb-20",
+          "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
+          isMobile ? "-mt-32 pb-32" : "-mt-32 pb-20",
           !isMobile && "px-6"
         )}
       >
-        <div className="flex flex-col space-y-6">
-          <Card className={cn(
-            "p-6 rounded-2xl shadow-sm w-full bg-[#FCFCFD] border border-gray-200",
-            isMobile && "rounded-2xl max-h-[calc(100dvh-160px)] overflow-y-auto [&::-webkit-scrollbar]:hidden"
-          )}>
-            {!isMobile && (
-              <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">
-                <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-                  <DynamicIcon
-                    name="TrendingUp"
-                    className="h-6 w-6 text-success"
-                  />
-                </div>
-                Nova Receita
-              </h2>
-            )}
-            {oneOffFormContent}
-          </Card>
+        {isMobile ? (
+          <div className="relative">
+            <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
+              {oneOffFormContent}
+            </Card>
+            <div
+              ref={setSubmitPortalRef}
+              className={cn(
+                "px-1",
+                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 py-3 bg-[#F9FAFB]/95 backdrop-blur-md"
+              )}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col space-y-6">
+            <Card className={cn(
+              "p-6 rounded-2xl shadow-sm w-full bg-[#FCFCFD] border border-gray-200",
+              isMobile && "rounded-2xl max-h-[calc(100dvh-160px)] overflow-y-auto [&::-webkit-scrollbar]:hidden"
+            )}>
+              {!isMobile && (
+                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">
+                  <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
+                    <DynamicIcon
+                      name="TrendingUp"
+                      className="h-6 w-6 text-success"
+                    />
+                  </div>
+                  Nova Receita
+                </h2>
+              )}
+              {oneOffFormContent}
+            </Card>
 
-          {!isMobile && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <TotalRevenueCard
                 revenues={revenues}
@@ -581,8 +613,8 @@ export default function Receitas() {
                 revenueTypes={incomeSubcategories}
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </main>
       <Footer
         isMobile={isMobile}
