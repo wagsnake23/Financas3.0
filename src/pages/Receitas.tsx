@@ -562,6 +562,8 @@ export default function Receitas() {
           <div className="relative">
             <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
               {oneOffFormContent}
+
+
             </Card>
             <div
               ref={setSubmitPortalRef}

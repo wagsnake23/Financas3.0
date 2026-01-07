@@ -35,6 +35,7 @@ import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 import { MonthlyYieldsBarChart } from "@/components/MonthlyYieldsBarChart"; // Importar MonthlyYieldsBarChart
+import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -392,8 +393,22 @@ export default function Dashboard() {
               </StatCard>
             )}
 
+            {isMobile && (!filter || filter === "revenues") && (
+              <RevenueByTypeChart
+                revenues={allRevenues.filter(r =>
+                  isWithinInterval(new Date(r.data), {
+                    start: startOfMonth(selectedMonth),
+                    end: endOfMonth(selectedMonth)
+                  })
+                )}
+                revenueTypes={allSubcategories}
+                isMobile={true}
+              />
+            )}
+
             {(!filter || filter === "revenues") && (
               <StatCard
+
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
                 secondaryStatTitle="Saldo Anual"
