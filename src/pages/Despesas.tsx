@@ -160,7 +160,7 @@ export default function Despesas() {
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
       <div className="relative h-[200px] w-full bg-gradient-to-b from-[#E54D4D] via-[#FF6B6B] to-[#F9FAFB] overflow-hidden">
         <div className={cn(
-          "container mx-auto px-6 relative z-10",
+          "container mx-auto px-6 relative z-10 max-w-[1200px]",
           isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#E54D4D]/0" : "pt-3 md:pt-7"
         )}>
           <div>

@@ -355,7 +355,7 @@ export const TransactionList = ({
   const transactionsToDisplay = sortedTransactions;
 
   return (
-    <div className={cn("p-6", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
+    <div className={cn("p-6 pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
 
       {/* Filtros em Estilo Chips/Pills - App Bancário Moderno */}
       <div className={cn(
@@ -482,9 +482,9 @@ export const TransactionList = ({
             )}
           </div>
         ) : (
-          <div className="lancamentos-scroll-container">
+          <div className="lancamentos-scroll-container pb-8">
             <Table className="lancamentos-table table-fixed border-separate border-spacing-0">
-              <TableHeader className="lancamentos-table-header">
+              <TableHeader className="lancamentos-table-header bg-gradient-to-b from-blue-50 to-white">
                 <TableRow>
                   <TableHead className="w-[12%] py-4">
                     Data
@@ -536,12 +536,12 @@ export const TransactionList = ({
 
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
-        "mt-auto pb-0 bg-transparent relative z-20",
-        isMobile ? "w-full px-2 mb-6" : "px-4 w-full px-6 mb-8"
+        "mt-auto relative z-20",
+        isMobile ? "w-full px-2 mb-6" : "mt-8 w-full px-6 mb-4"
       )}>
         <div className={cn(
-          "bg-gray-50 flex items-center justify-between w-full gap-2 pt-1.5 pb-3 px-4 shadow-sm border-t border-gray-300",
-          !isMobile && "!max-w-[1200px] mx-auto rounded-none"
+          "bg-gray-50 flex items-center justify-between w-full gap-2 pt-3 pb-3 px-4 shadow-sm border-t border-gray-300",
+          !isMobile && "max-w-[1000px] mx-auto bg-background border border-gray-200 rounded-2xl"
         )}>
           {/* 1: Lançamentos */}
           <div className="flex flex-col items-center justify-center flex-1">

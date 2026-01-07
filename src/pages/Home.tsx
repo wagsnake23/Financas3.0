@@ -211,7 +211,7 @@ export default function Home() {
             {/* NOVO HEADER PREMIUM — FINTECH STYLE */}
             <div className="relative h-[220px] w-full bg-gradient-to-b from-[#0A4A9B] via-[#1E6BCE] to-[#F8FAFC] overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-                <div className="container mx-auto px-6 pt-16 relative z-10">
+                <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[1000px]">
                     <div>
                         <h1 className="text-xl font-bold text-white tracking-tight">
                             Olá, {userName} 👋
@@ -223,7 +223,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <main className={cn("container mx-auto px-4 -mt-24 relative z-20 max-w-[1200px]")}>
+            <main className={cn("container mx-auto px-4 -mt-24 md:-mt-16 relative z-20 max-w-[1000px]")}>
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card

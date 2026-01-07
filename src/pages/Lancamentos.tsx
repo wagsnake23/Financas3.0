@@ -84,25 +84,25 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container mx-auto flex-grow",
-          isMobile ? "px-0 pt-2 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 py-8"
+          isMobile ? "px-0 pt-2 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-2 pb-8"
         )}
       >
-        {!isMobile && (
-          <h1 className="text-3xl font-bold mb-6">Histórico de Lançamentos</h1>
-        )}
 
-        <MonthNavigator
-          selectedMonth={selectedMonth}
-          onPreviousMonth={handlePreviousMonth}
-          onNextMonth={handleNextMonth}
-          isMobile={isMobile}
-          hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all"}
-          onClearFilters={() => {
-            setFilterType("all");
-            setFilterCategory("all");
-            setFilterPaymentOptionId("all");
-          }}
-        />
+
+        <div className={!isMobile ? "mt-4" : ""}>
+          <MonthNavigator
+            selectedMonth={selectedMonth}
+            onPreviousMonth={handlePreviousMonth}
+            onNextMonth={handleNextMonth}
+            isMobile={isMobile}
+            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all"}
+            onClearFilters={() => {
+              setFilterType("all");
+              setFilterCategory("all");
+              setFilterPaymentOptionId("all");
+            }}
+          />
+        </div>
 
         <LancamentosContent
           editingTransaction={editingTransaction}

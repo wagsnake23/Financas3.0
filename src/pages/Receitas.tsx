@@ -527,7 +527,7 @@ export default function Receitas() {
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
       <div className="relative h-[200px] w-full bg-gradient-to-b from-[#1AA361] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
         <div className={cn(
-          "container mx-auto px-6 relative z-10",
+          "container mx-auto px-6 relative z-10 max-w-[1200px]",
           isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#1AA361]/0" : "pt-3 md:pt-7"
         )}>
           <div>
@@ -574,33 +574,21 @@ export default function Receitas() {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-6">
               <Card className="p-6 rounded-2xl shadow-sm border border-gray-200 bg-[#FCFCFD]">
                 {oneOffFormContent}
               </Card>
+            </div>
 
-              <TotalRevenueCard
+            <div className="h-full">
+              <RevenueByTypeChart
                 revenues={revenues}
-                chartContent={
-                  <MonthlyRevenueBarChart
-                    revenues={revenues}
-                    currentDate={new Date()}
-                    isMobile={isMobile}
-                    onMonthClick={() => { }}
-                  />
-                }
+                revenueTypes={incomeSubcategories}
                 annualTotalValue={revenues
                   .filter(r => new Date(r.data).getFullYear() === new Date().getFullYear())
                   .reduce((sum, r) => sum + r.valor, 0)
                 }
-              />
-            </div>
-
-            <div className="space-y-6">
-              <RevenueByTypeChart
-                revenues={revenues}
-                revenueTypes={incomeSubcategories}
               />
             </div>
           </div>
