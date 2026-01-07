@@ -64,16 +64,18 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             {/* Group: Pago */}
             <div className="flex flex-col gap-0">
               <div className="flex items-center gap-1.5">
-                <DynamicIcon name="CheckCircle" className="h-3 w-3 text-[#059669]" />
-                <span className="text-[10px] font-bold uppercase tracking-tight text-[#059669]">
+                <div
+                  className="flex items-center justify-center rounded-full bg-[#44E37F]/90 text-white font-black"
+                  style={{ height: 14, width: 14, fontSize: 7 }}
+                >
+                  ✓
+                </div>
+                <span className="text-[0.65rem] text-gray-500 font-bold">
                   Pago
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className={cn(
-                  "text-[#374151]",
-                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
-                )}>
+              <div className="leading-none">
+                <span className="text-[11px] font-bold text-success/80">
                   {formatCurrency(totalPaid)}
                 </span>
               </div>
@@ -82,16 +84,16 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             {/* Group: Pendente */}
             <div className="flex flex-col gap-0">
               <div className="flex items-center gap-1.5">
-                <DynamicIcon name="Circle" className="h-3 w-3 text-[#E11D48]" />
-                <span className="text-[10px] font-bold uppercase tracking-tight text-[#E11D48]">
+                <DynamicIcon
+                  name="Circle"
+                  className="h-3.5 w-3.5 text-destructive/70"
+                />
+                <span className="text-[0.65rem] text-gray-500 font-bold">
                   Pendente
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className={cn(
-                  "text-[#374151]",
-                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
-                )}>
+              <div className="leading-none">
+                <span className="text-[11px] font-bold text-destructive/80">
                   {formatCurrency(totalPending)}
                 </span>
               </div>
@@ -100,16 +102,16 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             {/* Group: Total */}
             <div className="flex flex-col gap-0">
               <div className="flex items-center gap-1.5">
-                <DynamicIcon name="CreditCard" className="h-3 w-3 text-[#374151]" />
-                <span className="text-[10px] font-bold uppercase tracking-tight text-[#374151]">
-                  Total Fatura
+                <DynamicIcon
+                  name="CreditCard"
+                  className="h-3.5 w-3.5 text-gray-500"
+                />
+                <span className="text-[0.65rem] text-gray-500 font-bold">
+                  Total
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className={cn(
-                  "text-[#374151]",
-                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
-                )}>
+              <div className="leading-none">
+                <span className="text-[11px] font-bold text-gray-700">
                   {formatCurrency(totalCardExpenses)}
                 </span>
               </div>
@@ -118,7 +120,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
           {/* Right Section: Dates & Action */}
           <div className={cn(
-            "flex items-center justify-between md:justify-end gap-5 pt-2 border-t border-slate-50",
+            "flex items-center justify-between md:justify-end gap-3 pt-1 border-t border-slate-50",
             !isMobile && "pt-0 border-t-0"
           )}>
             {/* Date Details */}
@@ -143,15 +145,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               onClick={onPayInvoice}
               disabled={loadingPayInvoice || disablePayInvoiceButton}
               className={cn(
-                "h-9 px-10 rounded-xl transition-all duration-300 flex items-center justify-center",
-                "bg-gradient-to-br from-[#E9D5FF] to-[#DDD6FE] hover:from-[#DDD6FE] hover:to-[#C4B5FD]",
-                "border border-[#C4B5FD]/50 shadow-sm active:scale-95",
-                "text-[#4C1D95] font-bold text-[13px]",
+                "h-8 px-8 rounded-xl transition-all duration-300 flex items-center justify-center",
+                "bg-[#1B63C1] hover:bg-[#1652A1] active:scale-95",
+                "text-white font-bold text-[12px] shadow-sm",
                 "disabled:opacity-40 disabled:grayscale",
                 isMobile && "flex-1"
               )}
             >
-              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-[#4C1D95] opacity-80" />
+              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-white opacity-90" />
               {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
             </button>
           </div>
