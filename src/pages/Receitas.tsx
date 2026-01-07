@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { Navigation } from "@/components/Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -49,12 +49,10 @@ type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
-const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: "#FFFFFF", color: "#006000", border: "1px solid #E5FFE5" };
-const toastErrorStyle = { backgroundColor: "#FFFFFF", color: "#FF2929", border: "1px solid #FFE5E5" };
 
 export default function Receitas() {
   const { user, loading: authLoading } = useAuth();
+  const { showSuccessToast, showErrorToast } = useToast();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
@@ -126,10 +124,7 @@ export default function Receitas() {
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.", {
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Erro de Autenticação", "Usuário não autenticado.");
       setLoading(false);
       return;
     }
@@ -156,10 +151,7 @@ export default function Receitas() {
     setValidationErrors(newErrors);
 
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", {
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Validação", "Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
     }
@@ -240,10 +232,7 @@ export default function Receitas() {
         if (error) throw error;
       }
 
-      toast.success("Receita adicionada com sucesso!", {
-        style: toastSuccessStyle,
-        duration: toastDuration,
-      });
+      showSuccessToast("Sucesso", "Receita adicionada com sucesso!");
       setTipoReceitaId(UNSELECTED_VALUE);
       setValor(undefined);
       setData(new Date());
@@ -254,11 +243,7 @@ export default function Receitas() {
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["allRevenues"] });
     } catch (error: any) {
-      toast.error("Erro ao adicionar receita", {
-        description: error.message,
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Erro", error.message || "Erro ao adicionar receita");
       console.error("Supabase error adding revenue:", error);
     } finally {
       setLoading(false);

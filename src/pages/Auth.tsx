@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { z } from "zod";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -19,11 +19,8 @@ const nameSchema = z.string().trim().min(1, "Nome é obrigatório").max(100, "No
 
 type ViewMode = "login" | "signup" | "forgot-password" | "reset-password";
 
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
-const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
-const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
-
 export default function Auth() {
+  const { showSuccessToast, showErrorToast } = useToast();
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<ViewMode>("login");
   const [loading, setLoading] = useState(false);
@@ -56,7 +53,7 @@ export default function Auth() {
     if (!emailValidation.success) {
       newErrors.email = true;
       hasError = true;
-      toast.error(emailValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", emailValidation.error.errors[0].message);
     } else {
       newErrors.email = false;
     }
@@ -64,14 +61,14 @@ export default function Auth() {
     if (!password) {
       newErrors.password = true;
       hasError = true;
-      toast.error("Senha é obrigatória", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Campo Obrigatório", "Senha é obrigatória");
     } else {
       newErrors.password = false;
     }
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Campos Obrigatórios", "Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -83,17 +80,11 @@ export default function Auth() {
     });
 
     if (error) {
-      toast.error("Erro ao fazer login", {
-        description: error.message === "Invalid login credentials"
-          ? "Email ou senha inválidos"
-          : error.message,
-        duration: toastDuration, style: toastErrorStyle
-      });
+      showErrorToast("Erro ao fazer login", error.message === "Invalid login credentials"
+        ? "Email ou senha inválidos"
+        : error.message);
     } else if (data.user) {
-      toast.success("Login realizado com sucesso!", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Sucesso", "Login realizado com sucesso!");
       navigate("/");
     }
 

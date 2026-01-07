@@ -9,7 +9,7 @@ import { cn, isValidUuid, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } fr
 import { Tables } from "@/integrations/supabase/types";
 import { format, isValid, setDate, getMonth, getYear, addMonths, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,9 +53,6 @@ interface TransactionListProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
-const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
 export const TransactionList = ({
   transactions,
@@ -81,6 +78,7 @@ export const TransactionList = ({
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
+  const { showSuccessToast, showErrorToast } = useToast();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
@@ -242,15 +240,15 @@ export const TransactionList = ({
     console.log("handlePayInvoice: isValid(monthToValidate):", isValid(monthToValidate));
 
     if (!user) {
-      toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Autenticação", "Por favor, faça login novamente.");
       return;
     }
     if (!isValidUuid(filterPaymentOptionId)) {
-      toast.error("Selecione um cartão de crédito válido para pagar a fatura.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Seleção Inválida", "Selecione um cartão de crédito válido para pagar a fatura.");
       return;
     }
     if (!isValid(monthToValidate)) {
-      toast.error("Data do mês selecionado é inválida. Por favor, selecione um mês válido.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Data Inválida", "Data do mês selecionado é inválida.");
       console.error("Invalid selectedMonth in handlePayInvoice (using date-fns isValid):", selectedMonth, "Validated object:", monthToValidate);
       return;
     }
@@ -263,7 +261,7 @@ export const TransactionList = ({
         .map(t => t.id);
 
       if (installmentIdsToUpdate.length === 0) {
-        toast.info("Nenhuma despesa pendente encontrada para este cartão no mês selecionado.", { duration: toastDuration });
+        showErrorToast("Aviso", "Nenhuma despesa pendente encontrada para este cartão no mês selecionado.");
         setLoadingPayInvoice(false);
         return;
       }
@@ -280,10 +278,7 @@ export const TransactionList = ({
         throw error;
       }
 
-      toast.success("Fatura paga com sucesso!", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Sucesso", "Fatura paga com sucesso!");
 
       queryClient.invalidateQueries({ queryKey: ["expenseInstallments", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["revenues", user?.id] });
@@ -291,7 +286,7 @@ export const TransactionList = ({
 
     } catch (error: any) {
       console.error("Erro ao pagar fatura:", error);
-      toast.error("Erro ao pagar fatura.", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao Pagar Fatura", error.message || "Ocorreu um erro inesperado.");
     } finally {
       setLoadingPayInvoice(false);
     }
@@ -537,11 +532,11 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto relative z-20",
-        isMobile ? "w-full px-2 mb-6" : "mt-8 w-full px-6 mb-4"
+        isMobile ? "w-full px-2 mb-6" : "mt-8 w-full px-0 mb-4"
       )}>
         <div className={cn(
           "bg-gray-50 flex items-center justify-between w-full gap-2 pt-3 pb-3 px-4 shadow-sm border-t border-gray-300",
-          !isMobile && "max-w-[1000px] mx-auto bg-background border border-gray-200 rounded-2xl"
+          !isMobile && "w-full bg-background border border-gray-200 rounded-2xl"
         )}>
           {/* 1: Lançamentos */}
           <div className="flex flex-col items-center justify-center flex-1">

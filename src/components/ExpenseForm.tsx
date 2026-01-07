@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -69,9 +69,6 @@ interface ExpenseFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
-const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: "#FFFFFF", color: "#006000", border: "1px solid #E5FFE5" };
-const toastErrorStyle = { backgroundColor: "#FFFFFF", color: "#FF2929", border: "1px solid #FFE5E5" };
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   user,
@@ -88,6 +85,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialDescricao,
   submitPortalRef,
 }) => {
+  const { showSuccessToast, showErrorToast } = useToast();
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<
@@ -210,10 +208,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.", {
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Erro de Autenticação", "Usuário não autenticado.");
       setLoading(false);
       return;
     }
@@ -246,10 +241,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setValidationErrors(newErrors);
 
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", {
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Validação", "Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
     }
@@ -362,10 +354,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         if (parcelaError) throw parcelaError;
       }
 
-      toast.success("Despesa adicionada com sucesso!", {
-        style: toastSuccessStyle,
-        duration: toastDuration,
-      });
+      showSuccessToast("Sucesso", "Despesa adicionada com sucesso!");
 
       setSelectedSubcategoryId(UNSELECTED_VALUE);
       setFormaPagamento("dinheiro");
@@ -383,11 +372,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       });
       queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments"] });
     } catch (error: any) {
-      toast.error("Erro ao adicionar despesa", {
-        description: error.message,
-        duration: toastDuration,
-        style: toastErrorStyle,
-      });
+      showErrorToast("Erro", error.message || "Erro ao adicionar despesa");
       console.error("Supabase error adding expense:", error);
     } finally {
       setLoading(false);

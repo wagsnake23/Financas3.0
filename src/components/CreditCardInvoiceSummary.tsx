@@ -28,100 +28,136 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   formattedDueDate,
   formattedClosingDate,
   cardLastDigits,
-  selectedMonth, // Usar a nova prop
+  selectedMonth,
   onPayInvoice,
   loadingPayInvoice,
   disablePayInvoiceButton,
 }) => {
-  const formattedBadgeMonth = format(selectedMonth, "MMM/yy", { locale: ptBR });
+  const formattedBadgeMonth = format(selectedMonth, "MMMM", { locale: ptBR });
+  const formattedBadgeYear = format(selectedMonth, "yyyy", { locale: ptBR });
 
   return (
-    <Card className={cn(
-      "p-4 animate-fade-in space-y-2 bg-soft-blue/20 border border-soft-blue rounded-xl shadow-sm",
-      isMobile ? "p-3 space-y-2 w-full" : "" // Parent handles max-w
+    <div className={cn(
+      "w-full animate-fade-in transition-all duration-300",
+      !isMobile && "mb-6"
     )}>
-      {/* Contêiner principal para todos os status e o badge, alinhados horizontalmente */}
-      <div className={cn(
-        "flex items-center w-full",
-        isMobile ? "gap-1 justify-between" : "gap-4 justify-between"
+      <Card className={cn(
+        "relative overflow-hidden border border-slate-100 bg-[#FCFCFD] py-2 px-4",
+        "shadow-[0_2px_8px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.02)]",
+        "rounded-2xl",
+        isMobile ? "rounded-xl" : ""
       )}>
-        {/* Pago */}
-        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
-          <DynamicIcon name="CheckCircle" className={cn("h-5 w-5 text-success mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pago</p>
-          <p className={cn("text-sm font-bold text-success", isMobile && "text-xs")}>{formatCurrency(totalPaid)}</p>
-        </div>
+        {/* Subtle 3D Top Edge */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/60 z-10" />
 
-        {/* Pendente */}
-        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
-          <DynamicIcon name="Circle" className={cn("h-5 w-5 text-destructive mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Pendente</p>
-          <p className={cn("text-sm font-bold text-destructive", isMobile && "text-xs")}>{formatCurrency(totalPending)}</p>
-        </div>
-
-        {/* Total Fatura */}
-        <div className={cn("flex flex-col items-center justify-center flex-1", isMobile && "p-0")}>
-          <DynamicIcon name="CreditCard" className={cn("h-5 w-5 text-foreground mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-          <p className={cn("text-xs text-muted-foreground", isMobile && "text-[0.6rem]")}>Total</p>
-          <p className={cn("text-sm font-bold text-foreground", isMobile && "text-xs")}>{formatCurrency(totalCardExpenses)}</p>
-        </div>
-
-        {/* Badge / Datas (4º item) */}
         <div className={cn(
-          "flex flex-col items-center justify-center flex-1",
-          isMobile && "p-0"
+          "flex flex-col gap-3",
+          !isMobile && "flex-row items-center justify-between gap-4"
         )}>
-          <DynamicIcon name="Calendar" className={cn("h-5 w-5 text-primary mb-1", isMobile && "h-4 w-4 mb-0.5")} />
-          <p className={cn(
-            "text-[0.6rem] font-bold uppercase text-primary leading-none",
-            !isMobile && "text-xs"
+
+          {/* Main Info Groups */}
+          <div className={cn(
+            "flex items-center justify-between flex-1",
+            !isMobile && "justify-start gap-10"
           )}>
-            {formattedBadgeMonth}
-          </p>
-          {formattedDueDate && (
-            <p className={cn(
-              "text-[0.6rem] text-muted-foreground leading-none mt-0.5",
-              !isMobile && "text-[10px]"
-            )}>
-              Venc. {formattedDueDate}
-            </p>
-          )}
-        </div>
 
-        {/* Botão "Pagar Fatura" movido para dentro do flex container principal */}
-        {!isMobile && ( // Only show on desktop here
-          <Button
-            variant="secondary"
-            onClick={onPayInvoice}
-            className={cn(
-              "rounded-xl",
-              "w-auto px-6 h-9 text-sm" // Desktop size
-            )}
-            disabled={loadingPayInvoice || disablePayInvoiceButton}
-          >
-            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-            {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-          </Button>
-        )}
-      </div>
+            {/* Group: Pago */}
+            <div className="flex flex-col gap-0">
+              <div className="flex items-center gap-1.5">
+                <DynamicIcon name="CheckCircle" className="h-3 w-3 text-[#059669]" />
+                <span className="text-[10px] font-bold uppercase tracking-tight text-[#059669]">
+                  Pago
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn(
+                  "text-[#374151]",
+                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
+                )}>
+                  {formatCurrency(totalPaid)}
+                </span>
+              </div>
+            </div>
 
-      {/* Botão "Pagar Fatura" para mobile (mantido na linha de baixo) */}
-      {isMobile && (
-        <div className={cn("flex justify-center mt-3", isMobile && "mt-2")}>
-          <Button
-            variant="secondary"
-            onClick={onPayInvoice}
-            className={cn(
-              "rounded-xl",
-              isMobile ? "w-full max-w-[250px] h-8 px-3 text-xs" : "w-auto px-6" // Aumentado max-w para mobile
-            )}
-            disabled={loadingPayInvoice || disablePayInvoiceButton}
-          >
-            <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4" />
-            {loadingPayInvoice ? "Pagando..." : "Pagar Fatura"}
-          </Button>
+            {/* Group: Pendente */}
+            <div className="flex flex-col gap-0">
+              <div className="flex items-center gap-1.5">
+                <DynamicIcon name="Circle" className="h-3 w-3 text-[#E11D48]" />
+                <span className="text-[10px] font-bold uppercase tracking-tight text-[#E11D48]">
+                  Pendente
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn(
+                  "text-[#374151]",
+                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
+                )}>
+                  {formatCurrency(totalPending)}
+                </span>
+              </div>
+            </div>
+
+            {/* Group: Total */}
+            <div className="flex flex-col gap-0">
+              <div className="flex items-center gap-1.5">
+                <DynamicIcon name="CreditCard" className="h-3 w-3 text-[#374151]" />
+                <span className="text-[10px] font-bold uppercase tracking-tight text-[#374151]">
+                  Total Fatura
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn(
+                  "text-[#374151]",
+                  isMobile ? "text-sm font-medium" : "text-base font-semibold"
+                )}>
+                  {formatCurrency(totalCardExpenses)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Section: Dates & Action */}
+          <div className={cn(
+            "flex items-center justify-between md:justify-end gap-5 pt-2 border-t border-slate-50",
+            !isMobile && "pt-0 border-t-0"
+          )}>
+            {/* Date Details */}
+            <div className="flex flex-col items-end text-right">
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] font-bold text-[#64748b] capitalize">
+                  {formattedBadgeMonth}
+                </span>
+                <span className="text-[10px] font-medium text-[#64748b]/80">
+                  {formattedBadgeYear}
+                </span>
+              </div>
+              {formattedDueDate && (
+                <span className="text-[10px] font-medium text-[#64748b] mt-0">
+                  Venc. <span className="font-semibold text-[#475569]">{formattedDueDate}</span>
+                </span>
+              )}
+            </div>
+
+            {/* Action Button */}
+            <button
+              onClick={onPayInvoice}
+              disabled={loadingPayInvoice || disablePayInvoiceButton}
+              className={cn(
+                "h-9 px-10 rounded-xl transition-all duration-300 flex items-center justify-center",
+                "bg-gradient-to-br from-[#E9D5FF] to-[#DDD6FE] hover:from-[#DDD6FE] hover:to-[#C4B5FD]",
+                "border border-[#C4B5FD]/50 shadow-sm active:scale-95",
+                "text-[#4C1D95] font-bold text-[13px]",
+                "disabled:opacity-40 disabled:grayscale",
+                isMobile && "flex-1"
+              )}
+            >
+              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-[#4C1D95] opacity-80" />
+              {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
+            </button>
+          </div>
+
         </div>
-      )}
-    </Card>
+      </Card>
+    </div>
   );
 };

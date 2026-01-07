@@ -15,7 +15,7 @@ import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
+
 import DynamicIcon from "@/components/DynamicIcon";
 import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
 // Removed: import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
