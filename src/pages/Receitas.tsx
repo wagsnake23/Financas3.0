@@ -554,7 +554,7 @@ export default function Receitas() {
       <main
         className={cn(
           "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "-mt-32 pb-32" : "-mt-32 pb-20",
+          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20",
           !isMobile && "px-6"
         )}
       >
@@ -572,34 +572,20 @@ export default function Receitas() {
             />
           </div>
         ) : (
-          <div className="flex flex-col space-y-6">
-            <Card className={cn(
-              "p-6 rounded-2xl shadow-sm w-full bg-[#FCFCFD] border border-gray-200",
-              isMobile && "rounded-2xl max-h-[calc(100dvh-160px)] overflow-y-auto [&::-webkit-scrollbar]:hidden"
-            )}>
-              {!isMobile && (
-                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-success">
-                  <div className="p-2 rounded-full bg-soft-green/50 flex items-center justify-center">
-                    <DynamicIcon
-                      name="TrendingUp"
-                      className="h-6 w-6 text-success"
-                    />
-                  </div>
-                  Nova Receita
-                </h2>
-              )}
-              {oneOffFormContent}
-            </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div className="space-y-6">
+              <Card className="p-6 rounded-2xl shadow-sm border border-gray-200 bg-[#FCFCFD]">
+                {oneOffFormContent}
+              </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <TotalRevenueCard
                 revenues={revenues}
                 chartContent={
                   <MonthlyRevenueBarChart
                     revenues={revenues}
-                    currentDate={new Date()} // Or selected month if available
-                    isMobile={true}
-                    onMonthClick={() => { }} // No action for now
+                    currentDate={new Date()}
+                    isMobile={isMobile}
+                    onMonthClick={() => { }}
                   />
                 }
                 annualTotalValue={revenues
@@ -607,7 +593,9 @@ export default function Receitas() {
                   .reduce((sum, r) => sum + r.valor, 0)
                 }
               />
+            </div>
 
+            <div className="space-y-6">
               <RevenueByTypeChart
                 revenues={revenues}
                 revenueTypes={incomeSubcategories}

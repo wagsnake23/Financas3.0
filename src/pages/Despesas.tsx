@@ -187,7 +187,7 @@ export default function Despesas() {
       <main
         className={cn(
           "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "-mt-32 pb-32" : "-mt-32 pb-20",
+          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20",
           !isMobile && "px-6"
         )}
       >
