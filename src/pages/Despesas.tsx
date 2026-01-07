@@ -192,15 +192,15 @@ export default function Despesas() {
         )}
       >
         {isMobile ? (
-          <div className="space-y-4">
-            <Card className="w-full !max-w-full p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] max-h-[calc(100dvh-220px)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+          <div className="relative">
+            <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
               {formContent}
             </Card>
             <div
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-[30px] left-0 right-0 z-[60] px-4 py-3 bg-[#F9FAFB]/95 backdrop-blur-md"
+                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 py-3 bg-[#F9FAFB]/95 backdrop-blur-md"
               )}
             />
           </div>
