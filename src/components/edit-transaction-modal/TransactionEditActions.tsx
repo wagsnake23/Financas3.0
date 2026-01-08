@@ -28,7 +28,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl bg-soft-red text-destructive hover:bg-destructive/90 hover:text-primary-foreground border border-destructive", // Cores personalizadas, hover e borda
+          "flex-1 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 transition-colors", // Borda vermelho suave e fundo mais suave
           "text-sm", // Aumenta a fonte para 'sm'
           isMobile && "h-9" // Mantém a altura para mobile
         )}
@@ -40,7 +40,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "flex-1 rounded-xl bg-soft-blue text-primary hover:bg-primary/90 hover:text-primary-foreground border border-primary", // Cores personalizadas, hover e borda
+          "flex-1 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors", // Borda azul suave e fundo mais suave
           "text-sm", // Aumenta a fonte para 'sm'
           isMobile && "h-9" // Mantém a altura para mobile
         )}
@@ -51,7 +51,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "flex-1 rounded-xl bg-soft-green text-success-darker hover:bg-success-darker hover:text-primary-foreground border border-success", // Cores personalizadas, hover e borda
+          "flex-1 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 border-transparent shadow-md transition-all hover:shadow-lg", // Verde moderno, sólido, com sombra
           "text-sm", // Aumenta a fonte para 'sm'
           isMobile && "h-9" // Mantém a altura para mobile
         )}

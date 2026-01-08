@@ -160,13 +160,13 @@ const Lancamentos = () => {
           <DialogHeader
             className={cn(
               "flex flex-row items-center justify-center gap-2",
-              isMobile && "absolute top-4 left-4 right-12 text-left"
+              isMobile && "absolute top-3.5 left-4 right-12 text-left"
             )}
           >
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#E8E9FF] flex items-center justify-center">
               <span className="text-sm select-none" style={{ color: '#5B5FEF' }}>📝</span>
             </div>
-            <DialogTitle className="font-bold text-gray-900">Editar Lançamento</DialogTitle>
+            <DialogTitle className="font-bold pb-[1px]" style={{ color: '#3D408B' }}>Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (

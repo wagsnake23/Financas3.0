@@ -179,25 +179,21 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl",
+                "rounded-xl border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors",
                 isMobile
-                  ? "mt-0 h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary"
+                  ? "mt-0 h-10 text-sm flex-1"
                   : "sm:mt-0"
               )}
               onClick={() => setShowDeleteOptionsDialog(false)}
             >
-              <DynamicIcon
-                name="XCircle"
-                className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")}
-              />
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmDelete(selectedDeleteScope)}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "w-full sm:w-auto bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-10 text-xs flex-1"
+                "w-full sm:w-auto rounded-xl bg-[#D32F2F] text-white hover:bg-[#B71C1C] transition-colors border-transparent shadow-sm",
+                isMobile && "h-10 text-sm flex-1"
               )}
             >
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
