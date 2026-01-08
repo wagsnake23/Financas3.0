@@ -151,11 +151,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", isMobile && "max-w-[280px] mx-auto")}>
+    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-2", isMobile && "max-w-[280px] mx-auto")}>
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
-      <div className={cn("space-y-2")}>
+      <div className={cn("space-y-0.5", isMobile ? "-mt-10" : "-mt-6")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select
           value={selectedInvestmentCategoryId}
@@ -165,7 +165,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           }}
           disabled={loading}
         >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -186,10 +186,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn("space-y-2")}>
+      <div className={cn("space-y-0.5")}>
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl w-full bg-white", isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -203,7 +203,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
-        <div className="space-y-2">
+        <div className="space-y-0.5">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
             value={amount}
@@ -212,12 +212,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+        <div className="space-y-0.5">
+          <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
           <NumericInput
             id="edit-profitability"
             value={profitability}
@@ -227,19 +227,19 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             }}
             required
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+            className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
           />
         </div>
       </div>
 
-      <div className={cn("space-y-2")}>
+      <div className={cn("space-y-0.5")}>
         <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-[#DBEAFE]",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -268,13 +268,13 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Popover>
       </div>
 
-      <div className={cn("grid grid-cols-2 gap-2 w-full")}>
+      <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
         <Button
           type="button"
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-xl bg-soft-red hover:bg-destructive text-foreground hover:text-primary-foreground border border-destructive",
+            "flex-1 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
@@ -285,7 +285,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-xl bg-soft-green hover:bg-success text-foreground hover:text-primary-foreground border border-success",
+            "flex-1 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-md transition-all hover:shadow-lg",
             isMobile && "h-9 text-sm"
           )}
           size="lg"

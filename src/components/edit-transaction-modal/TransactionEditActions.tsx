@@ -51,7 +51,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "flex-1 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 border-transparent shadow-md transition-all hover:shadow-lg", // Verde moderno, sólido, com sombra
+          "flex-1 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-md transition-all hover:shadow-lg", // Verde moderno um pouco mais claro
           "text-sm", // Aumenta a fonte para 'sm'
           isMobile && "h-9" // Mantém a altura para mobile
         )}

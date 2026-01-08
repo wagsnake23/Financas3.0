@@ -836,9 +836,9 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className={cn("w-full rounded-xl bg-gradient-to-br from-[#E3F2FD] to-white border-blue-100", isMobile ? "max-w-sm p-4" : "sm:max-w-[425px]")}>
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full">📝 Editar Investimento</DialogTitle>
+        <DialogContent className={cn("w-full rounded-3xl bg-[#F0F7FF] border-blue-100", isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10")}>
+          <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+            <DialogTitle className="flex items-center justify-center gap-2 w-full text-[#1E40AF]">📝 Editar Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
