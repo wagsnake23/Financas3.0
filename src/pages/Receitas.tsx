@@ -268,7 +268,7 @@ export default function Receitas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
               "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+              "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
           >
@@ -286,7 +286,7 @@ export default function Receitas() {
             className={cn(
               "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
               "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-              "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+              "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
               isMobile && "h-8 py-0.5 text-sm"
             )}
           >
@@ -315,7 +315,7 @@ export default function Receitas() {
         >
           <SelectTrigger
             className={cn(
-              "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
+              "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
               "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({
@@ -370,7 +370,7 @@ export default function Receitas() {
               variant={"outline"}
               className={cn(
                 "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium",
+                "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium",
                 "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
                 isMobile ? "h-9 text-sm" : "h-10",
                 !data && "text-muted-foreground",
@@ -423,7 +423,7 @@ export default function Receitas() {
             setValidationErrors((prev) => ({ ...prev, valor: false }));
           }}
           className={cn(
-            "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
+            "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
             isMobile ? "h-9 text-sm" : "h-10",
             getBorderClass({
@@ -445,7 +445,7 @@ export default function Receitas() {
           placeholder="Detalhes sobre a receita..."
           rows={3}
           className={cn(
-            "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
+            "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
             "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
             isMobile ? "text-sm p-4" : "",
           )}
@@ -472,7 +472,7 @@ export default function Receitas() {
               "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
               isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
             )}
-            style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
+            style={{ "--cor-topo": "#22C55E", "--cor-base": "#16A34A" } as any}
             disabled={loading}
           >
             {loading ? "Salvando..." : "Salvar Receita"}
@@ -545,7 +545,7 @@ export default function Receitas() {
       >
         {isMobile ? (
           <div className="relative">
-            <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#FCFCFD] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
+            <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#F0FDF4] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
               {oneOffFormContent}
 
 
@@ -561,7 +561,7 @@ export default function Receitas() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-6">
-              <Card className="p-6 rounded-2xl shadow-sm border border-gray-200 bg-[#FCFCFD]">
+              <Card className="p-6 rounded-2xl shadow-sm border border-gray-200 bg-[#F0FDF4]">
                 {oneOffFormContent}
               </Card>
             </div>
