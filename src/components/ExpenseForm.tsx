@@ -416,7 +416,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         >
           <SelectTrigger
             className={cn(
-              "w-full rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium transition-all duration-200",
+              "w-full rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
               isMobile && "h-9 text-sm",
               getBorderClass({
                 isInvalid: validationErrors.selectedSubcategoryId,
@@ -506,7 +506,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           rows={isMobile ? 1 : 3}
           maxLength={50}
           className={cn(
-            "rounded-xl bg-white border-[#E5E7EB] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none",
+            "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none",
             isMobile && "text-sm p-4",
             getBorderClass({})
           )}
