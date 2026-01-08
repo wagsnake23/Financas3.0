@@ -63,6 +63,7 @@ export const useLancamentosLogic = (
     fetchedCategories: allSubcategories,
     cartoes,
     isLoading: isLoadingTransactionsData,
+    isFetching,
     isLoadingCategories,
     refetchCartoes, // NOVO: Obter refetchCartoes
   } = useTransactionsData({
@@ -220,6 +221,7 @@ export const useLancamentosLogic = (
     setSearchTerm,
     handleOptimisticToggleStatus, // NOVO RETORNO
     refetchCartoes, // NOVO: Retornar refetchCartoes
+    isFetching,
     allRevenues,
     allExpenseInstallments,
   };

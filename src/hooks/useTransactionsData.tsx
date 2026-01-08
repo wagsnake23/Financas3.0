@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -30,7 +30,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     placeholderData: keepPreviousData,
   });
 
-  const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<Tables<'receitas'>[]>({
+  const { data: revenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<Tables<'receitas'>[]>({
     queryKey: ["revenues", user?.id, format(selectedMonth, 'yyyy-MM')],
     queryFn: async () => {
       if (!user?.id) return [];
@@ -52,7 +52,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
     placeholderData: keepPreviousData,
   });
 
-  const { data: expenseInstallments = [], isLoading: isLoadingExpenses } = useQuery<
+  const { data: expenseInstallments = [], isLoading: isLoadingExpenses, isPlaceholderData: isPlaceholderExpenses } = useQuery<
     (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'id' | 'categoria_id' | 'user_id' | 'descricao' | 'forma_pagamento' | 'tipo_pagamento' | 'cartao_id' | 'is_recurring_master' | 'numero_parcelas' | 'valor_total'> | null })[]
   >({
     queryKey: ["expenseInstallments", user?.id, format(selectedMonth, 'yyyy-MM')],
@@ -70,7 +70,6 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .lt("vencimento", nextMonthStr)
         .order("vencimento", { ascending: true });
       if (error) throw error;
-      console.log("useTransactionsData: Raw expenseInstallments fetched:", data.map(p => ({ id: p.id, despesa_id: p.despesas?.id, forma_pagamento: p.despesas?.forma_pagamento, cartao_id: p.despesas?.cartao_id })));
       return data;
     },
     enabled: enabled,
@@ -96,10 +95,14 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
   // Removido totalInstallmentsMap pois agora buscamos numero_parcelas da despesa mestre
 
 
-  const monthlyFilteredTransactions = useMemo(() => {
-    console.log("useTransactionsData: monthlyFilteredTransactions useMemo re-running...");
+  // Use a ref to store the last stable filtered results to prevent flickering
+  // during month changes when query data is placeholder (from previous month).
+  const lastStableTransactions = useMemo(() => {
     if (!enabled) return [];
 
+    const isPlaceholder = isPlaceholderRevenues || isPlaceholderExpenses;
+
+    // Calculate current filtered transactions based on selectedMonth
     const startOfSelectedMonth = startOfMonth(selectedMonth);
     const startStr = format(startOfSelectedMonth, "yyyy-MM-01");
     const nextMonthStr = format(addMonths(startOfSelectedMonth, 1), "yyyy-MM-01");
@@ -119,12 +122,11 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         status: r.status,
         forma_pagamento: null,
         cartao_id: null,
-        is_recurring_master: Boolean(r.is_recurring_master), // Garante que seja boolean
-        recurrence_id: r.recurrence_id ?? null, // Garante que seja string | null
-        recurrence_day: r.recurrence_day ?? null, // Garante que seja number | null
-        // Set tipo_pagamento based on recurrence status for income
+        is_recurring_master: Boolean(r.is_recurring_master),
+        recurrence_id: r.recurrence_id ?? null,
+        recurrence_day: r.recurrence_day ?? null,
         tipo_pagamento: (r.is_recurring_master || !!r.recurrence_id) ? "fixo" : "avista",
-        paymentTimestamp: r.status === "Recebida" ? r.updated_at : null, // NOVO: Popula paymentTimestamp
+        paymentTimestamp: r.status === "Recebida" ? r.updated_at : null,
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
@@ -134,7 +136,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
       })
       .map(p => {
         const parentDespesa = p.despesas;
-        const transaction: Transaction = {
+        return {
           id: p.id,
           type: "expense",
           amount: p.valor_parcela,
@@ -147,41 +149,60 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           forma_pagamento: parentDespesa?.forma_pagamento,
           cartao_id: parentDespesa?.cartao_id,
           despesa_id: parentDespesa?.id,
-          is_recurring_master: Boolean(parentDespesa?.is_recurring_master), // Garante que seja boolean
-          recurrence_id: parentDespesa?.id ?? null, // Para despesas, o recurrence_id é o id da despesa mestra, garante null se parentDespesa.id for null
+          is_recurring_master: Boolean(parentDespesa?.is_recurring_master),
+          recurrence_id: parentDespesa?.id ?? null,
           recurrence_day: null,
-          tipo_pagamento: parentDespesa?.tipo_pagamento as "avista" | "parcelado" | "fixo", // NOVO: Incluído tipo_pagamento com cast
-          paymentTimestamp: p.data_pagamento, // NOVO: Popula paymentTimestamp
-        };
-        console.log("useTransactionsData: Mapped expense installment to Transaction:", { id: transaction.id, forma_pagamento: transaction.forma_pagamento, cartao_id: transaction.cartao_id });
-        return transaction;
+          tipo_pagamento: parentDespesa?.tipo_pagamento as "avista" | "parcelado" | "fixo",
+          paymentTimestamp: p.data_pagamento,
+        } as Transaction;
       });
 
     const combined = [...monthlyIncomeTransactions, ...monthlyExpenseTransactions].sort((a, b) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
-
-      if (dateA !== dateB) {
-        return dateB - dateA;
-      }
-      return a.id.localeCompare(b.id);
+      return dateA !== dateB ? dateB - dateA : a.id.localeCompare(b.id);
     });
 
-    console.log("useTransactionsData: Monthly Income transactions count:", monthlyIncomeTransactions.length);
-    console.log("useTransactionsData: Monthly Expense transactions count:", monthlyExpenseTransactions.length);
-    console.log("useTransactionsData: Combined monthlyFilteredTransactions count:", combined.length);
-
     return combined;
-  }, [selectedMonth, revenues, expenseInstallments, enabled]);
+  }, [selectedMonth, revenues, expenseInstallments, enabled, isPlaceholderRevenues, isPlaceholderExpenses]);
 
-  const isLoading = isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingCartoes;
+  // Handle stability: avoid clearing the list while placeholder data is active
+  const stableResultsRef = useRef<Transaction[]>([]);
+  const lastSelectedMonthRef = useRef("");
+  const currentMonthKey = format(selectedMonth, 'yyyy-MM');
+
+  const finalTransactions = useMemo(() => {
+    const isPlaceholder = isPlaceholderRevenues || isPlaceholderExpenses;
+
+    // If it's NOT a placeholder, we definitely update our stable reference
+    if (!isPlaceholder) {
+      stableResultsRef.current = lastStableTransactions;
+      lastSelectedMonthRef.current = currentMonthKey;
+      return lastStableTransactions;
+    }
+
+    // If it IS a placeholder, we check if our last stable data was for the current month
+    if (lastSelectedMonthRef.current === currentMonthKey) {
+      return stableResultsRef.current;
+    }
+
+    // If it's a placeholder AND the month changed, we keep the previous month's data 
+    // to avoid showing a blank list while loading.
+    return stableResultsRef.current;
+  }, [lastStableTransactions, isPlaceholderRevenues, isPlaceholderExpenses, currentMonthKey]);
+
+  const isLoading = (isLoadingRevenues || isLoadingExpenses || isLoadingCategories || isLoadingCartoes) &&
+    revenues.length === 0 && expenseInstallments.length === 0;
+
+  const isFetching = isLoadingRevenues || isLoadingExpenses || isPlaceholderRevenues || isPlaceholderExpenses;
 
   return {
-    monthlyFilteredTransactions,
+    monthlyFilteredTransactions: finalTransactions,
     fetchedCategories,
     cartoes,
     isLoading,
+    isFetching,
     isLoadingCategories,
-    refetchCartoes, // Expor a função de refetch
+    refetchCartoes,
   };
 };

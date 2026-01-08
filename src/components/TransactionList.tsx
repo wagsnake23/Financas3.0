@@ -82,6 +82,24 @@ export const TransactionList = ({
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+
+  // Sync local search with global search term (e.g. when filters are cleared)
+  useEffect(() => {
+    setLocalSearch(searchTerm);
+  }, [searchTerm]);
+
+  // Debounce logic: update global searchTerm after 400ms of inactivity
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (localSearch !== searchTerm) {
+        setSearchTerm(localSearch);
+      }
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [localSearch, searchTerm, setSearchTerm]);
+
   const { showSuccessToast, showErrorToast } = useToast();
   const navigate = useNavigate();
 
@@ -363,16 +381,19 @@ export const TransactionList = ({
         <div className="relative w-full group">
           <Input
             placeholder="Digite para buscar..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             className="pl-10 pr-10 h-9 md:h-10 rounded-xl border-gray-200 bg-white/80 backdrop-blur-sm focus-visible:ring-primary/20 focus-visible:border-primary transition-all shadow-sm group-hover:bg-white placeholder:text-gray-400 placeholder:font-normal text-sm"
           />
           <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none z-10">
             <span className="text-sm select-none leading-none">🔍</span>
           </div>
-          {searchTerm && (
+          {localSearch && (
             <button
-              onClick={() => setSearchTerm("")}
+              onClick={() => {
+                setLocalSearch("");
+                setSearchTerm(""); // Clear immediately for better UX
+              }}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
             >
               <X className="h-4 w-4" />

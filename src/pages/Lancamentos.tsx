@@ -150,20 +150,23 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            "rounded-xl", // Adicionado rounded-xl aqui
+            "rounded-3xl",
             isMobile
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
-            editingTransaction?.type === "expense" && "bg-gradient-to-b from-[#FEF9C3] to-[#FFFFFF]", // Aplica a cor de fundo para despesas
-            editingTransaction?.type === "income" && "bg-gradient-to-b from-[#E0F2FE] to-[#FFFFFF]" // Aplica a cor de fundo para receitas
+            "bg-[#F9FAFB]" // Off-white moderno
           )}
         >
           <DialogHeader
             className={cn(
+              "flex flex-row items-center justify-center gap-2",
               isMobile && "absolute top-4 left-4 right-12 text-left"
             )}
           >
-            <DialogTitle className="text-center w-full">✏️ Editar Lançamento</DialogTitle>
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#E8E9FF] flex items-center justify-center">
+              <span className="text-sm select-none" style={{ color: '#5B5FEF' }}>📝</span>
+            </div>
+            <DialogTitle className="font-bold text-gray-900">Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
