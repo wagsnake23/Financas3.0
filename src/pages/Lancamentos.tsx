@@ -154,7 +154,7 @@ const Lancamentos = () => {
             isMobile
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
-            "bg-[#F9FAFB]" // Off-white moderno
+            "bg-[#F8F6FF]" // Lilas extremamente suave, tom intermediário
           )}
         >
           <DialogHeader

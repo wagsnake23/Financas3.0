@@ -140,7 +140,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="category" className={cn(isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("rounded-xl bg-white border-[#E5E0FF] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent>
@@ -173,7 +173,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl bg-white border-[#E5E0FF] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -199,7 +199,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn("rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("rounded-xl bg-white border-[#E5E0FF] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent>
@@ -230,7 +230,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl bg-white border-[#E5E0FF] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent>
@@ -256,7 +256,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-medium h-10 rounded-xl bg-white border-[#D1D5DB] transition-all duration-200",
+                "w-full justify-start text-left font-medium h-10 rounded-xl bg-white border-[#E5E0FF] transition-all duration-200",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -292,7 +292,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
           rows={3}
-          className={cn("rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200", isMobile && "text-sm")}
+          className={cn("rounded-xl bg-white border-[#E5E0FF] font-medium transition-all duration-200", isMobile && "text-sm")}
           disabled={false} // Garantindo que não esteja desabilitado
         />
       </div>
