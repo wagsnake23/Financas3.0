@@ -23,6 +23,7 @@ import {
   addMonths,
   subMonths,
   getYear,
+  getMonth,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency } from "@/lib/utils";
@@ -36,6 +37,9 @@ import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 import { MonthlyYieldsBarChart } from "@/components/MonthlyYieldsBarChart"; // Importar MonthlyYieldsBarChart
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
+import { ProjectedYieldCard } from "@/components/ProjectedYieldCard";
+import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldChart";
+import { YearNavigatorCompact } from "@/components/YearNavigatorCompact";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -204,6 +208,57 @@ export default function Dashboard() {
       totalInvested
     };
   }, [totalProjectedAnnualYield, totalInvested]);
+
+  const [projectedYear, setProjectedYear] = useState(getYear(new Date()));
+
+  useEffect(() => {
+    setProjectedYear(getYear(selectedMonth));
+  }, [selectedMonth]);
+
+  const projectedYearValues = useMemo(() => {
+    const startYear = getYear(new Date());
+    const endYear = projectedYear;
+
+    let cumulativeBalance = 0;
+
+    // Calculate cumulative balance from current year up to projectedYear
+    // Only if endYear >= startYear, otherwise just use current year
+    const rangeEnd = Math.max(startYear, endYear);
+
+    for (let year = startYear; year <= rangeEnd; year++) {
+      const yearRevs = allRevenues
+        .filter((r) => Number(r.data.substring(0, 4)) === year)
+        .reduce((sum, r) => sum + r.valor, 0);
+
+      const yearExps = allExpenseInstallments
+        .filter((p) => Number(p.vencimento.substring(0, 4)) === year)
+        .reduce((sum, p) => sum + p.valor_parcela, 0);
+
+      const yearBalance = (yearRevs - yearExps) + currentYieldStats.annualYields;
+      cumulativeBalance += yearBalance;
+    }
+
+    // Still need the specific values for the selected endYear to show in the card's main stats
+    const revs = allRevenues
+      .filter((r) => Number(r.data.substring(0, 4)) === endYear)
+      .reduce((sum, r) => sum + r.valor, 0);
+
+    const exps = allExpenseInstallments
+      .filter((p) => Number(p.vencimento.substring(0, 4)) === endYear)
+      .reduce((sum, p) => sum + p.valor_parcela, 0);
+
+    const monthlyProjection = (revs - exps) / 12 + currentYieldStats.monthYields;
+    const annualBalance = (revs - exps) + currentYieldStats.annualYields;
+    const projectedPatrimony = currentYieldStats.totalInvested + cumulativeBalance;
+
+    return {
+      monthlyProjection,
+      annualBalance,
+      projectedPatrimony,
+      revenues: revs,
+      expenses: exps
+    };
+  }, [allRevenues, allExpenseInstallments, projectedYear, currentYieldStats]);
 
   const projectedEndDate = useMemo(() => {
     if (allRevenues.length === 0 && allExpenseInstallments.length === 0) return "";
@@ -513,6 +568,43 @@ export default function Dashboard() {
               </StatCard>
             )}
 
+            {(!filter || filter === "revenues") && (
+              <ProjectedYieldCard
+                mainStatValue={
+                  projectedYear === getYear(selectedMonth)
+                    ? stats.balance + currentYieldStats.monthYields
+                    : projectedYearValues.monthlyProjection
+                }
+                projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+                projectedPatrimonyLabel="Patrimônio Projetado"
+                annualTotalValue={projectedYearValues.annualBalance}
+                annualTotalLabel="Projeção Anual"
+                isMobile={isMobile}
+                topRightContent={
+                  <YearNavigatorCompact
+                    year={projectedYear}
+                    onPreviousYear={() => setProjectedYear(p => p - 1)}
+                    onNextYear={() => setProjectedYear(p => p + 1)}
+                    isMobile={isMobile}
+                  />
+                }
+                chartContent={
+                  <MonthlyProjectedYieldChart
+                    revenues={allRevenues}
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                    projectedMonthlyYield={currentYieldStats.monthYields}
+                    isMobile={true}
+                    onMonthClick={(date) => {
+                      setSelectedMonth(date);
+                      const el = document.getElementById("stat-expenses");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  />
+                }
+              />
+            )}
+
             {(!filter || filter === "expenses") && (
               <CombinedMonthlyExpensesDashboard
                 allRevenues={allRevenues}
@@ -735,6 +827,40 @@ export default function Dashboard() {
                   </Button>
                 </div>
               </StatCard>
+
+              <ProjectedYieldCard
+                mainStatValue={
+                  projectedYear === getYear(selectedMonth)
+                    ? stats.balance + currentYieldStats.monthYields
+                    : projectedYearValues.monthlyProjection
+                }
+                projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+                projectedPatrimonyLabel="Patrimônio Projetado"
+                annualTotalValue={projectedYearValues.annualBalance}
+                annualTotalLabel="Projeção Anual"
+                isMobile={isMobile}
+                topRightContent={
+                  <YearNavigatorCompact
+                    year={projectedYear}
+                    onPreviousYear={() => setProjectedYear(p => p - 1)}
+                    onNextYear={() => setProjectedYear(p => p + 1)}
+                    isMobile={isMobile}
+                  />
+                }
+                chartContent={
+                  <MonthlyProjectedYieldChart
+                    revenues={allRevenues}
+                    expenseInstallments={allExpenseInstallments}
+                    currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                    projectedMonthlyYield={currentYieldStats.monthYields}
+                    isMobile={true}
+                    onMonthClick={(date) => {
+                      setSelectedMonth(date);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  />
+                }
+              />
             </div>
 
             <div className="grid grid-cols-1">
