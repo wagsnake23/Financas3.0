@@ -240,7 +240,7 @@ export default function Home() {
                         {/* Seletor de Mês */}
                         <div
                             className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none"
-                            style={{ "--cor-topo": "#3B82F6", "--cor-base": "#1E6BCE", cursor: "default" } as any}
+                            style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6", cursor: "default", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15), inset 0px 1px 1px rgba(255, 255, 255, 0.3)" } as any}
                         >
                             <button onClick={handlePrevMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
                                 <DynamicIcon name="ChevronLeft" className="h-4 w-4" strokeWidth={3} />

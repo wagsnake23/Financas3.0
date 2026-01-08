@@ -145,12 +145,12 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               onClick={onPayInvoice}
               disabled={loadingPayInvoice || disablePayInvoiceButton}
               className={cn(
-                "h-8 px-8 rounded-xl transition-all duration-300 flex items-center justify-center",
-                "bg-[#1B63C1] hover:bg-[#1652A1] active:scale-95",
+                "h-8 px-8 rounded-xl transition-all duration-300 flex items-center justify-center btn-3d",
                 "text-white font-bold text-[12px] shadow-sm",
                 "disabled:opacity-40 disabled:grayscale",
                 isMobile && "flex-1"
               )}
+              style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6" } as React.CSSProperties}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-white opacity-90" />
               {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
