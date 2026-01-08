@@ -39,6 +39,8 @@ interface LancamentosContentProps {
   setFilterType: (type: string) => void;
   filterCategory: string;
   setFilterCategory: (category: string) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -66,6 +68,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   setFilterType,
   filterCategory,
   setFilterCategory,
+  searchTerm,
+  setSearchTerm,
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -94,6 +98,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
         setFilterType={setFilterType}
         filterCategory={filterCategory}
         setFilterCategory={setFilterCategory}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
     </div>
   );

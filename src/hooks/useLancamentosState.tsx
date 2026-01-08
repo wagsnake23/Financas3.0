@@ -54,6 +54,7 @@ export const useLancamentosState = () => {
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
   const [filterType, setFilterType] = useState<string>(initialFilterType);
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handlePreviousMonth = useCallback(() => {
     setSelectedMonth((prevMonth) => subMonths(prevMonth, 1));
@@ -93,6 +94,8 @@ export const useLancamentosState = () => {
     setFilterType,
     filterCategory,
     setFilterCategory,
+    searchTerm,
+    setSearchTerm,
     handleCancelEdit,
     isValidUuid,
   };

@@ -57,6 +57,8 @@ const Lancamentos = () => {
     setFilterType,
     filterCategory,
     setFilterCategory,
+    searchTerm,
+    setSearchTerm,
     handleOptimisticToggleStatus,
     refetchCartoes,
     allRevenues,
@@ -95,11 +97,12 @@ const Lancamentos = () => {
             onPreviousMonth={handlePreviousMonth}
             onNextMonth={handleNextMonth}
             isMobile={isMobile}
-            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all"}
+            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || searchTerm !== ""}
             onClearFilters={() => {
               setFilterType("all");
               setFilterCategory("all");
               setFilterPaymentOptionId("all");
+              setSearchTerm("");
             }}
           />
         </div>
@@ -129,6 +132,8 @@ const Lancamentos = () => {
           setFilterType={setFilterType}
           filterCategory={filterCategory}
           setFilterCategory={setFilterCategory}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       </main>
       <Footer

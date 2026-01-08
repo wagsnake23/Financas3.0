@@ -50,6 +50,8 @@ interface TransactionListProps {
   setFilterType: (type: string) => void;
   filterCategory: string;
   setFilterCategory: (category: string) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -74,13 +76,20 @@ export const TransactionList = ({
   setFilterType,
   filterCategory,
   setFilterCategory,
+  searchTerm,
+  setSearchTerm,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const { showSuccessToast, showErrorToast } = useToast();
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
+
+  function getCategoryDisplayName(categoryId: string) {
+    const category = allCategories.find(cat => cat.id === categoryId);
+    return category?.nome || categoryId;
+  }
+
   const [sortColumn, setSortColumn] = useState<string | null>("date"); // Default sort by date
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc"); // Default sort direction
 
@@ -113,7 +122,11 @@ export const TransactionList = ({
     console.log("TransactionList: filteredTransactions useMemo re-running...");
 
     return transactions.filter(transaction => {
-      const matchesSearch = isMobile ? true : transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const categoryName = getCategoryDisplayName(transaction.category).toLowerCase();
+      const description = (transaction.description || "").toLowerCase();
+      const searchLower = searchTerm.toLowerCase();
+
+      const matchesSearch = categoryName.includes(searchLower) || description.includes(searchLower);
       const matchesType = filterType === "all" || transaction.type === filterType;
       const matchesCategory = filterCategory === "all" || transaction.category === filterCategory;
 
@@ -132,16 +145,9 @@ export const TransactionList = ({
 
       const finalResult = matchesSearch && matchesType && matchesCategory && matchesPaymentOption;
 
-      console.log(`TransactionList: Filtering transaction ID: ${transaction.id}, Type: ${transaction.type}, Desc: ${transaction.description}, Date: ${transaction.date}, FormaPagamento: ${transaction.forma_pagamento}, CartaoId: ${transaction.cartao_id} -> MatchesSearch: ${matchesSearch}, MatchesType: ${matchesType}, MatchesCategory: ${matchesCategory}, MatchesPaymentOption: ${matchesPaymentOption}, FINAL: ${finalResult}`);
-
       return finalResult;
     });
-  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentOptionId, isMobile]);
-
-  const getCategoryDisplayName = (categoryId: string) => {
-    const category = allCategories.find(cat => cat.id === categoryId);
-    return category?.nome || categoryId;
-  };
+  }, [transactions, searchTerm, filterType, filterCategory, filterPaymentOptionId, allCategories]);
 
   const handleSort = (column: string) => {
     if (sortColumn === column) {
@@ -351,6 +357,29 @@ export const TransactionList = ({
 
   return (
     <div className={cn("p-6 pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
+
+      {/* Campo de Pesquisa */}
+      <div className={cn("px-4 mb-2 flex items-center relative", isMobile ? "-mt-1" : "px-6 mb-4")}>
+        <div className="relative w-full group">
+          <Input
+            placeholder="Digite para buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-10 h-9 md:h-10 rounded-xl border-gray-200 bg-white/80 backdrop-blur-sm focus-visible:ring-primary/20 focus-visible:border-primary transition-all shadow-sm group-hover:bg-white placeholder:text-gray-400 placeholder:font-normal text-sm"
+          />
+          <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none z-10">
+            <span className="text-sm select-none leading-none">🔍</span>
+          </div>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Filtros em Estilo Chips/Pills - App Bancário Moderno */}
       <div className={cn(

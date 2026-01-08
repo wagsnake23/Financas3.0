@@ -51,6 +51,8 @@ export const useLancamentosLogic = (
     setFilterType,
     filterCategory,
     setFilterCategory,
+    searchTerm,
+    setSearchTerm,
     handleCancelEdit,
     isValidUuid,
   } = useLancamentosState();
@@ -214,6 +216,8 @@ export const useLancamentosLogic = (
     setFilterType,
     filterCategory,
     setFilterCategory,
+    searchTerm,
+    setSearchTerm,
     handleOptimisticToggleStatus, // NOVO RETORNO
     refetchCartoes, // NOVO: Retornar refetchCartoes
     allRevenues,
