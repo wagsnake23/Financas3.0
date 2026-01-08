@@ -58,7 +58,7 @@ export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
         isMobile ? "text-[0.75rem]" : "text-sm",
         isPaidOrReceived
           ? "text-success font-bold"
-          : "text-gray-400 italic"
+          : "text-blue-400 italic"
       )}>
         {label}
       </span>

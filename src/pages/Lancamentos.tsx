@@ -154,7 +154,7 @@ const Lancamentos = () => {
             isMobile
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
-            "bg-[#F8F6FF]" // Lilas extremamente suave, tom intermediário
+            "bg-[#F0F7FF]" // Azul muito claro, perto do branco
           )}
         >
           <DialogHeader
@@ -163,10 +163,10 @@ const Lancamentos = () => {
               isMobile && "absolute top-3.5 left-4 right-12 text-left"
             )}
           >
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#E8E9FF] flex items-center justify-center">
-              <span className="text-sm select-none" style={{ color: '#5B5FEF' }}>📝</span>
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center">
+              <span className="text-sm select-none" style={{ color: '#1E40AF' }}>📝</span>
             </div>
-            <DialogTitle className="font-bold pb-[1px]" style={{ color: '#3D408B' }}>Editar Lançamento</DialogTitle>
+            <DialogTitle className="font-bold pb-[1px]" style={{ color: '#1E40AF' }}>Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (

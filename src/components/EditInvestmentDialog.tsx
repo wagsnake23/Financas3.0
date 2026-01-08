@@ -165,7 +165,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           }}
           disabled={loading}
         >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -189,7 +189,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <div className={cn("space-y-0.5")}>
         <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
         <Select value={type} onValueChange={setType} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm")}>
+          <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -212,7 +212,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -227,7 +227,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             }}
             required
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white border-[#DBEAFE]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+            className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
           />
         </div>
       </div>
@@ -239,7 +239,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-[#DBEAFE]",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-[#E5E0FF]",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
