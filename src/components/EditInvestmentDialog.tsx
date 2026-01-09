@@ -56,12 +56,34 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
-  // Cálculo reativo da Rentabilidade Diária (R$) - Apenas informativo
+  // Cálculo reativo da Rentabilidade Diária (R$) - Padrão Bancário
   const dailyProfitabilityRS = useMemo(() => {
     if (amount === undefined || profitability === undefined || amount <= 0) return 0;
+
+    // 1) Taxa diária (juros compostos 252 dias úteis)
     const annualRate = profitability / 100;
     const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-    return amount * dailyRate;
+
+    // 2) Truncar a taxa em 10 casas decimais (padrão financeiro)
+    const factor10 = Math.pow(10, 10);
+    const dailyRateTruncated = Math.trunc(dailyRate * factor10) / factor10;
+
+    // 3) Cálculo da rentabilidade bruta
+    const rawYield = amount * dailyRateTruncated;
+
+    // 4) Arredondamento Bancário (Round Half Even) para 2 casas decimais
+    const decimals = 2;
+    const m = Math.pow(10, decimals);
+    const n = +(rawYield * m).toFixed(8); // Evita erros de precisão do JS
+    const i = Math.floor(n);
+    const f = n - i;
+    const e = 1e-8; // Tolerância para comparação
+
+    const rounded = (f > 0.5 - e && f < 0.5 + e)
+      ? (i % 2 === 0 ? i : i + 1)
+      : Math.round(n);
+
+    return rounded / m;
   }, [amount, profitability]);
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
