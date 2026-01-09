@@ -237,11 +237,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
 
         {isMobile && (
-          <div className="space-y-0.5 animate-fade-in">
+          <div className="space-y-0.5">
             <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
             <div className={cn(
               "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
-              isMobile && "h-9 text-xs",
+              isMobile && "h-9 text-sm",
               "opacity-80"
             )}>
               {formatCurrency(dailyProfitabilityRS)}
@@ -285,7 +285,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
               <div className={cn(
                 "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
-                isMobile && "h-9 text-xs",
+                isMobile && "h-9 text-sm",
                 "opacity-80"
               )}>
                 {formatCurrency(dailyProfitabilityRS)}
