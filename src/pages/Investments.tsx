@@ -511,7 +511,7 @@ export default function Investments() { // Alterado para export default function
                           key={investment.id}
                           className={cn(
                             "relative group overflow-hidden transition-all duration-300",
-                            "bg-white/65 backdrop-blur-xl border border-white/40 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[16px] p-4",
+                            "bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)] rounded-[16px] p-4",
                             "hover:shadow-lg active:scale-[0.98]"
                           )}
                         >
@@ -872,7 +872,7 @@ export default function Investments() { // Alterado para export default function
                             key={investment.id}
                             className={cn(
                               "relative group overflow-hidden transition-all duration-300",
-                              "bg-white/65 backdrop-blur-xl border border-white/40 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[16px] p-5",
+                              "bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)] rounded-[16px] p-5",
                               "hover:shadow-lg active:scale-[0.98]",
                               isMobile && "p-4"
                             )}
@@ -993,7 +993,7 @@ export default function Investments() { // Alterado para export default function
         <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
         <AlertDialogContent className={cn("w-full rounded-xl", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
@@ -1013,7 +1013,6 @@ export default function Investments() { // Alterado para export default function
               )}
               onClick={() => setIsConfirmDeleteOpen(false)}
             >
-              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
@@ -1024,7 +1023,6 @@ export default function Investments() { // Alterado para export default function
                 isMobile && "h-10 text-sm flex-1"
               )}
             >
-              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}
               {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
