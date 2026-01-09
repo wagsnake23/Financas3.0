@@ -35,6 +35,7 @@ interface StatCardProps {
   annualTotalLabel?: string; // NEW: Prop for the annual total label (e.g., "Total Anual")
   neumorphism?: boolean; // NEW PROP for Neumorphism style
   id?: string; // NEW: Prop for accessibility and scrolling
+  isPercentage?: boolean; // NEW: Prop to display value as percentage
 }
 
 export const StatCard = ({
@@ -55,6 +56,7 @@ export const StatCard = ({
   annualTotalLabel, // Destructure new prop
   neumorphism = false, // Default to false
   id, // Destructure new prop
+  isPercentage = false,
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -154,7 +156,7 @@ export const StatCard = ({
                 "font-roboto" // Fonte Roboto
               )}
             >
-              {formatCurrency(mainStatValue)}
+              {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
             </p>
             {trend && (
               <p className={cn("text-xs text-muted-foreground", "font-roboto")}>

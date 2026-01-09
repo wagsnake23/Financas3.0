@@ -288,7 +288,14 @@ export default function Investments() { // Alterado para export default function
       ? investments.reduce((sum, inv) => sum + inv.rentabilidade, 0) / investments.length
       : 0;
 
-    return { totalInvested, avgProfitability };
+    // Calculo da rentabilidade diária total (R$) baseada em 252 dias úteis
+    const totalDailyYieldRS = investments.reduce((sum, inv) => {
+      const annualRate = inv.rentabilidade / 100;
+      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
+      return sum + (inv.valor * dailyRate);
+    }, 0);
+
+    return { totalInvested, avgProfitability, totalDailyYieldRS };
   }, [investments]);
 
   if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
@@ -553,6 +560,17 @@ export default function Investments() { // Alterado para export default function
                     variant="income" // Usar variant income para cor verde
                     isMobile={isMobile}
                   />
+                  <div className="mt-4" /> {/* Spacing between cards on mobile */}
+                  <StatCard
+                    mainStatTitle="Rentabilidade Média"
+                    mainStatValue={stats.avgProfitability}
+                    secondaryStatTitle="Rentabilidade Diária"
+                    secondaryStatValue={stats.totalDailyYieldRS}
+                    icon="Percent"
+                    variant="income"
+                    isMobile={isMobile}
+                    isPercentage={true}
+                  />
                 </div>
               )}
             </div>
@@ -572,12 +590,13 @@ export default function Investments() { // Alterado para export default function
               <StatCard
                 mainStatTitle="Rentabilidade Média"
                 mainStatValue={stats.avgProfitability}
-                secondaryStatTitle="Média Geral"
-                secondaryStatValue={stats.avgProfitability}
+                secondaryStatTitle="Rentabilidade Diária"
+                secondaryStatValue={stats.totalDailyYieldRS}
                 icon="Percent"
                 variant="income"
                 isMobile={isMobile}
                 neumorphism={true}
+                isPercentage={true}
               />
             </div>
 
