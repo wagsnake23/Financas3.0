@@ -102,7 +102,7 @@ const Lancamentos = () => {
             onNextMonth={handleNextMonth}
             isMobile={isMobile}
             onBack={() => navigate(-1)}
-            backButtonColor="#1E6BCE"
+            backButtonColor="#E54D4D"
             hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || searchTerm !== ""}
             onClearFilters={() => {
               setFilterType("all");

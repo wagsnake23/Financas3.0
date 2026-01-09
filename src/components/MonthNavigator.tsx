@@ -31,17 +31,17 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
     <div className={cn("relative flex items-center justify-center w-full", isMobile ? "h-8" : "h-10")}>
       {onBack && (
         <Button
-          variant="ghost"
           size="icon"
           onClick={onBack}
           className={cn(
-            "absolute inset-y-0 flex items-center justify-center rounded-xl transition-all active:scale-95",
+            "absolute inset-y-0 flex items-center justify-center rounded-xl transition-all active:scale-95 btn-3d bg-white border-none shadow-sm",
             isMobile ? "h-8 w-8 left-4" : "h-10 w-10 left-0"
           )}
           style={{
-            backgroundColor: `${backButtonColor}1A`, // 10% opacity
+            "--cor-topo": "#FFFFFF",
+            "--cor-base": "#F1F5F9",
             color: backButtonColor
-          }}
+          } as any}
         >
           <DynamicIcon name="ChevronLeft" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} strokeWidth={3} />
         </Button>
