@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -378,16 +378,40 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
-          <AlertDialogHeader>
-            <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente o cartão selecionado.
+        <AlertDialogContent className={cn(
+          "rounded-3xl bg-white border-none shadow-xl",
+          isMobile ? "w-[96%] p-6" : "sm:max-w-[500px] p-6"
+        )}>
+          <AlertDialogHeader className="flex flex-col items-center justify-center text-center">
+            <AlertDialogTitle className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2 mb-2">
+              <Trash2 className="h-5 w-5 text-red-500" />
+              Tem certeza?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-700">
+              Deseja realmente excluir este cartão?
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteCard} disabled={loading}>
+          <AlertDialogFooter className={cn(
+            "flex gap-3 mt-6",
+            isMobile ? "flex-row justify-center" : "sm:justify-center"
+          )}>
+            <AlertDialogCancel
+              onClick={() => setIsConfirmDeleteOpen(false)}
+              className={cn(
+                "flex-1 rounded-xl border-blue-200 bg-white text-[#1E40AF] font-bold hover:bg-blue-50 m-0 h-11",
+                !isMobile && "max-w-[140px]"
+              )}
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteCard}
+              disabled={loading}
+              className={cn(
+                "flex-1 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 border-none m-0 h-11 transition-all active:scale-95",
+                !isMobile && "max-w-[140px]"
+              )}
+            >
               {loading ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
