@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Pencil } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -189,14 +190,14 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogTrigger asChild>
           <Button
             type="button"
-            variant="outline"
             size="icon"
             className={cn(
-              "rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80", // Adicionado bg-soft-blue e hover
-              isMobile && "h-9 w-9" // Ajuste de tamanho para mobile
+              "btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-200 transition-all active:scale-90",
+              isMobile && "h-9 w-9"
             )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
           >
-            <DynamicIcon name="✏️" className="w-4 h-4" /> {/* Ícone de emoji de lápis */}
+            <span className="text-lg">✏️</span>
           </Button>
         </DialogTrigger>
         <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import DynamicIcon from "./DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { Plus } from "lucide-react";
 import { Card } from "@/components/ui/card"; // Importar Card
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
 import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
@@ -94,14 +95,14 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
       <DialogTrigger asChild>
         <Button
           type="button"
-          variant="outline"
           size="icon"
           className={cn(
-            "rounded-xl bg-soft-blue text-primary hover:bg-soft-blue/80", // Adicionado bg-soft-blue e hover
-            isMobile && "h-9 w-9" // Ajuste de tamanho para mobile
+            "btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-300 transition-all active:scale-90",
+            isMobile && "h-9 w-9"
           )}
+          style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
         >
-          <DynamicIcon name="➕" className="w-4 h-4" /> {/* Ícone de emoji de adição */}
+          <Plus className="h-[18px] w-[18px] text-white" />
         </Button>
       </DialogTrigger>
       <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
