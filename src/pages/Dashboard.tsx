@@ -40,6 +40,7 @@ import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import { ProjectedYieldCard } from "@/components/ProjectedYieldCard";
 import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldChart";
 import { YearNavigatorCompact } from "@/components/YearNavigatorCompact";
+import { InvestmentsYieldChart } from "@/components/InvestmentsYieldChart";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -505,8 +506,6 @@ export default function Dashboard() {
 
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
-                secondaryStatTitle="Saldo Anual"
-                secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -528,8 +527,8 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel={`Projetado ${projectedEndDate}`}
-                annualTotalValue={overallBalance}
+                annualTotalLabel="Saldo Anual"
+                annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 neumorphism={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -558,8 +557,8 @@ export default function Dashboard() {
               <StatCard
                 mainStatTitle="Rendimento Mensal"
                 mainStatValue={currentYieldStats.monthYields}
-                secondaryStatTitle="Total Anual"
-                secondaryStatValue={currentYieldStats.annualYields}
+                secondaryStatTitle="Patrimônio"
+                secondaryStatValue={currentYieldStats.totalInvested}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -581,8 +580,8 @@ export default function Dashboard() {
                     projectedAnnualYield={currentYieldStats.annualYields}
                   />
                 }
-                annualTotalLabel="Patrimônio"
-                annualTotalValue={currentYieldStats.totalInvested}
+                annualTotalLabel="Total Anual"
+                annualTotalValue={currentYieldStats.annualYields}
                 neumorphism={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
@@ -605,6 +604,14 @@ export default function Dashboard() {
                   </div>
                 </div>
               </StatCard>
+            )}
+
+            {isMobile && (!filter || filter === "revenues") && (
+              <InvestmentsYieldChart
+                investments={investments}
+                allSubcategories={allSubcategories}
+                isMobile={true}
+              />
             )}
 
             {(!filter || filter === "revenues") && (
@@ -760,8 +767,6 @@ export default function Dashboard() {
               <StatCard
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
-                secondaryStatTitle="Saldo Anual"
-                secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -782,8 +787,8 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel={`Projetado ${projectedEndDate}`}
-                annualTotalValue={overallBalance}
+                annualTotalLabel="Saldo Anual"
+                annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 neumorphism={true}
               >
                 <div className="flex justify-end mt-4">
@@ -822,8 +827,8 @@ export default function Dashboard() {
               <StatCard
                 mainStatTitle="Rendimento Mensal"
                 mainStatValue={currentYieldStats.monthYields}
-                secondaryStatTitle="Total Anual"
-                secondaryStatValue={currentYieldStats.annualYields}
+                secondaryStatTitle="Patrimônio"
+                secondaryStatValue={currentYieldStats.totalInvested}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -844,8 +849,8 @@ export default function Dashboard() {
                     projectedAnnualYield={currentYieldStats.annualYields}
                   />
                 }
-                annualTotalLabel="Patrimônio"
-                annualTotalValue={currentYieldStats.totalInvested}
+                annualTotalLabel="Total Anual"
+                annualTotalValue={currentYieldStats.annualYields}
                 neumorphism={true}
               >
                 <div className="flex justify-end mt-4">
@@ -901,6 +906,26 @@ export default function Dashboard() {
                 }
               />
             </div>
+
+            {(!filter || filter === "revenues") && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <RevenueByTypeChart
+                  revenues={allRevenues.filter(r =>
+                    isWithinInterval(new Date(r.data), {
+                      start: startOfMonth(selectedMonth),
+                      end: endOfMonth(selectedMonth)
+                    })
+                  )}
+                  revenueTypes={allSubcategories}
+                  isMobile={false}
+                />
+                <InvestmentsYieldChart
+                  investments={investments}
+                  allSubcategories={allSubcategories}
+                  isMobile={false}
+                />
+              </div>
+            )}
 
             <div className="grid grid-cols-1">
               <CombinedMonthlyExpensesDashboard
