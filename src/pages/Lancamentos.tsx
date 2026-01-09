@@ -1,4 +1,7 @@
 import { Navigation } from "@/components/Navigation";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import DynamicIcon from "@/components/DynamicIcon";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
@@ -23,6 +26,7 @@ import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
 
@@ -86,17 +90,19 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container mx-auto flex-grow",
-          isMobile ? "px-0 pt-2 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-2 pb-8"
+          isMobile ? "px-0 pt-0 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-0 pb-8"
         )}
       >
 
 
-        <div className={!isMobile ? "mt-4" : ""}>
+        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8 px-4" : "mt-2 mb-6 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
             onNextMonth={handleNextMonth}
             isMobile={isMobile}
+            onBack={() => navigate(-1)}
+            backButtonColor="#1E6BCE"
             hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || searchTerm !== ""}
             onClearFilters={() => {
               setFilterType("all");
