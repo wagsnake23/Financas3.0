@@ -501,7 +501,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         isOpen={isAddSubcategoryModalOpen}
         onOpenChange={setIsAddSubcategoryModalOpen}
         onAddCategory={(cat) => addCategoryMutation.mutate(cat)}
-        allCategories={allSubcategories} // Passing all categories (including parent ones)
+        allCategories={allSubcategories}
+        excludeCategoryIds={["receitas_e_investimentos"]}
       />
 
 

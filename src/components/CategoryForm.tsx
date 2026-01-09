@@ -32,6 +32,8 @@ interface CategoryFormProps {
   onCancelEdit?: () => void;
   allCategories: AppCategory[]; // Agora recebe todas as categorias (principais e sub)
   hideCardWrapper?: boolean; // NOVA PROP
+  excludeCategoryIds?: string[]; // Prop para excluir categorias específicas
+  defaultParentId?: string; // Prop para definir uma categoria pai padrão e travada
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -46,11 +48,13 @@ export const CategoryForm = ({
   onCancelEdit,
   allCategories,
   hideCardWrapper = false, // Valor padrão é false
+  excludeCategoryIds = [], // Valor padrão é vazio
+  defaultParentId,
 }: CategoryFormProps) => {
   const [nome, setNome] = useState("");
   const [icone, setIcone] = useState("😀");
   const [cor, setCor] = useState("hsl(210, 70%, 50%)");
-  const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
+  const [selectedParentId, setSelectedParentId] = useState<string | null>(defaultParentId || null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile(); // Usar o hook useIsMobile
@@ -66,10 +70,22 @@ export const CategoryForm = ({
       // Reset form when not editing
       setNome("");
       setIcone("😀");
-      setCor("hsl(210, 70%, 50%)");
-      setSelectedParentId(null);
+
+      // If there's a default parent, set its color
+      if (defaultParentId) {
+        const parent = allCategories.find(c => c.id === defaultParentId);
+        if (parent) {
+          setCor(getCategoryColor(parent, allCategories));
+        } else {
+          setCor("hsl(210, 70%, 50%)");
+        }
+        setSelectedParentId(defaultParentId);
+      } else {
+        setCor("hsl(210, 70%, 50%)");
+        setSelectedParentId(null);
+      }
     }
-  }, [editingCategory]);
+  }, [editingCategory, defaultParentId, allCategories]);
 
   // Close emoji picker when clicking outside
   useEffect(() => {
@@ -139,8 +155,10 @@ export const CategoryForm = ({
 
   // Filter categories that can be selected as a parent (only root categories)
   const possibleParentCategories = useMemo(() => {
-    return allCategories.filter((cat) => cat.parent_id === null);
-  }, [allCategories]);
+    return allCategories.filter((cat) =>
+      cat.parent_id === null && !excludeCategoryIds.includes(cat.id)
+    );
+  }, [allCategories, excludeCategoryIds]);
 
   const formContent = (
     <>
@@ -184,7 +202,7 @@ export const CategoryForm = ({
                 }
               }
             }}
-            disabled={editingCategory?.user_id === null}
+            disabled={editingCategory?.user_id === null || !!defaultParentId}
           >
             <SelectTrigger
               id="parent_id"

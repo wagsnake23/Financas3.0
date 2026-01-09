@@ -16,6 +16,8 @@ interface AddSubcategoryModalProps {
     onAddCategory: (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => void;
     allCategories: AppCategory[];
     onSuccess?: () => void;
+    excludeCategoryIds?: string[];
+    defaultParentId?: string;
 }
 
 export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
@@ -24,6 +26,8 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
     onAddCategory,
     allCategories,
     onSuccess,
+    excludeCategoryIds,
+    defaultParentId,
 }) => {
     const isMobile = useIsMobile();
 
@@ -57,6 +61,8 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
                         onCancelEdit={() => onOpenChange(false)}
                         allCategories={allCategories}
                         hideCardWrapper={true}
+                        excludeCategoryIds={excludeCategoryIds}
+                        defaultParentId={defaultParentId}
                     />
                 </div>
             </DialogContent>

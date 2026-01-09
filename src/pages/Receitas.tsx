@@ -40,6 +40,9 @@ import {
 } from "@/components/ui/popover";
 import { Footer } from "@/components/Footer";
 import CurrencyBR from "@/components/ui/currency-br";
+import { Plus } from "lucide-react";
+import { AddSubcategoryModal } from "@/components/AddSubcategoryModal";
+import { useMutation } from "@tanstack/react-query";
 
 import { Database } from "@/integrations/supabase/types";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
@@ -68,6 +71,40 @@ export default function Receitas() {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({});
+  const [isAddSubcategoryModalOpen, setIsAddSubcategoryModalOpen] = useState(false);
+
+  const addCategoryMutation = useMutation({
+    mutationFn: async (newCategory: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
+      if (!user?.id) throw new Error("User not authenticated.");
+      const categoryToInsert = {
+        ...newCategory,
+        id: crypto.randomUUID(),
+        user_id: user.id,
+        forma_pagamento: null,
+      };
+      const { data, error } = await supabase
+        .from("categorias")
+        .insert(categoryToInsert)
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      // Optimistically update the categories cache to include the new one immediately
+      queryClient.setQueryData(["categories", user?.id], (old: AppCategory[] | undefined) => {
+        return old ? [...old, data] : [data];
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
+      showSuccessToast("Sucesso", "Subcategoria adicionada!");
+      setTipoReceitaId(data.id);
+      setIsAddSubcategoryModalOpen(false);
+    },
+    onError: (error: any) => {
+      showErrorToast("Erro", error.message || "Erro ao adicionar subcategoria");
+    },
+  });
 
   const { data: revenues = [], isLoading: isLoadingRevenues } = useQuery<
     Tables<"receitas">[]
@@ -251,243 +288,266 @@ export default function Receitas() {
   };
 
   const oneOffFormContent = (
-    <form
-      id="revenue-form"
-      onSubmit={handleSubmitOneOff}
-      className={cn("w-full", isMobile ? "space-y-4" : "space-y-6")}
-    >
-      <div className={cn("space-y-2 pt-2", isMobile && "w-full mx-auto")}>
-        <ToggleGroup
-          type="single"
-          value={isRecurring ? "recorrente" : "avulsa"}
-          onValueChange={handleToggleChange}
-          className={cn("w-full justify-center", isMobile && "gap-x-2")}
-        >
-          <ToggleGroupItem
-            value="avulsa"
-            className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
-              "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-              "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
-              isMobile && "h-8 py-0.5 text-sm"
-            )}
+    <>
+      <form
+        id="revenue-form"
+        onSubmit={handleSubmitOneOff}
+        className={cn("w-full", isMobile ? "space-y-4" : "space-y-6")}
+      >
+        <div className={cn("space-y-2 pt-2", isMobile && "w-full mx-auto")}>
+          <ToggleGroup
+            type="single"
+            value={isRecurring ? "recorrente" : "avulsa"}
+            onValueChange={handleToggleChange}
+            className={cn("w-full justify-center", isMobile && "gap-x-2")}
           >
-            <DynamicIcon
-              name="⚡"
+            <ToggleGroupItem
+              value="avulsa"
               className={cn(
-                "mr-2 h-4 w-4 transition-colors",
-                !isRecurring ? "text-white" : "text-muted-foreground"
-              )}
-            />{" "}
-            Avulsa
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="recorrente"
-            className={cn(
-              "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
-              "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-              "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
-              isMobile && "h-8 py-0.5 text-sm"
-            )}
-          >
-            <DynamicIcon
-              name="🔁"
-              className={cn(
-                "mr-2 h-4 w-4 transition-colors",
-                isRecurring ? "text-white" : "text-muted-foreground"
-              )}
-            />{" "}
-            Recorrente
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-
-      <div className={cn(isMobile && "w-full mx-auto")}>
-        <Label htmlFor="tipo" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
-          Subcategoria de Receita
-        </Label>
-        <Select
-          value={tipoReceitaId}
-          onValueChange={(value) => {
-            setTipoReceitaId(value);
-            setValidationErrors((prev) => ({ ...prev, tipoReceitaId: false }));
-          }}
-        >
-          <SelectTrigger
-            className={cn(
-              "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-              isMobile ? "h-9 text-sm" : "h-10",
-              getBorderClass({
-                isInvalid: validationErrors.tipoReceitaId,
-                isValid: validationErrors.tipoReceitaId === false,
-              })
-            )}
-          >
-            <SelectValue placeholder="Selecione a subcategoria de receita" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem
-              value={UNSELECTED_VALUE}
-              disabled
-              className={cn(isMobile && "text-sm")}
-            >
-              Selecione a subcategoria de receita
-            </SelectItem>
-            {incomeSubcategories.length === 0 ? (
-              <SelectItem
-                value={UNSELECTED_VALUE}
-                disabled
-                className={cn(isMobile && "text-sm")}
-              >
-                Nenhum tipo de receita disponível
-              </SelectItem>
-            ) : (
-              incomeSubcategories.map((tipo) => (
-                <SelectItem
-                  key={tipo.id}
-                  value={tipo.id}
-                  className={cn(isMobile && "text-sm")}
-                >
-                  <span className="flex items-center gap-2">
-                    <span>{tipo.icone}</span>
-                    <span>{tipo.nome}</span>
-                  </span>
-                </SelectItem>
-              ))
-            )}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className={cn(isMobile && "w-full mx-auto")}>
-        <Label htmlFor="data" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
-          Data
-        </Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal transition-all duration-200",
-                "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium",
-                "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
-                isMobile ? "h-9 text-sm" : "h-10",
-                !data && "text-muted-foreground",
-                getBorderClass({
-                  isInvalid: validationErrors.data,
-                  isValid: validationErrors.data === false,
-                })
+                "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+                "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
+                "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
+                isMobile && "h-8 py-0.5 text-sm"
               )}
             >
               <DynamicIcon
-                name="📅"
+                name="⚡"
                 className={cn(
-                  "mr-2 h-4 w-4 text-gray-500",
-                  isMobile && "h-4 w-4"
+                  "mr-2 h-4 w-4 transition-colors",
+                  !isRecurring ? "text-white" : "text-muted-foreground"
                 )}
-              />
-              {data ? (
-                format(data, "PPP", { locale: ptBR })
-              ) : (
-                <span>Selecione uma data</span>
+              />{" "}
+              Avulsa
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="recorrente"
+              className={cn(
+                "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+                "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
+                "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
+                isMobile && "h-8 py-0.5 text-sm"
               )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={data}
-              onSelect={(date) => {
-                setData(date);
-                setIsCalendarOpen(false);
-                setValidationErrors((prev) => ({ ...prev, data: false }));
+            >
+              <DynamicIcon
+                name="🔁"
+                className={cn(
+                  "mr-2 h-4 w-4 transition-colors",
+                  isRecurring ? "text-white" : "text-muted-foreground"
+                )}
+              />{" "}
+              Recorrente
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
+        <div className={cn(isMobile && "w-full mx-auto")}>
+          <Label htmlFor="tipo" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            Subcategoria de Receita
+          </Label>
+          <div className="flex gap-2">
+            <Select
+              value={tipoReceitaId}
+              onValueChange={(value) => {
+                setTipoReceitaId(value);
+                setValidationErrors((prev) => ({ ...prev, tipoReceitaId: false }));
               }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+            >
+              <SelectTrigger
+                className={cn(
+                  "flex-1 rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
+                  "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                  isMobile ? "h-9 text-sm" : "h-10",
+                  getBorderClass({
+                    isInvalid: validationErrors.tipoReceitaId,
+                    isValid: validationErrors.tipoReceitaId === false,
+                  })
+                )}
+              >
+                <SelectValue placeholder="Selecione a subcategoria de receita" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  value={UNSELECTED_VALUE}
+                  disabled
+                  className={cn(isMobile && "text-sm")}
+                >
+                  Selecione a subcategoria de receita
+                </SelectItem>
+                {incomeSubcategories.length === 0 ? (
+                  <SelectItem
+                    value={UNSELECTED_VALUE}
+                    disabled
+                    className={cn(isMobile && "text-sm")}
+                  >
+                    Nenhum tipo de receita disponível
+                  </SelectItem>
+                ) : (
+                  incomeSubcategories.map((tipo) => (
+                    <SelectItem
+                      key={tipo.id}
+                      value={tipo.id}
+                      className={cn(isMobile && "text-sm")}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>{tipo.icone}</span>
+                        <span>{tipo.nome}</span>
+                      </span>
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+            <Button
+              type="button"
+              size="icon"
+              onClick={() => setIsAddSubcategoryModalOpen(true)}
+              className={cn(
+                "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-green-200 transition-all active:scale-90 flex-shrink-0",
+                isMobile ? "h-9 w-8" : "h-10 w-9"
+              )}
+              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+            >
+              <Plus className="h-[18px] w-[18px] text-white" />
+            </Button>
+          </div>
+        </div>
 
-      <div className={cn(isMobile && "w-full mx-auto")}>
-        <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
-          Valor (R$)
-        </Label>
-        <CurrencyBR
-          value={valor}
-          onChange={(v) => {
-            setValor(v);
-            setValidationErrors((prev) => ({ ...prev, valor: false }));
-          }}
-          className={cn(
-            "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
-            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
-            isMobile ? "h-9 text-sm" : "h-10",
-            getBorderClass({
-              isInvalid: validationErrors.valor,
-              isValid: validationErrors.valor === false,
-            })
-          )}
-        />
-      </div>
+        <div className={cn(isMobile && "w-full mx-auto")}>
+          <Label htmlFor="data" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            Data
+          </Label>
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal transition-all duration-200",
+                  "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium",
+                  "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                  isMobile ? "h-9 text-sm" : "h-10",
+                  !data && "text-muted-foreground",
+                  getBorderClass({
+                    isInvalid: validationErrors.data,
+                    isValid: validationErrors.data === false,
+                  })
+                )}
+              >
+                <DynamicIcon
+                  name="📅"
+                  className={cn(
+                    "mr-2 h-4 w-4 text-gray-500",
+                    isMobile && "h-4 w-4"
+                  )}
+                />
+                {data ? (
+                  format(data, "PPP", { locale: ptBR })
+                ) : (
+                  <span>Selecione uma data</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+              <Calendar
+                mode="single"
+                selected={data}
+                onSelect={(date) => {
+                  setData(date);
+                  setIsCalendarOpen(false);
+                  setValidationErrors((prev) => ({ ...prev, data: false }));
+                }}
+                initialFocus
+                locale={ptBR}
+                showOutsideDays={false}
+                className={cn(isMobile && "text-sm")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
 
-      <div className={cn(isMobile && "w-full mx-auto")}>
-        <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
-          Descrição
-        </Label>
-        <Textarea
-          id="descricao"
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          placeholder="Detalhes sobre a receita..."
-          rows={3}
-          className={cn(
-            "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
-            "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
-            isMobile ? "text-sm p-4" : "",
-          )}
-        />
-      </div>
-
-      {!isRecurring && (
-        <div className={cn("space-y-2", isMobile && "w-full mx-auto")}>
-          <RevenueStatusToggle
-            status={status}
-            setStatus={(val) => setStatus(val as ReceitaStatus)}
-            isMobile={isMobile}
+        <div className={cn(isMobile && "w-full mx-auto")}>
+          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            Valor (R$)
+          </Label>
+          <CurrencyBR
+            value={valor}
+            onChange={(v) => {
+              setValor(v);
+              setValidationErrors((prev) => ({ ...prev, valor: false }));
+            }}
+            className={cn(
+              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+              isMobile ? "h-9 text-sm" : "h-10",
+              getBorderClass({
+                isInvalid: validationErrors.valor,
+                isValid: validationErrors.valor === false,
+              })
+            )}
           />
         </div>
-      )}
 
-      {/* Submit Button Logic */}
-      {(() => {
-        const SubmitButton = (
-          <Button
-            type="submit"
-            form="revenue-form"
+        <div className={cn(isMobile && "w-full mx-auto")}>
+          <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            Descrição
+          </Label>
+          <Textarea
+            id="descricao"
+            value={descricao}
+            onChange={(e) => setDescricao(e.target.value)}
+            placeholder="Detalhes sobre a receita..."
+            rows={3}
             className={cn(
-              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-              isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
+              isMobile ? "text-sm p-4" : "",
             )}
-            style={{ "--cor-topo": "#22C55E", "--cor-base": "#16A34A" } as any}
-            disabled={loading}
-          >
-            {loading ? "Salvando..." : "Salvar Receita"}
-          </Button>
-        );
+          />
+        </div>
 
-        return isMobile && submitPortalRef
-          ? createPortal(SubmitButton, submitPortalRef)
-          : (
-            <div className={cn(isMobile && "w-full mx-auto")}>
-              {SubmitButton}
-            </div>
+        {!isRecurring && (
+          <div className={cn("space-y-2", isMobile && "w-full mx-auto")}>
+            <RevenueStatusToggle
+              status={status}
+              setStatus={(val) => setStatus(val as ReceitaStatus)}
+              isMobile={isMobile}
+            />
+          </div>
+        )}
+
+        {/* Submit Button Logic */}
+        {(() => {
+          const SubmitButton = (
+            <Button
+              type="submit"
+              form="revenue-form"
+              className={cn(
+                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+                isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+              )}
+              style={{ "--cor-topo": "#22C55E", "--cor-base": "#16A34A" } as any}
+              disabled={loading}
+            >
+              {loading ? "Salvando..." : "Salvar Receita"}
+            </Button>
           );
-      })()}
-    </form>
+
+          return isMobile && submitPortalRef
+            ? createPortal(SubmitButton, submitPortalRef)
+            : (
+              <div className={cn(isMobile && "w-full mx-auto")}>
+                {SubmitButton}
+              </div>
+            );
+        })()}
+      </form>
+      <AddSubcategoryModal
+        isOpen={isAddSubcategoryModalOpen}
+        onOpenChange={setIsAddSubcategoryModalOpen}
+        onAddCategory={(cat) => addCategoryMutation.mutate(cat)}
+        allCategories={fetchedCategories}
+        defaultParentId="receitas_e_investimentos"
+      />
+    </>
   );
 
   if (authLoading || isLoadingRevenues || isLoadingCategories) {
