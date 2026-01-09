@@ -244,7 +244,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             </div>
           </ScrollArea>
           <DialogFooter>
-            <Button onClick={() => setIsManageCardsOpen(false)} className="rounded-xl">Fechar</Button>
+            <Button type="button" onClick={() => setIsManageCardsOpen(false)} className="rounded-xl">Fechar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -320,7 +320,16 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 />
               </div>
             </div>
-            <Button onClick={handleUpdateCard} className="w-full rounded-xl" disabled={loading}>
+            <Button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleUpdateCard();
+              }}
+              className="w-full rounded-xl"
+              disabled={loading}
+            >
               {loading ? "Atualizando..." : "Atualizar Cartão"}
             </Button>
           </div>

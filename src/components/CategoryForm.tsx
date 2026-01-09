@@ -93,6 +93,7 @@ export const CategoryForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
 
     if (!selectedParentId || selectedParentId === UNSELECTED_VALUE) {
       toast.error("Selecione uma Categoria Principal para a subcategoria.", {

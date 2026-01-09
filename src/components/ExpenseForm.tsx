@@ -21,18 +21,19 @@ import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
 import { format, addMonths, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
-// Removido ícones lucide não utilizados
 import {
   cn,
   getBorderClass,
   formatInTimeZone,
   TARGET_TIMEZONE,
 } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import { AddSubcategoryModal } from "./AddSubcategoryModal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
 
@@ -105,9 +106,44 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
 
+  const [isAddSubcategoryModalOpen, setIsAddSubcategoryModalOpen] = useState(false);
+
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({});
+
+  const addCategoryMutation = useMutation({
+    mutationFn: async (newCategory: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
+      if (!user?.id) throw new Error("User not authenticated.");
+      const categoryToInsert = {
+        ...newCategory,
+        id: crypto.randomUUID(),
+        user_id: user.id,
+        forma_pagamento: null,
+      };
+      const { data, error } = await supabase
+        .from("categorias")
+        .insert(categoryToInsert)
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      // Optimistically update the categories cache to include the new one immediately
+      queryClient.setQueryData(["categories", user?.id], (old: AppCategory[] | undefined) => {
+        return old ? [...old, data] : [data];
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
+      showSuccessToast("Sucesso", "Subcategoria adicionada!");
+      setSelectedSubcategoryId(data.id);
+      setIsAddSubcategoryModalOpen(false);
+    },
+    onError: (error: any) => {
+      showErrorToast("Erro", error.message || "Erro ao adicionar subcategoria");
+    },
+  });
 
   const expenseSubcategories = React.useMemo(() => {
     return allSubcategories
@@ -399,54 +435,75 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       )}
 
-      {/* Subcategoria */}
       <div>
         <Label htmlFor="subcategoria" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria
         </Label>
-        <Select
-          value={selectedSubcategoryId}
-          onValueChange={(value) => {
-            setSelectedSubcategoryId(value);
-            setValidationErrors((prev) => ({
-              ...prev,
-              selectedSubcategoryId: false,
-            }));
-          }}
-        >
-          <SelectTrigger
-            className={cn(
-              "w-full rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
-              isMobile && "h-9 text-sm",
-              getBorderClass({
-                isInvalid: validationErrors.selectedSubcategoryId,
-                isValid: validationErrors.selectedSubcategoryId === false,
-              })
-            )}
+        <div className="flex gap-2">
+          <Select
+            value={selectedSubcategoryId}
+            onValueChange={(value) => {
+              setSelectedSubcategoryId(value);
+              setValidationErrors((prev) => ({
+                ...prev,
+                selectedSubcategoryId: false,
+              }));
+            }}
           >
-            <SelectValue placeholder="Selecione a subcategoria" />
-          </SelectTrigger>
-          <SelectContent className="max-h-[280px]">
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
-              Selecione a subcategoria
-            </SelectItem>
-            {expenseSubcategories.length === 0 ? (
+            <SelectTrigger
+              className={cn(
+                "flex-1 rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+                isMobile && "h-9 text-sm",
+                getBorderClass({
+                  isInvalid: validationErrors.selectedSubcategoryId,
+                  isValid: validationErrors.selectedSubcategoryId === false,
+                })
+              )}
+            >
+              <SelectValue placeholder="Selecione a subcategoria" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[280px]">
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
-                Nenhuma subcategoria encontrada
+                Selecione a subcategoria
               </SelectItem>
-            ) : (
-              expenseSubcategories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                  <span className="flex items-center gap-2">
-                    <span>{cat.icone}</span>
-                    <span>{cat.nome}</span>
-                  </span>
+              {expenseSubcategories.length === 0 ? (
+                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
+                  Nenhuma subcategoria encontrada
                 </SelectItem>
-              ))
+              ) : (
+                expenseSubcategories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                    <span className="flex items-center gap-2">
+                      <span>{cat.icone}</span>
+                      <span>{cat.nome}</span>
+                    </span>
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            size="icon"
+            onClick={() => setIsAddSubcategoryModalOpen(true)}
+            className={cn(
+              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-200 transition-all active:scale-90 flex-shrink-0",
+              isMobile && "w-8 h-9"
             )}
-          </SelectContent>
-        </Select>
+            style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+          >
+            <Plus className="h-[18px] w-[18px] text-white" />
+          </Button>
+        </div>
       </div>
+
+      <AddSubcategoryModal
+        isOpen={isAddSubcategoryModalOpen}
+        onOpenChange={setIsAddSubcategoryModalOpen}
+        onAddCategory={(cat) => addCategoryMutation.mutate(cat)}
+        allCategories={allSubcategories} // Passing all categories (including parent ones)
+      />
+
 
       <PaymentDetails
         valor={valor}
