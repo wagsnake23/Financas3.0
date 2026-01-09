@@ -254,7 +254,7 @@ export const CategoryForm = ({
                   onEmojiClick={handleEmojiClick}
                   width="100%"
                   height={isMobile ? 300 : 400}
-                  searchPlaceHolder="Buscar emoji..."
+                  searchDisabled={true}
                   previewConfig={{ showPreview: false }}
                 />
               </div>

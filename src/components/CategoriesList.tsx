@@ -16,6 +16,17 @@ import {
 import { PAYMENT_METHODS } from "@/data/colorPalette";
 import { cn } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/categoryColors";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 // Helper interface for hierarchical categories
 interface HierarchicalCategory extends AppCategory {
@@ -124,14 +135,38 @@ const CategoryItem = ({
           )}
 
           {!isDefault && category.parent_id !== null && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onDeleteCategory(category.id)}
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-3xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center justify-center gap-2">
+                    <Trash2 className="h-5 w-5 text-destructive" />
+                    Confirmar Exclusão
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center">
+                    Tem certeza que deseja excluir a subcategoria{" "}
+                    <span className="font-bold text-foreground">"{category.nome}"</span>?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex flex-row gap-2">
+                  <AlertDialogCancel className="flex-1 rounded-xl mt-0">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => onDeleteCategory(category.id)}
+                    className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                  >
+                    Excluir
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
       </div>
