@@ -105,35 +105,48 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           <Plus className="h-[18px] w-[18px] text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
-        <DialogHeader>
-          <DialogTitle>Cadastrar Novo Cartão</DialogTitle>
+      <DialogContent className={cn(
+        "rounded-3xl bg-[#F0F7FF] border-none shadow-xl",
+        isMobile ? "dialog-mobile pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+      )}>
+        <DialogHeader
+          className={cn(
+            "flex flex-row items-center justify-center gap-2 mb-2",
+            isMobile && "pt-0"
+          )}
+        >
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center shadow-sm">
+            <span className="text-sm select-none" style={{ color: '#1E40AF' }}>💳</span>
+          </div>
+          <DialogTitle className={cn("font-bold pb-[1px] text-[#1E40AF]", isMobile ? "text-lg" : "text-xl")}>
+            Cadastrar Novo Cartão
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label>Nome do Cartão</Label>
+        <div className={cn("space-y-4", isMobile && "pt-0 pb-2")}>
+          <div className="space-y-1.5">
+            <Label className="text-gray-500 font-medium text-sm ml-1">Nome do Cartão</Label>
             <Input
               value={newCardNome}
               onChange={(e) => {
                 setNewCardNome(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardNome: false }));
               }}
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))}
+              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))}
             />
           </div>
-          <div>
-            <Label>Banco</Label>
+          <div className="space-y-1.5">
+            <Label className="text-gray-500 font-medium text-sm ml-1">Banco</Label>
             <Input
               value={newCardBanco}
               onChange={(e) => {
                 setNewCardBanco(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardBanco: false }));
               }}
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))}
+              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))}
             />
           </div>
-          <div>
-            <Label>Últimos 4 Dígitos</Label>
+          <div className="space-y-1.5">
+            <Label className="text-gray-500 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
             <Input
               value={newCardUltimosDigitos}
               onChange={(e) => {
@@ -141,12 +154,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 setValidationErrors(prev => ({ ...prev, newCardUltimosDigitos: false }));
               }}
               maxLength={4}
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false }))}
+              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false }))}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Dia Fechamento</Label>
+            <div className="space-y-1.5">
+              <Label className="text-gray-500 font-medium text-sm ml-1">Dia Fechamento</Label>
               <Input
                 type="number"
                 min="1"
@@ -156,11 +169,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setNewCardDiaFechamento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaFechamento: false }));
                 }}
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false }))}
+                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false }))}
               />
             </div>
-            <div>
-              <Label>Dia Vencimento</Label>
+            <div className="space-y-1.5">
+              <Label className="text-gray-500 font-medium text-sm ml-1">Dia Vencimento</Label>
               <Input
                 type="number"
                 min="1"
@@ -170,7 +183,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setNewCardDiaVencimento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaVencimento: false }));
                 }}
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false }))}
+                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false }))}
               />
             </div>
           </div>
@@ -181,7 +194,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               e.stopPropagation();
               handleAddNewCartao();
             }}
-            className="w-full rounded-xl"
+            className={cn(
+              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+              isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
+            )}
+            style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
             disabled={loading}
           >
             {loading ? "Adicionando..." : "Adicionar Cartão"}

@@ -200,9 +200,22 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <span className="text-lg">✏️</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
-          <DialogHeader>
-            <DialogTitle>Gerenciar Cartões</DialogTitle>
+        <DialogContent className={cn(
+          "rounded-3xl bg-[#F8F9FA] border-none shadow-xl",
+          isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
+        )}>
+          <DialogHeader
+            className={cn(
+              "flex flex-row items-center justify-center gap-2 mb-2",
+              isMobile && "pt-0 mb-4"
+            )}
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
+              <span className="text-sm select-none">💳</span>
+            </div>
+            <DialogTitle className={cn("font-bold pb-[1px] text-gray-800", isMobile ? "text-lg" : "text-xl")}>
+              Gerenciar Cartões
+            </DialogTitle>
           </DialogHeader>
           <ScrollArea className="h-[300px] pr-4">
             <div className="space-y-4">
@@ -243,43 +256,66 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               )}
             </div>
           </ScrollArea>
-          <DialogFooter>
-            <Button type="button" onClick={() => setIsManageCardsOpen(false)} className="rounded-xl">Fechar</Button>
+          <DialogFooter className={cn(isMobile ? "pb-6 pt-2" : "pb-4")}>
+            <Button
+              type="button"
+              onClick={() => setIsManageCardsOpen(false)}
+              className={cn(
+                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+                isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+              )}
+              style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
+            >
+              Fechar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
-        <DialogContent className={cn("w-full sm:max-w-[425px] rounded-2xl sm:rounded-2xl")}> {/* Revertido para o estado anterior */}
-          <DialogHeader>
-            <DialogTitle>Editar Cartão</DialogTitle>
+        <DialogContent className={cn(
+          "rounded-3xl bg-[#F8F9FA] border-none shadow-xl",
+          isMobile ? "dialog-mobile pb-8" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
+        )}>
+          <DialogHeader
+            className={cn(
+              "flex flex-row items-center justify-center gap-2 mb-2",
+              isMobile && "pt-0 mb-4"
+            )}
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
+              <span className="text-sm select-none">✏️</span>
+            </div>
+            <DialogTitle className={cn("font-bold pb-[1px] text-gray-800", isMobile ? "text-lg" : "text-xl")}>
+              Editar Cartão
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>Nome do Cartão</Label>
+          <div className={cn("space-y-4", isMobile && "pb-4")}>
+            <div className="space-y-1.5">
+              <Label className="text-gray-500 font-medium text-sm ml-1">Nome do Cartão</Label>
               <Input
                 value={nomeCartao}
                 onChange={(e) => {
                   setNomeCartao(e.target.value);
                   setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
                 }}
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
+                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
               />
             </div>
-            <div>
-              <Label>Banco</Label>
+            <div className="space-y-1.5">
+              <Label className="text-gray-500 font-medium text-sm ml-1">Banco</Label>
               <Input
                 value={banco}
                 onChange={(e) => {
                   setBanco(e.target.value);
                   setValidationErrors(prev => ({ ...prev, banco: false }));
                 }}
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
+                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
               />
             </div>
-            <div>
-              <Label>Últimos 4 Dígitos</Label>
+            <div className="space-y-1.5">
+              <Label className="text-gray-500 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
               <Input
                 value={ultimosDigitos}
                 onChange={(e) => {
@@ -287,12 +323,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   setValidationErrors(prev => ({ ...prev, ultimosDigitos: false }));
                 }}
                 maxLength={4}
-                className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
+                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Dia Fechamento</Label>
+              <div className="space-y-1.5">
+                <Label className="text-gray-500 font-medium text-sm ml-1">Dia Fechamento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -302,11 +338,11 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaFechamento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaFechamento: false }));
                   }}
-                  className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
+                  className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
                 />
               </div>
-              <div>
-                <Label>Dia Vencimento</Label>
+              <div className="space-y-1.5">
+                <Label className="text-gray-500 font-medium text-sm ml-1">Dia Vencimento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -316,7 +352,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaVencimento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaVencimento: false }));
                   }}
-                  className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
+                  className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
                 />
               </div>
             </div>
@@ -327,7 +363,11 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 e.stopPropagation();
                 handleUpdateCard();
               }}
-              className="w-full rounded-xl"
+              className={cn(
+                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+                isMobile ? "h-11 text-base !shadow-none mt-4" : "h-11 text-base shadow-md mt-2"
+              )}
+              style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
               disabled={loading}
             >
               {loading ? "Atualizando..." : "Atualizar Cartão"}
