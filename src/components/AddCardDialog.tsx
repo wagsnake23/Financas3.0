@@ -122,7 +122,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             Cadastrar Novo Cartão
           </DialogTitle>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile && "pt-0 pb-2")}>
+        <div className={cn("space-y-4", isMobile ? "pt-0 pb-6" : "pb-4")}>
           <div className="space-y-1.5">
             <Label className="text-gray-500 font-medium text-sm ml-1">Nome do Cartão</Label>
             <Input
