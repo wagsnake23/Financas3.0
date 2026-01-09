@@ -532,17 +532,17 @@ export default function Investments() { // Alterado para export default function
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleEditClick(investment)}
-                                className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-primary transition-all text-gray-500"
+                                className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
                               >
-                                <DynamicIcon name="Pencil" className="h-3.5 w-3.5" />
+                                <DynamicIcon name="Pencil" className="h-4 w-4 text-[#3b82f6]" />
                               </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleDelete(investment.id)}
-                                className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-destructive transition-all text-gray-500"
+                                className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
                               >
-                                <DynamicIcon name="Trash2" className="h-3.5 w-3.5" />
+                                <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
                               </Button>
                             </div>
                           </div>
@@ -894,17 +894,17 @@ export default function Investments() { // Alterado para export default function
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleEditClick(investment)}
-                                  className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-primary transition-all text-gray-500"
+                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
                                 >
-                                  <DynamicIcon name="Pencil" className="h-3.5 w-3.5" />
+                                  <DynamicIcon name="Pencil" className="h-4 w-4 text-[#3b82f6]" />
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleDelete(investment.id)}
-                                  className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-destructive transition-all text-gray-500"
+                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
                                 >
-                                  <DynamicIcon name="Trash2" className="h-3.5 w-3.5" />
+                                  <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
                                 </Button>
                               </div>
                             </div>
