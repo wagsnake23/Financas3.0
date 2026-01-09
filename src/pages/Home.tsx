@@ -212,13 +212,16 @@ export default function Home() {
             <div className="relative h-[220px] w-full bg-gradient-to-b from-[#0A4A9B] via-[#1E6BCE] to-[#F8FAFC] overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
                 <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[1000px]">
-                    <div>
-                        <h1 className="text-xl font-bold text-white tracking-tight">
-                            Olá, {userName} 👋
-                        </h1>
-                        <p className="text-xs text-blue-100/80 font-medium mt-1 uppercase tracking-widest">
-                            {todayStr}
-                        </p>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <h1 className="text-xl font-bold text-white tracking-tight">
+                                Olá, {userName} 👋
+                            </h1>
+                            <p className="text-xs text-blue-100/80 font-medium mt-1 uppercase tracking-widest">
+                                {todayStr}
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -254,18 +257,28 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col -mt-1">
-                        <p className="text-[18px] font-black text-gray-700 tracking-tight mb-0.5">
-                            {formatCurrency(stats.currentBalance)}
-                        </p>
-                        <div className="flex items-center gap-2">
-                            <div className={cn(
-                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                            )}>
-                                {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
+                    <div className="flex justify-between items-end -mt-1">
+                        <div className="flex flex-col">
+                            <p className="text-[18px] font-black text-gray-700 tracking-tight mb-0.5">
+                                {formatCurrency(stats.currentBalance)}
+                            </p>
+                            <div className="flex items-center gap-2">
+                                <div className={cn(
+                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                    stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                )}>
+                                    {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
+                                </div>
+                                <span className="text-[10px] text-gray-400 font-medium">em relação ao mês anterior</span>
                             </div>
-                            <span className="text-[10px] text-gray-400 font-medium">em relação ao mês anterior</span>
+                        </div>
+
+                        {/* Botão de Investimentos */}
+                        <div
+                            onClick={() => navigate("/dashboard?filter=investments")}
+                            className="w-7 h-7 flex items-center justify-center rounded-full bg-orange-50 transition-all active:scale-90 cursor-pointer"
+                        >
+                            <DynamicIcon name="LineChart" className="h-3.5 w-3.5 text-orange-500" strokeWidth={3} />
                         </div>
                     </div>
                 </Card>

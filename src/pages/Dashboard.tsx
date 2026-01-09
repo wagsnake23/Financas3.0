@@ -220,15 +220,21 @@ export default function Dashboard() {
   }, [investments]);
 
   const currentYieldStats = useMemo(() => {
-    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0 };
+    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0, avgProfitability: 0, totalDailyYieldRS: 0 };
 
     // taxa_anual_ponderada = Σ (valor × (rentabilidade / 100)) ÷ Σ valor
     const weightedSum = investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
     const taxaAnualPonderada = weightedSum / totalInvested;
+    const avgProfitability = taxaAnualPonderada * 100;
 
-    // Rendimento Mensal: juros compostos com base em 21 dias úteis e truncamento da taxa diária
+    // Rendimento Diário e Mensal com base em 252 e 21 dias úteis
     const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
     const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+
+    // Rendimento Diário Total (R$)
+    const totalDailyYieldRS = totalInvested * dailyRateTruncated;
+
+    // Rendimento Mensal: juros compostos com base em 21 dias úteis
     const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
     const rawMonthYield = totalInvested * taxaMensal;
 
@@ -245,7 +251,9 @@ export default function Dashboard() {
     return {
       monthYields: monthRounded / m,
       annualYields: totalProjectedAnnualYield,
-      totalInvested
+      totalInvested,
+      avgProfitability,
+      totalDailyYieldRS
     };
   }, [totalProjectedAnnualYield, totalInvested, investments]);
 
@@ -376,7 +384,200 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
 
-        {isMobile ? (
+        {filter === "investments" ? (
+          <div className="flex flex-col gap-4">
+            {/* 1. Rendimento Mensal StatCard */}
+            <StatCard
+              mainStatTitle="Rendimento Mensal"
+              mainStatValue={currentYieldStats.monthYields}
+              topRightContent={
+                <MonthNavigatorCompact
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="yield"
+                />
+              }
+              variant="yield"
+              isMobile={isMobile}
+              childrenAlignment="start"
+              chartContent={
+                <MonthlyYieldsBarChart
+                  revenues={[]}
+                  currentDate={selectedMonth}
+                  isMobile={true}
+                  onMonthClick={handleMonthClick}
+                  projectedAnnualYield={currentYieldStats.annualYields}
+                />
+              }
+              annualTotalLabel="Total Anual"
+              annualTotalValue={currentYieldStats.annualYields}
+              neumorphism={true}
+            >
+              <div className={cn("flex flex-col w-full h-full")}>
+                <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#FB923C",
+                        "--cor-base": "#F97316",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/investimentos")}
+                  >
+                    Investimentos
+                  </Button>
+                </div>
+              </div>
+            </StatCard>
+
+            {/* 2. Gráfico de Receitas por Investimentos */}
+            <InvestmentsYieldChart
+              investments={investments}
+              allSubcategories={allSubcategories}
+              isMobile={isMobile}
+            />
+
+            {/* 3. Card de Projeção */}
+            <ProjectedYieldCard
+              mainStatValue={
+                projectedYear === getYear(selectedMonth)
+                  ? stats.balance + currentYieldStats.monthYields
+                  : projectedYearValues.monthlyProjection
+              }
+              projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+              projectedPatrimonyLabel="Patrimônio Projetado"
+              annualTotalValue={projectedYearValues.annualBalance}
+              annualTotalLabel="Projeção Anual"
+              isMobile={isMobile}
+              topRightContent={
+                <YearNavigatorCompact
+                  year={projectedYear}
+                  onPreviousYear={() => setProjectedYear(p => p - 1)}
+                  onNextYear={() => setProjectedYear(p => p + 1)}
+                  isMobile={isMobile}
+                />
+              }
+              chartContent={
+                <MonthlyProjectedYieldChart
+                  revenues={allRevenues}
+                  expenseInstallments={allExpenseInstallments}
+                  currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                  projectedMonthlyYield={currentYieldStats.monthYields}
+                  isMobile={true}
+                  onMonthClick={(date) => {
+                    setSelectedMonth(date);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
+              }
+            />
+
+            {/* 4. Card de Resumo (Investment Cockpit) */}
+            <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+              {isMobile ? (
+                <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[24px] p-5 shadow-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" />
+                        </div>
+                        <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
+                      </div>
+                      <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalInvested)}</p>
+                    </div>
+
+                    <div className="flex flex-col items-end text-right">
+                      <div className="flex flex-row-reverse items-center gap-2 mb-2">
+                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <DynamicIcon name="Percent" className="h-3.5 w-3.5" />
+                        </div>
+                        <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Média</h4>
+                      </div>
+                      <div className="flex items-baseline gap-0.5">
+                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
+                        <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <DynamicIcon name="Calendar" className="h-3.5 w-3.5" />
+                        </div>
+                        <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Mensal</h4>
+                      </div>
+                      <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
+                    </div>
+
+                    <div className="flex flex-col items-end text-right">
+                      <div className="flex flex-row-reverse items-center gap-2 mb-2">
+                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <DynamicIcon name="Clock" className="h-3.5 w-3.5" />
+                        </div>
+                        <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Diário</h4>
+                      </div>
+                      <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[32px] p-8 shadow-sm">
+                  <div className="grid grid-cols-4 items-center gap-8">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
+                        <DynamicIcon name="DollarSign" className="h-6 w-6" />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Investido</h4>
+                        <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalInvested)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
+                      <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
+                        <DynamicIcon name="Calendar" className="h-5 w-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
+                        <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
+                      <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
+                        <DynamicIcon name="Clock" className="h-5 w-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
+                        <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
+                      <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
+                        <DynamicIcon name="Percent" className="h-6 w-6" />
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
+                        <div className="flex items-baseline gap-1">
+                          <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
+                          <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : isMobile ? (
           <div className="grid grid-cols-1 gap-4">
             {(!filter || filter === "expenses") && (
               <StatCard
@@ -415,7 +616,7 @@ export default function Dashboard() {
                     <Button
                       className={cn(
                         "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
                       )}
                       style={
                         {
@@ -470,7 +671,7 @@ export default function Dashboard() {
                     <Button
                       className={cn(
                         "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold" // Changed w-auto to w-[160px]
+                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
                       )}
                       style={
                         {
@@ -489,21 +690,27 @@ export default function Dashboard() {
             )}
 
             {isMobile && (!filter || filter === "revenues") && (
-              <RevenueByTypeChart
-                revenues={allRevenues.filter(r =>
-                  isWithinInterval(new Date(r.data), {
-                    start: startOfMonth(selectedMonth),
-                    end: endOfMonth(selectedMonth)
-                  })
-                )}
-                revenueTypes={allSubcategories}
-                isMobile={true}
-              />
+              <>
+                <RevenueByTypeChart
+                  revenues={allRevenues.filter(r =>
+                    isWithinInterval(new Date(r.data), {
+                      start: startOfMonth(selectedMonth),
+                      end: endOfMonth(selectedMonth)
+                    })
+                  )}
+                  revenueTypes={allSubcategories}
+                  isMobile={true}
+                />
+                <InvestmentsYieldChart
+                  investments={investments}
+                  allSubcategories={allSubcategories}
+                  isMobile={isMobile}
+                />
+              </>
             )}
 
             {(!filter || filter === "revenues") && (
               <StatCard
-
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
                 topRightContent={
@@ -553,12 +760,10 @@ export default function Dashboard() {
               </StatCard>
             )}
 
-            {(!filter || filter === "revenues") && (
+            {!filter && (
               <StatCard
                 mainStatTitle="Rendimento Mensal"
                 mainStatValue={currentYieldStats.monthYields}
-                secondaryStatTitle="Patrimônio"
-                secondaryStatValue={currentYieldStats.totalInvested}
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -606,15 +811,7 @@ export default function Dashboard() {
               </StatCard>
             )}
 
-            {isMobile && (!filter || filter === "revenues") && (
-              <InvestmentsYieldChart
-                investments={investments}
-                allSubcategories={allSubcategories}
-                isMobile={true}
-              />
-            )}
-
-            {(!filter || filter === "revenues") && (
+            {!filter && (
               <ProjectedYieldCard
                 mainStatValue={
                   projectedYear === getYear(selectedMonth)
@@ -663,252 +860,261 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <StatCard
-                id="stat-expenses"
-                mainStatTitle="Total de Despesas"
-                mainStatValue={stats.totalExpenses}
-                icon="TrendingDown"
-                variant="expense"
-                isMobile={isMobile}
-                secondaryStatTitle="Pago este mês"
-                secondaryStatValue={totalPaidMonthlyExpenses}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="expense"
-                  />
-                }
-                chartContent={
-                  <MonthlyExpenseBarChart
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={totalAnnualExpenses}
-                neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold" // Consolidated px-3 and px-4 to just px-4, ensured w-auto
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FF6D6D",
-                        "--cor-base": "#E85454",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/despesas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Despesa
-                  </Button>
-                </div>
-              </StatCard>
+            <div className={cn("grid gap-4 mb-4", "grid-cols-1 md:grid-cols-2")}>
+              {(!filter || filter === "expenses") && (
+                <StatCard
+                  mainStatTitle="Total de Despesas"
+                  mainStatValue={stats.totalExpenses}
+                  icon="TrendingDown"
+                  variant="expense"
+                  isMobile={isMobile}
+                  secondaryStatTitle="Pago este mês"
+                  secondaryStatValue={totalPaidMonthlyExpenses}
+                  topRightContent={
+                    <MonthNavigatorCompact
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="expense"
+                    />
+                  }
+                  chartContent={
+                    <MonthlyExpenseBarChart
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={selectedMonth}
+                      isMobile={true}
+                      onMonthClick={handleMonthClick}
+                    />
+                  }
+                  annualTotalLabel="Total Anual"
+                  annualTotalValue={totalAnnualExpenses}
+                  neumorphism={true}
+                >
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#FF6D6D",
+                          "--cor-base": "#E85454",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/despesas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Despesa
+                    </Button>
+                  </div>
+                </StatCard>
+              )}
 
-              <StatCard
-                id="stat-revenues"
-                mainStatTitle="Total de Receitas"
-                mainStatValue={stats.totalIncome}
-                icon="TrendingUp"
-                variant="income"
-                isMobile={isMobile}
-                secondaryStatTitle="Receita Atual"
-                secondaryStatValue={totalReceivedMonthlyIncome}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="income"
-                  />
-                }
-                chartContent={
-                  <MonthlyRevenueBarChart
-                    revenues={allRevenues}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={totalAnnualRevenues}
-                neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] px-4 h-9 text-sm rounded-xl font-bold" // Consolidated px-3 and px-4 to just px-4, ensured w-auto
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#38C97C",
-                        "--cor-base": "#26A765",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/receitas")}
-                  >
-                    <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                    Nova Receita
-                  </Button>
-                </div>
-              </StatCard>
+              {(!filter || filter === "revenues") && (
+                <StatCard
+                  id="stat-revenues"
+                  mainStatTitle="Total de Receitas"
+                  mainStatValue={stats.totalIncome}
+                  icon="TrendingUp"
+                  variant="income"
+                  isMobile={isMobile}
+                  secondaryStatTitle="Receita Atual"
+                  secondaryStatValue={totalReceivedMonthlyIncome}
+                  topRightContent={
+                    <MonthNavigatorCompact
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="income"
+                    />
+                  }
+                  chartContent={
+                    <MonthlyRevenueBarChart
+                      revenues={allRevenues}
+                      currentDate={selectedMonth}
+                      isMobile={true}
+                      onMonthClick={handleMonthClick}
+                    />
+                  }
+                  annualTotalLabel="Total Anual"
+                  annualTotalValue={totalAnnualRevenues}
+                  neumorphism={true}
+                >
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] px-4 h-9 text-sm rounded-xl font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#38C97C",
+                          "--cor-base": "#26A765",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/receitas")}
+                    >
+                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
+                      Nova Receita
+                    </Button>
+                  </div>
+                </StatCard>
+              )}
 
-              <StatCard
-                mainStatTitle="Saldo Mensal"
-                mainStatValue={stats.balance}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="balance"
-                  />
-                }
-                variant="balance"
-                isMobile={isMobile}
-                chartContent={
-                  <MonthlyBalanceBarChart
-                    revenues={allRevenues}
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                  />
-                }
-                annualTotalLabel="Saldo Anual"
-                annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
-                neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#3B82F6",
-                        "--cor-base": "#2563EB",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/lancamentos")}
-                  >
-                    Lançamentos
-                  </Button>
-                </div>
-              </StatCard>
+              {(!filter || filter === "revenues") && (
+                <StatCard
+                  mainStatTitle="Saldo Mensal"
+                  mainStatValue={stats.balance}
+                  topRightContent={
+                    <MonthNavigatorCompact
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="balance"
+                    />
+                  }
+                  variant="balance"
+                  isMobile={isMobile}
+                  chartContent={
+                    <MonthlyBalanceBarChart
+                      revenues={allRevenues}
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={selectedMonth}
+                      isMobile={true}
+                      onMonthClick={handleMonthClick}
+                    />
+                  }
+                  annualTotalLabel="Saldo Anual"
+                  annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                  neumorphism={true}
+                >
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#3B82F6",
+                          "--cor-base": "#2563EB",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/lancamentos")}
+                    >
+                      Lançamentos
+                    </Button>
+                  </div>
+                </StatCard>
+              )}
 
-              <TotalExpensesCard
-                expenseInstallments={allExpenseInstallments}
-                isMobile={isMobile}
-                annualTotalValue={totalAnnualExpenses}
-                chartContent={
-                  <MonthlyExpenseBarChart
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                  />
-                }
-              />
+              {(!filter || filter === "expenses") && (
+                <TotalExpensesCard
+                  expenseInstallments={allExpenseInstallments}
+                  isMobile={isMobile}
+                  annualTotalValue={totalAnnualExpenses}
+                  chartContent={
+                    <MonthlyExpenseBarChart
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={selectedMonth}
+                      isMobile={true}
+                      onMonthClick={handleMonthClick}
+                    />
+                  }
+                />
+              )}
 
-              <StatCard
-                mainStatTitle="Rendimento Mensal"
-                mainStatValue={currentYieldStats.monthYields}
-                secondaryStatTitle="Patrimônio"
-                secondaryStatValue={currentYieldStats.totalInvested}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="yield"
-                  />
-                }
-                variant="yield"
-                isMobile={isMobile}
-                chartContent={
-                  <MonthlyYieldsBarChart
-                    revenues={[]}
-                    currentDate={selectedMonth}
-                    isMobile={true}
-                    onMonthClick={handleMonthClick}
-                    projectedAnnualYield={currentYieldStats.annualYields}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={currentYieldStats.annualYields}
-                neumorphism={true}
-              >
-                <div className="flex justify-end mt-4">
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FB923C",
-                        "--cor-base": "#F97316",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/investimentos")}
-                  >
-                    Investimentos
-                  </Button>
-                </div>
-              </StatCard>
+              {!filter && (
+                <StatCard
+                  mainStatTitle="Rendimento Mensal"
+                  mainStatValue={currentYieldStats.monthYields}
+                  topRightContent={
+                    <MonthNavigatorCompact
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
+                      isMobile={isMobile}
+                      variant="yield"
+                    />
+                  }
+                  variant="yield"
+                  isMobile={isMobile}
+                  chartContent={
+                    <MonthlyYieldsBarChart
+                      revenues={[]}
+                      currentDate={selectedMonth}
+                      isMobile={true}
+                      onMonthClick={handleMonthClick}
+                      projectedAnnualYield={currentYieldStats.annualYields}
+                    />
+                  }
+                  annualTotalLabel="Total Anual"
+                  annualTotalValue={currentYieldStats.annualYields}
+                  neumorphism={true}
+                >
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#FB923C",
+                          "--cor-base": "#F97316",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/investimentos")}
+                    >
+                      Investimentos
+                    </Button>
+                  </div>
+                </StatCard>
+              )}
 
-              <ProjectedYieldCard
-                mainStatValue={
-                  projectedYear === getYear(selectedMonth)
-                    ? stats.balance + currentYieldStats.monthYields
-                    : projectedYearValues.monthlyProjection
-                }
-                projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
-                projectedPatrimonyLabel="Patrimônio Projetado"
-                annualTotalValue={projectedYearValues.annualBalance}
-                annualTotalLabel="Projeção Anual"
-                isMobile={isMobile}
-                topRightContent={
-                  <YearNavigatorCompact
-                    year={projectedYear}
-                    onPreviousYear={() => setProjectedYear(p => p - 1)}
-                    onNextYear={() => setProjectedYear(p => p + 1)}
-                    isMobile={isMobile}
-                  />
-                }
-                chartContent={
-                  <MonthlyProjectedYieldChart
-                    revenues={allRevenues}
-                    expenseInstallments={allExpenseInstallments}
-                    currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
-                    projectedMonthlyYield={currentYieldStats.monthYields}
-                    isMobile={true}
-                    onMonthClick={(date) => {
-                      setSelectedMonth(date);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                  />
-                }
-              />
+              {!filter && (
+                <ProjectedYieldCard
+                  mainStatValue={
+                    projectedYear === getYear(selectedMonth)
+                      ? stats.balance + currentYieldStats.monthYields
+                      : projectedYearValues.monthlyProjection
+                  }
+                  projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+                  projectedPatrimonyLabel="Patrimônio Projetado"
+                  annualTotalValue={projectedYearValues.annualBalance}
+                  annualTotalLabel="Projeção Anual"
+                  isMobile={isMobile}
+                  topRightContent={
+                    <YearNavigatorCompact
+                      year={projectedYear}
+                      onPreviousYear={() => setProjectedYear(p => p - 1)}
+                      onNextYear={() => setProjectedYear(p => p + 1)}
+                      isMobile={isMobile}
+                    />
+                  }
+                  chartContent={
+                    <MonthlyProjectedYieldChart
+                      revenues={allRevenues}
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                      projectedMonthlyYield={currentYieldStats.monthYields}
+                      isMobile={true}
+                      onMonthClick={(date) => {
+                        setSelectedMonth(date);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    />
+                  }
+                />
+              )}
             </div>
 
             {(!filter || filter === "revenues") && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className={cn("grid gap-4 mb-4", "grid-cols-1 md:grid-cols-2")}>
                 <RevenueByTypeChart
                   revenues={allRevenues.filter(r =>
                     isWithinInterval(new Date(r.data), {
@@ -917,31 +1123,35 @@ export default function Dashboard() {
                     })
                   )}
                   revenueTypes={allSubcategories}
-                  isMobile={false}
+                  isMobile={isMobile}
                 />
                 <InvestmentsYieldChart
                   investments={investments}
                   allSubcategories={allSubcategories}
-                  isMobile={false}
+                  isMobile={isMobile}
                 />
               </div>
             )}
 
-            <div className="grid grid-cols-1">
-              <CombinedMonthlyExpensesDashboard
-                allRevenues={allRevenues}
-                allExpenseInstallments={allExpenseInstallments}
-                allCategories={allSubcategories}
-                isLoading={isLoading}
-                isMobile={isMobile}
-              />
-            </div>
+            {!filter && (
+              <div className="grid grid-cols-1">
+                <CombinedMonthlyExpensesDashboard
+                  allRevenues={allRevenues}
+                  allExpenseInstallments={allExpenseInstallments}
+                  allCategories={allSubcategories}
+                  isLoading={isLoading}
+                  isMobile={isMobile}
+                />
+              </div>
+            )}
 
-            <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-              <p className={cn("text-muted-foreground", "font-roboto")}>
-                Mais conteúdo do Dashboard virá aqui.
-              </p>
-            </Card>
+            {!filter && (
+              <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
+                <p className={cn("text-muted-foreground", "font-roboto")}>
+                  Mais conteúdo do Dashboard virá aqui.
+                </p>
+              </Card>
+            )}
           </>
         )}
       </main>

@@ -71,7 +71,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
     if (chartData.length === 0) {
         return (
             <div className={cn(
-                "bg-gradient-to-br from-orange-50/90 to-orange-100/60 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
+                "bg-gradient-to-br from-white to-[#FFF9F5]/80 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
                 "backdrop-blur-[8px] flex flex-col items-center justify-center min-h-[200px]",
                 isMobile && "px-3 py-5"
             )}>
@@ -83,7 +83,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
 
     return (
         <div className={cn(
-            "bg-gradient-to-br from-orange-50/90 to-orange-100/60 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
+            "bg-gradient-to-br from-white to-[#FFF9F5]/80 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
             "backdrop-blur-[8px] flex flex-col",
             isMobile ? "px-3 py-5" : "h-full justify-between"
         )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>

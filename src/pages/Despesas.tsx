@@ -16,10 +16,10 @@ import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
-// Removed: import { QrCodeScannerModal } from "@/components/QrCodeScannerModal"; // Importar o novo modal
-// Removed: import { Button } from "@/components/ui/button"; // Adicionado: Importação do componente Button
 
 interface Cartao {
   id: string;
@@ -37,6 +37,7 @@ export default function Despesas() {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
+  const navigate = useNavigate();
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
   const [submitPortalRef, setSubmitPortalRef] = useState<HTMLDivElement | null>(null);
@@ -161,7 +162,7 @@ export default function Despesas() {
       <div className="relative h-[200px] w-full bg-gradient-to-b from-[#E54D4D] via-[#FF6B6B] to-[#F9FAFB] overflow-hidden">
         <div className={cn(
           "container mx-auto px-6 relative z-10 max-w-[1200px]",
-          isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#E54D4D]/0" : "pt-3 md:pt-7"
+          isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#E54D4D]/0 justify-between" : "pt-3 md:pt-7 flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
@@ -181,6 +182,18 @@ export default function Despesas() {
               </div>
             </div>
           </div>
+
+          <Button
+            onClick={() => navigate(-1)}
+            className={cn(
+              "btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90",
+              isMobile ? "h-8 px-2" : ""
+            )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+          >
+            <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
+            Voltar
+          </Button>
         </div>
       </div>
 
