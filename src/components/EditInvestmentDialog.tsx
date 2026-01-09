@@ -26,7 +26,7 @@ interface EditInvestmentDialogProps {
   onUpdateSuccess: () => void;
   onCancelEdit: () => void;
   user: User | null;
-  investmentTypes: { value: string; label: string }[];
+  investmentTypes: { value: string; label: string; icon?: string }[];
   isMobile: boolean;
   allSubcategories: AppCategory[]; // Nova prop
   incomeInvestmentSubcategories: AppCategory[]; // Nova prop
@@ -181,7 +181,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-2", isMobile && "max-w-[280px] mx-auto")}>
+    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-2", isMobile && "w-full mx-auto")}>
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
@@ -216,23 +216,41 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn("space-y-0.5")}>
-        <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-        <Select value={type} onValueChange={setType} disabled={loading}>
-          <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {investmentTypes.map(t => (
-              <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                {t.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className={cn(isMobile ? "grid grid-cols-[1.6fr_1fr] gap-2" : "space-y-0.5")}>
+        <div className="space-y-0.5">
+          <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
+          <Select value={type} onValueChange={setType} disabled={loading}>
+            <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {investmentTypes.map(t => (
+                <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
+                  <div className="flex items-center gap-2">
+                    {t.icon && <span>{t.icon}</span>}
+                    <span>{t.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {isMobile && (
+          <div className="space-y-0.5 animate-fade-in">
+            <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
+            <div className={cn(
+              "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
+              isMobile && "h-9 text-xs",
+              "opacity-80"
+            )}>
+              {formatCurrency(dailyProfitabilityRS)}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
+      <div className={cn(isMobile ? "grid grid-cols-2 gap-2" : "space-y-4")}>
         <div className="space-y-0.5">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
@@ -246,7 +264,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           />
         </div>
 
-        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-2")}>
+        <div className={cn(!isMobile ? "grid grid-cols-2 gap-4" : "space-y-4")}>
           <div className="space-y-0.5">
             <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
             <NumericInput
@@ -264,9 +282,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
           {!isMobile && (
             <div className="space-y-0.5 animate-fade-in">
-              <Label className="text-xs">Rentabilidade Diária (R$)</Label>
+              <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
               <div className={cn(
                 "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
+                isMobile && "h-9 text-xs",
                 "opacity-80"
               )}>
                 {formatCurrency(dailyProfitabilityRS)}

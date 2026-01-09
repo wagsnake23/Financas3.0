@@ -193,7 +193,25 @@ export default function Dashboard() {
 
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
-    return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
+    const rawTotal = investments.reduce((sum, inv) => {
+      const annualRateDecimal = inv.rentabilidade / 100;
+      const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
+      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+      const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
+      return sum + (inv.valor * annualRateDerived);
+    }, 0);
+
+    // Arredondamento Bancário (Round Half Even) para 2 casas
+    const m = 100;
+    const n = +(rawTotal * m).toFixed(8);
+    const i = Math.floor(n);
+    const f = n - i;
+    const e = 1e-8;
+    const rounded = (f > 0.5 - e && f < 0.5 + e)
+      ? (i % 2 === 0 ? i : i + 1)
+      : Math.round(n);
+
+    return rounded / m;
   }, [investments]);
 
   const totalInvested = useMemo(() => {
@@ -201,13 +219,34 @@ export default function Dashboard() {
   }, [investments]);
 
   const currentYieldStats = useMemo(() => {
-    const monthYields = totalProjectedAnnualYield / 12;
+    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0 };
+
+    // taxa_anual_ponderada = Σ (valor × (rentabilidade / 100)) ÷ Σ valor
+    const weightedSum = investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
+    const taxaAnualPonderada = weightedSum / totalInvested;
+
+    // Rendimento Mensal: juros compostos com base em 21 dias úteis e truncamento da taxa diária
+    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
+    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+    const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
+    const rawMonthYield = totalInvested * taxaMensal;
+
+    // Arredondamento Bancário para o rendimento mensal
+    const m = 100;
+    const nm = +(rawMonthYield * m).toFixed(8);
+    const im = Math.floor(nm);
+    const fm = nm - im;
+    const e = 1e-8;
+    const monthRounded = (fm > 0.5 - e && fm < 0.5 + e)
+      ? (im % 2 === 0 ? im : im + 1)
+      : Math.round(nm);
+
     return {
-      monthYields,
+      monthYields: monthRounded / m,
       annualYields: totalProjectedAnnualYield,
       totalInvested
     };
-  }, [totalProjectedAnnualYield, totalInvested]);
+  }, [totalProjectedAnnualYield, totalInvested, investments]);
 
   const [projectedYear, setProjectedYear] = useState(getYear(new Date()));
 
