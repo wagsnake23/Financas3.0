@@ -407,7 +407,7 @@ export default function Receitas() {
               )}
               style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
             >
-              <Plus className="h-[18px] w-[18px] text-white" />
+              <Plus className="h-[18px] w-[18px] !text-white" />
             </Button>
           </div>
         </div>
@@ -524,7 +524,7 @@ export default function Receitas() {
                 "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
                 isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
               )}
-              style={{ "--cor-topo": "#22C55E", "--cor-base": "#16A34A" } as any}
+              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
               disabled={loading}
             >
               {loading ? "Salvando..." : "Salvar Receita"}
