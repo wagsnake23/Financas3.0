@@ -296,10 +296,20 @@ export default function Investments() { // Alterado para export default function
     const totalDailyYieldRS = investments.reduce((sum, inv) => {
       const annualRate = inv.rentabilidade / 100;
       const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-      return sum + (inv.valor * dailyRate);
+      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+      return sum + (inv.valor * dailyRateTruncated);
     }, 0);
 
-    return { totalInvested, avgProfitability, totalDailyYieldRS };
+    // Calculo da rentabilidade mensal total (R$) baseada em 21 dias úteis
+    const totalMonthlyYieldRS = investments.reduce((sum, inv) => {
+      const annualRate = inv.rentabilidade / 100;
+      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
+      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+      const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
+      return sum + (inv.valor * monthlyRate);
+    }, 0);
+
+    return { totalInvested, avgProfitability, totalDailyYieldRS, totalMonthlyYieldRS };
   }, [investments]);
 
   if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
@@ -556,52 +566,112 @@ export default function Investments() { // Alterado para export default function
                 </div>
               </Card>
               {isMobile && (
-                <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
-                  <StatCard
-                    mainStatTitle="Total Investido"
-                    mainStatValue={stats.totalInvested}
-                    icon="DollarSign"
-                    variant="income" // Usar variant income para cor verde
-                    isMobile={isMobile}
-                  />
-                  <div className="mt-4" /> {/* Spacing between cards on mobile */}
-                  <StatCard
-                    mainStatTitle="Rentabilidade Média"
-                    mainStatValue={stats.avgProfitability}
-                    secondaryStatTitle="Rentabilidade Diária"
-                    secondaryStatValue={stats.totalDailyYieldRS}
-                    icon="Percent"
-                    variant="income"
-                    isMobile={isMobile}
-                    isPercentage={true}
-                  />
+                <div className="mt-4">
+                  <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[24px] p-5 shadow-sm">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+                      {/* Total Investido */}
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                            <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" />
+                          </div>
+                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
+                        </div>
+                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
+                      </div>
+
+                      {/* Rentabilidade Média */}
+                      <div className="flex flex-col items-end text-right">
+                        <div className="flex flex-row-reverse items-center gap-2 mb-2">
+                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                            <DynamicIcon name="Percent" className="h-3.5 w-3.5" />
+                          </div>
+                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Média</h4>
+                        </div>
+                        <div className="flex items-baseline gap-0.5">
+                          <p className="text-base font-black text-gray-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
+                          <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
+                        </div>
+                      </div>
+
+                      {/* Rendimento Mensal */}
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                            <DynamicIcon name="Calendar" className="h-3.5 w-3.5" />
+                          </div>
+                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Mensal</h4>
+                        </div>
+                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                      </div>
+
+                      {/* Rendimento Diário */}
+                      <div className="flex flex-col items-end text-right">
+                        <div className="flex flex-row-reverse items-center gap-2 mb-2">
+                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                            <DynamicIcon name="Clock" className="h-3.5 w-3.5" />
+                          </div>
+                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Diário</h4>
+                        </div>
+                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <StatCard
-                mainStatTitle="Total Investido"
-                mainStatValue={stats.totalInvested}
-                icon="DollarSign"
-                variant="income"
-                isMobile={isMobile}
-                neumorphism={true}
-              />
+            <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[32px] p-8 shadow-sm mb-8">
+              <div className="grid grid-cols-4 items-center gap-8">
+                {/* Total Investido */}
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
+                    <DynamicIcon name="DollarSign" className="h-6 w-6" />
+                  </div>
+                  <div className="flex flex-col">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Investido</h4>
+                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
+                  </div>
+                </div>
 
-              <StatCard
-                mainStatTitle="Rentabilidade Média"
-                mainStatValue={stats.avgProfitability}
-                secondaryStatTitle="Rentabilidade Diária"
-                secondaryStatValue={stats.totalDailyYieldRS}
-                icon="Percent"
-                variant="income"
-                isMobile={isMobile}
-                neumorphism={true}
-                isPercentage={true}
-              />
+                {/* Rendimento Mensal */}
+                <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
+                  <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
+                    <DynamicIcon name="Calendar" className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
+                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                  </div>
+                </div>
+
+                {/* Rendimento Diário */}
+                <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
+                  <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
+                    <DynamicIcon name="Clock" className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
+                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                  </div>
+                </div>
+
+                {/* Rentabilidade Média */}
+                <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
+                  <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
+                    <DynamicIcon name="Percent" className="h-6 w-6" />
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
+                    <div className="flex items-baseline gap-1">
+                      <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
+                      <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
