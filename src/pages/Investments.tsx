@@ -284,9 +284,13 @@ export default function Investments() { // Alterado para export default function
 
   const stats = useMemo(() => {
     const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
-    const avgProfitability = investments.length > 0
-      ? investments.reduce((sum, inv) => sum + inv.rentabilidade, 0) / investments.length
-      : 0;
+
+    const weightedProfitability =
+      totalInvested > 0
+        ? investments.reduce((sum, inv) => sum + inv.valor * (inv.rentabilidade / 100), 0) / totalInvested
+        : 0;
+
+    const avgProfitability = weightedProfitability * 100;
 
     // Calculo da rentabilidade diária total (R$) baseada em 252 dias úteis
     const totalDailyYieldRS = investments.reduce((sum, inv) => {
