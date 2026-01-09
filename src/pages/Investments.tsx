@@ -485,78 +485,95 @@ export default function Investments() { // Alterado para export default function
             <div>
               <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
                 <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
-                <div className="space-y-3">
+                <div className="space-y-5">
                   {investments.length === 0 ? (
-                    <p className="text-muted-foreground text-center py-8">
+                    <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
                     </p>
                   ) : (
                     investments.map((investment) => {
                       const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                      const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
-                      const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
+                      const investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                      const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
+
+                      // Daily yield calculation based on 252 business days
+                      const annualRate = investment.rentabilidade / 100;
+                      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
+                      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+                      const dailyYield = investment.valor * dailyRateTruncated;
+
+                      const [year, month, day] = investment.data.split('-').map(Number);
+                      const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
 
                       return (
                         <div
                           key={investment.id}
-                          className={cn("p-4 border border-border rounded-lg hover:border-primary/50 transition-all", isMobile && "p-3")}
+                          className={cn(
+                            "relative group overflow-hidden transition-all duration-300",
+                            "bg-white/65 backdrop-blur-xl border border-white/40 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[16px] p-4",
+                            "hover:shadow-lg active:scale-[0.98]"
+                          )}
                         >
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2"> {/* Added flex container for icon and name */}
-                              <DynamicIcon name={investmentIcon} className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} /> {/* Display icon */}
-                              <div>
-                                <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
-                                <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
+                          {/* 1. Top: Icon, Name, Type and Actions */}
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-start gap-3">
+                              <DynamicIcon name={investmentIcon} className="h-6 w-6 text-primary/80" />
+                              <div className="flex flex-col">
+                                <h3 className="font-bold text-gray-800 leading-tight text-base">
+                                  {investmentNameDisplay}
+                                </h3>
+                                <p className="text-xs text-gray-500 font-medium opacity-80">{typeLabel}</p>
                               </div>
                             </div>
-                            <div className="flex gap-1"> {/* Container para os botões de ação */}
+
+                            <div className="flex gap-2">
                               <Button
                                 variant="ghost"
-                                size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
+                                size="icon"
                                 onClick={() => handleEditClick(investment)}
-                                className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                                className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-primary transition-all text-gray-500"
                               >
-                                <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                                <DynamicIcon name="Pencil" className="h-3.5 w-3.5" />
                               </Button>
                               <Button
                                 variant="ghost"
-                                size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
-                                onClick={() => handleDelete(investment.id)} // Agora chama handleDelete para abrir o diálogo
-                                className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                                size="icon"
+                                onClick={() => handleDelete(investment.id)}
+                                className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-destructive transition-all text-gray-500"
                               >
-                                <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                                <DynamicIcon name="Trash2" className="h-3.5 w-3.5" />
                               </Button>
                             </div>
                           </div>
 
-                          <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
-                            <div>
-                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="💰" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                Valor
-                              </p>
-                              <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
+                          {/* 2. Main Value and Yield */}
+                          <div className="flex flex-col justify-between gap-4">
+                            <div className="space-y-1">
+                              <div className="flex flex-col">
+                                <span className="font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
+                                  {formatCurrency(investment.valor)}
+                                </span>
+                              </div>
+
+                              {/* Rendimento Diário */}
+                              <div className="flex items-center gap-1.5 text-[12px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
+                                <span className="text-sm">🔥</span>
+                                <span>+ {formatCurrency(dailyYield)} / dia</span>
+                              </div>
                             </div>
-                            <div>
-                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="📈" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                Porcentagem
-                              </p>
-                              <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
-                            </div>
-                            <div>
-                              <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                <DynamicIcon name="📅" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                Data
-                              </p>
-                              <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
-                                {(() => {
-                                  const [year, month, day] = investment.data.split('-').map(Number);
-                                  const localDate = new Date(year, month - 1, day);
-                                  return localDate.toLocaleDateString('pt-BR');
-                                })()}
-                              </p>
+
+                            <div className="flex items-end justify-between">
+                              {/* Profitability Badge */}
+                              <div className="inline-flex items-center gap-1.5 bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white px-3 py-1 rounded-full text-[11px] font-black shadow-md shadow-blue-200">
+                                <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                <span>{investment.rentabilidade}% a.a.</span>
+                              </div>
+
+                              {/* Data Bottom Right */}
+                              <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                                {formattedDate}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -567,29 +584,30 @@ export default function Investments() { // Alterado para export default function
               </Card>
               {isMobile && (
                 <div className="mt-4">
-                  <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[24px] p-5 shadow-sm">
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+                  {/* Mobile Stats Card - Glassmorphism */}
+                  <div className="bg-white/65 backdrop-blur-xl border border-white/40 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[24px] p-6">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                       {/* Total Investido */}
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <div className="p-2 bg-success/80 shadow-md rounded-xl text-white">
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Total</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
+                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
                       </div>
 
                       {/* Rentabilidade Média */}
                       <div className="flex flex-col items-end text-right">
                         <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <div className="p-2 bg-success/80 shadow-md rounded-xl text-white">
                             <DynamicIcon name="Percent" className="h-3.5 w-3.5" />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Média</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Média</h4>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                          <p className="text-base font-black text-gray-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
+                          <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
                           <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
                         </div>
                       </div>
@@ -597,30 +615,30 @@ export default function Investments() { // Alterado para export default function
                       {/* Rendimento Mensal */}
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <div className="p-2 bg-success/80 shadow-md rounded-xl text-white">
                             <DynamicIcon name="Calendar" className="h-3.5 w-3.5" />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Mensal</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Mensal</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                       </div>
 
                       {/* Rendimento Diário */}
                       <div className="flex flex-col items-end text-right">
                         <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                          <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
+                          <div className="p-2 bg-success/80 shadow-md rounded-xl text-white">
                             <DynamicIcon name="Clock" className="h-3.5 w-3.5" />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Diário</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Diário</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-          </div>
+          </div >
         ) : (
           <>
             <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[32px] p-8 shadow-sm mb-8">
@@ -828,78 +846,99 @@ export default function Investments() { // Alterado para export default function
               <div>
                 <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
                   <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
-                  <div className="space-y-3">
+                  <div className="space-y-5">
                     {investments.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">
+                      <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
                       </p>
                     ) : (
                       investments.map((investment) => {
                         const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                         const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                        const investmentNameDisplay = investmentCategory?.nome || investment.nome; // Fallback to ID if not found
-                        const investmentIcon = investmentCategory?.icone || "MoreHorizontal"; // Fallback icon
+                        const investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                        const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
+
+                        // Daily yield calculation based on 252 business days
+                        const annualRate = investment.rentabilidade / 100;
+                        const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
+                        const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+                        const dailyYield = investment.valor * dailyRateTruncated;
+
+                        const [year, month, day] = investment.data.split('-').map(Number);
+                        const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
 
                         return (
                           <div
                             key={investment.id}
-                            className={cn("p-4 border border-border rounded-xl hover:border-primary/50 transition-all shadow-sm", isMobile && "p-3")}
+                            className={cn(
+                              "relative group overflow-hidden transition-all duration-300",
+                              "bg-white/65 backdrop-blur-xl border border-white/40 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[16px] p-5",
+                              "hover:shadow-lg active:scale-[0.98]",
+                              isMobile && "p-4"
+                            )}
                           >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex items-center gap-2"> {/* Added flex container for icon and name */}
-                                <DynamicIcon name={investmentIcon} className={cn("h-5 w-5 text-primary", isMobile && "h-4 w-4")} /> {/* Display icon */}
-                                <div>
-                                  <h3 className={cn("font-semibold text-lg", isMobile && "text-base")}>{investmentNameDisplay}</h3> {/* Use display name */}
-                                  <p className={cn("text-sm text-muted-foreground", isMobile && "text-xs")}>{typeLabel}</p>
+                            {/* 1. Top: Icon, Name, Type and Actions */}
+                            <div className="flex items-start justify-between mb-5">
+                              <div className="flex items-start gap-3">
+                                <DynamicIcon name={investmentIcon} className="h-6 w-6 text-primary/80" />
+                                <div className="flex flex-col">
+                                  <h3 className={cn("font-bold text-gray-800 leading-tight", isMobile ? "text-base" : "text-[1.1rem]")}>
+                                    {investmentNameDisplay}
+                                  </h3>
+                                  <p className="text-xs text-gray-500 font-medium opacity-80">{typeLabel}</p>
                                 </div>
                               </div>
-                              <div className="flex gap-1"> {/* Container para os botões de ação */}
+
+                              <div className="flex gap-2">
                                 <Button
                                   variant="ghost"
-                                  size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
+                                  size="icon"
                                   onClick={() => handleEditClick(investment)}
-                                  className={cn("text-primary hover:text-primary hover:bg-primary/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                                  className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-primary transition-all text-gray-500"
                                 >
-                                  <DynamicIcon name="Pencil" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                                  <DynamicIcon name="Pencil" className="h-3.5 w-3.5" />
                                 </Button>
                                 <Button
                                   variant="ghost"
-                                  size={isMobile ? "icon" : "sm"} // Ajustado para 'icon' em mobile
-                                  onClick={() => handleDelete(investment.id)} // Agora chama handleDelete para abrir o diálogo
-                                  className={cn("text-destructive hover:text-destructive hover:bg-destructive/10", isMobile && "h-8 w-8")} // Aumentado o tamanho do botão
+                                  size="icon"
+                                  onClick={() => handleDelete(investment.id)}
+                                  className="h-8 w-8 rounded-full bg-white/70 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white hover:text-destructive transition-all text-gray-500"
                                 >
-                                  <DynamicIcon name="Trash2" className={cn("h-4 w-4", isMobile && "h-4 w-4")} /> {/* Mantido o tamanho do ícone */}
+                                  <DynamicIcon name="Trash2" className="h-3.5 w-3.5" />
                                 </Button>
                               </div>
                             </div>
 
-                            <div className={cn("grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-border", isMobile && "mt-2 pt-2")}>
-                              <div>
-                                <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="💰" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                  Valor
-                                </p>
-                                <p className={cn("font-semibold", isMobile && "text-xs")}>{formatCurrency(investment.valor)}</p>
+                            {/* 2. Main Value and Yield */}
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                              <div className="space-y-1">
+                                <div className="flex flex-col">
+                                  <span className={cn(
+                                    "font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
+                                    isMobile ? "text-2xl" : "text-3xl"
+                                  )}>
+                                    {formatCurrency(investment.valor)}
+                                  </span>
+                                </div>
+
+                                {/* Rendimento Diário */}
+                                <div className="flex items-center gap-1.5 text-[13px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
+                                  <span className="text-sm">🔥</span>
+                                  <span>+ {formatCurrency(dailyYield)} / dia</span>
+                                </div>
                               </div>
-                              <div>
-                                <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="📈" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                  Porcentagem
-                                </p>
-                                <p className={cn("font-semibold text-success", isMobile && "text-xs")}>{investment.rentabilidade}% a.a.</p>
-                              </div>
-                              <div>
-                                <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isMobile && "text-[0.6rem]")}>
-                                  <DynamicIcon name="📅" className={cn("h-3 w-3", isMobile && "h-2.5 w-2.5")} />
-                                  Data
-                                </p>
-                                <p className={cn("font-semibold text-sm", isMobile && "text-xs")}>
-                                  {(() => {
-                                    const [year, month, day] = investment.data.split('-').map(Number);
-                                    const localDate = new Date(year, month - 1, day);
-                                    return localDate.toLocaleDateString('pt-BR');
-                                  })()}
-                                </p>
+
+                              <div className="flex flex-col items-end gap-2">
+                                {/* Profitability Badge */}
+                                <div className="inline-flex items-center gap-1.5 bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white px-3.5 py-1.5 rounded-full text-[12px] font-black shadow-md shadow-blue-200">
+                                  <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                  <span>{investment.rentabilidade}% a.a.</span>
+                                </div>
+
+                                {/* Data Bottom Right */}
+                                <div className="text-[10px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                                  {formattedDate}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -919,11 +958,12 @@ export default function Investments() { // Alterado para export default function
                     />
                   </div>
                 )}
-              </div>
-            </div>
+              </div >
+            </div >
           </>
-        )}
-      </main>
+        )
+        }
+      </main >
 
       <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
 
@@ -990,6 +1030,6 @@ export default function Investments() { // Alterado para export default function
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </div >
   );
 }
