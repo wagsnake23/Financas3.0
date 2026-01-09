@@ -40,7 +40,7 @@ export const PremiumToast: React.FC<PremiumToastProps> = ({
             className={cn(
                 "flex items-start gap-4 p-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] w-full max-w-[380px] border transition-all duration-500 ease-out transform",
                 isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0",
-                isSuccess ? "bg-[#CDEFD9] border-[#9FE0B6]" : "bg-[#F6CFCF] border-[#F1A6A6]"
+                isSuccess ? "bg-[#F0FDF4] border-[#BBF7D0]" : "bg-[#FEF2F2] border-[#FECACA]"
             )}
             role="alert"
         >
@@ -48,7 +48,7 @@ export const PremiumToast: React.FC<PremiumToastProps> = ({
             <div
                 className={cn(
                     "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
-                    isSuccess ? "bg-[#9FE0B6] text-[#1F3D2B]" : "bg-[#F1A6A6] text-[#4A1C1C]"
+                    isSuccess ? "bg-[#DCFCE7] text-[#166534]" : "bg-[#FEE2E2] text-[#991B1B]"
                 )}
             >
                 {isSuccess ? <CheckCircle2 size={18} strokeWidth={2.5} /> : <AlertCircle size={18} strokeWidth={2.5} />}
@@ -59,7 +59,7 @@ export const PremiumToast: React.FC<PremiumToastProps> = ({
                 <h3
                     className={cn(
                         "text-sm font-bold leading-tight mb-1",
-                        isSuccess ? "text-[#1F3D2B]" : "text-[#4A1C1C]"
+                        isSuccess ? "text-[#166534]" : "text-[#991B1B]"
                     )}
                 >
                     {title}
@@ -68,7 +68,7 @@ export const PremiumToast: React.FC<PremiumToastProps> = ({
                     <p
                         className={cn(
                             "text-xs font-medium leading-relaxed",
-                            isSuccess ? "text-[#3F6F57]" : "text-[#7A3A3A]"
+                            isSuccess ? "text-[#15803D]" : "text-[#B91C1C]"
                         )}
                     >
                         {description}
@@ -81,7 +81,7 @@ export const PremiumToast: React.FC<PremiumToastProps> = ({
                 onClick={handleClose}
                 className={cn(
                     "flex-shrink-0 p-1 rounded-full transition-colors",
-                    isSuccess ? "text-[#3F6F57] hover:bg-[#9FE0B6]/50" : "text-[#7A3A3A] hover:bg-[#F1A6A6]/50"
+                    isSuccess ? "text-[#15803D] hover:bg-[#DCFCE7]/50" : "text-[#B91C1C] hover:bg-[#FEE2E2]/50"
                 )}
                 aria-label="Fechar notificação"
             >
