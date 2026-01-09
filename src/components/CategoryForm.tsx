@@ -227,7 +227,11 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className={cn("rounded-xl border-blue-200 bg-white shadow-sm", isMobile && "h-11 text-sm", hideCardWrapper && "bg-white")}
+            className={cn(
+              "rounded-xl border-blue-200 bg-white shadow-sm placeholder:text-gray-400",
+              isMobile && "h-11 text-sm",
+              hideCardWrapper && "bg-white"
+            )}
             disabled={editingCategory?.user_id === null}
           />
         </div>
