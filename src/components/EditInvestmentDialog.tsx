@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -18,7 +18,7 @@ import { Investment, AppCategory } from "@/types/finance"; // Importar AppCatego
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
-import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
 // Removido: import { Card } from "@/components/ui/card"; // Importar Card
 
 interface EditInvestmentDialogProps {
@@ -55,6 +55,14 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const [loading, setLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+
+  // Cálculo reativo da Rentabilidade Diária (R$) - Apenas informativo
+  const dailyProfitabilityRS = useMemo(() => {
+    if (amount === undefined || profitability === undefined || amount <= 0) return 0;
+    const annualRate = profitability / 100;
+    const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
+    return amount * dailyRate;
+  }, [amount, profitability]);
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
@@ -216,19 +224,33 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           />
         </div>
 
-        <div className="space-y-0.5">
-          <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
-          <NumericInput
-            id="edit-profitability"
-            value={profitability}
-            onValueChange={(values) => {
-              setProfitability(values.floatValue);
-              setValidationErrors(prev => ({ ...prev, profitability: false }));
-            }}
-            required
-            disabled={loading}
-            className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
-          />
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-2")}>
+          <div className="space-y-0.5">
+            <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+            <NumericInput
+              id="edit-profitability"
+              value={profitability}
+              onValueChange={(values) => {
+                setProfitability(values.floatValue);
+                setValidationErrors(prev => ({ ...prev, profitability: false }));
+              }}
+              required
+              disabled={loading}
+              className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+            />
+          </div>
+
+          {!isMobile && (
+            <div className="space-y-0.5 animate-fade-in">
+              <Label className="text-xs">Rentabilidade Diária (R$)</Label>
+              <div className={cn(
+                "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
+                "opacity-80"
+              )}>
+                {formatCurrency(dailyProfitabilityRS)}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
