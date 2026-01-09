@@ -32,15 +32,23 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "rounded-xl",
-        isMobile ? "dialog-mobile" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+        "rounded-3xl bg-[#F0F7FF] border-none shadow-xl",
+        isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
       )}>
-        <DialogHeader className={cn(isMobile && "text-center")}>
-          <DialogTitle className={cn("flex items-center justify-center gap-2 w-full", isMobile && "text-xl")}>
-            ✏️ Editar Subcategoria
+        <DialogHeader
+          className={cn(
+            "flex flex-row items-center justify-center gap-2",
+            isMobile && "absolute top-3.5 left-4 right-12 text-left"
+          )}
+        >
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center">
+            <span className="text-sm select-none" style={{ color: '#1E40AF' }}>✏️</span>
+          </div>
+          <DialogTitle className={cn("font-bold pb-[1px] text-[#1E40AF]", isMobile ? "text-lg" : "text-xl")}>
+            Editar Subcategoria
           </DialogTitle>
         </DialogHeader>
-        <div className={cn(isMobile && "form-body")}>
+        <div className={cn(isMobile && "form-body pb-10")}>
           {editingCategory && (
             <CategoryForm
               onAddCategory={() => { }} // Não usado no modo de edição

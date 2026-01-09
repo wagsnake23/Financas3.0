@@ -187,7 +187,7 @@ export const CategoryForm = ({
           >
             <SelectTrigger
               id="parent_id"
-              className={cn("rounded-xl", isMobile && "h-9 text-sm", hideCardWrapper && "bg-[#F5F5F5]")}
+              className={cn("rounded-xl border-blue-200 bg-white shadow-sm", isMobile && "h-11 text-sm", hideCardWrapper && "bg-white")}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
@@ -227,7 +227,7 @@ export const CategoryForm = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Ex: Academia, Pet, etc."
             required
-            className={cn("rounded-xl", isMobile && "h-9 text-sm", hideCardWrapper && "bg-[#F5F5F5]")}
+            className={cn("rounded-xl border-blue-200 bg-white shadow-sm", isMobile && "h-11 text-sm", hideCardWrapper && "bg-white")}
             disabled={editingCategory?.user_id === null}
           />
         </div>
@@ -262,13 +262,17 @@ export const CategoryForm = ({
           </div>
         </div>
 
-        <div className="flex gap-2">
+        {isMobile && <div className="h-10" />}
+        <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "mt-6")}>
           {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
               type="button"
               variant="outline"
               onClick={handleCancel}
-              className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}
+              className={cn(
+                "flex-1 rounded-xl border-[#FEB2B2] bg-[#FFF5F5] text-[#E53E3E] hover:bg-[#FED7D7] hover:text-[#C53030] font-semibold transition-all",
+                isMobile && "h-11 text-sm"
+              )}
               size="lg"
             >
               Cancelar
@@ -276,7 +280,7 @@ export const CategoryForm = ({
           )}
           <Button
             type="submit"
-            className={cn("flex-1 rounded-xl", isMobile && "h-9 text-sm")}
+            className={cn("flex-1 rounded-xl font-semibold shadow-md", isMobile && "h-11 text-sm")}
             size="lg"
             disabled={editingCategory?.user_id === null}
           >

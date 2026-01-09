@@ -170,7 +170,7 @@ const Lancamentos = () => {
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
-            <div className="form-body">
+            <div className="form-body pb-4">
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}

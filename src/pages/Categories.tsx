@@ -64,6 +64,7 @@ const Categories = () => {
   const queryClient = useQueryClient();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
+  const [formKey, setFormKey] = useState(0); // Estado para resetar o formulário
   const isMobile = useIsMobile();
 
   // Fetch ALL categories (both main and subcategories) for the Categories page
@@ -110,15 +111,15 @@ const Categories = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
-      toast.success("Subcategoria adicionada!", { // Mensagem atualizada
+      toast.success("Subcategoria adicionada com sucesso ", { // Mensagem atualizada
         style: toastSuccessStyle,
         duration: toastDuration
       });
+      setFormKey(prev => prev + 1); // Limpa o formulário após o sucesso
     },
     onError: (error) => {
       toast.error("Erro ao adicionar subcategoria", { description: error.message, duration: toastDuration, style: toastErrorStyle }); // Mensagem atualizada
     },
-    enabled: !!user && !authLoading,
   });
 
   // Mutation for updating an existing category (now always a subcategory)
@@ -148,7 +149,6 @@ const Categories = () => {
     onError: (error) => {
       toast.error("Erro ao atualizar subcategoria", { description: error.message, duration: toastDuration, style: toastErrorStyle }); // Mensagem atualizada
     },
-    enabled: !!user && !authLoading,
   });
 
   // Mutation for deleting a category
@@ -183,7 +183,6 @@ const Categories = () => {
     onError: (error) => {
       toast.error("Erro ao remover categoria", { description: error.message, duration: toastDuration, style: toastErrorStyle });
     },
-    enabled: !!user && !authLoading,
   });
 
   const handleAddCategory = (category: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
@@ -254,6 +253,7 @@ const Categories = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"> {/* Revertido para lg:grid-cols-2 */}
           <div> {/* Removido lg:col-span-2 */}
             <CategoryForm
+              key={formKey}
               onAddCategory={handleAddCategory}
               onUpdateCategory={handleUpdateCategory} // Passar para o formulário principal também
               editingCategory={null} // O formulário principal é sempre para adicionar
