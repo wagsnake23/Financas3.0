@@ -337,7 +337,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors",
+            "flex-1 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 transition-colors",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
@@ -348,7 +348,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 border-transparent shadow-md transition-all hover:shadow-lg",
+            "flex-1 rounded-xl bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white border-transparent shadow-md shadow-blue-200 transition-all hover:shadow-lg hover:brightness-105 active:scale-95",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
