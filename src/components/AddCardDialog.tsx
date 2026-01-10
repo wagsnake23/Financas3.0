@@ -119,7 +119,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             <span className="text-sm select-none" style={{ color: '#1E40AF' }}>💳</span>
           </div>
           <DialogTitle className={cn("font-bold pb-[1px] text-[#1E40AF]", isMobile ? "text-lg" : "text-xl")}>
-            Cadastrar Novo Cartão
+            Novo Cartão
           </DialogTitle>
         </DialogHeader>
         <div className={cn("space-y-4", isMobile ? "pt-0 pb-6" : "pb-4")}>

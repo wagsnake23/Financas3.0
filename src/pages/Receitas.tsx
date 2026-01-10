@@ -590,7 +590,7 @@ export default function Receitas() {
                   Nova Receita
                 </h1>
                 <p className={cn("text-white font-medium mt-0.5 leading-none", isMobile ? "text-xs" : "text-sm")}>
-                  Registre suas entradas financeiras
+                  Registre seus ganhos
                 </p>
               </div>
             </div>
