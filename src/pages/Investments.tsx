@@ -349,7 +349,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                      "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
@@ -381,7 +381,7 @@ export default function Investments() { // Alterado para export default function
                   <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
                   <Select value={type} onValueChange={setType} disabled={loadingForm}>
                     <SelectTrigger className={cn(
-                      "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                      "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200",
                       isMobile && "h-9 text-sm"
                     )}>
                       <SelectValue />
@@ -411,7 +411,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200 placeholder:text-gray-400",
+                        "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                       )}
@@ -431,7 +431,7 @@ export default function Investments() { // Alterado para export default function
                       required
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200 placeholder:text-gray-400",
+                        "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                       )}
@@ -447,7 +447,7 @@ export default function Investments() { // Alterado para export default function
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "bg-white border-[#D1D5DB] transition-all duration-200",
+                          "bg-white border-[rgba(120,150,255,0.18)] transition-all duration-200",
                           !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
