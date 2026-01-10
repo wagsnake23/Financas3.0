@@ -350,6 +350,7 @@ export default function Investments() { // Alterado para export default function
                   >
                     <SelectTrigger id="investment-category" className={cn(
                       "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                      selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                     )}>
@@ -410,7 +411,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                       )}
@@ -430,7 +431,7 @@ export default function Investments() { // Alterado para export default function
                       required
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                        "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                       )}
@@ -447,7 +448,7 @@ export default function Investments() { // Alterado para export default function
                         className={cn(
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
                           "bg-white border-[#D1D5DB] transition-all duration-200",
-                          !date && "text-muted-foreground",
+                          !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
                         )}
@@ -475,7 +476,15 @@ export default function Investments() { // Alterado para export default function
                   </Popover>
                 </div>
 
-                <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
+                <Button
+                  type="submit"
+                  className={cn(
+                    "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
+                    isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+                  )}
+                  style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
+                  disabled={loadingForm}
+                >
                   {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
                 </Button>
               </form>
