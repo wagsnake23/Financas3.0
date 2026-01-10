@@ -273,9 +273,9 @@ export const useTransactionMutations = ({
                 .eq("user_id", user.id);
               if (updateOccurrenceError) throw updateOccurrenceError;
 
-            } else if (saveScope === "thisMonthForward" || saveScope === "all") {
-              // 1. Atualizar o registro mestre
-              if (originalTransaction.is_recurring_master || saveScope === "all") {
+            } else if (saveScope === "thisMonthForward") {
+              // 1. Atualizar o registro mestre SE ele for o que estamos editando
+              if (originalTransaction.is_recurring_master) {
                 const { error: updateMasterError } = await supabase
                   .from("receitas")
                   .update({
@@ -283,7 +283,6 @@ export const useTransactionMutations = ({
                     tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                     descricao: updatedTransaction.description,
                     recurrence_day: newRecurrenceDay,
-                    // NOVO: Adicionado updated_at para receitas mestras quando o status é 'Recebida'
                     updated_at: updatedTransaction.status === "Recebida" ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null,
                   })
                   .eq("id", masterRecurrenceId)
@@ -292,7 +291,8 @@ export const useTransactionMutations = ({
               }
 
               // 2. Deletar todas as ocorrências a partir da data de atualização (inclusive)
-              const deleteFromDate = formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
+              // FIX: Usar a string de data diretamente para evitar deslocamento de fuso horário
+              const deleteFromDate = updatedTransaction.date.substring(0, 10);
 
               console.log(`[DEBUG] Deleting income occurrences for master ${masterRecurrenceId} from ${deleteFromDate} onwards.`);
 
@@ -300,6 +300,7 @@ export const useTransactionMutations = ({
                 .from("receitas")
                 .delete()
                 .eq("recurrence_id", masterRecurrenceId)
+                .neq("id", masterRecurrenceId) // FIX: Não deletar o registro mestre
                 .gte("data", deleteFromDate)
                 .eq("user_id", user.id);
 
@@ -310,11 +311,75 @@ export const useTransactionMutations = ({
                 p_user_id: user.id,
                 p_transaction_type: 'income',
                 p_master_id: masterRecurrenceId,
-                p_first_occurrence_date: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, 'yyyy-MM-dd'), // Usar formatInTimeZone
+                p_first_occurrence_date: deleteFromDate,
                 p_monthly_amount: updatedTransaction.amount,
                 p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
                 p_description: updatedTransaction.description,
-                p_status: 'Prevista', // Required enum value
+                p_status: 'Prevista',
+                p_recurrence_day: newRecurrenceDay,
+                p_total_installments: RECURRING_INSTALLMENTS_COUNT,
+                p_forma_pagamento: null,
+                p_cartao_id: null,
+                p_tipo_pagamento: null,
+              });
+              if (rpcError) throw rpcError;
+
+            } else if (saveScope === "all") {
+              // 1. Buscar a data da primeira ocorrência da série para regenerar tudo corretamente
+              const { data: firstOccurrence, error: fetchFirstError } = await supabase
+                .from("receitas")
+                .select("data")
+                .eq("recurrence_id", masterRecurrenceId)
+                .order("data", { ascending: true })
+                .limit(1)
+                .single();
+
+              if (fetchFirstError && fetchFirstError.code !== 'PGRST116') throw fetchFirstError;
+
+              // Se não encontrar (improvável, mas possível se deletou tudo), usa a data atual como fallback
+              const seriesStartDate = firstOccurrence?.data || updatedTransaction.date.substring(0, 10);
+
+              // 2. Atualizar o registro mestre
+              const { error: updateMasterError } = await supabase
+                .from("receitas")
+                .update({
+                  valor: updatedTransaction.amount,
+                  tipo_receita_id: updatedTransaction.category === null ? null : updatedTransaction.category,
+                  descricao: updatedTransaction.description,
+                  recurrence_day: newRecurrenceDay,
+                  updated_at: updatedTransaction.status === "Recebida" ? formatInTimeZone(new Date(), TARGET_TIMEZONE, "yyyy-MM-dd HH:mm:ss") : null,
+                })
+                .eq("id", masterRecurrenceId)
+                .eq("user_id", user.id);
+              if (updateMasterError) throw updateMasterError;
+
+              // 3. Deletar TODAS as ocorrências desta recorrência
+              console.log(`[DEBUG] Deleting ALL income occurrences for master ${masterRecurrenceId}.`);
+              const { error: deleteAllError } = await supabase
+                .from("receitas")
+                .delete()
+                .eq("recurrence_id", masterRecurrenceId)
+                .neq("id", masterRecurrenceId) // FIX: Não deletar o registro mestre, apenas as ocorrências filhas
+                .eq("user_id", user.id);
+
+              if (deleteAllError) throw deleteAllError;
+
+              // 4. Chamar RPC para regenerar TODAS as ocorrências a partir do INÍCIO DA SÉRIE
+              // Ajustar a data de início para o novo dia de recorrência, mantendo o mês/ano original
+              const originalStart = parseISO(seriesStartDate);
+              // Como newRecurrenceDay vem do input, e queremos manter o mês/ano original do início da série:
+              // Vamos apenas passar a seriesStartDate original. A RPC generate_recurring_entries usa o p_recurrence_day para definir o dia.
+              // Contudo, p_first_occurrence_date é importante para definir o MÊS de início.
+
+              const { error: rpcError } = await supabase.rpc('generate_recurring_entries', {
+                p_user_id: user.id,
+                p_transaction_type: 'income',
+                p_master_id: masterRecurrenceId,
+                p_first_occurrence_date: seriesStartDate,
+                p_monthly_amount: updatedTransaction.amount,
+                p_category_id: updatedTransaction.category === null ? null : updatedTransaction.category,
+                p_description: updatedTransaction.description,
+                p_status: 'Prevista',
                 p_recurrence_day: newRecurrenceDay,
                 p_total_installments: RECURRING_INSTALLMENTS_COUNT,
                 p_forma_pagamento: null,
