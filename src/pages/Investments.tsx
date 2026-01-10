@@ -335,8 +335,8 @@ export default function Investments() { // Alterado para export default function
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
 
-            <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm bg-white", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
-              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
+            <Card className={cn("p-6 animate-slide-up rounded-xl bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
+              <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -704,8 +704,8 @@ export default function Investments() { // Alterado para export default function
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
               {/* Form */}
               <div>
-                <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm bg-white", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
-                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
+                <Card className={cn("p-6 animate-slide-up rounded-xl bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
+                  <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -983,7 +983,10 @@ export default function Investments() { // Alterado para export default function
           isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
         )}>
           <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">📝 Editar Investimento</DialogTitle>
+            <DialogTitle className="flex items-center justify-center gap-2 w-full">
+              <span>📝</span>
+              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Editar Investimento</span>
+            </DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
