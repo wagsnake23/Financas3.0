@@ -46,7 +46,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .lt("data", nextMonthStr)
         .order("data", { ascending: false });
       if (error) throw error;
-      return data;
+      return data.filter(r => r.data !== '1900-01-01');
     },
     enabled: enabled,
     placeholderData: keepPreviousData,

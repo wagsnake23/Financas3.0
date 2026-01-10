@@ -47,7 +47,7 @@ export default function Home() {
                 .gte("data", startRange)
                 .lte("data", endRange);
             if (error) throw error;
-            return data;
+            return data.filter((r: any) => r.data !== '1900-01-01');
         },
         enabled: !!user && !authLoading,
         placeholderData: keepPreviousData,

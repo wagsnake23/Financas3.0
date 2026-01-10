@@ -94,7 +94,7 @@ export const useLancamentosLogic = (
       if (!user?.id) return [];
       const { data, error } = await supabase.from("receitas").select("*").eq("user_id", user.id);
       if (error) throw error;
-      return data;
+      return data.filter((r: any) => r.data !== '1900-01-01');
     },
     enabled: !!user && !authLoading,
   });
