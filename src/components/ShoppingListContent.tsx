@@ -550,10 +550,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
                     {/* 📌 SEGUNDA LINHA: Data e Ações */}
                     <div className="flex items-center justify-between w-full">
-                      <div className="flex items-start gap-3 min-w-0 flex-1">
-                        {/* Espaço reservado para o Nº */}
-                        <div className="min-w-[28px] shrink-0" />
-                        {/* Data de Compra */}
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        {/* Ícone alinhado com o Nº */}
+                        <div className="min-w-[28px] flex justify-center shrink-0">
+                          {item.status && item.date && (
+                            <span className="text-[12px]">📅</span>
+                          )}
+                        </div>
+                        {/* Data alinhada com o Produto */}
                         <div className="min-w-0 flex-1">
                           {item.status && item.date && (
                             <span className="text-[0.75rem] text-gray-400 truncate block">
@@ -635,7 +639,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
                     {item.status && item.date && (
                       <p className="mt-[1px] text-[10px] text-gray-500">
-                        {item.date}
+                        📅 {item.date}
                       </p>
                     )}
                   </div>
