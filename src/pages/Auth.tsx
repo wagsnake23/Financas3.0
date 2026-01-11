@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ type ViewMode = "login" | "signup" | "forgot-password" | "reset-password";
 export default function Auth() {
   const { showSuccessToast, showErrorToast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>("login");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +35,14 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nome, setNome] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
+
+  // Effect to handle URL parameters (e.g., ?mode=reset-password)
+  useEffect(() => {
+    const mode = searchParams.get("mode") as ViewMode;
+    if (mode && ["login", "signup", "forgot-password", "reset-password"].includes(mode)) {
+      setViewMode(mode);
+    }
+  }, [searchParams]);
 
   // Effect to re-validate confirm password when password changes
   useEffect(() => {
@@ -597,6 +606,18 @@ export default function Auth() {
           >
             {loading ? "Redefinindo..." : "Redefinir senha"}
           </Button>
+          <div className="text-center text-sm">
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode("login");
+                setValidationErrors({});
+              }}
+              className="text-primary hover:underline block w-full"
+            >
+              Voltar para login
+            </button>
+          </div>
         </form>
       )}
     </>
