@@ -398,7 +398,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <AlertDialogCancel
               onClick={() => setIsConfirmDeleteOpen(false)}
               className={cn(
-                "flex-1 rounded-xl border-blue-200 bg-white text-[#1E40AF] font-bold hover:bg-blue-50 m-0 h-11",
+                "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold m-0 h-11",
                 !isMobile && "max-w-[140px]"
               )}
             >

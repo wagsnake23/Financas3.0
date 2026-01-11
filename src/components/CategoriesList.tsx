@@ -157,7 +157,7 @@ const CategoryItem = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="flex flex-row gap-2">
-                  <AlertDialogCancel className="flex-1 rounded-xl mt-0">Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel className="flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold mt-0">Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDeleteCategory(category.id)}
                     className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"

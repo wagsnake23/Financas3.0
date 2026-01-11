@@ -293,7 +293,7 @@ export const CategoryForm = ({
               variant="outline"
               onClick={handleCancel}
               className={cn(
-                "flex-1 rounded-xl border-[#FEB2B2] bg-[#FFF5F5] text-[#E53E3E] hover:bg-[#FED7D7] hover:text-[#C53030] font-semibold transition-all",
+                "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-all",
                 isMobile && "h-11 text-sm"
               )}
               size="lg"

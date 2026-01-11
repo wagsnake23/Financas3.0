@@ -264,43 +264,43 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
         {(paymentType === "credit_card" ||
           paymentType === "debit_card" ||
           paymentType === "bank_transfer") && (
-          <FormField
-            control={form.control}
-            name="paymentMethod"
-            render={({ field }) => (
-              <FormItem>
-                <Label className="text-sm font-medium text-gray-800 mb-1">
-                  Forma de Pagamento
-                </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {paymentType === "credit_card" ||
-                    paymentType === "debit_card"
-                      ? cartoes.map((cartao) => (
+            <FormField
+              control={form.control}
+              name="paymentMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <Label className="text-sm font-medium text-gray-800 mb-1">
+                    Forma de Pagamento
+                  </Label>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {paymentType === "credit_card" ||
+                        paymentType === "debit_card"
+                        ? cartoes.map((cartao) => (
                           <SelectItem key={cartao.id} value={cartao.id}>
                             {cartao.nome} ({cartao.final_cartao})
                           </SelectItem>
                         ))
-                      : bancos.map((banco) => (
+                        : bancos.map((banco) => (
                           <SelectItem key={banco.id} value={banco.id}>
                             {banco.nome}
                           </SelectItem>
                         ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
         {/* Data de Vencimento */}
         <FormField
@@ -453,7 +453,11 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
         )}
 
         <div className="flex justify-end space-x-2 mt-6">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button
+            type="button"
+            className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold"
+            onClick={onClose}
+          >
             Cancelar
           </Button>
           <Button type="submit" disabled={isLoading}>

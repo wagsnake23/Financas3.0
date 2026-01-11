@@ -40,7 +40,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "flex-1 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors", // Borda azul suave e fundo mais suave
+          "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-colors",
           "text-sm", // Aumenta a fonte para 'sm'
           isMobile && "h-9" // Mantém a altura para mobile
         )}

@@ -295,8 +295,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#E54D4D] hover:bg-[#E54D4D] hover:text-white hover:border-[#E54D4D] -mr-1"
-                                style={{ borderColor: "rgba(229, 77, 77, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-red-50 transition-all text-[#E54D4D] hover:bg-red-100 hover:text-[#C53030] border border-red-100 -mr-1"
                                 onClick={() => navigate("/lancamentos?type=expense")}
                             >
                                 Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
@@ -344,8 +343,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#1AA361] hover:bg-[#1AA361] hover:text-white hover:border-[#1AA361] -mr-1"
-                                style={{ borderColor: "rgba(26, 163, 97, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-emerald-50 transition-all text-[#1AA361] hover:bg-emerald-100 hover:text-[#15803d] border border-emerald-100 -mr-1"
                                 onClick={() => navigate("/lancamentos?type=income")}
                             >
                                 Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />

@@ -1124,7 +1124,7 @@ export default function Investments() { // Alterado para export default function
             <AlertDialogCancel
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "rounded-xl bg-white border border-blue-200 hover:bg-blue-50 text-primary",
+                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
                 isMobile && "h-10 text-sm flex-1 mt-0"
               )}
               onClick={() => setIsConfirmDeleteOpen(false)}
