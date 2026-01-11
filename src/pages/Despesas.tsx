@@ -176,7 +176,7 @@ export default function Despesas() {
                 <h1 className={cn("font-black text-white tracking-tight -mt-0.5", isMobile ? "text-xl" : "text-xl")}>
                   Nova Despesa
                 </h1>
-                <p className={cn("text-white font-medium mt-0.5 leading-none", isMobile ? "text-xs" : "text-sm")}>
+                <p className={cn("text-white font-medium -mt-0.5 leading-none", isMobile ? "text-xs" : "text-sm")}>
                   Registre seus gastos
                 </p>
               </div>

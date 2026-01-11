@@ -143,7 +143,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           <SelectTrigger className={cn("rounded-xl bg-white border-[#DBEAFE] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-xl">
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione a subcategoria</SelectItem>
             {filteredCategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhuma subcategoria disponível</SelectItem>
@@ -202,7 +202,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             <SelectTrigger className={cn("rounded-xl bg-white border-[#DBEAFE] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               {paymentOptions.map((option) => (
                 <SelectItem
                   key={option.value}
@@ -233,7 +233,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               <SelectTrigger className={cn("rounded-xl bg-white border-[#DBEAFE] font-medium transition-all duration-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o cartão</SelectItem>
                 {cartoes.map((card) => (
                   <SelectItem key={card.id} value={card.id} className={cn(isMobile && "text-sm")}>
