@@ -248,7 +248,7 @@ export default function Home() {
 
                         {/* Seletor de Mês */}
                         <div
-                            className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none"
+                            className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none -mr-1"
                             style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6", cursor: "default", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15), inset 0px 1px 1px rgba(255, 255, 255, 0.3)" } as any}
                         >
                             <button onClick={handlePrevMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
@@ -295,7 +295,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#E54D4D] hover:bg-[#E54D4D] hover:text-white hover:border-[#E54D4D]"
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#E54D4D] hover:bg-[#E54D4D] hover:text-white hover:border-[#E54D4D] -mr-1"
                                 style={{ borderColor: "rgba(229, 77, 77, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
                                 onClick={() => navigate("/lancamentos?type=expense")}
                             >
@@ -320,7 +320,7 @@ export default function Home() {
                                 </div>
                             </div>
                             <Button
-                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px]"
+                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
                                 style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                                 onClick={() => navigate("/despesas")}
                             >
@@ -344,7 +344,7 @@ export default function Home() {
                                 </p>
                             </div>
                             <Button
-                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#1AA361] hover:bg-[#1AA361] hover:text-white hover:border-[#1AA361]"
+                                className="h-9 px-3 rounded-2xl font-black text-[13px] shadow-sm whitespace-nowrap w-[135px] bg-white transition-all text-[#1AA361] hover:bg-[#1AA361] hover:text-white hover:border-[#1AA361] -mr-1"
                                 style={{ borderColor: "rgba(26, 163, 97, 0.3)", borderStyle: "solid", borderWidth: "1px" }}
                                 onClick={() => navigate("/lancamentos?type=income")}
                             >
@@ -369,7 +369,7 @@ export default function Home() {
                                 </div>
                             </div>
                             <Button
-                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px]"
+                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
                                 style={{ "--cor-topo": "#36E391", "--cor-base": "#1AA361" } as any}
                                 onClick={() => navigate("/receitas")}
                             >
