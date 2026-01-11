@@ -101,10 +101,10 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-[20px] pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-[#F0E8FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden mb-4 card-cartoes")}
+      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] rounded-[24px] border border-[#F0E8FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden mb-4 card-cartoes")}
       style={{ backgroundColor: "transparent" }}
     >
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#8235ff]" />
           <h2 className="text-[15px] font-black text-[#8235ff] tracking-tight">
@@ -116,9 +116,9 @@ export const MobileCreditCardExpenses: React.FC<
         </span>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-8 text-[13px] border-[#B299FF] bg-white shadow-sm">
+          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border-[#B299FF] bg-white shadow-sm">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent>
@@ -131,7 +131,7 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-[32px] text-xs font-bold shadow-md"
+          className="btn-3d rounded-xl w-full h-[30px] text-xs font-bold shadow-md"
           style={
             {
               "--cor-topo": "#9d50ff",
@@ -147,7 +147,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-2 text-center mt-1 border-t border-[#DCD2FF]/30 pt-2.5">
+          <div className="grid grid-cols-3 gap-2 text-center mt-1 border-t border-[#DCD2FF]/30 pt-1.5">
             {/* Pago */}
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-1.5 mb-1">
