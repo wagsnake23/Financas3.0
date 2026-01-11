@@ -71,11 +71,10 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
     if (chartData.length === 0) {
         return (
             <div className={cn(
-                "bg-gradient-to-br from-white to-[#FFF9F5]/80 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
-                "backdrop-blur-[8px] flex flex-col items-center justify-center min-h-[200px]",
+                "card-yield p-6 flex flex-col items-center justify-center min-h-[200px]",
                 isMobile && "px-3 py-5"
             )}>
-                <h3 className="text-lg font-black text-gray-800 tracking-tight mb-4">Receitas por Investimentos</h3>
+                <h3 className="text-lg font-black text-[#ea580c] tracking-tight mb-4">Receitas por Investimentos</h3>
                 <p className="text-muted-foreground">Nenhum investimento registrado</p>
             </div>
         );
@@ -83,14 +82,13 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
 
     return (
         <div className={cn(
-            "bg-gradient-to-br from-white to-[#FFF9F5]/80 p-6 rounded-[24px] border border-orange-200/50 shadow-[0_4px_24px_rgba(251,146,60,0.04)]",
-            "backdrop-blur-[8px] flex flex-col",
+            "card-yield p-6 flex flex-col",
             isMobile ? "px-3 py-5" : "h-full justify-between"
-        )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
+        )}>
             <div>
                 <div className="flex items-center gap-2 mb-6">
-                    <div className="h-8 w-2 bg-[#FB923C] rounded-full shadow-[0_0_12px_rgba(251,146,60,0.3)]" />
-                    <h3 className="text-lg font-black text-gray-800 tracking-tight">Receitas por Investimentos</h3>
+                    <div className="h-8 w-2 bg-[#FB923C] rounded-full" />
+                    <h3 className="text-lg font-black text-[#ea580c] tracking-tight">Receitas por Investimentos</h3>
                 </div>
 
                 <div
@@ -132,7 +130,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
                                                 dy={4}
                                                 textAnchor="end"
                                                 className={cn(
-                                                    "fill-gray-500 font-black uppercase tracking-tight",
+                                                    "fill-gray-700 font-black uppercase tracking-tight",
                                                     isMobile ? "text-[10px]" : "text-[12px]"
                                                 )}
                                             >

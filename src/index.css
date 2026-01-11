@@ -596,12 +596,12 @@ body {
       rgba(235, 220, 255, 0.9));
 }
 
-/* Yield Card */
+/* Yield Card - Enhanced Whiteness */
 .card-yield {
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.0) 60%),
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.75), transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.55), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.0) 70%),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.90), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.85), transparent 50%),
     linear-gradient(135deg,
       rgba(255, 228, 205, 0.9),
       rgba(255, 245, 235, 0.95),

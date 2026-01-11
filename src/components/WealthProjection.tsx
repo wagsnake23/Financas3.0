@@ -151,6 +151,12 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
             "w-full overflow-hidden border-none shadow-xl bg-gradient-to-b from-[#F9FBFF] to-white",
             isMobile ? "rounded-[24px] p-4" : "rounded-[32px] p-8"
         )}>
+            {/* Título do Gráfico */}
+            <div className="flex items-center gap-2 mb-6">
+                <div className="h-8 w-2 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full" />
+                <h3 className="text-lg font-black text-[#2563eb] opacity-90 tracking-tight">Projeção Patrimonial</h3>
+            </div>
+
             {/* Gráfico */}
             <div className="w-full h-[280px] mb-2">
                 <ResponsiveContainer width="100%" height="100%">
