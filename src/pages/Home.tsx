@@ -205,12 +205,13 @@ export default function Home() {
     const todayStr = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
     return (
-        <div className={cn("flex flex-col min-h-screen pb-10 bg-[#F8FAFC]")}>
+        <div
+            className={cn("flex flex-col min-h-screen pb-10 relative overflow-hidden sky-bg")}
+        >
             <Navigation />
 
-            {/* NOVO HEADER PREMIUM — FINTECH STYLE */}
-            <div className="relative h-[220px] w-full bg-gradient-to-b from-[#0A4A9B] via-[#1E6BCE] to-[#F8FAFC] overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+            {/* HEADER AREA */}
+            <div className="relative h-[220px] w-full overflow-hidden">
                 <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[1000px]">
                     <div className="flex justify-between items-start">
                         <div>
@@ -236,7 +237,8 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="px-5 pt-2.5 pb-2 mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden bg-white"
+                    className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                    style={{ backgroundColor: "transparent" }}
                 >
                     <div className="flex justify-between items-start mb-0">
                         <div className="flex items-center gap-2">
@@ -284,8 +286,8 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-3 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative bg-white"
-                        style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFF9F9 100%)" }}
+                        className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                        style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
@@ -332,8 +334,8 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="px-4 pt-2.5 pb-2 rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative bg-white"
-                        style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FFFA 100%)" }}
+                        className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                        style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
