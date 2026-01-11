@@ -221,7 +221,13 @@ export default function Home() {
                                 {todayStr}
                             </p>
                         </div>
-
+                        <div
+                            onClick={() => navigate("/dashboard?filter=investments")}
+                            className="btn-3d w-9 h-9 mt-1 flex items-center justify-center rounded-xl transition-all active:scale-90 cursor-pointer shadow-md border border-orange-300"
+                            style={{ "--cor-topo": "#FB923C", "--cor-base": "#F97316" } as any}
+                        >
+                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,14 +277,6 @@ export default function Home() {
                                 </div>
                                 <span className="text-[10px] text-gray-400 font-medium">em relação ao mês anterior</span>
                             </div>
-                        </div>
-
-                        {/* Botão de Investimentos */}
-                        <div
-                            onClick={() => navigate("/dashboard?filter=investments")}
-                            className="w-10 h-10 flex items-center justify-center rounded-full bg-orange-50 hover:bg-orange-100 transition-all active:scale-90 cursor-pointer shadow-sm border border-orange-100/50"
-                        >
-                            <DynamicIcon name="TrendingUp" className="h-5 w-5 text-orange-500" strokeWidth={3} />
                         </div>
                     </div>
                 </Card>
@@ -398,6 +396,6 @@ export default function Home() {
                 className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0" : "mt-8")}
                 user={user}
             />
-        </div>
+        </div >
     );
 };
