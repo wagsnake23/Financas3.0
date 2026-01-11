@@ -367,7 +367,7 @@ export default function Receitas() {
               >
                 <SelectValue placeholder="Selecione a subcategoria de receita" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="w-[--radix-select-trigger-width] rounded-xl">
                 <SelectItem
                   value={UNSELECTED_VALUE}
                   disabled
@@ -412,6 +412,28 @@ export default function Receitas() {
               <Plus className="h-[18px] w-[18px] !text-white" />
             </Button>
           </div>
+        </div>
+
+        <div className={cn(isMobile && "w-full mx-auto")}>
+          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            Valor (R$)
+          </Label>
+          <CurrencyBR
+            value={valor}
+            onChange={(v) => {
+              setValor(v);
+              setValidationErrors((prev) => ({ ...prev, valor: false }));
+            }}
+            className={cn(
+              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
+              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+              isMobile ? "h-9 text-sm" : "h-10",
+              getBorderClass({
+                isInvalid: validationErrors.valor,
+                isValid: validationErrors.valor === false,
+              })
+            )}
+          />
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
@@ -464,28 +486,6 @@ export default function Receitas() {
               />
             </PopoverContent>
           </Popover>
-        </div>
-
-        <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
-            Valor (R$)
-          </Label>
-          <CurrencyBR
-            value={valor}
-            onChange={(v) => {
-              setValor(v);
-              setValidationErrors((prev) => ({ ...prev, valor: false }));
-            }}
-            className={cn(
-              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
-              isMobile ? "h-9 text-sm" : "h-10",
-              getBorderClass({
-                isInvalid: validationErrors.valor,
-                isValid: validationErrors.valor === false,
-              })
-            )}
-          />
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>

@@ -462,7 +462,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             >
               <SelectValue placeholder="Selecione a subcategoria" />
             </SelectTrigger>
-            <SelectContent className="max-h-[280px]">
+            <SelectContent className="max-h-[280px] w-[--radix-select-trigger-width] rounded-xl">
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
                 Selecione a subcategoria
               </SelectItem>

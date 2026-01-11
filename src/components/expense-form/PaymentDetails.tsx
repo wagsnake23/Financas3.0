@@ -129,7 +129,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             )}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="avista" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">⚡</span> À Vista</span>
               </SelectItem>
@@ -165,7 +165,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             )}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
