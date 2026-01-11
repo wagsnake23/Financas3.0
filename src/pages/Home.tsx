@@ -289,7 +289,7 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#DC2626" }}>Despesas</h2>
+                                <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
                                 <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
                                     {formatCurrency(stats.currentExpenses)}
                                 </p>
@@ -337,7 +337,7 @@ export default function Home() {
                     >
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#16A34A" }}>Receitas</h2>
+                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
                                 <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
                                     {formatCurrency(stats.currentIncome)}
                                 </p>
