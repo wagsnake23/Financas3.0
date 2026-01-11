@@ -419,22 +419,7 @@ export default function Dashboard() {
             >
               <div className={cn("flex flex-col w-full h-full")}>
                 <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#3B82F6",
-                        "--cor-base": "#2563EB",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/dashboard?filter=projection")}
-                  >
-                    <DynamicIcon name="TrendingUp" className="mr-2 h-4 w-4" />
-                    Projeção
-                  </Button>
+
                   <Button
                     className={cn(
                       "btn-3d",
@@ -594,32 +579,6 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-          </div>
-        ) : filter === "projection" ? (
-          <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center gap-4 mb-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/dashboard")}
-                className="h-10 w-10 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-95"
-              >
-                <DynamicIcon name="ArrowLeft" className="h-6 w-6 text-gray-600" />
-              </Button>
-              <div className="flex flex-col">
-                <h2
-                  className="text-2xl font-black text-gray-800 tracking-tight leading-none cursor-pointer hover:text-primary transition-colors"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  Voltar ao Dashboard
-                </h2>
-                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1.5 opacity-80">Projeção do Patrimônio</p>
-              </div>
-            </div>
-            <WealthProjection
-              investments={investments as Investment[]}
-              isMobile={isMobile}
-            />
           </div>
         ) : isMobile ? (
           <div className="grid grid-cols-1 gap-4">
@@ -835,22 +794,7 @@ export default function Dashboard() {
               >
                 <div className={cn("flex flex-col w-full h-full")}>
                   <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#3B82F6",
-                          "--cor-base": "#2563EB",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/dashboard?filter=projection")}
-                    >
-                      <DynamicIcon name="TrendingUp" className="mr-2 h-4 w-4" />
-                      Projeção
-                    </Button>
+
                     <Button
                       className={cn(
                         "btn-3d",
@@ -914,6 +858,13 @@ export default function Dashboard() {
                 allExpenseInstallments={allExpenseInstallments}
                 allCategories={allSubcategories}
                 isLoading={isLoading}
+                isMobile={isMobile}
+              />
+            )}
+
+            {!filter && (
+              <WealthProjection
+                investments={investments as Investment[]}
                 isMobile={isMobile}
               />
             )}
@@ -1206,12 +1157,19 @@ export default function Dashboard() {
             )}
 
             {!filter && (
-              <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-                <p className={cn("text-muted-foreground", "font-roboto")}>
-                  Mais conteúdo do Dashboard virá aqui.
-                </p>
-              </Card>
+              <div className="mt-8">
+                <WealthProjection
+                  investments={investments as Investment[]}
+                  isMobile={isMobile}
+                />
+              </div>
             )}
+            <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
+              <p className={cn("text-muted-foreground", "font-roboto")}>
+                Mais conteúdo do Dashboard virá aqui.
+              </p>
+            </Card>
+
           </>
         )}
       </main>
