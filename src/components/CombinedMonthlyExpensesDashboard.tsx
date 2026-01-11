@@ -9,6 +9,8 @@ import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterva
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/categoryColors";
+import { getYear, setYear, startOfYear, endOfYear } from "date-fns";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 // Helper for subcategory grouping logic
 const groupSubcategories = (data: any[], limit: number) => {
@@ -46,6 +48,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   isMobile,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [viewMode, setViewMode] = useState<"monthly" | "annual">("monthly");
 
   const handlePreviousMonth = () => {
     setCurrentMonth(prev => subMonths(prev, 1));
@@ -55,19 +58,34 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     setCurrentMonth(prev => addMonths(prev, 1));
   };
 
+  const handlePreviousYear = () => {
+    setCurrentMonth(prev => subMonths(prev, 12));
+  };
+
+  const handleNextYear = () => {
+    setCurrentMonth(prev => addMonths(prev, 12));
+  };
+
   const startOfCurrentMonth = startOfMonth(currentMonth);
   const endOfCurrentMonth = endOfMonth(currentMonth);
 
-  // Filtrar parcelas de despesas para o mês selecionado internamente
-  const monthlyExpenseInstallments = useMemo(() => {
-    const startStr = format(startOfCurrentMonth, "yyyy-MM-01");
-    const nextMonthStartStr = format(addMonths(startOfCurrentMonth, 1), "yyyy-MM-01");
+  // Filtrar parcelas de despesas para o mês selecionado internamente ou para o ano todo
+  const filteredExpenseInstallments = useMemo(() => {
+    if (viewMode === "monthly") {
+      const startStr = format(startOfMonth(currentMonth), "yyyy-MM-01");
+      const nextMonthStartStr = format(addMonths(startOfMonth(currentMonth), 1), "yyyy-MM-01");
 
-    return allExpenseInstallments.filter(p => {
-      const vencimentoDate = p.vencimento.substring(0, 10);
-      return vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr;
-    });
-  }, [allExpenseInstallments, startOfCurrentMonth]);
+      return allExpenseInstallments.filter(p => {
+        const vencimentoDate = p.vencimento.substring(0, 10);
+        return vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr;
+      });
+    } else {
+      const yearStr = format(currentMonth, "yyyy");
+      return allExpenseInstallments.filter(p => {
+        return p.vencimento.startsWith(yearStr);
+      });
+    }
+  }, [allExpenseInstallments, currentMonth, viewMode]);
 
   // Calcular totais de resumo (Pago/Pendente)
   const { totalPaid, totalPending } = useMemo(() => {
@@ -78,7 +96,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     let paid = 0;
     let pending = 0;
 
-    monthlyExpenseInstallments.forEach(installment => {
+    filteredExpenseInstallments.forEach(installment => {
       if (installment.pago) {
         paid += installment.valor_parcela;
       } else {
@@ -87,12 +105,12 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     });
 
     return { totalPaid: paid, totalPending: pending };
-  }, [monthlyExpenseInstallments, isLoading]);
+  }, [filteredExpenseInstallments, isLoading]);
 
   // Preparar dados para o Gráfico de Pizza
   const expensesForPieChart = useMemo(() => {
     // Precisamos reconstruir o tipo Transaction a partir de expenseInstallments para o gráfico de pizza
-    return monthlyExpenseInstallments.map(p => ({
+    return filteredExpenseInstallments.map(p => ({
       id: p.id,
       type: "expense" as "expense", // Cast explícito
       amount: p.valor_parcela,
@@ -110,7 +128,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       recurrence_day: null,
       tipo_pagamento: p.despesas?.tipo_pagamento,
     }));
-  }, [monthlyExpenseInstallments]);
+  }, [filteredExpenseInstallments]);
 
   const expensesByCategory = expensesForPieChart
     .filter(t => t.type === "expense")
@@ -190,30 +208,58 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       )} style={{ WebkitBackdropFilter: 'blur(10px)' }}>
         {!isMobile && (
           <div className="flex items-center justify-between mb-8">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handlePreviousMonth}
-              className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
-            >
-              <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
-            </Button>
-
-            <div className="text-center group">
-              <h2 className="text-2xl font-black capitalize text-gray-800 tracking-tight transition-all group-hover:scale-105">
-                {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
-              </h2>
-              <div className="h-1.5 w-16 bg-primary/30 rounded-full mx-auto mt-2 transition-all group-hover:w-24 group-hover:bg-primary/50" />
+            <div className="flex items-center gap-2">
+              <ToggleGroup
+                type="single"
+                value={viewMode}
+                onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
+                className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
+              >
+                <ToggleGroupItem
+                  value="monthly"
+                  className="rounded-lg px-3 py-1.5 text-xs font-bold data-[state=on]:bg-white data-[state=on]:text-primary shadow-none transition-all"
+                >
+                  Mês
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="annual"
+                  className="rounded-lg px-3 py-1.5 text-xs font-bold data-[state=on]:bg-white data-[state=on]:text-primary shadow-none transition-all"
+                >
+                  Ano
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleNextMonth}
-              className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
-            >
-              <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
-            </Button>
+            <div className="flex items-center gap-6">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={viewMode === "monthly" ? handlePreviousMonth : handlePreviousYear}
+                className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
+              >
+                <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
+              </Button>
+
+              <div className="text-center group min-w-[180px]">
+                <h2 className="text-2xl font-black capitalize text-gray-800 tracking-tight transition-all group-hover:scale-105">
+                  {viewMode === "monthly"
+                    ? format(currentMonth, "MMMM yyyy", { locale: ptBR })
+                    : format(currentMonth, "yyyy", { locale: ptBR })}
+                </h2>
+                <div className="h-1.5 w-16 bg-primary/30 rounded-full mx-auto mt-2 transition-all group-hover:w-24 group-hover:bg-primary/50" />
+              </div>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={viewMode === "monthly" ? handleNextMonth : handleNextYear}
+                className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
+              >
+                <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
+              </Button>
+            </div>
+
+            <div className="w-24" /> {/* Spacer to balance the toggle group */}
           </div>
         )}
 
@@ -234,19 +280,55 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               </div>
 
               {isMobile && (
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" onClick={handlePreviousMonth} className="h-8 w-8 text-gray-400">
-                    <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
-                  </Button>
-                  <div className="flex flex-col items-center">
-                    <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">Mês</span>
-                    <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5">
-                      {format(currentMonth, "MMM/yy", { locale: ptBR })}
-                    </span>
+                <div className="flex flex-col items-end gap-2">
+                  <ToggleGroup
+                    type="single"
+                    value={viewMode}
+                    onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
+                    className="bg-white/40 p-0.5 rounded-lg shadow-sm border border-white/60"
+                  >
+                    <ToggleGroupItem
+                      value="monthly"
+                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                    >
+                      Mês
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="annual"
+                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                    >
+                      Ano
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={viewMode === "monthly" ? handlePreviousMonth : handlePreviousYear}
+                      className="h-8 w-8 text-gray-400"
+                    >
+                      <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
+                    </Button>
+                    <div className="flex flex-col items-center">
+                      <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">
+                        {viewMode === "monthly" ? "Mês" : "Ano"}
+                      </span>
+                      <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5 shadow-none">
+                        {viewMode === "monthly"
+                          ? format(currentMonth, "MMM/yy", { locale: ptBR })
+                          : format(currentMonth, "yyyy", { locale: ptBR })}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={viewMode === "monthly" ? handleNextMonth : handleNextYear}
+                      className="h-8 w-8 text-gray-400"
+                    >
+                      <DynamicIcon name="ChevronRight" className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-gray-400">
-                    <DynamicIcon name="ChevronRight" className="h-4 w-4" />
-                  </Button>
                 </div>
               )}
             </div>
@@ -390,19 +472,55 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               </div>
 
               {isMobile && (
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" onClick={handlePreviousMonth} className="h-8 w-8 text-gray-400">
-                    <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
-                  </Button>
-                  <div className="flex flex-col items-center">
-                    <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">Mês</span>
-                    <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5">
-                      {format(currentMonth, "MMM/yy", { locale: ptBR })}
-                    </span>
+                <div className="flex flex-col items-end gap-2">
+                  <ToggleGroup
+                    type="single"
+                    value={viewMode}
+                    onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
+                    className="bg-white/40 p-0.5 rounded-lg shadow-sm border border-white/60"
+                  >
+                    <ToggleGroupItem
+                      value="monthly"
+                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                    >
+                      Mês
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="annual"
+                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                    >
+                      Ano
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={viewMode === "monthly" ? handlePreviousMonth : handlePreviousYear}
+                      className="h-8 w-8 text-gray-400"
+                    >
+                      <DynamicIcon name="ChevronLeft" className="h-4 w-4" />
+                    </Button>
+                    <div className="flex flex-col items-center">
+                      <span className="text-[10px] uppercase font-bold text-gray-400 leading-none">
+                        {viewMode === "monthly" ? "Mês" : "Ano"}
+                      </span>
+                      <span className="text-sm font-black text-gray-700 capitalize leading-none pt-0.5">
+                        {viewMode === "monthly"
+                          ? format(currentMonth, "MMM/yy", { locale: ptBR })
+                          : format(currentMonth, "yyyy", { locale: ptBR })}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={viewMode === "monthly" ? handleNextMonth : handleNextYear}
+                      className="h-8 w-8 text-gray-400"
+                    >
+                      <DynamicIcon name="ChevronRight" className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-gray-400">
-                    <DynamicIcon name="ChevronRight" className="h-4 w-4" />
-                  </Button>
                 </div>
               )}
             </div>
