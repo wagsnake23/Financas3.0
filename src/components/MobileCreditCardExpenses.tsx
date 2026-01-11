@@ -106,12 +106,12 @@ export const MobileCreditCardExpenses: React.FC<
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#5429A6]" />
-          <h2 className="text-[15px] font-black text-[#5429A6] tracking-tight">
+          <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#8235ff]" />
+          <h2 className="text-[15px] font-black text-[#8235ff] tracking-tight">
             Cartões
           </h2>
         </div>
-        <span className="text-[12px] font-black text-[#5429A6] uppercase tracking-tight">
+        <span className="text-[12px] font-black text-[#8235ff] uppercase tracking-tight">
           {format(selectedMonth, "MMM / yyyy", { locale: ptBR }).replace(".", "")}
         </span>
       </div>

@@ -281,7 +281,7 @@ export default function Home() {
                     </div>
                 </Card>
 
-                <div className="grid grid-cols-1 gap-4 mb-4">
+                <div className="grid grid-cols-1 gap-3 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
                         className="px-4 pt-2.5 pb-2 rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative bg-white"
