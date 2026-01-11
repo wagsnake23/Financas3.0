@@ -152,12 +152,12 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
             isMobile ? "rounded-[24px] p-4" : "rounded-[32px] p-8"
         )}>
             {/* Gráfico */}
-            <div className="w-full h-[300px] mb-8">
+            <div className="w-full h-[280px] mb-2">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={chartData}
                         margin={{
-                            top: 10,
+                            top: 20,
                             right: isMobile ? 10 : 30,
                             left: isMobile ? -15 : 20,
                             bottom: 0
@@ -226,16 +226,34 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                             fill="url(#colorValue)"
                             animationDuration={1500}
                             activeDot={{ r: 6, fill: '#3b82f6', stroke: '#fff', strokeWidth: 3 }}
+                            dot={(props) => {
+                                const { cx, cy, payload } = props;
+                                if (payload.isRequestedTick) {
+                                    return (
+                                        <circle
+                                            key={`dot-${payload.month}`}
+                                            cx={cx}
+                                            cy={cy}
+                                            r={5}
+                                            fill="#3b82f6"
+                                            stroke="#fff"
+                                            strokeWidth={2}
+                                            className="shadow-sm border-none"
+                                        />
+                                    );
+                                }
+                                return <></>;
+                            }}
                         />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
 
             {/* Slider */}
-            <div className="space-y-6 mb-10 px-2">
-                <div className="flex items-center justify-between">
-                    <label className="text-sm font-black text-gray-500 uppercase tracking-widest">Tempo de Projeção</label>
-                    <span className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-black shadow-lg shadow-blue-100 italic">
+            <div className="space-y-1 mb-6 px-2">
+                <div className="flex items-center justify-between h-8">
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest leading-none">Tempo de Projeção</label>
+                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-[11px] font-black shadow-lg shadow-blue-100 italic leading-none">
                         {projectionMonths <= 24
                             ? `${projectionMonths} ${projectionMonths === 1 ? 'mês' : 'meses'}`
                             : `${Math.floor(projectionMonths / 12)} anos`
@@ -247,9 +265,9 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     onValueChange={(val) => setProjectionMonths(val[0])}
                     max={120}
                     step={1}
-                    className="py-4"
+                    className="py-2"
                 />
-                <div className="flex justify-between text-[10px] font-black text-gray-400 uppercase tracking-widest opacity-60">
+                <div className="flex justify-between text-[9px] font-bold text-gray-400 uppercase tracking-widest opacity-40">
                     <span>Hoje</span>
                     <span>{projectionMonths <= 24 ? "12 meses" : "5 anos"}</span>
                     <span>{projectionMonths <= 24 ? "24 meses" : "10 anos"}</span>
@@ -262,61 +280,61 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                 isMobile ? "grid-cols-1" : "grid-cols-3"
             )}>
                 {/* Card 1 - Valor Estimado */}
-                <div className="bg-white p-6 rounded-[28px] border border-emerald-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col gap-3 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110" />
-                    <div className="flex items-center gap-2 mb-1 relative">
-                        <div className="p-2.5 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-100 ring-4 ring-emerald-50">
-                            <DynamicIcon name="TrendingUp" className="h-5 w-5" />
+                <div className="bg-white py-4 px-5 rounded-[24px] border border-emerald-100 shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex items-center gap-4 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative flex-shrink-0">
+                        <div className="p-3 bg-emerald-500 text-white rounded-full shadow-lg shadow-emerald-100 ring-4 ring-emerald-50 flex items-center justify-center">
+                            <DynamicIcon name="TrendingUp" className="h-6 w-6" />
                         </div>
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Valor Estimado</span>
                     </div>
-                    <div className="relative">
-                        <p className="text-2xl font-black text-gray-800 tracking-tight leading-none mb-1">
+                    <div className="relative flex flex-col justify-center min-w-0">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Valor Estimado</span>
+                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.patrimonioFuturo)}
                         </p>
-                        <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold">
-                            <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                            <span>Crescimento composto</span>
+                        <div className="flex items-center gap-1.5 text-emerald-500 text-[10px] font-bold leading-none">
+                            <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                            <span className="truncate">Crescimento composto</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Card 2 - Lucro Acumulado */}
-                <div className="bg-white p-6 rounded-[28px] border border-violet-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col gap-3 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-violet-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110" />
-                    <div className="flex items-center gap-2 mb-1 relative">
-                        <div className="p-2.5 bg-violet-500 text-white rounded-xl shadow-lg shadow-violet-100 ring-4 ring-violet-50">
-                            <DynamicIcon name="PiggyBank" className="h-5 w-5" />
+                <div className="bg-white py-4 px-5 rounded-[24px] border border-violet-100 shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex items-center gap-4 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-violet-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative flex-shrink-0">
+                        <div className="p-3 bg-violet-500 text-white rounded-full shadow-lg shadow-violet-100 ring-4 ring-violet-50 flex items-center justify-center">
+                            <DynamicIcon name="PiggyBank" className="h-6 w-6" />
                         </div>
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Lucro Acumulado</span>
                     </div>
-                    <div className="relative">
-                        <p className="text-2xl font-black text-gray-800 tracking-tight leading-none mb-1">
+                    <div className="relative flex flex-col justify-center min-w-0">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Lucro Acumulado</span>
+                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.lucroAcumulado)}
                         </p>
-                        <div className="flex items-center gap-1.5 text-violet-500 text-[11px] font-bold">
-                            <DynamicIcon name="Sparkles" className="h-3.5 w-3.5" />
-                            <span>Rendimento esperado</span>
+                        <div className="flex items-center gap-1.5 text-violet-500 text-[10px] font-bold leading-none">
+                            <DynamicIcon name="Sparkles" className="h-3 w-3" />
+                            <span className="truncate">Rendimento esperado</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Card 3 - Renda Mensal Futura */}
-                <div className="bg-white p-6 rounded-[28px] border border-orange-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col gap-3 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110" />
-                    <div className="flex items-center gap-2 mb-1 relative">
-                        <div className="p-2.5 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-100 ring-4 ring-orange-50">
-                            <DynamicIcon name="Flame" className="h-5 w-5" />
+                <div className="bg-white py-4 px-5 rounded-[24px] border border-orange-100 shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex items-center gap-4 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110" />
+                    <div className="relative flex-shrink-0">
+                        <div className="p-3 bg-orange-500 text-white rounded-full shadow-lg shadow-orange-100 ring-4 ring-orange-50 flex items-center justify-center">
+                            <DynamicIcon name="Flame" className="h-6 w-6" />
                         </div>
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Renda Mensal Futura</span>
                     </div>
-                    <div className="relative">
-                        <p className="text-2xl font-black text-gray-800 tracking-tight leading-none mb-1">
+                    <div className="relative flex flex-col justify-center min-w-0">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Renda Mensal Futura</span>
+                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.rendaMensalFutura)}
                         </p>
-                        <div className="flex items-center gap-1.5 text-orange-500 text-[11px] font-bold">
-                            <DynamicIcon name="Calendar" className="h-3.5 w-3.5" />
-                            <span>Estimativa de saque mensal</span>
+                        <div className="flex items-center gap-1.5 text-orange-500 text-[10px] font-bold leading-none">
+                            <DynamicIcon name="Calendar" className="h-3 w-3" />
+                            <span className="truncate">Estimativa de saque mensal</span>
                         </div>
                     </div>
                 </div>

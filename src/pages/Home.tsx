@@ -276,9 +276,9 @@ export default function Home() {
                         {/* Botão de Investimentos */}
                         <div
                             onClick={() => navigate("/dashboard?filter=investments")}
-                            className="w-7 h-7 flex items-center justify-center rounded-full bg-orange-50 transition-all active:scale-90 cursor-pointer"
+                            className="w-10 h-10 flex items-center justify-center rounded-full bg-orange-50 hover:bg-orange-100 transition-all active:scale-90 cursor-pointer shadow-sm border border-orange-100/50"
                         >
-                            <DynamicIcon name="LineChart" className="h-3.5 w-3.5 text-orange-500" strokeWidth={3} />
+                            <DynamicIcon name="TrendingUp" className="h-5 w-5 text-orange-500" strokeWidth={3} />
                         </div>
                     </div>
                 </Card>

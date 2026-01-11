@@ -388,7 +388,22 @@ export default function Dashboard() {
 
         {filter === "investments" ? (
           <div className="flex flex-col gap-4">
-            {/* 1. Rendimento Mensal StatCard */}
+            {/* 1. Projeção do Patrimônio (AGORA EM PRIMEIRO) */}
+            <div className="mb-4">
+              <WealthProjection
+                investments={investments as Investment[]}
+                isMobile={isMobile}
+              />
+            </div>
+
+            {/* 2. Gráfico de Receitas por Investimentos */}
+            <InvestmentsYieldChart
+              investments={investments}
+              allSubcategories={allSubcategories}
+              isMobile={isMobile}
+            />
+
+            {/* 3. Rendimento Mensal StatCard (AGORA POR ÚLTIMO) */}
             <StatCard
               mainStatTitle="Rendimento Mensal"
               mainStatValue={currentYieldStats.monthYields}
@@ -419,7 +434,6 @@ export default function Dashboard() {
             >
               <div className={cn("flex flex-col w-full h-full")}>
                 <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
-
                   <Button
                     className={cn(
                       "btn-3d",
@@ -439,47 +453,8 @@ export default function Dashboard() {
               </div>
             </StatCard>
 
-            {/* 2. Gráfico de Receitas por Investimentos */}
-            <InvestmentsYieldChart
-              investments={investments}
-              allSubcategories={allSubcategories}
-              isMobile={isMobile}
-            />
 
-            {/* 3. Card de Projeção */}
-            <ProjectedYieldCard
-              mainStatValue={
-                projectedYear === getYear(selectedMonth)
-                  ? stats.balance + currentYieldStats.monthYields
-                  : projectedYearValues.monthlyProjection
-              }
-              projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
-              projectedPatrimonyLabel="Patrimônio Projetado"
-              annualTotalValue={projectedYearValues.annualBalance}
-              annualTotalLabel="Projeção Anual"
-              isMobile={isMobile}
-              topRightContent={
-                <YearNavigatorCompact
-                  year={projectedYear}
-                  onPreviousYear={() => setProjectedYear(p => p - 1)}
-                  onNextYear={() => setProjectedYear(p => p + 1)}
-                  isMobile={isMobile}
-                />
-              }
-              chartContent={
-                <MonthlyProjectedYieldChart
-                  revenues={allRevenues}
-                  expenseInstallments={allExpenseInstallments}
-                  currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
-                  projectedMonthlyYield={currentYieldStats.monthYields}
-                  isMobile={true}
-                  onMonthClick={(date) => {
-                    setSelectedMonth(date);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                />
-              }
-            />
+
 
             {/* 4. Card de Resumo (Investment Cockpit) */}
             <div className="animate-in fade-in slide-in-from-top-4 duration-500">
