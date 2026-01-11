@@ -528,7 +528,7 @@ export default function Investments() { // Alterado para export default function
                     type="single"
                     value={yieldViewMode}
                     onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                    className="bg-white/40 p-1 rounded-2xl shadow-sm border border-white/60"
+                    className="bg-white/40 p-1 rounded-2xl shadow-sm border border-border"
                   >
                     <ToggleGroupItem
                       value="daily"
@@ -912,7 +912,7 @@ export default function Investments() { // Alterado para export default function
                       type="single"
                       value={yieldViewMode}
                       onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                      className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-white/60"
+                      className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-border"
                     >
                       <ToggleGroupItem
                         value="daily"

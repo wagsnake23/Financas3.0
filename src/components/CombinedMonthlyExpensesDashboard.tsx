@@ -212,7 +212,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               type="single"
               value={viewMode}
               onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-              className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-white/60"
+              className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-gray-300/50"
             >
               <ToggleGroupItem
                 value="monthly"
@@ -281,7 +281,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     type="single"
                     value={viewMode}
                     onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
+                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-gray-300/50"
                   >
                     <ToggleGroupItem
                       value="monthly"
@@ -473,7 +473,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     type="single"
                     value={viewMode}
                     onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
+                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-gray-300/50"
                   >
                     <ToggleGroupItem
                       value="monthly"
