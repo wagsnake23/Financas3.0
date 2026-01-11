@@ -207,28 +207,26 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
       )} style={{ WebkitBackdropFilter: 'blur(10px)' }}>
         {!isMobile && (
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <ToggleGroup
-                type="single"
-                value={viewMode}
-                onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-                className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
+          <div className="flex flex-col items-end gap-3 mb-8 pr-2">
+            <ToggleGroup
+              type="single"
+              value={viewMode}
+              onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
+              className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-white/60"
+            >
+              <ToggleGroupItem
+                value="monthly"
+                className="rounded-xl px-5 py-2 text-sm font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white shadow-none transition-all"
               >
-                <ToggleGroupItem
-                  value="monthly"
-                  className="rounded-lg px-3 py-1.5 text-xs font-bold data-[state=on]:bg-white data-[state=on]:text-primary shadow-none transition-all"
-                >
-                  Mês
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="annual"
-                  className="rounded-lg px-3 py-1.5 text-xs font-bold data-[state=on]:bg-white data-[state=on]:text-primary shadow-none transition-all"
-                >
-                  Ano
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
+                Mês
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="annual"
+                className="rounded-xl px-5 py-2 text-sm font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white shadow-none transition-all"
+              >
+                Ano
+              </ToggleGroupItem>
+            </ToggleGroup>
 
             <div className="flex items-center gap-6">
               <Button
@@ -258,8 +256,6 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
               </Button>
             </div>
-
-            <div className="w-24" /> {/* Spacer to balance the toggle group */}
           </div>
         )}
 
@@ -280,22 +276,22 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               </div>
 
               {isMobile && (
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <ToggleGroup
                     type="single"
                     value={viewMode}
                     onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-                    className="bg-white/40 p-0.5 rounded-lg shadow-sm border border-white/60"
+                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
                   >
                     <ToggleGroupItem
                       value="monthly"
-                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white h-7"
                     >
                       Mês
                     </ToggleGroupItem>
                     <ToggleGroupItem
                       value="annual"
-                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white h-7"
                     >
                       Ano
                     </ToggleGroupItem>
@@ -472,22 +468,22 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               </div>
 
               {isMobile && (
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <ToggleGroup
                     type="single"
                     value={viewMode}
                     onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-                    className="bg-white/40 p-0.5 rounded-lg shadow-sm border border-white/60"
+                    className="bg-white/40 p-1 rounded-xl shadow-sm border border-white/60"
                   >
                     <ToggleGroupItem
                       value="monthly"
-                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white h-7"
                     >
                       Mês
                     </ToggleGroupItem>
                     <ToggleGroupItem
                       value="annual"
-                      className="rounded-md px-2 py-1 text-[10px] font-bold data-[state=on]:bg-white data-[state=on]:text-primary h-6"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white h-7"
                     >
                       Ano
                     </ToggleGroupItem>
