@@ -237,7 +237,7 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                    className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
                     style={{ backgroundColor: "transparent" }}
                 >
                     <div className="flex justify-between items-start mb-0">
@@ -286,7 +286,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-3 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                        className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
                         style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
@@ -334,7 +334,7 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="pl-[20px] pr-[20px] pt-[18px] pb-[18px] rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                        className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
                         style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
