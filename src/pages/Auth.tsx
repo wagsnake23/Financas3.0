@@ -102,7 +102,7 @@ export default function Auth() {
     if (!emailValidation.success) {
       newErrors.email = true;
       hasError = true;
-      toast.error(emailValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", emailValidation.error.errors[0].message);
     } else {
       newErrors.email = false;
     }
@@ -111,7 +111,7 @@ export default function Auth() {
     if (!nameValidation.success) {
       newErrors.nome = true;
       hasError = true;
-      toast.error(nameValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", nameValidation.error.errors[0].message);
     } else {
       newErrors.nome = false;
     }
@@ -120,7 +120,7 @@ export default function Auth() {
     if (!passwordValidation.success) {
       newErrors.password = true;
       hasError = true;
-      toast.error(passwordValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", passwordValidation.error.errors[0].message);
     } else {
       newErrors.password = false;
     }
@@ -128,14 +128,14 @@ export default function Auth() {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = true;
       hasError = true;
-      toast.error("As senhas não coincidem", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", "As senhas não coincidem");
     } else {
       newErrors.confirmPassword = false;
     }
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Campos Obrigatórios", "Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -153,10 +153,7 @@ export default function Auth() {
     });
 
     if (error) {
-      toast.error("Erro ao criar conta", {
-        description: error.message,
-        duration: toastDuration, style: toastErrorStyle
-      });
+      showErrorToast("Erro ao criar conta", error.message);
     } else if (data.user) {
       // Attempt to assign the role, but don't block the success message or change it based on this error
       const { error: roleError } = await supabase
@@ -168,10 +165,7 @@ export default function Auth() {
         // We still show the success message about email activation, but log the role error internally.
       }
 
-      toast.success("Conta criada com sucesso! Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Conta criada com sucesso!", "Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.");
 
       // After successful signup, clear the form and switch to login view.
       setEmail("");
@@ -196,14 +190,14 @@ export default function Auth() {
     if (!emailValidation.success) {
       newErrors.email = true;
       hasError = true;
-      toast.error(emailValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", emailValidation.error.errors[0].message);
     } else {
       newErrors.email = false;
     }
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Campos Obrigatórios", "Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -214,15 +208,9 @@ export default function Auth() {
     });
 
     if (error) {
-      toast.error("Erro ao enviar email", {
-        description: error.message,
-        duration: toastDuration, style: toastErrorStyle
-      });
+      showErrorToast("Erro ao enviar email", error.message);
     } else {
-      toast.success("Se o email existir, o link foi enviado.", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Sucesso", "Se o email existir, o link foi enviado.");
       setViewMode("login");
     }
 
@@ -240,7 +228,7 @@ export default function Auth() {
     if (!passwordValidation.success) {
       newErrors.password = true;
       hasError = true;
-      toast.error(passwordValidation.error.errors[0].message, { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", passwordValidation.error.errors[0].message);
     } else {
       newErrors.password = false;
     }
@@ -248,14 +236,14 @@ export default function Auth() {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = true;
       hasError = true;
-      toast.error("As senhas não coincidem", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro de Validação", "As senhas não coincidem");
     } else {
       newErrors.confirmPassword = false;
     }
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Campos Obrigatórios", "Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -266,15 +254,9 @@ export default function Auth() {
     });
 
     if (error) {
-      toast.error("Erro ao redefinir senha", {
-        description: error.message,
-        duration: toastDuration, style: toastErrorStyle
-      });
+      showErrorToast("Erro ao redefinir senha", error.message);
     } else {
-      toast.success("Senha redefinida com sucesso!", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Sucesso", "Senha redefinida com sucesso!");
       navigate("/");
     }
 
