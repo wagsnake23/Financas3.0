@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
@@ -95,6 +96,7 @@ export default function Investments() { // Alterado para export default function
   const [profitability, setProfitability] = useState<number | undefined>(undefined); // Alterado para number | undefined
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
+  const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // States for editing investment
@@ -493,7 +495,28 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div>
               <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
-                <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
+                  <ToggleGroup
+                    type="single"
+                    value={yieldViewMode}
+                    onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
+                    className="bg-white/40 p-1 rounded-2xl shadow-sm border border-white/60"
+                  >
+                    <ToggleGroupItem
+                      value="daily"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_2px_0_rgba(3,69,156,1)] h-7 transition-all active:scale-95"
+                    >
+                      Dia
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="monthly"
+                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_2px_0_rgba(3,69,156,1)] h-7 transition-all active:scale-95"
+                    >
+                      Mês
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
                 <div className="space-y-5">
                   {investments.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
@@ -511,6 +534,8 @@ export default function Investments() { // Alterado para export default function
                       const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
                       const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
                       const dailyYield = investment.valor * dailyRateTruncated;
+                      const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
+                      const monthlyYield = investment.valor * monthlyRate;
 
                       const [year, month, day] = investment.data.split('-').map(Number);
                       const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
@@ -565,10 +590,10 @@ export default function Investments() { // Alterado para export default function
                                 </span>
                               </div>
 
-                              {/* Rendimento Diário */}
+                              {/* Rendimento Diário / Mensal */}
                               <div className="flex items-center gap-1.5 text-[12px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
                                 <span className="text-sm">🔥</span>
-                                <span>+ {formatCurrency(dailyYield)} / dia</span>
+                                <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                               </div>
                             </div>
 
@@ -854,7 +879,28 @@ export default function Investments() { // Alterado para export default function
               {/* Investments List */}
               <div>
                 <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
-                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Meus Investimentos</h2>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
+                    <ToggleGroup
+                      type="single"
+                      value={yieldViewMode}
+                      onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
+                      className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-white/60"
+                    >
+                      <ToggleGroupItem
+                        value="daily"
+                        className="rounded-xl px-4 py-2 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_3px_0_rgba(3,69,156,1)] h-8 transition-all active:scale-95"
+                      >
+                        Dia
+                      </ToggleGroupItem>
+                      <ToggleGroupItem
+                        value="monthly"
+                        className="rounded-xl px-4 py-2 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_3px_0_rgba(3,69,156,1)] h-8 transition-all active:scale-95"
+                      >
+                        Mês
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </div>
                   <div className="space-y-5">
                     {investments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
@@ -872,6 +918,8 @@ export default function Investments() { // Alterado para export default function
                         const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
                         const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
                         const dailyYield = investment.valor * dailyRateTruncated;
+                        const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
+                        const monthlyYield = investment.valor * monthlyRate;
 
                         const [year, month, day] = investment.data.split('-').map(Number);
                         const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
@@ -930,10 +978,10 @@ export default function Investments() { // Alterado para export default function
                                   </span>
                                 </div>
 
-                                {/* Rendimento Diário */}
+                                {/* Rendimento Diário / Mensal */}
                                 <div className="flex items-center gap-1.5 text-[13px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
                                   <span className="text-sm">🔥</span>
-                                  <span>+ {formatCurrency(dailyYield)} / dia</span>
+                                  <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                                 </div>
                               </div>
 
