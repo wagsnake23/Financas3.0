@@ -52,12 +52,12 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            "w-full rounded-xl",
+            "w-full rounded-2xl",
             isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
           )}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className="flex justify-center items-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
@@ -75,25 +75,23 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl",
+                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
                 isMobile
-                  ? "mt-0 h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary"
+                  ? "mt-0 h-10 text-sm flex-1"
                   : "sm:mt-0"
               )}
               onClick={() => setShowSimpleDeleteDialog(false)}
             >
-              {isMobile && <DynamicIcon name="❌" className="mr-1 h-4 w-4" />}{" "}
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmDelete("oneOff")}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-bold",
                 isMobile && "h-10 text-sm flex-1"
               )}
             >
-              {isMobile && <DynamicIcon name="🗑️" className="mr-1 h-4 w-4" />}{" "}
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -107,7 +105,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            "w-full rounded-xl",
+            "w-full rounded-2xl",
             isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
           )}
         >
@@ -179,7 +177,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors",
+                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
                 isMobile
                   ? "mt-0 h-10 text-sm flex-1"
                   : "sm:mt-0"

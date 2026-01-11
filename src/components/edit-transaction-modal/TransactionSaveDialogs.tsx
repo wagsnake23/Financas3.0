@@ -49,7 +49,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
       >
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
-            <DynamicIcon name="Pencil" className="h-6 w-6 text-primary" />
+            <DynamicIcon name="Pencil" className="h-6 w-6 text-emerald-500" />
             Atualizar Lançamento Recorrente
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -67,7 +67,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="thisMonth"
                 id="save-this-month"
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
               />
               <label
                 htmlFor="save-this-month"
@@ -80,7 +80,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="thisMonthForward"
                 id="save-this-month-forward"
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
               />
               <label
                 htmlFor="save-this-month-forward"
@@ -93,7 +93,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="all"
                 id="save-all"
-                className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
               />
               <label
                 htmlFor="save-all"
@@ -113,24 +113,20 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
           <AlertDialogCancel
             disabled={loading || isFetchingOptions}
             className={cn(
-              "rounded-xl",
+              "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
               isMobile
-                ? "mt-0 h-10 text-xs flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary"
+                ? "mt-0 h-11 text-sm flex-1"
                 : "sm:mt-0"
             )}
           >
-            <DynamicIcon
-              name="XCircle"
-              className={cn("mr-1 h-3.5 w-3.5", isMobile && "h-3 w-3 mr-0.5")}
-            />
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => handleConfirmSave(selectedSaveScope)}
             disabled={loading || isFetchingOptions}
             className={cn(
-              "w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl",
-              isMobile && "h-10 text-xs flex-1"
+              "w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold",
+              isMobile && "h-11 text-sm flex-1"
             )}
           >
             {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
