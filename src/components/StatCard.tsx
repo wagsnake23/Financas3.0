@@ -36,6 +36,8 @@ interface StatCardProps {
   neumorphism?: boolean; // NEW PROP for Neumorphism style
   id?: string; // NEW: Prop for accessibility and scrolling
   isPercentage?: boolean; // NEW: Prop to display value as percentage
+  className?: string; // NEW: Custom class name
+  forceTransparentBackground?: boolean; // NEW: Force transparent background
 }
 
 export const StatCard = ({
@@ -57,6 +59,8 @@ export const StatCard = ({
   neumorphism = false, // Default to false
   id, // Destructure new prop
   isPercentage = false,
+  className,
+  forceTransparentBackground = false,
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -94,7 +98,7 @@ export const StatCard = ({
       id={id}
       // 🔹 NOVO: apenas cor de fundo controlada aqui
       style={{
-        backgroundColor: backgroundColors[variant] || undefined,
+        backgroundColor: forceTransparentBackground ? "transparent" : (backgroundColors[variant] || undefined),
       }}
       className={cn(
         cardPaddingClass,
@@ -106,7 +110,8 @@ export const StatCard = ({
             "rounded-3xl",
             "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]"
           )
-          : cn("rounded-xl shadow-sm")
+          : cn("rounded-xl shadow-sm"),
+        className
       )}
     >
       {/* Top-right content (MonthNavigatorCompact or MonthBadge) */}

@@ -431,6 +431,8 @@ export default function Dashboard() {
               annualTotalLabel="Total Anual"
               annualTotalValue={currentYieldStats.annualYields}
               neumorphism={true}
+              className="card-yield overflow-hidden"
+              forceTransparentBackground={true}
             >
               <div className={cn("flex flex-col w-full h-full")}>
                 <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
@@ -588,6 +590,8 @@ export default function Dashboard() {
                 annualTotalLabel="Total Anual"
                 annualTotalValue={totalAnnualExpenses}
                 neumorphism={true}
+                className="card-despesas overflow-hidden"
+                forceTransparentBackground={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
                   <div className={cn("flex justify-end", isMobile && "mt-2")}>
@@ -640,9 +644,10 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Total Anual"
                 annualTotalValue={totalAnnualRevenues}
                 neumorphism={true}
+                className="card-receitas overflow-hidden"
+                forceTransparentBackground={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
                   <div className={cn("flex justify-end", isMobile && "mt-2")}>
@@ -712,9 +717,10 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Saldo Anual"
                 annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 neumorphism={true}
+                className="card-saldo overflow-hidden"
+                forceTransparentBackground={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
                   <div className={cn("flex justify-end", isMobile && "mt-2")}>
@@ -766,6 +772,8 @@ export default function Dashboard() {
                 annualTotalLabel="Total Anual"
                 annualTotalValue={currentYieldStats.annualYields}
                 neumorphism={true}
+                className="card-yield overflow-hidden"
+                forceTransparentBackground={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
                   <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
