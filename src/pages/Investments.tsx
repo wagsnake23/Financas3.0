@@ -281,37 +281,64 @@ export default function Investments() { // Alterado para export default function
   };
 
   const totalProjectedAnnualYield = useMemo(() => {
-    return investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
+    const rawTotal = investments.reduce((sum, inv) => {
+      const annualRateDecimal = inv.rentabilidade / 100;
+      const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
+      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
+      const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
+      return sum + (inv.valor * annualRateDerived);
+    }, 0);
+
+    // Arredondamento Bancário (Round Half Even) para 2 casas
+    const m = 100;
+    const n = +(rawTotal * m).toFixed(8);
+    const i = Math.floor(n);
+    const f = n - i;
+    const e = 1e-8;
+    const rounded = (f > 0.5 - e && f < 0.5 + e)
+      ? (i % 2 === 0 ? i : i + 1)
+      : Math.round(n);
+
+    return rounded / m;
   }, [investments]);
 
   const stats = useMemo(() => {
     const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
 
-    const weightedProfitability =
-      totalInvested > 0
-        ? investments.reduce((sum, inv) => sum + inv.valor * (inv.rentabilidade / 100), 0) / totalInvested
-        : 0;
+    if (totalInvested === 0) return { totalInvested: 0, avgProfitability: 0, totalDailyYieldRS: 0, totalMonthlyYieldRS: 0 };
 
-    const avgProfitability = weightedProfitability * 100;
+    // taxa_anual_ponderada = Σ (valor × (rentabilidade / 100)) ÷ Σ valor
+    const weightedSum = investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
+    const taxaAnualPonderada = weightedSum / totalInvested;
+    const avgProfitability = taxaAnualPonderada * 100;
 
-    // Calculo da rentabilidade diária total (R$) baseada em 252 dias úteis
-    const totalDailyYieldRS = investments.reduce((sum, inv) => {
-      const annualRate = inv.rentabilidade / 100;
-      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-      return sum + (inv.valor * dailyRateTruncated);
-    }, 0);
+    // Rendimento Diário e Mensal com base em 252 e 21 dias úteis
+    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
+    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
 
-    // Calculo da rentabilidade mensal total (R$) baseada em 21 dias úteis
-    const totalMonthlyYieldRS = investments.reduce((sum, inv) => {
-      const annualRate = inv.rentabilidade / 100;
-      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-      const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
-      return sum + (inv.valor * monthlyRate);
-    }, 0);
+    // Rendimento Diário Total (R$)
+    const totalDailyYieldRS = totalInvested * dailyRateTruncated;
 
-    return { totalInvested, avgProfitability, totalDailyYieldRS, totalMonthlyYieldRS };
+    // Rendimento Mensal: juros compostos com base em 21 dias úteis
+    const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
+    const rawMonthYield = totalInvested * taxaMensal;
+
+    // Arredondamento Bancário para o rendimento mensal
+    const m = 100;
+    const nm = +(rawMonthYield * m).toFixed(8);
+    const im = Math.floor(nm);
+    const fm = nm - im;
+    const e = 1e-8;
+    const monthRounded = (fm > 0.5 - e && fm < 0.5 + e)
+      ? (im % 2 === 0 ? im : im + 1)
+      : Math.round(nm);
+
+    return {
+      totalInvested,
+      avgProfitability,
+      totalDailyYieldRS,
+      totalMonthlyYieldRS: monthRounded / m
+    };
   }, [investments]);
 
   if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
