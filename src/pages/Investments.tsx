@@ -16,7 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; /
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar cn, getBorderClass E formatCurrency, formatInTimeZone, TARGET_TIMEZONE
-import { format, getYear, subMonths, addMonths } from "date-fns"; // Importar format, getYear, subMonths, addMonths
+import { format, getYear, subMonths, addMonths, differenceInBusinessDays } from "date-fns"; // Importar format, getYear, subMonths, addMonths, differenceInBusinessDays
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
@@ -280,13 +280,44 @@ export default function Investments() { // Alterado para export default function
     handleCancelEdit();
   };
 
+  const calculatedInvestments = useMemo(() => {
+    return investments.map(inv => {
+      // 1. Taxa diária: (1 + (rentabilidade / 100))^(1 / 252) - 1
+      const taxaDiaria = Math.pow(1 + (inv.rentabilidade / 100), 1 / 252) - 1;
+
+      // 2. Dias úteis passados
+      const [year, month, day] = inv.data.split('-').map(Number);
+      const investDate = new Date(year, month - 1, day);
+      investDate.setHours(0, 0, 0, 0);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // differenceInBusinessDays returns the number of full business days between dates
+      const diasUteis = differenceInBusinessDays(today, investDate);
+
+      // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
+      const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
+
+      // 4. Rendimento de hoje: valor_atual × taxa_diaria
+      const rendimentoHojeVirtual = valorAtualVirtual * taxaDiaria;
+
+      return {
+        ...inv,
+        valorAtualVirtual,
+        rendimentoHojeVirtual,
+        taxaDiaria
+      };
+    });
+  }, [investments]);
+
   const totalProjectedAnnualYield = useMemo(() => {
-    const rawTotal = investments.reduce((sum, inv) => {
+    const rawTotal = calculatedInvestments.reduce((sum, inv) => {
       const annualRateDecimal = inv.rentabilidade / 100;
       const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
       const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
       const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
-      return sum + (inv.valor * annualRateDerived);
+      return sum + (inv.valorAtualVirtual * annualRateDerived);
     }, 0);
 
     // Arredondamento Bancário (Round Half Even) para 2 casas
@@ -304,24 +335,24 @@ export default function Investments() { // Alterado para export default function
 
   const stats = useMemo(() => {
     const totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
+    const totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorAtualVirtual, 0);
 
-    if (totalInvested === 0) return { totalInvested: 0, avgProfitability: 0, totalDailyYieldRS: 0, totalMonthlyYieldRS: 0 };
+    if (totalInvested === 0) return { totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0, totalMonthlyYieldRS: 0 };
 
-    // taxa_anual_ponderada = Σ (valor × (rentabilidade / 100)) ÷ Σ valor
-    const weightedSum = investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
-    const taxaAnualPonderada = weightedSum / totalInvested;
+    // taxa_anual_ponderada = Σ (valor_atual × (rentabilidade / 100)) ÷ Σ valor_atual
+    const weightedSum = calculatedInvestments.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
+    const taxaAnualPonderada = weightedSum / totalCurrentBalance;
     const avgProfitability = taxaAnualPonderada * 100;
 
-    // Rendimento Diário e Mensal com base em 252 e 21 dias úteis
-    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
-    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-
-    // Rendimento Diário Total (R$)
-    const totalDailyYieldRS = totalInvested * dailyRateTruncated;
+    // Rendimento Diário Total (R$) - Sum of virtual daily yields
+    const totalDailyYieldRS = calculatedInvestments.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
 
     // Rendimento Mensal: juros compostos com base em 21 dias úteis
+    // Para simplificar o rendimento mensal do portfólio, usamos a taxa média ponderada
+    const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
+    const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
     const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
-    const rawMonthYield = totalInvested * taxaMensal;
+    const rawMonthYield = totalCurrentBalance * taxaMensal;
 
     // Arredondamento Bancário para o rendimento mensal
     const m = 100;
@@ -335,11 +366,12 @@ export default function Investments() { // Alterado para export default function
 
     return {
       totalInvested,
+      totalCurrentBalance,
       avgProfitability,
       totalDailyYieldRS,
       totalMonthlyYieldRS: monthRounded / m
     };
-  }, [investments]);
+  }, [investments, calculatedInvestments]);
 
   if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
     return (
@@ -545,24 +577,21 @@ export default function Investments() { // Alterado para export default function
                   </ToggleGroup>
                 </div>
                 <div className="space-y-5">
-                  {investments.length === 0 ? (
+                  {calculatedInvestments.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
                     </p>
                   ) : (
-                    investments.map((investment) => {
+                    calculatedInvestments.map((investment) => {
                       const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                       const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                       const investmentNameDisplay = investmentCategory?.nome || investment.nome;
                       const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
-                      // Daily yield calculation based on 252 business days
-                      const annualRate = investment.rentabilidade / 100;
-                      const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-                      const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-                      const dailyYield = investment.valor * dailyRateTruncated;
-                      const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
-                      const monthlyYield = investment.valor * monthlyRate;
+                      // Yield calculation based on virtual current balance
+                      const dailyYield = investment.rendimentoHojeVirtual;
+                      const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
+                      const monthlyYield = investment.valorAtualVirtual * monthlyRate;
 
                       const [year, month, day] = investment.data.split('-').map(Number);
                       const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
@@ -613,7 +642,7 @@ export default function Investments() { // Alterado para export default function
                             <div className="space-y-1">
                               <div className="flex flex-col">
                                 <span className="font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
-                                  {formatCurrency(investment.valor)}
+                                  {formatCurrency(investment.valorAtualVirtual)}
                                 </span>
                               </div>
 
@@ -654,9 +683,9 @@ export default function Investments() { // Alterado para export default function
                           <div className="p-2 bg-success/80 shadow-md rounded-xl text-white">
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" />
                           </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Total</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Atual</h4>
                         </div>
-                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
+                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                       </div>
 
                       {/* Rentabilidade Média */}
@@ -710,8 +739,8 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="DollarSign" className="h-6 w-6" />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Investido</h4>
-                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalInvested)}</p>
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
+                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
                 </div>
 
@@ -929,24 +958,21 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroup>
                   </div>
                   <div className="space-y-5">
-                    {investments.length === 0 ? (
+                    {calculatedInvestments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
                       </p>
                     ) : (
-                      investments.map((investment) => {
+                      calculatedInvestments.map((investment) => {
                         const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                         const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                         const investmentNameDisplay = investmentCategory?.nome || investment.nome;
                         const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
-                        // Daily yield calculation based on 252 business days
-                        const annualRate = investment.rentabilidade / 100;
-                        const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-                        const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
-                        const dailyYield = investment.valor * dailyRateTruncated;
-                        const monthlyRate = Math.pow(1 + dailyRateTruncated, 21) - 1;
-                        const monthlyYield = investment.valor * monthlyRate;
+                        // Yield calculation based on virtual current balance
+                        const dailyYield = investment.rendimentoHojeVirtual;
+                        const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
+                        const monthlyYield = investment.valorAtualVirtual * monthlyRate;
 
                         const [year, month, day] = investment.data.split('-').map(Number);
                         const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
@@ -1001,7 +1027,7 @@ export default function Investments() { // Alterado para export default function
                                     "font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
                                     isMobile ? "text-2xl" : "text-3xl"
                                   )}>
-                                    {formatCurrency(investment.valor)}
+                                    {formatCurrency(investment.valorAtualVirtual)}
                                   </span>
                                 </div>
 
@@ -1034,8 +1060,8 @@ export default function Investments() { // Alterado para export default function
                 {isMobile && (
                   <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
                     <StatCard
-                      mainStatTitle="Total Investido"
-                      mainStatValue={stats.totalInvested}
+                      mainStatTitle="Saldo Atual"
+                      mainStatValue={stats.totalCurrentBalance}
                       icon="DollarSign"
                       variant="income" // Usar variant income para cor verde
                       isMobile={isMobile}

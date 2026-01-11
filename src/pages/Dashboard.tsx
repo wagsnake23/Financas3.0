@@ -41,6 +41,8 @@ import { ProjectedYieldCard } from "@/components/ProjectedYieldCard";
 import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldChart";
 import { YearNavigatorCompact } from "@/components/YearNavigatorCompact";
 import { InvestmentsYieldChart } from "@/components/InvestmentsYieldChart";
+import { WealthProjection } from "@/components/WealthProjection";
+import { Investment } from "@/types/finance";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -380,7 +382,7 @@ export default function Dashboard() {
           isMobile ? "pt-4 px-4 pb-16" : "py-8 max-w-[1200px] px-6"
         )}
       >
-        {!isMobile && (
+        {!isMobile && !filter && (
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
 
@@ -416,11 +418,27 @@ export default function Dashboard() {
               neumorphism={true}
             >
               <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
                   <Button
                     className={cn(
                       "btn-3d",
-                      "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                      "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 font-bold"
+                    )}
+                    style={
+                      {
+                        "--cor-topo": "#3B82F6",
+                        "--cor-base": "#2563EB",
+                      } as React.CSSProperties
+                    }
+                    onClick={() => navigate("/dashboard?filter=projection")}
+                  >
+                    <DynamicIcon name="TrendingUp" className="mr-2 h-4 w-4" />
+                    Projeção
+                  </Button>
+                  <Button
+                    className={cn(
+                      "btn-3d",
+                      "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
                     )}
                     style={
                       {
@@ -576,6 +594,32 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
+          </div>
+        ) : filter === "projection" ? (
+          <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/dashboard")}
+                className="h-10 w-10 rounded-full bg-white shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-95"
+              >
+                <DynamicIcon name="ArrowLeft" className="h-6 w-6 text-gray-600" />
+              </Button>
+              <div className="flex flex-col">
+                <h2
+                  className="text-2xl font-black text-gray-800 tracking-tight leading-none cursor-pointer hover:text-primary transition-colors"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  Voltar ao Dashboard
+                </h2>
+                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1.5 opacity-80">Projeção do Patrimônio</p>
+              </div>
+            </div>
+            <WealthProjection
+              investments={investments as Investment[]}
+              isMobile={isMobile}
+            />
           </div>
         ) : isMobile ? (
           <div className="grid grid-cols-1 gap-4">
@@ -790,11 +834,27 @@ export default function Dashboard() {
                 neumorphism={true}
               >
                 <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
+                  <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
                     <Button
                       className={cn(
                         "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
+                        "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 font-bold"
+                      )}
+                      style={
+                        {
+                          "--cor-topo": "#3B82F6",
+                          "--cor-base": "#2563EB",
+                        } as React.CSSProperties
+                      }
+                      onClick={() => navigate("/dashboard?filter=projection")}
+                    >
+                      <DynamicIcon name="TrendingUp" className="mr-2 h-4 w-4" />
+                      Projeção
+                    </Button>
+                    <Button
+                      className={cn(
+                        "btn-3d",
+                        "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
                       )}
                       style={
                         {
