@@ -1081,7 +1081,7 @@ export default function Investments() { // Alterado para export default function
       {/* NOVO: AlertDialog para confirmação de exclusão */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
-        <AlertDialogContent className={cn("w-full rounded-xl", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn("w-full rounded-[28px]", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -1098,8 +1098,8 @@ export default function Investments() { // Alterado para export default function
             <AlertDialogCancel
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "rounded-xl",
-                isMobile && "h-10 text-sm flex-1 bg-soft-blue hover:bg-soft-blue/80 text-primary mt-0"
+                "rounded-xl bg-white border border-blue-200 hover:bg-blue-50 text-primary",
+                isMobile && "h-10 text-sm flex-1 mt-0"
               )}
               onClick={() => setIsConfirmDeleteOpen(false)}
             >
