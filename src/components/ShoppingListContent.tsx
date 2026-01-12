@@ -515,7 +515,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   Nenhum item encontrado
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-16 px-4 animate-fade-in select-none">
+                <div className="flex flex-col items-center justify-center pt-8 pb-16 px-4 animate-fade-in select-none">
                   <div className="mb-1">
                     <img
                       src="/empty/cart.webp"

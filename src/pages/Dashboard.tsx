@@ -657,7 +657,7 @@ export default function Dashboard() {
 
 
 
-            {(!filter || filter === "revenues") && (
+            {!filter && (
               <StatCard
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
