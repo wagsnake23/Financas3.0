@@ -38,8 +38,8 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
             isMobile ? "h-8 w-8 left-2" : "h-10 w-10 left-0"
           )}
           style={{
-            "--cor-topo": "#FFFFFF",
-            "--cor-base": "#F1F5F9",
+            "--cor-topo": "#FFF5F5",
+            "--cor-base": "#FFE0E0",
             color: "#E54D4D",
             boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)"
           } as any}
@@ -88,8 +88,8 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
             isMobile ? "h-8 w-8 right-2" : "h-10 w-10 right-0"
           )}
           style={{
-            "--cor-topo": "#FFFFFF",
-            "--cor-base": "#F1F5F9",
+            "--cor-topo": "#FFF5F5",
+            "--cor-base": "#FFE0E0",
             boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)"
           } as any}
         >
