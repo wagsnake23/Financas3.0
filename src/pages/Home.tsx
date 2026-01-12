@@ -277,7 +277,7 @@ export default function Home() {
                             )}>
                                 {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
                             </div>
-                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
+                            <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
                         </div>
                     </div>
                 </Card>
@@ -320,7 +320,7 @@ export default function Home() {
                                     )}>
                                         {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
                                 </div>
                             </div>
                             <Button
@@ -372,7 +372,7 @@ export default function Home() {
                                     )}>
                                         {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
                                 </div>
                             </div>
                             <Button
