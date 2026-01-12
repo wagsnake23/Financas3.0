@@ -414,6 +414,7 @@ export default function Dashboard() {
               }
               annualTotalLabel="Saldo Anual"
               annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+              icon="Wallet"
               neumorphism={true}
             >
               <div className="flex justify-end mt-4">
@@ -641,6 +642,7 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
+                annualTotalLabel="Receita Anual"
                 annualTotalValue={totalAnnualRevenues}
                 neumorphism={true}
                 className="card-receitas overflow-hidden"
@@ -696,7 +698,9 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
+                annualTotalLabel="Saldo Anual"
                 annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                icon="Wallet"
                 neumorphism={true}
                 className="card-saldo overflow-hidden"
                 forceTransparentBackground={true}
@@ -880,7 +884,7 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                     />
                   }
-                  annualTotalLabel="Total Anual"
+                  annualTotalLabel="Receita Anual"
                   annualTotalValue={totalAnnualRevenues}
                   neumorphism={true}
                 >
@@ -931,6 +935,7 @@ export default function Dashboard() {
                   }
                   annualTotalLabel="Saldo Anual"
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                  icon="Wallet"
                   neumorphism={true}
                 >
                   <div className="flex justify-end mt-4">
