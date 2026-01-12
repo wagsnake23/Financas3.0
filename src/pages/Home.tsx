@@ -231,12 +231,15 @@ export default function Home() {
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
-                    className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                    className="pl-3 pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
                     style={{ backgroundColor: "transparent" }}
                 >
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex flex-col">
-                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                            <div className="flex items-center gap-2 mb-1">
+                                <Wallet className="h-[18px] w-[18px] text-[#3B82F6]" strokeWidth={2.5} />
+                                <h2 className="text-[15px] font-black tracking-tight" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                            </div>
                             <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
                                 {formatCurrency(stats.currentBalance)}
                             </p>
@@ -267,14 +270,14 @@ export default function Home() {
                         >
                             <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                         </Button>
-                        <div className="flex flex-col items-start gap-0.5 ml-1">
+                        <div className="flex flex-col items-start gap-0.5">
                             <div className={cn(
                                 "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
                                 stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                             )}>
                                 {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
                             </div>
-                            <span className="text-[10px] text-gray-400 font-medium leading-tight ml-0.5">em relação ao mês anterior</span>
+                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
                         </div>
                     </div>
                 </Card>
@@ -282,7 +285,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-3 mb-4">
                     {/* CARD DESPESAS */}
                     <Card
-                        className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                        className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-rose-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
                         style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
@@ -305,16 +308,19 @@ export default function Home() {
                             <div className="flex items-start gap-2">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90"
+                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
                                     style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
                                 >
                                     <TrendingDown className="h-[18px] w-[18px] text-white" />
                                 </Button>
-                                <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                    stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                                )}>
-                                    {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
+                                <div className="flex flex-col items-start gap-0.5">
+                                    <div className={cn(
+                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                        stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                    )}>
+                                        {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
+                                    </div>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
                                 </div>
                             </div>
                             <Button
@@ -331,7 +337,7 @@ export default function Home() {
                     {/* CARD DE RECEITAS */}
                     {/* CARD RECEITAS */}
                     <Card
-                        className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                        className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-emerald-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
                         style={{ backgroundColor: "transparent" }}
                     >
                         <div className="flex justify-between items-start mb-2">
@@ -354,16 +360,19 @@ export default function Home() {
                             <div className="flex items-start gap-2">
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90"
+                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
                                     style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
                                 >
                                     <TrendingUp className="h-[18px] w-[18px] text-white" />
                                 </Button>
-                                <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                    stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                )}>
-                                    {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
+                                <div className="flex flex-col items-start gap-0.5">
+                                    <div className={cn(
+                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                        stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                    )}>
+                                        {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
+                                    </div>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Comparativo mês anterior</span>
                                 </div>
                             </div>
                             <Button
