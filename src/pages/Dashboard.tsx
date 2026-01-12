@@ -403,58 +403,6 @@ export default function Dashboard() {
               isMobile={isMobile}
             />
 
-            {/* 3. Rendimento Mensal StatCard (AGORA POR ÚLTIMO) */}
-            <StatCard
-              mainStatTitle="Rendimento Mensal"
-              mainStatValue={currentYieldStats.monthYields}
-              topRightContent={
-                <MonthNavigatorCompact
-                  selectedMonth={selectedMonth}
-                  onPreviousMonth={handlePreviousMonth}
-                  onNextMonth={handleNextMonth}
-                  isMobile={isMobile}
-                  variant="yield"
-                />
-              }
-              variant="yield"
-              isMobile={isMobile}
-              childrenAlignment="start"
-              chartContent={
-                <MonthlyYieldsBarChart
-                  revenues={[]}
-                  currentDate={selectedMonth}
-                  isMobile={true}
-                  onMonthClick={handleMonthClick}
-                  projectedAnnualYield={currentYieldStats.annualYields}
-                />
-              }
-              annualTotalLabel="Total Anual"
-              annualTotalValue={currentYieldStats.annualYields}
-              neumorphism={true}
-              className="card-yield overflow-hidden"
-              forceTransparentBackground={true}
-            >
-              <div className={cn("flex flex-col w-full h-full")}>
-                <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
-                  <Button
-                    className={cn(
-                      "btn-3d",
-                      "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                    )}
-                    style={
-                      {
-                        "--cor-topo": "#FB923C",
-                        "--cor-base": "#F97316",
-                      } as React.CSSProperties
-                    }
-                    onClick={() => navigate("/investimentos")}
-                  >
-                    Investimentos
-                  </Button>
-                </div>
-              </div>
-            </StatCard>
-
 
 
 
@@ -744,59 +692,7 @@ export default function Dashboard() {
               </StatCard>
             )}
 
-            {!filter && (
-              <StatCard
-                mainStatTitle="Rendimento Mensal"
-                mainStatValue={currentYieldStats.monthYields}
-                topRightContent={
-                  <MonthNavigatorCompact
-                    selectedMonth={selectedMonth}
-                    onPreviousMonth={handlePreviousMonth}
-                    onNextMonth={handleNextMonth}
-                    isMobile={isMobile}
-                    variant="yield"
-                  />
-                }
-                variant="yield"
-                isMobile={isMobile}
-                childrenAlignment="start"
-                chartContent={
-                  <MonthlyYieldsBarChart
-                    revenues={[]}
-                    currentDate={selectedMonth}
-                    isMobile={isMobile}
-                    onMonthClick={handleMonthClick}
-                    projectedAnnualYield={currentYieldStats.annualYields}
-                  />
-                }
-                annualTotalLabel="Total Anual"
-                annualTotalValue={currentYieldStats.annualYields}
-                neumorphism={true}
-                className="card-yield overflow-hidden"
-                forceTransparentBackground={true}
-              >
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end gap-2", isMobile && "mt-2")}>
 
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[140px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#FB923C",
-                          "--cor-base": "#F97316",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/investimentos")}
-                    >
-                      Investimentos
-                    </Button>
-                  </div>
-                </div>
-              </StatCard>
-            )}
 
             {!filter && (
               <ProjectedYieldCard
@@ -1006,69 +902,7 @@ export default function Dashboard() {
                 </StatCard>
               )}
 
-              {(!filter || filter === "expenses") && (
-                <TotalExpensesCard
-                  expenseInstallments={allExpenseInstallments}
-                  isMobile={isMobile}
-                  annualTotalValue={totalAnnualExpenses}
-                  chartContent={
-                    <MonthlyExpenseBarChart
-                      expenseInstallments={allExpenseInstallments}
-                      currentDate={selectedMonth}
-                      isMobile={true}
-                      onMonthClick={handleMonthClick}
-                    />
-                  }
-                />
-              )}
 
-              {!filter && (
-                <StatCard
-                  mainStatTitle="Rendimento Mensal"
-                  mainStatValue={currentYieldStats.monthYields}
-                  topRightContent={
-                    <MonthNavigatorCompact
-                      selectedMonth={selectedMonth}
-                      onPreviousMonth={handlePreviousMonth}
-                      onNextMonth={handleNextMonth}
-                      isMobile={isMobile}
-                      variant="yield"
-                    />
-                  }
-                  variant="yield"
-                  isMobile={isMobile}
-                  chartContent={
-                    <MonthlyYieldsBarChart
-                      revenues={[]}
-                      currentDate={selectedMonth}
-                      isMobile={true}
-                      onMonthClick={handleMonthClick}
-                      projectedAnnualYield={currentYieldStats.annualYields}
-                    />
-                  }
-                  annualTotalLabel="Total Anual"
-                  annualTotalValue={currentYieldStats.annualYields}
-                  neumorphism={true}
-                >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#FB923C",
-                          "--cor-base": "#F97316",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/investimentos")}
-                    >
-                      Investimentos
-                    </Button>
-                  </div>
-                </StatCard>
-              )}
 
               {!filter && (
                 <ProjectedYieldCard
