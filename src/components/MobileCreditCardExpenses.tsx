@@ -147,7 +147,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-2 text-center mt-1 border-t border-[#DCD2FF]/30 pt-1.5">
+          <div className="grid grid-cols-3 gap-2 text-center mt-2 pt-0.5">
             {/* Pago */}
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-1.5 mb-1">
