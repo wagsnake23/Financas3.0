@@ -49,31 +49,31 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
 
       <div className={cn("flex items-center justify-center", isMobile ? "gap-2" : "gap-4")}>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={onPreviousMonth}
           className={cn(
-            "rounded-xl border-gray-200 shadow-sm", // Adicionado borda mais suave e sombra leve
+            "rounded-xl border-none shadow-none text-primary",
             isMobile ? "h-8 w-8" : "h-10 w-10",
-            "hover:bg-primary/10 hover:text-primary transition-all active:scale-90"
+            "hover:bg-primary/10 transition-all active:scale-90"
           )}
         >
-          <DynamicIcon name="ChevronLeft" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          <DynamicIcon name="ChevronLeft" className={cn("h-6 w-6", isMobile && "h-5 w-5")} strokeWidth={3} />
         </Button>
         <h2 className={cn("font-bold capitalize text-gray-700 whitespace-nowrap", isMobile ? "text-base mx-1" : "text-xl mx-2")}>
           {format(selectedMonth, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={onNextMonth}
           className={cn(
-            "rounded-xl border-gray-200 shadow-sm",
+            "rounded-xl border-none shadow-none text-primary",
             isMobile ? "h-8 w-8" : "h-10 w-10",
-            "hover:bg-primary/10 hover:text-primary transition-all active:scale-90"
+            "hover:bg-primary/10 transition-all active:scale-90"
           )}
         >
-          <DynamicIcon name="ChevronRight" className={cn("h-4 w-4", isMobile && "h-3.5 w-3.5")} />
+          <DynamicIcon name="ChevronRight" className={cn("h-6 w-6", isMobile && "h-5 w-5")} strokeWidth={3} />
         </Button>
       </div>
 
