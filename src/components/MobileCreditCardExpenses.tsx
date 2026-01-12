@@ -131,7 +131,7 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-[30px] text-xs font-bold shadow-sm border-none"
+          className="btn-3d rounded-xl w-full h-[32px] text-xs font-bold shadow-sm border-none"
           style={
             {
               "--cor-topo": "#9F7AEA",
