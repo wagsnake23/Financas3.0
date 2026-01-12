@@ -516,53 +516,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 px-4 animate-fade-in select-none">
-                  <div className="relative mb-6 cursor-default">
-                    <div className="absolute inset-0 bg-blue-400/20 blur-3xl rounded-full scale-150 opacity-40 translate-y-4" />
-                    <svg width="180" height="150" viewBox="0 0 180 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
-                      <defs>
-                        <linearGradient id="glass-body" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-                          <stop offset="100%" stopColor="#E0F2FE" stopOpacity="0.5" />
-                        </linearGradient>
-                        <linearGradient id="glass-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                          <stop offset="100%" stopColor="#BFDBFE" stopOpacity="0.5" />
-                        </linearGradient>
-                      </defs>
-
-                      {/* Shadow */}
-                      <ellipse cx="90" cy="138" rx="70" ry="12" fill="#1E40AF" fillOpacity="0.08" style={{ filter: "blur(6px)" }} />
-
-                      {/* Abstract Items inside */}
-                      <circle cx="70" cy="65" r="22" fill="#BFDBFE" fillOpacity="0.6" />
-                      <circle cx="110" cy="55" r="26" fill="#93C5FD" fillOpacity="0.5" />
-                      <rect x="85" y="30" width="30" height="40" rx="6" transform="rotate(-12 85 30)" fill="#60A5FA" fillOpacity="0.3" />
-
-                      {/* Cart Body */}
-                      <path
-                        d="M30 45 H150 L130 110 A 12 12 0 0 1 118 118 H62 A 12 12 0 0 1 50 110 L30 45 Z"
-                        fill="url(#glass-body)"
-                        stroke="url(#glass-stroke)"
-                        strokeWidth="1.5"
-                      />
-
-                      {/* Handle */}
-                      <path d="M30 45 L24 20 H8" stroke="#94A3B8" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
-
-                      {/* Wheels */}
-                      <circle cx="60" cy="128" r="9" fill="#3B82F6" />
-                      <circle cx="60" cy="128" r="3" fill="white" fillOpacity="0.6" />
-
-                      <circle cx="120" cy="128" r="9" fill="#3B82F6" />
-                      <circle cx="120" cy="128" r="3" fill="white" fillOpacity="0.6" />
-
-                      {/* Glass Reflections */}
-                      <path d="M40 52 H140 L134 75 H46 L40 52 Z" fill="white" fillOpacity="0.25" />
-                      <path d="M50 55 L56 100" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
-                      <circle cx="130" cy="35" r="8" fill="#EFF6FF" stroke="white" strokeWidth="1" opacity="0.8" />
-                    </svg>
+                  <div className="mb-1">
+                    <img
+                      src="/empty/cart.webp"
+                      alt="Carrinho vazio"
+                      className="w-[340px] max-w-[90vw] h-auto object-contain opacity-95"
+                    />
                   </div>
-                  <h3 className="text-lg font-bold text-[#1E3A8A]/80 mb-2 tracking-tight font-roboto">
+                  <h3 className="text-lg font-bold text-[#1E3A8A]/80 mb-1 tracking-tight font-roboto">
                     Sua lista está vazia
                   </h3>
                   <p className="text-sm text-[#64748B] font-medium max-w-[240px] text-center leading-relaxed">
