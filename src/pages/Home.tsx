@@ -234,15 +234,14 @@ export default function Home() {
                     className="pl-[20px] pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
                     style={{ backgroundColor: "transparent" }}
                 >
-                    <div className="flex justify-between items-start mb-0">
-                        <div className="flex items-center gap-2">
-                            <Wallet className="h-6 w-6 text-[#4A74D4]" />
-                            <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black text-[#1E6BCE] tracking-tight">Saldo Mensal</h2>
-                            </div>
+                    <div className="flex justify-between items-start mb-2">
+                        <div className="flex flex-col">
+                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                            <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
+                                {formatCurrency(stats.currentBalance)}
+                            </p>
                         </div>
-
-                        {/* Seletor de Mês */}
+                        {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
                         <div
                             className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none -mr-1"
                             style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4", cursor: "default", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15), inset 0px 1px 1px rgba(255, 255, 255, 0.3)" } as any}
@@ -259,30 +258,23 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="flex justify-between items-end -mt-1">
-                        <div className="flex flex-col">
-                            <p className="text-[18px] font-black text-gray-700 tracking-tight mb-0.5">
-                                {formatCurrency(stats.currentBalance)}
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <div className={cn(
-                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                    stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                )}>
-                                    {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
-                                </div>
-                                <span className="text-[10px] text-gray-400 font-medium">em relação ao mês anterior</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="absolute right-5 bottom-3">
-                        <div
+                    <div className="flex items-center mt-1 gap-2">
+                        {/* Investments Icon Button */}
+                        <Button
                             onClick={() => navigate("/dashboard?filter=investments")}
-                            className="btn-3d w-9 h-9 flex items-center justify-center rounded-xl transition-all active:scale-90 cursor-pointer shadow-none bg-white hover:bg-white/90 border-none"
-                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
+                            style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
                         >
-                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#1E6BCE]" strokeWidth={3} />
+                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                        </Button>
+                        <div className="flex flex-col items-start gap-0.5 ml-1">
+                            <div className={cn(
+                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                            )}>
+                                {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
+                            </div>
+                            <span className="text-[10px] text-gray-400 font-medium leading-tight ml-0.5">em relação ao mês anterior</span>
                         </div>
                     </div>
                 </Card>
