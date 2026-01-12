@@ -28,9 +28,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 transition-colors", // Borda vermelho suave e fundo mais suave
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-bold transition-colors",
+          "text-sm",
+          isMobile && "h-9"
         )}
         disabled={loading}
       >

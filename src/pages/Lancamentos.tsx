@@ -160,7 +160,7 @@ const Lancamentos = () => {
             isMobile
               ? "w-full dialog-mobile"
               : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
-            "bg-[#F0F7FF]" // Azul muito claro, perto do branco
+            "bg-[linear-gradient(180deg,hsl(215,45%,96%)_0%,hsl(215,45%,98%)_100%)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_20px_50px_rgba(40,80,160,0.25)]"
           )}
         >
           <DialogHeader
@@ -191,7 +191,7 @@ const Lancamentos = () => {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 };
 
