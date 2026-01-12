@@ -24,6 +24,7 @@ import {
   subMonths,
   getYear,
   getMonth,
+  differenceInBusinessDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency } from "@/lib/utils";
@@ -194,14 +195,45 @@ export default function Dashboard() {
     return allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
   }, [allExpenseInstallments]);
 
+  const calculatedInvestments = useMemo(() => {
+    return investments.map(inv => {
+      // 1. Taxa diária: (1 + (rentabilidade / 100))^(1 / 252) - 1
+      const taxaDiaria = Math.pow(1 + (inv.rentabilidade / 100), 1 / 252) - 1;
+
+      // 2. Dias úteis passados
+      const [year, month, day] = (inv.data as string).split('-').map(Number);
+      const investDate = new Date(year, month - 1, day);
+      investDate.setHours(0, 0, 0, 0);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // differenceInBusinessDays returns the number of full business days between dates
+      const diasUteis = differenceInBusinessDays(today, investDate);
+
+      // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
+      const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
+
+      // 4. Rendimento de hoje: valor_atual × taxa_diaria
+      const rendimentoHojeVirtual = valorAtualVirtual * taxaDiaria;
+
+      return {
+        ...inv,
+        valorAtualVirtual,
+        rendimentoHojeVirtual,
+        taxaDiaria
+      };
+    });
+  }, [investments]);
+
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
-    const rawTotal = investments.reduce((sum, inv) => {
+    const rawTotal = calculatedInvestments.reduce((sum, inv) => {
       const annualRateDecimal = inv.rentabilidade / 100;
       const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
       const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
       const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
-      return sum + (inv.valor * annualRateDerived);
+      return sum + (inv.valorAtualVirtual * annualRateDerived);
     }, 0);
 
     // Arredondamento Bancário (Round Half Even) para 2 casas
@@ -215,30 +247,32 @@ export default function Dashboard() {
       : Math.round(n);
 
     return rounded / m;
-  }, [investments]);
+  }, [calculatedInvestments]);
 
   const totalInvested = useMemo(() => {
     return investments.reduce((sum, inv) => sum + inv.valor, 0);
   }, [investments]);
 
   const currentYieldStats = useMemo(() => {
-    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0, avgProfitability: 0, totalDailyYieldRS: 0 };
+    const totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorAtualVirtual, 0);
 
-    // taxa_anual_ponderada = Σ (valor × (rentabilidade / 100)) ÷ Σ valor
-    const weightedSum = investments.reduce((sum, inv) => sum + (inv.valor * (inv.rentabilidade / 100)), 0);
-    const taxaAnualPonderada = weightedSum / totalInvested;
+    if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0 };
+
+    // taxa_anual_ponderada = Σ (valor_atual × (rentabilidade / 100)) ÷ Σ valor_atual
+    const weightedSum = calculatedInvestments.reduce((sum, inv) => sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100)), 0);
+    const taxaAnualPonderada = weightedSum / totalCurrentBalance;
     const avgProfitability = taxaAnualPonderada * 100;
 
     // Rendimento Diário e Mensal com base em 252 e 21 dias úteis
     const dailyRate = Math.pow(1 + taxaAnualPonderada, 1 / 252) - 1;
     const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
 
-    // Rendimento Diário Total (R$)
-    const totalDailyYieldRS = totalInvested * dailyRateTruncated;
+    // Rendimento Diário Total (R$) - Sum of virtual daily yields
+    const totalDailyYieldRS = calculatedInvestments.reduce((sum, inv) => sum + inv.rendimentoHojeVirtual, 0);
 
     // Rendimento Mensal: juros compostos com base em 21 dias úteis
     const taxaMensal = Math.pow(1 + dailyRateTruncated, 21) - 1;
-    const rawMonthYield = totalInvested * taxaMensal;
+    const rawMonthYield = totalCurrentBalance * taxaMensal;
 
     // Arredondamento Bancário para o rendimento mensal
     const m = 100;
@@ -254,10 +288,11 @@ export default function Dashboard() {
       monthYields: monthRounded / m,
       annualYields: totalProjectedAnnualYield,
       totalInvested,
+      totalCurrentBalance,
       avgProfitability,
       totalDailyYieldRS
     };
-  }, [totalProjectedAnnualYield, totalInvested, investments]);
+  }, [totalProjectedAnnualYield, totalInvested, calculatedInvestments]);
 
   const [projectedYear, setProjectedYear] = useState(getYear(new Date()));
 
@@ -299,7 +334,7 @@ export default function Dashboard() {
 
     const monthlyProjection = (revs - exps) / 12 + currentYieldStats.monthYields;
     const annualBalance = (revs - exps) + currentYieldStats.annualYields;
-    const projectedPatrimony = currentYieldStats.totalInvested + cumulativeBalance;
+    const projectedPatrimony = currentYieldStats.totalCurrentBalance + cumulativeBalance;
 
     return {
       monthlyProjection,
@@ -452,7 +487,7 @@ export default function Dashboard() {
                         </div>
                         <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
                       </div>
-                      <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalInvested)}</p>
+                      <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                     </div>
 
                     <div className="flex flex-col items-end text-right">
@@ -497,8 +532,8 @@ export default function Dashboard() {
                         <DynamicIcon name="DollarSign" className="h-6 w-6" />
                       </div>
                       <div className="flex flex-col">
-                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Investido</h4>
-                        <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalInvested)}</p>
+                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
+                        <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                       </div>
                     </div>
 
