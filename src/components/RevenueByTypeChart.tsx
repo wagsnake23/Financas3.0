@@ -62,14 +62,13 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
   // Dashboard-like gradient card and BarChart for both Mobile and Desktop
   return (
     <div className={cn(
-      "bg-gradient-to-br from-gray-50/90 to-gray-200/60 p-6 rounded-[24px] border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
-      "backdrop-blur-[8px] flex flex-col",
+      "card-receitas p-6 flex flex-col",
       isMobile ? "px-3 py-5" : "h-full justify-between"
-    )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
+    )}>
       <div>
         <div className="flex items-center gap-2 mb-6">
-          <div className="h-8 w-2 bg-[#1AA361] rounded-full shadow-[0_0_12px_rgba(26,163,97,0.3)]" />
-          <h3 className="text-lg font-black text-gray-800 tracking-tight">Receitas por Subcategoria</h3>
+          <div className="h-8 w-2 bg-[#1AA361] rounded-full" />
+          <h3 className="text-lg font-black text-[#1AA361] tracking-tight">Receitas por Subcategoria</h3>
         </div>
 
         <div
@@ -116,7 +115,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                         dy={4}
                         textAnchor="end"
                         className={cn(
-                          "fill-gray-500 font-black uppercase tracking-tight",
+                          "fill-gray-700 font-black uppercase tracking-tight",
                           isMobile ? "text-[10px]" : "text-[12px]"
                         )}
                       >
