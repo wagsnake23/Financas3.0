@@ -720,6 +720,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   "--cor-base": "#E85454",
                 } as React.CSSProperties
               }
+              disabled={totalItems === 0}
             >
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
