@@ -388,7 +388,54 @@ export default function Dashboard() {
 
         {filter === "investments" ? (
           <div className="flex flex-col gap-4">
-            {/* 1. Projeção do Patrimônio (AGORA EM PRIMEIRO) */}
+            {/* Saldo Mensal (Primeiro) */}
+            <StatCard
+              mainStatTitle="Saldo Mensal"
+              mainStatValue={stats.balance}
+              topRightContent={
+                <MonthNavigatorCompact
+                  selectedMonth={selectedMonth}
+                  onPreviousMonth={handlePreviousMonth}
+                  onNextMonth={handleNextMonth}
+                  isMobile={isMobile}
+                  variant="balance"
+                />
+              }
+              variant="balance"
+              isMobile={isMobile}
+              chartContent={
+                <MonthlyBalanceBarChart
+                  revenues={allRevenues}
+                  expenseInstallments={allExpenseInstallments}
+                  currentDate={selectedMonth}
+                  isMobile={true}
+                  onMonthClick={handleMonthClick}
+                />
+              }
+              annualTotalLabel="Saldo Anual"
+              annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+              neumorphism={true}
+            >
+              <div className="flex justify-end mt-4">
+                <Button
+                  className={cn(
+                    "btn-3d",
+                    "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
+                  )}
+                  style={
+                    {
+                      "--cor-topo": "#3B82F6",
+                      "--cor-base": "#2563EB",
+                    } as React.CSSProperties
+                  }
+                  onClick={() => navigate("/lancamentos")}
+                >
+                  Lançamentos
+                </Button>
+              </div>
+            </StatCard>
+
+            {/* 1. Projeção do Patrimônio */}
             <div className="mb-4">
               <WealthProjection
                 investments={investments as Investment[]}
@@ -402,6 +449,8 @@ export default function Dashboard() {
               allSubcategories={allSubcategories}
               isMobile={isMobile}
             />
+
+
 
 
 
@@ -620,25 +669,7 @@ export default function Dashboard() {
               </StatCard>
             )}
 
-            {isMobile && (!filter || filter === "revenues") && (
-              <>
-                <RevenueByTypeChart
-                  revenues={allRevenues.filter(r =>
-                    isWithinInterval(new Date(r.data), {
-                      start: startOfMonth(selectedMonth),
-                      end: endOfMonth(selectedMonth)
-                    })
-                  )}
-                  revenueTypes={allSubcategories}
-                  isMobile={true}
-                />
-                <InvestmentsYieldChart
-                  investments={investments}
-                  allSubcategories={allSubcategories}
-                  isMobile={isMobile}
-                />
-              </>
-            )}
+
 
             {(!filter || filter === "revenues") && (
               <StatCard
@@ -729,6 +760,26 @@ export default function Dashboard() {
                   />
                 }
               />
+            )}
+
+            {isMobile && (!filter || filter === "revenues") && (
+              <>
+                <RevenueByTypeChart
+                  revenues={allRevenues.filter(r =>
+                    isWithinInterval(new Date(r.data), {
+                      start: startOfMonth(selectedMonth),
+                      end: endOfMonth(selectedMonth)
+                    })
+                  )}
+                  revenueTypes={allSubcategories}
+                  isMobile={true}
+                />
+                <InvestmentsYieldChart
+                  investments={investments}
+                  allSubcategories={allSubcategories}
+                  isMobile={isMobile}
+                />
+              </>
             )}
 
             {(!filter || filter === "expenses") && (
@@ -854,7 +905,7 @@ export default function Dashboard() {
                 </StatCard>
               )}
 
-              {(!filter || filter === "revenues") && (
+              {!filter && (
                 <StatCard
                   mainStatTitle="Saldo Mensal"
                   mainStatValue={stats.balance}

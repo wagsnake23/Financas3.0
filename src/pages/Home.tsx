@@ -242,7 +242,7 @@ export default function Home() {
                 >
                     <div className="flex justify-between items-start mb-0">
                         <div className="flex items-center gap-2">
-                            <Wallet className="h-6 w-6 text-[#1E6BCE]" />
+                            <Wallet className="h-6 w-6 text-[#4A74D4]" />
                             <div className="flex flex-col">
                                 <h2 className="text-[15px] font-black text-[#1E6BCE] tracking-tight">Saldo Mensal</h2>
                             </div>
