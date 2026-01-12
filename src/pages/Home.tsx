@@ -236,10 +236,7 @@ export default function Home() {
                 >
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex flex-col">
-                            <div className="flex items-center gap-2 mb-1">
-                                <Wallet className="h-[18px] w-[18px] text-[#3B82F6]" strokeWidth={2.5} />
-                                <h2 className="text-[15px] font-black tracking-tight" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                            </div>
+                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
                             <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
                                 {formatCurrency(stats.currentBalance)}
                             </p>
@@ -277,7 +274,7 @@ export default function Home() {
                             )}>
                                 {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
                             </div>
-                            <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
+                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                         </div>
                     </div>
                 </Card>
@@ -320,7 +317,7 @@ export default function Home() {
                                     )}>
                                         {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                                 </div>
                             </div>
                             <Button
@@ -372,7 +369,7 @@ export default function Home() {
                                     )}>
                                         {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight"><span className="grayscale opacity-70">📅</span> Mês anterior</span>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                                 </div>
                             </div>
                             <Button
