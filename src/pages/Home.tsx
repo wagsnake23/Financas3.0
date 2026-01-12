@@ -279,10 +279,10 @@ export default function Home() {
                     <div className="absolute right-5 bottom-3">
                         <div
                             onClick={() => navigate("/dashboard?filter=investments")}
-                            className="btn-3d w-9 h-9 flex items-center justify-center rounded-xl transition-all active:scale-90 cursor-pointer shadow-md border border-orange-200"
-                            style={{ "--cor-topo": "#FFAB66", "--cor-base": "#E08244" } as any}
+                            className="btn-3d w-9 h-9 flex items-center justify-center rounded-xl transition-all active:scale-90 cursor-pointer shadow-none bg-white hover:bg-white/90 border-none"
+                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                         >
-                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#1E6BCE]" strokeWidth={3} />
                         </div>
                     </div>
                 </Card>
