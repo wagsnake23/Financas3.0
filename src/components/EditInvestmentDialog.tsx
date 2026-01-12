@@ -276,6 +276,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               }}
               required
               disabled={loading}
+              decimalScale={4}
+              fixedDecimalScale={false}
+              maxLength={7}
+              placeholder="0,0000"
               className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
             />
           </div>

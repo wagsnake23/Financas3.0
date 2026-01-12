@@ -488,9 +488,12 @@ export default function Investments() { // Alterado para export default function
                         setProfitability(values.floatValue);
                         setValidationErrors(prev => ({ ...prev, profitability: false }));
                       }}
-                      placeholder="0,00"
+                      placeholder="0,0000"
                       required
                       disabled={loadingForm}
+                      decimalScale={4}
+                      fixedDecimalScale={false}
+                      maxLength={7}
                       className={cn(
                         "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
@@ -876,9 +879,12 @@ export default function Investments() { // Alterado para export default function
                             setProfitability(values.floatValue);
                             setValidationErrors(prev => ({ ...prev, profitability: false }));
                           }}
-                          placeholder="0,00"
+                          placeholder="0,0000"
                           required
                           disabled={loadingForm}
+                          decimalScale={4}
+                          fixedDecimalScale={false}
+                          maxLength={7}
                           className={cn(
                             "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
                             isMobile && "h-9 text-sm",
