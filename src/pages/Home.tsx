@@ -31,7 +31,7 @@ export default function Home() {
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
     // Fetch all revenues for memory-based filtering (needed for variations)
-    const { data: allRevenues = [], isLoading: isLoadingRevenues } = useQuery<
+    const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
         Tables<"receitas">[]
     >({
         queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy-MM")],
@@ -54,7 +54,7 @@ export default function Home() {
     });
 
     // Fetch all expense installments for memory-based filtering and Credit Card card
-    const { data: allExpenseInstallments = [], isLoading: isLoadingExpenses } =
+    const { data: allExpenseInstallments = [], isLoading: isLoadingExpenses, isPlaceholderData: isPlaceholderExpenses } =
         useQuery<
             (Tables<"despesas_parcelas"> & {
                 despesas: Pick<
@@ -178,6 +178,27 @@ export default function Home() {
         };
     }, [allRevenues, allExpenseInstallments, selectedMonth]);
 
+    // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
+    const lastStableData = React.useRef({
+        stats,
+        allExpenseInstallments,
+        selectedMonth,
+    });
+
+    const isPlaceholder = isPlaceholderRevenues || isPlaceholderExpenses;
+
+    if (!isPlaceholder && !isLoadingRevenues && !isLoadingExpenses && !authLoading) {
+        lastStableData.current = {
+            stats,
+            allExpenseInstallments,
+            selectedMonth,
+        };
+    }
+
+    const dStats = lastStableData.current.stats;
+    const dExpenses = lastStableData.current.allExpenseInstallments;
+    const dMonth = lastStableData.current.selectedMonth;
+
     const location = useLocation();
 
     // Scroll to cartoes if hash is present
@@ -238,7 +259,7 @@ export default function Home() {
                         <div className="flex flex-col">
                             <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
                             <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
-                                {formatCurrency(stats.currentBalance)}
+                                {formatCurrency(dStats.currentBalance)}
                             </p>
                         </div>
                         {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
@@ -270,9 +291,9 @@ export default function Home() {
                         <div className="flex flex-col items-start gap-0.5">
                             <div className={cn(
                                 "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                stats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                             )}>
-                                {stats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.balanceVar).toFixed(1)}%
+                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                             </div>
                             <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                         </div>
@@ -289,7 +310,7 @@ export default function Home() {
                             <div className="flex flex-col">
                                 <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
                                 <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
-                                    {formatCurrency(stats.currentExpenses)}
+                                    {formatCurrency(dStats.currentExpenses)}
                                 </p>
                             </div>
                             <Button
@@ -313,9 +334,9 @@ export default function Home() {
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(
                                         "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                        stats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                        dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
                                     )}>
-                                        {stats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.expenseVar).toFixed(1)}%
+                                        {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                     </div>
                                     <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                                 </div>
@@ -341,7 +362,7 @@ export default function Home() {
                             <div className="flex flex-col">
                                 <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
                                 <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
-                                    {formatCurrency(stats.currentIncome)}
+                                    {formatCurrency(dStats.currentIncome)}
                                 </p>
                             </div>
                             <Button
@@ -365,9 +386,9 @@ export default function Home() {
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(
                                         "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                        stats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                        dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                     )}>
-                                        {stats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(stats.incomeVar).toFixed(1)}%
+                                        {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                     </div>
                                     <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                                 </div>
@@ -387,10 +408,10 @@ export default function Home() {
                     <div id="cartoes-section">
                         <MobileCreditCardExpenses
                             cartoes={cartoes}
-                            expenseInstallments={allExpenseInstallments}
+                            expenseInstallments={dExpenses}
                             allCategories={allSubcategories as any}
                             isMobile={isMobile}
-                            selectedMonth={selectedMonth}
+                            selectedMonth={dMonth}
                         />
                     </div>
                 </div>
