@@ -392,6 +392,9 @@ export default function Dashboard() {
             <StatCard
               mainStatTitle="Saldo Mensal"
               mainStatValue={stats.balance}
+              secondaryStatTitle="Saldo Anual"
+              secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
+
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -412,28 +415,9 @@ export default function Dashboard() {
                   onMonthClick={handleMonthClick}
                 />
               }
-              annualTotalLabel="Saldo Anual"
-              annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
-              icon="Wallet"
               neumorphism={true}
             >
-              <div className="flex justify-end mt-4">
-                <Button
-                  className={cn(
-                    "btn-3d",
-                    "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                  )}
-                  style={
-                    {
-                      "--cor-topo": "#3B82F6",
-                      "--cor-base": "#2563EB",
-                    } as React.CSSProperties
-                  }
-                  onClick={() => navigate("/lancamentos")}
-                >
-                  Lançamentos
-                </Button>
-              </div>
+              <div />
             </StatCard>
 
             {/* 1. Projeção do Patrimônio */}

@@ -709,27 +709,40 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="rounded-xl flex-1 h-9 text-xs">
-              <DynamicIcon name="Trash2" className="mr-2 h-3.5 w-3.5" /> Limpar Lista
+            <Button
+              className={cn(
+                "btn-3d",
+                "rounded-xl flex-1 h-9 text-sm font-bold"
+              )}
+              style={
+                {
+                  "--cor-topo": "#FF6D6D",
+                  "--cor-base": "#E85454",
+                } as React.CSSProperties
+              }
+            >
+              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="rounded-xl">
+          <AlertDialogContent className="rounded-3xl w-[90%] max-w-[400px]">
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center justify-center gap-2">
                 <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
                 Confirmação
               </AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogDescription className="text-center">
                 Deseja realmente excluir todos os itens da lista?
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold">Cancelar</AlertDialogCancel>
+            <AlertDialogFooter className="flex flex-row gap-2 items-center">
+              <AlertDialogCancel className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold flex-1 mt-0">
+                Cancelar
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearList}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl flex-1 mt-0"
               >
-                Confirmar
+                Excluir
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

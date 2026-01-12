@@ -38,6 +38,7 @@ interface StatCardProps {
   isPercentage?: boolean; // NEW: Prop to display value as percentage
   className?: string; // NEW: Custom class name
   forceTransparentBackground?: boolean; // NEW: Force transparent background
+  secondaryStatContent?: React.ReactNode; // NEW: Custom content for secondary stat
 }
 
 export const StatCard = ({
@@ -61,6 +62,7 @@ export const StatCard = ({
   isPercentage = false,
   className,
   forceTransparentBackground = false,
+  secondaryStatContent, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -170,41 +172,47 @@ export const StatCard = ({
             )}
           </div>
           {/* Secondary Stat Block (e.g., "Pago este mês") */}
-          {secondaryStatTitle && secondaryStatValue !== undefined && (
-            <div
-              className={cn(
-                "flex flex-col items-start pl-2 pt-1",
-                contentSpacingClass
-              )}
-            >
-              <p
-                className={cn(
-                  titleFontSizeClass,
-                  "font-semibold text-muted-foreground",
-                  "font-roboto"
-                )}
-              >
-                {secondaryStatTitle}
-              </p>
-              <p
-                className={cn(
-                  "font-bold leading-none",
-                  isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
-                  secondaryStatTitle === "Pago este mês" || secondaryStatTitle === "Receita Atual"
-                    ? "text-success"
-                    : variant === "yield"
-                      ? "text-yield"
-                      : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual" || secondaryStatTitle === "Saldo Anual")
-                        ? (secondaryStatValue >= 0
-                          ? (variant === "balance" ? "text-primary" : "text-success")
-                          : "text-destructive")
-                        : "text-primary", // Cor consistente
-                  "font-roboto" // Fonte Roboto
-                )}
-              >
-                {formatCurrency(secondaryStatValue)}
-              </p>
+          {secondaryStatContent ? (
+            <div className={cn("flex flex-col items-start pl-2 pt-1", contentSpacingClass)}>
+              {secondaryStatContent}
             </div>
+          ) : (
+            secondaryStatTitle && secondaryStatValue !== undefined && (
+              <div
+                className={cn(
+                  "flex flex-col items-start pl-2 pt-1",
+                  contentSpacingClass
+                )}
+              >
+                <p
+                  className={cn(
+                    titleFontSizeClass,
+                    "font-semibold text-muted-foreground",
+                    "font-roboto"
+                  )}
+                >
+                  {secondaryStatTitle}
+                </p>
+                <p
+                  className={cn(
+                    "font-bold leading-none",
+                    isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
+                    secondaryStatTitle === "Pago este mês" || secondaryStatTitle === "Receita Atual"
+                      ? "text-success"
+                      : variant === "yield"
+                        ? "text-yield"
+                        : (secondaryStatTitle === "Saldo Projetado" || secondaryStatTitle === "Saldo Atual" || secondaryStatTitle === "Saldo Anual")
+                          ? (secondaryStatValue >= 0
+                            ? (variant === "balance" ? "text-primary" : "text-success")
+                            : "text-destructive")
+                          : "text-primary", // Cor consistente
+                    "font-roboto" // Fonte Roboto
+                  )}
+                >
+                  {formatCurrency(secondaryStatValue)}
+                </p>
+              </div>
+            )
           )}
         </div>
 
