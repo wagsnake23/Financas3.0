@@ -118,7 +118,7 @@ export const MobileCreditCardExpenses: React.FC<
 
       <div className="space-y-1">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border-[#B299FF] bg-white shadow-sm">
+          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border-[#E0D6FF] bg-white shadow-sm">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent>

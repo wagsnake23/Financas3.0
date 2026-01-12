@@ -34,13 +34,14 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
           size="icon"
           onClick={onBack}
           className={cn(
-            "absolute inset-y-0 flex items-center justify-center rounded-xl transition-all active:scale-95 btn-3d bg-white border-none shadow-sm",
-            isMobile ? "h-8 w-8 left-4" : "h-10 w-10 left-0"
+            "absolute inset-y-0 flex items-center justify-center rounded-xl transition-all active:scale-95 btn-3d bg-white border border-rose-100 !shadow-none",
+            isMobile ? "h-8 w-8 left-2" : "h-10 w-10 left-0"
           )}
           style={{
             "--cor-topo": "#FFFFFF",
             "--cor-base": "#F1F5F9",
-            color: backButtonColor
+            color: "#E54D4D",
+            boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)"
           } as any}
         >
           <DynamicIcon name="ChevronLeft" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} strokeWidth={3} />
@@ -79,16 +80,20 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
 
       {hasFiltersActive && onClearFilters && (
         <Button
-          variant="ghost"
           size="icon"
           onClick={onClearFilters}
           title="Limpar todos os filtros"
           className={cn(
-            "absolute inset-y-0 right-0 rounded-xl text-destructive bg-soft-red/50 hover:bg-soft-red/70 transition-all flex items-center justify-center active:scale-95",
-            isMobile ? "h-8 w-8 right-4" : "h-10 w-10 right-0"
+            "absolute inset-y-0 right-0 rounded-xl btn-3d bg-white border border-rose-100 !shadow-none transition-all flex items-center justify-center active:scale-95",
+            isMobile ? "h-8 w-8 right-2" : "h-10 w-10 right-0"
           )}
+          style={{
+            "--cor-topo": "#FFFFFF",
+            "--cor-base": "#F1F5F9",
+            boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)"
+          } as any}
         >
-          <FilterX className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} />
+          <FilterX className={cn(isMobile ? "h-4 w-4" : "h-5 w-5", "text-destructive")} />
         </Button>
       )}
     </div>
