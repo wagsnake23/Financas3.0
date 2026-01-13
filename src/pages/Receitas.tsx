@@ -629,7 +629,7 @@ export default function Receitas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 pt-1.5 pb-3 bg-transparent"
+                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 pt-1 pb-3 bg-transparent"
               )}
             />
           </div>
@@ -659,7 +659,7 @@ export default function Receitas() {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-[#F9FAFB] z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-transparent z-50 m-0" : "mt-8")}
         user={user}
       />
     </div>
