@@ -199,10 +199,10 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                             domain={['auto', 'auto']}
                             width={isMobile ? 50 : 70}
                             tickFormatter={(value) => {
-                                if (value === 0) return "R$ 0";
-                                if (value >= 1000000) return `R$ ${(value / 1000000).toFixed(1)}M`;
-                                if (value >= 1000) return `R$ ${(value / 1000).toFixed(0)}k`;
-                                return `R$ ${value}`;
+                                if (value === 0) return "0";
+                                if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+                                if (value >= 1000) return `${(value / 1000).toFixed(0)}k`;
+                                return `${value}`;
                             }}
                         />
                         <Tooltip
@@ -258,8 +258,8 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
             {/* Slider */}
             <div className="space-y-1 mb-6 px-2">
                 <div className="flex items-center justify-between h-8">
-                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest leading-none">Tempo de Projeção</label>
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-[11px] font-black shadow-lg shadow-blue-100 italic leading-none">
+                    <label className="text-[11px] font-black text-blue-400/80 uppercase tracking-widest leading-none">Tempo de Projeção</label>
+                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-[11px] font-black shadow-lg shadow-blue-100 leading-none">
                         {projectionMonths <= 24
                             ? `${projectionMonths} ${projectionMonths === 1 ? 'mês' : 'meses'}`
                             : `${Math.floor(projectionMonths / 12)} anos`
@@ -273,7 +273,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     step={1}
                     className="py-2"
                 />
-                <div className="flex justify-between text-[9px] font-bold text-gray-400 uppercase tracking-widest opacity-40">
+                <div className="flex justify-between text-[9px] font-bold text-gray-600 uppercase tracking-widest">
                     <span>Hoje</span>
                     <span>{projectionMonths <= 24 ? "12 meses" : "5 anos"}</span>
                     <span>{projectionMonths <= 24 ? "24 meses" : "10 anos"}</span>
