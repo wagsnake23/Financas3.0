@@ -463,12 +463,7 @@ export default function Dashboard() {
               />
             </div>
 
-            {/* 2. Gráfico de Receitas por Investimentos */}
-            <InvestmentsYieldChart
-              investments={investments}
-              allSubcategories={allSubcategories}
-              isMobile={isMobile}
-            />
+
 
 
 
