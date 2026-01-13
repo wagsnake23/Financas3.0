@@ -233,7 +233,7 @@ export default function Home() {
 
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden">
-                <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[1000px]">
+                <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[800px]">
                     <div className="flex justify-between items-start">
                         <div>
                             <h1 className="text-xl font-bold text-white tracking-tight">
@@ -248,7 +248,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <main className={cn("container mx-auto px-4 -mt-24 md:-mt-16 relative z-20 max-w-[1000px]")}>
+            <main className={cn("container mx-auto px-4 -mt-24 md:mt-2 relative z-20 max-w-[800px]")}>
 
                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                 <Card
