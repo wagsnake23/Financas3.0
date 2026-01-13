@@ -343,7 +343,7 @@ export default function Receitas() {
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="tipo" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+          <Label htmlFor="tipo" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Subcategoria de Receita
           </Label>
           <div className="flex gap-2">
@@ -356,8 +356,7 @@ export default function Receitas() {
             >
               <SelectTrigger
                 className={cn(
-                  "flex-1 rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
-                  "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                  "flex-1 transition-all duration-200 input-3d-premium",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderClass({
                     isInvalid: validationErrors.tipoReceitaId,
@@ -367,7 +366,7 @@ export default function Receitas() {
               >
                 <SelectValue placeholder="Selecione a subcategoria" />
               </SelectTrigger>
-              <SelectContent className="w-[--radix-select-trigger-width] rounded-xl">
+              <SelectContent className="w-[--radix-select-trigger-width] rounded-2xl border-none shadow-xl">
                 <SelectItem
                   value={UNSELECTED_VALUE}
                   disabled
@@ -415,7 +414,7 @@ export default function Receitas() {
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+          <Label htmlFor="valor" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Valor (R$)
           </Label>
           <CurrencyBR
@@ -425,8 +424,7 @@ export default function Receitas() {
               setValidationErrors((prev) => ({ ...prev, valor: false }));
             }}
             className={cn(
-              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white",
+              "w-full transition-all duration-200 input-3d-premium",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({
                 isInvalid: validationErrors.valor,
@@ -437,7 +435,7 @@ export default function Receitas() {
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="data" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+          <Label htmlFor="data" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Data
           </Label>
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -445,9 +443,7 @@ export default function Receitas() {
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200",
-                  "rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium",
-                  "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10",
+                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
                   isMobile ? "h-9 text-sm" : "h-10",
                   !data && "text-muted-foreground",
                   getBorderClass({
@@ -489,7 +485,7 @@ export default function Receitas() {
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="descricao" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+          <Label htmlFor="descricao" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Descrição
           </Label>
           <Textarea
@@ -499,8 +495,7 @@ export default function Receitas() {
             placeholder="Detalhes sobre a receita..."
             rows={3}
             className={cn(
-              "w-full rounded-xl bg-white border-[#DCFCE7] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200",
-              "focus:border-[#A8C5FF] focus:ring-4 focus:ring-[#A8C5FF]/10 focus:bg-white resize-none",
+              "w-full transition-all duration-200 input-3d-premium resize-none",
               isMobile ? "text-sm p-4" : "",
             )}
           />
