@@ -106,47 +106,40 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(
-        "rounded-3xl bg-[#F0F7FF] border-none shadow-xl",
-        isMobile ? "dialog-mobile pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+        "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
+        isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
       )}>
-        <DialogHeader
-          className={cn(
-            "flex flex-row items-center justify-center gap-2 mb-2",
-            isMobile && "pt-0"
-          )}
-        >
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center shadow-sm">
-            <span className="text-sm select-none" style={{ color: '#1E40AF' }}>💳</span>
-          </div>
-          <DialogTitle className={cn("font-bold pb-[1px] text-[#1E40AF]", isMobile ? "text-lg" : "text-xl")}>
-            Novo Cartão
+        <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+          <DialogTitle className="flex items-center justify-center gap-2 w-full">
+            <span>💳</span>
+            <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Novo Cartão</span>
           </DialogTitle>
         </DialogHeader>
         <div className={cn("space-y-4", isMobile ? "pt-0 pb-6" : "pb-4")}>
           <div className="space-y-1.5">
-            <Label className="text-gray-500 font-medium text-sm ml-1">Nome do Cartão</Label>
+            <Label className="text-gray-800 font-medium text-sm ml-1">Nome do Cartão</Label>
             <Input
               value={newCardNome}
               onChange={(e) => {
                 setNewCardNome(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardNome: false }));
               }}
-              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))}
+              className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false }))}
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-gray-500 font-medium text-sm ml-1">Banco</Label>
+            <Label className="text-gray-800 font-medium text-sm ml-1">Banco</Label>
             <Input
               value={newCardBanco}
               onChange={(e) => {
                 setNewCardBanco(e.target.value);
                 setValidationErrors(prev => ({ ...prev, newCardBanco: false }));
               }}
-              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))}
+              className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false }))}
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-gray-500 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
+            <Label className="text-gray-800 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
             <Input
               value={newCardUltimosDigitos}
               onChange={(e) => {
@@ -154,12 +147,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 setValidationErrors(prev => ({ ...prev, newCardUltimosDigitos: false }));
               }}
               maxLength={4}
-              className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false }))}
+              className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false }))}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-gray-500 font-medium text-sm ml-1">Dia Fechamento</Label>
+              <Label className="text-gray-800 font-medium text-sm ml-1">Dia Fechamento</Label>
               <Input
                 type="number"
                 min="1"
@@ -169,11 +162,11 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setNewCardDiaFechamento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaFechamento: false }));
                 }}
-                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false }))}
+                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false }))}
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-gray-500 font-medium text-sm ml-1">Dia Vencimento</Label>
+              <Label className="text-gray-800 font-medium text-sm ml-1">Dia Vencimento</Label>
               <Input
                 type="number"
                 min="1"
@@ -183,7 +176,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setNewCardDiaVencimento(e.target.value);
                   setValidationErrors(prev => ({ ...prev, newCardDiaVencimento: false }));
                 }}
-                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false }))}
+                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false }))}
               />
             </div>
           </div>

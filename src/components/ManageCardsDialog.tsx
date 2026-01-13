@@ -275,47 +275,40 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
         <DialogContent className={cn(
-          "rounded-3xl bg-[#F8F9FA] border-none shadow-xl",
-          isMobile ? "dialog-mobile pb-8" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
+          "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
+          isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
         )}>
-          <DialogHeader
-            className={cn(
-              "flex flex-row items-center justify-center gap-2 mb-2",
-              isMobile && "pt-0 mb-4"
-            )}
-          >
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
-              <span className="text-sm select-none">✏️</span>
-            </div>
-            <DialogTitle className={cn("font-bold pb-[1px] text-gray-800", isMobile ? "text-lg" : "text-xl")}>
-              Editar Cartão
+          <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+            <DialogTitle className="flex items-center justify-center gap-2 w-full">
+              <span>💳</span>
+              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Editar Cartão</span>
             </DialogTitle>
           </DialogHeader>
           <div className={cn("space-y-4", isMobile && "pb-4")}>
             <div className="space-y-1.5">
-              <Label className="text-gray-500 font-medium text-sm ml-1">Nome do Cartão</Label>
+              <Label className="text-gray-800 font-medium text-sm ml-1">Nome do Cartão</Label>
               <Input
                 value={nomeCartao}
                 onChange={(e) => {
                   setNomeCartao(e.target.value);
                   setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
                 }}
-                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
+                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-gray-500 font-medium text-sm ml-1">Banco</Label>
+              <Label className="text-gray-800 font-medium text-sm ml-1">Banco</Label>
               <Input
                 value={banco}
                 onChange={(e) => {
                   setBanco(e.target.value);
                   setValidationErrors(prev => ({ ...prev, banco: false }));
                 }}
-                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
+                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-gray-500 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
+              <Label className="text-gray-800 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
               <Input
                 value={ultimosDigitos}
                 onChange={(e) => {
@@ -323,12 +316,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   setValidationErrors(prev => ({ ...prev, ultimosDigitos: false }));
                 }}
                 maxLength={4}
-                className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
+                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-gray-500 font-medium text-sm ml-1">Dia Fechamento</Label>
+                <Label className="text-gray-800 font-medium text-sm ml-1">Dia Fechamento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -338,11 +331,11 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaFechamento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaFechamento: false }));
                   }}
-                  className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
+                  className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-gray-500 font-medium text-sm ml-1">Dia Vencimento</Label>
+                <Label className="text-gray-800 font-medium text-sm ml-1">Dia Vencimento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -352,7 +345,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaVencimento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaVencimento: false }));
                   }}
-                  className={cn("rounded-xl border-blue-200 bg-white shadow-sm h-11", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
+                  className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
                 />
               </div>
             </div>
