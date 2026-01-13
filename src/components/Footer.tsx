@@ -17,8 +17,8 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
 
   return (
     <footer className={cn(
-      "py-6 text-center text-muted-foreground font-roboto", // Centralizado e fonte Roboto
-      isMobile ? "text-xs" : "text-sm",
+      "text-center text-muted-foreground font-roboto",
+      isMobile ? "text-[11px] py-1.5 pb-2" : "py-6 text-sm",
       className
     )}>
       © {new Date().getFullYear()} Minhas Finanças — By{" "}

@@ -207,7 +207,7 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <Card
-              className="!fixed top-[125px] left-4 right-4 p-4 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30 card-despesas"
+              className="!fixed top-[125px] left-4 right-4 p-4 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bottom-[92px] !overflow-y-auto [&::-webkit-scrollbar]:hidden z-30 card-despesas"
               style={{ backgroundColor: "transparent" }}
             >
               {formContent}
