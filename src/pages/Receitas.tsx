@@ -619,10 +619,11 @@ export default function Receitas() {
       >
         {isMobile ? (
           <div className="relative">
-            <Card className="fixed top-[125px] left-4 right-4 p-4 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bg-[#F0FDF4] bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30">
+            <Card
+              className="!fixed top-[125px] left-4 right-4 p-4 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none space-y-4 bottom-[92px] overflow-y-auto [&::-webkit-scrollbar]:hidden z-30 card-receitas"
+              style={{ backgroundColor: "transparent" }}
+            >
               {oneOffFormContent}
-
-
             </Card>
             <div
               ref={setSubmitPortalRef}
@@ -635,7 +636,10 @@ export default function Receitas() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-6">
-              <Card className="p-6 rounded-[24px] shadow-sm border border-gray-200 bg-[#F0FDF4]">
+              <Card
+                className="p-6 rounded-[24px] shadow-sm border border-[#EDFDF5] card-receitas"
+                style={{ backgroundColor: "transparent" }}
+              >
                 {oneOffFormContent}
               </Card>
             </div>
