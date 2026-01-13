@@ -97,7 +97,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div>
-          <Label htmlFor="valor" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="valor" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={valor}
             onChange={(v) => {
@@ -114,7 +114,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
         {/* Tipo de Pagamento (À vista / Parcelado / Fixo) */}
         <div>
-          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Tipo de Pagamento</Label>
+          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Tipo de Pagamento</Label>
           <Select
             value={tipoPagamento}
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
@@ -148,7 +148,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", tipoPagamento === "parcelado" && !isRecurring ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
         {/* Forma de Pagamento */}
         <div>
-          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => { // Tipo explícito para 'value'
@@ -185,7 +185,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado" E NÃO for recorrente) */}
         {tipoPagamento === "parcelado" && !isRecurring && ( // Condição atualizada
           <div>
-            <Label htmlFor="numeroParcelas" className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+            <Label htmlFor="numeroParcelas" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
               Número de Parcelas
             </Label>
             <Input
@@ -208,7 +208,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
       {formaPagamento === "cartao" && (
         <div className="col-span-full">
-          <Label className={cn("text-gray-500 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
