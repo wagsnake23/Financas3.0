@@ -106,7 +106,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
             className={cn(
               isMobile && "h-9 text-sm",
-              "bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+              "text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )}
           />
@@ -123,7 +123,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               isMobile && "h-9 text-sm",
               getBorderClass({})
             )}>
@@ -159,7 +159,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               isMobile && "h-9 text-sm",
               getBorderClass({})
             )}>
@@ -197,7 +197,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               onChange={handleNumeroParcelasChange}
               placeholder="Número de parcelas"
               className={cn(
-                "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
               )}
@@ -218,13 +218,13 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }}
             >
               <SelectTrigger className={cn(
-                "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
               )}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-2xl border-none shadow-xl">
                 <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o cartão</SelectItem>
                 {cartoes
                   .map((cartao) => (

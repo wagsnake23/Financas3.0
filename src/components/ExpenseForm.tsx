@@ -452,7 +452,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           >
             <SelectTrigger
               className={cn(
-                "flex-1 rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium transition-all duration-200",
+                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile && "h-9 text-sm",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
@@ -462,7 +462,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             >
               <SelectValue placeholder="Selecione a subcategoria" />
             </SelectTrigger>
-            <SelectContent className="max-h-[280px] w-[--radix-select-trigger-width] rounded-xl">
+            <SelectContent className="max-h-[280px] w-[--radix-select-trigger-width] rounded-2xl border-none shadow-xl">
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
                 Selecione a subcategoria
               </SelectItem>
@@ -564,7 +564,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           rows={isMobile ? 1 : 3}
           maxLength={50}
           className={cn(
-            "rounded-xl bg-white border-[#FFE5E5] text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none",
+            "rounded-xl text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none input-3d-premium",
             isMobile && "text-sm p-4",
             getBorderClass({})
           )}

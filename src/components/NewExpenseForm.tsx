@@ -145,7 +145,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
               </Label>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="input-3d-premium">
                     <SelectValue placeholder="Selecione uma subcategoria" />
                   </SelectTrigger>
                 </FormControl>
@@ -176,6 +176,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                   placeholder="0,00"
                   {...field}
                   inputMode="numeric"
+                  className="input-3d-premium"
                   onChange={(e) => {
                     const rawValue = e.target.value;
                     // Permite apenas números e vírgula
@@ -277,11 +278,11 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="input-3d-premium">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="rounded-2xl border-none shadow-xl">
                       {paymentType === "credit_card" ||
                         paymentType === "debit_card"
                         ? cartoes.map((cartao) => (
@@ -317,7 +318,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "w-[240px] pl-3 text-left font-normal input-3d-premium",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -358,7 +359,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
               <FormControl>
                 <Textarea
                   placeholder="Adicione uma descrição (opcional)"
-                  className="resize-y"
+                  className="resize-y input-3d-premium"
                   {...field}
                 />
               </FormControl>
@@ -437,6 +438,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                   <Input
                     placeholder="Ex: 3"
                     type="number"
+                    className="input-3d-premium"
                     {...field}
                     onChange={(e) => {
                       const value = e.target.value;

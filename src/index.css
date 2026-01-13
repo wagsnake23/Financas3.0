@@ -483,6 +483,25 @@ body {
   /* luz interna suave */
 }
 
+/* 3D Input Style */
+.input-3d-premium {
+  background: white !important;
+  border: 1px solid #FFE9ED !important;
+  box-shadow:
+    inset 0px 1px 2px rgba(255, 255, 255, 0.5),
+    inset 0px -2px 4px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease;
+}
+
+.input-3d-premium:focus,
+.input-3d-premium:focus-within {
+  border-color: #FFD1DC !important;
+  box-shadow:
+    inset 0px 1px 2px rgba(255, 255, 255, 1),
+    inset 0px -2px 4px rgba(0, 0, 0, 0.15) !important;
+  outline: none;
+}
+
 /* Backgrounds with images */
 .sky-bg {
   background-image:

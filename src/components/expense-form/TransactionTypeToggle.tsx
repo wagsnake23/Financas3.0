@@ -39,7 +39,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
             "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+            "data-[state=off]:bg-white data-[state=off]:border-white/70 data-[state=off]:backdrop-blur-sm data-[state=off]:text-gray-500",
             isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
           )}
         >
@@ -47,16 +47,16 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             name="⚡"
             className={cn(
               "mr-1.5 h-3.5 w-3.5 transition-colors",
-              isRecurring ? "text-muted-foreground" : "text-white"
+              isRecurring ? "text-gray-400" : "text-white"
             )}
           /> Avulsa
         </ToggleGroupItem>
         <ToggleGroupItem
           value="recorrente"
           className={cn(
-            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
+            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200 shadow-sm",
             "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-            "data-[state=off]:bg-transparent data-[state=off]:border-border data-[state=off]:text-muted-foreground",
+            "data-[state=off]:bg-white data-[state=off]:border-white/70 data-[state=off]:backdrop-blur-sm data-[state=off]:text-gray-500",
             isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
           )}
         >
