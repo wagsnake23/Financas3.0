@@ -216,7 +216,7 @@ export default function Despesas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 py-3 bg-[#F9FAFB]/95 backdrop-blur-md"
+                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 pt-1.5 pb-3 bg-transparent"
               )}
             />
           </div>
