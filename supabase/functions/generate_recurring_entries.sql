@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION public.generate_recurring_entries(
     p_monthly_amount numeric,
     p_category_id text,
     p_description text,
-    p_status public.receita_status, -- Only relevant for income
+    p_status public.receita_status,
     p_recurrence_day integer,
     p_total_installments integer,
-    p_forma_pagamento text DEFAULT NULL, -- Only relevant for expenses
-    p_cartao_id uuid DEFAULT NULL,       -- Only relevant for expenses
-    p_tipo_pagamento text DEFAULT NULL   -- Only relevant for expenses
+    p_forma_pagamento text DEFAULT NULL,
+    p_cartao_id uuid DEFAULT NULL,
+    p_tipo_pagamento text DEFAULT NULL
 )
 RETURNS void
 LANGUAGE plpgsql
@@ -95,7 +95,7 @@ BEGIN
                         v_installment_date,
                         p_description,
                         p_status,
-                        FALSE, -- Not the master itself
+                        FALSE,
                         p_master_id,
                         v_day_to_use
                     );
@@ -120,16 +120,15 @@ BEGIN
                     data_pagamento
                 ) VALUES (
                     p_master_id,
-                    i + 1, -- Installment number
+                    i + 1,
                     p_monthly_amount,
                     v_installment_date,
-                    FALSE, -- Expenses are initially pending
+                    FALSE,
                     NULL
                 );
             END IF;
 
-            -- Update the master 'despesas' record with total value and number of installments
-            -- This ensures the master record reflects the sum of all generated installments
+            -- 🔹 CORREÇÃO CRÍTICA AQUI
             UPDATE public.despesas
             SET
                 valor_total = (SELECT SUM(valor_parcela) FROM public.despesas_parcelas WHERE despesa_id = p_master_id),
@@ -139,7 +138,7 @@ BEGIN
                 forma_pagamento = p_forma_pagamento,
                 cartao_id = p_cartao_id,
                 tipo_pagamento = p_tipo_pagamento,
-                is_recurring_master = TRUE -- Ensure master flag is set
+                is_recurring_master = (p_tipo_pagamento = 'fixo') -- ← ESSA LINHA corrige tudo
             WHERE id = p_master_id AND user_id = p_user_id;
         END IF;
     END LOOP;

@@ -1,10 +1,10 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Transaction, TransactionType, AppCategory } from "@/types/finance";
 import { Database, Tables } from "@/integrations/supabase/types";
-import { format, parseISO, getDate } from "date-fns";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { isValidUuid, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils";
+import { isValidUuid } from "@/lib/utils";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -31,7 +31,6 @@ interface UseTransactionEditFormProps {
 
 const UNSELECTED_VALUE = "unselected";
 
-// Helper function to create a local Date object from a YYYY-MM-DD string
 const createSafeDate = (
   dateString: string | null | undefined
 ): Date | undefined => {
@@ -69,7 +68,7 @@ export const useTransactionEditForm = ({
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
   const [showDeleteOptionsDialog, setShowDeleteOptionsDialog] = useState(false);
-  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] = // Corrected name
+  const [showSimpleDeleteDialog, setShowSimpleDeleteOptionsDialog] =
     useState(false);
   const [selectedDeleteScope, setSelectedDeleteScope] =
     useState<DeleteScope>("thisMonth");
@@ -97,7 +96,8 @@ export const useTransactionEditForm = ({
       );
     } else {
       baseCategories = allCategories.filter(
-        (cat) => cat.parent_id !== null && cat.parent_id !== "receitas_e_investimentos"
+        (cat) =>
+          cat.parent_id !== null && cat.parent_id !== "receitas_e_investimentos"
       );
     }
 
@@ -129,7 +129,7 @@ export const useTransactionEditForm = ({
       ];
       const initialStatus =
         editingTransaction.status &&
-          validStatuses.includes(editingTransaction.status)
+        validStatuses.includes(editingTransaction.status)
           ? editingTransaction.status
           : "Pendente";
       setStatus(initialStatus);
@@ -222,10 +222,10 @@ export const useTransactionEditForm = ({
       let finalStatus: ReceitaStatus = isPaid
         ? "Recebida"
         : editingTransaction.status === "Cancelada"
-          ? "Cancelada"
-          : editingTransaction.status === "Prevista"
-            ? "Prevista"
-            : "Pendente";
+        ? "Cancelada"
+        : editingTransaction.status === "Prevista"
+        ? "Prevista"
+        : "Pendente";
 
       const updatedTransaction: Omit<Transaction, "id"> = {
         type,
@@ -235,7 +235,13 @@ export const useTransactionEditForm = ({
         description,
         status: finalStatus,
         installmentNumber: editingTransaction.installmentNumber,
-        totalInstallments: editingTransaction.totalInstallments,
+
+        // 🔴 ÚNICA CORREÇÃO AQUI
+        totalInstallments:
+          editingTransaction.totalInstallments ??
+          (editingTransaction as any).numero_parcelas ??
+          1,
+
         forma_pagamento: formaPagamento,
         cartao_id: formaPagamento === "cartao" ? cartaoId : null,
         despesa_id: editingTransaction.despesa_id,
@@ -310,7 +316,10 @@ export const useTransactionEditForm = ({
     setIsFetchingOptions(false);
     setLoading(false);
 
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+    const totalItemsInSeries =
+      editingTransaction.totalInstallments ??
+      (editingTransaction as any).numero_parcelas ??
+      1;
 
     const isFixedRecurringSeries =
       editingTransaction.tipo_pagamento === "fixo" &&
@@ -345,7 +354,10 @@ export const useTransactionEditForm = ({
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
 
-    const totalItemsInSeries = editingTransaction.totalInstallments || 1;
+    const totalItemsInSeries =
+      editingTransaction.totalInstallments ??
+      (editingTransaction as any).numero_parcelas ??
+      1;
 
     const isFixedRecurringSeries =
       editingTransaction.tipo_pagamento === "fixo" &&
@@ -363,7 +375,7 @@ export const useTransactionEditForm = ({
     if (shouldShowSeriesOptions) {
       setShowDeleteOptionsDialog(true);
     } else {
-      setShowSimpleDeleteOptionsDialog(true); // Corrected call
+      setShowSimpleDeleteOptionsDialog(true);
     }
   }, [editingTransaction, fetchPendingFutureItems]);
 
@@ -377,7 +389,7 @@ export const useTransactionEditForm = ({
         );
       }
       setShowDeleteOptionsDialog(false);
-      setShowSimpleDeleteOptionsDialog(false); // Corrected call
+      setShowSimpleDeleteOptionsDialog(false);
     },
     [editingTransaction, onDeleteTransaction]
   );
@@ -431,6 +443,6 @@ export const useTransactionEditForm = ({
     handleTriggerDeleteConfirmation,
     handleConfirmDelete,
     onCancelEdit,
-    createSafeDate, // Export for TransactionDetailsFields
+    createSafeDate,
   };
 };
