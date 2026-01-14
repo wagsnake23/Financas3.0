@@ -264,7 +264,7 @@ export const CategoryForm = ({
               <DialogContent
                 className={cn(
                   "p-0 border-none bg-white overflow-hidden shadow-2xl flex flex-col gap-0",
-                  isMobile ? "w-[95vw] max-w-[440px] rounded-[24px]" : "sm:max-w-[480px] rounded-xl"
+                  isMobile ? "w-[98vw] max-w-[500px] rounded-[24px]" : "sm:max-w-[550px] rounded-xl"
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
@@ -278,7 +278,7 @@ export const CategoryForm = ({
                   <EmojiPicker
                     onEmojiClick={handleEmojiClick}
                     width="100%"
-                    height={isMobile ? 380 : 420}
+                    height={isMobile ? 440 : 480}
                     autoFocusSearch={false}
                     searchDisabled={false}
                     previewConfig={{ showPreview: false }}
