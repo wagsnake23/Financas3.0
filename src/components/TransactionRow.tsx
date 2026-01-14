@@ -69,7 +69,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         onClick={() => onEditTransaction(transaction)}
         className={cn(
           "bg-white rounded-2xl py-2.5 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
-          transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
+          transaction.status === "Recebida" ? "border-l-4 border-l-success" : "border-l-4 border-l-[#FF8888]"
         )}
       >
         <div className="flex flex-col w-full gap-1">
@@ -124,7 +124,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
                   ? "text-[#25D366] font-extrabold"
-                  : "text-[#F59E0B] font-medium"
+                  : "text-[#FF8888] font-medium"
               )}>
                 {transaction.status === "Recebida"
                   ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
@@ -145,7 +145,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 {transaction.status === "Recebida" ? (
                   <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
                 ) : (
-                  <Circle className="absolute text-[#F59E0B] w-[16px] h-[16px]" strokeWidth={2.5} />
+                  <Circle className="absolute text-[#FF8888] w-[16px] h-[16px]" strokeWidth={2.5} />
                 )}
               </div>
             </div>
