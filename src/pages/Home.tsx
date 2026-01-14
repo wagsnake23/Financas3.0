@@ -264,7 +264,7 @@ export default function Home() {
                         </div>
                         {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
                         <div
-                            className="btn-3d flex items-center justify-between px-1 rounded-full transition-all h-8 w-[125px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                            className="btn-3d flex items-center justify-between px-1 rounded-full transition-all h-[34px] w-[125px] -mr-1 border border-blue-200 shadow-none cursor-default"
                             style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                         >
                             <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
