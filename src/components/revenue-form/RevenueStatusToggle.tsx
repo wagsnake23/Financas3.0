@@ -1,7 +1,7 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Check, Clock } from "lucide-react";
 
 interface RevenueStatusToggleProps {
   status: string;
@@ -14,71 +14,85 @@ export const RevenueStatusToggle: React.FC<RevenueStatusToggleProps> = ({
   setStatus,
   isMobile,
 }) => {
+  const isReceived = status === "Recebida";
+
   return (
-    <div className="flex justify-center pt-1">
+    <div className="w-full flex justify-center">
       <RadioGroup
         value={status}
         onValueChange={(value) => setStatus(value)}
-        className="flex items-center justify-center gap-6"
+        className="flex items-center gap-8"
       >
-        {/* RECEBIDA (Pago) */}
-        <div className="flex items-center gap-2">
+        {/* === RECEBIDA === */}
+        <label
+          htmlFor="status-received"
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <RadioGroupItem
             value="Recebida"
             id="status-received"
             className={cn(
-              isMobile ? "h-[17px] w-[17px]" : "h-[21px] w-[21px]",
-              "peer appearance-none rounded-full border border-success/40",
-              "ring-offset-background focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2",
-              // Fundo verde e ✓ central
-              "data-[state=checked]:bg-[#44E37F]",
-              "data-[state=checked]:border-[#44E37F]",
-              "data-[state=checked]:after:content-['✓'] data-[state=checked]:after:text-white",
-              "data-[state=checked]:after:text-[11px] data-[state=checked]:after:font-extrabold",
-              "data-[state=checked]:after:flex data-[state=checked]:after:items-center data-[state=checked]:after:justify-center"
+              "relative flex items-center justify-center transition-all",
+              "w-[18px] h-[18px] rounded-full border",
+              isReceived
+                ? "bg-[#25D366] border-[#25D366]"
+                : "border-gray-400 bg-white"
             )}
-          />
-          <Label
-            htmlFor="status-received"
+          >
+            {isReceived && (
+              <Check
+                className="absolute text-white w-[14px] h-[14px]"
+                strokeWidth={4}
+              />
+            )}
+          </RadioGroupItem>
+
+          <span
             className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-[#006600] peer-data-[state=checked]:font-extrabold"
+              "text-sm font-extrabold",
+              isReceived ? "text-[#1DA554]" : "text-gray-500",
+              isMobile && "text-xs"
             )}
           >
             Recebida
-          </Label>
-        </div>
+          </span>
+        </label>
 
-        {/* PENDENTE */}
-        <div className="flex items-center gap-2">
+        {/* === PENDENTE === */}
+        <label
+          htmlFor="status-pending"
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <RadioGroupItem
             value="Pendente"
             id="status-pending"
             className={cn(
-              isMobile ? "h-[17px] w-[17px]" : "h-[21px] w-[21px]",
-              "peer appearance-none rounded-full border border-destructive/40 bg-white",
-              "ring-offset-background focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2",
-
-              // Fundo vermelho + ✓ branco NEGRITO quando marcado
-              "data-[state=checked]:bg-[#FF8A8A]",
-              "data-[state=checked]:border-[#FF8A8A]",
-              "data-[state=checked]:after:content-['✓'] data-[state=checked]:after:text-white",
-              "data-[state=checked]:after:text-[11px] data-[state=checked]:after:font-extrabold",
-              "data-[state=checked]:after:flex data-[state=checked]:after:items-center data-[state=checked]:after:justify-center"
+              "relative flex items-center justify-center transition-all !shadow-none !outline-none !ring-0 !ring-offset-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+              "after:content-none data-[state=checked]:after:content-none",
+              "w-[18px] h-[18px] rounded-full border",
+              !isReceived
+                ? "bg-transparent border-none"
+                : "border-gray-400 bg-white"
             )}
-          />
-          <Label
-            htmlFor="status-pending"
+          >
+            {!isReceived && (
+              <Clock
+                className="absolute text-[#FF8888] w-[17px] h-[17px]"
+                strokeWidth={4}
+              />
+            )}
+          </RadioGroupItem>
+
+          <span
             className={cn(
-              "text-sm font-normal text-muted-foreground",
-              isMobile && "text-xs",
-              "peer-data-[state=checked]:text-destructive peer-data-[state=checked]:font-extrabold"
+              "text-sm font-medium",
+              !isReceived ? "text-[#FF8888]" : "text-gray-500",
+              isMobile && "text-xs"
             )}
           >
             Pendente
-          </Label>
-        </div>
+          </span>
+        </label>
       </RadioGroup>
     </div>
   );
