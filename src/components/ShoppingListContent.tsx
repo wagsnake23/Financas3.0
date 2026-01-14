@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Check, Circle } from "lucide-react";
+import { Check, Circle, Package } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -49,7 +49,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-  const [sortPendingFirst, setSortPendingFirst] = useState(false); // New state for sorting
+  const [sortType, setSortType] = useState<'default' | 'pending' | 'bought'>('default');
   const [searchTerm, setSearchTerm] = useState("");
 
   const newItemInputRef = useRef<HTMLInputElement>(null);
@@ -373,35 +373,38 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     }
   };
 
-  // Function to toggle pending items sort
-  const handleTogglePendingSort = () => {
-    setSortPendingFirst((prev) => {
-      const next = !prev;
+  // Function to toggle sort
+  const handleToggleSort = (type: 'pending' | 'bought') => {
+    setSortType((prev) => {
+      const next = prev === type ? 'default' : type;
 
-      // Ativar ordenação: pendentes primeiro
-      if (next) {
-        setItems((prevItems) => {
-          const nonEmpty = prevItems.filter(
-            (item) => item.product.trim() !== ""
-          );
-          const empty = prevItems.filter((item) => item.product.trim() === "");
+      setItems((prevItems) => {
+        const nonEmpty = prevItems.filter(
+          (item) => item.product.trim() !== ""
+        );
+        const empty = prevItems.filter((item) => item.product.trim() === "");
 
-          // Pendentes (status === false) primeiro, depois comprados (true)
-          const sortedNonEmpty = [...nonEmpty].sort((a, b) => {
+        let sortedNonEmpty = [...nonEmpty];
+
+        if (next === 'pending') {
+          // Pendentes (false) primeiro
+          sortedNonEmpty.sort((a, b) => {
             if (a.status === b.status) return 0;
-            return a.status ? 1 : -1; // false (pendente) vem antes de true (comprado)
+            return a.status ? 1 : -1;
           });
+        } else if (next === 'bought') {
+          // Comprados (true) primeiro
+          sortedNonEmpty.sort((a, b) => {
+            if (a.status === b.status) return 0;
+            return a.status ? -1 : 1;
+          });
+        } else {
+          // Default: order
+          sortedNonEmpty.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
 
-          return [...sortedNonEmpty, ...empty];
-        });
-      } else {
-        // Desativar ordenação: voltar para ordem original (campo 'order')
-        setItems((prevItems) => {
-          const cloned = [...prevItems];
-          cloned.sort((a, b) => (a.order || 0) - (b.order || 0));
-          return cloned;
-        });
-      }
+        return [...sortedNonEmpty, ...empty];
+      });
 
       return next;
     });
@@ -452,22 +455,58 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           🛒 Lista de Compras
         </h2>
 
-        <p className="text-sm text-muted-foreground">
-          Total Itens: <span className="font-semibold">{totalItems}</span> •
-          Pendentes:{" "}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+          {/* Total Items - Reset Sort */}
           <button
             type="button"
-            onClick={handleTogglePendingSort}
+            onClick={() => setSortType('default')}
             className={cn(
-              "font-semibold underline-offset-2",
-              sortPendingFirst
-                ? "text-destructive underline"
-                : "text-destructive hover:underline"
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              sortType === 'default'
+                ? "bg-[#EFF6FF] border-[#3B82F6] text-[#3B82F6] font-bold"
+                : "bg-white border-gray-200 text-gray-500 font-medium"
             )}
           >
-            {pendingItems}
-          </button> • Comprados: <span className="font-semibold text-success">{boughtItems}</span>
-        </p>
+            <Package size={14} strokeWidth={2.5} className={cn(sortType === 'default' ? "text-[#3B82F6]" : "text-gray-400")} />
+            <span className="text-xs sm:text-sm">{totalItems} Itens</span>
+          </button>
+
+          {/* Pending Items */}
+          <button
+            type="button"
+            onClick={() => handleToggleSort('pending')}
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              sortType === 'pending'
+                ? "bg-[#FFF0F0] border-[#FF8888]/30 text-[#FF8888] font-bold"
+                : "bg-white border-gray-200 text-gray-500 font-medium"
+            )}
+          >
+            <Circle size={14} strokeWidth={2.5} className={cn(sortType === 'pending' ? "text-[#FF8888] fill-[#FF8888]/10" : "text-gray-400")} />
+            <span className="text-xs sm:text-sm">{pendingItems} Pendentes</span>
+          </button>
+
+          {/* Bought Items */}
+          <button
+            type="button"
+            onClick={() => handleToggleSort('bought')}
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              sortType === 'bought'
+                ? "bg-[#F0FDF4] border-[#10B955]/30 text-[#10B955] font-bold"
+                : "bg-white border-gray-200 text-gray-500 font-medium"
+            )}
+          >
+            {sortType === 'bought' ? (
+              <div className="bg-[#10B955] rounded-full w-[14px] h-[14px] flex items-center justify-center">
+                <Check size={10} strokeWidth={4} className="text-white" />
+              </div>
+            ) : (
+              <Check size={14} strokeWidth={2.5} className="text-gray-400" />
+            )}
+            <span className="text-xs sm:text-sm">{boughtItems} Comprados</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
