@@ -455,20 +455,19 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           🛒 Lista de Compras
         </h2>
 
-        <div className="flex flex-nowrap items-center justify-between sm:justify-center gap-2 mt-1 w-full overflow-x-auto no-scrollbar px-1">
+        <div className="flex items-center justify-between gap-2 mt-1 w-full px-1">
           {/* Total Items - Reset Sort */}
           <button
             type="button"
             onClick={() => setSortType('default')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
-              sortType === 'default'
-                ? "!text-[#3B82F6] font-bold"
-                : "!text-gray-600 font-medium"
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
+              "bg-gray-100/70 border-gray-200 text-gray-600 font-medium hover:bg-gray-100"
             )}
-            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
-            <span className="text-xs sm:text-sm">{totalItems} Itens</span>
+            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+              {totalItems} Itens
+            </span>
           </button>
 
           {/* Pending Items */}
@@ -476,15 +475,16 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('pending')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
               sortType === 'pending'
-                ? "!text-[#FF8888] font-bold"
-                : "!text-gray-600 font-medium"
+                ? "bg-red-100 border-red-300 text-red-700 font-bold shadow-inner"
+                : "bg-red-50/40 border-red-100/60 text-red-500/70 font-medium hover:bg-red-50"
             )}
-            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
-            <Circle size={14} strokeWidth={2.5} className={cn(sortType === 'pending' ? "!text-[#FF8888] fill-[#FF8888]/10" : "!text-gray-400")} />
-            <span className="text-xs sm:text-sm">{pendingItems} Pendentes</span>
+            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+              <Circle className="w-3 h-3 sm:w-[15px] sm:h-[15px]" strokeWidth={2.5} />
+              {pendingItems} Pendentes
+            </span>
           </button>
 
           {/* Bought Items */}
@@ -492,26 +492,27 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('bought')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
               sortType === 'bought'
-                ? "!text-[#10B955] font-bold"
-                : "!text-gray-600 font-medium"
+                ? "bg-emerald-100 border-emerald-300 text-emerald-700 font-bold shadow-inner"
+                : "bg-emerald-50/40 border-emerald-100/60 text-emerald-500/70 font-medium hover:bg-emerald-50"
             )}
-            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
-            <div className={cn(
-              "rounded-full w-[14px] h-[14px] flex items-center justify-center transition-colors",
-              sortType === 'bought' ? "bg-[#10B955]" : "bg-gray-200"
-            )}>
-              <Check size={10} strokeWidth={4} className={cn(sortType === 'bought' ? "text-white" : "text-gray-500")} />
-            </div>
-            <span className="text-xs sm:text-sm">{boughtItems} Comprados</span>
+            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+              <div className={cn(
+                "rounded-full w-3 h-3 sm:w-[15px] sm:h-[15px] flex items-center justify-center transition-colors",
+                sortType === 'bought' ? "bg-emerald-600 text-white" : "bg-emerald-200/50 text-emerald-600/70"
+              )}>
+                <Check size={10} strokeWidth={4} />
+              </div>
+              {boughtItems} Comprados
+            </span>
           </button>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
-        <div className={cn("mb-4 shrink-0 relative", isMobile ? "w-full px-1" : "w-full")}>
+        <div className={cn("mb-4 shrink-0 relative mt-2", isMobile ? "w-full px-1" : "w-full")}>
           <input
             ref={newItemInputRef}
             type="text"
