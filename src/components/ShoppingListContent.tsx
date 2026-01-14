@@ -561,7 +561,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       {/* Status Label */}
                       <span className={cn(
                         "text-[0.75rem] tracking-tight shrink-0 ml-3 leading-none",
-                        item.status ? "text-success font-bold" : "text-gray-400 italic"
+                        item.status ? "text-[#10B955] font-extrabold" : "text-[#F59E0B] font-medium"
                       )}>
                         {item.status ? "COMPRADO" : "Pendente"}
                       </span>
