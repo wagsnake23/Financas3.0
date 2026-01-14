@@ -264,7 +264,7 @@ export const CategoryForm = ({
               <DialogContent
                 className={cn(
                   "p-0 border-none bg-white overflow-hidden shadow-2xl flex flex-col gap-0",
-                  isMobile ? "w-[98vw] max-w-[500px] rounded-[24px]" : "sm:max-w-[550px] rounded-xl"
+                  isMobile ? "w-[99vw] max-w-full rounded-[24px]" : "sm:max-w-[850px] rounded-2xl"
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
