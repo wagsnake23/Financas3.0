@@ -201,7 +201,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
+          "w-full rounded-3xl bg-[linear-gradient(180deg,#E6F2FF,#F0F8FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
           isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
         )}>
           <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>

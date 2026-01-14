@@ -106,7 +106,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(
-        "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
+        "w-full rounded-3xl bg-[linear-gradient(180deg,#E6F2FF,#F0F8FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
         isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
       )}>
         <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
