@@ -119,12 +119,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </div>
 
             {/* Status Group (Label + Botão) */}
-            <div className="flex items-center gap-1.5 shrink-0 ml-3">
+            <div className="flex items-center gap-0.5 shrink-0 ml-3">
               <span className={cn(
                 "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
                   ? "text-[#25D366] font-extrabold"
-                  : "text-[#D97706] font-medium"
+                  : "text-[#F59E0B] font-medium"
               )}>
                 {transaction.status === "Recebida"
                   ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
@@ -145,7 +145,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 {transaction.status === "Recebida" ? (
                   <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
                 ) : (
-                  <Circle className="absolute text-[#D97706] w-[16px] h-[16px]" strokeWidth={2.5} />
+                  <Circle className="absolute text-[#F59E0B] w-[16px] h-[16px]" strokeWidth={2.5} />
                 )}
               </div>
             </div>
