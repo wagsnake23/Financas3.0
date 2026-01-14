@@ -201,20 +201,13 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          "rounded-3xl bg-[#F8F9FA] border-none shadow-xl",
+          "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
           isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
         )}>
-          <DialogHeader
-            className={cn(
-              "flex flex-row items-center justify-center gap-2 mb-2",
-              isMobile && "pt-0 mb-4"
-            )}
-          >
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
-              <span className="text-sm select-none">💳</span>
-            </div>
-            <DialogTitle className={cn("font-bold pb-[1px] text-gray-800", isMobile ? "text-lg" : "text-xl")}>
-              Gerenciar Cartões
+          <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>
+            <DialogTitle className="flex items-center justify-center gap-2 w-full">
+              <span>💳</span>
+              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Gerenciar Cartões</span>
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="h-[300px] pr-4">
