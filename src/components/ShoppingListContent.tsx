@@ -455,13 +455,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           🛒 Lista de Compras
         </h2>
 
-        <div className="flex flex-nowrap items-center justify-between sm:justify-center gap-2 mt-2 w-full overflow-x-auto no-scrollbar px-1">
+        <div className="flex flex-nowrap items-center justify-between sm:justify-center gap-2 mt-1 w-full overflow-x-auto no-scrollbar px-1">
           {/* Total Items - Reset Sort */}
           <button
             type="button"
             onClick={() => setSortType('default')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'default'
                 ? "!text-[#3B82F6] font-bold"
                 : "!text-gray-600 font-medium"
@@ -476,7 +476,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('pending')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'pending'
                 ? "!text-[#FF8888] font-bold"
                 : "!text-gray-600 font-medium"
@@ -492,7 +492,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('bought')}
             className={cn(
-              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-2 rounded-full border border-gray-300 transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'bought'
                 ? "!text-[#10B955] font-bold"
                 : "!text-gray-600 font-medium"
