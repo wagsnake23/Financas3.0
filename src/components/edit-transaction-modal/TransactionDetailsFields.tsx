@@ -138,7 +138,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}>
       {/* Subcategoria */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="category" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
+        <Label htmlFor="category" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
@@ -166,7 +166,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="amount" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="amount" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
             onChange={(v) => {
@@ -180,7 +180,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         {/* Parcela (condicional) */}
         {showInstallmentField && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
-            <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
+            <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
@@ -194,7 +194,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Forma de Pagamento */}
       {transactionType === "expense" && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
@@ -221,7 +221,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Seleção de Cartão de Crédito (condicional - APENAS DESKTOP) */}
       {transactionType === "expense" && formaPagamento === "cartao" && !isMobile && (
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
@@ -250,7 +250,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="date" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Data</Label>
+        <Label htmlFor="date" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Data</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -285,20 +285,21 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
-        <Label htmlFor="description" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Descrição</Label>
+        <Label htmlFor="description" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Adicione uma descrição..."
-          rows={3}
-          className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200 resize-none", isMobile && "text-sm p-4")}
+          rows={2}
+          maxLength={45}
+          className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200 resize-none", isMobile && "text-sm pt-2 pb-2 pl-3 pr-3")}
           disabled={false} // Garantindo que não esteja desabilitado
         />
       </div>
 
       <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
-        <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Status</Label>
+        <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Status</Label>
         <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton
             currentStatus={isPaid ? "Recebida" : "Pendente"}
