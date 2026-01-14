@@ -449,7 +449,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <h2
           className={cn(
             "text-2xl font-bold text-primary w-full",
-            isMobile && "text-xl"
+            isMobile && "text-xl -mt-1"
           )}
         >
           🛒 Lista de Compras
@@ -496,13 +496,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 : "bg-white border-gray-200 text-gray-500 font-medium"
             )}
           >
-            {sortType === 'bought' ? (
-              <div className="bg-[#10B955] rounded-full w-[14px] h-[14px] flex items-center justify-center">
-                <Check size={10} strokeWidth={4} className="text-white" />
-              </div>
-            ) : (
-              <Check size={14} strokeWidth={2.5} className="text-gray-400" />
-            )}
+            <div className={cn(
+              "rounded-full w-[14px] h-[14px] flex items-center justify-center transition-colors",
+              sortType === 'bought' ? "bg-[#10B955]" : "bg-gray-200"
+            )}>
+              <Check size={10} strokeWidth={4} className={cn(sortType === 'bought' ? "text-white" : "text-gray-500")} />
+            </div>
             <span className="text-xs sm:text-sm">{boughtItems} Comprados</span>
           </button>
         </div>
