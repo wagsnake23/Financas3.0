@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import Dialog components
 import { AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
@@ -56,7 +57,7 @@ export const CategoryForm = ({
   const [cor, setCor] = useState("hsl(210, 70%, 50%)");
   const [selectedParentId, setSelectedParentId] = useState<string | null>(defaultParentId || null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const emojiPickerRef = useRef<HTMLDivElement>(null);
+  // Removed emojiPickerRef as it's no longer needed for modal
   const isMobile = useIsMobile(); // Usar o hook useIsMobile
 
   // Load editing data when editingCategory changes
@@ -87,20 +88,8 @@ export const CategoryForm = ({
     }
   }, [editingCategory, defaultParentId, allCategories]);
 
-  // Close emoji picker when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(event.target as Node)
-      ) {
-        setShowEmojiPicker(false);
-      }
-    };
+  // Removed outside click handler effect as Dialog handles closing
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setIcone(emojiData.emoji);
@@ -271,17 +260,19 @@ export const CategoryForm = ({
               {icone}
             </button>
 
-            {showEmojiPicker && (
-              <div ref={emojiPickerRef} className="absolute z-50 mt-2 w-full left-0">
-                <EmojiPicker
-                  onEmojiClick={handleEmojiClick}
-                  width="100%"
-                  height={isMobile ? 300 : 400}
-                  searchDisabled={true}
-                  previewConfig={{ showPreview: false }}
-                />
-              </div>
-            )}
+            <Dialog open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
+              <DialogContent className="sm:max-w-[425px] p-0 border-none bg-transparent shadow-none flex justify-center items-center">
+                <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    width={350}
+                    height={400}
+                    searchDisabled={false} // Enable search for better UX in modal
+                    previewConfig={{ showPreview: false }}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 

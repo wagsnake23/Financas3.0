@@ -1,22 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
 import { CategoryForm } from "@/components/CategoryForm";
-import { CategoryList } => "@/components/CategoryList";
+import CategoriesList from "@/components/CategoriesList";
 import DynamicIcon from "@/components/DynamicIcon";
+import { toast } from "sonner";
+import { EditCategoryModal } from "@/components/EditCategoryModal";
+
+// Helper type matching CategoriesList expectation
+interface HierarchicalCategory extends AppCategory {
+  subCategories?: HierarchicalCategory[];
+}
 
 export default function Categorias() {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
+  const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const {
     data: categories = [],
@@ -36,6 +44,87 @@ export default function Categorias() {
     },
     enabled: !!user && !authLoading,
   });
+
+  const hierarchicalCategories = useMemo(() => {
+    const buildHierarchy = (flat: AppCategory[]): HierarchicalCategory[] => {
+      const map = new Map<string, HierarchicalCategory>();
+      const roots: HierarchicalCategory[] = [];
+
+      flat.forEach((cat) => {
+        map.set(cat.id, { ...cat, subCategories: [] });
+      });
+
+      flat.forEach((cat) => {
+        if (cat.parent_id && map.has(cat.parent_id)) {
+          const parent = map.get(cat.parent_id);
+          if (parent) {
+            parent.subCategories?.push(map.get(cat.id)!);
+          }
+        } else {
+          roots.push(map.get(cat.id)!);
+        }
+      });
+
+      // Sort alpha
+      const sortNodes = (nodes: HierarchicalCategory[]) => {
+        nodes.sort((a, b) => (a.nome || "").localeCompare(b.nome || ""));
+        nodes.forEach((node) => {
+          if (node.subCategories && node.subCategories.length > 0) {
+            sortNodes(node.subCategories);
+          }
+        });
+      };
+      sortNodes(roots);
+      return roots;
+    };
+    return buildHierarchy(categories);
+  }, [categories]);
+
+  const handleAddCategory = async (categoryData: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
+    try {
+      if (!user) return;
+      const { error } = await supabase.from("categorias").insert({
+        ...categoryData,
+        user_id: user.id,
+      });
+
+      if (error) throw error;
+
+      toast.success("Subcategoria adicionada com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    } catch (error: any) {
+      toast.error("Erro ao adicionar categoria: " + error.message);
+    }
+  };
+
+  const handleUpdateCategory = async (id: string, categoryData: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
+    try {
+      const { error } = await supabase
+        .from("categorias")
+        .update(categoryData)
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast.success("Categoria atualizada com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setIsEditModalOpen(false);
+      setEditingCategory(null);
+    } catch (error: any) {
+      toast.error("Erro ao atualizar categoria: " + error.message);
+    }
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      const { error } = await supabase.from("categorias").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Categoria excluída com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    } catch (error: any) {
+      toast.error("Erro ao excluir categoria: " + error.message);
+    }
+  };
 
   if (authLoading || isLoadingCategories) {
     return (
@@ -93,7 +182,11 @@ export default function Categorias() {
               </div>
               🗂️Nova Subcategoria
             </h2>
-            <CategoryForm user={user} queryClient={queryClient} />
+            <CategoryForm
+              onAddCategory={handleAddCategory}
+              allCategories={categories}
+              hideCardWrapper={true}
+            />
 
             <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mt-6">
               <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
@@ -104,17 +197,22 @@ export default function Categorias() {
               </div>
               🗃️Categorias Cadastradas
             </h2>
-            <CategoryList
-              categories={categories}
-              user={user}
-              queryClient={queryClient}
+            <CategoriesList
+              categories={hierarchicalCategories}
+              onDeleteCategory={handleDeleteCategory}
+              onEditCategory={(cat) => {
+                setEditingCategory(cat);
+                setIsEditModalOpen(true);
+              }}
+              isMobile={isMobile}
+              allFlatCategories={categories}
             />
 
             <Footer isMobile={isMobile} className="pt-2" user={user} />
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
+            <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto w-full">
               <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mb-4">
                 <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
                   <DynamicIcon
@@ -124,28 +222,44 @@ export default function Categorias() {
                 </div>
                 🗂️Nova Subcategoria
               </h2>
-              <CategoryForm user={user} queryClient={queryClient} />
+              <CategoryForm
+                onAddCategory={handleAddCategory}
+                allCategories={categories}
+                hideCardWrapper={true}
+              />
             </Card>
 
-            <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto">
-              <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mb-4">
-                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
-                  <DynamicIcon
-                    name="List"
-                    className="h-6 w-6 text-primary"
-                  />
-                </div>
-                🗃️Categorias Cadastradas
-              </h2>
-              <CategoryList
-                categories={categories}
-                user={user}
-                queryClient={queryClient}
+            <Card className="rounded-xl shadow-sm max-w-[700px] mx-auto w-full">
+              {/* Title is inside CategoriesList for consistency or I should wrap it? 
+                  CategoriesList has title inside it. Let's rely on CategoriesList styling but it has a Card inside.
+                  Wait, CategoriesList returns a Card. So I should NOT wrap it in a Card.
+              */}
+              <CategoriesList
+                categories={hierarchicalCategories}
+                onDeleteCategory={handleDeleteCategory}
+                onEditCategory={(cat) => {
+                  setEditingCategory(cat);
+                  setIsEditModalOpen(true);
+                }}
+                isMobile={isMobile}
+                allFlatCategories={categories}
               />
             </Card>
           </div>
         )}
       </div>
+
+      <EditCategoryModal
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        editingCategory={editingCategory}
+        onUpdateCategory={handleUpdateCategory}
+        onCancelEdit={() => {
+          setIsEditModalOpen(false);
+          setEditingCategory(null);
+        }}
+        allCategories={categories}
+      />
 
       {!isMobile && <Footer isMobile={isMobile} user={user} />}
     </div>
