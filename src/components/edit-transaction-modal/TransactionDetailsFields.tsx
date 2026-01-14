@@ -81,6 +81,10 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   refetchCartoes,
   tipoPagamento,
 }) => {
+  const getBorderColor = (errorKey: string) => {
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#E2E8F0] border";
+  };
+
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
   const isRecurringIncome = (transactionType === "income" && totalInstallments && totalInstallments > 1);
   const showInstallmentField = isExpenseInstallment || isRecurringIncome;
@@ -137,10 +141,10 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}>
       {/* Subcategoria */}
-      <div className={cn("space-y-2", isMobile && "space-y-1")}>
+      <div className={cn(isMobile && "space-y-1")}>
         <Label htmlFor="category" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -165,7 +169,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Valor e Parcela (lado a lado) */}
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+        <div className={cn(isMobile && "space-y-1")}>
           <Label htmlFor="amount" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
@@ -173,19 +177,19 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("amount"), getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
         {/* Parcela (condicional) */}
         {showInstallmentField && (
-          <div className={cn("space-y-2", isMobile && "space-y-1")}>
+          <div className={cn(isMobile && "space-y-1")}>
             <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
-              className={cn("rounded-xl bg-muted/50 text-blue-500 font-medium", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium !text-blue-500 shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !border-blue-300 !bg-transparent", isMobile && "h-9 text-sm")}
             />
           </div>
         )}
@@ -193,13 +197,13 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Forma de Pagamento */}
       {transactionType === "expense" && (
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+        <div className={cn(isMobile && "space-y-1")}>
           <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("formaPagamento"), getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
@@ -220,7 +224,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Seleção de Cartão de Crédito (condicional - APENAS DESKTOP) */}
       {transactionType === "expense" && formaPagamento === "cartao" && !isMobile && (
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
+        <div className={cn(isMobile && "space-y-1")}>
           <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
@@ -230,7 +234,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("cartaoId"), getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -249,16 +253,17 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       )}
 
       {/* Data (abaixo de Valor e Parcela) */}
-      <div className={cn("space-y-2", isMobile && "space-y-1")}>
+      <div className={cn(isMobile && "space-y-1")}>
         <Label htmlFor="date" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Data</Label>
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-medium h-10 rounded-xl transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200",
+                "w-full justify-start text-left font-medium rounded-xl transition-all duration-200 input-3d-premium text-gray-800",
                 !date && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
+                isMobile ? "h-9 text-sm" : "h-10",
+                getBorderColor("date"),
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
               )}
             >
@@ -284,7 +289,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       </div>
 
       {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
-      <div className={cn("space-y-2", isMobile && "space-y-1")}>
+      <div className={cn(isMobile && "space-y-1")}>
         <Label htmlFor="description" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
@@ -293,12 +298,12 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           placeholder="Adicione uma descrição..."
           rows={2}
           maxLength={45}
-          className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 shadow-inner !border-gray-200 resize-none", isMobile && "text-sm pt-2 pb-2 pl-3 pr-3")}
+          className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 resize-none", isMobile && "text-sm pt-2 pb-2 pl-3 pr-3", getBorderColor("description"))}
           disabled={false} // Garantindo que não esteja desabilitado
         />
       </div>
 
-      <div className={cn("flex flex-col items-start space-y-2", isMobile && "space-y-1")}>
+      <div className={cn("flex flex-col items-start", isMobile && "space-y-1")}>
         <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Status</Label>
         <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
           <StatusToggleButton

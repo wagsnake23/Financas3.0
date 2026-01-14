@@ -73,6 +73,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [loading, setLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
+  const getBorderColor = (errorKey: string) => {
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#E2E8F0] border";
+  };
+
   const handleEditClick = (card: Cartao) => {
     setEditingCard(card);
     setNomeCartao(card.nome);
@@ -278,30 +282,40 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             </DialogTitle>
           </DialogHeader>
           <div className={cn("space-y-4", isMobile && "pb-4")}>
-            <div className="space-y-1.5">
-              <Label className="text-gray-800 font-medium text-sm ml-1">Nome do Cartão</Label>
+            <div>
+              <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
               <Input
                 value={nomeCartao}
                 onChange={(e) => {
                   setNomeCartao(e.target.value);
                   setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
                 }}
-                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false }))}
+                className={cn(
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  isMobile ? "h-9 text-sm" : "h-10",
+                  getBorderColor("nomeCartao"),
+                  getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false })
+                )}
               />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-gray-800 font-medium text-sm ml-1">Banco</Label>
+            <div>
+              <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Banco</Label>
               <Input
                 value={banco}
                 onChange={(e) => {
                   setBanco(e.target.value);
                   setValidationErrors(prev => ({ ...prev, banco: false }));
                 }}
-                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false }))}
+                className={cn(
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  isMobile ? "h-9 text-sm" : "h-10",
+                  getBorderColor("banco"),
+                  getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false })
+                )}
               />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-gray-800 font-medium text-sm ml-1">Últimos 4 Dígitos</Label>
+            <div>
+              <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Últimos 4 Dígitos</Label>
               <Input
                 value={ultimosDigitos}
                 onChange={(e) => {
@@ -309,12 +323,17 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   setValidationErrors(prev => ({ ...prev, ultimosDigitos: false }));
                 }}
                 maxLength={4}
-                className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false }))}
+                className={cn(
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  isMobile ? "h-9 text-sm" : "h-10",
+                  getBorderColor("ultimosDigitos"),
+                  getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false })
+                )}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-gray-800 font-medium text-sm ml-1">Dia Fechamento</Label>
+              <div>
+                <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Fechamento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -324,11 +343,16 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaFechamento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaFechamento: false }));
                   }}
-                  className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false }))}
+                  className={cn(
+                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                    isMobile ? "h-9 text-sm" : "h-10",
+                    getBorderColor("diaFechamento"),
+                    getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false })
+                  )}
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-gray-800 font-medium text-sm ml-1">Dia Vencimento</Label>
+              <div>
+                <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Vencimento</Label>
                 <Input
                   type="number"
                   min="1"
@@ -338,7 +362,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setDiaVencimento(e.target.value);
                     setValidationErrors(prev => ({ ...prev, diaVencimento: false }));
                   }}
-                  className={cn("input-3d-premium h-11 !border-gray-500", getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false }))}
+                  className={cn(
+                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                    isMobile ? "h-9 text-sm" : "h-10",
+                    getBorderColor("diaVencimento"),
+                    getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false })
+                  )}
                 />
               </div>
             </div>
