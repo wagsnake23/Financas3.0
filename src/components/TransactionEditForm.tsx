@@ -139,7 +139,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         onSubmit={handleSubmit}
         className={cn(
           "flex flex-col",
-          isMobile && "max-h-[75vh] space-y-1 overflow-hidden"
+          isMobile && "max-h-[75vh] overflow-hidden"
         )}
       >
         <TransactionStatusBar
@@ -152,7 +152,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         />
         <div
           className={cn(
-            "overflow-y-auto flex-1 min-h-0",
+            "overflow-y-auto flex-1 min-h-0 pb-4",
             isMobile && "w-full px-2 mt-0 overflow-x-hidden"
           )}
         >
@@ -195,7 +195,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn("w-full px-2 pt-0 pb-0 mt-1")}
+          className={cn("w-full px-2 pt-0 pb-0 mt-4")}
         />
       </form>
 
