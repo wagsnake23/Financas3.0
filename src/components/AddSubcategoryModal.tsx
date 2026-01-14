@@ -50,7 +50,7 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
                         Nova Subcategoria
                     </DialogTitle>
                 </DialogHeader>
-                <div className={cn(isMobile && "form-body pb-10")}>
+                <div className={cn(isMobile && "form-body pb-6")}>
                     <CategoryForm
                         onAddCategory={(cat) => {
                             onAddCategory(cat);

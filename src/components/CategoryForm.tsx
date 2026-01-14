@@ -276,7 +276,7 @@ export const CategoryForm = ({
           </div>
         </div>
 
-        {isMobile && <div className="h-10" />}
+        {isMobile && <div className="h-4" />}
         <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "mt-6")}>
           {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
