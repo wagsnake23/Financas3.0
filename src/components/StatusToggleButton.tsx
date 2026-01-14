@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Database } from "@/integrations/supabase/types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Check } from "lucide-react";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -22,46 +22,97 @@ export const StatusToggleButton: React.FC<StatusToggleButtonProps> = ({
   transactionType = "expense",
 }) => {
   const isPaidOrReceived = currentStatus === "Recebida";
+  const statusLabel = transactionType === "income" ? "Recebido" : "Pago";
 
-  const label = isPaidOrReceived
-    ? (transactionType === "income" ? "RECEBIDO!" : "PAGO!")
-    : "Pendente";
+  const handleValueChange = (value: string) => {
+    if (disabled) return;
+
+    // If clicking "paid" and currently not paid => toggle
+    if (value === "paid" && !isPaidOrReceived) {
+      onToggle();
+    }
+    // If clicking "pending" and currently paid => toggle
+    else if (value === "pending" && isPaidOrReceived) {
+      onToggle();
+    }
+  };
 
   return (
-    <div
-      onClick={!disabled ? onToggle : undefined}
-      className={cn(
-        "flex items-center gap-2 cursor-pointer select-none transition-all",
-        disabled && "opacity-50 cursor-not-allowed",
-        isMobile ? "h-8" : "h-9"
-      )}
+    <RadioGroup
+      value={isPaidOrReceived ? "paid" : "pending"}
+      onValueChange={handleValueChange}
+      className={cn("flex items-center gap-6", disabled && "opacity-50")}
+      disabled={disabled}
     >
-      <div
-        className={cn(
-          "rounded-full flex items-center justify-center transition-all border shadow-sm",
-          isMobile ? "h-5 w-5" : "h-6 w-6",
-          isPaidOrReceived
-            ? "bg-success border-success text-white scale-110 shadow-success/20"
-            : "bg-white border-destructive/50 text-transparent hover:border-success/50"
-        )}
+      {/* === PAGO / RECEBIDO === */}
+      <label
+        htmlFor="status-paid-toggle"
+        className={cn("flex items-center gap-2 cursor-pointer select-none")}
       >
-        {isPaidOrReceived && (
-          <span className={cn(
-            "font-black drop-shadow-sm",
-            isMobile ? "text-[12px]" : "text-sm"
-          )}>✓</span>
-        )}
-      </div>
+        <RadioGroupItem
+          value="paid"
+          id="status-paid-toggle"
+          className={cn(
+            "relative flex items-center justify-center transition-all",
+            "w-[18px] h-[18px] rounded-full border",
+            isPaidOrReceived
+              ? "bg-[#25D366] border-[#25D366]"
+              : "border-gray-400 bg-white"
+          )}
+        >
+          {isPaidOrReceived && (
+            <Check
+              className="absolute text-white w-[13px] h-[13px]"
+              strokeWidth={4}
+            />
+          )}
+        </RadioGroupItem>
 
-      <span className={cn(
-        "tracking-tight transition-all",
-        isMobile ? "text-[0.75rem]" : "text-sm",
-        isPaidOrReceived
-          ? "text-success font-bold"
-          : "text-blue-400 italic"
-      )}>
-        {label}
-      </span>
-    </div>
+        <span
+          className={cn(
+            "text-sm font-extrabold",
+            isPaidOrReceived ? "text-[#1DA554]" : "text-gray-500",
+            isMobile && "text-xs"
+          )}
+        >
+          {statusLabel}
+        </span>
+      </label>
+
+      {/* === PENDENTE === */}
+      <label
+        htmlFor="status-pending-toggle"
+        className={cn("flex items-center gap-2 cursor-pointer select-none")}
+      >
+        <RadioGroupItem
+          value="pending"
+          id="status-pending-toggle"
+          className={cn(
+            "relative flex items-center justify-center transition-all",
+            "w-[18px] h-[18px] rounded-full border",
+            !isPaidOrReceived
+              ? "bg-[#FF6D6D] border-[#FF6D6D]"
+              : "border-gray-400 bg-white"
+          )}
+        >
+          {!isPaidOrReceived && (
+            <Check
+              className="absolute text-white w-[13px] h-[13px]"
+              strokeWidth={4}
+            />
+          )}
+        </RadioGroupItem>
+
+        <span
+          className={cn(
+            "text-sm font-extrabold",
+            !isPaidOrReceived ? "text-[#E84F4F]" : "text-gray-500",
+            isMobile && "text-xs"
+          )}
+        >
+          Pendente
+        </span>
+      </label>
+    </RadioGroup>
   );
 };

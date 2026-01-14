@@ -38,6 +38,7 @@ import { TransactionDetailsFields } from "./edit-transaction-modal/TransactionDe
 import { TransactionDeleteDialogs } from "./edit-transaction-modal/TransactionDeleteDialogs"; // Importar o novo componente
 import { TransactionSaveDialogs } from "./edit-transaction-modal/TransactionSaveDialogs"; // Importar o novo componente
 import { TransactionEditActions } from "./edit-transaction-modal/TransactionEditActions";
+import { TransactionStatusBar } from "./edit-transaction-modal/TransactionStatusBar";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
 type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
@@ -138,13 +139,21 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         onSubmit={handleSubmit}
         className={cn(
           "flex flex-col",
-          isMobile && "max-h-[75vh] overflow-y-auto space-y-2"
+          isMobile && "max-h-[75vh] space-y-1 overflow-hidden"
         )}
       >
+        <TransactionStatusBar
+          isPaid={isPaid}
+          setIsPaid={setIsPaid}
+          paidAtTimestamp={paidAtTimestamp}
+          setPaidAtTimestamp={setPaidAtTimestamp}
+          transactionType={type as "income" | "expense"}
+          isMobile={isMobile}
+        />
         <div
           className={cn(
-            "overflow-y-auto",
-            isMobile && "w-full px-2 mt-0 max-h-[80vh] overflow-x-hidden"
+            "overflow-y-auto flex-1 min-h-0",
+            isMobile && "w-full px-2 mt-0 overflow-x-hidden"
           )}
         >
           <TransactionDetailsFields

@@ -303,38 +303,6 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         />
       </div>
 
-      <div className={cn("flex flex-col items-start", isMobile && "space-y-1")}>
-        <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Status</Label>
-        <div className="flex items-center gap-2 w-full"> {/* Container para o toggle e o timestamp */}
-          <StatusToggleButton
-            currentStatus={isPaid ? "Recebida" : "Pendente"}
-            onToggle={() => setIsPaid(!isPaid)}
-            isMobile={isMobile}
-            transactionType={transactionType}
-          />
-          {paidAtTimestamp && (
-            <div className="flex-1">
-              <Label htmlFor="paidAt" className={cn(isMobile && "text-xs", "sr-only")}>Data/Hora Pagamento</Label>
-              <Input
-                id="paidAt"
-                type="text"
-                value={paidAtTimestamp
-                  ? formatInTimeZone(
-                    paidAtTimestamp, // Simplificado para passar a string diretamente
-                    TARGET_TIMEZONE,
-                    "dd/MM/yyyy HH:mm",
-                    { locale: ptBR }
-                  )
-                  : ''
-                }
-                readOnly
-                disabled
-                className={cn("rounded-xl bg-muted/40 text-blue-600 font-medium border-none -mt-1", isMobile && "h-9 text-sm")}
-              />
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
