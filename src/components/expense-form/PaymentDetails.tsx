@@ -214,7 +214,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               pattern="[0-9]*"
               value={numeroParcelas}
               onChange={handleNumeroParcelasChange}
-              placeholder="Número de parcelas"
+              placeholder=""
               className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile && "h-9 text-sm",
