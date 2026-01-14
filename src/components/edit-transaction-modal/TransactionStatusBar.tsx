@@ -61,16 +61,23 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         "w-[18px] h-[18px] rounded-full border",
                         isPaid
                             ? "bg-[#25D366] border-[#25D366]"
-                            : "bg-[#FF6D6D] border-[#FF6D6D]"
+                            : "bg-[#FEF3C7] border-[#FEF3C7]"
                     )}>
-                        <Check
-                            className="absolute text-white w-[13px] h-[13px]"
-                            strokeWidth={4}
-                        />
+                        {isPaid ? (
+                            <Check
+                                className="absolute text-white w-[14px] h-[14px]"
+                                strokeWidth={4}
+                            />
+                        ) : (
+                            <Clock
+                                className="absolute text-[#D97706] w-[14px] h-[14px]"
+                                strokeWidth={4}
+                            />
+                        )}
                     </div>
                     <span className={cn(
                         "text-sm font-extrabold",
-                        isPaid ? "text-[#1DA554]" : "text-[#E84F4F]"
+                        isPaid ? "text-[#1DA554]" : "text-[#D97706]"
                     )}>
                         {statusLabel}
                     </span>

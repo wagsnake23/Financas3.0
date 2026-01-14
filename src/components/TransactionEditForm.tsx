@@ -152,7 +152,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         />
         <div
           className={cn(
-            "overflow-y-auto flex-1 min-h-0 pb-4",
+            "overflow-y-auto flex-1 min-h-0 pb-1",
             isMobile && "w-full px-2 mt-0 overflow-x-hidden"
           )}
         >
@@ -195,7 +195,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           loading={loading || isFetchingOptions}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
-          className={cn("w-full px-2 pt-0 pb-0 mt-4")}
+          className={cn("w-full px-2 pt-0 pb-0 mt-3")}
         />
       </form>
 

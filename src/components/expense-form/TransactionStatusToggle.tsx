@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Check } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 
 interface TransactionStatusToggleProps {
   isPaid: boolean;
@@ -37,7 +37,7 @@ export const TransactionStatusToggle: React.FC<
           >
             {isPaid && (
               <Check
-                className="absolute text-white w-[13px] h-[13px]"
+                className="absolute text-white w-[14px] h-[14px]"
                 strokeWidth={4}
               />
             )}
@@ -66,13 +66,13 @@ export const TransactionStatusToggle: React.FC<
               "relative flex items-center justify-center transition-all",
               "w-[18px] h-[18px] rounded-full border",
               !isPaid
-                ? "bg-[#FF6D6D] border-[#FF6D6D]"
+                ? "bg-[#FEF3C7] border-[#FEF3C7]"
                 : "border-gray-400 bg-white"
             )}
           >
             {!isPaid && (
-              <Check
-                className="absolute text-white w-[13px] h-[13px]"
+              <Clock
+                className="absolute text-[#D97706] w-[14px] h-[14px]"
                 strokeWidth={4}
               />
             )}
@@ -81,7 +81,7 @@ export const TransactionStatusToggle: React.FC<
           <span
             className={cn(
               "text-sm font-extrabold",
-              !isPaid ? "text-[#E84F4F]" : "text-gray-500",
+              !isPaid ? "text-[#D97706]" : "text-gray-500",
               isMobile && "text-xs"
             )}
           >
