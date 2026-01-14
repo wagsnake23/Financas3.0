@@ -524,8 +524,8 @@ export default function Receitas() {
               type="submit"
               form="revenue-form"
               className={cn(
-                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+                isMobile ? "h-11 text-base" : "h-11 text-base"
               )}
               style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
               disabled={loading}
