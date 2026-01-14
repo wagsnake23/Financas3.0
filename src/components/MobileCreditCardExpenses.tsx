@@ -121,7 +121,7 @@ export const MobileCreditCardExpenses: React.FC<
           <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border-[#E0D6FF] bg-white shadow-sm">
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-xl">
             {cartoes.map((card) => (
               <SelectItem key={card.id} value={card.id} className="text-sm">
                 {card.nome} {card.ultimos_digitos}
