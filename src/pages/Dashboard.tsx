@@ -473,12 +473,15 @@ export default function Dashboard() {
             {/* 4. Card de Resumo (Investment Cockpit) */}
             <div className="animate-in fade-in slide-in-from-top-4 duration-500">
               {isMobile ? (
-                <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[24px] p-5 shadow-sm">
+                <div className="card-receitas p-5 shadow-sm relative rounded-[24px]">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-6">
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
-                          <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" />
+                        <div
+                          className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
+                          style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                        >
+                          <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                         </div>
                         <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
                       </div>
@@ -487,8 +490,11 @@ export default function Dashboard() {
 
                     <div className="flex flex-col items-end text-right">
                       <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
-                          <DynamicIcon name="Percent" className="h-3.5 w-3.5" />
+                        <div
+                          className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
+                          style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                        >
+                          <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                         </div>
                         <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Média</h4>
                       </div>
@@ -500,8 +506,11 @@ export default function Dashboard() {
 
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
-                          <DynamicIcon name="Calendar" className="h-3.5 w-3.5" />
+                        <div
+                          className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
+                          style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                        >
+                          <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                         </div>
                         <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Mensal</h4>
                       </div>
@@ -510,8 +519,11 @@ export default function Dashboard() {
 
                     <div className="flex flex-col items-end text-right">
                       <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                        <div className="p-2 bg-success/80 shadow-sm rounded-xl text-white">
-                          <DynamicIcon name="Clock" className="h-3.5 w-3.5" />
+                        <div
+                          className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
+                          style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                        >
+                          <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                         </div>
                         <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Diário</h4>
                       </div>
@@ -520,11 +532,14 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-[#F2FFFB] to-[#E8F8F4] border border-success/20 rounded-[32px] p-8 shadow-sm">
+                <div className="card-receitas p-8 shadow-sm relative rounded-[32px]">
                   <div className="grid grid-cols-4 items-center gap-8">
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
-                        <DynamicIcon name="DollarSign" className="h-6 w-6" />
+                      <div
+                        className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
+                        style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                      >
+                        <DynamicIcon name="DollarSign" className="h-6 w-6 text-white" strokeWidth={3} />
                       </div>
                       <div className="flex flex-col">
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
@@ -533,8 +548,11 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
-                      <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
-                        <DynamicIcon name="Calendar" className="h-5 w-5" />
+                      <div
+                        className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
+                        style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                      >
+                        <DynamicIcon name="Calendar" className="h-5 w-5 text-white" strokeWidth={3} />
                       </div>
                       <div className="flex flex-col">
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
@@ -543,8 +561,11 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
-                      <div className="p-2.5 bg-success/80 rounded-xl text-white shadow-sm">
-                        <DynamicIcon name="Clock" className="h-5 w-5" />
+                      <div
+                        className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
+                        style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                      >
+                        <DynamicIcon name="Clock" className="h-5 w-5 text-white" strokeWidth={3} />
                       </div>
                       <div className="flex flex-col">
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
@@ -553,8 +574,11 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
-                      <div className="p-3 bg-success/80 shadow-sm rounded-2xl text-white">
-                        <DynamicIcon name="Percent" className="h-6 w-6" />
+                      <div
+                        className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
+                        style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                      >
+                        <DynamicIcon name="Percent" className="h-6 w-6 text-white" strokeWidth={3} />
                       </div>
                       <div className="flex flex-col items-end">
                         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
