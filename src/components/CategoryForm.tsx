@@ -184,8 +184,8 @@ export const CategoryForm = ({
         onSubmit={handleSubmit}
         className={cn("space-y-4", isMobile && "space-y-2")}
       >
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="parent_id" className={cn(isMobile && "text-xs")}>
+        <div className={cn(isMobile && "space-y-1")}>
+          <Label htmlFor="parent_id" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>
             Categoria Principal
           </Label>
           <Select
@@ -206,11 +206,11 @@ export const CategoryForm = ({
           >
             <SelectTrigger
               id="parent_id"
-              className={cn("rounded-xl border-blue-200 bg-white shadow-sm", isMobile && "h-11 text-sm", hideCardWrapper && "bg-white")}
+              className={cn("rounded-xl transition-all duration-200 input-3d-premium text-gray-800 !border-[#E2E8F0] border", isMobile ? "h-9 text-sm" : "h-10", hideCardWrapper && "bg-white")}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               {possibleParentCategories
                 .filter(
                   (cat) => cat.id !== editingCategory?.id && cat.id !== ""
@@ -235,8 +235,8 @@ export const CategoryForm = ({
           </Select>
         </div>
 
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label htmlFor="nome" className={cn(isMobile && "text-xs")}>
+        <div className={cn(isMobile && "space-y-1")}>
+          <Label htmlFor="nome" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>
             Nome da Subcategoria
           </Label>
           <Input
@@ -247,24 +247,24 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn(
-              "rounded-xl border-blue-200 bg-white shadow-sm placeholder:text-gray-400",
-              isMobile && "h-11 text-sm",
+              "rounded-xl transition-all duration-200 input-3d-premium text-gray-800 placeholder:text-gray-400 !border-[#E2E8F0] border",
+              isMobile ? "h-9 text-sm" : "h-10",
               hideCardWrapper && "bg-white"
             )}
             disabled={editingCategory?.user_id === null}
           />
         </div>
 
-        <div className={cn("space-y-2", isMobile && "space-y-1")}>
-          <Label className={cn(isMobile && "text-xs")}>Ícone / Emoji</Label>
+        <div className={cn(isMobile && "space-y-1")}>
+          <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
-                "w-full p-4 border-2 border-border rounded-xl hover:border-primary transition-colors flex items-center justify-center text-4xl",
-                hideCardWrapper ? "bg-[#F5F5F5]" : "bg-background",
-                isMobile && "p-2 text-3xl"
+                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium !border-[#E2E8F0] border",
+                "bg-white",
+                isMobile ? "p-2 text-3xl h-16" : "p-4 h-20"
               )}
               disabled={editingCategory?.user_id === null}
             >
