@@ -461,11 +461,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => setSortType('default')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'default'
-                ? "bg-[#EFF6FF] border-[#3B82F6] text-[#3B82F6] font-bold"
-                : "bg-white border-gray-200 text-gray-500 font-medium"
+                ? "!text-[#3B82F6] font-bold"
+                : "!text-gray-600 font-medium"
             )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
             <span className="text-xs sm:text-sm">{totalItems} Itens</span>
           </button>
@@ -475,13 +476,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('pending')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'pending'
-                ? "bg-[#FFF0F0] border-[#FF8888]/30 text-[#FF8888] font-bold"
-                : "bg-white border-gray-200 text-gray-500 font-medium"
+                ? "!text-[#FF8888] font-bold"
+                : "!text-gray-600 font-medium"
             )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
-            <Circle size={14} strokeWidth={2.5} className={cn(sortType === 'pending' ? "text-[#FF8888] fill-[#FF8888]/10" : "text-gray-400")} />
+            <Circle size={14} strokeWidth={2.5} className={cn(sortType === 'pending' ? "!text-[#FF8888] fill-[#FF8888]/10" : "!text-gray-400")} />
             <span className="text-xs sm:text-sm">{pendingItems} Pendentes</span>
           </button>
 
@@ -490,11 +492,12 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('bought')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
+              "btn-3d flex items-center gap-2 px-3 py-1.5 rounded-full border-none transition-all duration-200 active:scale-95 hover:bg-white/90 flex-shrink-0",
               sortType === 'bought'
-                ? "bg-[#F0FDF4] border-[#10B955]/30 text-[#10B955] font-bold"
-                : "bg-white border-gray-200 text-gray-500 font-medium"
+                ? "!text-[#10B955] font-bold"
+                : "!text-gray-600 font-medium"
             )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
           >
             <div className={cn(
               "rounded-full w-[14px] h-[14px] flex items-center justify-center transition-colors",
