@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Check, Circle } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -590,14 +591,16 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                         <div
                           onClick={() => handleStatusChange(item.id, !item.status)}
                           className={cn(
-                            "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm cursor-pointer",
+                            "h-[18px] w-[18px] rounded-full flex items-center justify-center transition-all relative",
                             item.status
-                              ? "bg-success border-success text-white scale-110"
-                              : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+                              ? "bg-[#25D366] border border-[#25D366] shadow-sm"
+                              : "bg-transparent border-none shadow-none"
                           )}
                         >
-                          {item.status && (
-                            <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
+                          {item.status ? (
+                            <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
+                          ) : (
+                            <Circle className="absolute text-[#F59E0B] w-[16px] h-[16px]" strokeWidth={2.5} />
                           )}
                         </div>
                         <AlertDialog>
