@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import Dialog components
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"; // Import Dialog components
 import { AppCategory } from "@/types/finance";
 import { toast } from "sonner";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
@@ -261,14 +261,29 @@ export const CategoryForm = ({
             </button>
 
             <Dialog open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
-              <DialogContent className="sm:max-w-[425px] p-0 border-none bg-transparent shadow-none flex justify-center items-center">
-                <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+              <DialogContent
+                className={cn(
+                  "p-0 border-none bg-white overflow-hidden shadow-2xl flex flex-col gap-0",
+                  isMobile ? "w-[95vw] max-w-[440px] rounded-[24px]" : "sm:max-w-[480px] rounded-xl"
+                )}
+                onOpenAutoFocus={(e) => e.preventDefault()}
+              >
+                <div className="h-14 flex items-center px-6 border-b bg-gray-50/50">
+                  <DialogTitle className="font-bold text-[#1E40AF] text-sm">
+                    Escolha um ícone
+                  </DialogTitle>
+                </div>
+
+                <div className="p-2 bg-white flex justify-center">
                   <EmojiPicker
                     onEmojiClick={handleEmojiClick}
-                    width={350}
-                    height={400}
-                    searchDisabled={false} // Enable search for better UX in modal
+                    width="100%"
+                    height={isMobile ? 380 : 420}
+                    autoFocusSearch={false}
+                    searchDisabled={false}
                     previewConfig={{ showPreview: false }}
+                    skinTonesDisabled={true}
+                    searchPlaceholder="Buscar..."
                   />
                 </div>
               </DialogContent>
