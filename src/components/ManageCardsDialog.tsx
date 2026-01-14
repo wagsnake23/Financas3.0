@@ -281,7 +281,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Editar Cartão</span>
             </DialogTitle>
           </DialogHeader>
-          <div className={cn("space-y-4", isMobile && "pb-4")}>
+          <div className={cn("space-y-4", isMobile && "pb-2")}>
             <div>
               <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
               <Input
