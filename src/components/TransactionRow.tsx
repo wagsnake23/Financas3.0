@@ -123,7 +123,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               <span className={cn(
                 "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
-                  ? "text-[#25D366] font-extrabold"
+                  ? "text-[#10B955] font-extrabold"
                   : "text-[#FF8888] font-medium"
               )}>
                 {transaction.status === "Recebida"

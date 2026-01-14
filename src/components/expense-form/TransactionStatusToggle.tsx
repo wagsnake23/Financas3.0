@@ -63,16 +63,17 @@ export const TransactionStatusToggle: React.FC<
             value="pending"
             id="status-pending"
             className={cn(
-              "relative flex items-center justify-center transition-all",
+              "relative flex items-center justify-center transition-all !shadow-none !outline-none !ring-0 !ring-offset-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+              "after:content-none data-[state=checked]:after:content-none",
               "w-[18px] h-[18px] rounded-full border",
               !isPaid
-                ? "bg-[#FEF3C7] border-[#FEF3C7]"
+                ? "bg-transparent border-none"
                 : "border-gray-400 bg-white"
             )}
           >
             {!isPaid && (
               <Clock
-                className="absolute text-[#D97706] w-[14px] h-[14px]"
+                className="absolute text-[#FF8888] w-[17px] h-[17px]"
                 strokeWidth={4}
               />
             )}
@@ -80,8 +81,8 @@ export const TransactionStatusToggle: React.FC<
 
           <span
             className={cn(
-              "text-sm font-extrabold",
-              !isPaid ? "text-[#D97706]" : "text-gray-500",
+              "text-sm font-medium",
+              !isPaid ? "text-[#FF8888]" : "text-gray-500",
               isMobile && "text-xs"
             )}
           >
@@ -89,6 +90,6 @@ export const TransactionStatusToggle: React.FC<
           </span>
         </label>
       </RadioGroup>
-    </div>
+    </div >
   );
 };
