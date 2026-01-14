@@ -111,7 +111,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {/* Descrição */}
               <div className="min-w-0 flex-1">
                 {transaction.description && (
-                  <span className="text-[0.75rem] text-gray-400 line-clamp-1 italic truncate block">
+                  <span className="text-[0.75rem] text-gray-400 line-clamp-1 truncate block">
                     {transaction.description}
                   </span>
                 )}
@@ -195,7 +195,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       </TableCell>
 
       {/* 📌 DESCRIÇÃO */}
-      <TableCell className="py-4 px-4 text-left text-gray-500 italic max-w-[200px] truncate font-roboto">
+      <TableCell className="py-4 px-4 text-left text-gray-500 max-w-[200px] truncate font-roboto">
         {transaction.description || "-"}
       </TableCell>
 
