@@ -82,6 +82,24 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     setValidationErrors(prev => ({ ...prev, numeroParcelas: false }));
   };
 
+  // Ref for the installments input
+  const parcelasInputRef = React.useRef<HTMLInputElement>(null);
+
+  // New Effect: Auto-focus and clear installments field when "Parcelado" is selected
+  useEffect(() => {
+    if (tipoPagamento === "parcelado" && !isRecurring) {
+      // Clear the value to ensure "empty field" state
+      setNumeroParcelas("" as any);
+
+      // Small timeout to allow render cycle to complete and input to appear
+      setTimeout(() => {
+        if (parcelasInputRef.current) {
+          parcelasInputRef.current.focus();
+        }
+      }, 0);
+    }
+  }, [tipoPagamento, isRecurring, setNumeroParcelas]);
+
   // NEW: Effect to auto-select card if only one is available
   useEffect(() => {
     if (formaPagamento === "cartao" && cartoes.length === 1) {
@@ -189,6 +207,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               Número de Parcelas
             </Label>
             <Input
+              ref={parcelasInputRef}
               id="numeroParcelas"
               type="text"
               inputMode="numeric"
