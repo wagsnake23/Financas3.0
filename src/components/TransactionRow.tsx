@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Check, Clock, Circle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -123,8 +123,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               <span className={cn(
                 "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
-                  ? "text-success font-bold"
-                  : "text-gray-400 italic"
+                  ? "text-[#25D366] font-extrabold"
+                  : "text-[#D97706] font-medium"
               )}>
                 {transaction.status === "Recebida"
                   ? (transaction.type === "income" ? "RECEBIDO" : "PAGO")
@@ -136,14 +136,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   onToggleStatus(transaction.id, transaction.type, newStatus);
                 }}
                 className={cn(
-                  "h-5 w-5 rounded-full flex items-center justify-center transition-all border shadow-sm",
+                  "h-[18px] w-[18px] rounded-full flex items-center justify-center transition-all border shadow-sm relative",
                   transaction.status === "Recebida"
-                    ? "bg-success border-success text-white scale-110"
-                    : "bg-white border-destructive/50 text-transparent hover:border-success/50"
+                    ? "bg-[#25D366] border-[#25D366]"
+                    : "bg-transparent border-[#D97706]/40"
                 )}
               >
-                {transaction.status === "Recebida" && (
-                  <span className="text-[12px] font-[1000] drop-shadow-sm">✓</span>
+                {transaction.status === "Recebida" ? (
+                  <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
+                ) : (
+                  <Circle className="absolute text-[#D97706] w-[16px] h-[16px]" strokeWidth={2.5} />
                 )}
               </div>
             </div>
@@ -215,14 +217,16 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             onToggleStatus(transaction.id, transaction.type, newStatus);
           }}
           className={cn(
-            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border-2 shadow-sm",
+            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border shadow-sm relative",
             transaction.status === "Recebida"
-              ? "bg-success border-success text-white h-[24px] w-[24px] scale-110 shadow-success/20"
-              : "bg-white border-destructive/50 text-transparent h-[24px] w-[24px] hover:border-success/50"
+              ? "bg-[#25D366] border-[#25D366] h-[18px] w-[18px]"
+              : "bg-[#FEF3C7] border-[#FEF3C7] h-[18px] w-[18px]"
           )}
         >
-          {transaction.status === "Recebida" && (
-            <span className="text-[12px] font-black">✓</span>
+          {transaction.status === "Recebida" ? (
+            <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
+          ) : (
+            <Clock className="absolute text-[#D97706] w-[14px] h-[14px]" strokeWidth={4} />
           )}
         </div>
       </TableCell>
