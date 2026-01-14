@@ -455,19 +455,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           🛒 Lista de Compras
         </h2>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+        <div className="flex flex-nowrap items-center justify-between sm:justify-center gap-2 mt-2 w-full overflow-x-auto no-scrollbar px-1">
           {/* Total Items - Reset Sort */}
           <button
             type="button"
             onClick={() => setSortType('default')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
               sortType === 'default'
                 ? "bg-[#EFF6FF] border-[#3B82F6] text-[#3B82F6] font-bold"
                 : "bg-white border-gray-200 text-gray-500 font-medium"
             )}
           >
-            <Package size={14} strokeWidth={2.5} className={cn(sortType === 'default' ? "text-[#3B82F6]" : "text-gray-400")} />
             <span className="text-xs sm:text-sm">{totalItems} Itens</span>
           </button>
 
@@ -476,7 +475,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('pending')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
               sortType === 'pending'
                 ? "bg-[#FFF0F0] border-[#FF8888]/30 text-[#FF8888] font-bold"
                 : "bg-white border-gray-200 text-gray-500 font-medium"
@@ -491,7 +490,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('bought')}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50",
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 shadow-sm active:scale-95 hover:bg-gray-50 flex-shrink-0",
               sortType === 'bought'
                 ? "bg-[#F0FDF4] border-[#10B955]/30 text-[#10B955] font-bold"
                 : "bg-white border-gray-200 text-gray-500 font-medium"
