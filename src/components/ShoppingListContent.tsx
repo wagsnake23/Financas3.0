@@ -539,7 +539,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   key={item.id}
                   className={cn(
                     "bg-white rounded-2xl py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
-                    item.status ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive/30"
+                    item.status ? "border-l-4 border-l-success" : "border-l-4 border-l-[#FF8888]"
                   )}
                 >
                   <div className="flex flex-col w-full gap-1">
@@ -561,7 +561,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       {/* Status Label */}
                       <span className={cn(
                         "text-[0.75rem] tracking-tight shrink-0 ml-3 leading-none",
-                        item.status ? "text-[#10B955] font-extrabold" : "text-[#F59E0B] font-medium"
+                        item.status ? "text-[#10B955] font-extrabold" : "text-[#FF8888] font-medium"
                       )}>
                         {item.status ? "COMPRADO" : "Pendente"}
                       </span>
@@ -600,7 +600,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                           {item.status ? (
                             <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
                           ) : (
-                            <Circle className="absolute text-[#F59E0B] w-[16px] h-[16px]" strokeWidth={2.5} />
+                            <Circle className="absolute text-[#FF8888] w-[16px] h-[16px]" strokeWidth={2.5} />
                           )}
                         </div>
                         <AlertDialog>
