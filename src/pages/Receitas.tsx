@@ -306,17 +306,20 @@ export default function Receitas() {
             <ToggleGroupItem
               value="avulsa"
               className={cn(
-                "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
-                "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-                "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
-                isMobile && "h-8 py-0.5 text-sm"
+                "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+                !isRecurring ? "!text-white font-bold" : "!text-[#1AA361]/80 font-medium",
+                isMobile && "h-9 py-0.5 text-sm"
               )}
+              style={!isRecurring
+                ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+              }
             >
               <DynamicIcon
-                name="⚡"
+                name="Zap"
                 className={cn(
                   "mr-2 h-4 w-4 transition-colors",
-                  !isRecurring ? "text-white" : "text-muted-foreground"
+                  !isRecurring ? "!text-white" : "!text-[#1AA361]/80"
                 )}
               />{" "}
               Avulsa
@@ -324,17 +327,20 @@ export default function Receitas() {
             <ToggleGroupItem
               value="recorrente"
               className={cn(
-                "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
-                "data-[state=on]:bg-[#25AF6A] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-                "data-[state=off]:bg-white data-[state=off]:border-[#DCFCE7] data-[state=off]:text-muted-foreground",
-                isMobile && "h-8 py-0.5 text-sm"
+                "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+                isRecurring ? "!text-white font-bold" : "!text-[#1AA361]/80 font-medium",
+                isMobile && "h-9 py-0.5 text-sm"
               )}
+              style={isRecurring
+                ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+              }
             >
               <DynamicIcon
-                name="🔁"
+                name="Repeat"
                 className={cn(
                   "mr-2 h-4 w-4 transition-colors",
-                  isRecurring ? "text-white" : "text-muted-foreground"
+                  isRecurring ? "!text-white" : "!text-[#1AA361]/80"
                 )}
               />{" "}
               Recorrente
