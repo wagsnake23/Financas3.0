@@ -580,10 +580,13 @@ export default function Receitas() {
         )}>
           <div>
             <div className="flex items-start gap-3">
-              <div className={cn("p-2 rounded-xl bg-[#F0FFF4] shadow-sm flex items-center justify-center border border-[#25AF6A]/20", "mt-1")}>
+              <div
+                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none", "mt-1")}
+                style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+              >
                 <DynamicIcon
                   name="TrendingUp"
-                  className={cn("text-[#25AF6A]", isMobile ? "h-4 w-4" : "h-5 w-5")}
+                  className={cn("text-white", isMobile ? "h-4 w-4" : "h-5 w-5")}
                 />
               </div>
               <div className="flex flex-col">
