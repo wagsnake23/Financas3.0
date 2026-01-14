@@ -329,7 +329,7 @@ export default function Home() {
                                     className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
                                     style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
                                 >
-                                    <TrendingDown className="h-[18px] w-[18px] text-white" />
+                                    <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(
@@ -381,7 +381,7 @@ export default function Home() {
                                     className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
                                     style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
                                 >
-                                    <TrendingUp className="h-[18px] w-[18px] text-white" />
+                                    <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(

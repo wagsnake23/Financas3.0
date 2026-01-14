@@ -582,11 +582,12 @@ export default function Receitas() {
             <div className="flex items-start gap-3">
               <div
                 className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none", "mt-1")}
-                style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+                style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
               >
                 <DynamicIcon
                   name="TrendingUp"
                   className={cn("text-white", isMobile ? "h-4 w-4" : "h-5 w-5")}
+                  strokeWidth={3}
                 />
               </div>
               <div className="flex flex-col">
