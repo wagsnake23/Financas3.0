@@ -136,10 +136,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   onToggleStatus(transaction.id, transaction.type, newStatus);
                 }}
                 className={cn(
-                  "h-[18px] w-[18px] rounded-full flex items-center justify-center transition-all border shadow-sm relative",
+                  "h-[18px] w-[18px] rounded-full flex items-center justify-center transition-all relative",
                   transaction.status === "Recebida"
-                    ? "bg-[#25D366] border-[#25D366]"
-                    : "bg-transparent border-[#D97706]/40"
+                    ? "bg-[#25D366] border border-[#25D366] shadow-sm"
+                    : "bg-transparent border-none shadow-none"
                 )}
               >
                 {transaction.status === "Recebida" ? (
