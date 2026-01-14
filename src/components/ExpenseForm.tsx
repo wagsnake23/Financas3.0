@@ -595,7 +595,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
               isMobile ? "h-11 text-base" : "h-11 text-base"
             )}
-            style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
             disabled={loading}
           >
             {loading ? "Salvando..." : "Salvar Despesa"}

@@ -19,7 +19,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
 }) => {
   return (
     <div className="space-y-2">
-      {!isMobile && ( // Renderiza o Label apenas se NÃO for mobile
+      {!isMobile && (
         <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
       )}
       <ToggleGroup
@@ -37,36 +37,44 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
         <ToggleGroupItem
           value="avulsa"
           className={cn(
-            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200",
-            "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-            "data-[state=off]:bg-white data-[state=off]:border-white/70 data-[state=off]:backdrop-blur-sm data-[state=off]:text-gray-500",
-            isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
+            "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+            !isRecurring ? "!text-white font-bold" : "!text-[#E55B5B]/80 font-medium",
+            isMobile ? "h-9 py-0.5 text-sm" : "h-10 text-sm"
           )}
+          style={!isRecurring
+            ? { "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any
+            : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+          }
         >
           <DynamicIcon
-            name="⚡"
+            name="Zap"
             className={cn(
-              "mr-1.5 h-3.5 w-3.5 transition-colors",
-              isRecurring ? "text-gray-400" : "text-white"
+              "mr-2 h-4 w-4 transition-colors",
+              !isRecurring ? "!text-white" : "!text-[#E55B5B]/80"
             )}
-          /> Avulsa
+          />{" "}
+          Avulsa
         </ToggleGroupItem>
         <ToggleGroupItem
           value="recorrente"
           className={cn(
-            "flex-1 rounded-xl flex items-center justify-center border transition-all duration-200 shadow-sm",
-            "data-[state=on]:bg-[#E55B5B] data-[state=on]:text-white data-[state=on]:font-bold data-[state=on]:border-none",
-            "data-[state=off]:bg-white data-[state=off]:border-white/70 data-[state=off]:backdrop-blur-sm data-[state=off]:text-gray-500",
-            isMobile ? "h-8 py-0.5 text-xs" : "h-10 text-sm"
+            "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+            isRecurring ? "!text-white font-bold" : "!text-[#E55B5B]/80 font-medium",
+            isMobile ? "h-9 py-0.5 text-sm" : "h-10 text-sm"
           )}
+          style={isRecurring
+            ? { "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any
+            : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+          }
         >
           <DynamicIcon
-            name="🔁"
+            name="Repeat"
             className={cn(
-              "mr-1.5 h-3.5 w-3.5 transition-colors",
-              isRecurring ? "text-white" : "text-muted-foreground"
+              "mr-2 h-4 w-4 transition-colors",
+              isRecurring ? "!text-white" : "!text-[#E55B5B]/80"
             )}
-          /> Recorrente
+          />{" "}
+          Recorrente
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
