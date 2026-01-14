@@ -264,17 +264,17 @@ export default function Home() {
                         </div>
                         {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
                         <div
-                            className="btn-3d flex items-center justify-between p-1 rounded-full transition-all h-9 w-[135px] border-none -mr-1"
-                            style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4", cursor: "default", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15), inset 0px 1px 1px rgba(255, 255, 255, 0.3)" } as any}
+                            className="btn-3d flex items-center justify-between px-1 rounded-full transition-all h-8 w-[125px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                            style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                         >
-                            <button onClick={handlePrevMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
-                                <DynamicIcon name="ChevronLeft" className="h-4 w-4" strokeWidth={3} />
+                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                             </button>
-                            <span className="text-[12px] font-black text-white px-1 flex-1 text-center uppercase tracking-tight">
+                            <span className="text-[11px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                             </span>
-                            <button onClick={handleNextMonth} className="text-white hover:bg-white/20 rounded-full p-1 transition-all">
-                                <DynamicIcon name="ChevronRight" className="h-4 w-4" strokeWidth={3} />
+                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                             </button>
                         </div>
                     </div>
