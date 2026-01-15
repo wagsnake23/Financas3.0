@@ -89,7 +89,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             {/* Valor */}
             <span className={cn(
               "font-extrabold text-sm tracking-tight whitespace-nowrap leading-tight pt-0.5",
-              transaction.type === 'income' ? "text-success" : "text-destructive"
+              transaction.type === 'income'
+                ? "text-success"
+                : (transaction.status === "Recebida" ? "text-[#FF8888]/80" : "text-destructive")
             )}>
               {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
             </span>
