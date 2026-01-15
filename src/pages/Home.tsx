@@ -24,6 +24,38 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import Loading from "@/components/Loading";
 
+const MiniFinanceBars = ({ expenses, revenues, balance }: { expenses: number, revenues: number, balance: number }) => {
+    const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
+    const getH = (val: number) => Math.max((Math.abs(val) / maxVal) * 32, 2);
+
+    const BarItem = ({ val, color, label, width }: { val: number, color: string, label: string, width: string }) => (
+        <div className="flex flex-col items-center gap-1">
+            <div
+                className="transition-all duration-500 ease-out"
+                style={{
+                    height: `${getH(val)}px`,
+                    width: width,
+                    backgroundColor: color,
+                    borderRadius: "3px"
+                }}
+            />
+            <span className="text-[9px] font-black text-gray-400 uppercase tracking-tighter leading-none">{label}</span>
+        </div>
+    );
+
+    return (
+        <div className="relative flex items-end gap-1 px-1 pb-1">
+            {/* Reference scale lines */}
+            <div className="absolute left-0 right-0 h-[0.5px] bg-gray-300/30" style={{ bottom: "48px" }} />
+            <div className="absolute left-0 right-0 h-[1px] bg-gray-200 bottom-[14.5px]" />
+
+            <BarItem val={expenses} color="#FF7070" label="D" width="15px" />
+            <BarItem val={revenues} color="#66E0A3" label="R" width="15px" />
+            <BarItem val={balance} color="#6B95FF" label="S" width="15px" />
+        </div>
+    );
+};
+
 export default function Home() {
     const { user, loading: authLoading } = useAuth();
     const isMobile = useIsMobile();
@@ -297,6 +329,15 @@ export default function Home() {
                             </div>
                             <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                         </div>
+                    </div>
+
+                    {/* Mini gráfico de barras (Posição Bottom Right) */}
+                    <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
+                        <MiniFinanceBars
+                            expenses={dStats.currentExpenses}
+                            revenues={dStats.currentIncome}
+                            balance={dStats.currentBalance}
+                        />
                     </div>
                 </Card>
 
