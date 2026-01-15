@@ -79,7 +79,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
     }
 
     return (
-        <ResponsiveContainer width="100%" height={isMobile ? 70 : 'auto'} minHeight={isMobile ? undefined : 260}>
+        <ResponsiveContainer width="100%" height={isMobile ? 90 : 'auto'} minHeight={isMobile ? undefined : 260}>
             <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
@@ -97,7 +97,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                             <text
                                 x={x}
                                 y={y}
-                                dy={isMobile ? 12 : 16}
+                                dy={12}
                                 textAnchor="middle"
                                 fill={color}
                                 style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
