@@ -169,7 +169,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <Label className="text-sm font-medium text-gray-800 mb-1">
-                Valor (R$)
+                Valor Total (R$)
               </Label>
               <FormControl>
                 <Input

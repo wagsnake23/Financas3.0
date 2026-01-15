@@ -115,7 +115,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div>
-          <Label htmlFor="valor" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="valor" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Valor Total (R$)</Label>
           <CurrencyBR
             value={valor}
             onChange={(v) => {
