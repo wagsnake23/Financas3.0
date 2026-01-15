@@ -80,7 +80,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
 
     return (
         <ResponsiveContainer width="100%" height={isMobile ? 90 : 'auto'} minHeight={isMobile ? undefined : 260}>
-            <BarChart data={chartData} margin={{ top: 3, right: 0, left: 0, bottom: 6 }}>
+            <BarChart data={chartData} margin={{ top: 3, right: 0, left: 0, bottom: 6 }} barCategoryGap="10%">
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                     dataKey="month"
@@ -113,7 +113,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                     hide={true}
                     domain={[0, 'dataMax']}
                 />
-                <Bar dataKey="absBalance" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
+                <Bar dataKey="absBalance" radius={[4, 4, 0, 0]} barSize={isMobile ? 18 : 24} activeBar={false}>
                     {chartData.map((entry, index) => {
                         const isPositive = entry.balance >= 0;
                         const fill = entry.isCurrentMonth
