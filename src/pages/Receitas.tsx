@@ -491,7 +491,7 @@ export default function Receitas() {
         </div>
 
         <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="descricao" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+          <Label htmlFor="descricao" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
             Descrição
           </Label>
           <Textarea
@@ -499,10 +499,11 @@ export default function Receitas() {
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             placeholder="Detalhes sobre a receita..."
-            rows={3}
+            rows={2}
+            maxLength={45}
             className={cn(
-              "w-full transition-all duration-200 input-3d-premium resize-none",
-              isMobile ? "text-sm p-4" : "",
+              "w-full transition-all duration-200 input-3d-premium resize-none min-h-[56px] h-[56px] py-1.5 px-3",
+              isMobile ? "text-sm" : "",
             )}
           />
         </div>
