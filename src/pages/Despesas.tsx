@@ -15,6 +15,12 @@ import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -166,16 +172,18 @@ export default function Despesas() {
         )}>
           <div>
             <div className="flex items-start gap-3">
-              <div
-                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none", isMobile ? "mt-0" : "mt-1")}
-                style={{ "--cor-topo": "#E54D4D", "--cor-base": "#C53030" } as any}
+              <Button
+                variant="ghost"
+                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
+                style={{ "--cor-topo": "#FFF5F5", "--cor-base": "#FFE4E6" } as any}
+                onClick={() => navigate("/lancamentos?type=expense")}
               >
                 <DynamicIcon
                   name="TrendingDown"
-                  className={cn("text-white", isMobile ? "h-4 w-4" : "h-5 w-5")}
-                  strokeWidth={3}
+                  className={cn("!text-[#E54D4D]", isMobile ? "h-4 w-4" : "h-5 w-5")}
+                  strokeWidth={4}
                 />
-              </div>
+              </Button>
               <div className="flex flex-col">
                 <h1 className={cn("font-black text-white tracking-tight -mt-0.5", isMobile ? "text-xl" : "text-xl")}>
                   Nova Despesa
