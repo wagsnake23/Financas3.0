@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -33,15 +33,22 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { AppCategory, TransactionType } from "@/types/finance";
 import { Textarea } from "@/components/ui/textarea";
 import { Tables } from "@/integrations/supabase/types";
-import { Label } from "@/components/ui/label"; // Importar Label
+import CurrencyBR from "@/components/ui/currency-br";
 
 const formSchema = z.object({
-  amount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-    message: "O valor deve ser um número positivo.",
+  amount: z.number({ required_error: "O valor é obrigatório." }).min(0.01, {
+    message: "O valor deve ser positivo.",
   }),
   category: z.string().min(1, { message: "Selecione uma categoria." }),
-  paymentType: z.enum(["credit_card", "debit_card", "bank_transfer", "cash", "pix", "boleto"]),
-  paymentMethod: z.string().optional(), // ID do cartão ou banco
+  paymentType: z.enum([
+    "credit_card",
+    "debit_card",
+    "bank_transfer",
+    "cash",
+    "pix",
+    "boleto",
+  ]),
+  paymentMethod: z.string().optional(), // Validação extra no superRefine
   date: z.date({
     required_error: "A data de vencimento é obrigatória.",
   }),
@@ -49,6 +56,24 @@ const formSchema = z.object({
   isRecurrent: z.enum(["one_off", "monthly", "installments"]),
   installments: z.string().optional(),
   recurrentId: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (
+    (data.paymentType === "credit_card" || data.paymentType === "debit_card") &&
+    !data.paymentMethod
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Selecione um cartão.",
+      path: ["paymentMethod"],
+    });
+  }
+  if (data.paymentType === "bank_transfer" && !data.paymentMethod) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Selecione um banco.",
+      path: ["paymentMethod"],
+    });
+  }
 });
 
 interface NewExpenseFormProps {
@@ -75,7 +100,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: initialData?.amount?.toString() || "",
+      amount: initialData?.amount ?? undefined,
       category: initialData?.category || "",
       paymentType: initialData?.paymentType || "credit_card",
       paymentMethod: initialData?.paymentMethod || "",
@@ -94,43 +119,6 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
     (cat) => cat.type === TransactionType.Expense
   );
 
-  const formatAmount = useCallback((value: string) => {
-    // Remove tudo que não for número ou vírgula
-    let cleanedValue = value.replace(/[^0-9,]/g, "");
-
-    // Substitui vírgula por ponto para operações internas
-    cleanedValue = cleanedValue.replace(",", ".");
-
-    // Garante que há apenas um ponto decimal
-    const parts = cleanedValue.split(".");
-    if (parts.length > 2) {
-      cleanedValue = parts[0] + "." + parts.slice(1).join("");
-    }
-
-    // Formata para moeda brasileira
-    const numberValue = parseFloat(cleanedValue);
-    if (isNaN(numberValue)) {
-      return "";
-    }
-
-    return numberValue.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }, []);
-
-  useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      if (name === "amount" && value.amount !== undefined) {
-        const formatted = formatAmount(value.amount);
-        if (value.amount !== formatted) {
-          form.setValue("amount", formatted, { shouldValidate: true });
-        }
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form, formatAmount]);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -140,16 +128,16 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           name="category"
           render={({ field }) => (
             <FormItem>
-              <Label className="text-sm font-medium text-gray-800 mb-1">
+              <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                 Subcategoria
-              </Label>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              </FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="input-3d-premium">
                     <SelectValue placeholder="Selecione uma subcategoria" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="rounded-2xl border-none shadow-xl">
                   {filteredCategories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.nome}
@@ -168,21 +156,14 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <Label className="text-sm font-medium text-gray-800 mb-1">
+              <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                 Valor Total (R$)
-              </Label>
+              </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="0,00"
-                  {...field}
-                  inputMode="numeric"
+                <CurrencyBR
+                  value={field.value}
+                  onChange={field.onChange}
                   className="input-3d-premium"
-                  onChange={(e) => {
-                    const rawValue = e.target.value;
-                    // Permite apenas números e vírgula
-                    const cleaned = rawValue.replace(/[^0-9,]/g, "");
-                    field.onChange(cleaned);
-                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -196,9 +177,9 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           name="paymentType"
           render={({ field }) => (
             <FormItem className="space-y-2">
-              <Label className="text-sm font-medium text-gray-800 mb-1">
+              <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                 Tipo de Pagamento
-              </Label>
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -270,12 +251,12 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
               name="paymentMethod"
               render={({ field }) => (
                 <FormItem>
-                  <Label className="text-sm font-medium text-gray-800 mb-1">
+                  <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                     Forma de Pagamento
-                  </Label>
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="input-3d-premium">
@@ -309,16 +290,16 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           name="date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <Label className="text-sm font-medium text-gray-800 mb-1">
+              <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                 Data de Vencimento
-              </Label>
+              </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal input-3d-premium",
+                        "w-full pl-3 text-left font-normal input-3d-premium",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -353,9 +334,9 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <Label className="text-sm font-medium text-gray-800 mb-1">
+              <FormLabel className="text-sm font-medium text-gray-800 mb-1">
                 Descrição
-              </Label>
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Adicione uma descrição (opcional)"

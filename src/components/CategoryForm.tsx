@@ -17,7 +17,7 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { PAYMENT_METHODS } from "@/data/colorPalette"; // Manter para referência, se necessário
 import { X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
-import { cn } from "@/lib/utils"; // Importar cn
+import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 import { getCategoryColor } from "@/lib/categoryColors";
 
@@ -170,6 +170,7 @@ export const CategoryForm = ({
       )}
 
       <form
+        id="category-form"
         onSubmit={handleSubmit}
         className={cn("space-y-4", isMobile && "space-y-2")}
       >
@@ -195,11 +196,16 @@ export const CategoryForm = ({
           >
             <SelectTrigger
               id="parent_id"
-              className={cn("rounded-xl transition-all duration-200 input-3d-premium text-gray-800 !border-[#E2E8F0] border", isMobile ? "h-9 text-sm" : "h-10", hideCardWrapper && "bg-white")}
+              className={cn(
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                isMobile ? "h-9 text-sm" : "h-10",
+                getBorderClass({}),
+                hideCardWrapper && "bg-white"
+              )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
+            <SelectContent className="rounded-2xl border-none shadow-xl">
               {possibleParentCategories
                 .filter(
                   (cat) => cat.id !== editingCategory?.id && cat.id !== ""
@@ -236,8 +242,9 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn(
-              "rounded-xl transition-all duration-200 input-3d-premium text-gray-800 placeholder:text-gray-400 !border-[#E2E8F0] border",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               isMobile ? "h-9 text-sm" : "h-10",
+              getBorderClass({}),
               hideCardWrapper && "bg-white"
             )}
             disabled={editingCategory?.user_id === null}
@@ -251,9 +258,10 @@ export const CategoryForm = ({
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
-                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium !border-[#E2E8F0] border",
+                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium",
                 "bg-white",
-                isMobile ? "p-2 text-3xl h-16" : "p-4 h-20"
+                isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
+                getBorderClass({})
               )}
               disabled={editingCategory?.user_id === null}
             >
