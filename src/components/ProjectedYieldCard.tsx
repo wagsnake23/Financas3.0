@@ -24,10 +24,16 @@ export const ProjectedYieldCard = ({
     topRightContent,
 }: ProjectedYieldCardProps) => {
     return (
-        <Card className={cn(
-            "p-6 animate-fade-in rounded-3xl card-3d bg-[#F0E7FF] flex flex-col relative",
-            isMobile ? "p-1.5 min-h-[162px]" : "h-full min-h-[200px]"
-        )}>
+        <Card
+            style={{
+                backgroundColor: "#F5F3FF",
+            }}
+            className={cn(
+                "rounded-3xl card-3d flex flex-col relative transition-all duration-300 animate-fade-in",
+                "bg-gradient-to-br from-[#7C3AED]/8 to-[#7C3AED]/4 border-[#7C3AED]/20",
+                "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]",
+                isMobile ? "p-1.5 min-h-[90px]" : "p-6 h-full min-h-[200px]"
+            )}>
             {/* Top-right content (YearNavigatorCompact) */}
             {topRightContent && (
                 <div
@@ -42,9 +48,25 @@ export const ProjectedYieldCard = ({
 
             <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
-                    <div className={cn(isMobile && "pl-2 pt-1", !isMobile && "flex flex-col gap-0.5")}>
-                        <p className={cn("text-sm font-semibold text-muted-foreground mb-1", isMobile && "text-xs", "font-roboto")}>Projeção Mensal</p>
-                        <p className={cn("text-3xl font-bold text-[#7C3AED]", isMobile ? "text-sm" : "text-xl", "font-roboto", "leading-none")}>{formatCurrency(mainStatValue)}</p>
+                    <div className={cn(
+                        "flex flex-col items-start",
+                        isMobile ? "pl-2 -mt-1 -space-y-2" : "pl-2 -mt-1 -space-y-1"
+                    )}>
+                        <p className={cn("font-semibold text-muted-foreground leading-none", isMobile ? "text-xs" : "text-sm", "font-roboto")}>
+                            <div className="flex items-center gap-2">
+                                <div className="rounded-xl shadow-sm p-1.5 -ml-1.5 translate-y-1 bg-[#7C3AED]/10 text-[#7C3AED]">
+                                    <DynamicIcon name="LineChart" className="h-4 w-4" />
+                                </div>
+                                Projeção Mensal
+                            </div>
+                        </p>
+                        <p className={cn(
+                            "font-bold leading-none text-[#7C3AED] pl-[34px]",
+                            isMobile ? "text-sm" : "text-base",
+                            "font-roboto"
+                        )}>
+                            {formatCurrency(mainStatValue)}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -55,23 +77,27 @@ export const ProjectedYieldCard = ({
                 </div>
             )}
 
-            {isMobile && <div className="h-9 mt-0 invisible" aria-hidden="true" />}
+            {/* Spacer to push bottom content down if needed, similar to StatCard childrens */}
+            {isMobile && <div className="h-12 w-full" />}
 
             <div className={cn(
                 "absolute flex items-center gap-2",
-                isMobile ? "bottom-2 left-[14px]" : "bottom-4 left-8"
+                isMobile ? "bottom-1.5 left-[14px]" : "bottom-4 left-8"
             )}>
-                <div className={cn(
-                    "rounded-xl bg-[#7C3AED]/10 p-2 text-[#7C3AED]",
-                    isMobile ? "p-1" : "p-2"
-                )}>
-                    <DynamicIcon name="LineChart" className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} />
-                </div>
-
+                {/* 
+                    StatCard generally puts 'Annual Total' here.
+                    The original ProjectedYieldCard had an Icon here too.
+                    StatCard doesn't usually have an icon at bottom left unless configured.
+                    I will keep the icon if it fits but ensure positioning matches 'Total Anual' of StatCard.
+                 */}
                 {annualTotalValue !== undefined && (
                     <div className="flex flex-col">
-                        <p className="text-xs text-muted-foreground leading-none font-roboto">{annualTotalLabel || "Total Anual"}</p>
-                        <p className="text-sm font-bold text-[#7C3AED] font-roboto">{formatCurrency(annualTotalValue)}</p>
+                        <p className={cn("text-muted-foreground leading-none font-roboto", isMobile ? "text-xs" : "text-xs")}>
+                            {annualTotalLabel || "Total Anual"}
+                        </p>
+                        <p className={cn("font-bold text-[#7C3AED] font-roboto leading-none", isMobile ? "text-sm" : "text-sm")}>
+                            {formatCurrency(annualTotalValue)}
+                        </p>
                     </div>
                 )}
             </div>
@@ -79,10 +105,10 @@ export const ProjectedYieldCard = ({
             {projectedPatrimonyValue !== undefined && (
                 <div className={cn(
                     "absolute flex flex-col items-end text-right",
-                    isMobile ? "bottom-2 right-[14px]" : "bottom-4 right-8"
+                    isMobile ? "bottom-2.5 right-[14px]" : "bottom-4 right-8"
                 )}>
-                    <p className="text-xs text-muted-foreground leading-none font-roboto">{projectedPatrimonyLabel || "Patrimônio Projetado"}</p>
-                    <p className="text-sm font-bold text-[#7C3AED] font-roboto">{formatCurrency(projectedPatrimonyValue)}</p>
+                    <p className={cn("text-muted-foreground leading-none font-roboto", isMobile ? "text-xs" : "text-xs")}>{projectedPatrimonyLabel || "Patrimônio Projetado"}</p>
+                    <p className={cn("font-bold text-[#7C3AED] font-roboto leading-none", isMobile ? "text-sm" : "text-sm")}>{formatCurrency(projectedPatrimonyValue)}</p>
                 </div>
             )}
         </Card>

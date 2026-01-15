@@ -82,11 +82,12 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
     }
 
     return (
-        <ResponsiveContainer width="100%" height={isMobile ? 70 : 'auto'} minHeight={isMobile ? undefined : 260}>
-            <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+        <ResponsiveContainer width="100%" height={isMobile ? 90 : 'auto'} minHeight={isMobile ? undefined : 260}>
+            <BarChart data={chartData} margin={{ top: 3, right: 0, left: 0, bottom: 6 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                     dataKey="month"
+                    height={12}
                     axisLine={false}
                     tickLine={false}
                     interval={0}
@@ -100,7 +101,7 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                             <text
                                 x={x}
                                 y={y}
-                                dy={isMobile ? 12 : 16}
+                                dy={7}
                                 textAnchor="middle"
                                 fill={color}
                                 style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
