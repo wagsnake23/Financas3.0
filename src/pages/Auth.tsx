@@ -174,7 +174,10 @@ export default function Auth() {
         // We still show the success message about email activation, but log the role error internally.
       }
 
-      showSuccessToast("Conta criada com sucesso!", "Um link de ativação foi enviado para o seu e-mail. Por favor, verifique sua caixa de entrada (e spam) para ativar sua conta.");
+      showSuccessToast(
+        "Cadastro concluído",
+        "Você já pode entrar com seu e-mail e senha."
+      );
 
       // After successful signup, clear the form and switch to login view.
       setEmail("");
