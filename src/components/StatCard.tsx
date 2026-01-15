@@ -39,6 +39,7 @@ interface StatCardProps {
   className?: string; // NEW: Custom class name
   forceTransparentBackground?: boolean; // NEW: Force transparent background
   secondaryStatContent?: React.ReactNode; // NEW: Custom content for secondary stat
+  bottomRightContent?: React.ReactNode; // NEW: Content for bottom-right corner matching bottom-left alignment
 }
 
 export const StatCard = ({
@@ -63,6 +64,7 @@ export const StatCard = ({
   className,
   forceTransparentBackground = false,
   secondaryStatContent, // Destructure new prop
+  bottomRightContent, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -93,7 +95,7 @@ export const StatCard = ({
   const cardPaddingClass = isMobile ? "p-1.5" : "p-6";
   const titleFontSizeClass = isMobile ? "text-xs" : "text-sm";
   // Removido valueFontSizeAndWeightClass e mainValueColorClass para aplicar diretamente
-  const contentSpacingClass = isMobile ? "space-y-0" : "space-y-0.5"; // Adjusted spacing here
+  const contentSpacingClass = isMobile ? "-space-y-2" : "-space-y-1"; // Adjusted spacing here
 
   return (
     <Card
@@ -136,18 +138,25 @@ export const StatCard = ({
           {/* Main Stat Block */}
           <div
             className={cn(
-              "flex flex-col items-start pl-2 pt-1",
+              "flex flex-col items-start pl-2 -mt-1",
               contentSpacingClass
             )}
           >
             <p
               className={cn(
                 titleFontSizeClass,
-                "font-semibold text-muted-foreground",
+                "font-semibold text-muted-foreground leading-none",
                 "font-roboto"
               )}
             >
-              {mainStatTitle}
+              <div className="flex items-center gap-2">
+                {!hideMainIcon && icon && (
+                  <div className={cn("rounded-xl shadow-sm p-1.5 -ml-1.5 translate-y-1", iconStyles[variant])}>
+                    <DynamicIcon name={icon} className="h-4 w-4" />
+                  </div>
+                )}
+                {mainStatTitle}
+              </div>
             </p>
             <p
               className={cn(
@@ -160,7 +169,8 @@ export const StatCard = ({
                     : variant === "yield"
                       ? "text-yield"
                       : mainStatValue >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
-                "font-roboto" // Fonte Roboto
+                "font-roboto", // Fonte Roboto
+                !hideMainIcon && icon && "pl-[34px]" // Align value with title text (icon width + padding + gap)
               )}
             >
               {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
@@ -241,58 +251,50 @@ export const StatCard = ({
       )}
 
       {/* Bottom-left content (Icon + Annual Total) */}
-      {(!hideMainIcon && icon) ||
-        (annualTotalValue !== undefined && annualTotalLabel) ? (
+      {/* Bottom-left content (Annual Total) */}
+      {(annualTotalValue !== undefined && annualTotalLabel) ? (
         <div
           className={cn(
-            "absolute flex items-center gap-2", // Use flex to align icon and text
-            isMobile ? "bottom-2 left-[14px]" : "bottom-4 left-8"
+            "absolute flex flex-col items-start",
+            isMobile ? "bottom-1.5 left-[14px]" : "bottom-4 left-8"
           )}
         >
-          {!hideMainIcon && icon && (topRightContent || isMobile) && (
-            <div
-              className={cn(
-                `rounded-xl shadow-sm`,
-                iconStyles[variant],
-                isMobile ? "p-1" : "p-2"
-              )}
-            >
-              <DynamicIcon
-                name={icon}
-                className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")}
-              />
-            </div>
-          )}
-          {annualTotalValue !== undefined && annualTotalLabel && (
-            <div className={cn("flex flex-col items-start")}>
-              {/* Removido classes de texto aqui */}
-              <p
-                className={cn(
-                  titleFontSizeClass,
-                  "text-muted-foreground leading-none",
-                  "font-roboto"
-                )}
-              >
-                {annualTotalLabel}
-              </p>
-              {/* Aplicado titleFontSizeClass e text-muted-foreground */}
-              <p
-                className={cn(
-                  "font-bold leading-none",
-                  isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
-                  variant === "income" ? "text-success" :
-                    variant === "expense" ? "text-destructive" :
-                      variant === "yield" ? "text-yield" :
-                        (annualTotalValue || 0) >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
-                  "font-roboto" // Fonte Roboto
-                )}
-              >
-                {formatCurrency(annualTotalValue)}
-              </p>
-            </div>
-          )}
+          <p
+            className={cn(
+              titleFontSizeClass,
+              "text-muted-foreground leading-none",
+              "font-roboto"
+            )}
+          >
+            {annualTotalLabel}
+          </p>
+          <p
+            className={cn(
+              "font-bold leading-none",
+              isMobile ? "text-sm" : "text-base", // Tamanho e peso consistentes
+              variant === "income" ? "text-success" :
+                variant === "expense" ? "text-destructive" :
+                  variant === "yield" ? "text-yield" :
+                    (annualTotalValue || 0) >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
+              "font-roboto" // Fonte Roboto
+            )}
+          >
+            {formatCurrency(annualTotalValue)}
+          </p>
         </div>
       ) : null}
+
+      {/* Bottom-right content (Mirroring Bottom-left) */}
+      {bottomRightContent && (
+        <div
+          className={cn(
+            "absolute flex flex-col items-end",
+            isMobile ? "bottom-2.5 right-[14px]" : "bottom-4 right-8"
+          )}
+        >
+          {bottomRightContent}
+        </div>
+      )}
     </Card>
   );
 };

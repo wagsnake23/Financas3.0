@@ -424,12 +424,10 @@ export default function Dashboard() {
         {filter === "investments" ? (
           <div className="flex flex-col gap-4">
             {/* Saldo Mensal (Primeiro) */}
+            {/* Saldo Mensal (Primeiro) */}
             <StatCard
               mainStatTitle="Saldo Mensal"
               mainStatValue={stats.balance}
-              secondaryStatTitle="Saldo Anual"
-              secondaryStatValue={totalAnnualRevenues - totalAnnualExpenses}
-
               topRightContent={
                 <MonthNavigatorCompact
                   selectedMonth={selectedMonth}
@@ -441,18 +439,25 @@ export default function Dashboard() {
               }
               variant="balance"
               isMobile={isMobile}
+              childrenAlignment="start"
               chartContent={
                 <MonthlyBalanceBarChart
                   revenues={allRevenues}
                   expenseInstallments={allExpenseInstallments}
                   currentDate={selectedMonth}
-                  isMobile={true}
+                  isMobile={isMobile}
                   onMonthClick={handleMonthClick}
                 />
               }
+              annualTotalLabel="Saldo Anual"
+              annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+              icon="Wallet"
               neumorphism={true}
+              className="card-saldo overflow-hidden"
+              forceTransparentBackground={true}
             >
-              <div />
+
+              <div className="h-12 md:h-[52px] w-full" />
             </StatCard>
 
             {/* 1. Projeção do Patrimônio */}
@@ -600,8 +605,7 @@ export default function Dashboard() {
                 id="stat-expenses"
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
-                secondaryStatTitle="Pago este mês"
-                secondaryStatValue={totalPaidMonthlyExpenses}
+
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -614,7 +618,7 @@ export default function Dashboard() {
                 icon="TrendingDown"
                 variant="expense"
                 isMobile={isMobile}
-                childrenAlignment="start"
+                childrenAlignment="end"
                 chartContent={
                   <MonthlyExpenseBarChart
                     expenseInstallments={allExpenseInstallments}
@@ -628,27 +632,17 @@ export default function Dashboard() {
                 neumorphism={true}
                 className="card-despesas overflow-hidden"
                 forceTransparentBackground={true}
+                bottomRightContent={
+                  <>
+                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Pago este mês</p>
+                    <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
+                      {formatCurrency(totalPaidMonthlyExpenses)}
+                    </p>
+                  </>
+                }
               >
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#FF6D6D",
-                          "--cor-base": "#E85454",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
-                </div>
+
+                <div className="h-12 md:h-[52px] w-full" />
               </StatCard>
             )}
 
@@ -657,8 +651,7 @@ export default function Dashboard() {
                 id="stat-revenues"
                 mainStatTitle="Total de Receitas"
                 mainStatValue={stats.totalIncome}
-                secondaryStatTitle="Receita Atual"
-                secondaryStatValue={totalReceivedMonthlyIncome}
+
                 topRightContent={
                   <MonthNavigatorCompact
                     selectedMonth={selectedMonth}
@@ -671,7 +664,7 @@ export default function Dashboard() {
                 icon="TrendingUp"
                 variant="income"
                 isMobile={isMobile}
-                childrenAlignment="start"
+                childrenAlignment="end"
                 chartContent={
                   <MonthlyRevenueBarChart
                     revenues={allRevenues}
@@ -685,27 +678,17 @@ export default function Dashboard() {
                 neumorphism={true}
                 className="card-receitas overflow-hidden"
                 forceTransparentBackground={true}
+                bottomRightContent={
+                  <>
+                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none">Receita Atual</p>
+                    <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
+                      {formatCurrency(totalReceivedMonthlyIncome)}
+                    </p>
+                  </>
+                }
               >
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#38C97C",
-                          "--cor-base": "#26A765",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/receitas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Receita
-                    </Button>
-                  </div>
-                </div>
+
+                <div className="h-12 md:h-[52px] w-full" />
               </StatCard>
             )}
 
@@ -743,25 +726,8 @@ export default function Dashboard() {
                 className="card-saldo overflow-hidden"
                 forceTransparentBackground={true}
               >
-                <div className={cn("flex flex-col w-full h-full")}>
-                  <div className={cn("flex justify-end", isMobile && "mt-2")}>
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl mb-1 mr-1 font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#3B82F6",
-                          "--cor-base": "#2563EB",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/lancamentos")}
-                    >
-                      Lançamentos
-                    </Button>
-                  </div>
-                </div>
+
+                <div className="h-12 md:h-[52px] w-full" />
               </StatCard>
             )}
 
@@ -851,8 +817,7 @@ export default function Dashboard() {
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-                  secondaryStatTitle="Pago este mês"
-                  secondaryStatValue={totalPaidMonthlyExpenses}
+
                   topRightContent={
                     <MonthNavigatorCompact
                       selectedMonth={selectedMonth}
@@ -873,25 +838,17 @@ export default function Dashboard() {
                   annualTotalLabel="Total Anual"
                   annualTotalValue={totalAnnualExpenses}
                   neumorphism={true}
+                  bottomRightContent={
+                    <>
+                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Pago este mês</p>
+                      <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
+                        {formatCurrency(totalPaidMonthlyExpenses)}
+                      </p>
+                    </>
+                  }
                 >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#FF6D6D",
-                          "--cor-base": "#E85454",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/despesas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Despesa
-                    </Button>
-                  </div>
+
+                  <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
 
@@ -903,8 +860,7 @@ export default function Dashboard() {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-                  secondaryStatTitle="Receita Atual"
-                  secondaryStatValue={totalReceivedMonthlyIncome}
+
                   topRightContent={
                     <MonthNavigatorCompact
                       selectedMonth={selectedMonth}
@@ -925,25 +881,17 @@ export default function Dashboard() {
                   annualTotalLabel="Receita Anual"
                   annualTotalValue={totalAnnualRevenues}
                   neumorphism={true}
+                  bottomRightContent={
+                    <>
+                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none">Receita Atual</p>
+                      <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
+                        {formatCurrency(totalReceivedMonthlyIncome)}
+                      </p>
+                    </>
+                  }
                 >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] px-4 h-9 text-sm rounded-xl font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#38C97C",
-                          "--cor-base": "#26A765",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/receitas")}
-                    >
-                      <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
-                      Nova Receita
-                    </Button>
-                  </div>
+
+                  <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
 
@@ -976,23 +924,8 @@ export default function Dashboard() {
                   icon="Wallet"
                   neumorphism={true}
                 >
-                  <div className="flex justify-end mt-4">
-                    <Button
-                      className={cn(
-                        "btn-3d",
-                        "w-[160px] h-9 px-4 text-sm rounded-xl font-bold"
-                      )}
-                      style={
-                        {
-                          "--cor-topo": "#3B82F6",
-                          "--cor-base": "#2563EB",
-                        } as React.CSSProperties
-                      }
-                      onClick={() => navigate("/lancamentos")}
-                    >
-                      Lançamentos
-                    </Button>
-                  </div>
+
+                  <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
 

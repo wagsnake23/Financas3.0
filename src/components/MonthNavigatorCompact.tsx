@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -20,51 +19,76 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   isMobile,
   variant,
 }) => {
-  const textColorClass = variant === "income" ? "text-success" : variant === "expense" ? "text-destructive" : variant === "yield" ? "text-yield" : "text-primary";
-  const hoverBgClass = variant === "income" ? "hover:bg-success/10" : variant === "expense" ? "hover:bg-destructive/10" : variant === "yield" ? "hover:bg-yield/10" : "hover:bg-primary/10";
-  const hoverTextColorClass = variant === "income" ? "hover:text-success" : variant === "expense" ? "hover:text-destructive" : variant === "yield" ? "hover:text-yield" : "hover:text-primary";
+
+  const variantStyles = {
+    balance: {
+      containerVars: { "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF" },
+      border: "border-blue-200",
+      text: "text-[#1E6BCE]",
+      buttonGradient: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)"
+    },
+    expense: {
+      containerVars: { "--cor-topo": "#FFF5F5", "--cor-base": "#FFEBEB" },
+      border: "border-rose-200",
+      text: "text-[#E54D4D]",
+      buttonGradient: "linear-gradient(180deg, #FF7D7D 0%, #D64545 100%)"
+    },
+    income: {
+      containerVars: { "--cor-topo": "#F0FDF4", "--cor-base": "#DCFCE7" },
+      border: "border-emerald-200",
+      text: "text-[#1AA361]",
+      buttonGradient: "linear-gradient(180deg, #66E0A3 0%, #2DAD70 100%)"
+    },
+    yield: {
+      containerVars: { "--cor-topo": "#FFF8F1", "--cor-base": "#FFEEDD" },
+      border: "border-orange-200",
+      text: "text-orange-600",
+      buttonGradient: "linear-gradient(180deg, #FDBA74 0%, #EA580C 100%)"
+    }
+  };
+
+  const currentStyle = variantStyles[variant] || variantStyles.balance;
 
   return (
-    <div className={cn(
-      "flex items-center justify-center gap-0.5", // Espaçamento compacto entre os elementos
-      isMobile ? "flex-row" : "flex-row" // Sempre em linha
-    )}>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onPreviousMonth}
-        className={cn(
-          isMobile ? "h-7 w-7 p-0" : "h-8 w-8 p-0", // Botões maiores
-          "font-bold", // Negrito para o texto do botão
-          textColorClass, // Aplica a cor do texto (verde/vermelho)
-          hoverBgClass, // Cor de fundo ao passar o mouse
-          hoverTextColorClass // Cor do texto ao passar o mouse
-        )}
+    <div
+      className={cn(
+        "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border shadow-none cursor-default",
+        currentStyle.border,
+        isMobile ? "" : "-mr-1"
+      )}
+      style={{
+        ...currentStyle.containerVars,
+        boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+      } as any}
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); onPreviousMonth(); }}
+        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+        style={{
+          background: currentStyle.buttonGradient,
+          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
+        }}
       >
-        <DynamicIcon name="ChevronLeft" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Ícone maior */}
-      </Button>
-      <div className={cn("flex flex-col items-center", isMobile ? "text-xs" : "text-sm")}> {/* Ajustado o tamanho base para mobile e desktop */}
-        <span className={cn("font-bold uppercase leading-none", textColorClass, isMobile ? "text-sm" : "text-base", "font-roboto")}> {/* Mês: maior */}
-          {format(selectedMonth, "MMM", { locale: ptBR })}
-        </span>
-        <span className={cn("leading-none", textColorClass, isMobile ? "text-xs" : "text-sm", "font-roboto")}> {/* Ano: um pouco menor que o mês */}
-          {format(selectedMonth, "yyyy")}
-        </span>
-      </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onNextMonth}
-        className={cn(
-          isMobile ? "h-7 w-7 p-0" : "h-8 w-8 p-0", // Botões maiores
-          "font-bold", // Negrito para o texto do botão
-          textColorClass, // Aplica a cor do texto (verde/vermelho)
-          hoverBgClass, // Cor de fundo ao passar o mouse
-          hoverTextColorClass // Cor do texto ao passar o mouse
-        )}
+        <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+      </button>
+
+      <span className={cn(
+        "text-[12px] font-black px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap",
+        currentStyle.text
+      )}>
+        {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+      </span>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); onNextMonth(); }}
+        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+        style={{
+          background: currentStyle.buttonGradient,
+          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
+        }}
       >
-        <DynamicIcon name="ChevronRight" className={cn(isMobile ? "h-4 w-4" : "h-5 w-5")} /> {/* Ícone maior */}
-      </Button>
+        <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+      </button>
     </div>
   );
 };
