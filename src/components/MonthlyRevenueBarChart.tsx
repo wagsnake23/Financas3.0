@@ -59,10 +59,11 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
 
   return (
     <ResponsiveContainer width="100%" height={isMobile ? 90 : 'auto'} minHeight={isMobile ? undefined : 260}>
-      <BarChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+      <BarChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 6 }}>
         <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
         <XAxis
           dataKey="month"
+          height={12}
           axisLine={false}
           tickLine={false}
           interval={0}
@@ -73,7 +74,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
               <text
                 x={x}
                 y={y}
-                dy={12} /* Ajustado para aproximar os meses das barras */
+                dy={7} /* Ajustado para aproximar os meses das barras */
                 textAnchor="middle"
                 fill={color}
                 style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
