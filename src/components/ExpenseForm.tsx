@@ -435,7 +435,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       )}
 
-      <div className={cn(isMobile && "!-mt-1.5")}>
+      <div>
         <Label htmlFor="subcategoria" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria
         </Label>

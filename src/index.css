@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -18,7 +18,7 @@ All colors MUST be HSL.
     --popover-foreground: 215 25% 15%;
 
     --primary: 215 96% 39%;
-    /* Novo azul para o botão Entrar: #0556C3 */
+    /* Novo azul para o botÃ£o Entrar: #0556C3 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
@@ -55,7 +55,7 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     --app-title: 215 96% 32%;
-    /* Cor para o título 'Minhas Finanças' - #04469E */
+    /* Cor para o tÃ­tulo 'Minhas FinanÃ§as' - #04469E */
 
     --border: 215 20% 88%;
     --input: 215 20% 88%;
@@ -83,7 +83,7 @@ All colors MUST be HSL.
     --soft-purple: 280 60% 90%;
     /* Nova cor roxo suave */
     --app-purple: 270 70% 58%;
-    /* NOVO: Roxo mais forte para botões */
+    /* NOVO: Roxo mais forte para botÃµes */
 
     --lancamentos-mobile-bg: 210 100% 98.5%;
     /* Azul muito claro suave para mobile */
@@ -155,7 +155,7 @@ All colors MUST be HSL.
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
     --app-title: 215 96% 32%;
-    /* Cor para o título 'Minhas Finanças' - #04469E em dark mode */
+    /* Cor para o tÃ­tulo 'Minhas FinanÃ§as' - #04469E em dark mode */
 
     --soft-yellow: 45 60% 20%;
     /* Darker soft yellow for dark mode */
@@ -168,7 +168,7 @@ All colors MUST be HSL.
     --soft-purple: 280 60% 20%;
     /* Darker soft purple for dark mode */
     --app-purple: 270 70% 60%;
-    /* NOVO: Roxo mais forte para botões em dark mode */
+    /* NOVO: Roxo mais forte para botÃµes em dark mode */
 
     --lancamentos-mobile-bg: 210 60% 97%;
     /* #F1F9FD - Keep it light as requested */
@@ -207,7 +207,7 @@ All colors MUST be HSL.
 /* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */
 .radio-fix-click [role="radio"] {
   pointer-events: auto;
-  /* Garante que o botão de rádio seja clicável */
+  /* Garante que o botÃ£o de rÃ¡dio seja clicÃ¡vel */
 }
 
 .radio-fix-click [role="radio"]::after {
@@ -221,7 +221,7 @@ All colors MUST be HSL.
 @media (max-width: 767px) {
   .dialog-mobile {
     padding-top: 0.75rem !important;
-    /* Aumentado para descer o título */
+    /* Aumentado para descer o tÃ­tulo */
     padding-bottom: 0 !important;
     /* remove faixa preta inferior */
     top: 55% !important;
@@ -230,15 +230,15 @@ All colors MUST be HSL.
 
   .dialog-mobile .form-body {
     margin-top: 3.2rem !important;
-    /* Espaçamento superior para descolar do header */
+    /* EspaÃ§amento superior para descolar do header */
   }
 
   .dialog-mobile .dialog-title {
     /* margin-top: 0 !important; */
-    /* ajuste fino do título */
+    /* ajuste fino do tÃ­tulo */
   }
 
-  /* Ocultar o cabeçalho da tabela em mobile */
+  /* Ocultar o cabeÃ§alho da tabela em mobile */
   .lancamentos-table-header {
     display: none !important;
   }
@@ -247,7 +247,7 @@ All colors MUST be HSL.
 html,
 body {
   height: 100%;
-  /* Removido overflow: hidden para permitir pull-to-refresh e scroll da página de fundo */
+  /* Removido overflow: hidden para permitir pull-to-refresh e scroll da pÃ¡gina de fundo */
 }
 
 /* Apenas para Desktop */
@@ -257,16 +257,16 @@ body {
     position: relative;
   }
 
-  /* Área rolável apenas no corpo da tabela */
+  /* Ãrea rolÃ¡vel apenas no corpo da tabela */
   .lancamentos-scroll-container {
     max-height: calc(100vh - 360px);
     overflow-y: auto;
     overflow-x: auto;
-    /* Permitir scroll horizontal se necessário */
+    /* Permitir scroll horizontal se necessÃ¡rio */
     position: relative;
   }
 
-  /* Desabilitar o overflow do wrapper interno do Shadcn para não quebrar o sticky */
+  /* Desabilitar o overflow do wrapper interno do Shadcn para nÃ£o quebrar o sticky */
   .lancamentos-scroll-container>div {
     overflow: visible !important;
   }
@@ -280,7 +280,7 @@ body {
     margin: 0 auto;
   }
 
-  /* Cabeçalho fixo (sticky) */
+  /* CabeÃ§alho fixo (sticky) */
   .lancamentos-table-header th {
     position: sticky;
     top: 0;
@@ -344,7 +344,7 @@ body {
     cursor: pointer;
   }
 
-  /* Ícones de seta com animação suave */
+  /* Ãcones de seta com animaÃ§Ã£o suave */
   .arrow-icon {
     /* margin-left: 4px; */
     /* Removed as it's now absolutely positioned */
@@ -377,31 +377,31 @@ body {
   div[role="dialog"]>div:last-child form {
     /* Targets the form within DialogContent */
     padding-top: 0.25rem !important;
-    /* Reduzido o padding superior do formulário */
+    /* Reduzido o padding superior do formulÃ¡rio */
     padding-bottom: 0.25rem !important;
-    /* Reduzido o padding inferior do formulário */
+    /* Reduzido o padding inferior do formulÃ¡rio */
   }
 
   div[role="dialog"]>div:last-child form>div {
-    /* Reduz o espaçamento vertical entre os grupos de campos */
+    /* Reduz o espaÃ§amento vertical entre os grupos de campos */
     margin-bottom: 0.5rem !important;
     /* Reduzido para 0.5rem */
   }
 
   div[role="dialog"]>div:last-child .dialog-header {
-    /* Reduz o padding inferior do cabeçalho do diálogo */
+    /* Reduz o padding inferior do cabeÃ§alho do diÃ¡logo */
     padding-bottom: 0.25rem !important;
     /* Reduzido para 0.25rem */
   }
 
   div[role="dialog"]>div:last-child .dialog-footer {
-    /* Reduz o padding superior do rodapé do diálogo */
+    /* Reduz o padding superior do rodapÃ© do diÃ¡logo */
     padding-top: 0.5rem !important;
     /* Reduzido para 0.5rem */
   }
 
   div[role="dialog"]>div:last-child input,
-  /* Ajusta a altura de inputs, selects e botões */
+  /* Ajusta a altura de inputs, selects e botÃµes */
   div[role="dialog"]>div:last-child select,
   div[role="dialog"]>div:last-child button {
     height: 2rem !important;
@@ -415,7 +415,7 @@ body {
   }
 
   div[role="dialog"]>div:last-child textarea {
-    /* Ajusta a altura mínima de textareas */
+    /* Ajusta a altura mÃ­nima de textareas */
     min-height: 3.5rem !important;
     /* Reduzido para 3.5rem */
   }
@@ -627,4 +627,33 @@ body {
       rgba(255, 228, 205, 0.9),
       rgba(255, 245, 235, 0.95),
       rgba(255, 228, 205, 0.9));
+}
+
+/* Nova Despesa & Nova Receita Form specific premium input styling */
+#expense-form .input-3d-premium,
+.card-despesas .input-3d-premium,
+#income-form .input-3d-premium,
+.card-receitas .input-3d-premium {
+  border: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+#expense-form .input-3d-premium:focus,
+#expense-form .input-3d-premium:focus-within,
+.card-despesas .input-3d-premium:focus,
+.card-despesas .input-3d-premium:focus-within,
+#income-form .input-3d-premium:focus,
+#income-form .input-3d-premium:focus-within,
+.card-receitas .input-3d-premium:focus,
+.card-receitas .input-3d-premium:focus-within {
+  border: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(37, 99, 235, 0.6),
+    0 0 6px rgba(37, 99, 235, 0.12),
+    inset 0px 1px 1.5px rgba(255, 255, 255, 1),
+    inset 0px -1px 2px rgba(0, 0, 0, 0.06) !important;
 }

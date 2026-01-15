@@ -292,7 +292,7 @@ export default function Receitas() {
   const oneOffFormContent = (
     <>
       <form
-        id="revenue-form"
+        id="income-form"
         onSubmit={handleSubmitOneOff}
         className={cn("w-full", isMobile ? "space-y-4" : "space-y-6")}
       >
@@ -523,7 +523,7 @@ export default function Receitas() {
           const SubmitButton = (
             <Button
               type="submit"
-              form="revenue-form"
+              form="income-form"
               className={cn(
                 "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
                 isMobile ? "h-11 text-base" : "h-11 text-base"
@@ -626,10 +626,10 @@ export default function Receitas() {
         {isMobile ? (
           <div className="relative">
             <Card
-              className="!fixed top-[125px] left-4 right-4 p-4 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[92px] overflow-hidden z-30 card-receitas"
+              className="!fixed top-[125px] left-4 right-4 py-2 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[92px] overflow-hidden z-30 card-receitas"
               style={{ backgroundColor: "transparent" }}
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
                 {oneOffFormContent}
               </div>
             </Card>
