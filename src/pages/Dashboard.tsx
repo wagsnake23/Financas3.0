@@ -680,7 +680,7 @@ export default function Dashboard() {
                 forceTransparentBackground={true}
                 bottomRightContent={
                   <>
-                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none">Receita Atual</p>
+                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Receita Atual</p>
                     <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
                       {formatCurrency(totalReceivedMonthlyIncome)}
                     </p>
@@ -883,7 +883,7 @@ export default function Dashboard() {
                   neumorphism={true}
                   bottomRightContent={
                     <>
-                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none">Receita Atual</p>
+                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Receita Atual</p>
                       <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
                         {formatCurrency(totalReceivedMonthlyIncome)}
                       </p>
