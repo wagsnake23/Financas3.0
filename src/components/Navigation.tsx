@@ -168,7 +168,7 @@ export const Navigation = () => {
                       </button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-[280px] bg-white border-l-0">
-                      <SheetHeader className="text-left pt-10 pb-6 border-b border-gray-100">
+                      <SheetHeader className="text-left pt-10 pb-4 border-b border-gray-100">
                         <div className="flex flex-col gap-0.5">
                           <span className="text-lg font-bold text-primary truncate">
                             {fullName}
@@ -178,7 +178,7 @@ export const Navigation = () => {
                           </span>
                         </div>
                       </SheetHeader>
-                      <div className="flex flex-col gap-0.5 mt-6">
+                      <div className="flex flex-col gap-0.5 mt-3">
                         {navItems.map((item) => (
                           <RouterNavLink
                             key={item.to}
