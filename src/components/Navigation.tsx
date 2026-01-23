@@ -205,11 +205,11 @@ export const Navigation = () => {
                             <span className="text-[14px] font-bold tracking-tight">{item.label}</span>
                           </RouterNavLink>
                         ))}
-                        <div className="h-px bg-slate-300/30 my-4 mx-4" />
+                        <div className="h-px bg-slate-300/30 my-2 mx-4" />
                         <Button
                           variant="ghost"
                           onClick={signOut}
-                          className="justify-start px-4 py-2 text-rose-600 hover:bg-rose-50/50 hover:text-rose-700 rounded-2xl font-bold transition-colors"
+                          className="justify-start px-4 py-2 text-rose-600 hover:bg-rose-50/50 hover:text-rose-700 rounded-2xl font-bold transition-colors mt-1"
                         >
                           <LogOut className="h-5 w-5 mr-4" strokeWidth={2.5} />
                           <span className="text-[14px]">Sair da Conta</span>
