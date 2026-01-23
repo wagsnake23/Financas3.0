@@ -167,40 +167,52 @@ export const Navigation = () => {
                         <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />
                       </button>
                     </SheetTrigger>
-                    <SheetContent side="right" className="w-[280px] bg-white border-l-0">
-                      <SheetHeader className="text-left pt-10 pb-4 border-b border-gray-100">
+                    <SheetContent
+                      side="right"
+                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden"
+                      style={{
+                        background: 'radial-gradient(circle at top center, rgba(255,255,255,0.4), transparent 70%), linear-gradient(180deg, #C8D9F2 0%, #E8F0FA 40%, #F8FAFC 100%)',
+                      }}
+                    >
+                      {/* Efeito institucional moderno no topo */}
+                      <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" />
+
+                      <SheetHeader className="relative text-left pt-20 pb-6 px-6 border-b border-white/40">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-lg font-bold text-primary truncate">
+                          <span className="text-xl font-bold text-[#1E40AF] truncate drop-shadow-sm">
                             {fullName}
                           </span>
-                          <span className="text-xs text-gray-500 truncate italic">
+                          <span className="text-xs text-[#64748B] truncate italic font-medium">
                             {user?.email}
                           </span>
                         </div>
                       </SheetHeader>
-                      <div className="flex flex-col gap-0.5 mt-3">
+
+                      <div className="relative flex flex-col gap-0.5 mt-4 px-3">
                         {navItems.map((item) => (
                           <RouterNavLink
                             key={item.to}
                             to={item.to}
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-4 px-4 py-2 rounded-2xl transition-all",
-                              isActive ? "bg-primary/10 text-primary font-bold" : "text-gray-600 hover:bg-gray-50"
+                              "flex items-center gap-4 px-4 py-2 rounded-2xl transition-all mx-1",
+                              isActive
+                                ? "bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white font-bold shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)]"
+                                : "text-[#4A6B8A] hover:bg-white/30 hover:text-[#1E3A5F]"
                             )}
                           >
-                            <span className="text-xl">{item.icon}</span>
-                            <span className="text-sm font-medium">{item.label}</span>
+                            <span className="text-xl filter drop-shadow-lg">{item.icon}</span>
+                            <span className="text-[14px] font-bold tracking-tight">{item.label}</span>
                           </RouterNavLink>
                         ))}
-                        <div className="h-[1.5px] bg-slate-200/80 my-2 mx-4" />
+                        <div className="h-px bg-slate-300/30 my-4 mx-4" />
                         <Button
                           variant="ghost"
                           onClick={signOut}
-                          className="justify-start px-4 py-2 text-destructive hover:bg-destructive/5 hover:text-destructive rounded-2xl"
+                          className="justify-start px-4 py-2 text-rose-600 hover:bg-rose-50/50 hover:text-rose-700 rounded-2xl font-bold transition-colors"
                         >
                           <LogOut className="h-5 w-5 mr-4" strokeWidth={2.5} />
-                          <span className="font-bold">Sair da Conta</span>
+                          <span className="text-[14px]">Sair da Conta</span>
                         </Button>
                       </div>
                     </SheetContent>
