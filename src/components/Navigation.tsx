@@ -14,6 +14,8 @@ import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCou
 import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
@@ -23,6 +25,23 @@ export const Navigation = () => {
   const location = useLocation();
 
   const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user);
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("nome")
+        .eq("id", user.id)
+        .single();
+      if (error) return null;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
 
   const navItems = [
     { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" },
@@ -150,19 +169,23 @@ export const Navigation = () => {
                     </SheetTrigger>
                     <SheetContent side="right" className="w-[280px] bg-white border-l-0">
                       <SheetHeader className="text-left pt-10 pb-6 border-b border-gray-100">
-                        <div className="flex items-center gap-3">
-                          <img src="/favicon.ico" alt="Logo" className="h-8 w-8" />
-                          <SheetTitle className="text-xl font-bold text-primary">Minhas Finanças</SheetTitle>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-lg font-bold text-primary truncate">
+                            {fullName}
+                          </span>
+                          <span className="text-xs text-gray-500 truncate italic">
+                            {user?.email}
+                          </span>
                         </div>
                       </SheetHeader>
-                      <div className="flex flex-col gap-1 mt-6">
+                      <div className="flex flex-col gap-0.5 mt-6">
                         {navItems.map((item) => (
                           <RouterNavLink
                             key={item.to}
                             to={item.to}
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-4 px-4 py-2.5 rounded-2xl transition-all",
+                              "flex items-center gap-4 px-4 py-2 rounded-2xl transition-all",
                               isActive ? "bg-primary/10 text-primary font-bold" : "text-gray-600 hover:bg-gray-50"
                             )}
                           >
@@ -170,11 +193,11 @@ export const Navigation = () => {
                             <span className="text-sm font-medium">{item.label}</span>
                           </RouterNavLink>
                         ))}
-                        <div className="h-px bg-gray-100 my-2 mx-4" />
+                        <div className="h-[1.5px] bg-slate-200/80 my-2 mx-4" />
                         <Button
                           variant="ghost"
                           onClick={signOut}
-                          className="justify-start px-4 py-2.5 text-destructive hover:bg-destructive/5 hover:text-destructive rounded-2xl"
+                          className="justify-start px-4 py-2 text-destructive hover:bg-destructive/5 hover:text-destructive rounded-2xl"
                         >
                           <LogOut className="h-5 w-5 mr-4" strokeWidth={2.5} />
                           <span className="font-bold">Sair da Conta</span>
