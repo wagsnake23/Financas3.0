@@ -650,21 +650,21 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className="max-w-[320px] rounded-2xl">
+                          <AlertDialogContent className="w-[92%] max-w-[380px] rounded-3xl p-6 border-none shadow-2xl">
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="flex items-center justify-center gap-2">
-                                <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
+                              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+                                <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
                                 Excluir Item?
                               </AlertDialogTitle>
-                              <AlertDialogDescription className="text-center">
-                                Deseja remover "{item.product}" da sua lista?
+                              <AlertDialogDescription className="text-center text-gray-500 font-medium">
+                                Deseja remover "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da sua lista?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter className="flex-row gap-2">
-                              <AlertDialogCancel className="flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold mt-0">Cancelar</AlertDialogCancel>
+                            <AlertDialogFooter className="flex flex-row gap-3 mt-4">
+                              <AlertDialogCancel className="flex-1 rounded-2xl border border-blue-100 bg-white text-[#1E3A8A] font-bold mt-0 h-11 hover:bg-blue-50 transition-colors">Cancelar</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDeleteRow(item.id)}
-                                className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                                className="flex-1 bg-[#D44D4D] text-white hover:bg-[#D44D4D]/90 rounded-2xl font-bold h-11 border-none shadow-md active:scale-95 transition-all outline-none"
                               >
                                 Excluir
                               </AlertDialogAction>
@@ -733,21 +733,21 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             <DynamicIcon name="Trash2" className="h-5 w-5" />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-xl">
+                        <AlertDialogContent className="w-[92%] max-w-[400px] rounded-3xl p-6 border-none shadow-2xl">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-2">
-                              <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
+                            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+                              <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
                               Excluir Item
                             </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Deseja realmente excluir o produto "{item.product}" da lista?
+                            <AlertDialogDescription className="text-center text-gray-500 font-medium">
+                              Deseja realmente excluir o produto "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da lista?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold">Cancelar</AlertDialogCancel>
+                          <AlertDialogFooter className="flex flex-row gap-3 mt-4">
+                            <AlertDialogCancel className="flex-1 rounded-2xl border border-blue-100 bg-white text-[#1E3A8A] font-bold mt-0 h-11 hover:bg-blue-50 transition-colors">Cancelar</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDeleteRow(item.id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                              className="flex-1 bg-[#D44D4D] text-white hover:bg-[#D44D4D]/90 rounded-2xl font-bold h-11 border-none shadow-md active:scale-95 transition-all outline-none"
                             >
                               Confirmar
                             </AlertDialogAction>
@@ -787,25 +787,23 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="rounded-3xl w-[90%] max-w-[400px]">
+          <AlertDialogContent className="w-[92%] max-w-[400px] rounded-3xl p-6 border-none shadow-2xl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center justify-center gap-2">
-                <DynamicIcon name="Trash2" className="h-5 w-5" color="#E85454" />
-                Confirmação
+              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+                <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
+                Limpar Lista?
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-center">
-                Deseja realmente excluir todos os itens da lista?
+              <AlertDialogDescription className="text-center text-gray-500 font-medium">
+                Essa ação irá remover <span className="text-red-500 font-bold">TODOS</span> os itens da sua lista permanentemente.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex flex-row gap-2 items-center">
-              <AlertDialogCancel className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold flex-1 mt-0">
-                Cancelar
-              </AlertDialogCancel>
+            <AlertDialogFooter className="flex flex-row gap-3 mt-4">
+              <AlertDialogCancel className="flex-1 rounded-2xl border border-blue-100 bg-white text-[#1E3A8A] font-bold mt-0 h-11 hover:bg-blue-50 transition-colors">Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearList}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl flex-1 mt-0"
+                className="flex-1 bg-[#D44D4D] text-white hover:bg-[#D44D4D]/90 rounded-2xl font-bold h-11 border-none shadow-md active:scale-95 transition-all outline-none"
               >
-                Excluir
+                Sim, Limpar
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

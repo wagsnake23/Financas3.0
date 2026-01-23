@@ -81,19 +81,33 @@ export const Navigation = () => {
   const isDarkPage = location.pathname === "/" || isDespesas || isReceitas;
 
   const [scrolled, setScrolled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isMobile) return;
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Observer para detectar modais (Radix UI adiciona classes/estilos ao body)
+    const observer = new MutationObserver(() => {
+      const isLocked = document.body.style.pointerEvents === "none" || document.body.hasAttribute("data-radix-scroll-lock");
+      setIsModalOpen(isLocked);
+    });
+
+    observer.observe(document.body, { attributes: true, attributeFilter: ["style", "data-radix-scroll-lock"] });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
   }, [isMobile]);
 
-  // Cores dinâmicas baseadas no tema da página
-  const mobileTextColor = isDarkPage ? "text-white" : "text-[#1E40AF]";
-  const mobileIconColor = isDarkPage ? "text-white" : "text-[#1E40AF]";
+  // Cores dinâmicas baseadas no tema da página ou estado do modal
+  const mobileTextColor = (isDarkPage || isModalOpen) ? "text-white" : "text-[#1E40AF]";
+  const mobileIconColor = (isDarkPage || isModalOpen) ? "text-white" : "text-[#1E40AF]";
 
   return (
     <>
@@ -129,7 +143,8 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-bold text-lg tracking-tight",
-                isMobile ? mobileTextColor : "text-white"
+                isMobile ? mobileTextColor : "text-white",
+                isModalOpen && "shadow-none drop-shadow-none filter-none"
               )}>Minhas Finanças</span>
             </div>
 
@@ -205,12 +220,12 @@ export const Navigation = () => {
                       {/* Efeito institucional moderno no topo */}
                       <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" />
 
-                      <SheetHeader className="relative text-left pt-20 pb-6 px-6 border-b border-white/40">
+                      <SheetHeader className="relative text-left pt-10 pb-6 px-6 border-b border-white/40">
                         <div className="flex flex-col gap-0.5">
                           <span className="text-xl font-bold text-[#1E40AF] truncate drop-shadow-sm">
                             {fullName}
                           </span>
-                          <span className="text-xs text-[#64748B] truncate italic font-medium">
+                          <span className="text-xs text-[#64748B] truncate font-medium">
                             {user?.email}
                           </span>
                         </div>
