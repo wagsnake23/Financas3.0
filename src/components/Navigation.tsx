@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { NavLink as RouterNavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,18 +76,42 @@ export const Navigation = () => {
     return location.pathname.startsWith(path);
   };
 
-  const isDespesas = location.pathname === "/despesas";
+  const isDespesas = location.pathname.startsWith("/despesas");
+  const isReceitas = location.pathname.startsWith("/receitas");
+  const isDarkPage = location.pathname === "/" || isDespesas || isReceitas;
+
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
+
+  // Cores dinâmicas baseadas no tema da página
+  const mobileTextColor = isDarkPage ? "text-white" : "text-[#1E40AF]";
+  const mobileIconColor = isDarkPage ? "text-white" : "text-[#1E40AF]";
 
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[60] transition-colors duration-300",
+        "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
+        isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 backdrop-blur-md border-b shadow-none",
+            "h-14 shadow-none border-none",
             isDespesas
-              ? "bg-gradient-to-b from-[#FFF1F1]/95 to-[#FFF1F1]/80 border-rose-100/50"
-              : "bg-gradient-to-b from-[#E0F2FE]/90 to-[#F8FAFC]/80 border-blue-100/50"
+              ? cn("bg-[#D44D4D]", !scrolled && "bg-transparent")
+              : isReceitas
+                ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
+                : !scrolled
+                  ? "bg-transparent"
+                  : isDarkPage
+                    ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
+                    : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
           : "h-16 bg-gradient-primary text-primary-foreground shadow-lg"
       )}>
@@ -105,9 +129,7 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-bold text-lg tracking-tight",
-                isMobile
-                  ? "text-primary"
-                  : "text-white"
+                isMobile ? mobileTextColor : "text-white"
               )}>Minhas Finanças</span>
             </div>
 
@@ -150,7 +172,10 @@ export const Navigation = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate("/lista-de-compras")}
-                    className="relative p-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
+                    className={cn(
+                      "relative p-2 rounded-full transition-colors",
+                      isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
+                    )}
                   >
                     <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
                     {pendingCount > 0 && (
@@ -163,7 +188,10 @@ export const Navigation = () => {
                   {/* Menu Lateral redundante para outras opções */}
                   <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
-                      <button className="p-2 text-primary hover:bg-primary/5 rounded-full transition-colors">
+                      <button className={cn(
+                        "p-2 rounded-full transition-colors",
+                        isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
+                      )}>
                         <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />
                       </button>
                     </SheetTrigger>

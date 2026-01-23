@@ -279,7 +279,7 @@ export default function Auth() {
     <>
       <div className={cn("mb-6 text-center", isMobile && "-mt-8")}>
         <img src="/favicon.ico" alt="Controle Financeiro Logo" className="mx-auto h-20 w-20" />
-        <h1 className="text-3xl font-bold text-app-title">
+        <h1 className="text-3xl font-black text-[#1E40AF]">
           Minhas Finanças
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -343,7 +343,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-base font-bold shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            className="w-full rounded-2xl text-base font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -476,7 +476,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -522,7 +522,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -603,7 +603,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg shadow-md active:shadow-none active:translate-y-0.5 transition-all duration-100"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >

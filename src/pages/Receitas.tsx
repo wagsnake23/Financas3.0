@@ -567,17 +567,17 @@ export default function Receitas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-[#F9FAFB] pt-14 md:pt-16",
+        "flex flex-col min-h-screen bg-[#F9FAFB] md:pt-16",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
       <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
-      <div className="relative h-[200px] w-full bg-gradient-to-b from-[#1AA361] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
+      <div className="relative h-[220px] w-full bg-gradient-to-b from-[#218C5C] via-[#48DE95] to-[#F9FAFB] overflow-hidden">
         <div className={cn(
           "container mx-auto px-6 relative z-10 max-w-[1200px]",
-          isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#1AA361]/0 justify-between" : "pt-3 md:pt-7 flex justify-between items-start"
+          isMobile ? "fixed top-14 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#218C5C]/0 justify-between pt-2" : "pt-3 md:pt-7 flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
