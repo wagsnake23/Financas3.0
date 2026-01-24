@@ -267,7 +267,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container mx-auto px-6 relative z-10 max-w-[800px]",
-                    isMobile ? "fixed top-12 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-11 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
                         <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-xl" : "text-xl")}>
@@ -288,7 +288,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative">
                         <div
-                            className="!fixed top-[115px] left-0 right-0 bottom-[88px] overflow-hidden z-30 px-3 pt-2"
+                            className="!fixed top-[115px] left-0 right-0 bottom-[48px] overflow-hidden z-30 px-3 pt-2"
                         >
                             <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8">
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
@@ -645,7 +645,7 @@ export default function Home() {
             </main>
             <Footer
                 isMobile={isMobile}
-                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-transparent" : "mt-8")}
+                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0" : "mt-8")}
                 user={user}
             />
         </div >
