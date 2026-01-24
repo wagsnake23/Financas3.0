@@ -41,14 +41,13 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       "w-full animate-fade-in transition-all duration-300",
       !isMobile && "mb-6"
     )}>
-      <Card className={cn(
-        "relative overflow-hidden border border-slate-100 bg-[#FCFCFD] py-2 px-4",
-        "shadow-[0_2px_8px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.02)]",
-        "rounded-2xl",
-        isMobile ? "rounded-xl" : ""
-      )}>
-        {/* Subtle 3D Top Edge */}
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/60 z-10" />
+      <Card
+        className={cn(
+          "relative overflow-hidden py-3 px-4 rounded-[24px] border border-[#F0E8FF] card-cartoes shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+          isMobile ? "mb-2" : "mb-6"
+        )}
+        style={{ backgroundColor: "transparent" }}
+      >
 
         <div className={cn(
           "flex flex-col gap-3",
@@ -150,7 +149,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
                 "disabled:opacity-40 disabled:grayscale",
                 isMobile && "flex-1"
               )}
-              style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6" } as React.CSSProperties}
+              style={{ "--cor-topo": "#9F7AEA", "--cor-base": "#805AD5" } as React.CSSProperties}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-white opacity-90" />
               {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
