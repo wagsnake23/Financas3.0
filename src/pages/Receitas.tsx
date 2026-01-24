@@ -580,13 +580,13 @@ export default function Receitas() {
       )}>
         <div className={cn(
           "container mx-auto px-6 relative z-10 max-w-[1200px]",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#218C5C]/0 justify-between" : "pt-[46px] md:pt-[62px] flex justify-between items-start"
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#218C5C]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
               <Button
                 variant="ghost"
-                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
+                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0 -ml-2" : "mt-1")}
                 style={isMobile ? { "--cor-topo": "#F0FDF4", "--cor-base": "#DCFCE7" } as any : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 onClick={() => navigate("/lancamentos?type=income")}
               >
