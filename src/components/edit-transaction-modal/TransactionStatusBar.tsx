@@ -52,8 +52,8 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
         <div className={cn(
             "flex items-center justify-between py-2 px-3 rounded-2xl backdrop-blur-md shadow-sm mb-2 border transition-all duration-300",
             isPaid
-                ? "bg-gradient-to-br from-[#F0FDF4] to-[#DCFCE7] border-[#DCFCE7]/60"
-                : "bg-gradient-to-br from-[#FFFEF9] to-[#FFFBEB] border-[#FEF3C7]/30",
+                ? "bg-gradient-to-br from-[#F1FBF9] to-[#E8F8EE] border-[#D1FAE5]"
+                : "bg-gradient-to-br from-[#FFFDF2] to-[#FFF9E5] border-[#FEF3C7]",
             isMobile && "mx-2"
         )}>
             {/* Left side: Status and Info */}
