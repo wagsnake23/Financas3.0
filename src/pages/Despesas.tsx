@@ -158,24 +158,27 @@ export default function Despesas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-[#F9FAFB] md:pt-16",
+        "flex flex-col min-h-screen bg-background md:pt-16",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
       <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
-      <div className="relative h-[220px] w-full bg-gradient-to-b from-[#CC4B4B] via-[#CC4B4B] via-45% to-transparent overflow-hidden">
+      <div className={cn(
+        "relative h-[220px] w-full overflow-hidden",
+        isMobile ? "bg-gradient-to-b from-[#CC4B4B] via-[#CC4B4B] via-45% to-transparent" : "bg-background"
+      )}>
         <div className={cn(
           "container mx-auto px-6 relative z-10 max-w-[1200px]",
-          isMobile ? "fixed top-12 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#D44D4D]/0 justify-between" : "pt-3 md:pt-7 flex justify-between items-start"
+          isMobile ? "fixed top-12 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#D44D4D]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
               <Button
                 variant="ghost"
                 className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
-                style={{ "--cor-topo": "#FFF5F5", "--cor-base": "#FFE4E6" } as any}
+                style={isMobile ? { "--cor-topo": "#FFF5F5", "--cor-base": "#FFE4E6" } as any : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 onClick={() => navigate("/lancamentos?type=expense")}
               >
                 <DynamicIcon
@@ -185,10 +188,10 @@ export default function Despesas() {
                 />
               </Button>
               <div className="flex flex-col">
-                <h1 className={cn("font-black text-white tracking-tight -mt-0.5", isMobile ? "text-xl" : "text-xl")}>
+                <h1 className={cn("font-black tracking-tight -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")}>
                   Nova Despesa
                 </h1>
-                <p className={cn("text-white font-medium -mt-0.5 leading-none", isMobile ? "text-xs" : "text-sm")}>
+                <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-white" : "text-sm text-slate-500")}>
                   Registre seus gastos
                 </p>
               </div>

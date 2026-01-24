@@ -43,14 +43,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
     )}>
       <Card
         className={cn(
-          "relative overflow-hidden py-3 px-4 rounded-[24px] border border-[#F0E8FF] card-cartoes shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
-          isMobile ? "mb-2" : "mb-6"
+          "relative overflow-hidden px-4 rounded-[24px] border border-[#F5F2FF] card-cartoes shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+          isMobile ? "py-2 mb-2" : "py-5 mb-6"
         )}
         style={{ backgroundColor: "transparent" }}
       >
 
         <div className={cn(
-          "flex flex-col gap-3",
+          "flex flex-col gap-2",
           !isMobile && "flex-row items-center justify-between gap-4"
         )}>
 
@@ -119,7 +119,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
           {/* Right Section: Dates & Action */}
           <div className={cn(
-            "flex items-center justify-between md:justify-end gap-3 pt-1 border-t border-slate-50",
+            "flex items-center justify-between md:justify-end gap-3 pt-1 border-t border-slate-50/50",
             !isMobile && "pt-0 border-t-0"
           )}>
             {/* Date Details */}
