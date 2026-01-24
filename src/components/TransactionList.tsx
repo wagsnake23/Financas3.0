@@ -463,7 +463,7 @@ export const TransactionList = ({
               "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
               filterPaymentOptionId !== "all"
                 ? (isValidUuid(filterPaymentOptionId)
-                  ? "bg-[#8257E5] hover:bg-[#8257E5]/90"
+                  ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90"
                   : (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90")
                 ) + " text-white border-transparent font-bold"
                 : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"

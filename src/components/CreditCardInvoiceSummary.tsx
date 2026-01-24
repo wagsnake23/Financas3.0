@@ -43,14 +43,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
     )}>
       <Card
         className={cn(
-          "relative overflow-hidden px-4 rounded-[24px] border border-[#F5F2FF] card-cartoes shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
-          isMobile ? "py-2 mb-2" : "py-5 mb-6"
+          "relative overflow-hidden px-4 rounded-[24px] border border-[#F0F7FF] card-saldo shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+          isMobile ? "py-2 mb-0.5" : "py-5 mb-6"
         )}
         style={{ backgroundColor: "transparent" }}
       >
 
         <div className={cn(
-          "flex flex-col gap-2",
+          isMobile ? "flex flex-col gap-1.5" : "flex flex-col gap-2",
           !isMobile && "flex-row items-center justify-between gap-4"
         )}>
 
@@ -149,7 +149,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
                 "disabled:opacity-40 disabled:grayscale",
                 isMobile && "flex-1"
               )}
-              style={{ "--cor-topo": "#9F7AEA", "--cor-base": "#805AD5" } as React.CSSProperties}
+              style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6" } as React.CSSProperties}
             >
               <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-white opacity-90" />
               {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
