@@ -519,10 +519,10 @@ body {
 .sky-bg {
   background-image: url("/backgrounds/sky.png") !important;
   background-size: cover !important;
-  background-position: center -80px !important;
+  background-position: center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
-  min-height: 100vh !important;
+  min-height: 100dvh !important;
   background-color: transparent !important;
 }
 
