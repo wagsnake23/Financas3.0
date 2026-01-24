@@ -83,8 +83,8 @@ const Lancamentos = () => {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background pt-16 relative",
-        isMobile ? "bg-gray-50 text-black h-screen overflow-hidden" : "bg-background"
+        "flex flex-col min-h-screen bg-background relative",
+        isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-16 bg-background"
       )}>
       <Navigation />
       <main
@@ -95,7 +95,7 @@ const Lancamentos = () => {
       >
 
 
-        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8 px-4" : "mt-2 mb-6 h-10")}>
+        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-[-4px] mb-4 h-8 px-4" : "mt-2 mb-6 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
