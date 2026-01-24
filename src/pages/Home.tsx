@@ -288,7 +288,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative">
                         <div
-                            className="!fixed top-[115px] left-0 right-0 bottom-[48px] overflow-hidden z-30 px-3 pt-2"
+                            className="!fixed top-[115px] left-0 right-0 bottom-[32px] overflow-hidden z-30 px-3 pt-2"
                         >
                             <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8">
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
