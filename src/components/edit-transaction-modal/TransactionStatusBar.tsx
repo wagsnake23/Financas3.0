@@ -50,7 +50,10 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
 
     return (
         <div className={cn(
-            "flex items-center justify-between py-2 px-3 rounded-2xl bg-white/60 backdrop-blur-md border border-white/20 shadow-sm mb-2",
+            "flex items-center justify-between py-2 px-3 rounded-2xl backdrop-blur-md shadow-sm mb-2 border transition-all duration-300",
+            isPaid
+                ? "bg-gradient-to-br from-[#F0FDF4] to-[#DCFCE7] border-[#DCFCE7]/60"
+                : "bg-gradient-to-br from-[#FFFEF9] to-[#FFFBEB] border-[#FEF3C7]/30",
             isMobile && "mx-2"
         )}>
             {/* Left side: Status and Info */}
@@ -84,7 +87,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                 </div>
 
                 {isPaid && paidAtTimestamp && (
-                    <span className="text-[10px] text-gray-500 font-medium ml-0.5 mt-0.5">
+                    <span className="text-[11px] text-slate-600 font-bold ml-0.5 mt-0.5">
                         {formattedDate}
                     </span>
                 )}
