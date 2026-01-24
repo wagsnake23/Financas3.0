@@ -281,16 +281,16 @@ export default function Home() {
             </div>
 
             <main className={cn(
-                "container mx-auto px-4 relative z-20 max-w-[800px]",
+                "container mx-auto px-4 relative z-20 max-w-[800px] !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
                 isMobile ? "-mt-32 pb-32" : "-mt-24 md:mt-2"
-            )}>
+            )} style={{ background: 'transparent' }}>
 
                 {isMobile ? (
-                    <div className="relative">
+                    <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[115px] left-0 right-0 bottom-[32px] overflow-hidden z-30 px-3 pt-2"
+                            className="!fixed top-[115px] left-0 right-0 bottom-[32px] overflow-hidden z-30 px-3 pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
-                            <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8">
+                            <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}>
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
                                     className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
