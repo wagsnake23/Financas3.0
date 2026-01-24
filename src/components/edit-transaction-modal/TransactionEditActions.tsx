@@ -28,7 +28,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-bold transition-colors",
+          "flex-1 rounded-xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-extrabold transition-colors",
           "text-sm",
           isMobile && "h-9"
         )}
@@ -40,9 +40,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-colors",
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold transition-colors",
+          "text-sm",
+          isMobile && "h-9"
         )}
         disabled={loading}
       >
@@ -51,9 +51,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "flex-1 rounded-xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg", // Verde moderno um pouco mais claro
-          "text-sm", // Aumenta a fonte para 'sm'
-          isMobile && "h-9" // Mantém a altura para mobile
+          "flex-1 rounded-xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
+          "text-base font-black",
+          isMobile && "h-9"
         )}
         disabled={loading}
         onClick={onSave}
