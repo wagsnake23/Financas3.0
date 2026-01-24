@@ -352,7 +352,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-xl bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white font-bold border-transparent shadow-md shadow-blue-200 transition-all hover:shadow-lg hover:brightness-105 active:scale-95",
+            "flex-1 rounded-xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
             isMobile && "h-9 text-sm"
           )}
           size="lg"
