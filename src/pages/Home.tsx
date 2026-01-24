@@ -264,202 +264,388 @@ export default function Home() {
             <Navigation />
 
             {/* HEADER AREA */}
-            <div className="relative h-[220px] w-full overflow-hidden">
-                <div className="container mx-auto px-6 pt-16 md:pt-24 relative z-10 max-w-[800px]">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h1 className="text-xl font-bold text-white tracking-tight">
-                                Olá, {userName} 👋
-                            </h1>
-                            <p className="text-xs text-blue-100/80 font-medium mt-1 uppercase tracking-widest">
-                                {todayStr}
-                            </p>
-                        </div>
-
+            <div className="relative h-[220px] w-full overflow-hidden shrink-0">
+                <div className={cn(
+                    "container mx-auto px-6 relative z-10 max-w-[800px]",
+                    isMobile ? "fixed top-12 left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
+                )}>
+                    <div>
+                        <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-xl" : "text-xl")}>
+                            Olá, {userName} 👋
+                        </h1>
+                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] mt-0.5" : "text-xs mt-1")}>
+                            {todayStr}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <main className={cn("container mx-auto px-4 -mt-24 md:mt-2 relative z-20 max-w-[800px]")}>
+            <main className={cn(
+                "container mx-auto px-4 relative z-20 max-w-[800px]",
+                isMobile ? "-mt-32 pb-32" : "-mt-24 md:mt-2"
+            )}>
 
-                {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
-                <Card
-                    className="pl-3 pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
-                    style={{ backgroundColor: "transparent" }}
-                >
-                    <div className="flex justify-between items-start mb-2">
-                        <div className="flex flex-col">
-                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                            <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
-                                {formatCurrency(dStats.currentBalance)}
-                            </p>
-                        </div>
-                        {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
+                {isMobile ? (
+                    <div className="relative">
                         <div
-                            className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-1 border border-blue-200 shadow-none cursor-default"
-                            style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+                            className="!fixed top-[115px] left-0 right-0 bottom-[88px] overflow-hidden z-30 px-3 pt-2"
                         >
-                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
-                            </button>
-                            <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
-                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
-                            </span>
-                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center mt-1 gap-2">
-                        {/* Investments Icon Button */}
-                        <Button
-                            onClick={() => navigate("/dashboard?filter=investments")}
-                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
-                            style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
-                        >
-                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                        </Button>
-                        <div className="flex flex-col items-start gap-0.5">
-                            <div className={cn(
-                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                            )}>
-                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
-                            </div>
-                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
-                        </div>
-                    </div>
-
-                    {/* Mini gráfico de barras (Posição Bottom Right) */}
-                    <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
-                        <MiniFinanceBars
-                            expenses={dStats.currentExpenses}
-                            revenues={dStats.currentIncome}
-                            balance={dStats.currentBalance}
-                        />
-                    </div>
-                </Card>
-
-                <div className="grid grid-cols-1 gap-3 mb-4">
-                    {/* CARD DESPESAS */}
-                    <Card
-                        className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
-                        style={{ backgroundColor: "transparent" }}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
-                                    {formatCurrency(dStats.currentExpenses)}
-                                </p>
-                            </div>
-                            <Button
-                                className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-1"
-                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
-                                onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
-                            >
-                                Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
-                            </Button>
-                        </div>
-
-                        <div className="flex items-center justify-between mt-1">
-                            <div className="flex items-start gap-2">
-                                <Button
-                                    onClick={() => navigate("/dashboard?filter=expenses")}
-                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
-                                    style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                            <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8">
+                                {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
+                                <Card
+                                    className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                                    style={{ backgroundColor: "transparent" }}
                                 >
-                                    <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex flex-col">
+                                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                                            <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
+                                                {formatCurrency(dStats.currentBalance)}
+                                            </p>
+                                        </div>
+                                        {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
+                                        <div
+                                            className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                                            style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+                                        >
+                                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            </button>
+                                            <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                            </span>
+                                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center mt-1 gap-2">
+                                        {/* Investments Icon Button */}
+                                        <Button
+                                            onClick={() => navigate("/dashboard?filter=investments")}
+                                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
+                                            style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
+                                        >
+                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                        </Button>
+                                        <div className="flex flex-col items-start gap-0.5">
+                                            <div className={cn(
+                                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                                dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                            )}>
+                                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                            </div>
+                                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Mini gráfico de barras (Posição Bottom Right) */}
+                                    <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
+                                        <MiniFinanceBars
+                                            expenses={dStats.currentExpenses}
+                                            revenues={dStats.currentIncome}
+                                            balance={dStats.currentBalance}
+                                        />
+                                    </div>
+                                </Card>
+
+                                {/* CARD DESPESAS */}
+                                <Card
+                                    className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                                    style={{ backgroundColor: "transparent" }}
+                                >
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex flex-col">
+                                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
+                                            <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                                {formatCurrency(dStats.currentExpenses)}
+                                            </p>
+                                        </div>
+                                        <Button
+                                            className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-1"
+                                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                            onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                        >
+                                            Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                        </Button>
+                                    </div>
+
+                                    <div className="flex items-center justify-between mt-1">
+                                        <div className="flex items-start gap-2">
+                                            <Button
+                                                onClick={() => navigate("/dashboard?filter=expenses")}
+                                                className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
+                                                style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                            >
+                                                <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                            </Button>
+                                            <div className="flex flex-col items-start gap-0.5">
+                                                <div className={cn(
+                                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                                    dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                                )}>
+                                                    {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                                </div>
+                                                <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                            style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                            onClick={() => navigate("/despesas")}
+                                        >
+                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                            Nova Despesa
+                                        </Button>
+                                    </div>
+                                </Card>
+
+                                {/* CARD RECEITAS */}
+                                <Card
+                                    className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                                    style={{ backgroundColor: "transparent" }}
+                                >
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex flex-col">
+                                            <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
+                                            <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                                {formatCurrency(dStats.currentIncome)}
+                                            </p>
+                                        </div>
+                                        <Button
+                                            className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-1"
+                                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                            onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                        >
+                                            Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                        </Button>
+                                    </div>
+
+                                    <div className="flex items-center justify-between mt-1">
+                                        <div className="flex items-start gap-2">
+                                            <Button
+                                                onClick={() => navigate("/dashboard?filter=revenues")}
+                                                className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
+                                                style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                            >
+                                                <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                            </Button>
+                                            <div className="flex flex-col items-start gap-0.5">
+                                                <div className={cn(
+                                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                                    dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                                )}>
+                                                    {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                                </div>
+                                                <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                            style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                            onClick={() => navigate("/receitas")}
+                                        >
+                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                            Nova Receita
+                                        </Button>
+                                    </div>
+                                </Card>
+
+                                <div id="cartoes-section">
+                                    <MobileCreditCardExpenses
+                                        cartoes={cartoes}
+                                        expenseInstallments={dExpenses}
+                                        allCategories={allSubcategories as any}
+                                        isMobile={isMobile}
+                                        selectedMonth={dMonth}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
+                        <Card
+                            className="pl-3 pr-[20px] pt-[12px] pb-[12px] mb-3 rounded-[28px] border-none shadow-[0_10px_30_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                            style={{ backgroundColor: "transparent" }}
+                        >
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="flex flex-col">
+                                    <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                                    <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
+                                        {formatCurrency(dStats.currentBalance)}
+                                    </p>
+                                </div>
+                                {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
+                                <div
+                                    className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                                    style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+                                >
+                                    <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                        <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+                                    </button>
+                                    <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                                        {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                    </span>
+                                    <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                        <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center mt-1 gap-2">
+                                {/* Investments Icon Button */}
+                                <Button
+                                    onClick={() => navigate("/dashboard?filter=investments")}
+                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
+                                    style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
+                                >
+                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(
                                         "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                        dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                        dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                     )}>
-                                        {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                        {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
                                     <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
                                 </div>
                             </div>
-                            <Button
-                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
-                                style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
-                                onClick={() => navigate("/despesas")}
-                            >
-                                <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
-                                Nova Despesa
-                            </Button>
-                        </div>
-                    </Card>
 
-                    {/* CARD DE RECEITAS */}
-                    {/* CARD RECEITAS */}
-                    <Card
-                        className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
-                        style={{ backgroundColor: "transparent" }}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="flex flex-col">
-                                <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
-                                    {formatCurrency(dStats.currentIncome)}
-                                </p>
+                            {/* Mini gráfico de barras (Posição Bottom Right) */}
+                            <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
+                                <MiniFinanceBars
+                                    expenses={dStats.currentExpenses}
+                                    revenues={dStats.currentIncome}
+                                    balance={dStats.currentBalance}
+                                />
                             </div>
-                            <Button
-                                className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-1"
-                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
-                                onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
-                            >
-                                Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
-                            </Button>
-                        </div>
+                        </Card>
 
-                        <div className="flex items-center justify-between mt-1">
-                            <div className="flex items-start gap-2">
-                                <Button
-                                    onClick={() => navigate("/dashboard?filter=revenues")}
-                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
-                                    style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
-                                >
-                                    <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                </Button>
-                                <div className="flex flex-col items-start gap-0.5">
-                                    <div className={cn(
-                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                        dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                    )}>
-                                        {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                        <div className="grid grid-cols-1 gap-3 mb-4">
+                            {/* CARD DESPESAS */}
+                            <Card
+                                className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                                style={{ backgroundColor: "transparent" }}
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
+                                        <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                            {formatCurrency(dStats.currentExpenses)}
+                                        </p>
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                    <Button
+                                        className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-1"
+                                        style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                        onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                    >
+                                        Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                    </Button>
                                 </div>
-                            </div>
-                            <Button
-                                className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
-                                style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
-                                onClick={() => navigate("/receitas")}
-                            >
-                                <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
-                                Nova Receita
-                            </Button>
-                        </div>
-                    </Card>
 
-                    {/* CARD DE CARTÃO DE CRÉDITO */}
-                    <div id="cartoes-section">
-                        <MobileCreditCardExpenses
-                            cartoes={cartoes}
-                            expenseInstallments={dExpenses}
-                            allCategories={allSubcategories as any}
-                            isMobile={isMobile}
-                            selectedMonth={dMonth}
-                        />
-                    </div>
-                </div>
+                                <div className="flex items-center justify-between mt-1">
+                                    <div className="flex items-start gap-2">
+                                        <Button
+                                            onClick={() => navigate("/dashboard?filter=expenses")}
+                                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
+                                            style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                        >
+                                            <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                        </Button>
+                                        <div className="flex flex-col items-start gap-0.5">
+                                            <div className={cn(
+                                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                                dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
+                                            )}>
+                                                {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                            </div>
+                                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                        </div>
+                                    </div>
+                                    <Button
+                                        className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                        style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                        onClick={() => navigate("/despesas")}
+                                    >
+                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                        Nova Despesa
+                                    </Button>
+                                </div>
+                            </Card>
+
+                            {/* CARD DE RECEITAS */}
+                            {/* CARD RECEITAS */}
+                            <Card
+                                className="pl-3 pr-[20px] pt-[12px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                                style={{ backgroundColor: "transparent" }}
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
+                                        <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                            {formatCurrency(dStats.currentIncome)}
+                                        </p>
+                                    </div>
+                                    <Button
+                                        className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-1"
+                                        style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                        onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                    >
+                                        Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                    </Button>
+                                </div>
+
+                                <div className="flex items-center justify-between mt-1">
+                                    <div className="flex items-start gap-2">
+                                        <Button
+                                            onClick={() => navigate("/dashboard?filter=revenues")}
+                                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
+                                            style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                        >
+                                            <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                        </Button>
+                                        <div className="flex flex-col items-start gap-0.5">
+                                            <div className={cn(
+                                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                                dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                            )}>
+                                                {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                            </div>
+                                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                        </div>
+                                    </div>
+                                    <Button
+                                        className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                        style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                        onClick={() => navigate("/receitas")}
+                                    >
+                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                        Nova Receita
+                                    </Button>
+                                </div>
+                            </Card>
+
+                            {/* CARD DE CARTÃO DE CRÉDITO */}
+                            <div id="cartoes-section">
+                                <MobileCreditCardExpenses
+                                    cartoes={cartoes}
+                                    expenseInstallments={dExpenses}
+                                    allCategories={allSubcategories as any}
+                                    isMobile={isMobile}
+                                    selectedMonth={dMonth}
+                                />
+                            </div>
+                        </div>
+                    </>
+                )}
             </main>
             <Footer
                 isMobile={isMobile}
-                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0" : "mt-8")}
+                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-transparent" : "mt-8")}
                 user={user}
             />
         </div >
