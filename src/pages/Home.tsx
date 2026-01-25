@@ -363,7 +363,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2"
+                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1"
                                             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -414,7 +414,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2"
+                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1"
                                             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -539,7 +539,7 @@ export default function Home() {
                                         </p>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2"
+                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1"
                                         style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                         onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                     >
@@ -591,7 +591,7 @@ export default function Home() {
                                         </p>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2"
+                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1"
                                         style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                         onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                     >
