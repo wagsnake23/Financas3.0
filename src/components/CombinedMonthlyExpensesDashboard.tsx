@@ -508,10 +508,10 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 </div>
               )}
 
-              {/* Legenda Fixa - Agora na parte inferior do card */}
-              <div className="mt-4 h-14 relative overflow-hidden">
+              {/* Legenda Fixa - Agora na parte inferior do card, mais próxima da borda */}
+              <div className="mt-4 h-20 relative overflow-hidden -mb-4">
                 <div className={cn(
-                  "flex items-center gap-3 p-2.5 rounded-xl transition-all duration-300 border border-transparent",
+                  "flex items-center gap-4 p-3.5 rounded-xl transition-all duration-300 border border-transparent",
                   activePieIndex !== null ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
                 )}
                   style={{
@@ -520,16 +520,16 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                   }}>
                   {activePieIndex !== null && (
                     <>
-                      <span className="text-2xl drop-shadow-sm">{chartData[activePieIndex]?.icone}</span>
+                      <span className="text-3xl drop-shadow-md">{chartData[activePieIndex]?.icone}</span>
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-black uppercase text-gray-500/80 tracking-wider leading-none">Categoria</span>
-                        <span className="font-bold text-gray-800 text-[15px] leading-tight">{chartData[activePieIndex]?.name}</span>
+                        <span className="text-[11px] font-black uppercase text-gray-500/80 tracking-wider leading-none mb-0.5">Categoria</span>
+                        <span className="font-bold text-gray-800 text-[18px] leading-tight tracking-tight">{chartData[activePieIndex]?.name}</span>
                       </div>
                       <div className="ml-auto flex flex-col items-end">
-                        <span className="text-sm font-black text-[#1E6BCE] tracking-tighter">
+                        <span className="text-[19px] font-black text-[#1E6BCE] tracking-tighter leading-none">
                           {formatCurrency(chartData[activePieIndex]?.value)}
                         </span>
-                        <span className="text-[10px] font-black text-gray-400">
+                        <span className="text-xs font-black text-gray-500/70 mt-0.5">
                           {((chartData[activePieIndex]?.value / totalMonthlyExpense) * 100).toFixed(1)}% do total
                         </span>
                       </div>
@@ -537,7 +537,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                   )}
                 </div>
                 {activePieIndex === null && (
-                  <div className="flex items-center justify-center h-full text-[11px] font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
+                  <div className="flex items-center justify-center h-full text-xs font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
                     Toque em uma fatia para detalhes
                   </div>
                 )}

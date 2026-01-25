@@ -60,7 +60,7 @@ INSERT INTO public.categorias (id, nome, icone, cor, forma_pagamento, parent_id,
 ('poupanca_reservas', 'Poupança / reservas financeiras', '🏦', 'hsl(150, 60%, 45%)', NULL, 'financas_dividas', NULL),
 ('taxas_juros', 'Taxas bancárias e juros', '📊', 'hsl(150, 60%, 45%)', NULL, 'financas_dividas', NULL),
 
-('familia_filhos', 'Família e filhos', '👨‍👩‍👧‍👦', 'hsl(345, 75%, 60%)', NULL, NULL, NULL),
+('familia_filhos', 'Família', '👨‍👩‍👧‍👦', 'hsl(345, 75%, 60%)', NULL, NULL, NULL),
 ('creche_baba', 'Creche ou babá', '👶', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),
 ('atividades_extracurriculares', 'Atividades extracurriculares', '⚽', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),
 ('roupas_material_filhos', 'Roupas e material escolar', '🧸', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),

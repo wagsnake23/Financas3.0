@@ -79,7 +79,16 @@ const Categories = () => {
         .or(`user_id.eq.${user.id},user_id.is.null`)
         .order("nome");
       if (error) throw error;
-      return data as AppCategory[];
+
+      // Normalização: Garante que "Família e Filhos" seja exibido sempre como "Família"
+      const normalizedData = (data as AppCategory[]).map(cat => {
+        if (cat.id === "familia_filhos" || cat.nome === "Família e Filhos" || cat.nome === "Família e filhos") {
+          return { ...cat, nome: "Família" };
+        }
+        return cat;
+      });
+
+      return normalizedData;
     },
     enabled: !!user && !authLoading,
   });

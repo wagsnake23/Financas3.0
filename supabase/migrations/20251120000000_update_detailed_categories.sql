@@ -97,7 +97,7 @@ INSERT INTO public.categorias (id, nome, icone, cor, forma_pagamento, parent_id,
 ('receitas_aluguel_imoveis', 'Aluguel de imóveis', '🏘️', 'hsl(150, 65%, 55%)', NULL, 'receitas', NULL),
 ('receitas_cofrinho', 'Cofrinho', '🐷', 'hsl(150, 65%, 55%)', NULL, 'receitas', NULL),
 
-('familia_filhos', 'Família e Filhos', '👨‍👩‍👧', 'hsl(345, 75%, 60%)', NULL, NULL, NULL),
+('familia_filhos', 'Família', '👨‍👩‍👧', 'hsl(345, 75%, 60%)', NULL, NULL, NULL),
 ('familia_atividades_extracurriculares', 'Atividades extracurriculares', '🧩', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),
 ('familia_creche_baba', 'Creche ou babá', '👶', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),
 ('familia_presentes_aniversario', 'Presentes de aniversário ou datas comemorativas', '🎁', 'hsl(345, 75%, 60%)', NULL, 'familia_filhos', NULL),

@@ -78,7 +78,7 @@ export const categories: AppCategory[] = [
   { id: "trabalho_marketing", nome: "Marketing", icone: "Megaphone", cor: "#6366F1", parent_id: "trabalho_negocio" },
   { id: "trabalho_equipamentos", nome: "Equipamentos", icone: "Monitor", cor: "#6366F1", parent_id: "trabalho_negocio" },
 
-  { id: "familia_filhos", nome: "Família e Filhos", icone: "Users", cor: "#EC4899", parent_id: null },
+  { id: "familia_filhos", nome: "Família", icone: "Users", cor: "#EC4899", parent_id: null },
   { id: "familia_atividades_extracurriculares", nome: "Atividades extracurriculares", icone: "Puzzle", cor: "#EC4899", parent_id: "familia_filhos" },
   { id: "familia_creche_baba", nome: "Creche ou babá", icone: "Baby", cor: "#EC4899", parent_id: "familia_filhos" },
   { id: "familia_presentes_aniversario", nome: "Presentes de aniversário ou datas comemorativas", icone: "Gift", cor: "#EC4899", parent_id: "familia_filhos" },
