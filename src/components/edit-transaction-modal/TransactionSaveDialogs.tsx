@@ -47,9 +47,9 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
         )}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
-            <DynamicIcon name="Pencil" className="h-6 w-6 text-[#25D366]" />
-            Atualizar Lançamento Recorrente
+          <AlertDialogTitle className="flex items-center justify-center gap-2">
+            <span className="text-2xl select-none">📝</span>
+            Atualizar Lançamento
           </AlertDialogTitle>
           <AlertDialogDescription>
             Este lançamento faz parte de uma série recorrente. Como você

@@ -147,7 +147,7 @@ const CategoryItem = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-7" : "!pb-7")}>
+              <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[20px] !pb-7" : "!pb-7 !rounded-[20px]")}>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="flex items-center justify-center gap-2">
                     <Trash2 className="h-5 w-5 text-destructive" />
@@ -158,11 +158,11 @@ const CategoryItem = ({
                     <span className="font-bold text-foreground">"{category.nome}"</span>?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className="flex flex-row gap-2">
-                  <AlertDialogCancel className="flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold mt-0">Cancelar</AlertDialogCancel>
+                <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                  <AlertDialogCancel className={cn("flex-1 rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black mt-0", isMobile && "h-12 text-base")}>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDeleteCategory(category.id)}
-                    className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                    className={cn("flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl font-black", isMobile && "h-12 text-base")}
                   >
                     Excluir
                   </AlertDialogAction>

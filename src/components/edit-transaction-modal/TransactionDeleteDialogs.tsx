@@ -52,7 +52,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px]" : "sm:max-w-[425px] !pb-7"
+            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px] !rounded-[20px]" : "sm:max-w-[425px] !pb-7 !rounded-[20px]"
           )}
         >
           <AlertDialogHeader>
@@ -74,7 +74,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
+                "rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black",
                 isMobile
                   ? "mt-0 h-12 text-base flex-1"
                   : "sm:mt-0"
@@ -87,7 +87,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               onClick={() => handleConfirmDelete("oneOff")}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-extrabold",
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-black",
                 isMobile && "h-12 text-base flex-1"
               )}
             >
@@ -108,9 +108,9 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
           )}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className="flex items-center justify-center gap-2">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-              Excluir Lançamento Recorrente
+              Excluir Lançamento
             </AlertDialogTitle>
             <AlertDialogDescription>
               Este lançamento faz parte de uma série recorrente. Como você
