@@ -39,7 +39,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#E2E8F0] border";
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#CBD5E1] border";
   };
 
   const handleAddNewCartao = async () => {
@@ -113,12 +113,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         isMobile ? "max-w-sm p-4 pt-10 dialog-mobile" : "sm:max-w-[425px] sm:pt-10"
       )}>
         <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
-          <DialogTitle className="flex items-center justify-center gap-2 w-full">
+          <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">
             <span>💳</span>
             <span>Novo Cartão</span>
           </DialogTitle>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile ? "pt-0 pb-5" : "pb-2")}>
+        <div className={cn("space-y-4", isMobile ? "pt-0 pb-3" : "pb-2")}>
           <div>
             <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input

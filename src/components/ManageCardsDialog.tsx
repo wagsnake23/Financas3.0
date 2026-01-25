@@ -74,7 +74,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#E2E8F0] border";
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#CBD5E1] border";
   };
 
   const handleEditClick = (card: Cartao) => {
@@ -273,13 +273,13 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent className={cn(
           isMobile ? "max-w-sm p-4 pt-10 dialog-mobile" : "sm:max-w-[425px] sm:pt-10"
         )}>
-          <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full">
+          <DialogHeader className={cn(isMobile ? "mt-2" : "-mt-4")}>
+            <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
               <span>💳</span>
               <span>Editar Cartão</span>
             </DialogTitle>
           </DialogHeader>
-          <div className={cn("space-y-4", isMobile ? "pb-5" : "pb-2")}>
+          <div className={cn("space-y-4", isMobile ? "pb-3" : "pb-2")}>
             <div>
               <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
               <Input
@@ -378,7 +378,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               }}
               className={cn(
                 "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                isMobile ? "h-11 text-base !shadow-none mt-4" : "h-11 text-base shadow-md mt-2"
+                isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
               )}
               style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
               disabled={loading}

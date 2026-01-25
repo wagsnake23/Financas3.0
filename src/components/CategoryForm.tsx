@@ -308,7 +308,7 @@ export const CategoryForm = ({
               onClick={handleCancel}
               className={cn(
                 "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-all",
-                isMobile && "h-11 text-sm"
+                isMobile && "h-11 text-base"
               )}
               size="lg"
             >
@@ -317,7 +317,7 @@ export const CategoryForm = ({
           )}
           <Button
             type="submit"
-            className={cn("flex-1 rounded-xl font-semibold shadow-md", isMobile && "h-11 text-sm")}
+            className={cn("flex-1 rounded-xl font-semibold shadow-md", isMobile && "h-11 text-base")}
             size="lg"
             disabled={editingCategory?.user_id === null}
           >

@@ -156,13 +156,14 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile" : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto"
+            isMobile ? "dialog-mobile rounded-[24px]" : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto rounded-[24px]"
           )}
         >
           <DialogHeader
             className={cn(
               "flex flex-row items-center justify-center gap-2",
-              isMobile && "absolute top-3.5 left-4 right-12 text-left"
+              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              !isMobile && "-mt-2"
             )}
           >
             <span className="text-2xl select-none mr-2">📝</span>
@@ -170,7 +171,7 @@ const Lancamentos = () => {
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
-            <div className="form-body pb-4">
+            <div className="form-body pb-0">
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}

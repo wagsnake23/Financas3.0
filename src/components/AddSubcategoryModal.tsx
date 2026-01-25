@@ -34,7 +34,7 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className={cn(
-                isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+                isMobile ? "dialog-mobile pb-2" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
             )}>
                 <DialogHeader
                     className={cn(
@@ -49,7 +49,7 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
                         Nova Subcategoria
                     </DialogTitle>
                 </DialogHeader>
-                <div className={cn(isMobile && "form-body pb-6")}>
+                <div className={cn(isMobile && "form-body pb-2")}>
                     <CategoryForm
                         onAddCategory={(cat) => {
                             onAddCategory(cat);

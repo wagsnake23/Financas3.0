@@ -1112,11 +1112,12 @@ export default function Investments() { // Alterado para export default function
         <DialogContent className={cn(
           isMobile ? "dialog-mobile" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
         )}>
-          <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">
-              <span>📝</span>
-              <span>Editar Investimento</span>
-            </DialogTitle>
+          <DialogHeader className={cn(
+            "flex flex-row items-center justify-center gap-2",
+            isMobile ? "mt-0" : "mt-2"
+          )}>
+            <span className="text-2xl select-none mr-2">📝</span>
+            <DialogTitle className="text-xl font-bold pb-[1px]">Editar Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
