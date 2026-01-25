@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Label, LabelList } from "recharts";
+import { PieChart, Pie, Cell, Sector, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Label, LabelList } from "recharts";
 import { Transaction, AppCategory } from "@/types/finance";
 import { Tables } from "@/integrations/supabase/types";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
@@ -49,6 +49,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<"monthly" | "annual">("monthly");
+  const [activePieIndex, setActivePieIndex] = useState<number | null>(null);
 
   const handlePreviousMonth = () => {
     setCurrentMonth(prev => subMonths(prev, 1));
@@ -192,6 +193,81 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     return chartData.reduce((sum, item) => sum + item.value, 0);
   }, [chartData]);
 
+  // Donut Chart Helpers
+  const handleSelect = (index: number) => {
+    setActivePieIndex(prev => prev === index ? null : index);
+  };
+
+  const renderActivePieShape = (props: any) => {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, midAngle } = props;
+    const RADIAN = Math.PI / 180;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const offset = 7;
+    const mx = cx + offset * cos;
+    const my = cy + offset * sin;
+
+    return (
+      <g>
+        <Sector
+          cx={mx}
+          cy={my}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius + 5}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+          style={{
+            filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.18))',
+            transition: 'all 0.25s ease-out'
+          }}
+        />
+        {/* Camada de relevo sutil (efeito de luz superior) */}
+        <Sector
+          cx={mx}
+          cy={my}
+          innerRadius={innerRadius + 2}
+          outerRadius={outerRadius + 4}
+          startAngle={startAngle + 1}
+          endAngle={endAngle - 1}
+          fill="rgba(255, 255, 255, 0.12)"
+          style={{ pointerEvents: 'none', transition: 'all 0.25s ease-out' }}
+        />
+      </g>
+    );
+  };
+
+  const renderPieLabel = (props: any) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent, index } = props;
+    const RADIAN = Math.PI / 180;
+    // Labels mais próximos da borda (offset menor que antes)
+    const radius = outerRadius + (isMobile ? 12 : 18);
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const isActive = index === activePieIndex;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={isActive ? "#1E6BCE" : "#64748b"}
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        className={cn(
+          "text-[10px] md:text-[11px] font-black cursor-pointer select-none transition-all duration-200",
+          isActive && "text-[12px] md:text-[13px]"
+        )}
+        style={{ pointerEvents: 'auto' }}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          handleSelect(index);
+        }}
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
   if (isLoading) {
     return (
       <Card className={cn("p-6 animate-fade-in rounded-xl shadow-sm", isMobile ? "h-48" : "h-60 flex items-center justify-center")}>
@@ -272,7 +348,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
             <div className="absolute inset-0 bg-white/40 pointer-events-none" />
 
             <div className="relative z-10">
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2 mt-1">
                   <div className="h-8 w-2 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.3)]" />
                   <h3 className="text-lg font-bold text-[#1E6BCE] tracking-tight">Despesas por Categoria</h3>
@@ -329,6 +405,41 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 )}
               </div>
 
+              {/* Legenda Fixa - Agora fora do flex do título e abaixo dele */}
+              <div className="mt-2 h-14 relative overflow-hidden mb-4">
+                <div className={cn(
+                  "flex items-center gap-3 p-2.5 rounded-xl transition-all duration-300 border border-transparent",
+                  activePieIndex !== null ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
+                )}
+                  style={{
+                    backgroundColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}15` : 'transparent',
+                    borderColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}30` : 'transparent'
+                  }}>
+                  {activePieIndex !== null && (
+                    <>
+                      <span className="text-2xl drop-shadow-sm">{chartData[activePieIndex]?.icone}</span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase text-gray-500/80 tracking-wider leading-none">Categoria</span>
+                        <span className="font-bold text-gray-800 text-[15px] leading-tight">{chartData[activePieIndex]?.name}</span>
+                      </div>
+                      <div className="ml-auto flex flex-col items-end">
+                        <span className="text-sm font-black text-[#1E6BCE] tracking-tighter">
+                          {formatCurrency(chartData[activePieIndex]?.value)}
+                        </span>
+                        <span className="text-[10px] font-black text-gray-400">
+                          {((chartData[activePieIndex]?.value / totalMonthlyExpense) * 100).toFixed(1)}% do total
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                {activePieIndex === null && (
+                  <div className="flex items-center justify-center h-full text-[11px] font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
+                    Toque em uma fatia para detalhes
+                  </div>
+                )}
+              </div>
+
               {chartData.length === 0 ? (
                 <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
                   <DynamicIcon name="PieChart" className="h-12 w-12 mb-2 opacity-20" />
@@ -371,10 +482,13 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         dataKey="value"
                         animationBegin={0}
                         animationDuration={1500}
-                        label={isMobile ? ({ percent }) => `${(percent * 100).toFixed(0)}%` : false}
+                        activeIndex={activePieIndex ?? undefined}
+                        activeShape={renderActivePieShape}
+                        label={renderPieLabel}
                         labelLine={false}
                         stroke="none"
                         isAnimationActive={true}
+                        onClick={(_, index) => handleSelect(index)}
                       >
                         {chartData.map((entry, index) => (
                           <Cell
@@ -404,33 +518,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                           }}
                         />
                       </Pie>
-                      <Tooltip
-                        cursor={{ fill: 'transparent' }}
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload;
-                            const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
-                            return (
-                              <div className="bg-white/90 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.15)] border border-white/60 rounded-2xl animate-in zoom-in-95" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
-                                <div className="flex items-center gap-3 mb-2">
-                                  <span className="text-2xl drop-shadow-sm">{data.icone}</span>
-                                  <div className="flex flex-col">
-                                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Categoria</span>
-                                    <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
-                                  </div>
-                                </div>
-                                <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
-                                  <span className="text-xl font-black text-primary tracking-tighter">
-                                    {formatCurrency(data.value)}
-                                  </span>
-                                  <span className="text-xs font-bold text-gray-400">({perc}%)</span>
-                                </div>
-                              </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
+                      <Tooltip content={<></>} />
                       {!isMobile && (
                         <Legend
                           verticalAlign="bottom"
