@@ -29,7 +29,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
           "w-full rounded-2xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-black transition-colors",
-          "text-[17px] h-12"
+          "text-[16px] h-11"
         )}
         disabled={loading}
       >
@@ -40,7 +40,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         onClick={onCancel}
         className={cn(
           "w-full rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD]/80 font-black transition-colors",
-          "text-[17px] h-12"
+          "text-[16px] h-11"
         )}
         disabled={loading}
       >
@@ -50,7 +50,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="submit" // Mantido como type="submit"
         className={cn(
           "w-full rounded-2xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
-          "text-[17px] font-black h-12"
+          "text-[16px] font-black h-11"
         )}
         disabled={loading}
         onClick={onSave}
