@@ -270,7 +270,7 @@ export default function Home() {
                     isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
-                        <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-xl" : "text-xl")}>
+                        <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-lg" : "text-xl")}>
                             Olá, {userName} 👋
                         </h1>
                         <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] mt-0.5" : "text-xs mt-1")}>
