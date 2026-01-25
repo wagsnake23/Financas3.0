@@ -787,23 +787,23 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className={cn("max-w-[425px] p-6 !pb-7", isMobile && "dialog-mobile w-[92%]")}>
+          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[98%] max-w-[98%] !rounded-[16px] !pb-7" : "sm:max-w-[450px] !pb-7 !rounded-[16px]")}>
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
-                <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
+                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
                 Limpar Lista?
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-center text-gray-500 font-medium">
-                Essa ação irá remover <span className="text-red-500 font-bold">TODOS</span> os itens da sua lista permanentemente.
+              <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
+                Essa ação irá remover <span className="text-destructive font-bold">TODOS</span> os itens da sua lista permanentemente.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex flex-row gap-3 mt-4">
-              <AlertDialogCancel className="flex-1 rounded-2xl border border-blue-100 bg-white text-[#1E3A8A] font-bold mt-0 h-11 hover:bg-blue-50 transition-colors">Cancelar</AlertDialogCancel>
+            <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row items-center justify-between mt-4")}>
+              <AlertDialogCancel className={cn("rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold", isMobile && "h-12 text-base flex-1 mt-0")}>Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearList}
-                className="flex-1 bg-[#D44D4D] text-white hover:bg-[#D44D4D]/90 rounded-2xl font-bold h-11 border-none shadow-md active:scale-95 transition-all outline-none"
+                className={cn("bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold", isMobile && "h-12 text-base flex-1")}
               >
-                Sim, Limpar
+                Limpar Tudo
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

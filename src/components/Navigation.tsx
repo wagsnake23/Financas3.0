@@ -162,11 +162,11 @@ export const Navigation = () => {
                         "px-3 py-2 rounded-xl text-sm transition-all flex items-center gap-2",
                         isActive
                           ? "bg-blue-200/50 text-[#1E40AF] font-bold shadow-sm"
-                          : "text-slate-900 hover:bg-blue-200/30 hover:text-[#1E40AF]"
+                          : "text-[#1A1A1A] hover:bg-blue-200/30 hover:text-[#1E40AF]"
                       )}
                     >
                       <DynamicIcon name={item.icon} className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <span className="font-semibold">{item.label}</span>
                     </RouterNavLink>
                   ))}
 
