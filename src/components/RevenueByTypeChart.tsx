@@ -68,7 +68,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
       <div>
         <div className="flex items-center gap-2 mb-6">
           <div className="h-8 w-2 bg-[#1AA361] rounded-full" />
-          <h3 className="text-lg font-black text-[#1AA361] tracking-tight">Receitas por Categoria</h3>
+          <h3 className="text-lg font-bold text-[#1AA361] tracking-tight">Receitas por Categoria</h3>
         </div>
 
         <div

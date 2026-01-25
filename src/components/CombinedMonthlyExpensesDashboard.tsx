@@ -266,10 +266,10 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           {/* Donut de Categorias */}
           <div className={cn(
             "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
-            isMobile ? "py-5 px-3" : "p-6"
-          )} style={{ backgroundColor: "rgba(255, 255, 255, 0.35)" }}>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
+            isMobile ? "pt-3 pb-5 px-3" : "pt-4 pb-6 px-6"
+          )} style={{ backgroundColor: "rgba(255, 255, 255, 0.55)" }}>
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-center gap-2 mt-1">
                 <div className="h-8 w-2 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.3)]" />
                 <h3 className="text-lg font-bold text-[#1E6BCE] tracking-tight">Despesas por Categoria</h3>
               </div>
@@ -454,10 +454,10 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           {/* Barras de Subcategorias */}
           <div className={cn(
             "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
-            isMobile ? "py-5 px-3" : "p-6"
-          )} style={{ backgroundColor: "transparent" }}>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
+            isMobile ? "pt-3 pb-5 px-3" : "pt-4 pb-6 px-6"
+          )} style={{ backgroundColor: "rgba(255, 255, 255, 0.55)" }}>
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-center gap-2 mt-1">
                 <div className="h-8 w-2 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.3)]" />
                 <h3 className="text-lg font-bold text-[#1E6BCE] tracking-tight">Despesas por Subcategoria</h3>
               </div>

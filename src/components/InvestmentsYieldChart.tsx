@@ -74,7 +74,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
                 "card-yield p-6 flex flex-col items-center justify-center min-h-[200px]",
                 isMobile && "px-3 py-5"
             )}>
-                <h3 className="text-lg font-black text-[#ea580c] tracking-tight mb-4">Receitas por Investimentos</h3>
+                <h3 className="text-lg font-bold text-[#ea580c] tracking-tight mb-4">Receitas por Investimentos</h3>
                 <p className="text-muted-foreground">Nenhum investimento registrado</p>
             </div>
         );
@@ -88,7 +88,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
             <div>
                 <div className="flex items-center gap-2 mb-6">
                     <div className="h-8 w-2 bg-[#FB923C] rounded-full" />
-                    <h3 className="text-lg font-black text-[#ea580c] tracking-tight">Receitas por Investimentos</h3>
+                    <h3 className="text-lg font-bold text-[#ea580c] tracking-tight">Receitas por Investimentos</h3>
                 </div>
 
                 <div
