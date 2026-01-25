@@ -52,8 +52,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            "w-full rounded-2xl",
-            isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
+            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px]" : "sm:max-w-[425px] !pb-7"
           )}
         >
           <AlertDialogHeader>
@@ -105,8 +104,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            "w-full rounded-2xl",
-            isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
+            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px]" : "sm:max-w-[425px] !pb-7"
           )}
         >
           <AlertDialogHeader>

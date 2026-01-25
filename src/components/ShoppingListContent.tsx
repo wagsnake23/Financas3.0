@@ -650,9 +650,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className="w-[92%] max-w-[380px] rounded-3xl p-6 border-none shadow-2xl">
+                          <AlertDialogContent className={cn("max-w-[400px] p-6 !pb-7", isMobile && "dialog-mobile w-[92%]")}>
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+                              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
                                 <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
                                 Excluir Item?
                               </AlertDialogTitle>
@@ -733,9 +733,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             <DynamicIcon name="Trash2" className="h-5 w-5" />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="w-[92%] max-w-[400px] rounded-3xl p-6 border-none shadow-2xl">
+                        <AlertDialogContent className={cn("max-w-[425px] p-6 !pb-7", isMobile && "dialog-mobile w-[92%]")}>
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+                            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
                               <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
                               Excluir Item
                             </AlertDialogTitle>
@@ -787,9 +787,9 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="w-[92%] max-w-[400px] rounded-3xl p-6 border-none shadow-2xl">
+          <AlertDialogContent className={cn("max-w-[425px] p-6 !pb-7", isMobile && "dialog-mobile w-[92%]")}>
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#1E3A8A]">
+              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
                 <DynamicIcon name="Trash2" className="h-6 w-6" color="#D44D4D" />
                 Limpar Lista?
               </AlertDialogTitle>

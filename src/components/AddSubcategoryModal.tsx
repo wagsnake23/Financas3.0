@@ -34,7 +34,6 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className={cn(
-                "rounded-3xl bg-[#F0F7FF] border-none shadow-xl",
                 isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
             )}>
                 <DialogHeader
@@ -46,7 +45,7 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center">
                         <span className="text-sm select-none" style={{ color: '#1E40AF' }}>➕</span>
                     </div>
-                    <DialogTitle className={cn("font-bold pb-[1px] text-[#1E40AF]", isMobile ? "text-lg" : "text-xl")}>
+                    <DialogTitle className={cn("font-bold pb-[1px]", isMobile ? "text-lg" : "text-xl")}>
                         Nova Subcategoria
                     </DialogTitle>
                 </DialogHeader>

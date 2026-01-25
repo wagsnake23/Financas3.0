@@ -41,6 +41,7 @@ interface CategoryItemProps {
   initialExpanded?: boolean; // Control initial expansion state
   allFlatCategories: AppCategory[]; // NEW: Pass all flat categories to find parent color
   categoryNumber?: string; // NEW: Prop for category number
+  isMobile: boolean; // Add isMobile prop
 }
 
 const getPaymentMethodLabel = (value?: string | null) => {
@@ -57,6 +58,7 @@ const CategoryItem = ({
   initialExpanded = false,
   allFlatCategories,
   categoryNumber,
+  isMobile,
 }: CategoryItemProps) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories =
@@ -145,7 +147,7 @@ const CategoryItem = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="rounded-3xl">
+              <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-7" : "!pb-7")}>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="flex items-center justify-center gap-2">
                     <Trash2 className="h-5 w-5 text-destructive" />
@@ -182,6 +184,7 @@ const CategoryItem = ({
               initialExpanded={initialExpanded}
               allFlatCategories={allFlatCategories} // Pass down to sub-subcategories
               categoryNumber={`${categoryNumber}.${index + 1}`} // Pass sub-number
+              isMobile={isMobile}
             />
           ))}
         </div>
@@ -324,6 +327,7 @@ const CategoriesList = ({
                 initialExpanded={!!searchTerm.trim()}
                 allFlatCategories={allFlatCategories} // Pass allFlatCategories here
                 categoryNumber={`${index + 1}`} // Pass initial number for root categories
+                isMobile={isMobile}
               />
             ))}
           </div>

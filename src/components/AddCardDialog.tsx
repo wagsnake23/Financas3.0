@@ -110,16 +110,15 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(
-        "w-full rounded-3xl bg-[linear-gradient(180deg,#E6F2FF,#F0F8FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
-        isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
+        isMobile ? "max-w-sm p-4 pt-10 dialog-mobile" : "sm:max-w-[425px] sm:pt-10"
       )}>
-        <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+        <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
           <DialogTitle className="flex items-center justify-center gap-2 w-full">
             <span>💳</span>
-            <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Novo Cartão</span>
+            <span>Novo Cartão</span>
           </DialogTitle>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-0")}>
+        <div className={cn("space-y-4", isMobile ? "pt-0 pb-5" : "pb-2")}>
           <div>
             <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input

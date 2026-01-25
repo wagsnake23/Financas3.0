@@ -181,7 +181,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-2", isMobile && "w-full mx-auto")}>
+    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-10", isMobile && "w-full mx-auto")}>
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>

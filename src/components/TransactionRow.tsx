@@ -261,7 +261,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="rounded-xl">
+            <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-7" : "!pb-7")}>
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
                 <AlertDialogDescription>

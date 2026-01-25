@@ -156,11 +156,7 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            "rounded-3xl",
-            isMobile
-              ? "w-full dialog-mobile"
-              : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto",
-            "bg-[#e1ebf5] border border-slate-200 shadow-2xl"
+            isMobile ? "dialog-mobile" : "sm:max-w-[400px] sm:max-h-[90vh] overflow-y-auto"
           )}
         >
           <DialogHeader
@@ -170,7 +166,7 @@ const Lancamentos = () => {
             )}
           >
             <span className="text-2xl select-none mr-2">📝</span>
-            <DialogTitle className="text-xl font-bold pb-[1px]" style={{ color: '#1A56AD' }}>Editar Lançamento</DialogTitle>
+            <DialogTitle className="text-xl font-bold pb-[1px]">Editar Lançamento</DialogTitle>
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (

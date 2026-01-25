@@ -205,13 +205,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          "w-full rounded-3xl bg-[linear-gradient(180deg,#E6F2FF,#F0F8FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
           isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
         )}>
           <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
               <span>💳</span>
-              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Gerenciar Cartões</span>
+              <span>Gerenciar Cartões</span>
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="h-[300px] pr-4">
@@ -253,7 +252,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               )}
             </div>
           </ScrollArea>
-          <DialogFooter className={cn(isMobile ? "pb-6 pt-2" : "pb-4")}>
+          <DialogFooter className={cn(isMobile ? "pb-5 pt-2" : "pb-3")}>
             <Button
               type="button"
               onClick={() => setIsManageCardsOpen(false)}
@@ -272,16 +271,15 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
         <DialogContent className={cn(
-          "w-full rounded-3xl bg-[linear-gradient(180deg,#F0F8FF,#E6F2FF)] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
-          isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
+          isMobile ? "max-w-sm p-4 pt-10 dialog-mobile" : "sm:max-w-[425px] sm:pt-10"
         )}>
-          <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+          <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
               <span>💳</span>
-              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Editar Cartão</span>
+              <span>Editar Cartão</span>
             </DialogTitle>
           </DialogHeader>
-          <div className={cn("space-y-4", isMobile && "pb-2")}>
+          <div className={cn("space-y-4", isMobile ? "pb-5" : "pb-2")}>
             <div>
               <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
               <Input
@@ -394,11 +392,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <AlertDialogContent className={cn(
-          "rounded-3xl bg-white border-none shadow-xl",
-          isMobile ? "w-[96%] p-6" : "sm:max-w-[500px] p-6"
+          isMobile ? "dialog-mobile w-[96%] p-6 !pb-7" : "sm:max-w-[500px] p-6 !pb-7"
         )}>
           <AlertDialogHeader className="flex flex-col items-center justify-center text-center">
-            <AlertDialogTitle className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2 mb-2">
+            <AlertDialogTitle className="text-xl font-bold flex items-center justify-center gap-2 mb-2">
               <Trash2 className="h-5 w-5 text-red-500" />
               Tem certeza?
             </AlertDialogTitle>

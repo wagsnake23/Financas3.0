@@ -271,13 +271,13 @@ export const CategoryForm = ({
             <Dialog open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
               <DialogContent
                 className={cn(
-                  "p-0 border-none bg-white overflow-hidden shadow-2xl flex flex-col gap-0",
-                  isMobile ? "w-[99vw] max-w-full rounded-[24px]" : "sm:max-w-[850px] rounded-2xl"
+                  "p-0 overflow-hidden flex flex-col gap-0",
+                  isMobile ? "w-[98vw] max-w-full" : "sm:max-w-[850px]"
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
                 <div className="h-14 flex items-center px-6 border-b bg-gray-50/50">
-                  <DialogTitle className="font-bold text-[#1E40AF] text-sm">
+                  <DialogTitle className="font-bold text-sm">
                     Escolha um ícone
                   </DialogTitle>
                 </div>

@@ -43,13 +43,12 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
     >
       <AlertDialogContent
         className={cn(
-          "w-full rounded-xl",
-          isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]"
+          isMobile ? "dialog-mobile max-w-[98vw] p-4 min-h-[180px] !pb-8" : "sm:max-w-[425px] !pb-8"
         )}
       >
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
-            <DynamicIcon name="Pencil" className="h-6 w-6 text-emerald-500" />
+            <DynamicIcon name="Pencil" className="h-6 w-6 text-[#25D366]" />
             Atualizar Lançamento Recorrente
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -67,7 +66,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="thisMonth"
                 id="save-this-month"
-                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
+                className="peer data-[state=checked]:border-[#25D366] data-[state=checked]:after:bg-[#25D366] data-[state=checked]:ring-[#25D366]"
               />
               <label
                 htmlFor="save-this-month"
@@ -80,7 +79,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="thisMonthForward"
                 id="save-this-month-forward"
-                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
+                className="peer data-[state=checked]:border-[#25D366] data-[state=checked]:after:bg-[#25D366] data-[state=checked]:ring-[#25D366]"
               />
               <label
                 htmlFor="save-this-month-forward"
@@ -93,7 +92,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               <RadioGroupItem
                 value="all"
                 id="save-all"
-                className="peer data-[state=checked]:border-emerald-500 data-[state=checked]:after:bg-emerald-500 data-[state=checked]:ring-emerald-500"
+                className="peer data-[state=checked]:border-[#25D366] data-[state=checked]:after:bg-[#25D366] data-[state=checked]:ring-[#25D366]"
               />
               <label
                 htmlFor="save-all"
@@ -115,7 +114,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
             className={cn(
               "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
               isMobile
-                ? "mt-0 h-11 text-sm flex-1"
+                ? "mt-0 h-11 text-base flex-1"
                 : "sm:mt-0"
             )}
           >
@@ -125,8 +124,8 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
             onClick={() => handleConfirmSave(selectedSaveScope)}
             disabled={loading || isFetchingOptions}
             className={cn(
-              "w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold",
-              isMobile && "h-11 text-sm flex-1"
+              "w-full sm:w-auto bg-[#25D366] hover:bg-[#25D366]/90 text-white rounded-xl font-bold",
+              isMobile && "h-11 text-base flex-1"
             )}
           >
             {loading || isFetchingOptions ? "Salvando..." : "Salvar"}

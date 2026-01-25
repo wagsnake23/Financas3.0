@@ -1110,13 +1110,12 @@ export default function Investments() { // Alterado para export default function
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className={cn(
-          "w-full rounded-3xl bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(245,248,255,0.9))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]",
-          isMobile ? "max-w-sm p-4 pt-10" : "sm:max-w-[425px] sm:pt-10"
+          isMobile ? "dialog-mobile" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
         )}>
-          <DialogHeader className={cn("-mt-6", !isMobile && "-mt-2")}>
+          <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
               <span>📝</span>
-              <span className="bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent">Editar Investimento</span>
+              <span>Editar Investimento</span>
             </DialogTitle>
           </DialogHeader>
           {editingInvestment && (
@@ -1137,7 +1136,7 @@ export default function Investments() { // Alterado para export default function
       {/* NOVO: AlertDialog para confirmação de exclusão */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
-        <AlertDialogContent className={cn("w-full rounded-[28px]", isMobile ? "max-w-[98vw] p-4 min-h-[180px]" : "sm:max-w-[425px]")}>
+        <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-7" : "sm:max-w-[425px] !pb-7")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
