@@ -580,7 +580,7 @@ export default function Receitas() {
       )}>
         <div className={cn(
           "container mx-auto px-6 relative z-10 max-w-[1200px]",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-6 flex items-center bg-[#218C5C]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-[#218C5C]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
