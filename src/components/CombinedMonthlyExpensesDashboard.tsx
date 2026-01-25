@@ -265,14 +265,13 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-8", isMobile && "gap-4")}>
           {/* Donut de Categorias */}
           <div className={cn(
-            "bg-gradient-to-br from-gray-50/90 to-gray-200/60 p-6 rounded-[24px] border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
-            "backdrop-blur-[8px]",
-            isMobile && "px-3 py-5"
-          )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
+            "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+            isMobile ? "py-5 px-3" : "p-6"
+          )} style={{ backgroundColor: "rgba(255, 255, 255, 0.35)" }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-2 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.3)]" />
-                <h3 className="text-lg font-black text-gray-800 tracking-tight">Despesas por Categoria</h3>
+                <h3 className="text-lg font-bold text-[#1E6BCE] tracking-tight">Despesas por Categoria</h3>
               </div>
 
               {isMobile && (
@@ -392,7 +391,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                 <tspan x={cx} dy="-0.6em" className="fill-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">
                                   Total
                                 </tspan>
-                                <tspan x={cx} dy="1.6em" className="fill-gray-800 text-xl font-black tracking-tighter">
+                                <tspan x={cx} dy="1.2em" className="fill-gray-800 text-xl font-black tracking-tighter">
                                   {formatCurrency(totalMonthlyExpense)}
                                 </tspan>
                               </text>
@@ -454,14 +453,13 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
 
           {/* Barras de Subcategorias */}
           <div className={cn(
-            "bg-gradient-to-br from-gray-50/90 to-gray-200/60 p-6 rounded-[24px] border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
-            "backdrop-blur-[8px]",
-            isMobile && "px-3 py-5"
-          )} style={{ WebkitBackdropFilter: 'blur(8px)' }}>
+            "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+            isMobile ? "py-5 px-3" : "p-6"
+          )} style={{ backgroundColor: "transparent" }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-2 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.3)]" />
-                <h3 className="text-lg font-black text-gray-800 tracking-tight">Despesas por Subcategoria</h3>
+                <h3 className="text-lg font-bold text-[#1E6BCE] tracking-tight">Despesas por Subcategoria</h3>
               </div>
 
               {isMobile && (
