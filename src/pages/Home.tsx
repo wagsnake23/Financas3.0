@@ -273,7 +273,7 @@ export default function Home() {
                         <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-lg" : "text-xl")}>
                             Olá, {userName} 👋
                         </h1>
-                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] mt-0.5" : "text-xs mt-1")}>
+                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] -mt-0.5" : "text-xs -mt-0.5")}>
                             {todayStr}
                         </p>
                     </div>
