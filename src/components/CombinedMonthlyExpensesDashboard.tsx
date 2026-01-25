@@ -51,6 +51,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   const [viewMode, setViewMode] = useState<"monthly" | "annual">("monthly");
   const [activePieIndex, setActivePieIndex] = useState<number | null>(null);
   const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+  const [tooltipY, setTooltipY] = useState<number>(0);
 
   const handlePreviousMonth = () => {
     setCurrentMonth(prev => subMonths(prev, 1));
@@ -203,8 +204,20 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     setActivePieIndex(prev => prev === index ? null : index);
   };
 
-  const handleBarSelect = (index: number) => {
-    setActiveBarIndex(prev => prev === index ? null : index);
+  const handleBarSelect = (index: number, e?: React.PointerEvent) => {
+    if (activeBarIndex === index) {
+      setActiveBarIndex(null);
+      return;
+    }
+
+    if (e && e.currentTarget) {
+      const rect = (e.currentTarget as HTMLElement).closest('.bar-chart-container')?.getBoundingClientRect();
+      if (rect) {
+        setTooltipY(e.clientY - rect.top);
+      }
+    }
+
+    setActiveBarIndex(index);
   };
 
   const renderActivePieShape = (props: any) => {
@@ -627,7 +640,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 </div>
               ) : (
                 <div
-                  className="w-full"
+                  className="w-full relative bar-chart-container"
                   style={{
                     height: isMobile
                       ? Math.max(200, subcategoryChartData.length * 35)
@@ -640,8 +653,6 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       layout="vertical"
                       margin={{ left: isMobile ? 0 : 30, right: 45, top: 0, bottom: 0 }}
                       barGap={2}
-                      onMouseMove={() => { }} // Disable default hover behavior
-                      onMouseLeave={() => { }}
                       {...({ activeTooltipIndex: activeBarIndex ?? undefined } as any)}
                     >
                       <defs>
@@ -672,9 +683,17 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                               className="cursor-pointer"
                               onPointerDown={(e) => {
                                 e.stopPropagation();
-                                handleBarSelect(index);
+                                handleBarSelect(index, e);
                               }}
                             >
+                              {/* Transparent clickable area for the entire row */}
+                              <rect
+                                x={isMobile ? -110 : -140}
+                                y={-20}
+                                width={1000}
+                                height={40}
+                                fill="transparent"
+                              />
                               {/* Background highlight for the entire row */}
                               {isActive && (
                                 <rect
@@ -715,38 +734,6 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                           );
                         }}
                       />
-                      <Tooltip
-                        cursor={false}
-                        active={activeBarIndex !== null}
-                        content={({ active, payload }) => {
-                          if (activeBarIndex === null) return null;
-
-                          const data = subcategoryChartData[activeBarIndex];
-                          if (!data) return null;
-
-                          const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
-                          return (
-                            <div
-                              className="bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl animate-in zoom-in-95 pointer-events-none"
-                              style={{ WebkitBackdropFilter: 'blur(10px)' }}
-                            >
-                              <div className="flex items-center gap-3 mb-2">
-                                <span className="text-2xl drop-shadow-sm">{data.icone}</span>
-                                <div className="flex flex-col">
-                                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
-                                  <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
-                                <span className="text-xl font-black text-indigo-600 tracking-tighter">
-                                  {formatCurrency(data.value)}
-                                </span>
-                                <span className="text-xs font-bold text-gray-400">({perc}%)</span>
-                              </div>
-                            </div>
-                          );
-                        }}
-                      />
                       <Bar
                         dataKey="value"
                         radius={[0, 10, 10, 0]}
@@ -769,7 +756,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                               }}
                               onPointerDown={(e) => {
                                 e.stopPropagation();
-                                handleBarSelect(index);
+                                handleBarSelect(index, e);
                               }}
                             />
                           );
@@ -799,7 +786,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                 }}
                                 onPointerDown={(e) => {
                                   e.stopPropagation();
-                                  handleBarSelect(index);
+                                  handleBarSelect(index, e);
                                 }}
                               >
                                 {percentage}
@@ -810,6 +797,38 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
+
+                  {/* Custom Absolute Tooltip */}
+                  {activeBarIndex !== null && subcategoryChartData[activeBarIndex] && (
+                    <div
+                      className="absolute pointer-events-none z-50 animate-in zoom-in-95 duration-200"
+                      style={{
+                        top: tooltipY,
+                        left: isMobile ? '50%' : '70%',
+                        transform: 'translate(-50%, -100%) translateY(-20px)',
+                      }}
+                    >
+                      <div className="bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="text-2xl drop-shadow-sm">{subcategoryChartData[activeBarIndex].icone}</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
+                            <span className="font-bold text-gray-800 leading-tight">{subcategoryChartData[activeBarIndex].name}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
+                          <span className="text-xl font-black text-indigo-600 tracking-tighter">
+                            {formatCurrency(subcategoryChartData[activeBarIndex].value)}
+                          </span>
+                          <span className="text-xs font-bold text-gray-400">
+                            ({((subcategoryChartData[activeBarIndex].value / totalMonthlyExpense) * 100).toFixed(1)}%)
+                          </span>
+                        </div>
+                      </div>
+                      {/* Tooltip Arrow */}
+                      <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-white/95 mx-auto -mt-[1px] drop-shadow-sm" />
+                    </div>
+                  )}
                 </div>
               )}
             </div>

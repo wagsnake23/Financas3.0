@@ -644,7 +644,7 @@ export default function Investments() { // Alterado para export default function
                           <div className="flex flex-col justify-between gap-4">
                             <div className="space-y-1">
                               <div className="flex flex-col">
-                                <span className="font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
+                                <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
                                   {formatCurrency(investment.valorAtualVirtual)}
                                 </span>
                               </div>
@@ -691,7 +691,7 @@ export default function Investments() { // Alterado para export default function
                           </div>
                           <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Atual</h4>
                         </div>
-                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                       </div>
 
                       {/* Rentabilidade Média */}
@@ -706,7 +706,7 @@ export default function Investments() { // Alterado para export default function
                           <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Média</h4>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                          <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
+                          <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
                           <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
                         </div>
                       </div>
@@ -722,7 +722,7 @@ export default function Investments() { // Alterado para export default function
                           </div>
                           <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Mensal</h4>
                         </div>
-                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                       </div>
 
                       {/* Rendimento Diário */}
@@ -736,7 +736,7 @@ export default function Investments() { // Alterado para export default function
                           </div>
                           <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Diário</h4>
                         </div>
-                        <p className="text-lg font-black text-gray-800 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                       </div>
                     </div>
                   </div>
@@ -758,7 +758,7 @@ export default function Investments() { // Alterado para export default function
                   </div>
                   <div className="flex flex-col">
                     <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
-                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
+                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
                 </div>
 
@@ -772,7 +772,7 @@ export default function Investments() { // Alterado para export default function
                   </div>
                   <div className="flex flex-col">
                     <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
-                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                   </div>
                 </div>
 
@@ -786,7 +786,7 @@ export default function Investments() { // Alterado para export default function
                   </div>
                   <div className="flex flex-col">
                     <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
-                    <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                   </div>
                 </div>
 
@@ -801,7 +801,7 @@ export default function Investments() { // Alterado para export default function
                   <div className="flex flex-col items-end">
                     <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
                     <div className="flex items-baseline gap-1">
-                      <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
+                      <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
                       <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
                     </div>
                   </div>
@@ -1054,7 +1054,7 @@ export default function Investments() { // Alterado para export default function
                               <div className="space-y-1">
                                 <div className="flex flex-col">
                                   <span className={cn(
-                                    "font-black tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
+                                    "font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
                                     isMobile ? "text-2xl" : "text-3xl"
                                   )}>
                                     {formatCurrency(investment.valorAtualVirtual)}
