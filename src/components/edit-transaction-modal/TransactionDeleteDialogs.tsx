@@ -104,7 +104,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px] !rounded-[20px]" : "sm:max-w-[425px] !pb-7 !rounded-[20px]"
+            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-5 min-h-[180px] !rounded-[20px]" : "sm:max-w-[425px] !pb-5 !rounded-[20px]"
           )}
         >
           <AlertDialogHeader>
@@ -129,7 +129,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="thisMonth"
                   id="delete-this-month"
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
                 />
                 <label
                   htmlFor="delete-this-month"
@@ -142,7 +142,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="thisMonthForward"
                   id="delete-this-month-forward"
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
                 />
                 <label
                   htmlFor="delete-this-month-forward"
@@ -155,7 +155,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="all"
                   id="delete-all"
-                  className="peer data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
                 />
                 <label
                   htmlFor="delete-all"
