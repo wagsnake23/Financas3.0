@@ -277,9 +277,9 @@ export default function Auth() {
 
   const formContent = (
     <>
-      <div className={cn("mb-6 text-center", isMobile && "-mt-8")}>
-        <img src="/favicon.ico" alt="Controle Financeiro Logo" className="mx-auto h-20 w-20" />
-        <h1 className="text-3xl font-black text-[#1E40AF]">
+      <div className={cn("mb-4 text-center", isMobile && "-mt-8")}>
+        <img src="/favicon.ico" alt="Controle Financeiro Logo" className="mx-auto h-16 w-16" />
+        <h1 className="text-2xl font-black text-[#1E40AF]">
           Minhas Finanças
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -291,7 +291,7 @@ export default function Auth() {
       </div>
 
       {viewMode === "login" && (
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-3">
           <div>
             <Label htmlFor="email">Email</Label>
             <div className="relative">
@@ -343,7 +343,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-base font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -378,7 +378,7 @@ export default function Auth() {
       )}
 
       {viewMode === "signup" && (
-        <form onSubmit={handleSignup} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-3">
           <div>
             <Label htmlFor="nome">Nome</Label>
             <Input
@@ -498,7 +498,7 @@ export default function Auth() {
       )}
 
       {viewMode === "forgot-password" && (
-        <form onSubmit={handleForgotPassword} className="space-y-4">
+        <form onSubmit={handleForgotPassword} className="space-y-3">
           <div>
             <Label htmlFor="forgot-email">Email</Label>
             <div className="relative">
@@ -545,7 +545,7 @@ export default function Auth() {
       )}
 
       {viewMode === "reset-password" && (
-        <form onSubmit={handleResetPassword} className="space-y-4">
+        <form onSubmit={handleResetPassword} className="space-y-3">
           <div>
             <Label htmlFor="new-password">Nova Senha</Label>
             <div className="relative">
@@ -629,24 +629,29 @@ export default function Auth() {
   return (
     <div className={cn(
       "min-h-screen flex flex-col items-center justify-center p-4",
-      isMobile ? "bg-white" : "bg-gradient-to-br from-background via-background to-secondary/20"
+      isMobile ? "bg-white" : "bg-gradient-to-br from-[#3B7ADD] to-[#0F1E38]"
     )}>
       {isMobile ? (
         <div className="w-full max-w-md p-4 flex flex-col pb-16">
           {formContent}
+          <Footer
+            isMobile={isMobile}
+            className="fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0"
+            user={null}
+          />
         </div>
       ) : (
-        <Card className="w-full max-w-md p-8 shadow-xl rounded-xl flex flex-col"> {/* Adicionado flex flex-col */}
-          <div className="flex-grow"> {/* Envolve o formContent em uma div que cresce */}
+        <Card className="w-full max-w-[350px] px-6 pt-5 pb-1 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border-t border-l border-white/20 bg-white/95 backdrop-blur-sm rounded-3xl flex flex-col relative z-10 transition-all duration-300">
+          <div className="flex-grow">
             {formContent}
           </div>
+          <Footer
+            isMobile={isMobile}
+            className="mt-3 py-2"
+            user={null}
+          />
         </Card>
       )}
-      <Footer
-        isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
-        user={null}
-      />
     </div>
   );
 }
