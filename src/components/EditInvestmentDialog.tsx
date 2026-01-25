@@ -195,7 +195,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           }}
           disabled={loading}
         >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
           <SelectContent>
@@ -220,7 +220,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <div className="space-y-0.5">
           <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
           <Select value={type} onValueChange={setType} disabled={loading}>
-            <SelectTrigger className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -240,7 +240,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <div className="space-y-0.5">
             <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
             <div className={cn(
-              "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
+              "rounded-xl w-full bg-gray-50 border border-slate-300 h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
               isMobile && "h-9 text-sm",
               "opacity-80"
             )}>
@@ -260,7 +260,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -280,7 +280,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               fixedDecimalScale={false}
               maxLength={7}
               placeholder="0,0000"
-              className={cn("rounded-xl w-full bg-white border-[#E5E0FF]", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+              className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
             />
           </div>
 
@@ -288,7 +288,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <div className="space-y-0.5 animate-fade-in">
               <Label className={cn(isMobile && "text-xs")}>Renda Diária</Label>
               <div className={cn(
-                "rounded-xl w-full bg-gray-50 border border-[#E5E0FF] h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
+                "rounded-xl w-full bg-gray-50 border border-slate-300 h-10 px-3 flex items-center font-semibold text-emerald-600 select-none",
                 isMobile && "h-9 text-sm",
                 "opacity-80"
               )}>
@@ -306,7 +306,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-[#E5E0FF]",
+                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-slate-300",
                 !date && "text-muted-foreground",
                 isMobile && "h-9 text-sm",
                 getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -341,8 +341,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-colors",
-            isMobile && "h-9 text-sm"
+            "flex-1 rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-colors",
+            "text-lg", // Aumentado para text-lg
+            isMobile && "h-12"
           )}
           size="lg"
           disabled={loading}
@@ -352,9 +353,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
-            "text-base font-black",
-            isMobile && "h-9"
+            "flex-1 rounded-2xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
+            "text-lg font-black", // Aumentado para text-lg
+            isMobile && "h-12"
           )}
           size="lg"
           disabled={loading}

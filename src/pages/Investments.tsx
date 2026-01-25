@@ -1114,7 +1114,7 @@ export default function Investments() { // Alterado para export default function
         )}>
           <DialogHeader className={cn(
             "flex flex-row items-center justify-center gap-2",
-            isMobile ? "mt-0" : "mt-2"
+            isMobile ? "mt-0" : "-mt-4"
           )}>
             <span className="text-2xl select-none mr-2">📝</span>
             <DialogTitle className="text-xl font-bold pb-[1px]">Editar Investimento</DialogTitle>
@@ -1137,7 +1137,7 @@ export default function Investments() { // Alterado para export default function
       {/* NOVO: AlertDialog para confirmação de exclusão */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
-        <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-7" : "sm:max-w-[425px] !pb-7")}>
+        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[20px] !pb-7" : "sm:max-w-[425px] !pb-7 !rounded-[20px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -1154,8 +1154,8 @@ export default function Investments() { // Alterado para export default function
             <AlertDialogCancel
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
-                isMobile && "h-10 text-sm flex-1 mt-0"
+                "rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
+                isMobile && "h-12 text-base flex-1 mt-0"
               )}
               onClick={() => setIsConfirmDeleteOpen(false)}
             >
@@ -1165,8 +1165,8 @@ export default function Investments() { // Alterado para export default function
               onClick={handleConfirmDelete}
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl",
-                isMobile && "h-10 text-sm flex-1"
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold",
+                isMobile && "h-12 text-base flex-1"
               )}
             >
               {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}

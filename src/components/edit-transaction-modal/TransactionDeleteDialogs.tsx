@@ -74,9 +74,9 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
+                "rounded-xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
                 isMobile
-                  ? "mt-0 h-10 text-sm flex-1"
+                  ? "mt-0 h-12 text-base flex-1"
                   : "sm:mt-0"
               )}
               onClick={() => setShowSimpleDeleteDialog(false)}
@@ -87,8 +87,8 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               onClick={() => handleConfirmDelete("oneOff")}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-bold",
-                isMobile && "h-10 text-sm flex-1"
+                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl font-extrabold",
+                isMobile && "h-12 text-base flex-1"
               )}
             >
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
@@ -175,9 +175,9 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold",
+                "rounded-xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
                 isMobile
-                  ? "mt-0 h-10 text-sm flex-1"
+                  ? "mt-0 h-12 text-base flex-1"
                   : "sm:mt-0"
               )}
               onClick={() => setShowDeleteOptionsDialog(false)}
@@ -189,7 +189,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               disabled={loading || isFetchingOptions}
               className={cn(
                 "w-full sm:w-auto rounded-xl bg-[#D32F2F] text-white hover:bg-[#B71C1C] transition-colors border-transparent shadow-sm",
-                isMobile && "h-10 text-sm flex-1"
+                isMobile && "h-12 text-base flex-1"
               )}
             >
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}

@@ -23,14 +23,13 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   className, // Receber a prop className
 }) => {
   return (
-    <div className={cn("flex gap-2", isMobile ? "action-buttons" : "md:flex-row", className)}> {/* Aplicado className aqui */}
+    <div className={cn("grid grid-cols-3 gap-2", className)}> {/* Grid layout for equal widths */}
       <Button
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "flex-1 rounded-xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-extrabold transition-colors",
-          "text-sm",
-          isMobile && "h-9"
+          "w-full rounded-2xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-black transition-colors",
+          "text-[17px] h-12"
         )}
         disabled={loading}
       >
@@ -40,9 +39,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold transition-colors",
-          "text-sm",
-          isMobile && "h-9"
+          "w-full rounded-2xl border border-blue-200 bg-white text-[#1A56AD] hover:bg-blue-50 hover:text-[#1A56AD]/80 font-black transition-colors",
+          "text-[17px] h-12"
         )}
         disabled={loading}
       >
@@ -51,9 +49,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "flex-1 rounded-xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
-          "text-base font-black",
-          isMobile && "h-9"
+          "w-full rounded-2xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
+          "text-[17px] font-black h-12"
         )}
         disabled={loading}
         onClick={onSave}
