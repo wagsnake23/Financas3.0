@@ -28,7 +28,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "w-full rounded-2xl border border-red-100 bg-white text-red-600 hover:bg-red-50 hover:text-red-700 font-black transition-colors",
+          "w-full rounded-2xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-black transition-colors",
           "text-[17px] h-12"
         )}
         disabled={loading}
@@ -39,7 +39,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "w-full rounded-2xl border border-blue-200 bg-white text-[#1A56AD] hover:bg-blue-50 hover:text-[#1A56AD]/80 font-black transition-colors",
+          "w-full rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD]/80 font-black transition-colors",
           "text-[17px] h-12"
         )}
         disabled={loading}

@@ -341,7 +341,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-colors",
+            "flex-1 rounded-2xl border border-blue-300 bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700 font-bold transition-colors",
             "text-lg", // Aumentado para text-lg
             isMobile && "h-12"
           )}

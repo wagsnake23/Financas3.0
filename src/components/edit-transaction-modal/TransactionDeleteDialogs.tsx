@@ -104,7 +104,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px]" : "sm:max-w-[425px] !pb-7"
+            isMobile ? "dialog-mobile max-w-[98vw] p-4 !pb-7 min-h-[180px] !rounded-[20px]" : "sm:max-w-[425px] !pb-7 !rounded-[20px]"
           )}
         >
           <AlertDialogHeader>
@@ -175,7 +175,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
+                "rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black",
                 isMobile
                   ? "mt-0 h-12 text-base flex-1"
                   : "sm:mt-0"
@@ -188,7 +188,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               onClick={() => handleConfirmDelete(selectedDeleteScope)}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "w-full sm:w-auto rounded-xl bg-[#D32F2F] text-white hover:bg-[#B71C1C] transition-colors border-transparent shadow-sm",
+                "w-full sm:w-auto rounded-2xl bg-[#D32F2F] text-white hover:bg-[#B71C1C] transition-colors border-transparent shadow-sm font-black",
                 isMobile && "h-12 text-base flex-1"
               )}
             >
