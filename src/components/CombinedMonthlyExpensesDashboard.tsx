@@ -50,6 +50,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<"monthly" | "annual">("monthly");
   const [activePieIndex, setActivePieIndex] = useState<number | null>(null);
+  const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
 
   const handlePreviousMonth = () => {
     setCurrentMonth(prev => subMonths(prev, 1));
@@ -131,42 +132,46 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
     }));
   }, [filteredExpenseInstallments]);
 
-  const expensesByCategory = expensesForPieChart
-    .filter(t => t.type === "expense")
-    .reduce((acc, transaction) => {
-      const subcategory = allCategories.find(c => c.id === transaction.category);
-      let parentCategory: AppCategory | undefined;
+  const expensesByCategory = useMemo(() => {
+    return expensesForPieChart
+      .filter(t => t.type === "expense")
+      .reduce((acc, transaction) => {
+        const subcategory = allCategories.find(c => c.id === transaction.category);
+        let parentCategory: AppCategory | undefined;
 
-      if (subcategory && subcategory.parent_id) {
-        parentCategory = allCategories.find(c => c.id === subcategory.parent_id);
-      }
+        if (subcategory && subcategory.parent_id) {
+          parentCategory = allCategories.find(c => c.id === subcategory.parent_id);
+        }
 
-      const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
-      const displayCategoryColor = subcategory ? getCategoryColor(subcategory, allCategories) : (parentCategory ? getCategoryColor(parentCategory, allCategories) : "hsl(215, 15%, 50%)");
-      const displayCategoryIcon = parentCategory?.icone || subcategory?.icone || "📁";
+        const displayCategoryName = parentCategory?.nome || subcategory?.nome || "Outros";
+        const displayCategoryColor = subcategory ? getCategoryColor(subcategory, allCategories) : (parentCategory ? getCategoryColor(parentCategory, allCategories) : "hsl(215, 15%, 50%)");
+        const displayCategoryIcon = parentCategory?.icone || subcategory?.icone || "📁";
 
-      if (!acc[displayCategoryName]) {
-        acc[displayCategoryName] = { value: 0, color: displayCategoryColor, icone: displayCategoryIcon };
-      }
-      acc[displayCategoryName].value += transaction.amount;
-      return acc;
-    }, {} as Record<string, { value: number; color: string; icone: string }>);
+        if (!acc[displayCategoryName]) {
+          acc[displayCategoryName] = { value: 0, color: displayCategoryColor, icone: displayCategoryIcon };
+        }
+        acc[displayCategoryName].value += transaction.amount;
+        return acc;
+      }, {} as Record<string, { value: number; color: string; icone: string }>);
+  }, [expensesForPieChart, allCategories]);
 
-  const expensesBySubcategory = expensesForPieChart
-    .filter(t => t.type === "expense")
-    .reduce((acc, transaction) => {
-      const subcategory = allCategories.find(c => c.id === transaction.category);
+  const expensesBySubcategory = useMemo(() => {
+    return expensesForPieChart
+      .filter(t => t.type === "expense")
+      .reduce((acc, transaction) => {
+        const subcategory = allCategories.find(c => c.id === transaction.category);
 
-      const name = subcategory?.nome || "Outros";
-      const color = subcategory ? getCategoryColor(subcategory, allCategories) : "hsl(215, 15%, 50%)";
-      const icon = subcategory?.icone || "📁";
+        const name = subcategory?.nome || "Outros";
+        const color = subcategory ? getCategoryColor(subcategory, allCategories) : "hsl(215, 15%, 50%)";
+        const icon = subcategory?.icone || "📁";
 
-      if (!acc[name]) {
-        acc[name] = { value: 0, color, icone: icon };
-      }
-      acc[name].value += transaction.amount;
-      return acc;
-    }, {} as Record<string, { value: number; color: string; icone: string }>);
+        if (!acc[name]) {
+          acc[name] = { value: 0, color, icone: icon };
+        }
+        acc[name].value += transaction.amount;
+        return acc;
+      }, {} as Record<string, { value: number; color: string; icone: string }>);
+  }, [expensesForPieChart, allCategories]);
 
   const chartData = useMemo(() => {
     return Object.entries(expensesByCategory).map(([name, data]) => ({
@@ -196,6 +201,10 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   // Donut Chart Helpers
   const handleSelect = (index: number) => {
     setActivePieIndex(prev => prev === index ? null : index);
+  };
+
+  const handleBarSelect = (index: number) => {
+    setActiveBarIndex(prev => prev === index ? null : index);
   };
 
   const renderActivePieShape = (props: any) => {
@@ -631,6 +640,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       layout="vertical"
                       margin={{ left: isMobile ? 0 : 30, right: 45, top: 0, bottom: 0 }}
                       barGap={2}
+                      onMouseMove={() => { }} // Disable default hover behavior
+                      onMouseLeave={() => { }}
+                      {...({ activeTooltipIndex: activeBarIndex ?? undefined } as any)}
                     >
                       <defs>
                         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
@@ -651,16 +663,51 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         width={isMobile ? 110 : 140}
                         axisLine={false}
                         tickLine={false}
-                        tick={({ x, y, payload }) => {
-                          const item = subcategoryChartData.find(d => d.name === payload.value);
+                        tick={({ x, y, payload, index }) => {
+                          const item = subcategoryChartData[index];
+                          const isActive = index === activeBarIndex;
                           return (
-                            <g transform={`translate(${x},${y})`}>
+                            <g
+                              transform={`translate(${x},${y})`}
+                              className="cursor-pointer"
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                handleBarSelect(index);
+                              }}
+                            >
+                              {/* Background highlight for the entire row */}
+                              {isActive && (
+                                <rect
+                                  x={isMobile ? -110 : -140}
+                                  y={-20}
+                                  width={1000}
+                                  height={40}
+                                  fill="#3b82f6"
+                                  fillOpacity={0.15}
+                                  rx={12}
+                                  className="animate-in fade-in duration-300"
+                                />
+                              )}
+                              {/* Tiny color indicator on the left if active */}
+                              {isActive && (
+                                <rect
+                                  x={isMobile ? -110 : -140}
+                                  y={-10}
+                                  width={4}
+                                  height={20}
+                                  fill={item?.color}
+                                  rx={2}
+                                />
+                              )}
                               <text
                                 x={isMobile ? -8 : -15}
                                 y={0}
                                 dy={4}
                                 textAnchor="end"
-                                className="fill-gray-500 text-[10px] md:text-[12px] font-black uppercase tracking-tight"
+                                className={cn(
+                                  "text-[10px] md:text-[12px] font-black uppercase tracking-tight transition-all duration-300",
+                                  isActive ? "fill-indigo-600" : "fill-gray-500"
+                                )}
                               >
                                 {item?.icone} {isMobile && payload.value.length > 13 ? `${payload.value.substring(0, 11)}..` : payload.value}
                               </text>
@@ -669,30 +716,35 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         }}
                       />
                       <Tooltip
-                        cursor={{ fill: 'transparent' }}
+                        cursor={false}
+                        active={activeBarIndex !== null}
                         content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload;
-                            const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
-                            return (
-                              <div className="bg-white/90 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.15)] border border-white/60 rounded-2xl animate-in zoom-in-95" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
-                                <div className="flex items-center gap-3 mb-2">
-                                  <span className="text-2xl drop-shadow-sm">{data.icone}</span>
-                                  <div className="flex flex-col">
-                                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
-                                    <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
-                                  </div>
-                                </div>
-                                <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
-                                  <span className="text-xl font-black text-indigo-600 tracking-tighter">
-                                    {formatCurrency(data.value)}
-                                  </span>
-                                  <span className="text-xs font-bold text-gray-400">({perc}%)</span>
+                          if (activeBarIndex === null) return null;
+
+                          const data = subcategoryChartData[activeBarIndex];
+                          if (!data) return null;
+
+                          const perc = ((data.value / totalMonthlyExpense) * 100).toFixed(1);
+                          return (
+                            <div
+                              className="bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl animate-in zoom-in-95 pointer-events-none"
+                              style={{ WebkitBackdropFilter: 'blur(10px)' }}
+                            >
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-2xl drop-shadow-sm">{data.icone}</span>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
+                                  <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
                                 </div>
                               </div>
-                            );
-                          }
-                          return null;
+                              <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
+                                <span className="text-xl font-black text-indigo-600 tracking-tighter">
+                                  {formatCurrency(data.value)}
+                                </span>
+                                <span className="text-xs font-bold text-gray-400">({perc}%)</span>
+                              </div>
+                            </div>
+                          );
                         }}
                       />
                       <Bar
@@ -702,17 +754,32 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         className="cursor-pointer transition-all duration-300"
                         isAnimationActive={true}
                       >
-                        {subcategoryChartData.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={entry.color}
-                          />
-                        ))}
+                        {subcategoryChartData.map((entry, index) => {
+                          const isActive = index === activeBarIndex;
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={entry.color}
+                              className={cn(
+                                "cursor-pointer transition-all duration-300",
+                                isActive ? "opacity-100" : (activeBarIndex !== null ? "opacity-30" : "opacity-100")
+                              )}
+                              style={{
+                                filter: isActive ? 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))' : 'none'
+                              }}
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                handleBarSelect(index);
+                              }}
+                            />
+                          );
+                        })}
                         <LabelList
                           dataKey="value"
                           position="right"
                           content={(props: any) => {
-                            const { x, y, width, value } = props;
+                            const { x, y, width, value, index } = props;
+                            const isActive = index === activeBarIndex;
                             const percentage = totalMonthlyExpense > 0
                               ? `${((value / totalMonthlyExpense) * 100).toFixed(1)}%`
                               : "0%";
@@ -720,10 +787,20 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                               <text
                                 x={x + width + 10}
                                 y={y + (isMobile ? 14 : 18)}
-                                fill="#334155"
+                                fill={isActive ? "#4f46e5" : "#334155"}
                                 fontSize={isMobile ? 11 : 12}
                                 fontWeight="900"
-                                className="font-roboto"
+                                className={cn(
+                                  "font-roboto cursor-pointer select-none transition-all duration-300"
+                                )}
+                                style={{
+                                  pointerEvents: 'auto',
+                                  textShadow: isActive ? '0px 0px 8px rgba(79, 70, 229, 0.4)' : 'none'
+                                }}
+                                onPointerDown={(e) => {
+                                  e.stopPropagation();
+                                  handleBarSelect(index);
+                                }}
                               >
                                 {percentage}
                               </text>
