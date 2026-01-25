@@ -295,7 +295,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     </div>
                     <div className="relative flex flex-col justify-center min-w-0">
                         <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Valor Estimado</span>
-                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
+                        <p className="text-[20px] font-black text-slate-600 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.patrimonioFuturo)}
                         </p>
                         <div className="flex items-center gap-1.5 text-emerald-500 text-[10px] font-bold leading-none">
@@ -315,7 +315,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     </div>
                     <div className="relative flex flex-col justify-center min-w-0">
                         <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Lucro Acumulado</span>
-                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
+                        <p className="text-[20px] font-black text-slate-600 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.lucroAcumulado)}
                         </p>
                         <div className="flex items-center gap-1.5 text-violet-500 text-[10px] font-bold leading-none">
@@ -335,7 +335,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     </div>
                     <div className="relative flex flex-col justify-center min-w-0">
                         <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] mb-0.5 leading-none">Renda Mensal Futura</span>
-                        <p className="text-[20px] font-black text-gray-800 tracking-tight leading-none mb-1 truncate">
+                        <p className="text-[20px] font-black text-slate-600 tracking-tight leading-none mb-1 truncate">
                             {formatCurrency(currentProjectionData.rendaMensalFutura)}
                         </p>
                         <div className="flex items-center gap-1.5 text-orange-500 text-[10px] font-bold leading-none">

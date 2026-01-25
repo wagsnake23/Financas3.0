@@ -51,7 +51,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
         isMobile && "bg-gradient-to-br from-gray-50/90 to-gray-200/60 border border-gray-300/50 shadow-[0_4px_24px_rgba(0,0,0,0.04)] backdrop-blur-[8px]",
         !isMobile && "h-full flex flex-col justify-center"
       )}>
-        <h2 className="text-xl font-semibold mb-4">Receitas por Subcategoria</h2>
+        <h2 className="text-xl font-semibold mb-4">Receitas por Categoria</h2>
         <div className="flex-grow flex items-center justify-center text-muted-foreground">
           Nenhuma receita registrada
         </div>
@@ -68,7 +68,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
       <div>
         <div className="flex items-center gap-2 mb-6">
           <div className="h-8 w-2 bg-[#1AA361] rounded-full" />
-          <h3 className="text-lg font-black text-[#1AA361] tracking-tight">Receitas por Subcategoria</h3>
+          <h3 className="text-lg font-black text-[#1AA361] tracking-tight">Receitas por Categoria</h3>
         </div>
 
         <div
@@ -136,7 +136,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-2xl drop-shadow-sm">{data.icone}</span>
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
+                            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Categoria</span>
                             <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
                           </div>
                         </div>
