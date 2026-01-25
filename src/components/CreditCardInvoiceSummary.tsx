@@ -43,8 +43,8 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
     )}>
       <Card
         className={cn(
-          "relative overflow-hidden px-4 rounded-[24px] border border-[#F0F7FF] card-saldo shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
-          isMobile ? "py-2 mb-0.5" : "py-5 mb-6"
+          "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
+          isMobile ? "py-3 mb-0.5" : "py-5 mb-6"
         )}
         style={{ backgroundColor: "transparent" }}
       >

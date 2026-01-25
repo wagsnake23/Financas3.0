@@ -540,6 +540,7 @@ body {
 .card-despesas,
 .card-receitas,
 .card-cartoes,
+.card-fatura,
 .card-yield {
   position: relative;
   overflow: hidden;
@@ -555,6 +556,7 @@ body {
 .card-despesas::before,
 .card-receitas::before,
 .card-cartoes::before,
+.card-fatura::before,
 .card-yield::before {
   content: "";
   position: absolute;
@@ -590,6 +592,18 @@ body {
       rgba(220, 235, 255, 0.75),
       rgba(240, 248, 255, 0.8),
       rgba(220, 235, 255, 0.75));
+}
+
+/* Fatura Card - More visible blue */
+.card-fatura {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.0) 60%),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.55), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.45), transparent 50%),
+    linear-gradient(135deg,
+      rgba(200, 230, 255, 0.95),
+      rgba(230, 245, 255, 0.98),
+      rgba(200, 230, 255, 0.95));
 }
 
 /* Despesas Card */
