@@ -145,7 +145,8 @@ export const StatCard = ({
             <p
               className={cn(
                 titleFontSizeClass,
-                "font-semibold text-muted-foreground leading-none",
+                "font-semibold leading-none",
+                variant === "balance" ? "text-[#1E6BCE]" : "text-muted-foreground",
                 "font-roboto"
               )}
             >
@@ -168,7 +169,9 @@ export const StatCard = ({
                     ? "text-destructive"
                     : variant === "yield"
                       ? "text-yield"
-                      : mainStatValue >= 0 ? "text-primary" : "text-destructive", // Conditional for balance: blue if positive
+                      : variant === "balance"
+                        ? (mainStatValue >= 0 ? "text-[#1E6BCE]" : "text-destructive")
+                        : (mainStatValue >= 0 ? "text-primary" : "text-destructive"),
                 "font-roboto", // Fonte Roboto
                 !hideMainIcon && icon && "pl-[34px]" // Align value with title text (icon width + padding + gap)
               )}

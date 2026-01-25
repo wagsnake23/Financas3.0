@@ -49,9 +49,9 @@ const MiniFinanceBars = ({ expenses, revenues, balance }: { expenses: number, re
             <div className="absolute left-0 right-0 h-[0.5px] bg-gray-300/30" style={{ bottom: "48px" }} />
             <div className="absolute left-0 right-0 h-[1px] bg-gray-200 bottom-[14.5px]" />
 
-            <BarItem val={expenses} color="#FF7070" label="D" width="15px" />
-            <BarItem val={revenues} color="#66E0A3" label="R" width="15px" />
-            <BarItem val={balance} color="#6B95FF" label="S" width="15px" />
+            <BarItem val={expenses} color="#E54D4D" label="D" width="15px" />
+            <BarItem val={revenues} color="#1AA361" label="R" width="15px" />
+            <BarItem val={balance} color="#1E6BCE" label="S" width="15px" />
         </div>
     );
 };
@@ -308,13 +308,13 @@ export default function Home() {
                                             className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
                                             style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
                                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
                                             </button>
                                             <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
                                                 <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
                                             </button>
                                         </div>
@@ -325,7 +325,7 @@ export default function Home() {
                                         <Button
                                             onClick={() => navigate("/dashboard?filter=investments")}
                                             className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
-                                            style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
+                                            style={{ "--cor-topo": "#1E6BCE", "--cor-base": "#1557A6" } as any}
                                         >
                                             <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                         </Button>
@@ -483,13 +483,13 @@ export default function Home() {
                                     className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
                                     style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                                 >
-                                    <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                    <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
                                         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
                                     </button>
                                     <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
-                                    <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
+                                    <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
                                         <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
                                     </button>
                                 </div>
@@ -500,7 +500,7 @@ export default function Home() {
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=investments")}
                                     className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
-                                    style={{ "--cor-topo": "#6B95FF", "--cor-base": "#4A74D4" } as any}
+                                    style={{ "--cor-topo": "#1E6BCE", "--cor-base": "#1557A6" } as any}
                                 >
                                     <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                 </Button>
