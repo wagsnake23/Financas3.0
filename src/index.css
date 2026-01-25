@@ -447,7 +447,6 @@ body {
 /* 3D Button Style */
 .btn-3d {
   color: #fff;
-  font-weight: 600;
   cursor: pointer;
   border: none;
   background: linear-gradient(180deg,

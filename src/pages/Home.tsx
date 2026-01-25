@@ -298,14 +298,14 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                                            <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
+                                            <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                                            <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none">
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
                                         {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
                                         <div
-                                            className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                                            className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
                                             style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                                         >
                                             <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
@@ -357,17 +357,17 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                            <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                            <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
+                                            <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-1"
+                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2"
                                             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
-                                            Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                            Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
                                         </Button>
                                     </div>
 
@@ -391,11 +391,11 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                            className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
                                             style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
                                             onClick={() => navigate("/despesas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
                                             Nova Despesa
                                         </Button>
                                     </div>
@@ -408,17 +408,17 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                            <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                            <h2 className="text-[15px] font-bold tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
+                                            <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-1"
+                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2"
                                             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
-                                            Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                            Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
                                         </Button>
                                     </div>
 
@@ -442,11 +442,11 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                            className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
                                             style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
                                             onClick={() => navigate("/receitas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
                                             Nova Receita
                                         </Button>
                                     </div>
@@ -473,14 +473,14 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start mb-2">
                                 <div className="flex flex-col">
-                                    <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                                    <p className="text-[18px] font-black text-gray-700 tracking-tight leading-none">
+                                    <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                                    <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none">
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
                                 {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
                                 <div
-                                    className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-1 border border-blue-200 shadow-none cursor-default"
+                                    className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
                                     style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
                                 >
                                     <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
@@ -533,17 +533,17 @@ export default function Home() {
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                        <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                        <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
+                                        <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
                                             {formatCurrency(dStats.currentExpenses)}
                                         </p>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-1"
+                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2"
                                         style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                         onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                     >
-                                        Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                        Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
                                     </Button>
                                 </div>
 
@@ -567,11 +567,11 @@ export default function Home() {
                                         </div>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                        className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
                                         style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
                                         onClick={() => navigate("/despesas")}
                                     >
-                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
                                         Nova Despesa
                                     </Button>
                                 </div>
@@ -585,17 +585,17 @@ export default function Home() {
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                        <p className="text-[17px] font-black text-gray-700 tracking-tight leading-none">
+                                        <h2 className="text-[15px] font-bold tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
+                                        <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
                                             {formatCurrency(dStats.currentIncome)}
                                         </p>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-3 rounded-2xl font-black text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-1"
+                                        className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2"
                                         style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                         onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                     >
-                                        Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={3} />
+                                        Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
                                     </Button>
                                 </div>
 
@@ -619,11 +619,11 @@ export default function Home() {
                                         </div>
                                     </div>
                                     <Button
-                                        className="btn-3d h-9 px-4 rounded-2xl font-bold text-xs shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-1"
+                                        className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
                                         style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
                                         onClick={() => navigate("/receitas")}
                                     >
-                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={3} />
+                                        <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
                                         Nova Receita
                                     </Button>
                                 </div>

@@ -107,7 +107,7 @@ export const MobileCreditCardExpenses: React.FC<
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#8235ff]" />
-          <h2 className="text-[15px] font-black text-[#8235ff] tracking-tight">
+          <h2 className="text-[15px] font-bold text-[#8235ff] tracking-tight">
             Cartões
           </h2>
         </div>
@@ -131,7 +131,7 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-[32px] text-xs font-bold shadow-sm border-none"
+          className="btn-3d rounded-xl w-full h-[32px] text-xs font-extrabold shadow-sm border-none"
           style={
             {
               "--cor-topo": "#9F7AEA",
