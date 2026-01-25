@@ -222,17 +222,29 @@ export const TransactionList = ({
       (acc, t) => {
         if (t.type === "income") {
           acc.income += t.amount;
+          if (t.status === "Recebida") {
+            acc.receivedIncome += t.amount;
+          } else {
+            acc.pendingIncome += t.amount;
+          }
         } else {
           acc.expense += t.amount;
+          if (t.status === "Recebida") {
+            acc.paidExpense += t.amount;
+          }
         }
         acc.count += 1;
         return acc;
       },
-      { income: 0, expense: 0, count: 0 }
+      { income: 0, expense: 0, count: 0, paidExpense: 0, receivedIncome: 0, pendingIncome: 0 }
     );
   }, [filteredTransactions]);
 
-  const accumulatedValue = summary.income - summary.expense;
+  const accumulatedValue = filterType === "expense"
+    ? summary.expense - summary.paidExpense
+    : filterType === "income"
+      ? summary.receivedIncome
+      : summary.income - summary.expense;
 
   const { totalPaidCard, totalPendingCard, totalCardExpenses } = useMemo(() => {
     let paid = 0;
@@ -595,24 +607,39 @@ export const TransactionList = ({
             <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
           </div>
 
-          {/* 2: Receitas */}
+          {/* 2: Receitas / Valor Pago */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Receitas</span>
-            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">{formatCurrency(summary.income, !isMobile)}</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
+              {filterType === 'expense' ? 'Valor Pago' : 'Receitas'}
+            </span>
+            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">
+              {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, !isMobile)}
+            </span>
           </div>
 
-          {/* 3: Despesas */}
+          {/* 3: Despesas / Pendente */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Despesas</span>
-            <span className="text-xs sm:text-sm font-bold text-destructive whitespace-nowrap">{formatCurrency(summary.expense, !isMobile)}</span>
+            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
+              {filterType === 'income' ? 'Pendente' : 'Despesas'}
+            </span>
+            <span className={cn(
+              "text-xs sm:text-sm font-bold whitespace-nowrap",
+              filterType === 'income' ? "text-orange-500" : "text-destructive"
+            )}>
+              {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, !isMobile)}
+            </span>
           </div>
 
-          {/* 4: Saldo */}
+          {/* 4: Saldo / Recebidas */}
           <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
             <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Saldo</span>
             <span className={cn(
               "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
-              accumulatedValue >= 0 ? "text-primary" : "text-destructive"
+              filterType === 'expense'
+                ? (accumulatedValue > 0 ? "text-destructive" : "text-primary")
+                : filterType === 'income'
+                  ? "text-primary"
+                  : (accumulatedValue >= 0 ? "text-primary" : "text-destructive")
             )}>
               {formatCurrency(accumulatedValue, !isMobile)}
             </span>
