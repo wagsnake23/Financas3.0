@@ -110,7 +110,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(
-        isMobile ? "max-w-sm p-4 pt-10 dialog-mobile !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[32px] overflow-y-auto"
+        isMobile ? "max-w-sm p-4 pt-10 pb-2 dialog-mobile !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[32px] overflow-y-auto"
       )}>
         <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
           <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">
@@ -118,7 +118,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             <span>Novo Cartão</span>
           </DialogTitle>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile ? "pt-0 pb-3" : "pb-2")}>
+        <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-2")}>
           <div>
             <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input
