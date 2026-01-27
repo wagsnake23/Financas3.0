@@ -419,14 +419,14 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200",
+                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                     )}>
                       <SelectValue placeholder="Selecione o tipo de investimento" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl border-none shadow-xl">
+                    <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
                       <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
                       {incomeInvestmentSubcategories.length === 0 && (
                         <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
@@ -451,12 +451,12 @@ export default function Investments() { // Alterado para export default function
                   <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
                   <Select value={type} onValueChange={setType} disabled={loadingForm}>
                     <SelectTrigger className={cn(
-                      "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200",
+                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                       isMobile && "h-9 text-sm"
                     )}>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl border-none shadow-xl">
+                    <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
                       {investmentTypes.map(t => (
                         <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
                           <span className="flex items-center gap-2">
@@ -481,7 +481,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200 placeholder:text-gray-400",
+                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                       )}
@@ -504,7 +504,7 @@ export default function Investments() { // Alterado para export default function
                       fixedDecimalScale={false}
                       maxLength={7}
                       className={cn(
-                        "rounded-xl bg-white border-[rgba(120,150,255,0.18)] font-medium transition-all duration-200 placeholder:text-gray-400",
+                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                       )}
@@ -520,7 +520,7 @@ export default function Investments() { // Alterado para export default function
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "bg-white border-[rgba(120,150,255,0.18)] transition-all duration-200",
+                          "bg-white border-[#A5C2F9]/50 transition-all duration-200",
                           !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -566,7 +566,7 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div>
               <Card
-                className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none bg-transparent")}
+                className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none")}
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="flex items-center justify-between mb-6">
@@ -599,7 +599,7 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                <div className="space-y-5">
+                <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar pr-1">
                   {calculatedInvestments.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
@@ -622,11 +622,10 @@ export default function Investments() { // Alterado para export default function
                       return (
                         <div
                           key={investment.id}
-                          className={cn(
-                            "relative group overflow-hidden transition-all duration-300",
-                            "bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)] rounded-[16px] p-4",
-                            "hover:shadow-lg active:scale-[0.98]"
-                          )}
+                          className="relative group overflow-hidden transition-all duration-300 p-4 border border-blue-100 rounded-[20px] shadow-sm mb-2 last:mb-0"
+                          style={{
+                            backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                          }}
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
                           <div className="flex items-start justify-between mb-4">
@@ -640,7 +639,7 @@ export default function Investments() { // Alterado para export default function
                               </div>
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex items-center">
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -649,24 +648,24 @@ export default function Investments() { // Alterado para export default function
                               >
                                 <DynamicIcon name="Pencil" className="h-4 w-4 text-[#3b82f6]" />
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleDelete(investment.id)}
-                                className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
-                              >
-                                <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
-                              </Button>
                             </div>
                           </div>
 
                           {/* 2. Main Value and Yield */}
                           <div className="flex flex-col justify-between gap-4">
                             <div className="space-y-1">
-                              <div className="flex flex-col">
+                              <div className="flex items-center justify-between">
                                 <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
                                   {formatCurrency(investment.valorAtualVirtual)}
                                 </span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleDelete(investment.id)}
+                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
+                                >
+                                  <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
+                                </Button>
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
@@ -857,13 +856,13 @@ export default function Investments() { // Alterado para export default function
                         disabled={loadingForm}
                       >
                         <SelectTrigger id="investment-category" className={cn(
-                          "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                         )}>
                           <SelectValue placeholder="Selecione o tipo de investimento" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-xl">
+                        <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
                           <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
                           {incomeInvestmentSubcategories.length === 0 && (
                             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
@@ -888,12 +887,12 @@ export default function Investments() { // Alterado para export default function
                       <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
                       <Select value={type} onValueChange={setType} disabled={loadingForm}>
                         <SelectTrigger className={cn(
-                          "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                           isMobile && "h-9 text-sm"
                         )}>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-xl">
+                        <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
                           {investmentTypes.map(t => (
                             <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
                               <span className="flex items-center gap-2">
@@ -918,7 +917,7 @@ export default function Investments() { // Alterado para export default function
                           }}
                           disabled={loadingForm}
                           className={cn(
-                            "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                             isMobile && "h-9 text-sm",
                             getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                           )}
@@ -941,7 +940,7 @@ export default function Investments() { // Alterado para export default function
                           fixedDecimalScale={false}
                           maxLength={7}
                           className={cn(
-                            "rounded-xl bg-white border-[#D1D5DB] font-medium transition-all duration-200",
+                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                             isMobile && "h-9 text-sm",
                             getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                           )}
@@ -957,7 +956,7 @@ export default function Investments() { // Alterado para export default function
                             variant={"outline"}
                             className={cn(
                               "w-full justify-start text-left font-medium h-10 rounded-xl",
-                              "bg-white border-[#D1D5DB] transition-all duration-200",
+                              "bg-white border-[#A5C2F9]/50 transition-all duration-200",
                               !date && "text-muted-foreground",
                               isMobile && "h-9 text-sm",
                               getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -996,7 +995,7 @@ export default function Investments() { // Alterado para export default function
               {/* Investments List */}
               <div>
                 <Card
-                  className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none bg-transparent")}
+                  className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none")}
                   style={{ backgroundColor: "transparent" }}
                 >
                   <div className="flex items-center justify-between mb-6">
@@ -1029,7 +1028,7 @@ export default function Investments() { // Alterado para export default function
                       </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
-                  <div className="space-y-5">
+                  <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar pr-1">
                     {calculatedInvestments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
@@ -1053,11 +1052,12 @@ export default function Investments() { // Alterado para export default function
                           <div
                             key={investment.id}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300",
-                              "bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)] rounded-[16px] p-5",
-                              "hover:shadow-lg active:scale-[0.98]",
+                              "relative group overflow-hidden transition-all duration-300 p-5 border border-blue-100 rounded-[20px] shadow-sm mb-2 last:mb-0",
                               isMobile && "p-4"
                             )}
+                            style={{
+                              backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                            }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
                             <div className="flex items-start justify-between mb-5">
