@@ -197,10 +197,10 @@ export const CategoryForm = ({
             <SelectTrigger
               id="parent_id"
               className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-11",
                 getBorderClass({}),
-                hideCardWrapper ? "!bg-white !border-[#FF9191] !border" : "!bg-white"
+                "!bg-white"
               )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
@@ -242,10 +242,9 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn(
-              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium !bg-white",
+              "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium !bg-white",
               isMobile ? "h-9 text-sm" : "h-11",
-              getBorderClass({}),
-              hideCardWrapper && "!border-[#FF9191] !border"
+              getBorderClass({})
             )}
             disabled={editingCategory?.user_id === null}
           />
@@ -260,8 +259,7 @@ export const CategoryForm = ({
               className={cn(
                 "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium !bg-white",
                 isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
-                getBorderClass({}),
-                hideCardWrapper ? "border-[#FF9191] border" : ""
+                getBorderClass({})
               )}
               disabled={editingCategory?.user_id === null}
             >
@@ -304,12 +302,12 @@ export const CategoryForm = ({
           {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
               type="button"
-              variant="outline"
               onClick={handleCancel}
               className={cn(
-                "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold transition-all",
-                isMobile && "h-11 text-base"
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                isMobile && "h-11 text-lg"
               )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               size="lg"
             >
               Cancelar

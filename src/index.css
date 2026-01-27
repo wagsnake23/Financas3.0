@@ -484,12 +484,13 @@ body {
 /* 3D Input Style */
 .input-3d-premium {
   background: white !important;
-  border: 1px solid #F0F2F5;
+  border: 1.5px solid #AAB8C6 !important;
   border-radius: 0.75rem !important;
-  color: #1A1A1A !important;
+  color: #111827 !important;
+  font-weight: 600 !important;
   box-shadow:
-    inset 0px 1px 1.5px rgba(255, 255, 255, 0.8),
-    inset 0px -1px 2px rgba(0, 0, 0, 0.04) !important;
+    inset 0px 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0px -1.5px 2px rgba(0, 0, 0, 0.05) !important;
   transition: all 0.2s ease;
 }
 
