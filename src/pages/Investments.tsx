@@ -685,7 +685,7 @@ export default function Investments() { // Alterado para export default function
                               </div>
 
                               {/* Data Bottom Right */}
-                              <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                              <div className="text-[11px] text-gray-400 font-black uppercase tracking-widest">
                                 {formattedDate}
                               </div>
                             </div>
@@ -1120,7 +1120,7 @@ export default function Investments() { // Alterado para export default function
                                 </div>
 
                                 {/* Data Bottom Right */}
-                                <div className="text-[10px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                                <div className="text-[11px] sm:text-[12px] text-gray-400 font-black uppercase tracking-widest mt-1">
                                   {formattedDate}
                                 </div>
                               </div>
