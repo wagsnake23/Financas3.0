@@ -570,7 +570,7 @@ export default function Investments() { // Alterado para export default function
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
+                  <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
                   <ToggleGroup
                     type="single"
                     value={yieldViewMode}
@@ -999,7 +999,7 @@ export default function Investments() { // Alterado para export default function
                   style={{ backgroundColor: "transparent" }}
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
+                    <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
                     <ToggleGroup
                       type="single"
                       value={yieldViewMode}
