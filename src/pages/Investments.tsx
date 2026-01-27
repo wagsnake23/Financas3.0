@@ -617,7 +617,8 @@ export default function Investments() { // Alterado para export default function
                       const monthlyYield = investment.valorAtualVirtual * monthlyRate;
 
                       const [year, month, day] = investment.data.split('-').map(Number);
-                      const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
+                      const dateObj = new Date(year, month - 1, day);
+                      const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
 
                       return (
                         <div
@@ -685,7 +686,7 @@ export default function Investments() { // Alterado para export default function
                               </div>
 
                               {/* Data Bottom Right */}
-                              <div className="text-[11px] text-gray-400 font-black uppercase tracking-widest">
+                              <div className="text-[13px] text-gray-400 font-black uppercase tracking-widest">
                                 {formattedDate}
                               </div>
                             </div>
@@ -1046,7 +1047,8 @@ export default function Investments() { // Alterado para export default function
                         const monthlyYield = investment.valorAtualVirtual * monthlyRate;
 
                         const [year, month, day] = investment.data.split('-').map(Number);
-                        const formattedDate = new Date(year, month - 1, day).toLocaleDateString('pt-BR');
+                        const dateObj = new Date(year, month - 1, day);
+                        const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
 
                         return (
                           <div
@@ -1120,7 +1122,7 @@ export default function Investments() { // Alterado para export default function
                                 </div>
 
                                 {/* Data Bottom Right */}
-                                <div className="text-[11px] sm:text-[12px] text-gray-400 font-black uppercase tracking-widest mt-1">
+                                <div className="text-[13px] sm:text-[14px] text-gray-400 font-black uppercase tracking-widest mt-1">
                                   {formattedDate}
                                 </div>
                               </div>
