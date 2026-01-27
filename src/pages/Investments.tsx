@@ -678,7 +678,9 @@ export default function Investments() { // Alterado para export default function
 
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
-                              <div className="inline-flex items-center gap-1.5 bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white px-3 py-1 rounded-full text-[11px] font-black shadow-md shadow-blue-200">
+                              <div
+                                className="inline-flex items-center gap-1.5 text-white px-3 py-1 rounded-full text-[11px] font-black bg-gradient-to-b from-[#6B95FF] to-[#4A74D4] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                              >
                                 <DynamicIcon name="TrendingUp" className="h-3 w-3" />
                                 <span>{investment.rentabilidade}% a.a.</span>
                               </div>
@@ -1110,7 +1112,9 @@ export default function Investments() { // Alterado para export default function
 
                               <div className="flex flex-col items-end gap-2">
                                 {/* Profitability Badge */}
-                                <div className="inline-flex items-center gap-1.5 bg-gradient-to-br from-[#7dd3fc] to-[#a78bfa] text-white px-3.5 py-1.5 rounded-full text-[12px] font-black shadow-md shadow-blue-200">
+                                <div
+                                  className="inline-flex items-center gap-1.5 text-white px-3.5 py-1.5 rounded-full text-[12px] font-black bg-gradient-to-b from-[#6B95FF] to-[#4A74D4] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                                >
                                   <DynamicIcon name="TrendingUp" className="h-3 w-3" />
                                   <span>{investment.rentabilidade}% a.a.</span>
                                 </div>
