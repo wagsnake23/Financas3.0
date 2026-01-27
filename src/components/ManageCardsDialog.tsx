@@ -205,7 +205,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          isMobile ? "dialog-mobile pb-6" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto"
+          isMobile ? "dialog-mobile pb-6 !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[32px]"
         )}>
           <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
@@ -271,7 +271,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
         <DialogContent className={cn(
-          isMobile ? "max-w-sm p-4 pt-10 dialog-mobile" : "sm:max-w-[425px] sm:pt-10"
+          isMobile ? "max-w-sm p-4 pt-10 dialog-mobile !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[32px] overflow-y-auto"
         )}>
           <DialogHeader className={cn(isMobile ? "mt-2" : "-mt-4")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
@@ -392,7 +392,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <AlertDialogContent className={cn(
-          isMobile ? "dialog-mobile w-[96%] p-6 !pb-7" : "sm:max-w-[500px] p-6 !pb-7"
+          isMobile ? "dialog-mobile w-[96%] p-6 !pb-7 !rounded-[32px]" : "sm:max-w-[500px] p-6 !pb-7 !rounded-[32px]"
         )}>
           <AlertDialogHeader className="flex flex-col items-center justify-center text-center">
             <AlertDialogTitle className="text-xl font-bold flex items-center justify-center gap-2 mb-2">

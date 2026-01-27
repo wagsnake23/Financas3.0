@@ -1156,7 +1156,7 @@ export default function Investments() { // Alterado para export default function
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className={cn(
-          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[16px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[32px]"
         )}>
           <DialogHeader className={cn(
             "flex flex-row items-center justify-center gap-1",
@@ -1183,7 +1183,7 @@ export default function Investments() { // Alterado para export default function
       {/* NOVO: AlertDialog para confirmação de exclusão */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <div /> {/* Placeholder to avoid issues with Dialog triggers if any, but AlertDialog doesn't need it */}
-        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[16px] !pb-7" : "sm:max-w-[425px] !pb-7 !rounded-[16px]")}>
+        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[32px] !pb-7" : "sm:max-w-[425px] !pb-7 !rounded-[32px]")}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
