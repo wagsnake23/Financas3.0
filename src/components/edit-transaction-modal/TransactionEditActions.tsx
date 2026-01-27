@@ -49,9 +49,10 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "w-full rounded-2xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
-          "text-[16px] font-black h-11"
+          "w-full rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+          isMobile ? "h-11 text-lg" : "h-11 text-lg"
         )}
+        style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
         disabled={loading}
         onClick={onSave}
       >

@@ -318,10 +318,10 @@ export const CategoryForm = ({
           <Button
             type="submit"
             className={cn(
-              "flex-1 rounded-xl font-black !text-[#374151] border border-amber-200/50 transition-all active:scale-95 shadow-sm bg-gradient-to-b from-[#FDE68A] to-[#FCD34D] text-lg",
+              "flex-1 rounded-xl btn-3d font-black !text-[#374151] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
               isMobile && "h-11 text-lg"
             )}
-            style={{ backgroundImage: "linear-gradient(to bottom, #FDE68A, #FCD34D)" }}
+            style={{ "--cor-topo": "#FFD54F", "--cor-base": "#FFC107" } as any}
             size="lg"
             disabled={editingCategory?.user_id === null}
           >

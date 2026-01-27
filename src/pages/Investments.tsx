@@ -552,10 +552,10 @@ export default function Investments() { // Alterado para export default function
                 <Button
                   type="submit"
                   className={cn(
-                    "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                    isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+                    "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                    isMobile ? "h-11 text-lg" : "h-11 text-lg"
                   )}
-                  style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
+                  style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
                   disabled={loadingForm}
                 >
                   {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
@@ -986,7 +986,15 @@ export default function Investments() { // Alterado para export default function
                       </Popover>
                     </div>
 
-                    <Button type="submit" className={cn("w-full rounded-xl", isMobile && "h-9 text-sm")} size="lg" disabled={loadingForm}>
+                    <Button
+                      type="submit"
+                      className={cn(
+                        "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                        isMobile ? "h-11 text-lg" : "h-11 text-lg"
+                      )}
+                      style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
+                      disabled={loadingForm}
+                    >
                       {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
                     </Button>
                   </form>
