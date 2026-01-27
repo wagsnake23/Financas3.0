@@ -13,6 +13,8 @@ import CategoriesList from "@/components/CategoriesList";
 import DynamicIcon from "@/components/DynamicIcon";
 import { toast } from "sonner";
 import { EditCategoryModal } from "@/components/EditCategoryModal";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // Helper type matching CategoriesList expectation
 interface HierarchicalCategory extends AppCategory {
@@ -23,6 +25,7 @@ export default function Categorias() {
   const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -157,30 +160,67 @@ export default function Categorias() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background pt-16",
+        "flex flex-col min-h-screen bg-background md:pt-16",
         isMobile && "bg-lancamentos-mobile-bg"
       )}
     >
       <Navigation />
 
-      <div
-        className={cn(
-          "mx-auto space-y-6",
-          !isMobile && "flex-grow",
-          isMobile ? "p-4 pt-2" : "max-w-[1200px] px-6 py-8"
-        )}
-      >
-        {!isMobile && (
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Categorias</h1>
-              <p className="text-muted-foreground">
-                Gerencie suas categorias de despesas e receitas
-              </p>
+      {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
+      <div className={cn(
+        "relative h-[220px] w-full overflow-hidden",
+        isMobile ? "bg-gradient-to-b from-[#1E6BCE] via-[#1E6BCE] via-45% to-transparent" : "bg-background"
+      )}>
+        <div className={cn(
+          "container mx-auto px-6 relative z-10 max-w-[1200px]",
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-transparent justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
+        )}>
+          <div>
+            <div className="flex items-start gap-3">
+              <Button
+                variant="ghost"
+                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
+                style={isMobile ? { "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF" } as any : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                onClick={() => navigate(-1)}
+              >
+                <DynamicIcon
+                  name="Tags"
+                  className={cn("!text-[#1E6BCE]", isMobile ? "h-4 w-4" : "h-5 w-5")}
+                  strokeWidth={4}
+                />
+              </Button>
+              <div className="flex flex-col">
+                <h1 className={cn("font-black tracking-tight -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")}>
+                  Categorias
+                </h1>
+                <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-white" : "text-sm text-slate-500")}>
+                  Gerencie suas categorias de despesas e receitas
+                </p>
+              </div>
             </div>
           </div>
-        )}
 
+          <Button
+            onClick={() => navigate(-1)}
+            className={cn(
+              "btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90",
+              isMobile ? "h-8 px-2" : ""
+            )}
+            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+          >
+            <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1E6BCE]" strokeWidth={3} />
+            Voltar
+          </Button>
+        </div>
+      </div>
+
+      <main
+        className={cn(
+          "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
+          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20",
+          !isMobile && "px-6"
+        )}
+      >
         {isMobile ? (
           <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
             <h2 className="text-xl font-semibold flex items-center gap-2 text-primary">
@@ -222,7 +262,10 @@ export default function Categorias() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <Card className="p-6 rounded-xl shadow-sm max-w-[700px] mx-auto w-full">
+            <Card
+              className="p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo"
+              style={{ backgroundColor: "transparent" }}
+            >
               <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mb-4">
                 <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
                   <DynamicIcon
@@ -239,11 +282,10 @@ export default function Categorias() {
               />
             </Card>
 
-            <Card className="rounded-xl shadow-sm max-w-[700px] mx-auto w-full">
-              {/* Title is inside CategoriesList for consistency or I should wrap it? 
-                  CategoriesList has title inside it. Let's rely on CategoriesList styling but it has a Card inside.
-                  Wait, CategoriesList returns a Card. So I should NOT wrap it in a Card.
-              */}
+            <Card
+              className="rounded-[24px] shadow-sm border border-blue-100 card-saldo overflow-hidden"
+              style={{ backgroundColor: "transparent" }}
+            >
               <CategoriesList
                 categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}
@@ -257,7 +299,7 @@ export default function Categorias() {
             </Card>
           </div>
         )}
-      </div>
+      </main>
 
       <EditCategoryModal
         isOpen={isEditModalOpen}

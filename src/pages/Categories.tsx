@@ -11,9 +11,12 @@ import { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import Loading from "@/components/Loading";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import DynamicIcon from "@/components/DynamicIcon";
+import { EditCategoryModal } from "@/components/EditCategoryModal";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils"; // Importar cn
-import { EditCategoryModal } from "@/components/EditCategoryModal"; // Importar o novo modal
+import { cn } from "@/lib/utils";
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -66,6 +69,7 @@ const Categories = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
   const [formKey, setFormKey] = useState(0); // Estado para resetar o formulário
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   // Fetch ALL categories (both main and subcategories) for the Categories page
   // A filtragem para subcategorias será feita no CategoryForm e CategoryList
@@ -255,44 +259,121 @@ const Categories = () => {
   }
 
   return (
-    <div className="flex flex-col bg-background pt-16"> {/* Alterado min-h-screen para flex flex-col */}
+    <div
+      className={cn(
+        "flex flex-col min-h-screen bg-background md:pt-16",
+        isMobile && "bg-[#F9FAFB]"
+      )}
+    >
       <Navigation />
 
-      <main className={cn("container mx-auto", isMobile ? "px-4 py-4 flex-grow" : "max-w-[1200px] px-6 py-8")}> {/* Ajustado py-4 e adicionado flex-grow para mobile */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"> {/* Revertido para lg:grid-cols-2 */}
-          <div> {/* Removido lg:col-span-2 */}
+      {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
+      {!isMobile && (
+        <div className="relative h-[220px] w-full overflow-hidden bg-background">
+          <div className="container mx-auto px-6 relative z-10 max-w-[1200px] pt-12 md:pt-16 flex justify-between items-start">
+            <div>
+              <div className="flex items-start gap-3">
+                <Button
+                  variant="ghost"
+                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-1"
+                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                  onClick={() => navigate(-1)}
+                >
+                  <span className="text-xl">📚</span>
+                </Button>
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
+                    Categorias
+                  </h1>
+                  <p className="text-sm font-bold -mt-0.5 leading-none text-slate-500">
+                    Gerencie suas categorias e subcategorias
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => navigate(-1)}
+              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90"
+              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+            >
+              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1E6BCE]" strokeWidth={3} />
+              Voltar
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <main
+        className={cn(
+          "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
+          isMobile ? "pt-20 pb-32" : "-mt-24 pb-20",
+          !isMobile && "px-6"
+        )}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <Card
+            className={cn(
+              "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
+              isMobile && "border-none shadow-none bg-transparent p-4"
+            )}
+            style={{ backgroundColor: "transparent" }}
+          >
+            <div className="flex items-center gap-2 mb-6">
+              <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                <span className="text-xl">🗂️</span>
+              </div>
+              <h2 className="text-xl font-bold text-[#1E6BCE]">Nova Subcategoria</h2>
+            </div>
             <CategoryForm
               key={formKey}
               onAddCategory={handleAddCategory}
-              onUpdateCategory={handleUpdateCategory} // Passar para o formulário principal também
-              editingCategory={null} // O formulário principal é sempre para adicionar
-              onCancelEdit={handleCancelEdit} // Passar para o formulário principal também
-              allCategories={allCategories} // Passar todas as categorias para o formulário
+              onUpdateCategory={handleUpdateCategory}
+              editingCategory={null}
+              onCancelEdit={handleCancelEdit}
+              allCategories={allCategories}
+              hideCardWrapper={true}
             />
-          </div>
+          </Card>
 
-          <div className={cn(isMobile && "max-w-sm mx-auto")}> {/* Aplicado max-w-sm e mx-auto para mobile */}
-            <React.Suspense fallback={
-              <Card className="p-6 flex flex-col rounded-xl shadow-sm">
-                <div className="flex-shrink-0 mb-4">
-                  <h2 className="text-2xl font-bold">Categorias Cadastradas</h2>
+          <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
+            <Card
+              className={cn(
+                "rounded-[24px] shadow-sm border border-blue-100 card-saldo overflow-hidden",
+                isMobile && "border-none shadow-none bg-transparent"
+              )}
+              style={{ backgroundColor: "transparent" }}
+            >
+              {!isMobile && (
+                <div className="flex items-center gap-2 p-6 pb-0">
+                  <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                    <DynamicIcon
+                      name="List"
+                      className="h-6 w-6 text-[#1E6BCE]"
+                    />
+                  </div>
+                  <h2 className="text-xl font-bold text-[#1E6BCE]">Categorias Cadastradas</h2>
                 </div>
-                <div className="p-6 text-center text-muted-foreground">Carregando lista de categorias...</div>
-              </Card>
-            }>
-              <CategoriesList
-                categories={hierarchicalCategories}
-                onDeleteCategory={handleDeleteCategory}
-                onEditCategory={handleEditCategory} // Passar a função que abre o modal
-                isMobile={isMobile}
-                allFlatCategories={allCategories} // NEW: Pass allCategories here
-              />
-            </React.Suspense>
+              )}
+              <React.Suspense fallback={
+                <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
+                  Carregando lista de categorias...
+                </div>
+              }>
+                <CategoriesList
+                  categories={hierarchicalCategories}
+                  onDeleteCategory={handleDeleteCategory}
+                  onEditCategory={handleEditCategory}
+                  isMobile={isMobile}
+                  allFlatCategories={allCategories}
+                />
+              </React.Suspense>
+            </Card>
           </div>
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-transparent" : "mt-8")} />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal
@@ -303,7 +384,7 @@ const Categories = () => {
         onCancelEdit={handleCancelEdit}
         allCategories={allCategories}
       />
-    </div>
+    </div >
   );
 };
 

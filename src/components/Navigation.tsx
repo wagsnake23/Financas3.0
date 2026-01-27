@@ -78,6 +78,8 @@ export const Navigation = () => {
 
   const isDespesas = location.pathname.startsWith("/despesas");
   const isReceitas = location.pathname.startsWith("/receitas");
+  const isInvestimentos = location.pathname.startsWith("/investimentos");
+  const isCategorias = location.pathname.startsWith("/categorias");
   const isDarkPage = location.pathname === "/" || isDespesas || isReceitas;
 
   const [scrolled, setScrolled] = useState(false);
@@ -121,11 +123,15 @@ export const Navigation = () => {
               ? cn("bg-[#D44D4D]", !scrolled && "bg-transparent")
               : isReceitas
                 ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
-                : !scrolled
-                  ? "bg-transparent"
-                  : isDarkPage
-                    ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
-                    : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
+                : isInvestimentos
+                  ? "bg-[hsl(210,100%,98.5%)]"
+                  : isCategorias
+                    ? "bg-[#F9FAFB]"
+                    : !scrolled
+                      ? "bg-transparent"
+                      : isDarkPage
+                        ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
+                        : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
           : "h-16 bg-gradient-to-r from-blue-50 to-blue-100/50 text-slate-700 shadow-md backdrop-blur-sm"
       )}>
