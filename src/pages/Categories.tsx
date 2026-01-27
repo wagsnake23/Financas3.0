@@ -307,7 +307,7 @@ const Categories = () => {
       <main
         className={cn(
           "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "pt-20 pb-32" : "-mt-24 pb-20",
+          isMobile ? "pt-16 pb-32" : "-mt-24 pb-20",
           !isMobile && "px-6"
         )}
       >
@@ -317,7 +317,10 @@ const Categories = () => {
               "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
               isMobile && "border-none shadow-none bg-transparent p-4"
             )}
-            style={{ backgroundColor: "transparent" }}
+            style={{
+              backgroundColor: "transparent",
+              backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+            }}
           >
             <div className="flex items-center gap-2 mb-6">
               <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
@@ -370,7 +373,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-transparent" : "mt-8")} />
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-[#F9FAFB] border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]" : "mt-8")} />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal
