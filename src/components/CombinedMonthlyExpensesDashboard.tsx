@@ -305,55 +305,52 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
         isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
       )} style={{ WebkitBackdropFilter: 'blur(10px)' }}>
         {!isMobile && (
-          <div className="flex flex-col items-end gap-3 mb-8 pr-2">
+          <div className="flex items-center justify-between mb-8 px-2">
+            <div
+              className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default"
+              style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+            >
+              <button
+                onClick={viewMode === "monthly" ? handlePreviousMonth : handlePreviousYear}
+                className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm"
+                style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}
+              >
+                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+              </button>
+              <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                {viewMode === "monthly"
+                  ? format(currentMonth, "MMM / y", { locale: ptBR }).replace(".", "")
+                  : format(currentMonth, "yyyy", { locale: ptBR })}
+              </span>
+              <button
+                onClick={viewMode === "monthly" ? handleNextMonth : handleNextYear}
+                className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm"
+                style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}
+              >
+                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+              </button>
+            </div>
+
             <ToggleGroup
               type="single"
               value={viewMode}
               onValueChange={(v) => v && setViewMode(v as "monthly" | "annual")}
-              className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-gray-300/50"
+              className="btn-3d bg-[#E6F0FF] p-1 rounded-2xl border border-blue-200 shadow-none h-9 w-[135px]"
+              style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
             >
               <ToggleGroupItem
                 value="monthly"
-                className="rounded-xl px-5 py-2 text-sm font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white shadow-none transition-all"
+                className="rounded-xl flex-1 text-xs font-black transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#1E6BCE] data-[state=on]:to-[#1557A6] data-[state=on]:text-white data-[state=on]:shadow-md data-[state=off]:text-[#1E6BCE] h-7"
               >
                 Mês
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="annual"
-                className="rounded-xl px-5 py-2 text-sm font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white shadow-none transition-all"
+                className="rounded-xl flex-1 text-xs font-black transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#1E6BCE] data-[state=on]:to-[#1557A6] data-[state=on]:text-white data-[state=on]:shadow-md data-[state=off]:text-[#1E6BCE] h-7"
               >
                 Ano
               </ToggleGroupItem>
             </ToggleGroup>
-
-            <div className="flex items-center gap-6">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={viewMode === "monthly" ? handlePreviousMonth : handlePreviousYear}
-                className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
-              >
-                <DynamicIcon name="ChevronLeft" className="h-6 w-6 text-gray-600" />
-              </Button>
-
-              <div className="text-center group min-w-[180px]">
-                <h2 className="text-2xl font-black capitalize text-gray-800 tracking-tight transition-all group-hover:scale-105">
-                  {viewMode === "monthly"
-                    ? format(currentMonth, "MMMM yyyy", { locale: ptBR })
-                    : format(currentMonth, "yyyy", { locale: ptBR })}
-                </h2>
-                <div className="h-1.5 w-16 bg-primary/30 rounded-full mx-auto mt-2 transition-all group-hover:w-24 group-hover:bg-primary/50" />
-              </div>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={viewMode === "monthly" ? handleNextMonth : handleNextYear}
-                className="h-10 w-10 rounded-full hover:bg-white/40 transition-colors shadow-sm bg-white/20"
-              >
-                <DynamicIcon name="ChevronRight" className="h-6 w-6 text-gray-600" />
-              </Button>
-            </div>
           </div>
         )}
 
