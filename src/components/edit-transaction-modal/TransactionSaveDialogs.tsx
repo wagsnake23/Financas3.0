@@ -112,11 +112,10 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
           <AlertDialogCancel
             disabled={loading || isFetchingOptions}
             className={cn(
-              "rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black",
-              isMobile
-                ? "mt-0 h-12 text-base flex-1"
-                : "sm:mt-0"
+              "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+              isMobile && "h-12 text-lg"
             )}
+            style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
           >
             Cancelar
           </AlertDialogCancel>
@@ -124,9 +123,10 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
             onClick={() => handleConfirmSave(selectedSaveScope)}
             disabled={loading || isFetchingOptions}
             className={cn(
-              "w-full sm:w-auto bg-[#25D366] hover:bg-[#25D366]/90 text-white rounded-2xl font-black",
-              isMobile && "h-12 text-base flex-1"
+              "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+              isMobile && "h-12 text-lg"
             )}
+            style={{ "--cor-topo": "#4ADE80", "--cor-base": "#22C55E" } as any}
           >
             {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
           </AlertDialogAction>

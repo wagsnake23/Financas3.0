@@ -410,9 +410,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <AlertDialogCancel
               onClick={() => setIsConfirmDeleteOpen(false)}
               className={cn(
-                "flex-1 rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold m-0 h-11",
-                !isMobile && "max-w-[140px]"
+                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 m-0",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
             >
               Cancelar
             </AlertDialogCancel>
@@ -420,9 +421,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               onClick={handleDeleteCard}
               disabled={loading}
               className={cn(
-                "flex-1 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 border-none m-0 h-11 transition-all active:scale-95",
-                !isMobile && "max-w-[140px]"
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 m-0",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
               {loading ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>

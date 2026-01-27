@@ -660,11 +660,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                                 Deseja remover "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da sua lista?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row items-center justify-between")}>
-                              <AlertDialogCancel className={cn("rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold", isMobile && "h-12 text-base flex-1 mt-0")}>Cancelar</AlertDialogCancel>
+                            <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                              <AlertDialogCancel className={cn(
+                                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                                isMobile && "h-12 text-lg"
+                              )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleDeleteRow(item.id)}
-                                className={cn("bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold", isMobile && "h-12 text-base flex-1")}
+                                className={cn(
+                                  "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                                  isMobile && "h-12 text-lg"
+                                )}
+                                style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                               >
                                 Excluir
                               </AlertDialogAction>
@@ -743,11 +750,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               Deseja realmente excluir o produto "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da lista?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row items-center justify-between")}>
-                            <AlertDialogCancel className={cn("rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold", isMobile && "h-12 text-base flex-1 mt-0")}>Cancelar</AlertDialogCancel>
+                          <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                            <AlertDialogCancel className={cn(
+                              "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                              isMobile && "h-12 text-lg"
+                            )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDeleteRow(item.id)}
-                              className={cn("bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold", isMobile && "h-12 text-base flex-1")}
+                              className={cn(
+                                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                                isMobile && "h-12 text-lg"
+                              )}
+                              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                             >
                               Excluir
                             </AlertDialogAction>
@@ -797,11 +811,18 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 Essa ação irá remover <span className="text-destructive font-bold">TODOS</span> os itens da sua lista permanentemente.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className={cn("flex flex-col sm:flex-row justify-center gap-2", isMobile && "flex-row items-center justify-between mt-4")}>
-              <AlertDialogCancel className={cn("rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold", isMobile && "h-12 text-base flex-1 mt-0")}>Cancelar</AlertDialogCancel>
+            <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between mt-4")}>
+              <AlertDialogCancel className={cn(
+                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                isMobile && "h-12 text-lg"
+              )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClearList}
-                className={cn("bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold", isMobile && "h-12 text-base flex-1")}
+                className={cn(
+                  "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                  isMobile && "h-12 text-lg"
+                )}
+                style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
               >
                 Limpar Tudo
               </AlertDialogAction>

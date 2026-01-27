@@ -1202,15 +1202,16 @@ export default function Investments() { // Alterado para export default function
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className={cn(
-            "flex flex-col sm:flex-row justify-center gap-2",
-            isMobile && "flex-row items-center justify-between"
+            "flex flex-row gap-2",
+            isMobile && "items-center justify-between"
           )}>
             <AlertDialogCancel
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "rounded-2xl border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-extrabold",
-                isMobile && "h-12 text-base flex-1 mt-0"
+                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setIsConfirmDeleteOpen(false)}
             >
               Cancelar
@@ -1219,9 +1220,10 @@ export default function Investments() { // Alterado para export default function
               onClick={handleConfirmDelete}
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-extrabold",
-                isMobile && "h-12 text-base flex-1"
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
               {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>

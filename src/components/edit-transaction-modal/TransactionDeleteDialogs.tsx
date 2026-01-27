@@ -74,11 +74,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black",
-                isMobile
-                  ? "mt-0 h-12 text-base flex-1"
-                  : "sm:mt-0"
+                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setShowSimpleDeleteDialog(false)}
             >
               Cancelar
@@ -87,9 +86,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               onClick={() => handleConfirmDelete("oneOff")}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-2xl font-black",
-                isMobile && "h-12 text-base flex-1"
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
@@ -175,11 +175,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black",
-                isMobile
-                  ? "mt-0 h-12 text-base flex-1"
-                  : "sm:mt-0"
+                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setShowDeleteOptionsDialog(false)}
             >
               Cancelar
@@ -188,9 +187,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
               onClick={() => handleConfirmDelete(selectedDeleteScope)}
               disabled={loading || isFetchingOptions}
               className={cn(
-                "w-full sm:w-auto rounded-2xl bg-[#D32F2F] text-white hover:bg-[#B71C1C] transition-colors border-transparent shadow-sm font-black",
-                isMobile && "h-12 text-base flex-1"
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
               )}
+              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
               {loading || isFetchingOptions ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>

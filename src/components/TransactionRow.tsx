@@ -268,14 +268,21 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   Tem certeza que deseja excluir esta {transaction.type === 'income' ? 'receita' : 'despesa'}? Esta ação não pode ser desfeita.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="rounded-xl border border-blue-100 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-bold">Cancelar</AlertDialogCancel>
+              <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                <AlertDialogCancel className={cn(
+                  "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                  isMobile && "h-12 text-lg"
+                )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={(e) => {
                     e.stopPropagation();
                     onDeleteTransaction(transaction.id, transaction.type, "oneOff");
                   }}
-                  className="bg-destructive text-white hover:bg-destructive/90 rounded-xl border-none"
+                  className={cn(
+                    "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                    isMobile && "h-12 text-lg"
+                  )}
+                  style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                 >
                   Excluir
                 </AlertDialogAction>

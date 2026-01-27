@@ -158,10 +158,17 @@ const CategoryItem = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
-                  <AlertDialogCancel className={cn("flex-1 rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD] font-black mt-0", isMobile && "h-12 text-base")}>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel className={cn(
+                    "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                    isMobile && "h-12 text-lg"
+                  )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDeleteCategory(category.id)}
-                    className={cn("flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl font-black", isMobile && "h-12 text-base")}
+                    className={cn(
+                      "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                      isMobile && "h-12 text-lg"
+                    )}
+                    style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                   >
                     Excluir
                   </AlertDialogAction>

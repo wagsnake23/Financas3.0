@@ -32,9 +32,9 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "card-yellow border-2 border-white shadow-md",
+        "card-yellow no-rim !border-2 !border-white shadow-2xl",
         isMobile ? "dialog-mobile pb-2 w-[99vw] max-w-[99vw] !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[32px]"
-      )} style={{ backgroundColor: "#FEF9C3", backdropFilter: "none" }}>
+      )} style={{ backgroundColor: "rgba(254, 249, 195, 0.5)", backdropFilter: "blur(15px)" }}>
         <DialogHeader
           className={cn(
             "flex flex-row items-center justify-center gap-2",
