@@ -205,7 +205,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          isMobile ? "dialog-mobile pb-6 !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[32px]"
+          isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[32px]"
         )}>
           <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
@@ -252,7 +252,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               )}
             </div>
           </ScrollArea>
-          <DialogFooter className={cn(isMobile ? "pb-5 pt-2" : "pb-3")}>
+          <DialogFooter className={cn(isMobile ? "pb-2 pt-2" : "pb-3")}>
             <Button
               type="button"
               onClick={() => setIsManageCardsOpen(false)}
@@ -271,7 +271,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
         <DialogContent className={cn(
-          isMobile ? "max-w-sm p-4 pt-10 pb-2 dialog-mobile !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[32px] overflow-y-auto"
+          isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[32px] overflow-y-auto"
         )}>
           <DialogHeader className={cn(isMobile ? "mt-2" : "-mt-4")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
