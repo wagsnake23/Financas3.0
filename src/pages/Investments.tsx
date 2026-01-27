@@ -575,19 +575,27 @@ export default function Investments() { // Alterado para export default function
                     type="single"
                     value={yieldViewMode}
                     onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                    className="bg-white/40 p-1 rounded-2xl shadow-sm border border-border"
+                    className={cn(
+                      "btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default",
+                      isMobile && "-mt-1"
+                    )}
+                    style={{
+                      "--cor-topo": "#E6F0FF",
+                      "--cor-base": "#DCEBFF",
+                      boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                    } as any}
                   >
                     <ToggleGroupItem
                       value="daily"
-                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_2px_0_rgba(3,69,156,1)] h-7 transition-all active:scale-95"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#6B95FF] data-[state=on]:to-[#4A74D4] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                     >
-                      Dia
+                      DIA
                     </ToggleGroupItem>
                     <ToggleGroupItem
                       value="monthly"
-                      className="rounded-xl px-3 py-1 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_2px_0_rgba(3,69,156,1)] h-7 transition-all active:scale-95"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#6B95FF] data-[state=on]:to-[#4A74D4] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                     >
-                      Mês
+                      MÊS
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
@@ -995,19 +1003,27 @@ export default function Investments() { // Alterado para export default function
                       type="single"
                       value={yieldViewMode}
                       onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                      className="bg-white/40 p-1.5 rounded-2xl shadow-sm border border-border"
+                      className={cn(
+                        "btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default",
+                        isMobile && "-mt-1"
+                      )}
+                      style={{
+                        "--cor-topo": "#E6F0FF",
+                        "--cor-base": "#DCEBFF",
+                        boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                      } as any}
                     >
                       <ToggleGroupItem
                         value="daily"
-                        className="rounded-xl px-4 py-2 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_3px_0_rgba(3,69,156,1)] h-8 transition-all active:scale-95"
+                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#6B95FF] data-[state=on]:to-[#4A74D4] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       >
-                        Dia
+                        DIA
                       </ToggleGroupItem>
                       <ToggleGroupItem
                         value="monthly"
-                        className="rounded-xl px-4 py-2 text-xs font-black data-[state=on]:bg-blue-600 data-[state=on]:text-white data-[state=on]:shadow-[0_3px_0_rgba(3,69,156,1)] h-8 transition-all active:scale-95"
+                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#6B95FF] data-[state=on]:to-[#4A74D4] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       >
-                        Mês
+                        MÊS
                       </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
