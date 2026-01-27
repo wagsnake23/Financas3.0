@@ -200,7 +200,7 @@ export const CategoryForm = ({
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({}),
-                hideCardWrapper && "bg-white"
+                hideCardWrapper ? "bg-white border-[#b8cadd]/60" : "bg-white"
               )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
@@ -245,7 +245,7 @@ export const CategoryForm = ({
               "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({}),
-              hideCardWrapper && "bg-white"
+              hideCardWrapper ? "bg-white border-[#b8cadd]/60" : "bg-white"
             )}
             disabled={editingCategory?.user_id === null}
           />
@@ -261,7 +261,8 @@ export const CategoryForm = ({
                 "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium",
                 "bg-white",
                 isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
-                getBorderClass({})
+                getBorderClass({}),
+                hideCardWrapper && "border-[#b8cadd]/60"
               )}
               disabled={editingCategory?.user_id === null}
             >

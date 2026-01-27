@@ -34,7 +34,7 @@ export const AddSubcategoryModal: React.FC<AddSubcategoryModalProps> = ({
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className={cn(
-                isMobile ? "dialog-mobile pb-2" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto"
+                isMobile ? "dialog-mobile pb-2 w-[99vw] max-w-[99vw] !rounded-[32px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[32px]"
             )}>
                 <DialogHeader
                     className={cn(
