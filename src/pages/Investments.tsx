@@ -670,7 +670,7 @@ export default function Investments() { // Alterado para export default function
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
-                              <div className="flex items-center gap-1.5 text-[12px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
+                              <div className="flex items-center gap-1.5 text-[12px] font-bold text-success/90 w-fit ml-0.5">
                                 <span className="text-sm">🔥</span>
                                 <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                               </div>
@@ -1106,7 +1106,7 @@ export default function Investments() { // Alterado para export default function
                                 </div>
 
                                 {/* Rendimento Diário / Mensal */}
-                                <div className="flex items-center gap-1.5 text-[13px] font-bold text-success/90 bg-success/5 px-2 py-0.5 rounded-lg w-fit ml-0.5">
+                                <div className="flex items-center gap-1.5 text-[13px] font-bold text-success/90 w-fit ml-0.5">
                                   <span className="text-sm">🔥</span>
                                   <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                                 </div>
