@@ -468,7 +468,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo md:h-[155px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{ backgroundColor: "transparent" }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -527,7 +527,7 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas md:h-[155px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{ backgroundColor: "transparent" }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -578,7 +578,7 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas md:h-[155px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{ backgroundColor: "transparent" }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -628,7 +628,7 @@ export default function Home() {
                         </Card>
 
                         {/* CARD DE CARTÃO DE CRÉDITO */}
-                        <div id="cartoes-section" className="md:h-[155px] mb-4">
+                        <div id="cartoes-section" className="md:h-[170px] mb-4">
                             <MobileCreditCardExpenses
                                 cartoes={cartoes}
                                 expenseInstallments={dExpenses}
