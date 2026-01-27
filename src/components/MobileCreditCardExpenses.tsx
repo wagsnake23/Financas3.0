@@ -101,13 +101,13 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] rounded-[24px] border border-[#F0E8FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden mb-4 card-cartoes")}
+      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] rounded-[24px] border border-[#F0E8FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden mb-4 card-cartoes h-full")}
       style={{ backgroundColor: "transparent" }}
     >
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#8235ff]" />
-          <h2 className="text-[15px] font-bold text-[#8235ff] tracking-tight">
+          <h2 className="text-[15px] font-bold md:text-[18px] md:font-black text-[#8235ff] tracking-tight">
             Cartões
           </h2>
         </div>

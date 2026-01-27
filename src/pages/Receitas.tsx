@@ -301,7 +301,7 @@ export default function Receitas() {
             type="single"
             value={isRecurring ? "recorrente" : "avulsa"}
             onValueChange={handleToggleChange}
-            className={cn("w-full justify-center", isMobile && "gap-x-2")}
+            className={cn("w-full justify-center", isMobile ? "gap-x-2" : "gap-x-4")}
           >
             <ToggleGroupItem
               value="avulsa"
