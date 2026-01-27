@@ -146,7 +146,7 @@ const CategoryItem = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[20px] !pb-7" : "!pb-7 !rounded-[20px]")}>
+              <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[20px] !pb-4" : "!pb-4 !rounded-[20px]")}>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="flex items-center justify-center gap-2">
                     <Trash2 className="h-5 w-5 text-destructive" />

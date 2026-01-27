@@ -650,7 +650,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-7" : "sm:max-w-[425px] !pb-7 !rounded-[32px]")}>
+                          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[425px] !pb-4 !rounded-[32px]")}>
                             <AlertDialogHeader>
                               <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
                                 <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -660,7 +660,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                                 Deseja remover "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da sua lista?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                            <AlertDialogFooter className={cn("flex flex-row gap-2 mt-6", isMobile && "items-center justify-between")}>
                               <AlertDialogCancel className={cn(
                                 "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
                                 isMobile && "h-12 text-lg"
@@ -740,7 +740,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             <DynamicIcon name="Trash2" className="h-5 w-5" />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-7" : "sm:max-w-[425px] !pb-7 !rounded-[32px]")}>
+                        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[425px] !pb-4 !rounded-[32px]")}>
                           <AlertDialogHeader>
                             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
                               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -750,7 +750,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               Deseja realmente excluir o produto "<span className="text-[#1E3A8A] font-bold">{item.product}</span>" da lista?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                          <AlertDialogFooter className={cn("flex flex-row gap-2 mt-6", isMobile && "items-center justify-between")}>
                             <AlertDialogCancel className={cn(
                               "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
                               isMobile && "h-12 text-lg"
@@ -801,7 +801,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-7" : "sm:max-w-[450px] !pb-7 !rounded-[32px]")}>
+          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[450px] !pb-4 !rounded-[32px]")}>
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
                 <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
