@@ -24,9 +24,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import Loading from "@/components/Loading";
 
-const MiniFinanceBars = ({ expenses, revenues, balance }: { expenses: number, revenues: number, balance: number }) => {
+const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
     const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
-    const getH = (val: number) => Math.max((Math.abs(val) / maxVal) * 32, 2);
+    const getH = (val: number) => Math.max((Math.abs(val) / maxVal) * height, 2);
 
     const BarItem = ({ val, color, label, width }: { val: number, color: string, label: string, width: string }) => (
         <div className="flex flex-col items-center gap-1">
@@ -45,9 +45,12 @@ const MiniFinanceBars = ({ expenses, revenues, balance }: { expenses: number, re
 
     return (
         <div className="relative flex items-end gap-1 px-1 pb-1">
-            {/* Reference scale lines */}
-            <div className="absolute left-0 right-0 h-[0.5px] bg-gray-300/30" style={{ bottom: "48px" }} />
-            <div className="absolute left-0 right-0 h-[1px] bg-gray-200 bottom-[14.5px]" />
+            {showScaleLines && (
+                <>
+                    <div className="absolute left-0 right-0 h-[0.5px] bg-gray-300/30" style={{ bottom: "48px" }} />
+                    <div className="absolute left-0 right-0 h-[1px] bg-gray-200 bottom-[14.5px]" />
+                </>
+            )}
 
             <BarItem val={expenses} color="#E54D4D" label="D" width="15px" />
             <BarItem val={revenues} color="#1AA361" label="R" width="15px" />
@@ -270,10 +273,10 @@ export default function Home() {
                     isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
-                        <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-lg" : "text-xl")}>
+                        <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-lg" : "text-2xl")}>
                             Olá, {userName} 👋
                         </h1>
-                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] -mt-0.5" : "text-xs -mt-0.5")}>
+                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] -mt-0.5" : "text-sm -mt-0.5")}>
                             {todayStr}
                         </p>
                     </div>
@@ -473,8 +476,8 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[18px] md:font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                                    <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none">
+                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
+                                    <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none md:text-[21px] md:font-black">
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
@@ -486,7 +489,7 @@ export default function Home() {
                                     <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
                                         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
                                     </button>
-                                    <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                                    <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
                                     <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
@@ -506,21 +509,23 @@ export default function Home() {
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className={cn(
-                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
                                         dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                     )}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                    <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
                                 </div>
                             </div>
 
                             {/* Mini gráfico de barras (Posição Bottom Right) */}
-                            <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
+                            <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible md:bottom-5 md:right-8">
                                 <MiniFinanceBars
                                     expenses={dStats.currentExpenses}
                                     revenues={dStats.currentIncome}
                                     balance={dStats.currentBalance}
+                                    height={isMobile ? 32 : 48}
+                                    showScaleLines={false}
                                 />
                             </div>
                         </Card>
@@ -532,13 +537,13 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[18px] md:font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
+                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
+                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none md:text-[20px] md:font-black">
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1"
+                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1 md:text-[14px]"
                                     style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -557,16 +562,16 @@ export default function Home() {
                                     </Button>
                                     <div className="flex flex-col items-start gap-0.5">
                                         <div className={cn(
-                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
                                             dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                                         )}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                        <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
+                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2 md:text-[15px]"
                                     style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
                                     onClick={() => navigate("/receitas")}
                                 >
@@ -583,13 +588,13 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[18px] md:font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
+                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
+                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none md:text-[20px] md:font-black">
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1"
+                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1 md:text-[14px]"
                                     style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -608,16 +613,16 @@ export default function Home() {
                                     </Button>
                                     <div className="flex flex-col items-start gap-0.5">
                                         <div className={cn(
-                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
+                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
                                             dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
                                         )}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                        <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
+                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2 md:text-[15px]"
                                     style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
                                     onClick={() => navigate("/despesas")}
                                 >
