@@ -200,6 +200,8 @@ interface CategoriesListProps {
   maxHeight?: string;
   isMobile: boolean;
   allFlatCategories: AppCategory[]; // NEW: Receive all flat categories
+  hideCardWrapper?: boolean;
+  hideTitle?: boolean;
 }
 
 const CategoriesList = ({
@@ -209,6 +211,8 @@ const CategoriesList = ({
   maxHeight = "600px",
   isMobile,
   allFlatCategories, // Use the new prop
+  hideCardWrapper = false,
+  hideTitle = false,
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -285,16 +289,24 @@ const CategoriesList = ({
     return buildFilteredHierarchy(includedFlatCategories);
   }, [searchTerm, flatCategories, categories]);
 
+  const Container = hideCardWrapper ? "div" : Card;
+
   return (
-    <Card
-      className="p-6 flex flex-col rounded-xl shadow-sm"
-      style={{ height: maxHeight }}
+    <Container
+      className={cn(
+        "flex flex-col",
+        !hideCardWrapper && "p-6 rounded-xl shadow-sm",
+        hideCardWrapper && "px-6 pb-6 pt-2"
+      )}
+      style={{ height: maxHeight, backgroundColor: hideCardWrapper ? "transparent" : undefined }}
     >
       <div className="flex-shrink-0 mb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-            🗃️ Categorias Cadastradas
-          </h2>
+        <div className={cn("flex flex-col sm:flex-row sm:items-center gap-4 mb-4", !hideTitle ? "sm:justify-between" : "sm:justify-start")}>
+          {!hideTitle && (
+            <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
+              🗃️ Categorias Cadastradas
+            </h2>
+          )}
 
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -333,7 +345,7 @@ const CategoriesList = ({
           </div>
         )}
       </ScrollArea>
-    </Card>
+    </Container>
   );
 };
 

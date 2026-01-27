@@ -344,17 +344,12 @@ const Categories = () => {
               )}
               style={{ backgroundColor: "transparent" }}
             >
-              {!isMobile && (
-                <div className="flex items-center gap-2 p-6 pb-0">
-                  <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
-                    <DynamicIcon
-                      name="List"
-                      className="h-6 w-6 text-[#1E6BCE]"
-                    />
-                  </div>
-                  <h2 className="text-xl font-bold text-[#1E6BCE]">Categorias Cadastradas</h2>
+              <div className="flex items-center gap-2 p-4 md:p-6 pb-0">
+                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                  <span className="text-xl">🗃️</span>
                 </div>
-              )}
+                <h2 className="text-xl font-bold text-[#1E6BCE]">Categorias Cadastradas</h2>
+              </div>
               <React.Suspense fallback={
                 <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
                   Carregando lista de categorias...
@@ -366,6 +361,8 @@ const Categories = () => {
                   onEditCategory={handleEditCategory}
                   isMobile={isMobile}
                   allFlatCategories={allCategories}
+                  hideCardWrapper={true}
+                  hideTitle={true}
                 />
               </React.Suspense>
             </Card>
