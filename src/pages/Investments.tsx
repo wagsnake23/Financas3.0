@@ -396,7 +396,16 @@ export default function Investments() { // Alterado para export default function
         {isMobile ? (
           <div className="grid grid-cols-1 gap-4">
 
-            <Card className={cn("p-6 animate-slide-up rounded-xl bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
+            <Card
+              className={cn(
+                "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
+                isMobile && "border-none shadow-none bg-transparent p-4"
+              )}
+              style={{
+                backgroundColor: "transparent",
+                backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+              }}
+            >
               <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -417,7 +426,7 @@ export default function Investments() { // Alterado para export default function
                     )}>
                       <SelectValue placeholder="Selecione o tipo de investimento" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-2xl border-none shadow-xl">
                       <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
                       {incomeInvestmentSubcategories.length === 0 && (
                         <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
@@ -447,7 +456,7 @@ export default function Investments() { // Alterado para export default function
                     )}>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-2xl border-none shadow-xl">
                       {investmentTypes.map(t => (
                         <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
                           <span className="flex items-center gap-2">
@@ -556,7 +565,10 @@ export default function Investments() { // Alterado para export default function
 
             {/* Investments List */}
             <div>
-              <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+              <Card
+                className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none bg-transparent")}
+                style={{ backgroundColor: "transparent" }}
+              >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
                   <ToggleGroup
@@ -812,7 +824,16 @@ export default function Investments() { // Alterado para export default function
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
               {/* Form */}
               <div>
-                <Card className={cn("p-6 animate-slide-up rounded-xl bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(245,248,255,0.55))] backdrop-blur-[12px] border border-[rgba(120,150,255,0.18)] shadow-[0_12px_28px_rgba(0,0,0,0.06),inset_0_0_0_1px_rgba(255,255,255,0.25)]", isMobile ? "p-4" : "max-w-[700px] mx-auto")}>
+                <Card
+                  className={cn(
+                    "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
+                    isMobile && "border-none shadow-none bg-transparent p-4"
+                  )}
+                  style={{
+                    backgroundColor: "transparent",
+                    backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                  }}
+                >
                   <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
@@ -832,7 +853,7 @@ export default function Investments() { // Alterado para export default function
                         )}>
                           <SelectValue placeholder="Selecione o tipo de investimento" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="rounded-2xl border-none shadow-xl">
                           <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
                           {incomeInvestmentSubcategories.length === 0 && (
                             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
@@ -862,7 +883,7 @@ export default function Investments() { // Alterado para export default function
                         )}>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="rounded-2xl border-none shadow-xl">
                           {investmentTypes.map(t => (
                             <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
                               <span className="flex items-center gap-2">
@@ -964,7 +985,10 @@ export default function Investments() { // Alterado para export default function
 
               {/* Investments List */}
               <div>
-                <Card className={cn("p-6 rounded-xl shadow-sm", isMobile && "p-4")}>
+                <Card
+                  className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none bg-transparent")}
+                  style={{ backgroundColor: "transparent" }}
+                >
                   <div className="flex items-center justify-between mb-6">
                     <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>Meus Investimentos</h2>
                     <ToggleGroup

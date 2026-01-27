@@ -108,8 +108,9 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const mobileTextColor = (isDarkPage || isModalOpen) ? "text-white" : "text-[#1E40AF]";
-  const mobileIconColor = (isDarkPage || isModalOpen) ? "text-white" : "text-[#1E40AF]";
+  const forceDarkText = isInvestimentos || isCategorias;
+  const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#1E40AF]";
+  const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#1E40AF]";
 
   return (
     <>
