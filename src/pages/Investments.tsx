@@ -382,11 +382,11 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className={cn("flex flex-col bg-background pt-16", isMobile && "bg-lancamentos-mobile-bg")}> {/* Alterado min-h-screen para flex flex-col */}
+    <div className={cn("flex flex-col bg-background", isMobile ? "bg-lancamentos-mobile-bg" : "pt-16")}> {/* Alterado min-h-screen para flex flex-col */}
       <Navigation />
 
       {/* Main Content */}
-      <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 py-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
+      <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 pt-16 pb-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
         {!isMobile && (
           <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
         )}
