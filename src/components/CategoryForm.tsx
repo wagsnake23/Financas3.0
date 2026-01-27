@@ -174,8 +174,8 @@ export const CategoryForm = ({
         onSubmit={handleSubmit}
         className={cn("space-y-4", isMobile && "space-y-2")}
       >
-        <div className={cn(isMobile && "space-y-1")}>
-          <Label htmlFor="parent_id" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>
+        <div className="space-y-2">
+          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Categoria Principal
           </Label>
           <Select
@@ -198,14 +198,14 @@ export const CategoryForm = ({
               id="parent_id"
               className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-10",
+                isMobile ? "h-9 text-sm" : "h-11",
                 getBorderClass({}),
-                hideCardWrapper ? "bg-white border-[#b8cadd]/60" : "bg-white"
+                hideCardWrapper ? "bg-white !border-[#FF9191] !border" : "bg-white"
               )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
+            <SelectContent className="max-h-[280px] w-[--radix-select-trigger-width] rounded-2xl border-none shadow-xl">
               {possibleParentCategories
                 .filter(
                   (cat) => cat.id !== editingCategory?.id && cat.id !== ""
@@ -230,8 +230,8 @@ export const CategoryForm = ({
           </Select>
         </div>
 
-        <div className={cn(isMobile && "space-y-1")}>
-          <Label htmlFor="nome" className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>
+        <div className="space-y-2">
+          <Label htmlFor="nome" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
             Nome da Subcategoria
           </Label>
           <Input
@@ -243,26 +243,25 @@ export const CategoryForm = ({
             required
             className={cn(
               "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-9 text-sm" : "h-11",
               getBorderClass({}),
-              hideCardWrapper ? "bg-white border-[#b8cadd]/60" : "bg-white"
+              hideCardWrapper && "!border-[#FF9191] !border"
             )}
             disabled={editingCategory?.user_id === null}
           />
         </div>
 
-        <div className={cn(isMobile && "space-y-1")}>
-          <Label className={cn("text-gray-800 font-medium mb-1 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
+        <div className="space-y-2">
+          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
                 "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium",
-                "bg-white",
                 isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
                 getBorderClass({}),
-                hideCardWrapper && "border-[#b8cadd]/60"
+                hideCardWrapper ? "bg-white !border-[#FF9191] !border" : "bg-white"
               )}
               disabled={editingCategory?.user_id === null}
             >
@@ -318,7 +317,11 @@ export const CategoryForm = ({
           )}
           <Button
             type="submit"
-            className={cn("flex-1 rounded-xl font-semibold shadow-md", isMobile && "h-11 text-base")}
+            className={cn(
+              "flex-1 rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
+              isMobile && "h-11 text-base"
+            )}
+            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
             size="lg"
             disabled={editingCategory?.user_id === null}
           >
