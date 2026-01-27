@@ -322,10 +322,14 @@ const Categories = () => {
               backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
             }}
           >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+            <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
+              {!isMobile ? (
+                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                  <span className="text-xl">🗂️</span>
+                </div>
+              ) : (
                 <span className="text-xl">🗂️</span>
-              </div>
+              )}
               <h2 className="text-xl font-bold text-[#1E6BCE]">Nova Subcategoria</h2>
             </div>
             <CategoryForm
@@ -347,10 +351,14 @@ const Categories = () => {
               )}
               style={{ backgroundColor: "transparent" }}
             >
-              <div className="flex items-center gap-2 p-4 md:p-6 pb-0">
-                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+              <div className={cn("flex items-center p-4 md:p-6 pb-0", isMobile ? "gap-1.5" : "gap-2")}>
+                {!isMobile ? (
+                  <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                    <span className="text-xl">🗃️</span>
+                  </div>
+                ) : (
                   <span className="text-xl">🗃️</span>
-                </div>
+                )}
                 <h2 className="text-xl font-bold text-[#1E6BCE]">Categorias Cadastradas</h2>
               </div>
               <React.Suspense fallback={
