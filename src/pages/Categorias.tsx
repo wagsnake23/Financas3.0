@@ -222,55 +222,57 @@ export default function Categorias() {
         )}
       >
         {isMobile ? (
-          <Card className="w-full !max-w-full p-4 rounded-xl shadow-none border-none space-y-4">
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-primary">
-              <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
-                <DynamicIcon
-                  name="PlusCircle"
-                  className="h-6 w-6 text-primary"
-                />
-              </div>
-              🗂️Nova Subcategoria
-            </h2>
-            <CategoryForm
-              onAddCategory={handleAddCategory}
-              allCategories={categories}
-              hideCardWrapper={true}
-            />
+          <div className="space-y-6">
+            <Card className="w-full !max-w-full p-6 rounded-[24px] shadow-md border-2 border-white space-y-4 card-yellow relative overflow-hidden">
+              <h2 className="text-xl font-black flex items-center gap-2 text-[#374151]">
+                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                  <DynamicIcon
+                    name="PlusCircle"
+                    className="h-6 w-6 text-[#374151]"
+                  />
+                </div>
+                🗂️Nova Subcategoria
+              </h2>
+              <CategoryForm
+                onAddCategory={handleAddCategory}
+                allCategories={categories}
+                hideCardWrapper={true}
+              />
+            </Card>
 
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mt-6">
-              <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
-                <DynamicIcon
-                  name="List"
-                  className="h-6 w-6 text-primary"
-                />
-              </div>
-              🗃️Categorias Cadastradas
-            </h2>
-            <CategoriesList
-              categories={hierarchicalCategories}
-              onDeleteCategory={handleDeleteCategory}
-              onEditCategory={(cat) => {
-                setEditingCategory(cat);
-                setIsEditModalOpen(true);
-              }}
-              isMobile={isMobile}
-              allFlatCategories={categories}
-            />
-
-            <Footer isMobile={isMobile} className="pt-2" user={user} />
-          </Card>
+            <Card className="w-full !max-w-full p-6 rounded-[24px] shadow-md border-2 border-white space-y-4 card-yellow relative overflow-hidden">
+              <h2 className="text-xl font-black flex items-center gap-2 text-[#374151]">
+                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                  <DynamicIcon
+                    name="List"
+                    className="h-6 w-6 text-[#374151]"
+                  />
+                </div>
+                🗃️Categorias Cadastradas
+              </h2>
+              <CategoriesList
+                categories={hierarchicalCategories}
+                onDeleteCategory={handleDeleteCategory}
+                onEditCategory={(cat) => {
+                  setEditingCategory(cat);
+                  setIsEditModalOpen(true);
+                }}
+                isMobile={isMobile}
+                allFlatCategories={categories}
+              />
+            </Card>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <Card
-              className="p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo"
+              className="p-6 rounded-[24px] shadow-md border-2 border-white card-yellow relative overflow-hidden"
               style={{ backgroundColor: "transparent" }}
             >
-              <h2 className="text-xl font-semibold flex items-center gap-2 text-primary mb-4">
-                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+              <h2 className="text-xl font-black flex items-center gap-2 text-[#374151] mb-4">
+                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
                   <DynamicIcon
                     name="PlusCircle"
-                    className="h-6 w-6 text-primary"
+                    className="h-6 w-6 text-[#374151]"
                   />
                 </div>
                 🗂️Nova Subcategoria
@@ -283,9 +285,20 @@ export default function Categorias() {
             </Card>
 
             <Card
-              className="rounded-[24px] shadow-sm border border-blue-100 card-saldo overflow-hidden"
+              className="rounded-[24px] shadow-md border-2 border-white card-yellow overflow-hidden relative"
               style={{ backgroundColor: "transparent" }}
             >
+              <div className="p-6 pb-0">
+                <h2 className="text-xl font-black flex items-center gap-2 text-[#374151] mb-4">
+                  <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                    <DynamicIcon
+                      name="List"
+                      className="h-6 w-6 text-[#374151]"
+                    />
+                  </div>
+                  🗃️Categorias Cadastradas
+                </h2>
+              </div>
               <CategoriesList
                 categories={hierarchicalCategories}
                 onDeleteCategory={handleDeleteCategory}

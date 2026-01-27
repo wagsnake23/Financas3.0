@@ -174,8 +174,8 @@ export const CategoryForm = ({
         onSubmit={handleSubmit}
         className={cn("space-y-4", isMobile && "space-y-2")}
       >
-        <div className="space-y-2">
-          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <div className="space-y-1">
+          <Label className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
             Categoria Principal
           </Label>
           <Select
@@ -200,7 +200,7 @@ export const CategoryForm = ({
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-11",
                 getBorderClass({}),
-                hideCardWrapper ? "bg-white !border-[#FF9191] !border" : "bg-white"
+                hideCardWrapper ? "!bg-white !border-[#FF9191] !border" : "!bg-white"
               )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
@@ -230,8 +230,8 @@ export const CategoryForm = ({
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="nome" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <div className="space-y-1">
+          <Label htmlFor="nome" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
             Nome da Subcategoria
           </Label>
           <Input
@@ -242,7 +242,7 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn(
-              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium !bg-white",
               isMobile ? "h-9 text-sm" : "h-11",
               getBorderClass({}),
               hideCardWrapper && "!border-[#FF9191] !border"
@@ -251,17 +251,17 @@ export const CategoryForm = ({
           />
         </div>
 
-        <div className="space-y-2">
-          <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
+        <div className="space-y-1">
+          <Label className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
-                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium",
+                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium !bg-white",
                 isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
                 getBorderClass({}),
-                hideCardWrapper ? "bg-white !border-[#FF9191] !border" : "bg-white"
+                hideCardWrapper ? "border-[#FF9191] border" : ""
               )}
               disabled={editingCategory?.user_id === null}
             >
@@ -318,10 +318,10 @@ export const CategoryForm = ({
           <Button
             type="submit"
             className={cn(
-              "flex-1 rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
-              isMobile && "h-11 text-base"
+              "flex-1 rounded-xl font-black !text-[#374151] border border-amber-200/50 transition-all active:scale-95 shadow-sm bg-gradient-to-b from-[#FCD34D] to-[#FBBF24] text-lg",
+              isMobile && "h-11 text-lg"
             )}
-            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
+            style={{ backgroundImage: "linear-gradient(to bottom, #FCD34D, #FBBF24)" }}
             size="lg"
             disabled={editingCategory?.user_id === null}
           >

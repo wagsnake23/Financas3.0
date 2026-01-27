@@ -314,23 +314,21 @@ const Categories = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <Card
             className={cn(
-              "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
-              isMobile && "border-none shadow-none bg-transparent p-4"
+              "p-6 rounded-[24px] shadow-md border-2 border-white card-yellow relative overflow-hidden"
             )}
             style={{
-              backgroundColor: "transparent",
-              backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+              backgroundColor: "transparent"
             }}
           >
             <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
               {!isMobile ? (
-                <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
                   <span className="text-xl">🗂️</span>
                 </div>
               ) : (
                 <span className="text-xl">🗂️</span>
               )}
-              <h2 className="text-xl font-bold text-[#1E6BCE]">Nova Subcategoria</h2>
+              <h2 className="text-xl font-black text-[#374151]">Nova Subcategoria</h2>
             </div>
             <CategoryForm
               key={formKey}
@@ -346,20 +344,20 @@ const Categories = () => {
           <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
             <Card
               className={cn(
-                "rounded-[24px] shadow-sm border border-blue-100 card-saldo overflow-hidden",
-                isMobile && "border-none shadow-none bg-transparent"
+                "rounded-[24px] shadow-md border-2 border-white card-yellow overflow-hidden relative",
+                isMobile && "mb-32"
               )}
               style={{ backgroundColor: "transparent" }}
             >
               <div className={cn("flex items-center p-4 md:p-6 pb-0", isMobile ? "gap-1.5" : "gap-2")}>
                 {!isMobile ? (
-                  <div className="p-2 rounded-full bg-soft-blue/50 flex items-center justify-center">
+                  <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
                     <span className="text-xl">🗃️</span>
                   </div>
                 ) : (
                   <span className="text-xl">🗃️</span>
                 )}
-                <h2 className="text-xl font-bold text-[#1E6BCE]">Categorias Cadastradas</h2>
+                <h2 className="text-xl font-black text-[#374151]">Categorias Cadastradas</h2>
               </div>
               <React.Suspense fallback={
                 <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
