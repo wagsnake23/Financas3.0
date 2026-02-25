@@ -338,14 +338,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
         <Button
           type="button"
-          // Removido: variant="outline"
           onClick={onCancelEdit}
           className={cn(
-            "flex-1 rounded-2xl border border-blue-300 bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700 font-bold transition-colors",
-            "text-lg", // Aumentado para text-lg
-            isMobile && "h-12"
+            "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+            isMobile && "h-11"
           )}
-          size="lg"
+          style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any}
           disabled={loading}
         >
           Cancelar
@@ -353,11 +351,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button
           type="submit"
           className={cn(
-            "flex-1 rounded-2xl bg-[#25D366] text-white hover:bg-[#25D366]/90 border-transparent shadow-md transition-all hover:shadow-lg",
-            "text-lg font-black", // Aumentado para text-lg
-            isMobile && "h-12"
+            "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+            isMobile && "h-11"
           )}
-          size="lg"
+          style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
           disabled={loading}
         >
           {loading ? "Salvando..." : "Salvar"}
