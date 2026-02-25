@@ -158,7 +158,7 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[32px] !border-2 !border-white shadow-2xl"
+            isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[28px] !border-2 !border-white shadow-2xl pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px] !border-2 !border-white shadow-2xl"
           )}
         >
           <DialogHeader

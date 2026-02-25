@@ -139,7 +139,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
         onSubmit={handleSubmit}
         className={cn(
           "flex flex-col",
-          isMobile && "max-h-[75vh] overflow-hidden"
+          isMobile && "max-h-[70vh] overflow-hidden"
         )}
       >
         <TransactionStatusBar
