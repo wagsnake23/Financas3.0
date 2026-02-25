@@ -269,7 +269,7 @@ export const CategoryForm = ({
             <Dialog open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
               <DialogContent
                 className={cn(
-                  "p-0 overflow-hidden flex flex-col gap-0",
+                  "p-0 overflow-hidden flex flex-col gap-0 !rounded-[28px] !border-2 !border-white shadow-2xl",
                   isMobile ? "w-[98vw] max-w-full" : "sm:max-w-[850px]"
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}

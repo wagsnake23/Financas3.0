@@ -650,7 +650,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[425px] !pb-4 !rounded-[32px]")}>
+                          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[28px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[28px] !border-2 !border-white shadow-2xl")}>
                             <AlertDialogHeader>
                               <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
                                 <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -740,7 +740,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             <DynamicIcon name="Trash2" className="h-5 w-5" />
                           </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[425px] !pb-4 !rounded-[32px]")}>
+                        <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[28px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[28px] !border-2 !border-white shadow-2xl")}>
                           <AlertDialogHeader>
                             <AlertDialogTitle className="flex items-center justify-center gap-2 text-center">
                               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
@@ -801,7 +801,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[32px] !pb-4" : "sm:max-w-[450px] !pb-4 !rounded-[32px]")}>
+          <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[28px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[450px] !pb-4 !rounded-[28px] !border-2 !border-white shadow-2xl")}>
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
                 <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />

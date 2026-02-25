@@ -43,7 +43,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
     >
       <AlertDialogContent
         className={cn(
-          isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] p-4 min-h-[180px] !pb-5 !rounded-[32px]" : "sm:max-w-[425px] !pb-5 !rounded-[32px]"
+          isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] p-4 min-h-[180px] !pb-5 !rounded-[28px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-5 !rounded-[28px] !border-2 !border-white shadow-2xl"
         )}
       >
         <AlertDialogHeader>
