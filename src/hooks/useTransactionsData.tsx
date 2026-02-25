@@ -136,6 +136,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         recurrence_day: r.recurrence_day ?? null,
         tipo_pagamento: (r.is_recurring_master || !!r.recurrence_id) ? "fixo" : "avista",
         paymentTimestamp: r.status === "Recebida" ? r.updated_at : null,
+        created_at: r.created_at,
       }));
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
@@ -163,6 +164,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           recurrence_day: null,
           tipo_pagamento: parentDespesa?.tipo_pagamento as "avista" | "parcelado" | "fixo",
           paymentTimestamp: p.data_pagamento,
+          created_at: p.created_at,
         } as Transaction;
       });
 

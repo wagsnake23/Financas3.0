@@ -20,6 +20,7 @@ export interface Transaction {
   recurrence_day?: number | null; // Dia do mês para recorrência
   tipo_pagamento?: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento
   paymentTimestamp?: string | null; // NOVO: Data e hora do pagamento/recebimento
+  created_at?: string; // NOVO: Data de criação do registro
 }
 
 // Interface principal para categorias, alinhada com a tabela 'categorias' do Supabase

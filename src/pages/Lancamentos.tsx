@@ -23,6 +23,8 @@ import { TotalRevenueCard } from "@/components/TotalRevenueCard";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -161,17 +163,24 @@ const Lancamentos = () => {
         >
           <DialogHeader
             className={cn(
-              "flex flex-row items-center justify-center gap-2",
-              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              "flex flex-col items-center justify-center gap-0 space-y-0",
+              isMobile && "absolute top-3.5 left-4 right-12 text-left items-start",
               !isMobile && "-mt-2"
             )}
           >
-            <span className="text-2xl select-none mr-2">📝</span>
-            <DialogTitle className="text-xl font-bold pb-[1px]">Editar Lançamento</DialogTitle>
+            <div className="flex flex-row items-center gap-2">
+              <span className="text-2xl select-none mr-2">📝</span>
+              <DialogTitle className="text-xl font-bold pb-[1px] m-0 leading-none">Editar Lançamento</DialogTitle>
+            </div>
+            {editingTransaction?.created_at && (
+              <p className={cn("text-[11px] font-medium text-slate-500", isMobile && "ml-[42px] -mt-[17px]")}>
+                Registro criado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
+              </p>
+            )}
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
-            <div className="form-body pb-0">
+            <div className={cn("form-body pb-0", isMobile && "pt-3")}>
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}

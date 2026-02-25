@@ -63,7 +63,7 @@ export const useTransactionEditForm = ({
   const [paidAtTimestamp, setPaidAtTimestamp] = useState<string | null>(null);
 
   const [formaPagamento, setFormaPagamento] = useState<
-    "dinheiro" | "pix" | "cartao" | "boleto"
+    "dinheiro" | "pix" | "cartao"
   >("dinheiro");
   const [cartaoId, setCartaoId] = useState(UNSELECTED_VALUE);
 
@@ -129,7 +129,7 @@ export const useTransactionEditForm = ({
       ];
       const initialStatus =
         editingTransaction.status &&
-        validStatuses.includes(editingTransaction.status)
+          validStatuses.includes(editingTransaction.status)
           ? editingTransaction.status
           : "Pendente";
       setStatus(initialStatus);
@@ -144,8 +144,7 @@ export const useTransactionEditForm = ({
         (editingTransaction.forma_pagamento as
           | "dinheiro"
           | "pix"
-          | "cartao"
-          | "boleto") || "dinheiro"
+          | "cartao") || "dinheiro"
       );
       setCartaoId(editingTransaction.cartao_id || UNSELECTED_VALUE);
 
@@ -222,10 +221,10 @@ export const useTransactionEditForm = ({
       let finalStatus: ReceitaStatus = isPaid
         ? "Recebida"
         : editingTransaction.status === "Cancelada"
-        ? "Cancelada"
-        : editingTransaction.status === "Prevista"
-        ? "Prevista"
-        : "Pendente";
+          ? "Cancelada"
+          : editingTransaction.status === "Prevista"
+            ? "Prevista"
+            : "Pendente";
 
       const updatedTransaction: Omit<Transaction, "id"> = {
         type,

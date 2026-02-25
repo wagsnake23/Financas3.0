@@ -42,8 +42,8 @@ interface TransactionDetailsFieldsProps {
   validationErrors: Record<string, boolean>;
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   paidAtTimestamp: string | null;
-  formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
-  setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
+  formaPagamento: "dinheiro" | "pix" | "cartao";
+  setFormaPagamento: (value: "dinheiro" | "pix" | "cartao") => void;
   cartaoId: string;
   setCartaoId: (value: string) => void;
   cartoes: Tables<'cartoes'>[];
@@ -95,7 +95,6 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       { value: UNSELECTED_VALUE, label: "Selecione a forma de pagamento", disabled: true },
       { value: "dinheiro", label: "💰 Dinheiro" },
       { value: "pix", label: "📲 Pix" },
-      { value: "boleto", label: "📑 Boleto" },
     ];
 
     if (isMobile) {
@@ -117,11 +116,11 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         setFormaPagamento("cartao");
         setCartaoId(value);
       } else { // If a non-card option is selected
-        setFormaPagamento(value as "dinheiro" | "pix" | "boleto");
+        setFormaPagamento(value as "dinheiro" | "pix");
         setCartaoId(UNSELECTED_VALUE);
       }
     } else {
-      setFormaPagamento(value as "dinheiro" | "pix" | "cartao" | "boleto");
+      setFormaPagamento(value as "dinheiro" | "pix" | "cartao");
       if (value !== "cartao") {
         setCartaoId(UNSELECTED_VALUE);
       }
