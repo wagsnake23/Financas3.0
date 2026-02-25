@@ -21,8 +21,8 @@ interface Cartao {
 interface PaymentDetailsProps {
   valor: number | undefined; // Alterado para number | undefined
   setValor: (value: number | undefined) => void; // Alterado para number | undefined
-  formaPagamento: "dinheiro" | "pix" | "cartao" | "boleto";
-  setFormaPagamento: (value: "dinheiro" | "pix" | "cartao" | "boleto") => void;
+  formaPagamento: "dinheiro" | "pix" | "cartao";
+  setFormaPagamento: (value: "dinheiro" | "pix" | "cartao") => void;
   cartaoId: string;
   setCartaoId: (value: string) => void;
   cartoes: Cartao[];
@@ -169,7 +169,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
-            onValueChange={(value: "dinheiro" | "pix" | "cartao" | "boleto") => { // Tipo explícito para 'value'
+            onValueChange={(value: "dinheiro" | "pix" | "cartao") => { // Tipo explícito para 'value'
               setFormaPagamento(value);
               if (value !== "cartao") { // Se a forma de pagamento não for cartão, resetar o cartão selecionado
                 setCartaoId(UNSELECTED_VALUE);
@@ -184,17 +184,14 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
+              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>
               </SelectItem>
               <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">📲</span> Pix</span>
               </SelectItem>
-              <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>
-              </SelectItem>
-              <SelectItem value="boleto" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📑</span> Boleto</span>
+              <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
             </SelectContent>
           </Select>

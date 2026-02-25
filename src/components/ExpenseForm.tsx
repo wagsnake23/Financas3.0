@@ -62,7 +62,7 @@ interface ExpenseFormProps {
   isRecurring: boolean;
   setIsRecurring: (value: boolean) => void;
   initialValor?: number;
-  initialFormaPagamento?: "dinheiro" | "pix" | "cartao" | "boleto";
+  initialFormaPagamento?: "dinheiro" | "pix" | "cartao";
   initialCartaoId?: string;
   initialDescricao?: string;
   submitPortalRef?: HTMLDivElement | null;
@@ -90,8 +90,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<
-    "dinheiro" | "pix" | "cartao" | "boleto"
-  >("dinheiro");
+    "dinheiro" | "pix" | "cartao"
+  >("cartao");
   const [tipoPagamento, setTipoPagamento] = useState<
     "avista" | "parcelado" | "fixo"
   >("avista");
@@ -393,7 +393,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       showSuccessToast("Sucesso", "Despesa adicionada com sucesso!");
 
       setSelectedSubcategoryId(UNSELECTED_VALUE);
-      setFormaPagamento("dinheiro");
+      setFormaPagamento("cartao");
       setTipoPagamento("avista");
       setCartaoId(UNSELECTED_VALUE);
       setValor(undefined);
