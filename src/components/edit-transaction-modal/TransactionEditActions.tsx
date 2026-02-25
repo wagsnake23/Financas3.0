@@ -28,9 +28,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "w-full rounded-2xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-black transition-colors",
-          "text-[16px] h-11"
+          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[16px] h-11"
         )}
+        style={{ "--cor-topo": "#E54D4D", "--cor-base": "#C53030" } as any}
         disabled={loading}
       >
         Excluir
@@ -39,9 +39,9 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "w-full rounded-2xl border border-blue-300 bg-blue-100 text-[#1A56AD] hover:bg-blue-200 hover:text-[#1A56AD]/80 font-black transition-colors",
-          "text-[16px] h-11"
+          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[16px] h-11"
         )}
+        style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any}
         disabled={loading}
       >
         Cancelar
@@ -49,8 +49,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="submit" // Mantido como type="submit"
         className={cn(
-          "w-full rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-          isMobile ? "h-11 text-lg" : "h-11 text-lg"
+          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
         disabled={loading}

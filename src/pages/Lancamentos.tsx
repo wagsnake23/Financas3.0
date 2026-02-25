@@ -168,8 +168,8 @@ const Lancamentos = () => {
               !isMobile && "-mt-2"
             )}
           >
-            <div className="flex flex-row items-center gap-2">
-              <span className="text-2xl select-none mr-2">📝</span>
+            <div className="flex flex-row items-center gap-1.5">
+              <span className="text-2xl select-none mr-0.5">📝</span>
               <DialogTitle className="text-xl font-bold pb-[1px] m-0 leading-none">Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
