@@ -173,14 +173,14 @@ const Lancamentos = () => {
               <DialogTitle className="text-xl font-bold pb-[1px] m-0 leading-none">Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
-              <p className={cn("text-[11px] font-medium text-slate-500", isMobile && "ml-[42px] -mt-[17px]")}>
+              <p className={cn("text-[13px] font-medium text-slate-500", isMobile && "ml-[42px] -mt-[14px]")}>
                 Registro criado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
               </p>
             )}
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
-            <div className={cn("form-body pb-0", isMobile && "pt-3")}>
+            <div className={cn("form-body pb-0", isMobile && "pt-6")}>
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}

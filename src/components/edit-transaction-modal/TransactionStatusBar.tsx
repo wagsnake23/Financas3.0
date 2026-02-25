@@ -87,7 +87,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                 </div>
 
                 {isPaid && paidAtTimestamp && (
-                    <span className="text-[11px] text-slate-600 font-bold ml-0.5 mt-0.5">
+                    <span className="text-[12.5px] text-slate-600 font-bold ml-0.5 mt-1">
                         {formattedDate}
                     </span>
                 )}
