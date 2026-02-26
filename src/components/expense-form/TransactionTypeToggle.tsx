@@ -18,10 +18,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
   isMobile,
 }) => {
   return (
-    <div className="space-y-2">
-      {!isMobile && (
-        <Label className={cn(isMobile && "text-xs")}>Tipo de Lançamento</Label>
-      )}
+    <div className="w-full">
       <ToggleGroup
         type="single"
         value={isRecurring ? "recorrente" : "avulsa"}
@@ -32,14 +29,14 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
             onSelectAvulsa();
           }
         }}
-        className={cn("w-full justify-center", isMobile && "gap-x-2")}
+        className={cn("w-full justify-center", isMobile ? "gap-x-2" : "gap-x-4")}
       >
         <ToggleGroupItem
           value="avulsa"
           className={cn(
             "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
             !isRecurring ? "!text-white font-bold" : "!text-[#E55B5B]/80 font-medium",
-            isMobile ? "h-9 py-0.5 text-sm" : "h-10 text-sm"
+            isMobile && "h-9 py-0.5 text-sm"
           )}
           style={!isRecurring
             ? { "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any
@@ -60,7 +57,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
             isRecurring ? "!text-white font-bold" : "!text-[#E55B5B]/80 font-medium",
-            isMobile ? "h-9 py-0.5 text-sm" : "h-10 text-sm"
+            isMobile && "h-9 py-0.5 text-sm"
           )}
           style={isRecurring
             ? { "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any

@@ -134,7 +134,7 @@ export const Navigation = () => {
                         ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
                         : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
-          : "h-16 bg-gradient-to-r from-blue-50 to-blue-100/50 text-slate-700 shadow-md backdrop-blur-sm"
+          : "h-16 bg-[#0B213F] text-white shadow-md backdrop-blur-sm"
       )}>
         <div className="container mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
@@ -150,7 +150,7 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-bold text-lg tracking-tight",
-                isMobile ? mobileTextColor : "text-[#1E40AF]",
+                isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
               )}>Minhas Finanças</span>
             </div>
@@ -168,8 +168,8 @@ export const Navigation = () => {
                       className={({ isActive }) => cn(
                         "px-3 py-2 rounded-xl text-sm transition-all flex items-center gap-2",
                         isActive
-                          ? "bg-blue-200/50 text-[#1E40AF] font-bold shadow-sm"
-                          : "text-[#1A1A1A] hover:bg-blue-200/30 hover:text-[#1E40AF]"
+                          ? "bg-[#FEF9C3] text-[#0B213F] font-bold shadow-sm"
+                          : "text-white hover:bg-white/10"
                       )}
                     >
                       <DynamicIcon name={item.icon} className="h-4 w-4" />
@@ -181,7 +181,7 @@ export const Navigation = () => {
                     variant="ghost"
                     size="sm"
                     onClick={signOut}
-                    className="ml-2 text-slate-900 hover:bg-red-50 hover:text-red-600 rounded-xl"
+                    className="ml-2 text-white hover:bg-red-500/20 hover:text-red-300 rounded-xl"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
