@@ -174,7 +174,7 @@ const Lancamentos = () => {
             </div>
             {editingTransaction?.created_at && (
               <p className={cn("text-[13px] font-medium text-slate-500", isMobile && "ml-[42px] -mt-[14px]")}>
-                Registro criado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
+                Registrado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
               </p>
             )}
           </DialogHeader>
