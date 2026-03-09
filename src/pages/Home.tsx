@@ -293,13 +293,13 @@ export default function Home() {
 
             <main className={cn(
                 "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1050px] !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
-                isMobile ? "-mt-32 pb-32" : "-mt-24 md:mt-2"
+                isMobile ? "-mt-32 pb-10" : "-mt-24 md:mt-2"
             )} style={{ background: 'transparent' }}>
 
                 {isMobile ? (
                     <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[96px] left-0 right-0 bottom-[32px] overflow-hidden z-30 px-3 pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
+                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 px-3 pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
                                 className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"

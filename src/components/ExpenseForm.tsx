@@ -161,14 +161,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
 
   useEffect(() => {
-    if (isRecurring) {
-      setIsPaid(false);
-    } else if (tipoPagamento === "parcelado") {
-      setIsPaid(false);
-    } else if (formaPagamento === "cartao") {
-      setIsPaid(false);
-    } else {
+    // Lógica inteligente: compras à vista no dinheiro/pix são marcadas como pagas.
+    // Cartão de crédito ou parcelados sempre começam como pendentes.
+    if (tipoPagamento === "avista" && (formaPagamento === "pix" || formaPagamento === "dinheiro")) {
       setIsPaid(true);
+    } else {
+      setIsPaid(false);
     }
   }, [formaPagamento, tipoPagamento, isRecurring]);
 
@@ -193,26 +191,21 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     if (isRecurring) {
       // If "Recorrente" is selected (tipoPagamento === "fixo")
       setNumeroParcelas(RECURRING_INSTALLMENTS_COUNT);
-      setIsPaid(false); // Recurring expenses are initially pending
     } else {
       // If "Avulsa" is selected (tipoPagamento === "avista" or "parcelado")
       if (tipoPagamento === "avista") {
         setNumeroParcelas(1); // Avista always has 1 installment
-        setIsPaid(true); // Avista is usually paid immediately
       } else if (tipoPagamento === "parcelado") {
         // When switching to "parcelado" from "fixo, reset to 1.
-        // Otherwise, if it was "avista" (numeroParcelas was 1) or user input, keep it.
         if (numeroParcelas === RECURRING_INSTALLMENTS_COUNT) {
           setNumeroParcelas(1);
         }
-        setIsPaid(false); // Parcelado is initially pending
       }
     }
   }, [
     isRecurring,
     tipoPagamento,
     setNumeroParcelas,
-    setIsPaid,
     numeroParcelas,
   ]);
 
