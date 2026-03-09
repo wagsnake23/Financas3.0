@@ -299,7 +299,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 px-3 pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
+                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 px-[14px] pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
                                 className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
