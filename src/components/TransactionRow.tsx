@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Check, Clock, Circle } from "lucide-react";
+import { SquarePen, Trash2, Check, Clock, Circle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -248,7 +248,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             }}
             className="h-9 w-9 text-primary hover:bg-primary/10 rounded-xl"
           >
-            <Pencil className="h-4 w-4" />
+            <SquarePen className="h-4 w-4" />
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
