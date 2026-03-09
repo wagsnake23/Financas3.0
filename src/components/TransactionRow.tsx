@@ -256,7 +256,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 variant="ghost"
                 size="icon"
                 onClick={(e) => e.stopPropagation()}
-                className="h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
+                className="hidden h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
