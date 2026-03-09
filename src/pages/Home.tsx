@@ -256,6 +256,14 @@ export default function Home() {
 
     const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
     const userName = fullName.trim().split(" ")[0];
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return "Bom dia";
+        if (hour >= 12 && hour < 18) return "Boa tarde";
+        return "Boa noite";
+    };
+
+    const greeting = getGreeting();
     const formattedDate = format(new Date(), "eee, dd MMM yyyy", { locale: ptBR });
     // Capitalize first letter of abbreviated weekday
     const todayStr = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
@@ -274,7 +282,7 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 className={cn("font-bold text-white tracking-tight leading-none", isMobile ? "text-lg" : "text-2xl")}>
-                            Olá, {userName} 👋
+                            {greeting}, {userName} 👋
                         </h1>
                         <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] -mt-0.5" : "text-sm -mt-0.5")}>
                             {todayStr}
