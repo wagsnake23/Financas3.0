@@ -293,10 +293,16 @@ export default function Home() {
                         <div
                             className="!fixed top-[96px] left-0 right-0 bottom-[32px] overflow-hidden z-30 px-3 pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
-                            <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-3 pb-8 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}>
+                            <div
+                                className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
+                                style={{
+                                    background: 'transparent',
+                                    gridTemplateRows: 'repeat(4, 1fr)'
+                                }}
+                            >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{ backgroundColor: "transparent" }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -355,7 +361,7 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas h-full w-full flex flex-col justify-center"
                                     style={{ backgroundColor: "transparent" }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -406,7 +412,7 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas h-full w-full flex flex-col justify-center"
                                     style={{ backgroundColor: "transparent" }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -455,7 +461,7 @@ export default function Home() {
                                     </div>
                                 </Card>
 
-                                <div id="cartoes-section">
+                                <div id="cartoes-section" className="h-full w-full">
                                     <MobileCreditCardExpenses
                                         cartoes={cartoes}
                                         expenseInstallments={dExpenses}
