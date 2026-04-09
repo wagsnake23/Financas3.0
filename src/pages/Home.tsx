@@ -316,13 +316,13 @@ export default function Home() {
                                         background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                         backdropFilter: "blur(12px)",
                                         border: "1px solid rgba(255,255,255,0.05)",
-                                        boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(37,99,235,0.25)"
+                                        boxShadow: "0 0 20px rgba(37,99,235,0.25)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
                                             <h2 className="text-[14px] font-medium tracking-tight mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
-                                            <p className="text-[26px] font-bold text-white tracking-tight leading-none" style={{ letterSpacing: "0.5px" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
@@ -387,7 +387,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
-                                            <p className="text-[24px] font-[800] tracking-tight leading-none md:text-[28px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
@@ -446,7 +446,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
-                                            <p className="text-[24px] font-[800] tracking-tight leading-none md:text-[28px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
@@ -511,13 +511,13 @@ export default function Home() {
                                 background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                 backdropFilter: "blur(12px)",
                                 border: "1px solid rgba(255,255,255,0.05)",
-                                boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(37,99,235,0.25)"
+                                boxShadow: "0 0 20px rgba(37,99,235,0.25)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-medium tracking-tight mb-1 md:text-[16px]" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
-                                    <p className="text-[24px] font-bold text-white tracking-tight leading-none md:text-[28px]" style={{ letterSpacing: "0.5px" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
@@ -584,7 +584,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
-                                    <p className="text-[24px] font-[800] tracking-tight leading-none md:text-[28px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
@@ -643,7 +643,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
-                                    <p className="text-[24px] font-[800] tracking-tight leading-none md:text-[28px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>
