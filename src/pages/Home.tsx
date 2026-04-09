@@ -355,10 +355,10 @@ export default function Home() {
                                             <div className={cn(
                                                 "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                 dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
-                                            )} style={{ background: dStats.balanceVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)" }}>
+                                            )} style={{ background: "#fcfcfc" }}>
                                                 {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
-                                            <span className="text-[12px] leading-tight" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
+                                            <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                         </div>
                                     </div>
 
@@ -415,7 +415,7 @@ export default function Home() {
                                                      dStats.expenseVar >= 0 ? "text-[#ef4444]" : "text-[#22c55e]"
                                                 )}
                                                      style={{
-                                                         background: dStats.expenseVar >= 0 ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)"
+                                                         background: "#fcfcfc"
                                                      }}>
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
@@ -476,7 +476,7 @@ export default function Home() {
                                                      dStats.incomeVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
                                                 )}
                                                      style={{
-                                                         background: dStats.incomeVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)"
+                                                         background: "#fcfcfc"
                                                      }}>
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
@@ -554,10 +554,10 @@ export default function Home() {
                                     <div className={cn(
                                         "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none",
                                         dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
-                                    )} style={{ background: dStats.balanceVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)" }}>
+                                    )} style={{ background: "#fcfcfc" }}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[12px] leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
+                                    <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                 </div>
                             </div>
 
@@ -616,7 +616,7 @@ export default function Home() {
                                              dStats.incomeVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
                                         )}
                                              style={{
-                                                 background: dStats.incomeVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)"
+                                                 background: "#fcfcfc"
                                              }}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
@@ -677,7 +677,7 @@ export default function Home() {
                                              dStats.expenseVar >= 0 ? "text-[#ef4444]" : "text-[#22c55e]"
                                         )}
                                              style={{
-                                                 background: dStats.expenseVar >= 0 ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)"
+                                                 background: "#fcfcfc"
                                              }}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
