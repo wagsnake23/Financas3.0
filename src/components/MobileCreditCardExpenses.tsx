@@ -101,24 +101,31 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] rounded-[24px] border border-[#F0E8FF] shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
-      style={{ backgroundColor: "transparent" }}
+      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      style={{
+        borderRadius: "24px",
+        border: "1px solid rgba(255,255,255,0.05)",
+        background: "radial-gradient(circle at 20% 80%, rgba(124,58,237,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(124,58,237,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
+        backgroundBlendMode: "screen",
+        backdropFilter: "blur(14px)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(124,58,237,0.15)"
+      }}
     >
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
-          <DynamicIcon name="CreditCard" className="h-6 w-6 text-[#8235ff]" />
-          <h2 className="text-[15px] font-bold md:text-[21px] md:font-black text-[#8235ff] tracking-tight">
+          <DynamicIcon name="CreditCard" className="h-6 w-6 text-white" />
+          <h2 className="text-[14px] font-medium md:text-[16px] text-[rgba(255,255,255,0.9)] tracking-tight">
             Cartões
           </h2>
         </div>
-        <span className="text-[12px] font-black text-[#8235ff] uppercase tracking-tight">
+        <span className="text-[12px] font-bold text-white uppercase tracking-tight" style={{ letterSpacing: "0.5px" }}>
           {format(selectedMonth, "MMM / yyyy", { locale: ptBR }).replace(".", "")}
         </span>
       </div>
 
       <div className="space-y-1">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border-[#E0D6FF] bg-white shadow-sm">
+          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border shadow-sm font-medium" style={{ background: "#f8fafc", borderColor: "#d8b4fe", color: "#1e293b" }}>
             <SelectValue placeholder="Selecione um cartão" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -131,13 +138,8 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="btn-3d rounded-xl w-full h-[32px] text-xs font-extrabold shadow-sm border-none"
-          style={
-            {
-              "--cor-topo": "#9F7AEA",
-              "--cor-base": "#805AD5",
-            } as React.CSSProperties
-          }
+          className="rounded-[14px] w-full h-[32px] text-xs font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+          style={{ background: "linear-gradient(135deg, #6d28d9, #7c3aed)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
         >
@@ -152,14 +154,14 @@ export const MobileCreditCardExpenses: React.FC<
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-1.5 mb-1">
                 <div
-                  className="flex items-center justify-center rounded-full bg-[#44E37F]/90 text-white font-black"
-                  style={{ height: 14, width: 14, fontSize: 7 }}
+                  className="flex items-center justify-center rounded-full bg-[#22c55e] text-white font-black"
+                  style={{ height: 14, width: 14, fontSize: 7, boxShadow: "0 0 8px rgba(34,197,94,0.4)" }}
                 >
                   ✓
                 </div>
-                <p className="text-[0.65rem] text-gray-500 font-bold md:text-sm">Pago</p>
+                <p className="text-[0.65rem] text-[#22c55e] font-bold md:text-sm">Pago</p>
               </div>
-              <p className="text-[11px] font-bold text-success/80 md:text-[15px]">
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#f5f3ff", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                 {formatCurrency(totalPaid)}
               </p>
             </div>
@@ -169,11 +171,12 @@ export const MobileCreditCardExpenses: React.FC<
               <div className="flex items-center gap-1.5 mb-1">
                 <DynamicIcon
                   name="Circle"
-                  className="h-3.5 w-3.5 text-destructive/70"
+                  className="h-3.5 w-3.5 text-[#ef4444]"
+                  style={{ filter: "drop-shadow(0 0 4px rgba(239,68,68,0.4))" }}
                 />
-                <p className="text-[0.65rem] text-gray-500 font-bold md:text-sm">Pendente</p>
+                <p className="text-[0.65rem] text-[#ef4444] font-bold md:text-sm">Pendente</p>
               </div>
-              <p className="text-[11px] font-bold text-destructive/80 md:text-[15px]">
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#f5f3ff", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                 {formatCurrency(totalPending)}
               </p>
             </div>
@@ -183,11 +186,11 @@ export const MobileCreditCardExpenses: React.FC<
               <div className="flex items-center gap-1.5 mb-1">
                 <DynamicIcon
                   name="CreditCard"
-                  className="h-3.5 w-3.5 text-gray-500"
+                  className="h-3.5 w-3.5 text-[rgba(255,255,255,0.7)]"
                 />
-                <p className="text-[0.65rem] text-gray-500 font-bold md:text-sm">Total</p>
+                <p className="text-[0.65rem] text-[rgba(255,255,255,0.7)] font-bold md:text-sm">Total</p>
               </div>
-              <p className="text-[11px] font-bold text-gray-700 md:text-[15px]">
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#f5f3ff", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                 {formatCurrency(totalCardExpenses)}
               </p>
             </div>
@@ -196,7 +199,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {selectedCardId !== UNSELECTED_VALUE &&
           filteredExpenses.length === 0 && (
-            <p className="text-muted-foreground text-center py-1 text-xs">
+            <p className="text-[rgba(255,255,255,0.5)] text-center py-1 text-xs">
               Nenhuma despesa no mês selecionado.
             </p>
           )}

@@ -28,7 +28,7 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
     const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
     const getH = (val: number) => Math.max((Math.abs(val) / maxVal) * height, 2);
 
-    const BarItem = ({ val, color, label, width }: { val: number, color: string, label: string, width: string }) => (
+    const BarItem = ({ val, color, label, width, glowColor }: { val: number, color: string, label: string, width: string, glowColor: string }) => (
         <div className="flex flex-col items-center gap-1">
             <div
                 className="transition-all duration-500 ease-out"
@@ -36,10 +36,11 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
                     height: `${getH(val)}px`,
                     width: width,
                     backgroundColor: color,
-                    borderRadius: "3px"
+                    borderRadius: "3px",
+                    filter: `drop-shadow(0 0 6px ${glowColor})`
                 }}
             />
-            <span className="text-[9px] font-black text-gray-400 uppercase tracking-tighter leading-none">{label}</span>
+            <span className="text-[9px] font-black uppercase tracking-tighter leading-none" style={{ color: "rgba(255,255,255,0.4)" }}>{label}</span>
         </div>
     );
 
@@ -47,14 +48,14 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
         <div className="relative flex items-end gap-1 px-1 pb-1">
             {showScaleLines && (
                 <>
-                    <div className="absolute left-0 right-0 h-[0.5px] bg-gray-300/30" style={{ bottom: "48px" }} />
-                    <div className="absolute left-0 right-0 h-[1px] bg-gray-200 bottom-[14.5px]" />
+                    <div className="absolute left-0 right-0 h-[0.5px]" style={{ bottom: "48px", background: "rgba(255,255,255,0.1)" }} />
+                    <div className="absolute left-0 right-0 h-[1px]" style={{ bottom: "14.5px", background: "rgba(255,255,255,0.15)" }} />
                 </>
             )}
 
-            <BarItem val={expenses} color="#E54D4D" label="D" width="15px" />
-            <BarItem val={revenues} color="#1AA361" label="R" width="15px" />
-            <BarItem val={balance} color="#1E6BCE" label="S" width="15px" />
+            <BarItem val={expenses} color="#ef4444" glowColor="rgba(239,68,68,0.5)" label="D" width="15px" />
+            <BarItem val={revenues} color="#22c55e" glowColor="rgba(34,197,94,0.5)" label="R" width="15px" />
+            <BarItem val={balance} color="#3b82f6" glowColor="rgba(59,130,246,0.5)" label="S" width="15px" />
         </div>
     );
 };
@@ -310,29 +311,34 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
-                                    style={{ backgroundColor: "transparent" }}
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
+                                    style={{
+                                        background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
+                                        backdropFilter: "blur(12px)",
+                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(37,99,235,0.25)"
+                                    }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                                            <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none">
+                                            <h2 className="text-[14px] font-medium tracking-tight mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
+                                            <p className="text-[26px] font-bold text-white tracking-tight leading-none" style={{ letterSpacing: "0.5px" }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
-                                        {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
+                                        {/* Seletor de Mês (Posição Top Right) */}
                                         <div
-                                            className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
-                                            style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+                                            className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
+                                            style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            <button onClick={handlePrevMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
-                                            <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                                            <span className="text-[12px] font-bold text-white px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            <button onClick={handleNextMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                         </div>
                                     </div>
@@ -341,19 +347,18 @@ export default function Home() {
                                         {/* Investments Icon Button */}
                                         <Button
                                             onClick={() => navigate("/dashboard?filter=investments")}
-                                            className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
-                                            style={{ "--cor-topo": "#1E6BCE", "--cor-base": "#1557A6" } as any}
+                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
                                         >
-                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
                                         </Button>
-                                        <div className="flex flex-col items-start gap-0.5">
+                                        <div className="flex flex-col items-start gap-0.5 mt-1">
                                             <div className={cn(
-                                                "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                                dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                            )}>
+                                                "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border border-white/5",
+                                                dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
+                                            )} style={{ background: "rgba(255,255,255,0.08)", textShadow: dStats.balanceVar >= 0 ? "0 0 6px rgba(34,197,94,0.4)" : "0 0 6px rgba(239,68,68,0.4)" }}>
                                                 {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
-                                            <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                            <span className="text-[12px] leading-tight" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
                                         </div>
                                     </div>
 
@@ -369,19 +374,26 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas h-full w-full flex flex-col justify-center"
-                                    style={{ backgroundColor: "transparent" }}
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
+                                    style={{
+                                        borderRadius: "24px",
+                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
+                                        backgroundBlendMode: "screen",
+                                        backdropFilter: "blur(14px)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(239,68,68,0.15)"
+                                    }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-bold tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                            <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
+                                        <div className="flex flex-col md:mt-3">
+                                            <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
+                                            <p className="text-[26px] font-[800] tracking-tight leading-none md:text-[30px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1"
-                                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:scale-95 text-[#ef4444] -mr-2 mt-1 border-none hover:bg-white"
+                                            style={{ background: "rgba(255,255,255,0.9)", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -392,27 +404,28 @@ export default function Home() {
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
-                                                className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
-                                                style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                                className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.4)" }}
                                             >
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className={cn(
-                                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                                    dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                                                )}>
+                                                <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none text-white tracking-tight leading-none h-[18px]"
+                                                     style={{
+                                                         background: dStats.expenseVar >= 0 ? "#ef4444" : "#22c55e",
+                                                         boxShadow: dStats.expenseVar >= 0 ? "0 0 8px rgba(239,68,68,0.4)" : "0 0 8px rgba(34,197,94,0.4)"
+                                                     }}>
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                             </div>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
-                                            style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                            className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
+                                            <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
                                             Nova Despesa
                                         </Button>
                                     </div>
@@ -420,19 +433,26 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas h-full w-full flex flex-col justify-center"
-                                    style={{ backgroundColor: "transparent" }}
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
+                                    style={{
+                                        borderRadius: "24px",
+                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
+                                        backgroundBlendMode: "screen",
+                                        backdropFilter: "blur(14px)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(34,197,94,0.15)"
+                                    }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-bold tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                            <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none">
+                                        <div className="flex flex-col md:mt-3">
+                                            <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
+                                            <p className="text-[26px] font-[800] tracking-tight leading-none md:text-[30px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1"
-                                            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:scale-95 text-[#22c55e] -mr-2 mt-1 border-none hover:bg-white"
+                                            style={{ background: "rgba(255,255,255,0.9)", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -443,27 +463,28 @@ export default function Home() {
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
-                                                className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
-                                                style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                                className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                style={{ background: "#22c55e", boxShadow: "0 0 8px rgba(34,197,94,0.4)" }}
                                             >
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className={cn(
-                                                    "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold",
-                                                    dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                                )}>
+                                                <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none text-white tracking-tight leading-none h-[18px]"
+                                                     style={{
+                                                         background: dStats.incomeVar >= 0 ? "#22c55e" : "#ef4444",
+                                                         boxShadow: dStats.incomeVar >= 0 ? "0 0 8px rgba(34,197,94,0.4)" : "0 0 8px rgba(239,68,68,0.4)"
+                                                     }}>
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] text-gray-400 font-medium leading-tight">Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                             </div>
                                         </div>
                                         <Button
-                                            className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2"
-                                            style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                            className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
+                                            <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
                                             Nova Receita
                                         </Button>
                                     </div>
@@ -485,29 +506,34 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[28px] border-none shadow-[0_10px_30px_rgba(0,0,0,0.08)] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
-                            style={{ backgroundColor: "transparent" }}
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            style={{
+                                background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
+                                backdropFilter: "blur(12px)",
+                                border: "1px solid rgba(255,255,255,0.05)",
+                                boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(37,99,235,0.25)"
+                            }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-1" style={{ color: "#1E6BCE" }}>Saldo Mensal</h2>
-                                    <p className="text-[18px] font-bold text-gray-700 tracking-tight leading-none md:text-[21px] md:font-black">
+                                    <h2 className="text-[14px] font-medium tracking-tight mb-1 md:text-[16px]" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
+                                    <p className="text-[26px] font-bold text-white tracking-tight leading-none md:text-[30px]" style={{ letterSpacing: "0.5px" }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
-                                {/* Seletor de Mês (Posição Top Right - Match "Ver Gastos") */}
+                                {/* Seletor de Mês (Posição Top Right) */}
                                 <div
-                                    className="btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] -mr-2 border border-blue-200 shadow-none cursor-default"
-                                    style={{ "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)" } as any}
+                                    className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
+                                    style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                 >
-                                    <button onClick={handlePrevMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                        <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+                                    <button onClick={handlePrevMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                        <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
-                                    <span className="text-[12px] font-black text-[#1E6BCE] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                    <span className="text-[12px] font-bold text-white px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
-                                    <button onClick={handleNextMonth} className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm" style={{ background: "linear-gradient(180deg, #1E6BCE 0%, #1557A6 100%)", boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)" }}>
-                                        <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                    <button onClick={handleNextMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                        <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                 </div>
                             </div>
@@ -516,19 +542,18 @@ export default function Home() {
                                 {/* Investments Icon Button */}
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=investments")}
-                                    className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-blue-200 transition-all active:scale-90 shrink-0"
-                                    style={{ "--cor-topo": "#1E6BCE", "--cor-base": "#1557A6" } as any}
+                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
                                 >
-                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
                                 </Button>
-                                <div className="flex flex-col items-start gap-0.5">
+                                <div className="flex flex-col items-start gap-0.5 mt-1">
                                     <div className={cn(
-                                        "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
-                                        dStats.balanceVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                    )}>
+                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border border-white/5",
+                                        dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
+                                    )} style={{ background: "rgba(255,255,255,0.08)", textShadow: dStats.balanceVar >= 0 ? "0 0 6px rgba(34,197,94,0.4)" : "0 0 6px rgba(239,68,68,0.4)" }}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
+                                    <span className="text-[12px] leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
                                 </div>
                             </div>
 
@@ -546,19 +571,26 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
-                            style={{ backgroundColor: "transparent" }}
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            style={{
+                                borderRadius: "24px",
+                                border: "1px solid rgba(255,255,255,0.05)",
+                                        background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
+                                        backgroundBlendMode: "screen",
+                                        backdropFilter: "blur(14px)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(34,197,94,0.15)"
+                            }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-0.5" style={{ color: "#1AA361" }}>Receitas</h2>
-                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none md:text-[20px] md:font-black">
+                                    <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
+                                    <p className="text-[26px] font-[800] tracking-tight leading-none md:text-[30px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 border border-emerald-200 -mr-2 mt-1 md:text-[14px]"
-                                    style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:scale-95 text-[#22c55e] -mr-2 mt-1 md:text-[14px] border-none hover:bg-white"
+                                    style={{ background: "rgba(255,255,255,0.9)", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -569,27 +601,28 @@ export default function Home() {
                                 <div className="flex items-start gap-2">
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=revenues")}
-                                        className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-emerald-200 transition-all active:scale-90 shrink-0"
-                                        style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                        className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                        style={{ background: "#22c55e", boxShadow: "0 0 8px rgba(34,197,94,0.4)" }}
                                     >
                                         <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
-                                    <div className="flex flex-col items-start gap-0.5">
-                                        <div className={cn(
-                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
-                                            dStats.incomeVar >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                        )}>
+                                    <div className="flex flex-col items-start gap-0.5 mt-1">
+                                        <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none text-white tracking-tight leading-none h-[18px] md:h-[20px]"
+                                             style={{
+                                                 background: dStats.incomeVar >= 0 ? "#22c55e" : "#ef4444",
+                                                 boxShadow: dStats.incomeVar >= 0 ? "0 0 8px rgba(34,197,94,0.4)" : "0 0 8px rgba(239,68,68,0.4)"
+                                             }}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2 md:text-[15px]"
-                                    style={{ "--cor-topo": "#66E0A3", "--cor-base": "#2DAD70" } as any}
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
+                                    style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
                                     onClick={() => navigate("/receitas")}
                                 >
-                                    <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
+                                    <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
                                     Nova Receita
                                 </Button>
                             </div>
@@ -597,19 +630,26 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] border border-white shadow-[0_4px_12px_rgba(0,0,0,0.03)] relative card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
-                            style={{ backgroundColor: "transparent" }}
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            style={{
+                                borderRadius: "24px",
+                                border: "1px solid rgba(255,255,255,0.05)",
+                                        background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
+                                        backgroundBlendMode: "screen",
+                                        backdropFilter: "blur(14px)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(239,68,68,0.15)"
+                            }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-bold md:text-[20px] md:font-black tracking-tight mb-1" style={{ color: "#E54D4D" }}>Despesas</h2>
-                                    <p className="text-[17px] font-bold text-gray-700 tracking-tight leading-none md:text-[20px] md:font-black">
+                                    <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
+                                    <p className="text-[26px] font-[800] tracking-tight leading-none md:text-[30px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-3 rounded-2xl font-extrabold text-[13px] shadow-none whitespace-nowrap w-[135px] transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 border border-rose-200 -mr-2 mt-1 md:text-[14px]"
-                                    style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any}
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:scale-95 text-[#ef4444] -mr-2 mt-1 md:text-[14px] border-none hover:bg-white"
+                                    style={{ background: "rgba(255,255,255,0.9)", boxShadow: "0 4px 10px rgba(0,0,0,0.2)" }}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -620,27 +660,28 @@ export default function Home() {
                                 <div className="flex items-start gap-2">
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=expenses")}
-                                        className="btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 shrink-0"
-                                        style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                        className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                        style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.4)" }}
                                     >
                                         <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
-                                    <div className="flex flex-col items-start gap-0.5">
-                                        <div className={cn(
-                                            "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold md:text-[11px]",
-                                            dStats.expenseVar >= 0 ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"
-                                        )}>
+                                    <div className="flex flex-col items-start gap-0.5 mt-1">
+                                        <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none text-white tracking-tight leading-none h-[18px] md:h-[20px]"
+                                             style={{
+                                                 background: dStats.expenseVar >= 0 ? "#ef4444" : "#22c55e",
+                                                 boxShadow: dStats.expenseVar >= 0 ? "0 0 8px rgba(239,68,68,0.4)" : "0 0 8px rgba(34,197,94,0.4)"
+                                             }}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[10px] text-gray-400 font-medium leading-tight md:text-[11px]">Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
-                                    className="btn-3d h-9 px-4 rounded-2xl font-extrabold text-sm shadow-md text-white border-none transition-all active:scale-95 w-[135px] -mr-2 md:text-[15px]"
-                                    style={{ "--cor-topo": "#FF7070", "--cor-base": "#D64545" } as any}
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
+                                    style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
                                     onClick={() => navigate("/despesas")}
                                 >
-                                    <Plus className="mr-1.5 h-4 w-4" strokeWidth={4} />
+                                    <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
                                     Nova Despesa
                                 </Button>
                             </div>
