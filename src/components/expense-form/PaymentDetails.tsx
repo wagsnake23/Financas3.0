@@ -100,15 +100,15 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     }
   }, [tipoPagamento, isRecurring, setNumeroParcelas]);
 
-  // NEW: Effect to auto-select card if only one is available
+  // NEW: Effect to auto-select the first card if available
   useEffect(() => {
-    if (formaPagamento === "cartao" && cartoes.length === 1) {
+    if (formaPagamento === "cartao" && cartoes.length > 0 && cartaoId === UNSELECTED_VALUE) {
       setCartaoId(cartoes[0].id);
     } else if (formaPagamento === "cartao" && cartoes.length === 0) {
       // If "cartao" is selected but no cards are available, ensure UNSELECTED_VALUE
       setCartaoId(UNSELECTED_VALUE);
     }
-  }, [formaPagamento, cartoes, setCartaoId, UNSELECTED_VALUE]);
+  }, [formaPagamento, cartoes, setCartaoId, UNSELECTED_VALUE, cartaoId]);
 
   return (
     <div className="space-y-4"> {/* Usar space-y-4 para espaçamento vertical entre os blocos */}

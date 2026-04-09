@@ -93,7 +93,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .from("cartoes")
         .select("*")
         .eq("user_id", user.id)
-        .order("nome");
+        .order("created_at");
       if (error) throw error;
       return data;
     },

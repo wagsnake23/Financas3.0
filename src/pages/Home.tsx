@@ -135,7 +135,7 @@ export default function Home() {
                 .from("cartoes")
                 .select("*")
                 .eq("user_id", user.id)
-                .order("nome");
+                .order("created_at");
             if (error) throw error;
             return data;
         },

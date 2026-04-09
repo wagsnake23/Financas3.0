@@ -90,7 +90,7 @@ export default function Despesas() {
       .from("cartoes")
       .select("*")
       .eq("user_id", user?.id)
-      .order("nome");
+      .order("created_at");
 
     if (error) {
       console.error(error);
