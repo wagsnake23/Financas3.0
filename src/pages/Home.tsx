@@ -353,9 +353,9 @@ export default function Home() {
                                         </Button>
                                         <div className="flex flex-col items-start gap-0.5 mt-1">
                                             <div className={cn(
-                                                "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border border-white/5",
+                                                "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                 dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
-                                            )} style={{ background: "rgba(255,255,255,0.08)", textShadow: dStats.balanceVar >= 0 ? "0 0 6px rgba(34,197,94,0.4)" : "0 0 6px rgba(239,68,68,0.4)" }}>
+                                            )} style={{ background: dStats.balanceVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)" }}>
                                                 {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
                                             <span className="text-[12px] leading-tight" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
@@ -410,10 +410,12 @@ export default function Home() {
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none text-white tracking-tight leading-none h-[18px]"
+                                                <div className={cn(
+                                                     "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
+                                                     dStats.expenseVar >= 0 ? "text-[#ef4444]" : "text-[#22c55e]"
+                                                )}
                                                      style={{
-                                                         background: dStats.expenseVar >= 0 ? "#ef4444" : "#22c55e",
-                                                         boxShadow: dStats.expenseVar >= 0 ? "0 0 8px rgba(239,68,68,0.4)" : "0 0 8px rgba(34,197,94,0.4)"
+                                                         background: dStats.expenseVar >= 0 ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)"
                                                      }}>
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
@@ -469,10 +471,12 @@ export default function Home() {
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none text-white tracking-tight leading-none h-[18px]"
+                                                <div className={cn(
+                                                     "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
+                                                     dStats.incomeVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
+                                                )}
                                                      style={{
-                                                         background: dStats.incomeVar >= 0 ? "#22c55e" : "#ef4444",
-                                                         boxShadow: dStats.incomeVar >= 0 ? "0 0 8px rgba(34,197,94,0.4)" : "0 0 8px rgba(239,68,68,0.4)"
+                                                         background: dStats.incomeVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)"
                                                      }}>
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
@@ -548,9 +552,9 @@ export default function Home() {
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5 mt-1">
                                     <div className={cn(
-                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border border-white/5",
+                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none",
                                         dStats.balanceVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
-                                    )} style={{ background: "rgba(255,255,255,0.08)", textShadow: dStats.balanceVar >= 0 ? "0 0 6px rgba(34,197,94,0.4)" : "0 0 6px rgba(239,68,68,0.4)" }}>
+                                    )} style={{ background: dStats.balanceVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)" }}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
                                     <span className="text-[12px] leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>Mês anterior</span>
@@ -607,10 +611,12 @@ export default function Home() {
                                         <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
                                     <div className="flex flex-col items-start gap-0.5 mt-1">
-                                        <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none text-white tracking-tight leading-none h-[18px] md:h-[20px]"
+                                        <div className={cn(
+                                             "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
+                                             dStats.incomeVar >= 0 ? "text-[#22c55e]" : "text-[#ef4444]"
+                                        )}
                                              style={{
-                                                 background: dStats.incomeVar >= 0 ? "#22c55e" : "#ef4444",
-                                                 boxShadow: dStats.incomeVar >= 0 ? "0 0 8px rgba(34,197,94,0.4)" : "0 0 8px rgba(239,68,68,0.4)"
+                                                 background: dStats.incomeVar >= 0 ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)"
                                              }}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
@@ -666,10 +672,12 @@ export default function Home() {
                                         <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
                                     <div className="flex flex-col items-start gap-0.5 mt-1">
-                                        <div className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none text-white tracking-tight leading-none h-[18px] md:h-[20px]"
+                                        <div className={cn(
+                                             "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
+                                             dStats.expenseVar >= 0 ? "text-[#ef4444]" : "text-[#22c55e]"
+                                        )}
                                              style={{
-                                                 background: dStats.expenseVar >= 0 ? "#ef4444" : "#22c55e",
-                                                 boxShadow: dStats.expenseVar >= 0 ? "0 0 8px rgba(239,68,68,0.4)" : "0 0 8px rgba(34,197,94,0.4)"
+                                                 background: dStats.expenseVar >= 0 ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)"
                                              }}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
