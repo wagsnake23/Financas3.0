@@ -316,7 +316,7 @@ export default function Home() {
                                         background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                         backdropFilter: "blur(12px)",
                                         border: "none",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -381,7 +381,7 @@ export default function Home() {
                                         background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -442,7 +442,7 @@ export default function Home() {
                                         background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -515,7 +515,7 @@ export default function Home() {
                                 background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                 backdropFilter: "blur(12px)",
                                 border: "none",
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -582,7 +582,7 @@ export default function Home() {
                                         background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -643,7 +643,7 @@ export default function Home() {
                                         background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
