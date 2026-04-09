@@ -108,7 +108,7 @@ export const MobileCreditCardExpenses: React.FC<
         background: "radial-gradient(circle at 20% 80%, rgba(124,58,237,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(124,58,237,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
         backgroundBlendMode: "screen",
         backdropFilter: "blur(14px)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(124,58,237,0.15)"
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(124,58,237,0.15)"
       }}
     >
       <div className="flex items-center justify-between mb-1">
