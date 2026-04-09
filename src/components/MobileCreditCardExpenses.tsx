@@ -104,11 +104,11 @@ export const MobileCreditCardExpenses: React.FC<
       className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "24px",
-        border: "1px solid rgba(255,255,255,0.05)",
+        border: "none",
         background: "radial-gradient(circle at 20% 80%, rgba(124,58,237,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(124,58,237,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
         backgroundBlendMode: "screen",
         backdropFilter: "blur(14px)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(124,58,237,0.15)"
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
       }}
     >
       <div className="flex items-center justify-between mb-1">

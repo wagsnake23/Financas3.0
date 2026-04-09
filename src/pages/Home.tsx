@@ -315,8 +315,8 @@ export default function Home() {
                                     style={{
                                         background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                         backdropFilter: "blur(12px)",
-                                        border: "1px solid rgba(255,255,255,0.05)",
-                                        boxShadow: "0 0 20px rgba(37,99,235,0.25)"
+                                        border: "none",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -377,11 +377,11 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        border: "none",
                                         background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(239,68,68,0.15)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -436,11 +436,11 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        border: "none",
                                         background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(34,197,94,0.15)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -510,8 +510,8 @@ export default function Home() {
                             style={{
                                 background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
                                 backdropFilter: "blur(12px)",
-                                border: "1px solid rgba(255,255,255,0.05)",
-                                boxShadow: "0 0 20px rgba(37,99,235,0.25)"
+                                border: "none",
+                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -574,11 +574,11 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "1px solid rgba(255,255,255,0.05)",
+                                border: "none",
                                         background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(34,197,94,0.15)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -633,11 +633,11 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "1px solid rgba(255,255,255,0.05)",
+                                border: "none",
                                         background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
                                         backgroundBlendMode: "screen",
                                         backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 0 20px rgba(239,68,68,0.15)"
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.4)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
