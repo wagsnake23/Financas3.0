@@ -40,7 +40,7 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
                     filter: `drop-shadow(0 0 6px ${glowColor})`
                 }}
             />
-            <span className="text-[9px] font-black uppercase tracking-tighter leading-none" style={{ color: "rgba(255,255,255,0.4)" }}>{label}</span>
+            <span className="text-[9px] font-black uppercase tracking-tighter leading-none" style={{ color: "#6b7280" }}>{label}</span>
         </div>
     );
 
@@ -48,8 +48,8 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
         <div className="relative flex items-end gap-1 px-1 pb-1">
             {showScaleLines && (
                 <>
-                    <div className="absolute left-0 right-0 h-[0.5px]" style={{ bottom: "48px", background: "rgba(255,255,255,0.1)" }} />
-                    <div className="absolute left-0 right-0 h-[1px]" style={{ bottom: "14.5px", background: "rgba(255,255,255,0.15)" }} />
+                    <div className="absolute left-0 right-0 h-[0.5px]" style={{ bottom: "48px", background: "rgba(0,0,0,0.06)" }} />
+                    <div className="absolute left-0 right-0 h-[1px]" style={{ bottom: "14.5px", background: "rgba(0,0,0,0.1)" }} />
                 </>
             )}
 
@@ -313,16 +313,16 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{
-                                        background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
-                                        backdropFilter: "blur(12px)",
-                                        border: "none",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        backdropFilter: "blur(6px)",
+                                        border: "1px solid rgba(0, 102, 255, 0.12)",
+                                        boxShadow: "inset 0 0 12px rgba(0, 102, 255, 0.08)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[14px] font-medium tracking-tight mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                            <h2 className="text-[14px] font-medium tracking-tight mb-1" style={{ color: "#4b5563" }}>Saldo Mensal</h2>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
@@ -331,13 +331,13 @@ export default function Home() {
                                             className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                             style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                            <button onClick={handlePrevMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
                                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
-                                            <span className="text-[12px] font-bold text-white px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
+                                            <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                            <button onClick={handleNextMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
                                                 <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                         </div>
@@ -349,7 +349,7 @@ export default function Home() {
                                             onClick={() => navigate("/dashboard?filter=investments")}
                                             className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
                                         >
-                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
+                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#111827] overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
                                         </Button>
                                         <div className="flex flex-col items-start gap-0.5 mt-1">
                                             <div className={cn(
@@ -358,17 +358,19 @@ export default function Home() {
                                             )} style={{ background: "#fcfcfc" }}>
                                                 {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
-                                            <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                            <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
                                         </div>
                                     </div>
 
                                     {/* Mini gráfico de barras (Posição Bottom Right) */}
-                                    <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible">
-                                        <MiniFinanceBars
-                                            expenses={dStats.currentExpenses}
-                                            revenues={dStats.currentIncome}
-                                            balance={dStats.currentBalance}
-                                        />
+                                    <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible">
+                                        <div className="p-2 backdrop-blur-[12px] bg-white/[0.03] rounded-xl flex items-end">
+                                            <MiniFinanceBars
+                                                expenses={dStats.currentExpenses}
+                                                revenues={dStats.currentIncome}
+                                                balance={dStats.currentBalance}
+                                            />
+                                        </div>
                                     </div>
                                 </Card>
 
@@ -377,17 +379,16 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "none",
-                                        background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
-                                        backgroundBlendMode: "screen",
-                                        backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                        border: "1px solid rgba(255, 59, 48, 0.15)",
+                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        backdropFilter: "blur(6px)",
+                                        boxShadow: "inset 0 0 14px rgba(255, 59, 48, 0.08)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
@@ -419,7 +420,7 @@ export default function Home() {
                                                      }}>
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
                                             </div>
                                         </div>
                                         <Button
@@ -438,17 +439,16 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "none",
-                                        background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
-                                        backgroundBlendMode: "screen",
-                                        backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                        border: "1px solid rgba(34, 197, 94, 0.15)",
+                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        backdropFilter: "blur(6px)",
+                                        boxShadow: "inset 0 0 14px rgba(34, 197, 94, 0.08)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
@@ -480,7 +480,7 @@ export default function Home() {
                                                      }}>
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
                                             </div>
                                         </div>
                                         <Button
@@ -512,16 +512,16 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                background: "linear-gradient(135deg, rgba(30,58,138,0.85), rgba(37,99,235,0.85)), radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)",
-                                backdropFilter: "blur(12px)",
-                                border: "none",
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                backdropFilter: "blur(6px)",
+                                border: "1px solid rgba(0, 102, 255, 0.12)",
+                                boxShadow: "inset 0 0 12px rgba(0, 102, 255, 0.08)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[14px] font-medium tracking-tight mb-1 md:text-[16px]" style={{ color: "rgba(255,255,255,0.7)" }}>Saldo Mensal</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                    <h2 className="text-[14px] font-medium tracking-tight mb-1 md:text-[16px]" style={{ color: "#4b5563" }}>Saldo Mensal</h2>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
@@ -530,13 +530,13 @@ export default function Home() {
                                     className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                     style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                 >
-                                    <button onClick={handlePrevMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                    <button onClick={handlePrevMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
                                         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
-                                    <span className="text-[12px] font-bold text-white px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                    <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
-                                    <button onClick={handleNextMonth} className="text-white hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                    <button onClick={handleNextMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
                                         <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                 </div>
@@ -548,7 +548,7 @@ export default function Home() {
                                     onClick={() => navigate("/dashboard?filter=investments")}
                                     className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
                                 >
-                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
+                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#111827] overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5 mt-1">
                                     <div className={cn(
@@ -557,20 +557,21 @@ export default function Home() {
                                     )} style={{ background: "#fcfcfc" }}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
-                                    <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                    <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
                                 </div>
                             </div>
 
-                            {/* Mini gráfico de barras (Posição Bottom Right) */}
-                            <div className="absolute bottom-1.5 right-5 pointer-events-none h-0 flex items-end overflow-visible md:bottom-5 md:right-8">
-                                <MiniFinanceBars
-                                    expenses={dStats.currentExpenses}
-                                    revenues={dStats.currentIncome}
-                                    balance={dStats.currentBalance}
-                                    height={isMobile ? 32 : 48}
-                                    showScaleLines={false}
-                                />
-                            </div>
+                             <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible md:bottom-5 md:right-8">
+                                 <div className="p-2 backdrop-blur-[12px] bg-white/[0.03] rounded-xl flex items-end">
+                                     <MiniFinanceBars
+                                         expenses={dStats.currentExpenses}
+                                         revenues={dStats.currentIncome}
+                                         balance={dStats.currentBalance}
+                                         height={isMobile ? 32 : 48}
+                                         showScaleLines={false}
+                                     />
+                                 </div>
+                             </div>
                         </Card>
 
                         {/* CARD RECEITAS */}
@@ -578,17 +579,16 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "none",
-                                        background: "radial-gradient(circle at 20% 80%, rgba(34,197,94,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(34,197,94,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
-                                        backgroundBlendMode: "screen",
-                                        backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                border: "1px solid rgba(34, 197, 94, 0.15)",
+                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                backdropFilter: "blur(6px)",
+                                boxShadow: "inset 0 0 14px rgba(34, 197, 94, 0.08)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ecfdf5", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
@@ -620,7 +620,7 @@ export default function Home() {
                                              }}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
@@ -639,17 +639,16 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "none",
-                                        background: "radial-gradient(circle at 20% 80%, rgba(239,68,68,0.35), transparent 60%), radial-gradient(circle at 80% 20%, rgba(239,68,68,0.18), transparent 70%), linear-gradient(135deg, rgba(15,23,42,0.75), rgba(15,23,42,0.55))",
-                                        backgroundBlendMode: "screen",
-                                        backdropFilter: "blur(14px)",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)"
+                                border: "1px solid rgba(255, 59, 48, 0.15)",
+                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                backdropFilter: "blur(6px)",
+                                boxShadow: "inset 0 0 14px rgba(255, 59, 48, 0.08)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#ffffff", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>
@@ -681,7 +680,7 @@ export default function Home() {
                                              }}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
                                     </div>
                                 </div>
                                 <Button
