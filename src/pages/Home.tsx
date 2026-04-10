@@ -313,7 +313,8 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{
-                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                                        backgroundBlendMode: "soft-light",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -323,7 +324,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
@@ -332,13 +333,13 @@ export default function Home() {
                                             className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                             style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
                                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                             <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
                                                 <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                         </div>
@@ -381,7 +382,8 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
+                                        backgroundBlendMode: "soft-light",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(255, 59, 48, 0.08)",
@@ -391,7 +393,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
@@ -442,7 +444,8 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
+                                        backgroundBlendMode: "soft-light",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(34, 197, 94, 0.08)",
@@ -452,7 +455,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
@@ -516,7 +519,8 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                                backgroundBlendMode: "soft-light",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -526,7 +530,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
@@ -535,13 +539,13 @@ export default function Home() {
                                     className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                     style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                 >
-                                    <button onClick={handlePrevMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
+                                    <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
                                         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                     <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
-                                    <button onClick={handleNextMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
+                                    <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
                                         <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                 </div>
@@ -585,7 +589,8 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
+                                backgroundBlendMode: "soft-light",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(34, 197, 94, 0.08)",
@@ -595,7 +600,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
@@ -646,7 +651,8 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+                                background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
+                                backgroundBlendMode: "soft-light",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(255, 59, 48, 0.08)",
@@ -656,7 +662,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>

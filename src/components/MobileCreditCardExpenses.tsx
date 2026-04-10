@@ -104,7 +104,8 @@ export const MobileCreditCardExpenses: React.FC<
       className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "24px",
-        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
+        background: "linear-gradient(135deg, #f6f5f9 0%, #efedf4 60%, rgba(124, 58, 237, 0.10) 100%)",
+        backgroundBlendMode: "soft-light",
         backdropFilter: "blur(6px)",
         border: "1px solid rgba(0,0,0,0.06)",
         outline: "1px solid rgba(124, 58, 237, 0.08)",
@@ -161,7 +162,7 @@ export const MobileCreditCardExpenses: React.FC<
                 </div>
                 <p className="text-[0.65rem] text-[#22c55e] font-bold md:text-sm">Pago</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#111827", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                 {formatCurrency(totalPaid)}
               </p>
             </div>
@@ -176,7 +177,7 @@ export const MobileCreditCardExpenses: React.FC<
                 />
                 <p className="text-[0.65rem] text-[#ef4444] font-bold md:text-sm">Pendente</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#111827", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                 {formatCurrency(totalPending)}
               </p>
             </div>
@@ -190,7 +191,7 @@ export const MobileCreditCardExpenses: React.FC<
                 />
                 <p className="text-[0.65rem] text-[#4b5563] font-bold md:text-sm">Total</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "#111827", fontFamily: "'Inter', sans-serif", fontWeight: 800, letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                 {formatCurrency(totalCardExpenses)}
               </p>
             </div>
