@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -549,6 +549,24 @@ body {
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.card-saldo::after,
+.card-despesas::after,
+.card-receitas::after,
+.card-cartoes::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  pointer-events: none;
 }
 
 /* Glass Rim Effect */

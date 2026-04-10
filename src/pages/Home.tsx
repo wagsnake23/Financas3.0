@@ -313,10 +313,11 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{
-                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0, 102, 255, 0.12)",
-                                        boxShadow: "inset 0 0 12px rgba(0, 102, 255, 0.08)"
+                                        border: "1px solid rgba(0,0,0,0.06)",
+                                        outline: "1px solid rgba(0, 102, 255, 0.08)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -331,13 +332,13 @@ export default function Home() {
                                             className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                             style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                            <button onClick={handlePrevMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
                                                 <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                             <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                            <button onClick={handleNextMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
                                                 <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                         </div>
@@ -347,9 +348,10 @@ export default function Home() {
                                         {/* Investments Icon Button */}
                                         <Button
                                             onClick={() => navigate("/dashboard?filter=investments")}
-                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
+                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                         >
-                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#111827] overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
+                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                         </Button>
                                         <div className="flex flex-col items-start gap-0.5 mt-1">
                                             <div className={cn(
@@ -364,7 +366,7 @@ export default function Home() {
 
                                     {/* Mini gráfico de barras (Posição Bottom Right) */}
                                     <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible">
-                                        <div className="p-2 backdrop-blur-[12px] bg-white/[0.03] rounded-xl flex items-end">
+                                        <div className="p-2 rounded-xl flex items-end">
                                             <MiniFinanceBars
                                                 expenses={dStats.currentExpenses}
                                                 revenues={dStats.currentIncome}
@@ -379,10 +381,11 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "1px solid rgba(255, 59, 48, 0.15)",
-                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                         backdropFilter: "blur(6px)",
-                                        boxShadow: "inset 0 0 14px rgba(255, 59, 48, 0.08)"
+                                        border: "1px solid rgba(0,0,0,0.06)",
+                                        outline: "1px solid rgba(255, 59, 48, 0.08)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -394,7 +397,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#ef4444] -mr-2 mt-1 border-none"
-                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", boxShadow: "0 6px 14px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4)", borderBottom: "2px solid rgba(0,0,0,0.15)" }}
+                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -406,7 +409,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
                                                 className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.4)" }}
+                                                style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             >
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -425,7 +428,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -439,10 +442,11 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "24px",
-                                        border: "1px solid rgba(34, 197, 94, 0.15)",
-                                        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                         backdropFilter: "blur(6px)",
-                                        boxShadow: "inset 0 0 14px rgba(34, 197, 94, 0.08)"
+                                        border: "1px solid rgba(0,0,0,0.06)",
+                                        outline: "1px solid rgba(34, 197, 94, 0.08)",
+                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -454,7 +458,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#22c55e] -mr-2 mt-1 border-none"
-                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", boxShadow: "0 6px 14px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4)", borderBottom: "2px solid rgba(0,0,0,0.15)" }}
+                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -466,7 +470,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
                                                 className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "#22c55e", boxShadow: "0 0 8px rgba(34,197,94,0.4)" }}
+                                                style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             >
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -485,7 +489,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -512,10 +516,11 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[24px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(0, 102, 255, 0.12)",
-                                boxShadow: "inset 0 0 12px rgba(0, 102, 255, 0.08)"
+                                border: "1px solid rgba(0,0,0,0.06)",
+                                outline: "1px solid rgba(0, 102, 255, 0.08)",
+                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -530,13 +535,13 @@ export default function Home() {
                                     className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
                                     style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                 >
-                                    <button onClick={handlePrevMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                    <button onClick={handlePrevMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
                                         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                     <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                     </span>
-                                    <button onClick={handleNextMonth} className="text-[#111827] hover:bg-black/20 rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all bg-black/10 hover:-translate-y-[1px] active:translate-y-[1px]">
+                                    <button onClick={handleNextMonth} className="text-white border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "linear-gradient(135deg, #3b82f6, #2563eb)", boxShadow: "0 2px 4px rgba(37,99,235,0.15)" }}>
                                         <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                     </button>
                                 </div>
@@ -546,9 +551,10 @@ export default function Home() {
                                 {/* Investments Icon Button */}
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=investments")}
-                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-[10px] shadow-sm border-none transition-all active:scale-90 shrink-0 bg-white/10 hover:bg-white/20"
+                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                 >
-                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-[#111827] overflow-visible" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))" }} />
+                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                 </Button>
                                 <div className="flex flex-col items-start gap-0.5 mt-1">
                                     <div className={cn(
@@ -562,7 +568,7 @@ export default function Home() {
                             </div>
 
                              <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible md:bottom-5 md:right-8">
-                                 <div className="p-2 backdrop-blur-[12px] bg-white/[0.03] rounded-xl flex items-end">
+                                 <div className="p-2 rounded-xl flex items-end">
                                      <MiniFinanceBars
                                          expenses={dStats.currentExpenses}
                                          revenues={dStats.currentIncome}
@@ -579,10 +585,11 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "1px solid rgba(34, 197, 94, 0.15)",
-                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                 backdropFilter: "blur(6px)",
-                                boxShadow: "inset 0 0 14px rgba(34, 197, 94, 0.08)"
+                                border: "1px solid rgba(0,0,0,0.06)",
+                                outline: "1px solid rgba(34, 197, 94, 0.08)",
+                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -594,7 +601,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#22c55e] -mr-2 mt-1 md:text-[14px] border-none"
-                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", boxShadow: "0 6px 14px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4)", borderBottom: "2px solid rgba(0,0,0,0.15)" }}
+                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -606,7 +613,7 @@ export default function Home() {
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=revenues")}
                                         className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                        style={{ background: "#22c55e", boxShadow: "0 0 8px rgba(34,197,94,0.4)" }}
+                                        style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     >
                                         <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
@@ -625,7 +632,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
-                                    style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+                                    style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate("/receitas")}
                                 >
                                     <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -639,10 +646,11 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "24px",
-                                border: "1px solid rgba(255, 59, 48, 0.15)",
-                                background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+                                background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
                                 backdropFilter: "blur(6px)",
-                                boxShadow: "inset 0 0 14px rgba(255, 59, 48, 0.08)"
+                                border: "1px solid rgba(0,0,0,0.06)",
+                                outline: "1px solid rgba(255, 59, 48, 0.08)",
+                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
@@ -654,7 +662,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#ef4444] -mr-2 mt-1 md:text-[14px] border-none"
-                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", boxShadow: "0 6px 14px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4)", borderBottom: "2px solid rgba(0,0,0,0.15)" }}
+                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -666,7 +674,7 @@ export default function Home() {
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=expenses")}
                                         className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                        style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.4)" }}
+                                        style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     >
                                         <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                     </Button>
@@ -685,7 +693,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
-                                    style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+                                    style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate("/despesas")}
                                 >
                                     <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />

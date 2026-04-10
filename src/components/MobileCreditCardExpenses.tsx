@@ -104,10 +104,11 @@ export const MobileCreditCardExpenses: React.FC<
       className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "24px",
-        border: "1px solid rgba(124, 58, 237, 0.15)",
-        background: "linear-gradient(135deg, #f5f7fb, #eef2f7)",
+        background: "linear-gradient(135deg, #f8fafc, #eef2f7)",
         backdropFilter: "blur(6px)",
-        boxShadow: "inset 0 0 14px rgba(124, 58, 237, 0.08)"
+        border: "1px solid rgba(0,0,0,0.06)",
+        outline: "1px solid rgba(124, 58, 237, 0.08)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(124, 58, 237, 0.12)"
       }}
     >
       <div className="flex items-center justify-between mb-1">
@@ -138,7 +139,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         <Button
           className="rounded-[14px] w-full h-[32px] text-xs font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
-          style={{ background: "linear-gradient(135deg, #6d28d9, #7c3aed)", boxShadow: "0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+          style={{ background: "linear-gradient(135deg, #6d28d9, #7c3aed)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
         >
