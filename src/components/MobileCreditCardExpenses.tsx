@@ -162,7 +162,7 @@ export const MobileCreditCardExpenses: React.FC<
                 </div>
                 <p className="text-[0.65rem] text-[#22c55e] font-bold md:text-sm">Pago</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                 {formatCurrency(totalPaid)}
               </p>
             </div>
@@ -177,7 +177,7 @@ export const MobileCreditCardExpenses: React.FC<
                 />
                 <p className="text-[0.65rem] text-[#ef4444] font-bold md:text-sm">Pendente</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                 {formatCurrency(totalPending)}
               </p>
             </div>
@@ -191,7 +191,7 @@ export const MobileCreditCardExpenses: React.FC<
                 />
                 <p className="text-[0.65rem] text-[#4b5563] font-bold md:text-sm">Total</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: "'Inter', sans-serif", fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+              <p className="text-[13px] md:text-[16px] leading-none tracking-tight" style={{ color: "rgba(17, 24, 39, 0.92)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                 {formatCurrency(totalCardExpenses)}
               </p>
             </div>

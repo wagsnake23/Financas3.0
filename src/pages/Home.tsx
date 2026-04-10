@@ -324,7 +324,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
                                         </div>
@@ -393,7 +393,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
                                         </div>
@@ -455,7 +455,7 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
-                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                            <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
                                         </div>
@@ -530,7 +530,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
                                 </div>
@@ -600,7 +600,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
                                 </div>
@@ -662,7 +662,7 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
-                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
+                                    <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.01em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
                                 </div>
