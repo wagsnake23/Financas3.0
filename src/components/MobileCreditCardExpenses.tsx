@@ -114,7 +114,7 @@ export const MobileCreditCardExpenses: React.FC<
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <DynamicIcon name="CreditCard" className="h-6 w-6" style={{ color: "#7c3aed" }} />
-          <h2 className="text-[14px] font-medium md:text-[16px] tracking-tight" style={{ color: "#7c3aed" }}>
+          <h2 className="text-[14px] font-[800] md:text-[16px] tracking-tight" style={{ color: "#7c3aed" }}>
             Cartões
           </h2>
         </div>

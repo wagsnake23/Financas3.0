@@ -322,7 +322,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[14px] font-medium tracking-tight mb-1" style={{ color: "#4b5563" }}>Saldo Mensal</h2>
+                                            <h2 className="text-[14px] font-[800] tracking-tight mb-1" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
                                             <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentBalance)}
                                             </p>
@@ -390,7 +390,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
+                                            <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
                                             <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentExpenses)}
                                             </p>
@@ -451,7 +451,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
+                                            <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
                                             <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                                 {formatCurrency(dStats.currentIncome)}
                                             </p>
@@ -525,7 +525,7 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[14px] font-medium tracking-tight mb-1 md:text-[16px]" style={{ color: "#4b5563" }}>Saldo Mensal</h2>
+                                    <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#2563eb" }}>Saldo Mensal</h2>
                                     <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentBalance)}
                                     </p>
@@ -594,7 +594,7 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#56a37e" }}>Receitas</h2>
+                                    <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#16a34a" }}>Receitas</h2>
                                     <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentIncome)}
                                     </p>
@@ -655,7 +655,7 @@ export default function Home() {
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[14px] font-bold tracking-tight mb-1 md:text-[16px]" style={{ color: "#cc5c5c" }}>Despesas</h2>
+                                    <h2 className="text-[14px] font-[800] tracking-tight mb-1 md:text-[16px]" style={{ color: "#dc2626" }}>Despesas</h2>
                                     <p className="text-[22px] font-[800] tracking-tight leading-none md:text-[26px]" style={{ fontFamily: "'Inter', sans-serif", color: "#111827", letterSpacing: "0.5px", fontVariantNumeric: "tabular-nums" }}>
                                         {formatCurrency(dStats.currentExpenses)}
                                     </p>
