@@ -28,24 +28,24 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
     const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
     const getH = (val: number) => Math.max((Math.abs(val) / maxVal) * height, 2);
 
-    const BarItem = ({ val, color, label, width, glowColor }: { val: number, color: string, label: string, width: string, glowColor: string }) => (
+    const BarItem = ({ val, colorStart, colorEnd, label, width, glowColor }: { val: number, colorStart: string, colorEnd: string, label: string, width: string, glowColor: string }) => (
         <div className="flex flex-col items-center gap-1">
             <div
                 className="transition-all duration-500 ease-out"
                 style={{
                     height: `${getH(val)}px`,
                     width: width,
-                    backgroundColor: color,
-                    borderRadius: "3px",
-                    filter: `drop-shadow(0 0 6px ${glowColor})`
+                    background: `linear-gradient(to top, ${colorStart}, ${colorEnd})`,
+                    borderRadius: "4px",
+                    boxShadow: `inset -2px 0 4px rgba(0,0,0,0.15), inset 2px 0 4px rgba(255,255,255,0.4), 0 4px 10px ${glowColor}`
                 }}
             />
-            <span className="text-[9px] font-black uppercase tracking-tighter leading-none" style={{ color: "#6b7280" }}>{label}</span>
+            <span className="text-[9px] font-[800] uppercase tracking-tighter leading-none" style={{ color: "rgba(17, 24, 39, 0.92)" }}>{label}</span>
         </div>
     );
 
     return (
-        <div className="relative flex items-end gap-1 px-1 pb-1">
+        <div className="relative flex items-end gap-1.5 px-1 pb-1">
             {showScaleLines && (
                 <>
                     <div className="absolute left-0 right-0 h-[0.5px]" style={{ bottom: "48px", background: "rgba(0,0,0,0.06)" }} />
@@ -53,9 +53,9 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
                 </>
             )}
 
-            <BarItem val={expenses} color="#ef4444" glowColor="rgba(239,68,68,0.5)" label="D" width="15px" />
-            <BarItem val={revenues} color="#22c55e" glowColor="rgba(34,197,94,0.5)" label="R" width="15px" />
-            <BarItem val={balance} color="#3b82f6" glowColor="rgba(59,130,246,0.5)" label="S" width="15px" />
+            <BarItem val={expenses} colorStart="#dc2626" colorEnd="#ef4444" glowColor="rgba(220,38,38,0.4)" label="D" width="16px" />
+            <BarItem val={revenues} colorStart="#16a34a" colorEnd="#22c55e" glowColor="rgba(22,163,74,0.4)" label="R" width="16px" />
+            <BarItem val={balance} colorStart="#2563eb" colorEnd="#3b82f6" glowColor="rgba(37,99,235,0.4)" label="S" width="16px" />
         </div>
     );
 };
