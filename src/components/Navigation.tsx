@@ -219,20 +219,17 @@ export const Navigation = () => {
                     </SheetTrigger>
                     <SheetContent
                       side="right"
-                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden"
-                      style={{
-                        background: 'radial-gradient(circle at top center, rgba(255,255,255,0.4), transparent 70%), linear-gradient(180deg, #C8D9F2 0%, #E8F0FA 40%, #F8FAFC 100%)',
-                      }}
+                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-[#F8FAFF]"
                     >
                       {/* Efeito institucional moderno no topo */}
                       <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" />
 
-                      <SheetHeader className="relative text-left pt-10 pb-6 px-6 border-b border-white/40">
+                      <SheetHeader className="relative text-left pt-12 pb-6 px-6 bg-[#2B457D] border-b border-white/10 shadow-sm">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-xl font-bold text-[#1E40AF] truncate drop-shadow-sm">
+                          <span className="text-xl font-bold text-white truncate drop-shadow-sm">
                             {fullName}
                           </span>
-                          <span className="text-xs text-[#64748B] truncate font-medium">
+                          <span className="text-xs text-blue-100/70 truncate font-medium">
                             {user?.email}
                           </span>
                         </div>
