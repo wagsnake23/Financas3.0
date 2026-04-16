@@ -198,7 +198,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
             <SelectValue placeholder="Selecione o tipo de investimento" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-2xl border-none shadow-xl">
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
             {incomeInvestmentSubcategories.length === 0 ? (
               <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
@@ -223,7 +223,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <SelectTrigger className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm")}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-2xl border-none shadow-xl">
               {investmentTypes.map(t => (
                 <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
                   <div className="flex items-center gap-2">

@@ -587,13 +587,13 @@ export default function Investments() { // Alterado para export default function
                   >
                       <ToggleGroupItem
                         value="daily"
-                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#2563EB] data-[state=on]:to-[#1E40AF] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       >
                         DIA
                       </ToggleGroupItem>
                       <ToggleGroupItem
                         value="monthly"
-                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#2563EB] data-[state=on]:to-[#1E40AF] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       >
                         MÊS
                       </ToggleGroupItem>
@@ -679,7 +679,7 @@ export default function Investments() { // Alterado para export default function
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
                                 <div
-                                  className="inline-flex items-center gap-1.5 text-white px-3 py-1 rounded-full text-[11px] font-black bg-gradient-to-b from-[#2563EB] to-[#1E40AF] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                                  className="inline-flex items-center gap-1.5 text-white px-3 py-1 rounded-full text-[11px] font-black bg-gradient-to-b from-[#4B76D1] to-[#3555A2] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
                                 >
                                 <DynamicIcon name="TrendingUp" className="h-3 w-3" />
                                 <span>{investment.rentabilidade}% a.a.</span>
@@ -1025,13 +1025,13 @@ export default function Investments() { // Alterado para export default function
                     >
                         <ToggleGroupItem
                           value="daily"
-                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#2563EB] data-[state=on]:to-[#1E40AF] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                         >
                           DIA
                         </ToggleGroupItem>
                         <ToggleGroupItem
                           value="monthly"
-                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#2563EB] data-[state=on]:to-[#1E40AF] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                         >
                           MÊS
                         </ToggleGroupItem>
@@ -1123,7 +1123,7 @@ export default function Investments() { // Alterado para export default function
                               <div className="flex flex-col items-end gap-2">
                                 {/* Profitability Badge */}
                                 <div
-                                  className="inline-flex items-center gap-1.5 text-white px-3.5 py-1.5 rounded-full text-[12px] font-black bg-gradient-to-b from-[#2563EB] to-[#1E40AF] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                                  className="inline-flex items-center gap-1.5 text-white px-3.5 py-1.5 rounded-full text-[12px] font-black bg-gradient-to-b from-[#4B76D1] to-[#3555A2] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
                                 >
                                   <DynamicIcon name="TrendingUp" className="h-3 w-3" />
                                   <span>{investment.rentabilidade}% a.a.</span>
