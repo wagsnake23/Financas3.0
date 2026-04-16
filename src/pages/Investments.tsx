@@ -97,7 +97,33 @@ export default function Investments() { // Alterado para export default function
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
   const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
+  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
+  const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
+  const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
+  const [taxaAdicional, setTaxaAdicional] = useState<number | undefined>(0);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+
+  // Fetch active indexers (CDI/IPCA)
+  const { data: indexadores = [] } = useQuery({
+    queryKey: ["indexadores"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("indexadores")
+        .select("*")
+        .is("data_fim", null);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI")?.taxa_anual || 10.65, [indexadores]);
+  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA")?.taxa_anual || 5.0, [indexadores]);
+
+  const taxaEstimada = useMemo(() => {
+    if (tipoRentabilidade === "fixo") return profitability || 0;
+    const taxaBase = indexador === "CDI" ? cdi : ipca;
+    return (taxaBase * (percentualIndexador || 0) / 100) + (taxaAdicional || 0);
+  }, [tipoRentabilidade, indexador, percentualIndexador, taxaAdicional, profitability, cdi, ipca]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -153,6 +179,9 @@ export default function Investments() { // Alterado para export default function
       setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
       setAmount(undefined); // Reset para undefined
       setProfitability(undefined); // Reset para undefined
+      setPercentualIndexador(undefined); // Reset percentual indexador
+      setTaxaAdicional(undefined); // Reset taxa adicional para limpar o campo
+      setTipoRentabilidade("indexado"); // Reinicia sempre como indexado
       setDate(new Date()); // Reset para Date
       setType("fixed");
       setValidationErrors({}); // Clear errors on success
@@ -215,9 +244,15 @@ export default function Investments() { // Alterado para export default function
       newErrors.amount = true;
       hasError = true;
     }
-    if (profitability === undefined || profitability < 0) { // Assuming profitability can be 0
+    if (tipoRentabilidade === "fixo" && (profitability === undefined || profitability < 0)) {
       newErrors.profitability = true;
       hasError = true;
+    }
+    if (tipoRentabilidade === "indexado") {
+      if (percentualIndexador === undefined || percentualIndexador <= 0) {
+        newErrors.percentualIndexador = true;
+        hasError = true;
+      }
     }
     if (!date) {
       newErrors.date = true;
@@ -242,7 +277,11 @@ export default function Investments() { // Alterado para export default function
       tipo: type,
       valor: amount, // Usar o valor como number
       data: formattedDate, // Usar a data formatada
-      rentabilidade: profitability, // Usar o valor como number
+      tipo_rentabilidade: tipoRentabilidade,
+      taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
+      indexador: tipoRentabilidade === "indexado" ? indexador : null,
+      percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
+      taxa_adicional: tipoRentabilidade === "indexado" ? taxaAdicional : null,
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -273,6 +312,7 @@ export default function Investments() { // Alterado para export default function
 
   const handleUpdateSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["indexadores"] }); // Also refresh indexers if needed
     toast.success("Investimento atualizado!", {
       style: toastSuccessStyle,
       duration: toastDuration
@@ -282,8 +322,17 @@ export default function Investments() { // Alterado para export default function
 
   const calculatedInvestments = useMemo(() => {
     return investments.map(inv => {
-      // 1. Taxa diária: (1 + (rentabilidade / 100))^(1 / 252) - 1
-      const taxaDiaria = Math.pow(1 + (inv.rentabilidade / 100), 1 / 252) - 1;
+      // Logic for Annual Rate based on type
+      let taxaAnual = 0;
+      if (inv.tipo_rentabilidade === "fixo") {
+        taxaAnual = inv.taxa_fixa || 0;
+      } else if (inv.tipo_rentabilidade === "indexado") {
+        const taxaBase = inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0);
+        taxaAnual = (taxaBase * ((inv.percentual_indexador || 0) / 100)) + (inv.taxa_adicional || 0);
+      }
+
+      // 1. Taxa diária: (1 + (taxaAnual / 100))^(1 / 252) - 1
+      const taxaDiaria = Math.pow(1 + (taxaAnual / 100), 1 / 252) - 1;
 
       // 2. Dias úteis passados
       const [year, month, day] = inv.data.split('-').map(Number);
@@ -304,16 +353,17 @@ export default function Investments() { // Alterado para export default function
 
       return {
         ...inv,
+        rentabilidade: taxaAnual, // Store derived real yield for display
         valorAtualVirtual,
         rendimentoHojeVirtual,
         taxaDiaria
       };
     });
-  }, [investments]);
+  }, [investments, cdi, ipca]);
 
   const totalProjectedAnnualYield = useMemo(() => {
     const rawTotal = calculatedInvestments.reduce((sum, inv) => {
-      const annualRateDecimal = inv.rentabilidade / 100;
+      const annualRateDecimal = inv.rentabilidade / 100; // already derived in calculatedInvestments
       const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
       const dailyRateTruncated = Math.trunc(dailyRate * 1e10) / 1e10;
       const annualRateDerived = Math.pow(1 + dailyRateTruncated, 252) - 1;
@@ -469,25 +519,68 @@ export default function Investments() { // Alterado para export default function
                   </Select>
                 </div>
 
-                {/* Agrupando Valor Investido e Rentabilidade */}
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
+                <div className={cn(
+                  "grid gap-2",
+                  tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
+                )}>
                   <div className="space-y-2">
-                    <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                    <CurrencyBR
-                      value={amount}
-                      onChange={(v) => {
-                        setAmount(v);
-                        setValidationErrors(prev => ({ ...prev, amount: false }));
+                    <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                    <Select
+                      value={tipoRentabilidade}
+                      onValueChange={(v: "fixo" | "indexado") => {
+                        setTipoRentabilidade(v);
+                        if (v === "fixo") {
+                          setPercentualIndexador(undefined);
+                          setTaxaAdicional(0);
+                        } else {
+                          setProfitability(undefined);
+                        }
                       }}
-                      disabled={loadingForm}
-                      className={cn(
-                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
-                        isMobile && "h-9 text-sm",
-                        getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
-                      )}
-                    />
+                    >
+                      <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-2xl border-none shadow-xl">
+                        <SelectItem value="fixo" className="text-sm">Fixa</SelectItem>
+                        <SelectItem value="indexado" className="text-sm">Indexada</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
+                  {tipoRentabilidade === "indexado" && (
+                    <div className="space-y-2 animate-in fade-in slide-in-from-left-2 duration-300">
+                      <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
+                      <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
+                        <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-2xl border-none shadow-xl">
+                          <SelectItem value="CDI" className="text-sm">CDI</SelectItem>
+                          <SelectItem value="IPCA" className="text-sm">IPCA</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                  <CurrencyBR
+                    value={amount}
+                    onChange={(v) => {
+                      setAmount(v);
+                      setValidationErrors(prev => ({ ...prev, amount: false }));
+                    }}
+                    disabled={loadingForm}
+                    className={cn(
+                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
+                      isMobile && "h-9 text-sm",
+                      getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
+                    )}
+                  />
+                </div>
+
+                {tipoRentabilidade === "fixo" ? (
                   <div className="space-y-2">
                     <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                     <NumericInput
@@ -510,7 +603,56 @@ export default function Investments() { // Alterado para export default function
                       )}
                     />
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
+                      <NumericInput
+                        value={percentualIndexador}
+                        onValueChange={(v) => setPercentualIndexador(v.floatValue)}
+                        placeholder="Ex: 110"
+                        className={cn(
+                          "h-9 rounded-xl bg-white border-[#A5C2F9]/50 text-xs font-bold",
+                          getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                        )}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className={cn(isMobile && "text-xs")}>Taxa Adicional (% a.a)</Label>
+                      <NumericInput
+                        value={taxaAdicional}
+                        onValueChange={(v) => setTaxaAdicional(v.floatValue)}
+                        placeholder="Ex: 0,50"
+                        className="h-9 rounded-xl bg-white border-[#A5C2F9]/50 text-xs font-bold placeholder:text-slate-300 placeholder:font-normal"
+                      />
+                    </div>
+
+                    {/* Preview Indexado */}
+                    {amount !== undefined && percentualIndexador !== undefined && (
+                      <div className="p-3 rounded-xl bg-[#218C5C]/5 border border-[#218C5C]/20 animate-fade-in shadow-sm">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-black text-[#218C5C] uppercase tracking-wider">Simulação</span>
+                          <div className="flex items-center gap-1">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#218C5C] animate-pulse" />
+                            <span className="text-[10px] font-bold text-[#218C5C]">Ativo</span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Taxa Est. (% a.a)</p>
+                            <p className="text-sm font-black text-[#218C5C]">{taxaEstimada.toFixed(2)}%</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Rend. Diário Est.</p>
+                            <p className="text-sm font-black text-[#218C5C]">
+                              {amount ? formatCurrency((amount * (Math.pow(1 + taxaEstimada / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
@@ -678,12 +820,21 @@ export default function Investments() { // Alterado para export default function
 
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
-                                <div
-                                  className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3 py-1 rounded-full text-[11px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
-                                >
-                                  <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                  <span>{investment.rentabilidade}% a.a.</span>
-                                </div>
+                                  <div
+                                    className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3 py-1 rounded-full text-[11px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
+                                  >
+                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                    <div className="flex flex-col items-start leading-none">
+                                      <span className="text-[11px]">
+                                        {investment.tipo_rentabilidade === "indexado"
+                                          ? `${investment.percentual_indexador}% ${investment.indexador}${investment.taxa_adicional ? ` + ${investment.taxa_adicional}%` : ""}`
+                                          : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
+                                      </span>
+                                      {investment.tipo_rentabilidade === "indexado" && (
+                                        <span className="text-[9px] opacity-70 font-medium">≈ {investment.rentabilidade.toFixed(2)}% a.a.</span>
+                                      )}
+                                    </div>
+                                  </div>
 
                               {/* Data Bottom Right */}
                               <div className="text-[13px] text-gray-400 font-black uppercase tracking-widest">
@@ -906,25 +1057,68 @@ export default function Investments() { // Alterado para export default function
                       </Select>
                     </div>
 
-                    {/* Agrupando Valor Investido e Rentabilidade */}
-                    <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-1")}>
+                    <div className={cn(
+                      "grid gap-4",
+                      tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
+                    )}>
                       <div className="space-y-2">
-                        <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                        <CurrencyBR
-                          value={amount}
-                          onChange={(v) => {
-                            setAmount(v);
-                            setValidationErrors(prev => ({ ...prev, amount: false }));
+                        <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                        <Select
+                          value={tipoRentabilidade}
+                          onValueChange={(v: "fixo" | "indexado") => {
+                            setTipoRentabilidade(v);
+                            if (v === "fixo") {
+                              setPercentualIndexador(undefined);
+                              setTaxaAdicional(0);
+                            } else {
+                              setProfitability(undefined);
+                            }
                           }}
-                          disabled={loadingForm}
-                          className={cn(
-                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                            isMobile && "h-9 text-sm",
-                            getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
-                          )}
-                        />
+                        >
+                          <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-2xl border-none shadow-xl">
+                            <SelectItem value="fixo" className="text-sm">Fixa</SelectItem>
+                            <SelectItem value="indexado" className="text-sm">Indexada</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
 
+                      {tipoRentabilidade === "indexado" && (
+                        <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
+                          <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
+                          <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
+                            <SelectTrigger className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-2xl border-none shadow-xl">
+                              <SelectItem value="CDI">CDI</SelectItem>
+                              <SelectItem value="IPCA">IPCA</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                      <CurrencyBR
+                        value={amount}
+                        onChange={(v) => {
+                          setAmount(v);
+                          setValidationErrors(prev => ({ ...prev, amount: false }));
+                        }}
+                        disabled={loadingForm}
+                        className={cn(
+                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
+                        )}
+                      />
+                    </div>
+
+                    {tipoRentabilidade === "fixo" ? (
                       <div className="space-y-2">
                         <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                         <NumericInput
@@ -941,13 +1135,62 @@ export default function Investments() { // Alterado para export default function
                           fixedDecimalScale={false}
                           maxLength={7}
                           className={cn(
-                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
                             isMobile && "h-9 text-sm",
                             getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                           )}
                         />
                       </div>
-                    </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
+                          <NumericInput
+                            value={percentualIndexador}
+                            onValueChange={(v) => setPercentualIndexador(v.floatValue)}
+                            placeholder="Ex: 110,00"
+                            className={cn(
+                              "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                              getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                            )}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className={cn(isMobile && "text-xs")}>Taxa Adicional (% a.a)</Label>
+                          <NumericInput
+                            value={taxaAdicional}
+                            onValueChange={(v) => setTaxaAdicional(v.floatValue)}
+                            placeholder="Ex: 0,50"
+                            className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal"
+                          />
+                        </div>
+
+                        {/* Preview Indexado Desktop */}
+                        {amount !== undefined && percentualIndexador !== undefined && (
+                          <div className="p-4 rounded-2xl bg-[#218C5C]/5 border border-[#218C5C]/20 animate-fade-in shadow-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-[11px] font-black text-[#218C5C] uppercase tracking-[0.1em]">Simulação Estimada</span>
+                              <div className="flex items-center gap-1.5">
+                                <span className="h-2 w-2 rounded-full bg-[#218C5C] animate-pulse" />
+                                <span className="text-[11px] font-bold text-[#218C5C]">Tempo Real</span>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-8">
+                              <div>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rentabilidade Anual</p>
+                                <p className="text-xl font-black text-[#218C5C] tracking-tight">{taxaEstimada.toFixed(2)}% <span className="text-xs">a.a.</span></p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rendimento Diário</p>
+                                <p className="text-xl font-black text-[#218C5C] tracking-tight">
+                                  {amount ? formatCurrency((amount * (Math.pow(1 + taxaEstimada / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
@@ -1122,12 +1365,21 @@ export default function Investments() { // Alterado para export default function
 
                               <div className="flex flex-col items-end gap-2">
                                 {/* Profitability Badge */}
-                                <div
-                                  className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
-                                >
-                                  <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                  <span>{investment.rentabilidade}% a.a.</span>
-                                </div>
+                                  <div
+                                    className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
+                                  >
+                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                    <div className="flex flex-col items-start leading-none">
+                                      <span className="text-[12px]">
+                                        {investment.tipo_rentabilidade === "indexado"
+                                          ? `${investment.percentual_indexador}% ${investment.indexador}${investment.taxa_adicional ? ` + ${investment.taxa_adicional}%` : ""}`
+                                          : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
+                                      </span>
+                                      {investment.tipo_rentabilidade === "indexado" && (
+                                        <span className="text-[10px] opacity-70 font-medium">≈ {investment.rentabilidade.toFixed(2)}% a.a.</span>
+                                      )}
+                                    </div>
+                                  </div>
 
                                 {/* Data Bottom Right */}
                                 <div className="text-[13px] sm:text-[14px] text-gray-400 font-black uppercase tracking-widest mt-1">

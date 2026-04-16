@@ -43,7 +43,11 @@ export interface Investment {
   tipo: string;
   valor: number;
   data: string;
-  rentabilidade: number;
+  tipo_rentabilidade: "fixo" | "indexado"; // NOVO
+  taxa_fixa?: number | null; // NOVO
+  indexador?: "CDI" | "IPCA" | null; // NOVO
+  percentual_indexador?: number | null; // NOVO
+  taxa_adicional?: number | null; // NOVO
   created_at?: string | null;
 }
 

@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -274,30 +274,69 @@ export type Database = {
           data: string
           id: string
           nome: string
-          rentabilidade: number
           tipo: string
           user_id: string
           valor: number
+          tipo_rentabilidade: string | null
+          taxa_fixa: number | null
+          indexador: string | null
+          percentual_indexador: number | null
+          taxa_adicional: number | null
         }
         Insert: {
           created_at?: string
           data: string
           id?: string
           nome: string
-          rentabilidade: number
           tipo: string
           user_id: string
           valor: number
+          tipo_rentabilidade?: string | null
+          taxa_fixa?: number | null
+          indexador?: string | null
+          percentual_indexador?: number | null
+          taxa_adicional?: number | null
         }
         Update: {
           created_at?: string
           data?: string
           id?: string
           nome?: string
-          rentabilidade?: number
           tipo?: string
           user_id?: string
           valor?: number
+          tipo_rentabilidade?: string | null
+          taxa_fixa?: number | null
+          indexador?: string | null
+          percentual_indexador?: number | null
+          taxa_adicional?: number | null
+        }
+        Relationships: []
+      }
+      indexadores: {
+        Row: {
+          id: string
+          tipo: string
+          taxa_anual: number
+          data_inicio: string
+          data_fim: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tipo: string
+          taxa_anual: number
+          data_inicio: string
+          data_fim?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tipo?: string
+          taxa_anual?: number
+          data_inicio?: string
+          data_fim?: string | null
+          created_at?: string
         }
         Relationships: []
       }
