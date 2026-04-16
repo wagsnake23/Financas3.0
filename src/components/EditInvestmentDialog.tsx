@@ -15,7 +15,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Investment, AppCategory } from "@/types/finance"; // Importar AppCategory
-import { format, parseISO } from "date-fns";
+import { format, parseISO, differenceInBusinessDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR
@@ -57,7 +57,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">(investmentToEdit.tipo_rentabilidade || "fixo");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">(investmentToEdit.indexador || "CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>(investmentToEdit.percentual_indexador || undefined);
-  const [taxaAdicional, setTaxaAdicional] = useState<number | undefined>(investmentToEdit.taxa_adicional || 0);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // Fetch active indexers
@@ -79,8 +78,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
     const taxaBase = indexador === "CDI" ? cdi : ipca;
-    return (taxaBase * (percentualIndexador || 0) / 100) + (taxaAdicional || 0);
-  }, [tipoRentabilidade, indexador, percentualIndexador, taxaAdicional, profitability, cdi, ipca]);
+    return (taxaBase * (percentualIndexador || 0) / 100);
+  }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
 
   // Cálculo reativo da Rentabilidade Diária (R$) - Padrão Bancário
   const dailyProfitabilityRS = useMemo(() => {
@@ -122,7 +121,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     setTipoRentabilidade(investmentToEdit.tipo_rentabilidade || "fixo");
     setIndexador(investmentToEdit.indexador || "CDI");
     setPercentualIndexador(investmentToEdit.percentual_indexador || undefined);
-    setTaxaAdicional(investmentToEdit.taxa_adicional || 0);
     setValidationErrors({}); // Clear errors on new edit
   }, [investmentToEdit]);
 
@@ -140,7 +138,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           taxa_fixa: updatedInvestment.taxa_fixa,
           indexador: updatedInvestment.indexador,
           percentual_indexador: updatedInvestment.percentual_indexador,
-          taxa_adicional: updatedInvestment.taxa_adicional,
+          taxa_adicional: null,
         })
         .eq("id", updatedInvestment.id)
         .eq("user_id", user.id) // Corrigido para user_id
@@ -222,7 +220,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      taxa_adicional: tipoRentabilidade === "indexado" ? taxaAdicional : null,
+      taxa_adicional: null,
     };
 
     updateInvestmentMutation.mutate(updatedInvestment);
@@ -264,7 +262,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className={cn(isMobile ? "grid grid-cols-[1.6fr_1fr] gap-2" : "space-y-0.5")}>
+      <div className="space-y-0.5">
         <div className="space-y-0.5">
           <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
           <Select value={type} onValueChange={setType} disabled={loading}>
@@ -284,18 +282,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </Select>
         </div>
 
-        {isMobile && (
-          <div className="space-y-0.5">
-            <Label className={cn(isMobile && "text-xs")}>Estimativa</Label>
-            <div className={cn(
-              "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-10 px-3 flex items-center font-bold text-[#218C5C] select-none text-[12px]",
-              isMobile && "h-9",
-              "opacity-90"
-            )}>
-              {taxaEstimada.toFixed(2)}% a.a.
-            </div>
-          </div>
-        )}
       </div>
 
       <div className={cn(
@@ -310,7 +296,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setTipoRentabilidade(v);
               if (v === "fixo") {
                 setPercentualIndexador(undefined);
-                setTaxaAdicional(0);
               } else {
                 setProfitability(undefined);
               }
@@ -383,7 +368,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
             <NumericInput
               value={percentualIndexador}
               onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-              placeholder="Ex: 110,00"
+              placeholder="0,00"
               className={cn(
                 "h-10 rounded-xl w-full bg-white border-slate-300 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
                 getBorderClass({ isInvalid: validationErrors.percentualIndexador })
@@ -392,36 +377,32 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </div>
         )}
 
-        {/* Lado Esquerdo - Linha 2: Estimativa Calculada (Bruta e Líquida) */}
-        <div className="space-y-0.5">
+        {/* Linha 2 Full Width: Estimativa Calculada (Bruta e Líquida) */}
+        <div className="space-y-0.5 col-span-2">
           <Label className={cn(isMobile && "text-xs")}>Estimativa (Bruto/IR/Líq.)</Label>
           <div className={cn(
-            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-10 px-2 flex flex-col justify-center font-bold text-[#218C5C] select-none text-[10px] opacity-90 leading-tight",
-            isMobile && "h-10"
+            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-12 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight",
           )}>
-            <div>Bruto: {taxaEstimada.toFixed(2)}% a.a.</div>
-            <div className="flex justify-between w-full">
-              <span className="text-red-500/70">IR: {getAliquotaIR(date || new Date())}%</span>
-              <span className="text-[#218C5C]">Líq: {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%</span>
+            <div className="flex justify-between w-full items-center">
+              {/* Lado Esquerdo: IR (Valor Real Acumulado e Taxa) */}
+              <div className="flex flex-col gap-0.5">
+                <span className="text-red-500 text-[11px]">
+                  -{formatCurrency(
+                    ((amount || 0) * (Math.pow(1 + (Math.pow(1 + (taxaEstimada / 100), 1 / 252) - 1), Math.max(0, differenceInBusinessDays(new Date(), date || new Date()))) - 1)) * 
+                    (getAliquotaIR(date || new Date()) / 100)
+                  )}
+                </span>
+                <span className="text-red-500/60 text-[9px] uppercase tracking-wider">IR: {getAliquotaIR(date || new Date())}%</span>
+              </div>
+
+              {/* Lado Direito: Bruto e Líquido */}
+              <div className="flex flex-col items-end gap-0.5 text-right">
+                <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider">Bruto: {taxaEstimada.toFixed(2)}%</span>
+                <span className="text-[#218C5C] text-[12px] font-black">Líq: {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}% a.a.</span>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Lado Direito - Linha 2: Taxa Adicional (se houver) */}
-        {tipoRentabilidade === "indexado" ? (
-          <div className="space-y-0.5">
-            <Label className={cn(isMobile && "text-xs")}>Taxa Adicional (% a.a)</Label>
-            <NumericInput
-              value={taxaAdicional}
-              onValueChange={(v) => setTaxaAdicional(v.floatValue)}
-              placeholder="Ex: 0,50"
-              className="h-10 rounded-xl w-full bg-white border-slate-300 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal"
-            />
-          </div>
-        ) : (
-          /* Placeholder para manter o grid alinhado no modo fixo */
-          <div className="hidden md:block"></div>
-        )}
       </div>
 
       <div className={cn("space-y-0.5")}>

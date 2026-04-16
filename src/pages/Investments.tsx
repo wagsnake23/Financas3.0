@@ -97,10 +97,9 @@ export default function Investments() { // Alterado para export default function
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
   const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
-  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
+  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("fixo");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
-  const [taxaAdicional, setTaxaAdicional] = useState<number | undefined>(0);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   // Fetch active indexers (CDI/IPCA)
@@ -122,8 +121,8 @@ export default function Investments() { // Alterado para export default function
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
     const taxaBase = indexador === "CDI" ? cdi : ipca;
-    return (taxaBase * (percentualIndexador || 0) / 100) + (taxaAdicional || 0);
-  }, [tipoRentabilidade, indexador, percentualIndexador, taxaAdicional, profitability, cdi, ipca]);
+    return (taxaBase * (percentualIndexador || 0) / 100);
+  }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -180,8 +179,7 @@ export default function Investments() { // Alterado para export default function
       setAmount(undefined); // Reset para undefined
       setProfitability(undefined); // Reset para undefined
       setPercentualIndexador(undefined); // Reset percentual indexador
-      setTaxaAdicional(undefined); // Reset taxa adicional para limpar o campo
-      setTipoRentabilidade("indexado"); // Reinicia sempre como indexado
+      setTipoRentabilidade("fixo"); // Reinicia como fixo
       setDate(new Date()); // Reset para Date
       setType("fixed");
       setValidationErrors({}); // Clear errors on success
@@ -281,7 +279,7 @@ export default function Investments() { // Alterado para export default function
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      taxa_adicional: tipoRentabilidade === "indexado" ? taxaAdicional : null,
+      taxa_adicional: null,
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -464,7 +462,7 @@ export default function Investments() { // Alterado para export default function
                 backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
               }}
             >
-              <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
+              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -539,7 +537,6 @@ export default function Investments() { // Alterado para export default function
                         setTipoRentabilidade(v);
                         if (v === "fixo") {
                           setPercentualIndexador(undefined);
-                          setTaxaAdicional(0);
                         } else {
                           setProfitability(undefined);
                         }
@@ -618,22 +615,14 @@ export default function Investments() { // Alterado para export default function
                       <NumericInput
                         value={percentualIndexador}
                         onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-                        placeholder="Ex: 110"
+                        placeholder="0,00"
                         className={cn(
                           "h-9 rounded-xl bg-white border-[#A5C2F9]/50 text-xs font-bold",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador })
                         )}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className={cn(isMobile && "text-xs")}>Taxa Adicional (% a.a)</Label>
-                      <NumericInput
-                        value={taxaAdicional}
-                        onValueChange={(v) => setTaxaAdicional(v.floatValue)}
-                        placeholder="Ex: 0,50"
-                        className="h-9 rounded-xl bg-white border-[#A5C2F9]/50 text-xs font-bold placeholder:text-slate-300 placeholder:font-normal"
-                      />
-                    </div>
+
 
                     {/* Preview Indexado */}
                     {amount !== undefined && percentualIndexador !== undefined && (
@@ -1005,7 +994,7 @@ export default function Investments() { // Alterado para export default function
                     backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
                   }}
                 >
-                  <h2 className={cn("text-2xl font-bold mb-6 text-[#0556C3]", isMobile && "text-xl mb-4")}>💶 Novo Investimento</h2>
+                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -1079,7 +1068,6 @@ export default function Investments() { // Alterado para export default function
                             setTipoRentabilidade(v);
                             if (v === "fixo") {
                               setPercentualIndexador(undefined);
-                              setTaxaAdicional(0);
                             } else {
                               setProfitability(undefined);
                             }
@@ -1158,22 +1146,14 @@ export default function Investments() { // Alterado para export default function
                           <NumericInput
                             value={percentualIndexador}
                             onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-                            placeholder="Ex: 110,00"
+                            placeholder="0,00"
                             className={cn(
                               "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
                               getBorderClass({ isInvalid: validationErrors.percentualIndexador })
                             )}
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label className={cn(isMobile && "text-xs")}>Taxa Adicional (% a.a)</Label>
-                          <NumericInput
-                            value={taxaAdicional}
-                            onValueChange={(v) => setTaxaAdicional(v.floatValue)}
-                            placeholder="Ex: 0,50"
-                            className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal"
-                          />
-                        </div>
+
 
                         {/* Preview Indexado Desktop */}
                         {amount !== undefined && percentualIndexador !== undefined && (
@@ -1269,7 +1249,7 @@ export default function Investments() { // Alterado para export default function
                   style={{ backgroundColor: "transparent" }}
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
+                    <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
                     <ToggleGroup
                       type="single"
                       value={yieldViewMode}
