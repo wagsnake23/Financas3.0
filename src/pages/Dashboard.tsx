@@ -480,25 +480,8 @@ export default function Dashboard() {
                     neumorphism={true}
                     className="card-saldo overflow-hidden h-full"
                     forceTransparentBackground={true}
-                  >
-                    <div className="flex items-center mt-6 md:mt-8 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
-                      <Button
-                        onClick={() => setSearchParams({})}
-                        className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                        style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                      >
-                        <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
-                      </Button>
-                      <div className="flex flex-col items-start gap-0.5">
-                        <div className={cn(
-                          "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] md:text-[11px] font-bold border-none",
-                          "text-[#ef4444]"
-                        )} style={{ background: "#fcfcfc" }}>
-                          Desativar Filtro
-                        </div>
-                        <span className="text-[10px] font-medium leading-tight md:text-[11px]" style={{ color: "#4b5563" }}>Investimentos</span>
-                      </div>
-                    </div>
+                    >
+                    <div className="h-12 md:h-[52px] w-full" />
                   </StatCard>
 
                   {/* Investment Cockpit - Replaced with Investments Module design - Using 2/3 of space on large screens */}
@@ -611,24 +594,7 @@ export default function Dashboard() {
                   className="card-saldo overflow-hidden"
                   forceTransparentBackground={true}
                 >
-                  <div className="flex items-center mt-3 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
-                    <Button
-                      onClick={() => setSearchParams({ filter: "investments" })}
-                      className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                      style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                    >
-                      <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
-                    </Button>
-                    <div className="flex flex-col items-start gap-0.5">
-                      <div className={cn(
-                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
-                        "text-[#22c55e]"
-                      )} style={{ background: "#fcfcfc" }}>
-                        Ativar Filtro
-                      </div>
-                      <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Investimentos</span>
-                    </div>
-                  </div>
+                  <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
 
                 {/* 1. Projeção do Patrimônio */}
@@ -831,24 +797,7 @@ export default function Dashboard() {
                 className="card-saldo overflow-hidden"
                 forceTransparentBackground={true}
               >
-                <div className="flex items-center mt-3 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
-                  <Button
-                    onClick={() => setSearchParams({ filter: "investments" })}
-                    className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                  >
-                    <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
-                  </Button>
-                  <div className="flex flex-col items-start gap-0.5">
-                    <div className={cn(
-                      "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
-                      "text-[#22c55e]"
-                    )} style={{ background: "#fcfcfc" }}>
-                      Ativar Filtro
-                    </div>
-                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Investimentos</span>
-                  </div>
-                </div>
+                <div className="h-12 md:h-[52px] w-full" />
               </StatCard>
             )}
 
@@ -1044,24 +993,7 @@ export default function Dashboard() {
                   icon="Wallet"
                   neumorphism={true}
                 >
-                  <div className="flex items-center mt-6 md:mt-8 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
-                    <Button
-                      onClick={() => setSearchParams({ filter: "investments" })}
-                      className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                      style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                    >
-                      <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
-                    </Button>
-                    <div className="flex flex-col items-start gap-0.5">
-                      <div className={cn(
-                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] md:text-[11px] font-bold border-none",
-                        "text-[#22c55e]"
-                      )} style={{ background: "#fcfcfc" }}>
-                        Ativar Filtro
-                      </div>
-                      <span className="text-[10px] font-medium leading-tight md:text-[11px]" style={{ color: "#4b5563" }}>Investimentos</span>
-                    </div>
-                  </div>
+                  <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
 
