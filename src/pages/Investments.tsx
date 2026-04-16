@@ -15,8 +15,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar cn, getBorderClass E formatCurrency, formatInTimeZone, TARGET_TIMEZONE
-import { format, getYear, subMonths, addMonths, differenceInBusinessDays } from "date-fns"; // Importar format, getYear, subMonths, addMonths, differenceInBusinessDays
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR
+import { format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
@@ -323,13 +323,9 @@ export default function Investments() { // Alterado para export default function
   const calculatedInvestments = useMemo(() => {
     return investments.map(inv => {
       // Logic for Annual Rate based on type
-      let taxaAnual = 0;
-      if (inv.tipo_rentabilidade === "fixo") {
-        taxaAnual = inv.taxa_fixa || 0;
-      } else if (inv.tipo_rentabilidade === "indexado") {
-        const taxaBase = inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0);
-        taxaAnual = (taxaBase * ((inv.percentual_indexador || 0) / 100)) + (inv.taxa_adicional || 0);
-      }
+      const taxaAnual = inv.tipo_rentabilidade === "indexado" 
+        ? ((inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * ((inv.percentual_indexador || 0) / 100)) + (inv.taxa_adicional || 0)
+        : (inv.taxa_fixa || 0);
 
       // 1. Taxa diária: (1 + (taxaAnual / 100))^(1 / 252) - 1
       const taxaDiaria = Math.pow(1 + (taxaAnual / 100), 1 / 252) - 1;
@@ -342,7 +338,6 @@ export default function Investments() { // Alterado para export default function
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      // differenceInBusinessDays returns the number of full business days between dates
       const diasUteis = differenceInBusinessDays(today, investDate);
 
       // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
@@ -351,12 +346,24 @@ export default function Investments() { // Alterado para export default function
       // 4. Rendimento de hoje: valor_atual × taxa_diaria
       const rendimentoHojeVirtual = valorAtualVirtual * taxaDiaria;
 
+      // IR Calculation
+      const aliquotaIR = getAliquotaIR(investDate);
+      const rendimentoBruto = valorAtualVirtual - inv.valor;
+      const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
+      const rendimentoLiquido = rendimentoBruto - imposto;
+      const valorLiquido = inv.valor + rendimentoLiquido;
+
       return {
         ...inv,
-        rentabilidade: taxaAnual, // Store derived real yield for display
+        rentabilidade: taxaAnual, // Annual Gross
         valorAtualVirtual,
         rendimentoHojeVirtual,
-        taxaDiaria
+        taxaDiaria,
+        aliquotaIR,
+        rendimentoBruto,
+        imposto,
+        rendimentoLiquido,
+        valorLiquido
       };
     });
   }, [investments, cdi, ipca]);
@@ -639,13 +646,15 @@ export default function Investments() { // Alterado para export default function
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Taxa Est. (% a.a)</p>
-                            <p className="text-sm font-black text-[#218C5C]">{taxaEstimada.toFixed(2)}%</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">IR / Líquido Anual</p>
+                            <p className="text-sm font-black text-[#218C5C]">
+                              {getAliquotaIR(date || new Date())}% / {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%
+                            </p>
                           </div>
                           <div>
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Rend. Diário Est.</p>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Rend. Líquido Est.</p>
                             <p className="text-sm font-black text-[#218C5C]">
-                              {amount ? formatCurrency((amount * (Math.pow(1 + taxaEstimada / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                              {amount ? formatCurrency((amount * (Math.pow(1 + (taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)) / 100, 1 / 252) - 1))) : "R$ 0,00"}
                             </p>
                           </div>
                         </div>
@@ -1175,15 +1184,23 @@ export default function Investments() { // Alterado para export default function
                                 <span className="text-[11px] font-bold text-[#218C5C]">Tempo Real</span>
                               </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-8">
+                            <div className="grid grid-cols-3 gap-4">
                               <div>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rentabilidade Anual</p>
-                                <p className="text-xl font-black text-[#218C5C] tracking-tight">{taxaEstimada.toFixed(2)}% <span className="text-xs">a.a.</span></p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Bruto / IR / Líquido</p>
+                                <p className="text-sm font-black text-[#218C5C] tracking-tight">
+                                  {taxaEstimada.toFixed(2)}% / {getAliquotaIR(date || new Date())}% / {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%
+                                </p>
                               </div>
                               <div>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rendimento Diário</p>
                                 <p className="text-xl font-black text-[#218C5C] tracking-tight">
                                   {amount ? formatCurrency((amount * (Math.pow(1 + taxaEstimada / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Estimativa Líquida</p>
+                                <p className="text-xl font-black text-[#218C5C] tracking-tight">
+                                  {amount ? formatCurrency((amount * (Math.pow(1 + (taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)) / 100, 1 / 252) - 1))) : "R$ 0,00"}
                                 </p>
                               </div>
                             </div>

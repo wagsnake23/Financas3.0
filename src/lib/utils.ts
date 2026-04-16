@@ -68,3 +68,14 @@ export function zonedTimeToUtcFallback(
 ): Date {
   return new Date(new Date(dateString).toLocaleString("en-US", { timeZone }));
 }
+
+export function getAliquotaIR(dataInvestimento: Date) {
+  const hoje = new Date();
+  const diffTime = Math.abs(hoje.getTime() - dataInvestimento.getTime());
+  const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDias <= 180) return 22.5;
+  if (diffDias <= 360) return 20;
+  if (diffDias <= 720) return 17.5;
+  return 15;
+}

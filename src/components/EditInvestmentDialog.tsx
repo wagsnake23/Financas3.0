@@ -18,7 +18,7 @@ import { Investment, AppCategory } from "@/types/finance"; // Importar AppCatego
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR
 // Removido: import { Card } from "@/components/ui/card"; // Importar Card
 
 interface EditInvestmentDialogProps {
@@ -392,14 +392,18 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </div>
         )}
 
-        {/* Lado Esquerdo - Linha 2: Estimativa Calculada */}
+        {/* Lado Esquerdo - Linha 2: Estimativa Calculada (Bruta e Líquida) */}
         <div className="space-y-0.5">
-          <Label className={cn(isMobile && "text-xs")}>Estimativa</Label>
+          <Label className={cn(isMobile && "text-xs")}>Estimativa (Bruto/IR/Líq.)</Label>
           <div className={cn(
-            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-10 px-3 flex items-center font-bold text-[#218C5C] select-none text-[12px] opacity-90",
+            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-10 px-2 flex flex-col justify-center font-bold text-[#218C5C] select-none text-[10px] opacity-90 leading-tight",
             isMobile && "h-10"
           )}>
-            {taxaEstimada.toFixed(2)}% a.a.
+            <div>Bruto: {taxaEstimada.toFixed(2)}% a.a.</div>
+            <div className="flex justify-between w-full">
+              <span className="text-red-500/70">IR: {getAliquotaIR(date || new Date())}%</span>
+              <span className="text-[#218C5C]">Líq: {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%</span>
+            </div>
           </div>
         </div>
 
