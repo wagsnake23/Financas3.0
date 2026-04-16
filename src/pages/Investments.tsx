@@ -343,21 +343,22 @@ export default function Investments() { // Alterado para export default function
       // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
       const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
 
-      // 4. Rendimento de hoje: valor_atual × taxa_diaria
-      const rendimentoHojeVirtual = valorAtualVirtual * taxaDiaria;
-
-      // IR Calculation
+      // 4. IR Calculation
       const aliquotaIR = getAliquotaIR(investDate);
       const rendimentoBruto = valorAtualVirtual - inv.valor;
       const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
       const rendimentoLiquido = rendimentoBruto - imposto;
       const valorLiquido = inv.valor + rendimentoLiquido;
 
+      // 5. Rendimento de hoje líquido
+      const rendimentoBrutoDia = valorAtualVirtual * taxaDiaria;
+      const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
+
       return {
         ...inv,
         rentabilidade: taxaAnual, // Annual Gross
         valorAtualVirtual,
-        rendimentoHojeVirtual,
+        rendimentoHojeVirtual: rendimentoHojeLiquido,
         taxaDiaria,
         aliquotaIR,
         rendimentoBruto,
@@ -808,7 +809,7 @@ export default function Investments() { // Alterado para export default function
                             <div className="space-y-1">
                               <div className="flex items-center justify-between">
                                 <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
-                                  {formatCurrency(investment.valorAtualVirtual)}
+                                  {formatCurrency(investment.valorLiquido)}
                                 </span>
                                 <Button
                                   variant="ghost"
