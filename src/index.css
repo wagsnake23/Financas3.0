@@ -220,7 +220,7 @@ All colors MUST be HSL.
 
 @media (max-width: 767px) {
   .dialog-mobile {
-    padding-top: 0.75rem !important;
+    padding-top: 0.8rem !important;
     /* Aumentado para descer o tÃ­tulo */
     /* padding-bottom: 0 !important; REMOVIDO para permitir espaçamento customizado */
     top: 55% !important;
@@ -232,10 +232,7 @@ All colors MUST be HSL.
     /* EspaÃ§amento superior para descolar do header */
   }
 
-  .dialog-mobile .dialog-title {
-    /* margin-top: 0 !important; */
-    /* ajuste fino do tÃ­tulo */
-  }
+
 
   /* Ocultar o cabeÃ§alho da tabela em mobile */
   .lancamentos-table-header {

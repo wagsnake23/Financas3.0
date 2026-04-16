@@ -109,7 +109,40 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       : Math.round(n);
 
     return rounded / m;
-  }, [amount, profitability]);
+  }, [amount, taxaEstimada]);
+
+  const metrics = useMemo(() => {
+    const dias = Math.max(
+      0,
+      differenceInBusinessDays(new Date(), date || new Date())
+    );
+
+    const taxaAnual = taxaEstimada / 100;
+
+    // taxa diária (padrão mercado)
+    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / 252) - 1;
+
+    // valor atual com juros compostos
+    const valorAtual = (amount || 0) * Math.pow(1 + taxaDiaria, dias);
+
+    // lucro bruto
+    const rendimentoBruto = valorAtual - (amount || 0);
+
+    // IR
+    const aliquota = getAliquotaIR(date || new Date());
+
+    // imposto apenas sobre lucro
+    const imposto = rendimentoBruto > 0
+      ? rendimentoBruto * (aliquota / 100)
+      : 0;
+
+    // rendimento líquido
+    const rendimentoLiquido = rendimentoBruto - imposto;
+
+    const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
+
+    return { imposto, aliquota, taxaLiquida };
+  }, [amount, taxaEstimada, date]);
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
@@ -227,7 +260,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4 pb-2", isMobile && "w-full mx-auto")}>
+    <form onSubmit={handleSubmit} className={cn(isMobile ? "space-y-2.5" : "space-y-4", isMobile && "w-full mx-auto")}>
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
@@ -377,7 +410,44 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </div>
         )}
 
-        {/* Linha 2 Full Width: Estimativa Calculada (Bruta e Líquida) */}
+        {/* Linha 2 Full Width: Data do Investimento */}
+        <div className="space-y-0.5 col-span-2">
+          <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-slate-300",
+                  !date && "text-muted-foreground",
+                  isMobile && "h-9 text-sm",
+                  getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                )}
+                disabled={loading}
+              >
+                <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
+                {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(selectedDate) => {
+                  setDate(selectedDate);
+                  setIsCalendarOpen(false);
+                  setValidationErrors(prev => ({ ...prev, date: false }));
+                }}
+                initialFocus
+                locale={ptBR}
+                showOutsideDays={false}
+                className={cn(isMobile && "text-sm")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {/* Linha 3 Full Width: Estimativa Calculada (Bruta e Líquida) */}
         <div className="space-y-0.5 col-span-2">
           <Label className={cn(isMobile && "text-xs")}>Estimativa (Bruto/IR/Líq.)</Label>
           <div className={cn(
@@ -387,61 +457,22 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               {/* Lado Esquerdo: IR (Valor Real Acumulado e Taxa) */}
               <div className="flex flex-col gap-0.5">
                 <span className="text-red-500 text-[11px]">
-                  -{formatCurrency(
-                    ((amount || 0) * (Math.pow(1 + (Math.pow(1 + (taxaEstimada / 100), 1 / 252) - 1), Math.max(0, differenceInBusinessDays(new Date(), date || new Date()))) - 1)) * 
-                    (getAliquotaIR(date || new Date()) / 100)
-                  )}
+                  -{formatCurrency(metrics.imposto)}
                 </span>
-                <span className="text-red-500/60 text-[9px] uppercase tracking-wider">IR: {getAliquotaIR(date || new Date())}%</span>
+                <span className="text-red-500/60 text-[9px] uppercase tracking-wider">IR: {metrics.aliquota}%</span>
               </div>
 
               {/* Lado Direito: Bruto e Líquido */}
               <div className="flex flex-col items-end gap-0.5 text-right">
                 <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider">Bruto: {taxaEstimada.toFixed(2)}%</span>
-                <span className="text-[#218C5C] text-[12px] font-black">Líq: {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}% a.a.</span>
+                <span className="text-[#218C5C] text-[12px] font-black">Líq: {metrics.taxaLiquida.toFixed(2)}% a.a.</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={cn("space-y-0.5")}>
-        <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-slate-300",
-                !date && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
-                getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-              )}
-              disabled={loading}
-            >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
-              {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(selectedDate) => {
-                setDate(selectedDate);
-                setIsCalendarOpen(false);
-                setValidationErrors(prev => ({ ...prev, date: false }));
-              }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
+      <div className={cn("grid grid-cols-2 gap-2 w-full pt-0")}>
         <Button
           type="button"
           onClick={onCancelEdit}
