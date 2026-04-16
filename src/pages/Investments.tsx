@@ -679,11 +679,11 @@ export default function Investments() { // Alterado para export default function
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
                                 <div
-                                  className="inline-flex items-center gap-1.5 text-white px-3 py-1 rounded-full text-[11px] font-black bg-gradient-to-b from-[#4B76D1] to-[#3555A2] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                                  className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3 py-1 rounded-full text-[11px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
                                 >
-                                <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                <span>{investment.rentabilidade}% a.a.</span>
-                              </div>
+                                  <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                  <span>{investment.rentabilidade}% a.a.</span>
+                                </div>
 
                               {/* Data Bottom Right */}
                               <div className="text-[13px] text-gray-400 font-black uppercase tracking-widest">
@@ -1123,7 +1123,7 @@ export default function Investments() { // Alterado para export default function
                               <div className="flex flex-col items-end gap-2">
                                 {/* Profitability Badge */}
                                 <div
-                                  className="inline-flex items-center gap-1.5 text-white px-3.5 py-1.5 rounded-full text-[12px] font-black bg-gradient-to-b from-[#4B76D1] to-[#3555A2] shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)]"
+                                  className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
                                 >
                                   <DynamicIcon name="TrendingUp" className="h-3 w-3" />
                                   <span>{investment.rentabilidade}% a.a.</span>
