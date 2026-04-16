@@ -1,13 +1,13 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, LabelList } from "recharts";
 import { Tables } from "@/integrations/supabase/types";
-import { AppCategory } from "@/types/finance";
+import { Investment, AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/categoryColors";
 import DynamicIcon from "./DynamicIcon";
 import { useMemo } from "react";
 
 interface InvestmentsYieldChartProps {
-    investments: Tables<'investimentos'>[];
+    investments: (Investment & { rentabilidade?: number })[];
     allSubcategories: AppCategory[];
     isMobile?: boolean;
 }
@@ -21,7 +21,7 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
             const icone = category?.icone || "💰";
 
             // 1) Taxa diária (juros compostos 252 dias úteis)
-            const annualRateDecimal = inv.rentabilidade / 100;
+            const annualRateDecimal = (inv.rentabilidade || 0) / 100;
             const dailyRate = Math.pow(1 + annualRateDecimal, 1 / 252) - 1;
 
             // 2) Truncar a taxa em 10 casas decimais (padrão financeiro)

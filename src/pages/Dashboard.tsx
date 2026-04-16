@@ -51,7 +51,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const filter = searchParams.get("filter");
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function Dashboard() {
     });
 
   // Fetch investments
-  const { data: investments = [], isLoading: isLoadingInvestments } = useQuery<Tables<"investimentos">[]>({
+  const { data: investments = [], isLoading: isLoadingInvestments } = useQuery<Investment[]>({
     queryKey: ["investments", user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
@@ -126,10 +126,26 @@ export default function Dashboard() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return data as Investment[];
     },
     enabled: !!user && !authLoading,
   });
+
+  // Fetch active indexers (CDI/IPCA)
+  const { data: indexadores = [] } = useQuery({
+    queryKey: ["indexadores"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("indexadores")
+        .select("*")
+        .is("data_fim", null);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI")?.taxa_anual || 10.65, [indexadores]);
+  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA")?.taxa_anual || 5.0, [indexadores]);
 
   const {
     monthlyFilteredTransactions,
@@ -196,9 +212,16 @@ export default function Dashboard() {
   }, [allExpenseInstallments]);
 
   const calculatedInvestments = useMemo(() => {
-    return investments.map(inv => {
-      // 1. Taxa diária: (1 + (rentabilidade / 100))^(1 / 252) - 1
-      const taxaDiaria = Math.pow(1 + (inv.rentabilidade / 100), 1 / 252) - 1;
+    return investments.map((inv: Investment) => {
+      // Calculate total profitability for indexed investments (Gross)
+      let taxaAnual = inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : 0;
+      if (inv.tipo_rentabilidade === "indexado") {
+        const taxaBase = inv.indexador === "CDI" ? cdi : ipca;
+        taxaAnual = (taxaBase * (inv.percentual_indexador || 0) / 100) + (inv.taxa_adicional || 0);
+      }
+
+      // 1. Taxa diária: (1 + (taxa_anual / 100))^(1 / 252) - 1
+      const taxaDiaria = Math.pow(1 + (taxaAnual / 100), 1 / 252) - 1;
 
       // 2. Dias úteis passados
       const [year, month, day] = (inv.data as string).split('-').map(Number);
@@ -219,12 +242,13 @@ export default function Dashboard() {
 
       return {
         ...inv,
+        rentabilidade: taxaAnual, // Annual Gross
         valorAtualVirtual,
         rendimentoHojeVirtual,
         taxaDiaria
       };
     });
-  }, [investments]);
+  }, [investments, cdi, ipca]);
 
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
@@ -426,7 +450,7 @@ export default function Dashboard() {
             {!isMobile ? (
               <>
                 {/* Desktop Layout: Side-by-side Saldo and Cockpit */}
-                <div className="grid grid-cols-2 gap-4 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
                   <StatCard
                     mainStatTitle="Saldo Mensal"
                     mainStatValue={stats.balance}
@@ -451,20 +475,37 @@ export default function Dashboard() {
                         onMonthClick={handleMonthClick}
                       />
                     }
-                    annualTotalLabel="Saldo Anual"
                     annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                     icon="Wallet"
                     neumorphism={true}
                     className="card-saldo overflow-hidden h-full"
                     forceTransparentBackground={true}
                   >
-                    <div className="h-12 md:h-[52px] w-full" />
+                    <div className="flex items-center mt-6 md:mt-8 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
+                      <Button
+                        onClick={() => setSearchParams({})}
+                        className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                        style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                      >
+                        <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
+                      </Button>
+                      <div className="flex flex-col items-start gap-0.5">
+                        <div className={cn(
+                          "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] md:text-[11px] font-bold border-none",
+                          "text-[#ef4444]"
+                        )} style={{ background: "#fcfcfc" }}>
+                          Desativar Filtro
+                        </div>
+                        <span className="text-[10px] font-medium leading-tight md:text-[11px]" style={{ color: "#4b5563" }}>Investimentos</span>
+                      </div>
+                    </div>
                   </StatCard>
 
-                  <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="card-receitas p-8 shadow-sm relative rounded-[32px] h-full flex flex-col justify-center">
-                      <div className="grid grid-cols-2 gap-x-12 gap-y-10">
-                        {/* Linha 1: Saldo Atual e Rentabilidade */}
+                  {/* Investment Cockpit - Replaced with Investments Module design - Using 2/3 of space on large screens */}
+                  <div className="lg:col-span-2 animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="card-receitas border-none rounded-[32px] p-8 shadow-sm h-full flex items-center">
+                      <div className="grid grid-cols-2 xl:grid-cols-4 items-center gap-x-8 gap-y-10 w-full">
+                        {/* Total Investido */}
                         <div className="flex items-center gap-4">
                           <div
                             className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
@@ -474,28 +515,12 @@ export default function Dashboard() {
                           </div>
                           <div className="flex flex-col">
                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
-                            <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
+                            <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                           </div>
                         </div>
 
-                        <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-12">
-                          <div
-                            className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
-                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                          >
-                            <DynamicIcon name="Percent" className="h-6 w-6 text-white" strokeWidth={3} />
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
-                            <div className="flex items-baseline gap-1">
-                              <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
-                              <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Linha 2: Mensal e Diário */}
-                        <div className="flex items-center gap-4 border-t border-success/10 pt-8">
+                        {/* Rendimento Mensal */}
+                        <div className="flex items-center lg:justify-center gap-4 border-l border-success/10 h-10">
                           <div
                             className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
@@ -503,21 +528,39 @@ export default function Dashboard() {
                             <DynamicIcon name="Calendar" className="h-5 w-5 text-white" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rendimento Mensal</h4>
-                            <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
+                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
+                            <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
                           </div>
                         </div>
 
-                        <div className="flex flex-row-reverse items-center gap-4 border-l border-t border-success/10 h-20 pt-8">
+                        {/* Rendimento Diário */}
+                        <div className="flex items-center lg:justify-center gap-4 border-l border-success/10 h-10">
                           <div
                             className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
                           >
                             <DynamicIcon name="Clock" className="h-5 w-5 text-white" strokeWidth={3} />
                           </div>
-                          <div className="flex flex-col items-end">
+                          <div className="flex flex-col">
                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
-                            <p className="text-xl font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
+                            <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
+                          </div>
+                        </div>
+
+                        {/* Rentabilidade Média */}
+                        <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
+                          <div
+                            className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
+                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
+                          >
+                            <DynamicIcon name="Percent" className="h-6 w-6 text-white" strokeWidth={3} />
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Média</h4>
+                            <div className="flex items-baseline gap-1">
+                              <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
+                              <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -528,7 +571,7 @@ export default function Dashboard() {
                 {/* Full Width Wealth Projection */}
                 <div className="w-full mb-4">
                   <WealthProjection
-                    investments={investments as Investment[]}
+                    investments={calculatedInvestments}
                     isMobile={isMobile}
                   />
                 </div>
@@ -568,22 +611,38 @@ export default function Dashboard() {
                   className="card-saldo overflow-hidden"
                   forceTransparentBackground={true}
                 >
-
-                  <div className="h-12 md:h-[52px] w-full" />
+                  <div className="flex items-center mt-3 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
+                    <Button
+                      onClick={() => setSearchParams({ filter: "investments" })}
+                      className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                      style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                    >
+                      <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
+                    </Button>
+                    <div className="flex flex-col items-start gap-0.5">
+                      <div className={cn(
+                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
+                        "text-[#22c55e]"
+                      )} style={{ background: "#fcfcfc" }}>
+                        Ativar Filtro
+                      </div>
+                      <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Investimentos</span>
+                    </div>
+                  </div>
                 </StatCard>
 
                 {/* 1. Projeção do Patrimônio */}
                 <div className="mb-4">
                   <WealthProjection
-                    investments={investments as Investment[]}
+                    investments={calculatedInvestments}
                     isMobile={isMobile}
                   />
                 </div>
 
                 {/* 4. Card de Resumo (Investment Cockpit) */}
                 <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="card-receitas p-5 shadow-sm relative rounded-[24px]">
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+                  <div className="card-receitas p-6 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[24px]">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
                           <div
@@ -592,9 +651,9 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Total</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Atual</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                       </div>
 
                       <div className="flex flex-col items-end text-right">
@@ -605,10 +664,10 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Média</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Média</h4>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                          <p className="text-base font-black text-gray-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
+                          <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
                           <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
                         </div>
                       </div>
@@ -621,9 +680,9 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Mensal</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Mensal</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.monthYields)}</p>
                       </div>
 
                       <div className="flex flex-col items-end text-right">
@@ -634,9 +693,9 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">Diário</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Diário</h4>
                         </div>
-                        <p className="text-base font-black text-gray-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
+                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalDailyYieldRS)}</p>
                       </div>
                     </div>
                   </div>
@@ -772,8 +831,24 @@ export default function Dashboard() {
                 className="card-saldo overflow-hidden"
                 forceTransparentBackground={true}
               >
-
-                <div className="h-12 md:h-[52px] w-full" />
+                <div className="flex items-center mt-3 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
+                  <Button
+                    onClick={() => setSearchParams({ filter: "investments" })}
+                    className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                  >
+                    <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
+                  </Button>
+                  <div className="flex flex-col items-start gap-0.5">
+                    <div className={cn(
+                      "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
+                      "text-[#22c55e]"
+                    )} style={{ background: "#fcfcfc" }}>
+                      Ativar Filtro
+                    </div>
+                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Investimentos</span>
+                  </div>
+                </div>
               </StatCard>
             )}
 
@@ -829,7 +904,7 @@ export default function Dashboard() {
                   isMobile={true}
                 />
                 <InvestmentsYieldChart
-                  investments={investments}
+                  investments={calculatedInvestments}
                   allSubcategories={allSubcategories}
                   isMobile={isMobile}
                 />
@@ -848,7 +923,7 @@ export default function Dashboard() {
 
             {!filter && (
               <WealthProjection
-                investments={investments as Investment[]}
+                investments={calculatedInvestments}
                 isMobile={isMobile}
               />
             )}
@@ -965,13 +1040,28 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                     />
                   }
-                  annualTotalLabel="Saldo Anual"
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                   icon="Wallet"
                   neumorphism={true}
                 >
-
-                  <div className="h-12 md:h-[52px] w-full" />
+                  <div className="flex items-center mt-6 md:mt-8 gap-3 animate-in fade-in slide-in-from-left-4 duration-700">
+                    <Button
+                      onClick={() => setSearchParams({ filter: "investments" })}
+                      className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                      style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                    >
+                      <DynamicIcon name="LineChart" className="h-5 w-5 text-white" strokeWidth={3} />
+                    </Button>
+                    <div className="flex flex-col items-start gap-0.5">
+                      <div className={cn(
+                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] md:text-[11px] font-bold border-none",
+                        "text-[#22c55e]"
+                      )} style={{ background: "#fcfcfc" }}>
+                        Ativar Filtro
+                      </div>
+                      <span className="text-[10px] font-medium leading-tight md:text-[11px]" style={{ color: "#4b5563" }}>Investimentos</span>
+                    </div>
+                  </div>
                 </StatCard>
               )}
 
@@ -1027,7 +1117,7 @@ export default function Dashboard() {
                   isMobile={isMobile}
                 />
                 <InvestmentsYieldChart
-                  investments={investments}
+                  investments={calculatedInvestments}
                   allSubcategories={allSubcategories}
                   isMobile={isMobile}
                 />
@@ -1049,7 +1139,7 @@ export default function Dashboard() {
             {!filter && (
               <div className="mt-8">
                 <WealthProjection
-                  investments={investments as Investment[]}
+                  investments={calculatedInvestments}
                   isMobile={isMobile}
                 />
               </div>

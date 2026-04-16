@@ -18,7 +18,7 @@ import DynamicIcon from "./DynamicIcon";
 import { cn } from "@/lib/utils";
 
 interface WealthProjectionProps {
-    investments: Investment[];
+    investments: (Investment & { rentabilidade?: number })[];
     isMobile?: boolean;
 }
 
@@ -32,7 +32,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
 
         return investments.map(inv => {
             // taxa_diaria = (1 + (rentabilidade / 100))^(1 / 252) - 1
-            const taxaDiaria = Math.pow(1 + (inv.rentabilidade / 100), 1 / 252) - 1;
+            const taxaDiaria = Math.pow(1 + ((inv.rentabilidade || 0) / 100), 1 / 252) - 1;
 
             const [year, month, day] = inv.data.split('-').map(Number);
             const investDate = new Date(year, month - 1, day);
@@ -131,7 +131,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
 
         // Calcular taxa_media ponderada (baseada no valor atual virtual hoje)
         const weightedSumRates = virtualInvestments.reduce((sum, inv) => {
-            return sum + (inv.valorAtualVirtual * (inv.rentabilidade / 100));
+            return sum + (inv.valorAtualVirtual * ((inv.rentabilidade || 0) / 100));
         }, 0);
 
         const taxaMediaAnualPonderada = patrimonioHoje > 0 ? weightedSumRates / patrimonioHoje : 0;
