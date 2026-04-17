@@ -238,6 +238,7 @@ export default function Dashboard() {
         dataInicio: inv.data,
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
+        taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
       });
       
       const taxaDiaria = ultimaTaxaAplicada;

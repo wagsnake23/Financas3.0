@@ -104,6 +104,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       dataInicio: date || new Date(),
       indexadorMap: idxMap || new Map<string, number>(),
       percentualIndexador: tipoRentabilidade === "indexado" ? (percentualIndexador || 100) : 100,
+      taxaFixaAnual: tipoRentabilidade === "fixo" ? (profitability || 0) : null,
     });
 
     const rendimentoBruto = valorAtualVirtual - (amount || 0);

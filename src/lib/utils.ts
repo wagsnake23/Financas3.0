@@ -102,26 +102,26 @@ export interface IndexadorHistorico {
 }
 
 /**
- * Normaliza uma data para o formato YYYY-MM-DD.
+ * Normaliza uma data para o formato YYYY-MM-DD usando o fuso horário de Brasília.
  */
 function formatDateKey(date: Date | string): string {
   if (typeof date === 'string') {
     return date.split('T')[0];
   }
-  return date.toISOString().split('T')[0];
+
+  return date.toLocaleDateString("en-CA", {
+    timeZone: "America/Sao_Paulo",
+  });
 }
 
 /**
  * Verifica se uma data é dia útil (segunda a sexta).
- * Pode ser expandida para incluir feriados nacionais da B3 no futuro.
  */
 export function isDiaUtil(date: Date): boolean {
   const diaSemana = date.getDay();
-  // 0 = Domingo, 6 = Sábado
   if (diaSemana === 0 || diaSemana === 6) {
     return false;
   }
-  // Placeholder para feriados nacionais
   return true;
 }
 
@@ -144,19 +144,21 @@ export function calcularRendimentoComCDI({
   dataInicio,
   indexadorMap,
   percentualIndexador = 100,
+  taxaFixaAnual = null,
 }: {
   valorInicial: number;
   dataInicio: string | Date;
   indexadorMap: Map<string, number>;
   percentualIndexador?: number;
+  taxaFixaAnual?: number | null;
 }): { valorAtual: number; ultimaTaxaAplicada: number } {
   let valor = valorInicial;
 
   const startStr = formatDateKey(dataInicio);
-  const inicio = new Date(`${startStr}T00:00:00`);
+  const inicio = new Date(startStr + "T12:00:00");
   
   const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
+  hoje.setHours(12, 0, 0, 0);
 
   let ultimaTaxa = 0;
   let ultimaTaxaAplicada = 0;
@@ -164,34 +166,53 @@ export function calcularRendimentoComCDI({
   const primeiroDiaYield = new Date(inicio);
   primeiroDiaYield.setDate(primeiroDiaYield.getDate() + 1);
 
-  // Busca de semente retroativa (até 2 anos)
-  let dataSemente = new Date(inicio);
-  for (let i = 0; i < 730; i++) {
-    const key = formatDateKey(dataSemente);
-    const taxaSemente = indexadorMap.get(key);
-    if (taxaSemente !== undefined && taxaSemente !== null) {
-      ultimaTaxa = taxaSemente;
-      break;
+  // Busca de semente retroativa para indexadores (até 2 anos)
+  if (indexadorMap.size > 0) {
+    let dataSemente = new Date(inicio);
+    for (let i = 0; i < 730; i++) {
+      const key = formatDateKey(dataSemente);
+      const taxaSemente = indexadorMap.get(key);
+      if (taxaSemente !== undefined && taxaSemente !== null) {
+        ultimaTaxa = taxaSemente;
+        break;
+      }
+      dataSemente.setDate(dataSemente.getDate() - 1);
     }
-    dataSemente.setDate(dataSemente.getDate() - 1);
   }
+
+  const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
 
   // Loop principal
   for (let d = new Date(primeiroDiaYield); d <= hoje; d.setDate(d.getDate() + 1)) {
-    // 🏦 Regra de Mercado: CDI só rende em dias úteis
     if (!isDiaUtil(d)) continue;
 
     const key = formatDateKey(d);
-    const taxaDia = indexadorMap.get(key);
+    
+    if (taxaFixaAnual !== null) {
+      // Caso Renda Fixa Prefixada
+      valor *= (1 + taxaDiariaFixa);
+      ultimaTaxaAplicada = taxaDiariaFixa;
+    } else {
+      // Caso Renda Fixa Pós-fixada (CDI/IPCA)
+      const taxaDia = indexadorMap.get(key);
+      const isHoje = formatDateKey(d) === formatDateKey(hoje);
 
-    // Se não houver taxa específica para o dia útil, mantém a última taxa (fallback útil para hiatos no banco)
-    const taxaBase = (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) ? taxaDia : ultimaTaxa;
+      let taxaBase: number | undefined = undefined;
 
-    if (taxaBase > 0) {
-      const taxa = taxaBase * (percentualIndexador / 100);
-      valor *= (1 + taxa);
-      ultimaTaxa = taxaBase;
-      ultimaTaxaAplicada = taxa;
+      if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
+        taxaBase = taxaDia;
+      } else if (isHoje && ultimaTaxa > 0) {
+        // 🔥 CORREÇÃO: Se for hoje e não houver taxa no mapa, usa a última taxa válida como estimativa.
+        // Isso permite visualizar o rendimento do dia antes da publicação oficial.
+        taxaBase = ultimaTaxa;
+      }
+
+      if (taxaBase !== undefined && taxaBase > 0) {
+        const taxa = taxaBase * (percentualIndexador / 100);
+        valor *= (1 + taxa);
+        ultimaTaxa = taxaBase;
+        ultimaTaxaAplicada = taxa;
+      }
     }
   }
 
