@@ -142,6 +142,13 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
   return map;
 }
 
+/**
+ * Motor de Cálculo de Rendimento (Engine Real)
+ * Baseado no padrão de mercado brasileiro (B3/CDB):
+ * - Capitalização bruta diária em dias úteis
+ * - IR regressivo aplicado sobre o lucro total ao final
+ * - CÁLCULO PURO: Sem fatores de ajuste artificiais ou offsets fixos
+ */
 export function calcularRendimentoComCDI({
   valorInicial,
   dataInicio,
@@ -159,19 +166,19 @@ export function calcularRendimentoComCDI({
 }): { valorAtual: number; ultimaTaxaAplicada: number; rendimentoBrutoAcumulado: number; irProvisionado: number } {
   let valorBruto = valorInicial;
 
+  // Normalização de Datas
   const startStr = formatDateKey(dataInicio);
   const inicio = new Date(startStr + "T12:00:00");
-  
   const hoje = new Date();
   hoje.setHours(12, 0, 0, 0);
-
-  let ultimaTaxa = 0;
-  let ultimaTaxaAplicada = 0;
 
   const primeiroDiaYield = new Date(inicio);
   primeiroDiaYield.setDate(primeiroDiaYield.getDate() + 1);
 
-  // Busca de semente retroativa para indexadores (até 2 anos)
+  let ultimaTaxa = 0;
+  let ultimaTaxaAplicada = 0;
+
+  // Busca de semente retroativa (Fallback para indexadores)
   if (indexadorMap.size > 0 && taxaFixaAnual === null) {
     let dataSemente = new Date(inicio);
     for (let i = 0; i < 730; i++) {
@@ -187,8 +194,8 @@ export function calcularRendimentoComCDI({
 
   const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
 
-  // Loop de capitalização bruta
-  for (let d = new Date(primeiroDiaYield); d <= hoje; d.setDate(d.getDate() + 1)) {
+  // Loop de Capitalização Bruta (CÁLCULO PURO)
+  for (let d = new Date(primeiroDiaYield); d < hoje; d.setDate(d.getDate() + 1)) {
     if (!isDiaUtil(d)) continue;
 
     const key = formatDateKey(d);
@@ -208,21 +215,22 @@ export function calcularRendimentoComCDI({
     }
 
     if (taxaBase !== undefined && taxaBase > 0) {
+      // Cálculo direto sem modificadores
       const taxa = taxaBase * (percentualIndexador / 100);
       valorBruto *= (1 + taxa);
-      ultimaTaxa = taxaBase;
+      
+      ultimaTaxa = indexadorMap.get(key) || ultimaTaxa; 
       ultimaTaxaAplicada = taxa;
     }
   }
 
-  // 🔥 ARREDONDAMENTO FINANCEIRO (DUAS CASAS DECIMAIS)
+  // Cálculo Final de IR e Arredondamentos Financeiros
   const lucroTotal = valorBruto - valorInicial;
   const aliquota = getAliquotaIR(inicio, hoje, tipoTributacao);
   
-  // Arredonda o IR conforme padrão bancário
   const ir = Math.round(lucroTotal * (aliquota / 100) * 100) / 100;
   
-  // Arredonda o valor líquido final
+  // Valor Líquido Final (Arredondado para 2 casas decimais padrão bancário)
   const valorLiquido = Math.round((valorBruto - ir) * 100) / 100;
   const rendimentoBrutoAcumulado = Math.round(lucroTotal * 100) / 100;
 

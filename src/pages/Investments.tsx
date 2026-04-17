@@ -363,6 +363,22 @@ export default function Investments() { // Alterado para export default function
 
       const tipoTributacao = getTipoTributacao(inv, allSubcategories);
 
+      console.log(`Calculando ${inv.tipo} (${inv.id}):`, {
+        tipoRentabilidade: inv.tipo_rentabilidade,
+        indexador: inv.indexador,
+        percentualIndexador: inv.percentual_indexador,
+        tipoTributacao
+      });
+
+      const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
+      
+      console.log(`Debug Investimento ${inv.id}:`, {
+        rawPercentual: inv.percentual_indexador,
+        finalPercentual: pIndexador,
+        tipo: inv.tipo,
+        valor: inv.valor
+      });
+
       // Cálculo de rendimento usando dados históricos (Engine Real - Provisão Diária)
       const { 
         valorAtual: valorLiquido, 
@@ -373,7 +389,7 @@ export default function Investments() { // Alterado para export default function
         valorInicial: inv.valor,
         dataInicio: inv.data,
         indexadorMap: idxMap || new Map<string, number>(),
-        percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
+        percentualIndexador: pIndexador,
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
         tipoTributacao
       });
