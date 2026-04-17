@@ -248,12 +248,18 @@ export default function Dashboard() {
       const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
       const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - aliquotaIR / 100);
 
+      const rendimentoBruto = valorAtualVirtual - inv.valor;
+      const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
+      const rendimentoLiquido = rendimentoBruto - imposto;
+      const valorLiquido = inv.valor + rendimentoLiquido;
+
       return {
         ...inv,
         rentabilidade: taxaAnual, // Annual Gross
         valorAtualVirtual,
         rendimentoHojeVirtual,
-        taxaDiaria
+        taxaDiaria,
+        valorLiquido
       };
     });
   }, [investments, cdi, ipca, allSubcategories]);
@@ -281,12 +287,10 @@ export default function Dashboard() {
     return rounded / m;
   }, [calculatedInvestments]);
 
-  const totalInvested = useMemo(() => {
-    return investments.reduce((sum, inv) => sum + inv.valor, 0);
-  }, [investments]);
-
   const currentYieldStats = useMemo(() => {
-    const totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorAtualVirtual, 0);
+    let totalInvested = investments.reduce((sum, inv) => sum + inv.valor, 0);
+    // Modified to use Net Amount for cockpit totals
+    let totalCurrentBalance = calculatedInvestments.reduce((sum, inv) => sum + inv.valorLiquido, 0);
 
     if (totalInvested === 0) return { monthYields: 0, annualYields: 0, totalInvested: 0, totalCurrentBalance: 0, avgProfitability: 0, totalDailyYieldRS: 0 };
 
@@ -324,7 +328,7 @@ export default function Dashboard() {
       avgProfitability,
       totalDailyYieldRS
     };
-  }, [totalProjectedAnnualYield, totalInvested, calculatedInvestments]);
+  }, [totalProjectedAnnualYield, investments, calculatedInvestments]);
 
   const [projectedYear, setProjectedYear] = useState(getYear(new Date()));
 
