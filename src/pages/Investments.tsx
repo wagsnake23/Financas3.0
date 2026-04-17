@@ -1336,7 +1336,7 @@ export default function Investments() { // Alterado para export default function
                               backgroundBlendMode: "soft-light",
                               backdropFilter: "blur(6px)",
                               outline: "1px solid rgba(0, 102, 255, 0.08)",
-                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -4px 10px rgba(0,0,0,0.03), inset 0 0 12px rgba(0,102,255,0.08)"
+                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
