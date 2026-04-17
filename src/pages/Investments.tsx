@@ -1430,9 +1430,20 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className={cn(
-          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[28px] !border-2 !border-white shadow-2xl !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px] !border-2 !border-white shadow-2xl"
-        )}>
+        <DialogContent 
+          className={cn(
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[28px] !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px]",
+            "!border-none shadow-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            outline: "1px solid rgba(34, 197, 94, 0.08)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+          }}
+        >
           <DialogHeader className={cn(
             "flex flex-row items-center justify-center gap-1 pb-0 mb-0 !space-y-0",
             isMobile ? "-mt-2 -mb-2" : "-mt-4"
