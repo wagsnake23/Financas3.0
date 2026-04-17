@@ -819,7 +819,7 @@ export default function Investments() { // Alterado para export default function
                                 <h3 className="font-bold text-gray-800 leading-tight text-base">
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className="text-xs text-gray-500 font-medium opacity-80">{typeLabel}</p>
+                                <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
                               </div>
                             </div>
 
@@ -840,8 +840,8 @@ export default function Investments() { // Alterado para export default function
                             <div className="space-y-1">
                               <div className="flex items-center justify-between">
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
-                                  <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
+                                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
+                                  <span className="font-bold tracking-tight text-[#0556C3] text-2xl">
                                     {formatCurrency(investment.valorLiquido)}
                                   </span>
                                 </div>
@@ -881,7 +881,7 @@ export default function Investments() { // Alterado para export default function
                                   </div>
 
                               {/* Data Bottom Right */}
-                              <div className="text-[13px] text-gray-400 font-black uppercase tracking-widest">
+                              <div className="text-[12px] text-slate-500 font-black uppercase tracking-widest">
                                 {formattedDate}
                               </div>
                             </div>
@@ -1351,7 +1351,7 @@ export default function Investments() { // Alterado para export default function
                                   <h3 className={cn("font-bold text-gray-800 leading-tight", isMobile ? "text-base" : "text-[1.1rem]")}>
                                     {investmentNameDisplay}
                                   </h3>
-                                  <p className="text-xs text-gray-500 font-medium opacity-80">{typeLabel}</p>
+                                  <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
                                 </div>
                               </div>
 
@@ -1379,9 +1379,9 @@ export default function Investments() { // Alterado para export default function
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                               <div className="space-y-1">
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
+                                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
                                   <span className={cn(
-                                    "font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
+                                    "font-bold tracking-tight text-[#0556C3]",
                                     isMobile ? "text-2xl" : "text-3xl"
                                   )}>
                                     {formatCurrency(investment.valorLiquido)}
@@ -1414,7 +1414,7 @@ export default function Investments() { // Alterado para export default function
                                   </div>
 
                                 {/* Data Bottom Right */}
-                                <div className="text-[13px] sm:text-[14px] text-gray-400 font-black uppercase tracking-widest mt-1">
+                                <div className="text-[12px] sm:text-[13px] text-slate-500 font-black uppercase tracking-widest mt-1">
                                   {formattedDate}
                                 </div>
                               </div>
