@@ -109,8 +109,8 @@ export const Navigation = () => {
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
   const forceDarkText = isInvestimentos || isCategorias;
-  const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#1E40AF]";
-  const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#1E40AF]";
+  const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
+  const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
 
   return (
     <>
@@ -125,7 +125,7 @@ export const Navigation = () => {
               : isReceitas
                 ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
                 : isInvestimentos
-                  ? "bg-[hsl(210,100%,98.5%)]"
+                  ? "bg-slate-50"
                   : isCategorias
                     ? "bg-[#F9FAFB]"
                     : !scrolled

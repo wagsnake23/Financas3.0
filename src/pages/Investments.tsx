@@ -1328,12 +1328,15 @@ export default function Investments() { // Alterado para export default function
                           <div
                             key={investment.id}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300 p-5 rounded-[20px] shadow-none mb-2 last:mb-0 border border-black/5",
+                              "relative group overflow-hidden transition-all duration-300 p-5 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
                               isMobile && "p-4"
                             )}
                             style={{
-                              background: "rgba(255, 255, 255, 0.45)",
-                              backdropFilter: "blur(4px)"
+                              background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                              backgroundBlendMode: "soft-light",
+                              backdropFilter: "blur(6px)",
+                              outline: "1px solid rgba(0, 102, 255, 0.08)",
+                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -4px 10px rgba(0,0,0,0.03), inset 0 0 12px rgba(0,102,255,0.08)"
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
