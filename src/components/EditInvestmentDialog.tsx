@@ -389,7 +389,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               {/* Coluna Direita */}
               <div className="flex flex-col gap-1.5 items-end h-full justify-center text-right">
                 <div className="flex flex-col items-end">
-                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Imposto de Renda</span>
+                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Imposto de Renda</span>
                   {metrics.tipoTributacao === "isento" ? (
                     <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
                   ) : (
@@ -399,7 +399,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
                   )}
                 </div>
                 <div className="flex flex-col items-end pt-1 border-t border-blue-200/30">
-                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
+                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Saldo Líquido Total</span>
                   <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
                 </div>
             </div>
