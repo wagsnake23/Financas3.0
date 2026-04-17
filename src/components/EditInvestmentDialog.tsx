@@ -377,11 +377,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               {/* Coluna Esquerda */}
               <div className="flex flex-col gap-1.5 justify-center h-full text-left">
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Rentabilidade Líquida</span>
+                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rentabilidade Líquida</span>
                   <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
                 </div>
                 <div className="flex flex-col pt-1 border-t border-blue-200/30">
-                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Rendimento Líquido</span>
+                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rendimento Líquido</span>
                   <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
                 </div>
               </div>
@@ -412,10 +412,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button 
           type="button" 
           onClick={onCancelEdit} 
-          className={cn("flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 shadow-sm", isMobile && "h-11")} 
+          className={cn("flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11", isMobile && "h-11")} 
           style={{ 
             "--cor-topo": "#E2E8F0", 
-            "--cor-base": "#CBD5E1" 
+            "--cor-base": "#CBD5E1",
+            boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
           } as any} 
           disabled={loading}
         >
