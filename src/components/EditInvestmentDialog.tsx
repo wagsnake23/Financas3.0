@@ -264,8 +264,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </SelectContent>
         </Select>
       </div>
-
-      <div className={cn("grid gap-2 mb-2", tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1")}>
+      <div className={cn("grid grid-cols-2 gap-x-4 gap-y-4")}>
         <div className="space-y-1">
           <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
           <Select
@@ -286,7 +285,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </Select>
         </div>
 
-        {tipoRentabilidade === "indexado" && (
+        {tipoRentabilidade === "indexado" ? (
           <div className="space-y-1 animate-in fade-in slide-in-from-left-2 duration-300">
             <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
             <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
@@ -299,10 +298,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               </SelectContent>
             </Select>
           </div>
+        ) : (
+          <div className="hidden sm:block" />
         )}
-      </div>
 
-      <div className={cn("grid grid-cols-2 gap-x-4 gap-y-4")}>
         <div className="space-y-0.5">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
