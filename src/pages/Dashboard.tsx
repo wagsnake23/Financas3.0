@@ -27,7 +27,7 @@ import {
   differenceInBusinessDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, formatCurrency, getAliquotaIR, getTipoTributacao } from "@/lib/utils";
+import { cn, formatCurrency, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
@@ -132,20 +132,23 @@ export default function Dashboard() {
   });
 
   // Fetch active indexers (CDI/IPCA)
-  const { data: indexadores = [] } = useQuery({
-    queryKey: ["indexadores"],
+  const { data: indexadores = [] } = useQuery<IndexadorHistorico[]>({
+    queryKey: ["indexadores-cdi"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("*")
-        .is("data_fim", null);
+        .select("tipo, taxa_anual, data_inicio, data_fim, taxa_diaria" as any)
+        .order("data_inicio", { ascending: true });
       if (error) throw error;
-      return data;
+      return data as unknown as IndexadorHistorico[];
     },
   });
 
-  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI")?.taxa_anual || 10.65, [indexadores]);
-  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA")?.taxa_anual || 5.0, [indexadores]);
+  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI" && !i.data_fim)?.taxa_anual || 10.65, [indexadores]);
+  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA" && !i.data_fim)?.taxa_anual || 5.0, [indexadores]);
+
+  const indexadorMapCDI = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI")), [indexadores]);
+  const indexadorMapIPCA = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA")), [indexadores]);
 
   const {
     monthlyFilteredTransactions,
@@ -220,24 +223,27 @@ export default function Dashboard() {
         taxaAnual = (taxaBase * (inv.percentual_indexador || 0) / 100) + (inv.taxa_adicional || 0);
       }
 
-      // 1. Taxa diária: (1 + (taxa_anual / 100))^(1 / 252) - 1
-      const taxaDiaria = Math.pow(1 + (taxaAnual / 100), 1 / 252) - 1;
+      // Determinar o mapa de indexador correto
+      let idxMap: Map<string, number> | undefined;
+      if (inv.tipo_rentabilidade === "indexado") {
+        if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
+        else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
+      }
 
-      // 2. Dias úteis passados
-      const [year, month, day] = (inv.data as string).split('-').map(Number);
-      const investDate = new Date(year, month - 1, day);
-      investDate.setHours(0, 0, 0, 0);
-
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      // differenceInBusinessDays returns the number of full business days between dates
-      const diasUteis = differenceInBusinessDays(today, investDate);
-
-      // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
-      const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
+      // Cálculo de rendimento usando dados históricos
+      const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
+        valorInicial: inv.valor,
+        dataInicio: inv.data,
+        dataFim: new Date(),
+        indexadorMap: idxMap || new Map<string, number>(),
+        percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
+        taxaAdicionalAoAno: inv.tipo_rentabilidade === "indexado" ? (inv.taxa_adicional || 0) : (inv.taxa_fixa || 0)
+      });
+      
+      const taxaDiaria = ultimaTaxaAplicada;
 
       // 4. Rendimento de hoje líquido: (valor_atual × taxa_diaria) × (1 - IR/100)
+      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T00:00:00`) : new Date(inv.data);
       const tipoTributacao = getTipoTributacao(inv, allSubcategories);
       const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
       const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - aliquotaIR / 100);
