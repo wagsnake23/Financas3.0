@@ -511,7 +511,7 @@ export default function Investments() { // Alterado para export default function
                 isMobile && "p-4"
               )}
               style={{
-                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                 backgroundBlendMode: "soft-light",
                 backdropFilter: "blur(6px)",
                 outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -745,7 +745,7 @@ export default function Investments() { // Alterado para export default function
               <Card
                 className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
                 style={{ 
-                  background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                   backgroundBlendMode: "soft-light",
                   backdropFilter: "blur(6px)",
                   outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -1272,7 +1272,7 @@ export default function Investments() { // Alterado para export default function
                 <Card
                   className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
                   style={{ 
-                    background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                     backgroundBlendMode: "soft-light",
                     backdropFilter: "blur(6px)",
                     outline: "1px solid rgba(0, 102, 255, 0.08)",
