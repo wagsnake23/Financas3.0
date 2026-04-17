@@ -362,8 +362,18 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
 
         <div className="space-y-0.5 col-span-2 relative">
-          <div className="absolute inset-0 bg-green-400/10 blur-[30px] rounded-full -z-10 scale-90" />
-          <div className="rounded-xl w-full bg-green-100/30 border border-green-200/40 h-[84px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight relative z-0 shadow-[0_0_20px_rgba(34,197,94,0.08)]">
+          <div className="absolute inset-x-0 -inset-y-4 bg-green-500/25 blur-[45px] rounded-full -z-10 scale-110" />
+          <div 
+            className="rounded-xl w-full h-[84px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight relative z-0"
+            style={{
+              background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
+              backgroundBlendMode: "soft-light",
+              backdropFilter: "blur(6px)",
+              border: "1px solid rgba(0,0,0,0.06)",
+              outline: "1px solid rgba(34, 197, 94, 0.08)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -4px 10px rgba(0,0,0,0.03), inset 0 0 12px rgba(34, 197, 94, 0.12)"
+            }}
+          >
             <div className="flex justify-between w-full items-center">
               {/* Coluna Esquerda */}
               <div className="flex flex-col gap-1.5 justify-center h-full text-left">

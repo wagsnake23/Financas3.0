@@ -1433,7 +1433,7 @@ export default function Investments() { // Alterado para export default function
         <DialogContent 
           className={cn(
             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[28px] !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px]",
-            "!border-2 border-[#25AF6A]/30 shadow-none"
+            "!border-2 border-[#218C5C]/20 shadow-none"
           )}
           style={{
             background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
