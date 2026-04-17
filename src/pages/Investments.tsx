@@ -108,10 +108,10 @@ export default function Investments() { // Alterado para export default function
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, data_fim, taxa_diaria" as any)
+        .select("tipo, taxa_anual, data_inicio, data_fim, taxa_diaria")
         .order("data_inicio", { ascending: true });
       if (error) throw error;
-      return data as unknown as IndexadorHistorico[];
+      return data as IndexadorHistorico[];
     },
   });
 

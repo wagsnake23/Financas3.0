@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      indexadores: {
+        Row: {
+          id: string
+          tipo: string
+          taxa_anual: number
+          taxa_diaria: number | null
+          data_inicio: string
+          data_fim: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tipo: string
+          taxa_anual: number
+          taxa_diaria?: number | null
+          data_inicio: string
+          data_fim?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tipo?: string
+          taxa_anual?: number
+          taxa_diaria?: number | null
+          data_inicio?: string
+          data_fim?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action_type: string
@@ -310,33 +340,6 @@ export type Database = {
           indexador?: string | null
           percentual_indexador?: number | null
           taxa_adicional?: number | null
-        }
-        Relationships: []
-      }
-      indexadores: {
-        Row: {
-          id: string
-          tipo: string
-          taxa_anual: number
-          data_inicio: string
-          data_fim: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          tipo: string
-          taxa_anual: number
-          data_inicio: string
-          data_fim?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          tipo?: string
-          taxa_anual?: number
-          data_inicio?: string
-          data_fim?: string | null
-          created_at?: string
         }
         Relationships: []
       }
