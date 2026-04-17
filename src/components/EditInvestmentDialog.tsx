@@ -361,8 +361,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </Popover>
         </div>
 
-        <div className="space-y-0.5 col-span-2 relative">
-          <div className="absolute inset-x-0 -inset-y-4 bg-green-500/25 blur-[45px] rounded-full -z-10 scale-110" />
+        <div className="space-y-0.5 col-span-2">
           <div 
             className="rounded-xl w-full h-[84px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight relative z-0"
             style={{
@@ -410,7 +409,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     </div>
 
       <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
-        <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any} disabled={loading}>Cancelar</Button>
+        <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black !text-gray-500 border-none transition-all active:scale-95 shadow-[0_1px_1px_rgba(0,0,0,0.02)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#F8FAFC", "--cor-base": "#F1F5F9" } as any} disabled={loading}>Cancelar</Button>
         <Button type="submit" className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
       </div>
     </form>
