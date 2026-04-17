@@ -128,6 +128,29 @@ export function isDiaUtil(date: Date): boolean {
   return true;
 }
 
+/**
+ * Retorna o próximo dia útil a partir de uma data.
+ */
+export function proximoDiaUtil(date: Date): Date {
+  const proximo = new Date(date);
+  proximo.setDate(proximo.getDate() + 1);
+  while (!isDiaUtil(proximo)) {
+    proximo.setDate(proximo.getDate() + 1);
+  }
+  return proximo;
+}
+
+/**
+ * Ajusta a data de aplicação informada pelo usuário para alinhar o rendimento (D+1)
+ * com o saldo real da corretora sem o usuário precisar ajustar manualmente.
+ */
+function normalizarDataAplicacao(dataUI: Date | string): Date {
+  const d = typeof dataUI === 'string' ? new Date(dataUI + "T12:00:00") : new Date(dataUI);
+  d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() - 1);
+  return d;
+}
+
 export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string, number> {
   const map = new Map<string, number>();
 
@@ -147,7 +170,7 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
  * Baseado no padrão de mercado brasileiro (B3/CDB):
  * - Capitalização bruta diária em dias úteis
  * - IR regressivo aplicado sobre o lucro total ao final
- * - CÁLCULO PURO: Sem fatores de ajuste artificiais ou offsets fixos
+ * - Rendimento começa em D+1 ÚTIL (Ajustado internamente)
  */
 export function calcularRendimentoComCDI({
   valorInicial,
@@ -166,21 +189,24 @@ export function calcularRendimentoComCDI({
 }): { valorAtual: number; ultimaTaxaAplicada: number; rendimentoBrutoAcumulado: number; irProvisionado: number } {
   let valorBruto = valorInicial;
 
-  // Normalização de Datas
-  const startStr = formatDateKey(dataInicio);
-  const inicio = new Date(startStr + "T12:00:00");
+  // 🔥 Normalização Interna:
+  // Voltamos 1 dia na data de aplicação para que o proximoDiaUtil(data - 1) 
+  // resulte na própria data de aplicação caso seja dia útil, 
+  // iniciando o rendimento exatamente na data informada pelo usuário.
+  const inicioNormalizado = normalizarDataAplicacao(dataInicio);
+  
   const hoje = new Date();
   hoje.setHours(12, 0, 0, 0);
 
-  const primeiroDiaYield = new Date(inicio);
-  primeiroDiaYield.setDate(primeiroDiaYield.getDate() + 1);
+  // Início do rendimento (D+1 da data normalizada = Data UI original se for dia útil)
+  const primeiroDiaYield = proximoDiaUtil(inicioNormalizado);
 
   let ultimaTaxa = 0;
   let ultimaTaxaAplicada = 0;
 
   // Busca de semente retroativa (Fallback para indexadores)
   if (indexadorMap.size > 0 && taxaFixaAnual === null) {
-    let dataSemente = new Date(inicio);
+    let dataSemente = new Date(inicioNormalizado);
     for (let i = 0; i < 730; i++) {
       const key = formatDateKey(dataSemente);
       const taxaSemente = indexadorMap.get(key);
@@ -194,7 +220,7 @@ export function calcularRendimentoComCDI({
 
   const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
 
-  // Loop de Capitalização Bruta (CÁLCULO PURO)
+  // Loop de Capitalização Bruta
   for (let d = new Date(primeiroDiaYield); d < hoje; d.setDate(d.getDate() + 1)) {
     if (!isDiaUtil(d)) continue;
 
@@ -215,7 +241,6 @@ export function calcularRendimentoComCDI({
     }
 
     if (taxaBase !== undefined && taxaBase > 0) {
-      // Cálculo direto sem modificadores
       const taxa = taxaBase * (percentualIndexador / 100);
       valorBruto *= (1 + taxa);
       
@@ -224,13 +249,15 @@ export function calcularRendimentoComCDI({
     }
   }
 
-  // Cálculo Final de IR e Arredondamentos Financeiros
+  // Cálculo de IR e Finalização
+  // Para fins tributários de permanência, usamos a data UI original (que é inicioNormalizado + 1 dia)
+  const dataReferenciaIR = new Date(inicioNormalizado);
+  dataReferenciaIR.setDate(dataReferenciaIR.getDate() + 1);
+
   const lucroTotal = valorBruto - valorInicial;
-  const aliquota = getAliquotaIR(inicio, hoje, tipoTributacao);
+  const aliquota = getAliquotaIR(dataReferenciaIR, hoje, tipoTributacao);
   
   const ir = Math.round(lucroTotal * (aliquota / 100) * 100) / 100;
-  
-  // Valor Líquido Final (Arredondado para 2 casas decimais padrão bancário)
   const valorLiquido = Math.round((valorBruto - ir) * 100) / 100;
   const rendimentoBrutoAcumulado = Math.round(lucroTotal * 100) / 100;
 
