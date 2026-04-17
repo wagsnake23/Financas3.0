@@ -451,7 +451,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
         {/* Linha 3 Full Width: Estimativa Calculada (Bruta e Líquida) */}
         <div className="space-y-0.5 col-span-2">
-          <Label className={cn(isMobile && "text-xs")}>Estimativa (Bruto/IR/Líq.)</Label>
           <div className={cn(
             "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-12 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight",
           )}>
