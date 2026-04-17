@@ -111,12 +111,25 @@ function formatDateKey(date: Date | string): string {
   return date.toISOString().split('T')[0];
 }
 
+/**
+ * Verifica se uma data é dia útil (segunda a sexta).
+ * Pode ser expandida para incluir feriados nacionais da B3 no futuro.
+ */
+export function isDiaUtil(date: Date): boolean {
+  const diaSemana = date.getDay();
+  // 0 = Domingo, 6 = Sábado
+  if (diaSemana === 0 || diaSemana === 6) {
+    return false;
+  }
+  // Placeholder para feriados nacionais
+  return true;
+}
+
 export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string, number> {
   const map = new Map<string, number>();
 
   if (!indexadores || indexadores.length === 0) return map;
 
-  // Processar apenas taxa_diaria, ignorando taxa_anual conforme solicitado
   for (const item of indexadores) {
     if (!item.data_inicio || item.taxa_diaria == null) continue;
     const key = item.data_inicio.split('T')[0];
@@ -165,17 +178,19 @@ export function calcularRendimentoComCDI({
 
   // Loop principal
   for (let d = new Date(primeiroDiaYield); d <= hoje; d.setDate(d.getDate() + 1)) {
+    // 🏦 Regra de Mercado: CDI só rende em dias úteis
+    if (!isDiaUtil(d)) continue;
+
     const key = formatDateKey(d);
     const taxaDia = indexadorMap.get(key);
 
-    if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
-      const taxa = taxaDia * (percentualIndexador / 100);
+    // Se não houver taxa específica para o dia útil, mantém a última taxa (fallback útil para hiatos no banco)
+    const taxaBase = (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) ? taxaDia : ultimaTaxa;
+
+    if (taxaBase > 0) {
+      const taxa = taxaBase * (percentualIndexador / 100);
       valor *= (1 + taxa);
-      ultimaTaxa = taxaDia;
-      ultimaTaxaAplicada = taxa;
-    } else if (ultimaTaxa > 0) {
-      const taxa = ultimaTaxa * (percentualIndexador / 100);
-      valor *= (1 + taxa);
+      ultimaTaxa = taxaBase;
       ultimaTaxaAplicada = taxa;
     }
   }
