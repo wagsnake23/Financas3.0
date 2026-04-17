@@ -1433,13 +1433,12 @@ export default function Investments() { // Alterado para export default function
         <DialogContent 
           className={cn(
             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[28px] !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px]",
-            "!border-none shadow-none"
+            "!border-2 border-[#25AF6A]/30 shadow-none"
           )}
           style={{
-            background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
+            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            border: "1px solid rgba(0,0,0,0.06)",
             outline: "1px solid rgba(34, 197, 94, 0.08)",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
           }}
@@ -1449,7 +1448,7 @@ export default function Investments() { // Alterado para export default function
             isMobile ? "-mt-2 -mb-2" : "-mt-4"
           )}>
             <span className="text-2xl select-none">📝</span>
-            <DialogTitle className="text-xl font-bold pb-[1px] text-center">Editar Investimento</DialogTitle>
+            <DialogTitle className="text-xl font-bold pb-[1px] text-center text-[#25AF6A]">Editar Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
