@@ -27,7 +27,7 @@ import {
   differenceInBusinessDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, formatCurrency, getAliquotaIR } from "@/lib/utils";
+import { cn, formatCurrency, getAliquotaIR, getTipoTributacao } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
@@ -238,7 +238,8 @@ export default function Dashboard() {
       const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
 
       // 4. Rendimento de hoje líquido: (valor_atual × taxa_diaria) × (1 - IR/100)
-      const aliquotaIR = getAliquotaIR(investDate);
+      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
+      const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
       const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - aliquotaIR / 100);
 
       return {
@@ -249,7 +250,7 @@ export default function Dashboard() {
         taxaDiaria
       };
     });
-  }, [investments, cdi, ipca]);
+  }, [investments, cdi, ipca, allSubcategories]);
 
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
