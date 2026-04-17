@@ -1445,7 +1445,7 @@ export default function Investments() { // Alterado para export default function
           }}
         >
           <DialogHeader className={cn(
-            "flex flex-row items-center justify-center gap-1 pb-0 mb-0 !space-y-0",
+            "flex flex-row items-center justify-center gap-1 pb-0 mb-0 !space-y-0 transform translate-y-[5px]",
             isMobile ? "-mt-2 -mb-2" : "-mt-4"
           )}>
             <span className="text-2xl select-none">📝</span>
