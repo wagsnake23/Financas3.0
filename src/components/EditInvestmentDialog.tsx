@@ -409,7 +409,19 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     </div>
 
       <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
-        <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black !text-gray-500 border-none transition-all active:scale-95 shadow-[0_1px_1px_rgba(0,0,0,0.02)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#F8FAFC", "--cor-base": "#F1F5F9" } as any} disabled={loading}>Cancelar</Button>
+        <Button 
+          type="button" 
+          onClick={onCancelEdit} 
+          className={cn("flex-1 rounded-[14px] btn-3d font-black !text-gray-500 border border-slate-300 transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.03)] text-lg h-11", isMobile && "h-11")} 
+          style={{ 
+            "--cor-topo": "#E2E8F0", 
+            "--cor-base": "#CBD5E1",
+            boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.08)"
+          } as any} 
+          disabled={loading}
+        >
+          Cancelar
+        </Button>
         <Button type="submit" className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
       </div>
     </form>
