@@ -743,8 +743,14 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div>
               <Card
-                className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none")}
-                style={{ backgroundColor: "transparent" }}
+                className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
+                style={{ 
+                  background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                  backgroundBlendMode: "soft-light",
+                  backdropFilter: "blur(6px)",
+                  outline: "1px solid rgba(0, 102, 255, 0.08)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
@@ -800,9 +806,9 @@ export default function Investments() { // Alterado para export default function
                       return (
                         <div
                           key={investment.id}
-                          className="relative group overflow-hidden transition-all duration-300 p-4 border border-blue-100 rounded-[20px] shadow-sm mb-2 last:mb-0"
+                          className="relative group overflow-hidden transition-all duration-300 p-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm"
                           style={{
-                            backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                            backgroundColor: "#FFFFFF"
                           }}
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
@@ -1332,11 +1338,9 @@ export default function Investments() { // Alterado para export default function
                               isMobile && "p-4"
                             )}
                             style={{
-                              background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
-                              backgroundBlendMode: "soft-light",
-                              backdropFilter: "blur(6px)",
-                              outline: "1px solid rgba(0, 102, 255, 0.08)",
-                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                              backgroundColor: "#FFFFFF",
+                              border: "1px solid rgba(0,0,0,0.08)",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)"
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
