@@ -412,11 +412,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button 
           type="button" 
           onClick={onCancelEdit} 
-          className={cn("flex-1 rounded-[14px] btn-3d font-black !text-gray-500 border border-slate-300 transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.03)] text-lg h-11", isMobile && "h-11")} 
+          className={cn("flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 shadow-sm", isMobile && "h-11")} 
           style={{ 
             "--cor-topo": "#E2E8F0", 
-            "--cor-base": "#CBD5E1",
-            boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.08)"
+            "--cor-base": "#CBD5E1" 
           } as any} 
           disabled={loading}
         >
