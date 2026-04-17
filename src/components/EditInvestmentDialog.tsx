@@ -142,8 +142,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     const rendimentoLiquido = rendimentoBruto - imposto;
 
     const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
+    const valorTotalLiquido = (amount || 0) + rendimentoLiquido;
 
-    return { imposto, aliquota, taxaLiquida, tipoTributacao, rendimentoLiquido };
+    return { imposto, aliquota, taxaLiquida, tipoTributacao, rendimentoLiquido, valorTotalLiquido };
   }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId]);
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
@@ -432,17 +433,23 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         {/* Linha 3 Full Width: Estimativa Calculada (Bruta e Líquida) */}
         <div className="space-y-0.5 col-span-2">
           <div className={cn(
-            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-12 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight",
+            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-16 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight",
           )}>
             <div className="flex justify-between w-full items-center">
               {/* Lado Esquerdo: Taxas (Bruta e Líquida) */}
-              <div className="flex flex-col gap-0.5 justify-center h-full text-left">
-                <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider">Bruta: {taxaEstimada.toFixed(2)}% a.a.</span>
-                <span className="text-[#218C5C] text-[12px] font-black">Líquida: {metrics.taxaLiquida.toFixed(2)}% a.a.</span>
+              <div className="flex flex-col gap-1 justify-center h-full text-left">
+                <div className="flex flex-col">
+                  <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider leading-none">Bruta: {taxaEstimada.toFixed(2)}% a.a.</span>
+                  <span className="text-[#218C5C] text-[11px] font-black leading-tight">Líquida: {metrics.taxaLiquida.toFixed(2)}% a.a.</span>
+                </div>
+                <div className="flex flex-col pt-0.5 border-t border-blue-200/30">
+                  <span className="text-gray-400 text-[8px] uppercase tracking-[0.1em] leading-none mb-0.5">Saldo Líquido Total</span>
+                  <span className="text-[#0556C3] text-[14px] font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
+                </div>
               </div>
 
               {/* Lado Direito: IR e Rendimento */}
-              <div className="flex flex-col items-end gap-0.5 text-right">
+              <div className="flex flex-col items-end gap-1 text-right">
                 {metrics.tipoTributacao === "isento" ? (
                   <span className="text-[#218C5C] text-[9px] font-black uppercase tracking-wider">
                     Isento de IR
@@ -452,7 +459,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
                     IR {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
                   </span>
                 )}
-                <span className="text-success text-[13px] font-black">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
+                <div className="flex flex-col items-end pt-0.5">
+                  <span className="text-gray-400 text-[8px] uppercase tracking-[0.1em] leading-none mb-0.5">Rendimento Líquido</span>
+                  <span className="text-success text-[14px] font-black leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
+                </div>
               </div>
             </div>
           </div>
