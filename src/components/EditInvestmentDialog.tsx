@@ -363,11 +363,10 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
 
         <div className="space-y-0.5 col-span-2">
-          <div className="rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-16 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight">
+          <div className="rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-[72px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight">
             <div className="flex justify-between w-full items-center">
               <div className="flex flex-col gap-1 justify-center h-full text-left">
                 <div className="flex flex-col">
-                  <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider leading-none">Bruta: {taxaEstimada.toFixed(2)}% a.a.</span>
                   <span className="text-[#218C5C] text-[11px] font-black leading-tight">Líquida: {metrics.taxaLiquida.toFixed(2)}% a.a.</span>
                 </div>
                 <div className="flex flex-col pt-0.5 border-t border-blue-200/30">
