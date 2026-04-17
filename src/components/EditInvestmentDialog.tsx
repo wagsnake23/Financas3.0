@@ -390,7 +390,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
       </div>
 
-      <div className={cn("grid grid-cols-2 gap-2 w-full pt-0")}>
+      <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
         <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any} disabled={loading}>Cancelar</Button>
         <Button type="submit" className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
       </div>
