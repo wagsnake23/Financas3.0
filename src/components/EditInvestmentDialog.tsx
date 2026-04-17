@@ -266,7 +266,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       <DialogDescription className="sr-only">
         Formulário para editar os detalhes do investimento.
       </DialogDescription>
-      <div className={cn("space-y-0.5", isMobile ? "-mt-10" : "-mt-6")}>
+      <div className={cn("space-y-0.5", isMobile ? "-mt-16" : "-mt-6")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select
           value={selectedInvestmentCategoryId}

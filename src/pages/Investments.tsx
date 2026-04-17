@@ -1434,8 +1434,8 @@ export default function Investments() { // Alterado para export default function
           isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[28px] !border-2 !border-white shadow-2xl !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px] !border-2 !border-white shadow-2xl"
         )}>
           <DialogHeader className={cn(
-            "flex flex-row items-center justify-center gap-1",
-            isMobile ? "-mt-2" : "-mt-4"
+            "flex flex-row items-center justify-center gap-1 pb-0 mb-0 !space-y-0",
+            isMobile ? "-mt-2 -mb-2" : "-mt-4"
           )}>
             <span className="text-2xl select-none">📝</span>
             <DialogTitle className="text-xl font-bold pb-[1px] text-center">Editar Investimento</DialogTitle>
