@@ -491,7 +491,7 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className={cn("flex flex-col bg-background", isMobile ? "bg-lancamentos-mobile-bg" : "pt-16")}> {/* Alterado min-h-screen para flex flex-col */}
+    <div className={cn("flex flex-col bg-background", isMobile ? "bg-slate-50" : "pt-16")}> {/* Alterado para bg-slate-50 em mobile conforme solicitado */}
       <Navigation />
 
       {/* Main Content */}
@@ -507,12 +507,15 @@ export default function Investments() { // Alterado para export default function
 
             <Card
               className={cn(
-                "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
-                isMobile && "border-none shadow-none bg-transparent p-4"
+                "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
+                isMobile && "p-4"
               )}
               style={{
-                backgroundColor: "transparent",
-                backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                backgroundBlendMode: "soft-light",
+                backdropFilter: "blur(6px)",
+                outline: "1px solid rgba(0, 102, 255, 0.08)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
               }}
             >
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
@@ -1261,8 +1264,14 @@ export default function Investments() { // Alterado para export default function
               {/* Investments List */}
               <div>
                 <Card
-                  className={cn("p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo", isMobile && "p-4 border-none shadow-none")}
-                  style={{ backgroundColor: "transparent" }}
+                  className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
+                  style={{ 
+                    background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
+                    backgroundBlendMode: "soft-light",
+                    backdropFilter: "blur(6px)",
+                    outline: "1px solid rgba(0, 102, 255, 0.08)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                  }}
                 >
                   <div className="flex items-center justify-between mb-6">
                     <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
@@ -1319,11 +1328,12 @@ export default function Investments() { // Alterado para export default function
                           <div
                             key={investment.id}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300 p-5 border border-blue-100 rounded-[20px] shadow-sm mb-2 last:mb-0",
+                              "relative group overflow-hidden transition-all duration-300 p-5 rounded-[20px] shadow-none mb-2 last:mb-0 border border-black/5",
                               isMobile && "p-4"
                             )}
                             style={{
-                              backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                              background: "rgba(255, 255, 255, 0.45)",
+                              backdropFilter: "blur(4px)"
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
