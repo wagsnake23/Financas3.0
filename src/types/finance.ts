@@ -33,6 +33,7 @@ export interface AppCategory {
   user_id?: string | null;
   created_at?: string | null;
   parent_id?: string | null; // Novo campo para indicar a categoria pai
+  tipo_tributacao?: "regressivo" | "isento";
 }
 
 // Interface para Investimentos, alinhada com a nova tabela 'investimentos' do Supabase

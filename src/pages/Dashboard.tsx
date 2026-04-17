@@ -27,7 +27,7 @@ import {
   differenceInBusinessDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, getAliquotaIR } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
@@ -237,8 +237,9 @@ export default function Dashboard() {
       // 3. Valor atual virtual: valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
       const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
 
-      // 4. Rendimento de hoje: valor_atual × taxa_diaria
-      const rendimentoHojeVirtual = valorAtualVirtual * taxaDiaria;
+      // 4. Rendimento de hoje líquido: (valor_atual × taxa_diaria) × (1 - IR/100)
+      const aliquotaIR = getAliquotaIR(investDate);
+      const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - aliquotaIR / 100);
 
       return {
         ...inv,

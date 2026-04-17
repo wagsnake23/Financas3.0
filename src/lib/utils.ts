@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatInTimeZone } from "date-fns-tz"; // Removido zonedTimeToUtc
-
+import { AppCategory, Investment } from "@/types/finance";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -69,7 +69,14 @@ export function zonedTimeToUtcFallback(
   return new Date(new Date(dateString).toLocaleString("en-US", { timeZone }));
 }
 
-export function getAliquotaIR(dataInvestimento: Date) {
+export type TipoTributacao = "regressivo" | "isento";
+
+export function getAliquotaIR(
+  dataInvestimento: Date,
+  tipoTributacao: TipoTributacao = "regressivo"
+): number {
+  if (tipoTributacao === "isento") return 0;
+
   const hoje = new Date();
   const diffTime = Math.abs(hoje.getTime() - dataInvestimento.getTime());
   const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -78,4 +85,12 @@ export function getAliquotaIR(dataInvestimento: Date) {
   if (diffDias <= 360) return 20;
   if (diffDias <= 720) return 17.5;
   return 15;
+}
+
+export function getTipoTributacao(
+  inv: Investment | { nome: string },
+  categorias: AppCategory[]
+): TipoTributacao {
+  const categoria = categorias.find(c => c.id === inv.nome);
+  return categoria?.tipo_tributacao ?? "regressivo";
 }

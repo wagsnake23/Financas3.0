@@ -15,7 +15,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao
 import { format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
@@ -123,6 +123,21 @@ export default function Investments() { // Alterado para export default function
     const taxaBase = indexador === "CDI" ? cdi : ipca;
     return (taxaBase * (percentualIndexador || 0) / 100);
   }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
+
+  const metricsNewForm = useMemo(() => {
+    const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
+    const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
+    const aliquota = getAliquotaIR(date || new Date(), tipoTributacao);
+    
+    const taxaAnual = taxaEstimada / 100;
+    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / 252) - 1;
+    const rendimentoBrutoDia = (amount || 0) * taxaDiaria;
+    
+    const rendimentoLiquidoDia = rendimentoBrutoDia * (1 - aliquota / 100);
+    const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
+
+    return { tipoTributacao, aliquota, rendimentoBrutoDia, rendimentoLiquidoDia, taxaLiquida };
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -342,7 +357,8 @@ export default function Investments() { // Alterado para export default function
       const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteis));
 
       // 4. IR Calculation
-      const aliquotaIR = getAliquotaIR(investDate);
+      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
+      const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
       const rendimentoBruto = valorAtualVirtual - inv.valor;
       const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
       const rendimentoLiquido = rendimentoBruto - imposto;
@@ -354,6 +370,7 @@ export default function Investments() { // Alterado para export default function
 
       return {
         ...inv,
+        tipoTributacao,
         rentabilidade: taxaAnual, // Annual Gross
         valorAtualVirtual,
         rendimentoHojeVirtual: rendimentoHojeLiquido,
@@ -365,7 +382,7 @@ export default function Investments() { // Alterado para export default function
         valorLiquido
       };
     });
-  }, [investments, cdi, ipca]);
+  }, [investments, cdi, ipca, allSubcategories]);
 
   const totalProjectedAnnualYield = useMemo(() => {
     const rawTotal = calculatedInvestments.reduce((sum, inv) => {
@@ -1169,19 +1186,19 @@ export default function Investments() { // Alterado para export default function
                               <div>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Bruto / IR / Líquido</p>
                                 <p className="text-sm font-black text-[#218C5C] tracking-tight">
-                                  {taxaEstimada.toFixed(2)}% / {getAliquotaIR(date || new Date())}% / {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%
+                                  {taxaEstimada.toFixed(2)}% / {metricsNewForm.tipoTributacao === "isento" ? "ISENTO" : `${metricsNewForm.aliquota}%`} / {metricsNewForm.taxaLiquida.toFixed(2)}%
                                 </p>
                               </div>
                               <div>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rendimento Diário</p>
                                 <p className="text-xl font-black text-[#218C5C] tracking-tight">
-                                  {amount ? formatCurrency((amount * (Math.pow(1 + taxaEstimada / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                                  {formatCurrency(metricsNewForm.rendimentoBrutoDia)}
                                 </p>
                               </div>
                               <div>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Estimativa Líquida</p>
                                 <p className="text-xl font-black text-[#218C5C] tracking-tight">
-                                  {amount ? formatCurrency((amount * (Math.pow(1 + (taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)) / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                                  {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
                                 </p>
                               </div>
                             </div>

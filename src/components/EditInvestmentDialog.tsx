@@ -129,7 +129,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     const rendimentoBruto = valorAtual - (amount || 0);
 
     // IR
-    const aliquota = getAliquotaIR(date || new Date());
+    const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
+    const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
+    const aliquota = getAliquotaIR(date || new Date(), tipoTributacao);
 
     // imposto apenas sobre lucro
     const imposto = rendimentoBruto > 0
@@ -141,8 +143,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
     const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
 
-    return { imposto, aliquota, taxaLiquida };
-  }, [amount, taxaEstimada, date]);
+    return { imposto, aliquota, taxaLiquida, tipoTributacao };
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId]);
 
   // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
@@ -455,11 +457,19 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           )}>
             <div className="flex justify-between w-full items-center">
               {/* Lado Esquerdo: IR (Valor Real Acumulado e Taxa) */}
-              <div className="flex flex-col gap-0.5">
-                <span className="text-red-500 text-[11px]">
-                  -{formatCurrency(metrics.imposto)}
-                </span>
-                <span className="text-red-500/60 text-[9px] uppercase tracking-wider">IR: {metrics.aliquota}%</span>
+              <div className="flex flex-col gap-0.5 justify-center h-full">
+                {metrics.tipoTributacao === "isento" ? (
+                  <span className="text-[#218C5C] text-[10px] font-black uppercase tracking-wider">
+                    Isento de IR
+                  </span>
+                ) : (
+                  <>
+                    <span className="text-red-500 text-[11px]">
+                      -{formatCurrency(metrics.imposto)}
+                    </span>
+                    <span className="text-red-500/60 text-[9px] uppercase tracking-wider">IR: {metrics.aliquota}%</span>
+                  </>
+                )}
               </div>
 
               {/* Lado Direito: Bruto e Líquido */}
