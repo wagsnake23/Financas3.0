@@ -137,15 +137,24 @@ export default function Dashboard() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, data_fim, taxa_diaria")
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria")
         .order("data_inicio", { ascending: true });
       if (error) throw error;
       return data as IndexadorHistorico[];
     },
   });
 
-  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI" && !i.data_fim)?.taxa_anual || 10.65, [indexadores]);
-  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA" && !i.data_fim)?.taxa_anual || 5.0, [indexadores]);
+  const cdi = useMemo(() => {
+    const cdis = indexadores.filter(i => i.tipo === "CDI");
+    if (cdis.length === 0) return 10.65;
+    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
+
+  const ipca = useMemo(() => {
+    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
+    if (ipcas.length === 0) return 5.0;
+    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
 
   const indexadorMapCDI = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI")), [indexadores]);
   const indexadorMapIPCA = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA")), [indexadores]);
@@ -216,13 +225,6 @@ export default function Dashboard() {
 
   const calculatedInvestments = useMemo(() => {
     return investments.map((inv: Investment) => {
-      // Calculate total profitability for indexed investments (Gross)
-      let taxaAnual = inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : 0;
-      if (inv.tipo_rentabilidade === "indexado") {
-        const taxaBase = inv.indexador === "CDI" ? cdi : ipca;
-        taxaAnual = (taxaBase * (inv.percentual_indexador || 0) / 100) + (inv.taxa_adicional || 0);
-      }
-
       // Determinar o mapa de indexador correto
       let idxMap: Map<string, number> | undefined;
       if (inv.tipo_rentabilidade === "indexado") {
@@ -230,39 +232,44 @@ export default function Dashboard() {
         else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
       }
 
-      // Cálculo de rendimento usando dados históricos
+      // Cálculo de rendimento usando dados históricos (Engine Real)
       const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
-        dataFim: new Date(),
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
-        taxaAdicionalAoAno: inv.tipo_rentabilidade === "indexado" ? (inv.taxa_adicional || 0) : (inv.taxa_fixa || 0)
       });
       
       const taxaDiaria = ultimaTaxaAplicada;
 
-      // 4. Rendimento de hoje líquido: (valor_atual × taxa_diaria) × (1 - IR/100)
+      // 4. Rendimento de hoje líquido
       const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T00:00:00`) : new Date(inv.data);
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
+      const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
       const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-      const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
-      const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - aliquotaIR / 100);
+      const rawAliquota = getAliquotaIR(investDate, tipoTributacao);
+      const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - rawAliquota / 100);
 
       const rendimentoBruto = valorAtualVirtual - inv.valor;
-      const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
+      const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (rawAliquota / 100) : 0;
       const rendimentoLiquido = rendimentoBruto - imposto;
       const valorLiquido = inv.valor + rendimentoLiquido;
 
       return {
         ...inv,
-        rentabilidade: taxaAnual, // Annual Gross
+        rentabilidade: inv.tipo_rentabilidade === "indexado" 
+          ? (inv.indexador === "CDI" ? cdi : ipca) * (inv.percentual_indexador || 100) / 100
+          : (inv.taxa_fixa || 0),
         valorAtualVirtual,
         rendimentoHojeVirtual,
         taxaDiaria,
         valorLiquido
       };
     });
-  }, [investments, cdi, ipca, allSubcategories]);
+  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
 
   // Yields calculation
   const totalProjectedAnnualYield = useMemo(() => {
@@ -509,7 +516,7 @@ export default function Dashboard() {
                             <DynamicIcon name="DollarSign" className="h-6 w-6 text-white" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
-                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
+                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
                             <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                           </div>
                         </div>
@@ -629,7 +636,7 @@ export default function Dashboard() {
                           >
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Atual</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Líquido Total</h4>
                         </div>
                         <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(currentYieldStats.totalCurrentBalance)}</p>
                       </div>

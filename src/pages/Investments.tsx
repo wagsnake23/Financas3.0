@@ -108,18 +108,36 @@ export default function Investments() { // Alterado para export default function
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, data_fim, taxa_diaria")
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria")
         .order("data_inicio", { ascending: true });
       if (error) throw error;
       return data as IndexadorHistorico[];
     },
   });
 
-  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI" && !i.data_fim)?.taxa_anual || 10.65, [indexadores]);
-  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA" && !i.data_fim)?.taxa_anual || 5.0, [indexadores]);
+  const cdi = useMemo(() => {
+    const cdis = indexadores.filter(i => i.tipo === "CDI");
+    if (cdis.length === 0) return 10.65;
+    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
 
-  const indexadorMapCDI = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI")), [indexadores]);
-  const indexadorMapIPCA = useMemo(() => buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA")), [indexadores]);
+  const ipca = useMemo(() => {
+    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
+    if (ipcas.length === 0) return 5.0;
+    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
+
+  const indexadorMapCDI = useMemo(() => {
+    const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI"));
+    console.log("CDI Map size:", map.size);
+    return map;
+  }, [indexadores]);
+
+  const indexadorMapIPCA = useMemo(() => {
+    const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA"));
+    console.log("IPCA Map size:", map.size);
+    return map;
+  }, [indexadores]);
 
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
@@ -297,7 +315,6 @@ export default function Investments() { // Alterado para export default function
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      taxa_adicional: null,
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -337,12 +354,7 @@ export default function Investments() { // Alterado para export default function
   };
 
   const calculatedInvestments = useMemo(() => {
-    return investments.map(inv => {
-      // Logic for Annual Rate based on type
-      const taxaAnual = inv.tipo_rentabilidade === "indexado" 
-        ? ((inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * ((inv.percentual_indexador || 0) / 100)) + (inv.taxa_adicional || 0)
-        : (inv.taxa_fixa || 0);
-
+    return (investments || []).map(inv => {
       // Determinar o mapa de indexador correto
       let idxMap: Map<string, number> | undefined;
       if (inv.tipo_rentabilidade === "indexado") {
@@ -350,24 +362,30 @@ export default function Investments() { // Alterado para export default function
         else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
       }
 
-      // Cálculo de rendimento usando dados históricos
+      // Cálculo de rendimento usando dados históricos (Engine Real)
       const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
-        dataFim: new Date(),
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
-        taxaAdicionalAoAno: inv.tipo_rentabilidade === "indexado" ? (inv.taxa_adicional || 0) : (inv.taxa_fixa || 0)
       });
       
       const taxaDiaria = ultimaTaxaAplicada;
 
       // 4. IR Calculation
       const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T00:00:00`) : new Date(inv.data);
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
+      const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
       const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-      const aliquotaIR = getAliquotaIR(investDate, tipoTributacao);
+      const rawAliquota = getAliquotaIR(investDate, tipoTributacao);
       const rendimentoBruto = valorAtualVirtual - inv.valor;
-      const imposto = rendimentoBruto > 0 ? rendimentoBruto * (aliquotaIR / 100) : 0;
+      
+      const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (rawAliquota / 100) : 0;
+      const aliquotaIR = (rendimentoBruto > 0 && diffDias > 0) ? rawAliquota : 0;
+      
       const rendimentoLiquido = rendimentoBruto - imposto;
       const valorLiquido = inv.valor + rendimentoLiquido;
 
@@ -378,7 +396,9 @@ export default function Investments() { // Alterado para export default function
       return {
         ...inv,
         tipoTributacao,
-        rentabilidade: taxaAnual, // Annual Gross
+        rentabilidade: inv.tipo_rentabilidade === "indexado" 
+          ? (inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * (inv.percentual_indexador || 100) / 100
+          : (inv.taxa_fixa || 0),
         valorAtualVirtual,
         rendimentoHojeVirtual: rendimentoHojeLiquido,
         taxaDiaria,
@@ -389,7 +409,7 @@ export default function Investments() { // Alterado para export default function
         valorLiquido
       };
     });
-  }, [investments, cdi, ipca, allSubcategories]);
+  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA ]);
 
   const totalProjectedAnnualYield = useMemo(() => {
     const rawTotal = calculatedInvestments.reduce((sum, inv) => {
@@ -801,9 +821,12 @@ export default function Investments() { // Alterado para export default function
                           <div className="flex flex-col justify-between gap-4">
                             <div className="space-y-1">
                               <div className="flex items-center justify-between">
-                                <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
-                                  {formatCurrency(investment.valorLiquido)}
-                                </span>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
+                                  <span className="font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent text-2xl">
+                                    {formatCurrency(investment.valorLiquido)}
+                                  </span>
+                                </div>
                                 <Button
                                   variant="ghost"
                                   size="icon"
@@ -830,7 +853,7 @@ export default function Investments() { // Alterado para export default function
                                     <div className="flex flex-col items-start leading-none">
                                       <span className="text-[11px]">
                                         {investment.tipo_rentabilidade === "indexado"
-                                          ? `${investment.percentual_indexador}% ${investment.indexador}${investment.taxa_adicional ? ` + ${investment.taxa_adicional}%` : ""}`
+                                          ? `${investment.percentual_indexador}% ${investment.indexador}`
                                           : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
                                       </span>
                                       {investment.tipo_rentabilidade === "indexado" && (
@@ -865,7 +888,7 @@ export default function Investments() { // Alterado para export default function
                           >
                             <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                           </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Atual</h4>
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Líquido Total</h4>
                         </div>
                         <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                       </div>
@@ -933,7 +956,7 @@ export default function Investments() { // Alterado para export default function
                     <DynamicIcon name="DollarSign" className="h-6 w-6 text-white" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Atual</h4>
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
                     <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
                 </div>
@@ -1330,11 +1353,12 @@ export default function Investments() { // Alterado para export default function
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                               <div className="space-y-1">
                                 <div className="flex flex-col">
+                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
                                   <span className={cn(
                                     "font-bold tracking-tight bg-gradient-to-r from-[#1E6BCE] to-[#8257E5] bg-clip-text text-transparent",
                                     isMobile ? "text-2xl" : "text-3xl"
                                   )}>
-                                    {formatCurrency(investment.valorAtualVirtual)}
+                                    {formatCurrency(investment.valorLiquido)}
                                   </span>
                                 </div>
 
@@ -1354,7 +1378,7 @@ export default function Investments() { // Alterado para export default function
                                     <div className="flex flex-col items-start leading-none">
                                       <span className="text-[12px]">
                                         {investment.tipo_rentabilidade === "indexado"
-                                          ? `${investment.percentual_indexador}% ${investment.indexador}${investment.taxa_adicional ? ` + ${investment.taxa_adicional}%` : ""}`
+                                          ? `${investment.percentual_indexador}% ${investment.indexador}`
                                           : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
                                       </span>
                                       {investment.tipo_rentabilidade === "indexado" && (
@@ -1378,7 +1402,7 @@ export default function Investments() { // Alterado para export default function
                 {isMobile && (
                   <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
                     <StatCard
-                      mainStatTitle="Saldo Atual"
+                      mainStatTitle="Saldo Líquido Total"
                       mainStatValue={stats.totalCurrentBalance}
                       icon="DollarSign"
                       variant="income" // Usar variant income para cor verde
@@ -1417,6 +1441,8 @@ export default function Investments() { // Alterado para export default function
               isMobile={isMobile}
               allSubcategories={allSubcategories}
               incomeInvestmentSubcategories={incomeInvestmentSubcategories}
+              indexadorMapCDI={indexadorMapCDI}
+              indexadorMapIPCA={indexadorMapIPCA}
             />
           )}
         </DialogContent>

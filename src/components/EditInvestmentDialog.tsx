@@ -3,23 +3,21 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
+import CurrencyBR from "@/components/ui/currency-br";
 import { NumericInput } from "@/components/ui/numeric-input";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Investment, AppCategory } from "@/types/finance"; // Importar AppCategory
-import { format, parseISO, differenceInBusinessDays } from "date-fns";
+import { Investment, AppCategory } from "@/types/finance";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR
-// Removido: import { Card } from "@/components/ui/card"; // Importar Card
+import DynamicIcon from "./DynamicIcon";
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, calcularRendimentoComCDI } from "@/lib/utils";
 
 interface EditInvestmentDialogProps {
   investmentToEdit: Investment;
@@ -28,12 +26,14 @@ interface EditInvestmentDialogProps {
   user: User | null;
   investmentTypes: { value: string; label: string; icon?: string }[];
   isMobile: boolean;
-  allSubcategories: AppCategory[]; // Nova prop
-  incomeInvestmentSubcategories: AppCategory[]; // Nova prop
+  allSubcategories: AppCategory[];
+  incomeInvestmentSubcategories: AppCategory[];
+  indexadorMapCDI: Map<string, number>;
+  indexadorMapIPCA: Map<string, number>;
 }
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
 const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
@@ -44,10 +44,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   user,
   investmentTypes,
   isMobile,
-  allSubcategories, // Usar nova prop
-  incomeInvestmentSubcategories, // Usar nova prop
+  allSubcategories,
+  incomeInvestmentSubcategories,
+  indexadorMapCDI,
+  indexadorMapIPCA,
 }) => {
-  const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(investmentToEdit.nome); // Changed from 'name'
+  const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(investmentToEdit.nome);
   const [type, setType] = useState(investmentToEdit.tipo);
   const [amount, setAmount] = useState<number | undefined>(investmentToEdit.valor);
   const [date, setDate] = useState<Date | undefined>(parseISO(investmentToEdit.data));
@@ -57,99 +59,79 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">(investmentToEdit.tipo_rentabilidade || "fixo");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">(investmentToEdit.indexador || "CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>(investmentToEdit.percentual_indexador || undefined);
-  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
-  // Fetch active indexers
   const { data: indexadores = [] } = useQuery({
     queryKey: ["indexadores"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("*")
-        .is("data_fim", null);
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria");
       if (error) throw error;
       return data;
     },
   });
 
-  const cdi = useMemo(() => indexadores.find(i => i.tipo === "CDI")?.taxa_anual || 10.65, [indexadores]);
-  const ipca = useMemo(() => indexadores.find(i => i.tipo === "IPCA")?.taxa_anual || 5.0, [indexadores]);
+  const cdi = useMemo(() => {
+    const cdis = indexadores.filter(i => i.tipo === "CDI");
+    if (cdis.length === 0) return 11.15;
+    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
+
+  const ipca = useMemo(() => {
+    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
+    if (ipcas.length === 0) return 4.5;
+    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+  }, [indexadores]);
 
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
     const taxaBase = indexador === "CDI" ? cdi : ipca;
-    return (taxaBase * (percentualIndexador || 0) / 100);
+    return (taxaBase * (percentualIndexador || 100) / 100);
   }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
 
-  // Cálculo reativo da Rentabilidade Diária (R$) - Padrão Bancário
-  const dailyProfitabilityRS = useMemo(() => {
-    if (amount === undefined || taxaEstimada === undefined || amount <= 0) return 0;
-
-    // 1) Taxa diária (juros compostos 252 dias úteis)
-    const annualRate = taxaEstimada / 100;
-    const dailyRate = Math.pow(1 + annualRate, 1 / 252) - 1;
-
-    // 2) Truncar a taxa em 10 casas decimais (padrão financeiro)
-    const factor10 = Math.pow(10, 10);
-    const dailyRateTruncated = Math.trunc(dailyRate * factor10) / factor10;
-
-    // 3) Cálculo da rentabilidade bruta
-    const rawYield = amount * dailyRateTruncated;
-
-    // 4) Arredondamento Bancário (Round Half Even) para 2 casas decimais
-    const decimals = 2;
-    const m = Math.pow(10, decimals);
-    const n = +(rawYield * m).toFixed(8); // Evita erros de precisão do JS
-    const i = Math.floor(n);
-    const f = n - i;
-    const e = 1e-8; // Tolerância para comparação
-
-    const rounded = (f > 0.5 - e && f < 0.5 + e)
-      ? (i % 2 === 0 ? i : i + 1)
-      : Math.round(n);
-
-    return rounded / m;
-  }, [amount, taxaEstimada]);
-
   const metrics = useMemo(() => {
-    const dias = Math.max(
-      0,
-      differenceInBusinessDays(new Date(), date || new Date())
-    );
+    // Determinar o mapa de indexador correto
+    let idxMap: Map<string, number> | undefined;
+    if (tipoRentabilidade === "indexado") {
+      if (indexador === "CDI") idxMap = indexadorMapCDI;
+      else if (indexador === "IPCA") idxMap = indexadorMapIPCA;
+    }
 
-    const taxaAnual = taxaEstimada / 100;
+    // Cálculo de rendimento usando dados históricos (Engine Real - MESMA DA LISTA)
+    const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
+      valorInicial: amount || 0,
+      dataInicio: date || new Date(),
+      indexadorMap: idxMap || new Map<string, number>(),
+      percentualIndexador: tipoRentabilidade === "indexado" ? (percentualIndexador || 100) : 100,
+    });
 
-    // taxa diária (padrão mercado)
-    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / 252) - 1;
+    const rendimentoBruto = valorAtualVirtual - (amount || 0);
 
-    // valor atual com juros compostos
-    const valorAtual = (amount || 0) * Math.pow(1 + taxaDiaria, dias);
-
-    // lucro bruto
-    const rendimentoBruto = valorAtual - (amount || 0);
-
-    // IR
     const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
     const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
-    const aliquota = getAliquotaIR(date || new Date(), tipoTributacao);
+    const investDate = date || new Date();
+    
+    // Aliquota real based on duration
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+    const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
+    const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    const aliquota = getAliquotaIR(investDate, tipoTributacao);
 
     // imposto apenas sobre lucro
-    const imposto = rendimentoBruto > 0
-      ? rendimentoBruto * (aliquota / 100)
-      : 0;
-
-    // rendimento líquido
+    const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (aliquota / 100) : 0;
     const rendimentoLiquido = rendimentoBruto - imposto;
 
-    const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
+    const taxaLiquida = taxaEstimada * (1 - (rendimentoBruto > 0 ? aliquota : 0) / 100);
     const valorTotalLiquido = (amount || 0) + rendimentoLiquido;
 
-    return { imposto, aliquota, taxaLiquida, tipoTributacao, rendimentoLiquido, valorTotalLiquido };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId]);
+    return { imposto, aliquota: (rendimentoBruto > 0 ? aliquota : 0), taxaLiquida, tipoTributacao, rendimentoLiquido, valorTotalLiquido };
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, indexadorMapCDI, indexadorMapIPCA]);
 
-  // Update form fields if investmentToEdit changes (e.g., if user selects another investment quickly)
   useEffect(() => {
-    setSelectedInvestmentCategoryId(investmentToEdit.nome); // Update
+    setSelectedInvestmentCategoryId(investmentToEdit.nome);
     setType(investmentToEdit.tipo);
     setAmount(investmentToEdit.valor);
     setDate(parseISO(investmentToEdit.data));
@@ -157,7 +139,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     setTipoRentabilidade(investmentToEdit.tipo_rentabilidade || "fixo");
     setIndexador(investmentToEdit.indexador || "CDI");
     setPercentualIndexador(investmentToEdit.percentual_indexador || undefined);
-    setValidationErrors({}); // Clear errors on new edit
+    setValidationErrors({});
   }, [investmentToEdit]);
 
   const updateInvestmentMutation = useMutation({
@@ -166,18 +148,17 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       const { data, error } = await supabase
         .from("investimentos")
         .update({
-          nome: updatedInvestment.nome, // This will be the category ID
+          nome: updatedInvestment.nome,
           tipo: updatedInvestment.tipo,
-          valor: updatedInvestment.valor,
+          valor: Number(updatedInvestment.valor),
           data: updatedInvestment.data,
           tipo_rentabilidade: updatedInvestment.tipo_rentabilidade,
-          taxa_fixa: updatedInvestment.taxa_fixa,
-          indexador: updatedInvestment.indexador,
-          percentual_indexador: updatedInvestment.percentual_indexador,
-          taxa_adicional: null,
+          taxa_fixa: updatedInvestment.taxa_fixa ?? null,
+          indexador: updatedInvestment.indexador ?? null,
+          percentual_indexador: updatedInvestment.percentual_indexador ?? null,
         })
         .eq("id", updatedInvestment.id)
-        .eq("user_id", user.id) // Corrigido para user_id
+        .eq("user_id", user.id)
         .select()
         .single();
       if (error) throw error;
@@ -188,7 +169,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     },
     onError: (error) => {
       toast.error("Erro ao atualizar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
-      console.error("Supabase error updating investment:", error);
     },
     onSettled: () => {
       setLoading(false);
@@ -225,10 +205,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         newErrors.percentualIndexador = true;
         hasError = true;
       }
-      if (!indexador) {
-        newErrors.indexador = true;
-        hasError = true;
-      }
     }
     if (!date) {
       newErrors.date = true;
@@ -242,21 +218,18 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       return;
     }
 
-    const formattedDate = date
-      ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') // Usar formatInTimeZone
-      : "";
+    const formattedDate = date ? formatInTimeZone(date, TARGET_TIMEZONE, 'yyyy-MM-dd') : "";
 
     const updatedInvestment: Investment = {
       ...investmentToEdit,
-      nome: selectedInvestmentCategoryId, // Store category ID
+      nome: selectedInvestmentCategoryId,
       tipo: type,
-      valor: amount, // Usar o valor como number
+      valor: amount,
       data: formattedDate,
       tipo_rentabilidade: tipoRentabilidade,
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      taxa_adicional: null,
     };
 
     updateInvestmentMutation.mutate(updatedInvestment);
@@ -264,9 +237,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className={cn(isMobile ? "space-y-2.5" : "space-y-4", isMobile && "w-full mx-auto")}>
-      <DialogDescription className="sr-only">
-        Formulário para editar os detalhes do investimento.
-      </DialogDescription>
+      <DialogDescription className="sr-only">Formulário para editar os detalhes do investimento.</DialogDescription>
       <div className={cn("space-y-0.5", isMobile ? "-mt-16" : "-mt-6")}>
         <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
         <Select
@@ -282,39 +253,27 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-xl">
             <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
-            {incomeInvestmentSubcategories.length === 0 ? (
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
-            ) : (
-              incomeInvestmentSubcategories.map(cat => (
-                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                  <span className="flex items-center gap-2">
-                    <span>{cat.icone}</span>
-                    <span>{cat.nome}</span>
-                  </span>
-                </SelectItem>
-              ))
-            )}
+            {incomeInvestmentSubcategories.map(cat => (
+              <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                <span className="flex items-center gap-2">
+                  <span>{cat.icone}</span>
+                  <span>{cat.nome}</span>
+                </span>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
-
-
-      <div className={cn(
-        "grid gap-2 mb-2",
-        tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
-      )}>
+      <div className={cn("grid gap-2 mb-2", tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1")}>
         <div className="space-y-1">
           <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
           <Select
             value={tipoRentabilidade}
             onValueChange={(v: "fixo" | "indexado") => {
               setTipoRentabilidade(v);
-              if (v === "fixo") {
-                setPercentualIndexador(undefined);
-              } else {
-                setProfitability(undefined);
-              }
+              if (v === "fixo") setPercentualIndexador(undefined);
+              else setProfitability(undefined);
             }}
           >
             <SelectTrigger className={cn("rounded-xl bg-white border-slate-300 transition-all duration-200", isMobile && "h-10 text-sm")}>
@@ -344,7 +303,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       <div className={cn("grid grid-cols-2 gap-x-4 gap-y-4")}>
-        {/* Lado Esquerdo - Linha 1: Valor Investido */}
         <div className="space-y-0.5">
           <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
           <CurrencyBR
@@ -358,7 +316,6 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           />
         </div>
 
-        {/* Lado Direito - Linha 1: Rentabilidade Principal */}
         {tipoRentabilidade === "fixo" ? (
           <div className="space-y-0.5">
             <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
@@ -375,7 +332,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               fixedDecimalScale={false}
               maxLength={7}
               placeholder="0,0000"
-              className={cn("rounded-xl w-full bg-white border-slate-300 placeholder:text-slate-300 placeholder:font-normal", isMobile && "h-10 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
+              className={cn("rounded-xl w-full bg-white border-slate-300 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal", isMobile && "h-10 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false }))}
             />
           </div>
         ) : (
@@ -385,58 +342,29 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               value={percentualIndexador}
               onValueChange={(v) => setPercentualIndexador(v.floatValue)}
               placeholder="0,00"
-              className={cn(
-                "h-10 rounded-xl w-full bg-white border-slate-300 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
-                getBorderClass({ isInvalid: validationErrors.percentualIndexador })
-              )}
+              className={cn("h-10 rounded-xl w-full bg-white border-slate-300 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal", getBorderClass({ isInvalid: validationErrors.percentualIndexador }))}
             />
           </div>
         )}
 
-        {/* Linha 2 Full Width: Data do Investimento */}
         <div className="space-y-0.5 col-span-2">
           <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-slate-300",
-                  !date && "text-muted-foreground",
-                  isMobile && "h-9 text-sm",
-                  getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-                )}
-                disabled={loading}
-              >
+              <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal h-10 rounded-xl bg-white border-slate-300", !date && "text-muted-foreground", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false }))} disabled={loading}>
                 <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
                 {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  setIsCalendarOpen(false);
-                  setValidationErrors(prev => ({ ...prev, date: false }));
-                }}
-                initialFocus
-                locale={ptBR}
-                showOutsideDays={false}
-                className={cn(isMobile && "text-sm")}
-              />
+              <Calendar mode="single" selected={date} onSelect={(sd) => { setDate(sd); setIsCalendarOpen(false); setValidationErrors(p => ({ ...p, date: false })); }} initialFocus locale={ptBR} showOutsideDays={false} className={cn(isMobile && "text-sm")} />
             </PopoverContent>
           </Popover>
         </div>
 
-        {/* Linha 3 Full Width: Estimativa Calculada (Bruta e Líquida) */}
         <div className="space-y-0.5 col-span-2">
-          <div className={cn(
-            "rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-16 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight",
-          )}>
+          <div className="rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-16 px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight">
             <div className="flex justify-between w-full items-center">
-              {/* Lado Esquerdo: Taxas (Bruta e Líquida) */}
               <div className="flex flex-col gap-1 justify-center h-full text-left">
                 <div className="flex flex-col">
                   <span className="text-[#218C5C]/60 text-[9px] uppercase tracking-wider leading-none">Bruta: {taxaEstimada.toFixed(2)}% a.a.</span>
@@ -447,17 +375,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
                   <span className="text-[#0556C3] text-[14px] font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
                 </div>
               </div>
-
-              {/* Lado Direito: IR e Rendimento */}
               <div className="flex flex-col items-end gap-1 text-right">
                 {metrics.tipoTributacao === "isento" ? (
-                  <span className="text-[#218C5C] text-[9px] font-black uppercase tracking-wider">
-                    Isento de IR
-                  </span>
+                  <span className="text-[#218C5C] text-[9px] font-black uppercase tracking-wider">Isento de IR</span>
                 ) : (
-                  <span className="text-red-500 text-[10px] uppercase font-bold tracking-wider">
-                    IR {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
-                  </span>
+                  <span className="text-red-500 text-[10px] uppercase font-bold tracking-wider">IR {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}</span>
                 )}
                 <div className="flex flex-col items-end pt-0.5">
                   <span className="text-gray-400 text-[8px] uppercase tracking-[0.1em] leading-none mb-0.5">Rendimento Líquido</span>
@@ -470,29 +392,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
 
       <div className={cn("grid grid-cols-2 gap-2 w-full pt-0")}>
-        <Button
-          type="button"
-          onClick={onCancelEdit}
-          className={cn(
-            "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-            isMobile && "h-11"
-          )}
-          style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any}
-          disabled={loading}
-        >
-          Cancelar
-        </Button>
-        <Button
-          type="submit"
-          className={cn(
-            "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-            isMobile && "h-11"
-          )}
-          style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
-          disabled={loading}
-        >
-          {loading ? "Salvando..." : "Salvar"}
-        </Button>
+        <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any} disabled={loading}>Cancelar</Button>
+        <Button type="submit" className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
       </div>
     </form>
   );

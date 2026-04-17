@@ -1,7 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { formatInTimeZone } from "date-fns-tz"; // Removido zonedTimeToUtc
+import { formatInTimeZone } from "date-fns-tz";
 import { AppCategory, Investment } from "@/types/finance";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -13,7 +14,6 @@ export const isValidUuid = (value: string | null | undefined): boolean => {
   return uuidRegex.test(value);
 };
 
-// 🔥 Correção aplicada aqui
 export const formatCurrency = (value?: number | null, showSymbol: boolean = true) => {
   if (typeof value !== "number" || isNaN(value)) {
     return showSymbol ? "R$ 0,00" : "0,00";
@@ -47,7 +47,6 @@ export const getBorderClass = ({
   } else if (isValid) {
     borderClass = "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   } else {
-    // Default focus state for fields without validation status
     borderClass = "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   }
 
@@ -58,10 +57,9 @@ export const getBorderClass = ({
   );
 };
 
-export const TARGET_TIMEZONE = "America/Sao_Paulo"; // Fuso horário UTC-3 (Brasília)
-export { formatInTimeZone }; // Exportar apenas formatInTimeZone
+export const TARGET_TIMEZONE = "America/Sao_Paulo";
+export { formatInTimeZone };
 
-// Função de fallback para zonedTimeToUtc
 export function zonedTimeToUtcFallback(
   dateString: string,
   timeZone: string
@@ -101,42 +99,28 @@ export interface IndexadorHistorico {
   taxa_anual: number;
   taxa_diaria: number;
   data_inicio: string;
-  data_fim: string | null;
+}
+
+/**
+ * Normaliza uma data para o formato YYYY-MM-DD.
+ */
+function formatDateKey(date: Date | string): string {
+  if (typeof date === 'string') {
+    return date.split('T')[0];
+  }
+  return date.toISOString().split('T')[0];
 }
 
 export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string, number> {
   const map = new Map<string, number>();
-  if (indexadores.length === 0) return map;
 
-  // Assume indexadores are ordered by data_inicio ascending
-  const firstStartStr = indexadores[0].data_inicio.includes('T') ? indexadores[0].data_inicio.split('T')[0] : indexadores[0].data_inicio;
-  const firstDate = new Date(`${firstStartStr}T00:00:00`);
-  
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  if (!indexadores || indexadores.length === 0) return map;
 
-  let ultimaTaxaConhecida = 0;
-  let index = 0;
-
-  for (let d = new Date(firstDate); d <= today; d.setDate(d.getDate() + 1)) {
-    const dataStr = d.toISOString().split("T")[0];
-
-    // Catch up any indexers that started on or before this date
-    while (index < indexadores.length) {
-      const idxStartStr = indexadores[index].data_inicio.includes('T') ? indexadores[index].data_inicio.split('T')[0] : indexadores[index].data_inicio;
-      if (idxStartStr <= dataStr) {
-        if (indexadores[index].taxa_diaria != null) {
-          ultimaTaxaConhecida = indexadores[index].taxa_diaria;
-        }
-        index++;
-      } else {
-        break;
-      }
-    }
-
-    if (ultimaTaxaConhecida > 0) {
-      map.set(dataStr, ultimaTaxaConhecida);
-    }
+  // Processar apenas taxa_diaria, ignorando taxa_anual conforme solicitado
+  for (const item of indexadores) {
+    if (!item.data_inicio || item.taxa_diaria == null) continue;
+    const key = item.data_inicio.split('T')[0];
+    map.set(key, Number(item.taxa_diaria));
   }
 
   return map;
@@ -145,48 +129,56 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
 export function calcularRendimentoComCDI({
   valorInicial,
   dataInicio,
-  dataFim,
   indexadorMap,
   percentualIndexador = 100,
-  taxaAdicionalAoAno = 0
 }: {
   valorInicial: number;
-  dataInicio: Date | string;
-  dataFim: Date | string;
+  dataInicio: string | Date;
   indexadorMap: Map<string, number>;
   percentualIndexador?: number;
-  taxaAdicionalAoAno?: number;
 }): { valorAtual: number; ultimaTaxaAplicada: number } {
   let valor = valorInicial;
-  
-  // Safe date conversion handling timezone offsets by slicing out the time if it's a string
-  let dStart = typeof dataInicio === 'string' ? dataInicio.split('T')[0] : dataInicio.toISOString().split('T')[0];
-  const inicio = new Date(`${dStart}T00:00:00`);
-  
-  let dEnd = typeof dataFim === 'string' ? dataFim.split('T')[0] : dataFim.toISOString().split('T')[0];
-  const fim = new Date(`${dEnd}T00:00:00`);
 
-  const taxaDiariaAdicional = taxaAdicionalAoAno > 0 ? Math.pow(1 + taxaAdicionalAoAno / 100, 1 / 252) - 1 : 0;
+  const startStr = formatDateKey(dataInicio);
+  const inicio = new Date(`${startStr}T00:00:00`);
   
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  let ultimaTaxa = 0;
   let ultimaTaxaAplicada = 0;
 
-  for (let d = new Date(inicio); d <= fim; d.setDate(d.getDate() + 1)) {
-    const key = d.toISOString().split("T")[0];
+  const primeiroDiaYield = new Date(inicio);
+  primeiroDiaYield.setDate(primeiroDiaYield.getDate() + 1);
+
+  // Busca de semente retroativa (até 2 anos)
+  let dataSemente = new Date(inicio);
+  for (let i = 0; i < 730; i++) {
+    const key = formatDateKey(dataSemente);
+    const taxaSemente = indexadorMap.get(key);
+    if (taxaSemente !== undefined && taxaSemente !== null) {
+      ultimaTaxa = taxaSemente;
+      break;
+    }
+    dataSemente.setDate(dataSemente.getDate() - 1);
+  }
+
+  // Loop principal
+  for (let d = new Date(primeiroDiaYield); d <= hoje; d.setDate(d.getDate() + 1)) {
+    const key = formatDateKey(d);
     const taxaDia = indexadorMap.get(key);
 
-    let taxaNesseDia = taxaDiariaAdicional;
-
-    if (taxaDia) {
-      // CDI é contínuo, aplicamos o percentual em cima da taxa diária real do mapa (que é fornecida em %)
-      taxaNesseDia += (taxaDia / 100) * (percentualIndexador / 100);
-    }
-    
-    if (taxaNesseDia > 0) {
-      valor *= 1 + taxaNesseDia;
-      ultimaTaxaAplicada = taxaNesseDia;
+    if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
+      const taxa = taxaDia * (percentualIndexador / 100);
+      valor *= (1 + taxa);
+      ultimaTaxa = taxaDia;
+      ultimaTaxaAplicada = taxa;
+    } else if (ultimaTaxa > 0) {
+      const taxa = ultimaTaxa * (percentualIndexador / 100);
+      valor *= (1 + taxa);
+      ultimaTaxaAplicada = taxa;
     }
   }
 
   return { valorAtual: valor, ultimaTaxaAplicada };
 }
-
