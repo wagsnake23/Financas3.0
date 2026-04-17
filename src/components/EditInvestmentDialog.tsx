@@ -363,41 +363,41 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </div>
 
         <div className="space-y-0.5 col-span-2">
-          <div className="rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-[84px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight">
+          <div className="rounded-xl w-full bg-blue-50/50 border border-blue-200/50 h-[92px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight">
             <div className="flex justify-between w-full items-center">
               {/* Coluna Esquerda */}
               <div className="flex flex-col gap-1.5 justify-center h-full text-left">
                 <div className="flex flex-col">
-                  <span className="text-gray-500 text-[8px] uppercase tracking-wider leading-none mb-0.5">Rentabilidade Líquida</span>
-                  <span className="text-[#0556C3] text-[11px] font-black leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
+                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Rentabilidade Líquida</span>
+                  <span className="text-[#0556C3] text-[13px] font-black leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
                 </div>
                 <div className="flex flex-col pt-1 border-t border-blue-200/30">
-                  <span className="text-gray-400 text-[8px] uppercase tracking-wider leading-none mb-0.5">Rendimento Líquido</span>
-                  <span className="text-success text-[14px] font-black leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
+                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Rendimento Líquido</span>
+                  <span className="text-success text-[16px] font-black leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
                 </div>
               </div>
 
               {/* Coluna Direita */}
               <div className="flex flex-col gap-1.5 items-end h-full justify-center text-right">
                 <div className="flex flex-col items-end">
-                  <span className="text-gray-500 text-[8px] uppercase tracking-wider leading-none mb-0.5">Imposto de Renda</span>
+                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Imposto de Renda</span>
                   {metrics.tipoTributacao === "isento" ? (
-                    <span className="text-[#218C5C] text-[9px] font-black uppercase tracking-wider">Isento</span>
+                    <span className="text-[#218C5C] text-[10px] font-black uppercase tracking-wider">Isento</span>
                   ) : (
-                    <span className="text-red-500 text-[10px] uppercase font-bold tracking-wider">
+                    <span className="text-red-500 text-[12px] uppercase font-bold tracking-wider">
                       {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
                     </span>
                   )}
                 </div>
                 <div className="flex flex-col items-end pt-1 border-t border-blue-200/30">
-                  <span className="text-gray-400 text-[8px] uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
-                  <span className="text-[#0556C3] text-[14px] font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
+                  <span className="text-gray-500 text-[9px] uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
+                  <span className="text-[#0556C3] text-[16px] font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
                 </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
       <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
         <Button type="button" onClick={onCancelEdit} className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any} disabled={loading}>Cancelar</Button>
