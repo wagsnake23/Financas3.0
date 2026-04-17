@@ -69,14 +69,17 @@ export function zonedTimeToUtcFallback(
 
 export type TipoTributacao = "regressivo" | "isento";
 
+/**
+ * Calcula a alíquota de IR com base na duração do investimento.
+ */
 export function getAliquotaIR(
   dataInvestimento: Date,
+  dataReferencia: Date = new Date(),
   tipoTributacao: TipoTributacao = "regressivo"
 ): number {
   if (tipoTributacao === "isento") return 0;
 
-  const hoje = new Date();
-  const diffTime = Math.abs(hoje.getTime() - dataInvestimento.getTime());
+  const diffTime = Math.abs(dataReferencia.getTime() - dataInvestimento.getTime());
   const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDias <= 180) return 22.5;
@@ -145,14 +148,16 @@ export function calcularRendimentoComCDI({
   indexadorMap,
   percentualIndexador = 100,
   taxaFixaAnual = null,
+  tipoTributacao = "regressivo",
 }: {
   valorInicial: number;
   dataInicio: string | Date;
   indexadorMap: Map<string, number>;
   percentualIndexador?: number;
   taxaFixaAnual?: number | null;
-}): { valorAtual: number; ultimaTaxaAplicada: number } {
-  let valor = valorInicial;
+  tipoTributacao?: TipoTributacao;
+}): { valorAtual: number; ultimaTaxaAplicada: number; rendimentoBrutoAcumulado: number; irProvisionado: number } {
+  let valorBruto = valorInicial;
 
   const startStr = formatDateKey(dataInicio);
   const inicio = new Date(startStr + "T12:00:00");
@@ -167,7 +172,7 @@ export function calcularRendimentoComCDI({
   primeiroDiaYield.setDate(primeiroDiaYield.getDate() + 1);
 
   // Busca de semente retroativa para indexadores (até 2 anos)
-  if (indexadorMap.size > 0) {
+  if (indexadorMap.size > 0 && taxaFixaAnual === null) {
     let dataSemente = new Date(inicio);
     for (let i = 0; i < 730; i++) {
       const key = formatDateKey(dataSemente);
@@ -182,39 +187,49 @@ export function calcularRendimentoComCDI({
 
   const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
 
-  // Loop principal
+  // Loop de capitalização bruta
   for (let d = new Date(primeiroDiaYield); d <= hoje; d.setDate(d.getDate() + 1)) {
     if (!isDiaUtil(d)) continue;
 
     const key = formatDateKey(d);
-    
+    let taxaBase: number | undefined = undefined;
+
     if (taxaFixaAnual !== null) {
-      // Caso Renda Fixa Prefixada
-      valor *= (1 + taxaDiariaFixa);
-      ultimaTaxaAplicada = taxaDiariaFixa;
+      taxaBase = taxaDiariaFixa;
     } else {
-      // Caso Renda Fixa Pós-fixada (CDI/IPCA)
       const taxaDia = indexadorMap.get(key);
       const isHoje = formatDateKey(d) === formatDateKey(hoje);
-
-      let taxaBase: number | undefined = undefined;
 
       if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
         taxaBase = taxaDia;
       } else if (isHoje && ultimaTaxa > 0) {
-        // 🔥 CORREÇÃO: Se for hoje e não houver taxa no mapa, usa a última taxa válida como estimativa.
-        // Isso permite visualizar o rendimento do dia antes da publicação oficial.
         taxaBase = ultimaTaxa;
       }
+    }
 
-      if (taxaBase !== undefined && taxaBase > 0) {
-        const taxa = taxaBase * (percentualIndexador / 100);
-        valor *= (1 + taxa);
-        ultimaTaxa = taxaBase;
-        ultimaTaxaAplicada = taxa;
-      }
+    if (taxaBase !== undefined && taxaBase > 0) {
+      const taxa = taxaBase * (percentualIndexador / 100);
+      valorBruto *= (1 + taxa);
+      ultimaTaxa = taxaBase;
+      ultimaTaxaAplicada = taxa;
     }
   }
 
-  return { valorAtual: valor, ultimaTaxaAplicada };
+  // 🔥 ARREDONDAMENTO FINANCEIRO (DUAS CASAS DECIMAIS)
+  const lucroTotal = valorBruto - valorInicial;
+  const aliquota = getAliquotaIR(inicio, hoje, tipoTributacao);
+  
+  // Arredonda o IR conforme padrão bancário
+  const ir = Math.round(lucroTotal * (aliquota / 100) * 100) / 100;
+  
+  // Arredonda o valor líquido final
+  const valorLiquido = Math.round((valorBruto - ir) * 100) / 100;
+  const rendimentoBrutoAcumulado = Math.round(lucroTotal * 100) / 100;
+
+  return { 
+    valorAtual: valorLiquido, 
+    ultimaTaxaAplicada, 
+    rendimentoBrutoAcumulado, 
+    irProvisionado: ir 
+  };
 }

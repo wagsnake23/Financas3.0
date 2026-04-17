@@ -17,7 +17,7 @@ import { Investment, AppCategory } from "@/types/finance";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon";
-import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, calcularRendimentoComCDI } from "@/lib/utils";
+import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, calcularRendimentoComCDI, getTipoTributacao } from "@/lib/utils";
 
 interface EditInvestmentDialogProps {
   investmentToEdit: Investment;
@@ -98,38 +98,37 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       else if (indexador === "IPCA") idxMap = indexadorMapIPCA;
     }
 
-    // Cálculo de rendimento usando dados históricos (Engine Real - MESMA DA LISTA)
-    const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
+    const tipoTributacao = getTipoTributacao({ nome: selectedInvestmentCategoryId }, allSubcategories);
+
+    const { 
+      valorAtual: valorLiquido, 
+      ultimaTaxaAplicada: taxaDiaria,
+      rendimentoBrutoAcumulado: rendimentoBruto,
+      irProvisionado: valorIR
+    } = calcularRendimentoComCDI({
       valorInicial: amount || 0,
       dataInicio: date || new Date(),
       indexadorMap: idxMap || new Map<string, number>(),
       percentualIndexador: tipoRentabilidade === "indexado" ? (percentualIndexador || 100) : 100,
       taxaFixaAnual: tipoRentabilidade === "fixo" ? (profitability || 0) : null,
+      tipoTributacao
     });
 
-    const rendimentoBruto = valorAtualVirtual - (amount || 0);
-
-    const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
-    const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
+    const rendimentoLiquido = valorLiquido - (amount || 0);
+    
     const investDate = date || new Date();
-    
-    // Aliquota real based on duration
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
-    const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
-    const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    const aliquota = getAliquotaIR(investDate, tipoTributacao);
+    const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
 
-    // imposto apenas sobre lucro
-    const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (aliquota / 100) : 0;
-    const rendimentoLiquido = rendimentoBruto - imposto;
-
-    const taxaLiquida = taxaEstimada * (1 - (rendimentoBruto > 0 ? aliquota : 0) / 100);
-    const valorTotalLiquido = (amount || 0) + rendimentoLiquido;
-
-    return { imposto, aliquota: (rendimentoBruto > 0 ? aliquota : 0), taxaLiquida, tipoTributacao, rendimentoLiquido, valorTotalLiquido };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, indexadorMapCDI, indexadorMapIPCA]);
+    return { 
+      tipoTributacao, 
+      aliquota: aliquotaIR, 
+      rendimentoBruto, 
+      rendimentoLiquido, 
+      valorTotalLiquido: valorLiquido,
+      imposto: valorIR,
+      taxaLiquida: taxaEstimada * (1 - aliquotaIR / 100) 
+    };
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, indexadorMapCDI, indexadorMapIPCA, tipoRentabilidade, indexador, percentualIndexador, profitability]);
 
   useEffect(() => {
     setSelectedInvestmentCategoryId(investmentToEdit.nome);

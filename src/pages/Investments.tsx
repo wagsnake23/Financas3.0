@@ -148,7 +148,7 @@ export default function Investments() { // Alterado para export default function
   const metricsNewForm = useMemo(() => {
     const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
     const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
-    const aliquota = getAliquotaIR(date || new Date(), tipoTributacao);
+    const aliquota = getAliquotaIR(date || new Date(), new Date(), tipoTributacao);
     
     const taxaAnual = taxaEstimada / 100;
     const taxaDiaria = Math.pow(1 + taxaAnual, 1 / 252) - 1;
@@ -355,43 +355,35 @@ export default function Investments() { // Alterado para export default function
 
   const calculatedInvestments = useMemo(() => {
     return (investments || []).map(inv => {
-      // Determinar o mapa de indexador correto
       let idxMap: Map<string, number> | undefined;
       if (inv.tipo_rentabilidade === "indexado") {
         if (inv.indexador === "CDI") idxMap = indexadorMapCDI;
         else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
       }
 
-      // Cálculo de rendimento usando dados históricos (Engine Real)
-      const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
+      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
+
+      // Cálculo de rendimento usando dados históricos (Engine Real - Provisão Diária)
+      const { 
+        valorAtual: valorLiquido, 
+        ultimaTaxaAplicada: taxaDiaria,
+        rendimentoBrutoAcumulado: rendimentoBruto,
+        irProvisionado: valorIR
+      } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
+        tipoTributacao
       });
       
-      const taxaDiaria = ultimaTaxaAplicada;
+      const rendimentoLiquido = valorLiquido - inv.valor;
+      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
+      const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
 
-      // 4. IR Calculation
-      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T00:00:00`) : new Date(inv.data);
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
-      const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
-      const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-      const rawAliquota = getAliquotaIR(investDate, tipoTributacao);
-      const rendimentoBruto = valorAtualVirtual - inv.valor;
-      
-      const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (rawAliquota / 100) : 0;
-      const aliquotaIR = (rendimentoBruto > 0 && diffDias > 0) ? rawAliquota : 0;
-      
-      const rendimentoLiquido = rendimentoBruto - imposto;
-      const valorLiquido = inv.valor + rendimentoLiquido;
-
-      // 5. Rendimento de hoje líquido
-      const rendimentoBrutoDia = valorAtualVirtual * taxaDiaria;
+      // Usamos o valor líquido atual para projetar o rendimento de hoje
+      const rendimentoBrutoDia = valorLiquido * taxaDiaria;
       const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
 
       return {
@@ -400,17 +392,17 @@ export default function Investments() { // Alterado para export default function
         rentabilidade: inv.tipo_rentabilidade === "indexado" 
           ? (inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * (inv.percentual_indexador || 100) / 100
           : (inv.taxa_fixa || 0),
-        valorAtualVirtual,
+        valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto para fins informativos
         rendimentoHojeVirtual: rendimentoHojeLiquido,
         taxaDiaria,
         aliquotaIR,
         rendimentoBruto,
-        imposto,
+        imposto: valorIR,
         rendimentoLiquido,
         valorLiquido
       };
     });
-  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA ]);
+  }, [investments, cdi, ipca, allSubcategories, indexadorMapCDI, indexadorMapIPCA]);
 
   const totalProjectedAnnualYield = useMemo(() => {
     const rawTotal = calculatedInvestments.reduce((sum, inv) => {
@@ -663,13 +655,13 @@ export default function Investments() { // Alterado para export default function
                           <div>
                             <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">IR / Líquido Anual</p>
                             <p className="text-sm font-black text-[#218C5C]">
-                              {getAliquotaIR(date || new Date())}% / {(taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)).toFixed(2)}%
+                              {metricsNewForm.aliquota}% / {metricsNewForm.taxaLiquida.toFixed(2)}%
                             </p>
                           </div>
                           <div>
                             <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Rend. Líquido Est.</p>
                             <p className="text-sm font-black text-[#218C5C]">
-                              {amount ? formatCurrency((amount * (Math.pow(1 + (taxaEstimada * (1 - getAliquotaIR(date || new Date()) / 100)) / 100, 1 / 252) - 1))) : "R$ 0,00"}
+                              {amount ? formatCurrency(metricsNewForm.rendimentoLiquidoDia) : "R$ 0,00"}
                             </p>
                           </div>
                         </div>

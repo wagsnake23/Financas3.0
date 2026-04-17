@@ -232,41 +232,43 @@ export default function Dashboard() {
         else if (inv.indexador === "IPCA") idxMap = indexadorMapIPCA;
       }
 
+      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
+
       // Cálculo de rendimento usando dados históricos (Engine Real)
-      const { valorAtual: valorAtualVirtual, ultimaTaxaAplicada } = calcularRendimentoComCDI({
+      const { 
+        valorAtual: valorLiquido, 
+        ultimaTaxaAplicada: taxaDiaria,
+        rendimentoBrutoAcumulado: rendimentoBruto,
+        irProvisionado: valorIR
+      } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
         indexadorMap: idxMap || new Map<string, number>(),
         percentualIndexador: inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100,
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
+        tipoTributacao
       });
       
-      const taxaDiaria = ultimaTaxaAplicada;
+      const rendimentoLiquido = valorLiquido - inv.valor;
+      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
+      const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
 
-      // 4. Rendimento de hoje líquido
-      const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T00:00:00`) : new Date(inv.data);
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
-      const diffTime = Math.abs(hoje.getTime() - investDate.getTime());
-      const diffDias = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      const tipoTributacao = getTipoTributacao(inv, allSubcategories);
-      const rawAliquota = getAliquotaIR(investDate, tipoTributacao);
-      const rendimentoHojeVirtual = (valorAtualVirtual * taxaDiaria) * (1 - rawAliquota / 100);
-
-      const rendimentoBruto = valorAtualVirtual - inv.valor;
-      const imposto = (rendimentoBruto > 0 && diffDias > 0) ? rendimentoBruto * (rawAliquota / 100) : 0;
-      const rendimentoLiquido = rendimentoBruto - imposto;
-      const valorLiquido = inv.valor + rendimentoLiquido;
+      const rendimentoBrutoDia = valorLiquido * taxaDiaria;
+      const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
 
       return {
         ...inv,
+        tipoTributacao,
         rentabilidade: inv.tipo_rentabilidade === "indexado" 
-          ? (inv.indexador === "CDI" ? cdi : ipca) * (inv.percentual_indexador || 100) / 100
+          ? (inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * (inv.percentual_indexador || 100) / 100
           : (inv.taxa_fixa || 0),
-        valorAtualVirtual,
-        rendimentoHojeVirtual,
+        valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto informativo
+        rendimentoHojeVirtual: rendimentoHojeLiquido,
         taxaDiaria,
+        aliquotaIR,
+        rendimentoBruto,
+        imposto: valorIR,
+        rendimentoLiquido,
         valorLiquido
       };
     });
