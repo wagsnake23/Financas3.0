@@ -828,10 +828,10 @@ export default function Investments() { // Alterado para export default function
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleEditClick(investment)}
-                                className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
-                              >
-                                <DynamicIcon name="Pencil" className="h-4 w-4 text-[#3b82f6]" />
-                              </Button>
+                               className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
+                             >
+                               <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
+                             </Button>
                             </div>
                           </div>
 
@@ -849,7 +849,7 @@ export default function Investments() { // Alterado para export default function
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleDelete(investment.id)}
-                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
+                                  className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                                 >
                                   <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
                                 </Button>
@@ -1360,15 +1360,15 @@ export default function Investments() { // Alterado para export default function
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleEditClick(investment)}
-                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
-                                >
-                                  <DynamicIcon name="Pencil" className="h-4 w-4 text-[#3b82f6]" />
-                                </Button>
+                                className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
+                              >
+                                <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
+                              </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleDelete(investment.id)}
-                                  className="h-9 w-9 rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.85),rgba(240,245,255,0.6))] border border-[rgba(120,150,255,0.25)] backdrop-blur-md shadow-[0_6px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] hover:-translate-y-px transition-all duration-300 hover:bg-white"
+                                  className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                                 >
                                   <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
                                 </Button>

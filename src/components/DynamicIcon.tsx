@@ -11,7 +11,7 @@ import {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat, Clock, History
+  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen
 } from 'lucide-react';
 import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 
@@ -29,7 +29,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat, Clock, History
+  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen
 };
 
 interface DynamicIconProps extends React.SVGProps<SVGSVGElement> {
@@ -46,19 +46,25 @@ const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...pr
 
   if (IconComponent) {
     // Se for um nome de ícone Lucide válido, renderiza o componente Lucide
-    return <IconComponent className={className} style={{ color: color }} {...props} />; // Aplicar color via style
+    return <IconComponent className={className} style={{ color: color }} {...props} />;
   } else if (safeName) {
     // Se não for um ícone Lucide, mas não for vazio, assume que é um emoji ou texto
-    // Renderiza o texto diretamente dentro de um span, aplicando as classes e cores
+    // Removemos props incompatíveis com span que vêm de SVGProps (como ref disparando erro TS)
+    const { ref, ...htmlProps } = props as any;
+    
     return (
-      <span className={cn("emoji", className, "flex items-center justify-center")} style={{ color: color }} {...props}>
+      <span 
+        className={cn("emoji", className, "flex items-center justify-center")} 
+        style={{ color: color }} 
+        {...htmlProps}
+      >
         {safeName}
       </span>
     );
   } else {
     // Se o nome for vazio ou inválido, renderiza o ícone de ajuda como fallback
     console.warn(`DynamicIcon: Icon name is empty or invalid: '${name}'. Rendering HelpCircle.`);
-    return <HelpCircle className={className} style={{ color: color }} {...props} />; // Aplicar color via style
+    return <HelpCircle className={className} style={{ color: color }} {...props} />;
   }
 };
 
