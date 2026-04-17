@@ -277,12 +277,12 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           disabled={loading}
         >
           <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false }))}>
-            <SelectValue placeholder="Selecione o tipo de investimento" />
+            <SelectValue placeholder="Selecione o investimento" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-xl">
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
             {incomeInvestmentSubcategories.length === 0 ? (
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
             ) : (
               incomeInvestmentSubcategories.map(cat => (
                 <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
@@ -297,27 +297,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         </Select>
       </div>
 
-      <div className="space-y-0.5">
-        <div className="space-y-0.5">
-          <Label htmlFor="edit-type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-          <Select value={type} onValueChange={setType} disabled={loading}>
-            <SelectTrigger className={cn("rounded-xl w-full bg-white border-slate-300", isMobile && "h-9 text-sm")}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
-              {investmentTypes.map(t => (
-                <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                  <div className="flex items-center gap-2">
-                    {t.icon && <span>{t.icon}</span>}
-                    <span>{t.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-      </div>
 
       <div className={cn(
         "grid gap-2 mb-2",

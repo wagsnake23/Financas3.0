@@ -497,12 +497,12 @@ export default function Investments() { // Alterado para export default function
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                     )}>
-                      <SelectValue placeholder="Selecione o tipo de investimento" />
+                      <SelectValue placeholder="Selecione o investimento" />
                     </SelectTrigger>
                     <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
-                      <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+                      <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
                       {incomeInvestmentSubcategories.length === 0 && (
-                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
                       )}
                       {incomeInvestmentSubcategories.length > 0 && (
                         <>
@@ -520,27 +520,7 @@ export default function Investments() { // Alterado para export default function
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-                  <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                    <SelectTrigger className={cn(
-                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                      isMobile && "h-9 text-sm"
-                    )}>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
-                      {investmentTypes.map(t => (
-                        <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                          <span className="flex items-center gap-2">
-                            <DynamicIcon name={t.icon} className="h-4 w-4" />
-                            {t.label}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+
 
                 <div className={cn(
                   "grid gap-2",
@@ -1028,12 +1008,12 @@ export default function Investments() { // Alterado para export default function
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                         )}>
-                          <SelectValue placeholder="Selecione o tipo de investimento" />
+                          <SelectValue placeholder="Selecione o investimento" />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
-                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o tipo de investimento</SelectItem>
+                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
                           {incomeInvestmentSubcategories.length === 0 && (
-                            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum tipo de investimento disponível</SelectItem>
+                            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
                           )}
                           {incomeInvestmentSubcategories.length > 0 && (
                             <>
@@ -1051,27 +1031,7 @@ export default function Investments() { // Alterado para export default function
                       </Select>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="type" className={cn(isMobile && "text-xs")}>Tipo</Label>
-                      <Select value={type} onValueChange={setType} disabled={loadingForm}>
-                        <SelectTrigger className={cn(
-                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                          isMobile && "h-9 text-sm"
-                        )}>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
-                          {investmentTypes.map(t => (
-                            <SelectItem key={t.value} value={t.value} className={cn(isMobile && "text-sm")}>
-                              <span className="flex items-center gap-2">
-                                <DynamicIcon name={t.icon} className="h-4 w-4" />
-                                {t.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+
 
                     <div className={cn(
                       "grid gap-4",
