@@ -43,15 +43,22 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
     >
       <AlertDialogContent
         className={cn(
-          isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] p-4 min-h-[180px] !pb-5 !rounded-[28px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-5 !rounded-[28px] !border-2 !border-white shadow-2xl"
+          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 min-h-[180px] !pb-5 !rounded-[25px] shadow-none border-none" : "sm:max-w-[425px] !pb-5 !rounded-[25px] shadow-none border-none"
         )}
+        style={{
+          background: "linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)",
+          backgroundBlendMode: "soft-light",
+          backdropFilter: "blur(6px)",
+          border: "1px solid rgba(0,0,0,0.06)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+        }}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center justify-center gap-2">
+          <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-bold">
             <span className="text-2xl select-none">📝</span>
             Atualizar Lançamento
           </AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-center">
             Este lançamento faz parte de uma série recorrente. Como você
             gostaria de aplicar as alterações?
           </AlertDialogDescription>
@@ -105,17 +112,21 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
         </div>
         <AlertDialogFooter
           className={cn(
-            "flex flex-col sm:flex-row justify-center gap-2",
-            isMobile && "flex-row justify-between items-center"
+            "flex flex-row justify-center gap-2 items-center w-full pt-2"
           )}
         >
           <AlertDialogCancel
             disabled={loading || isFetchingOptions}
             className={cn(
-              "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-              isMobile && "h-12 text-lg"
+              "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
+              isMobile && "h-11"
             )}
-            style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+            style={{ 
+              "--cor-topo": "#E2E8F0", 
+              "--cor-base": "#CBD5E1",
+              boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
+            } as any}
+            onClick={() => setShowSaveOptionsDialog(false)}
           >
             Cancelar
           </AlertDialogCancel>
@@ -123,10 +134,10 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
             onClick={() => handleConfirmSave(selectedSaveScope)}
             disabled={loading || isFetchingOptions}
             className={cn(
-              "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-              isMobile && "h-12 text-lg"
+              "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+              isMobile && "h-11"
             )}
-            style={{ "--cor-topo": "#4ADE80", "--cor-base": "#22C55E" } as any}
+            style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
           >
             {loading || isFetchingOptions ? "Salvando..." : "Salvar"}
           </AlertDialogAction>

@@ -52,15 +52,22 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] p-4 !pb-4 min-h-[180px] !rounded-[28px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[28px] !border-2 !border-white shadow-2xl"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[25px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[25px] shadow-none border-none"
           )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex justify-center items-center gap-2">
+            <AlertDialogTitle className="flex justify-center items-center gap-2 text-center font-bold">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-center">
               Tem certeza que deseja excluir este lançamento? Esta ação não pode
               ser desfeita.
             </AlertDialogDescription>
@@ -104,15 +111,22 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
       >
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] p-4 !pb-4 min-h-[180px] !rounded-[28px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[28px] !border-2 !border-white shadow-2xl"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[25px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[25px] shadow-none border-none"
           )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center justify-center gap-2">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-bold">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Excluir Lançamento
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-center">
               Este lançamento faz parte de uma série recorrente. Como você
               gostaria de excluí-lo?
             </AlertDialogDescription>
