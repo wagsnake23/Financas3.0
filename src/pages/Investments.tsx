@@ -892,151 +892,80 @@ export default function Investments() { // Alterado para export default function
                   )}
                 </div>
               </Card>
-              {isMobile && (
-                <div className="mt-4">
-                  {/* Mobile Stats Card - Glassmorphism */}
-                  <div className="card-receitas p-6 shadow-[0_12px_28px_rgba(0,0,0,0.08)] rounded-[24px]">
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-7">
-                      {/* Total Investido */}
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div
-                            className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
-                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                          >
-                            <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                          </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Saldo Líquido Total</h4>
-                        </div>
-                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
-                      </div>
 
-                      {/* Rentabilidade Média */}
-                      <div className="flex flex-col items-end text-right">
-                        <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                          <div
-                            className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
-                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                          >
-                            <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                          </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Média</h4>
-                        </div>
-                        <div className="flex items-baseline gap-0.5">
-                          <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
-                          <span className="text-[8px] font-black text-gray-500 uppercase">a.a.</span>
-                        </div>
-                      </div>
-
-                      {/* Rendimento Mensal */}
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div
-                            className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
-                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                          >
-                            <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                          </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Mensal</h4>
-                        </div>
-                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
-                      </div>
-
-                      {/* Rendimento Diário */}
-                      <div className="flex flex-col items-end text-right">
-                        <div className="flex flex-row-reverse items-center gap-2 mb-2">
-                          <div
-                            className="btn-3d p-2 rounded-xl shadow-sm border-none flex items-center justify-center"
-                            style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                          >
-                            <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                          </div>
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Diário</h4>
-                        </div>
-                        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
-                      </div>
+              {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
+              <Card
+                className={cn(
+                  "rounded-[24px] overflow-hidden mt-6 shadow-sm",
+                  "p-5"
+                )}
+                style={{
+                  background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
+                  backgroundBlendMode: "soft-light",
+                  backdropFilter: "blur(6px)",
+                  border: "1px solid rgba(0,0,0,0.08)",
+                  outline: "1px solid rgba(34, 197, 94, 0.08)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                }}
+              >
+                <div className="grid grid-cols-2 gap-y-7 gap-x-4 items-start">
+                  {/* Total Investido - Col 1 (Esquerda Topo) */}
+                  <div className="flex flex-col gap-1.5 items-start">
+                    <div className="flex items-center gap-2">
+                      <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
                     </div>
+                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
-                </div>
-              )}
-            </div>
-          </div >
-        ) : (
-          <>
-            <div className="card-receitas border-none rounded-[32px] p-8 shadow-sm mb-8">
-              <div className="grid grid-cols-4 items-center gap-8">
-                {/* Total Investido */}
-                <div className="flex items-center gap-4">
-                  <div
-                    className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
-                    style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                  >
-                    <DynamicIcon name="DollarSign" className="h-6 w-6 text-white" strokeWidth={3} />
-                  </div>
-                  <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
-                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
-                  </div>
-                </div>
 
-                {/* Rendimento Mensal */}
-                <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
-                  <div
-                    className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
-                    style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                  >
-                    <DynamicIcon name="Calendar" className="h-5 w-5 text-white" strokeWidth={3} />
-                  </div>
-                  <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Mensal</h4>
-                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
-                  </div>
-                </div>
-
-                {/* Rendimento Diário */}
-                <div className="flex items-center justify-center gap-4 border-l border-success/10 h-10">
-                  <div
-                    className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
-                    style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                  >
-                    <DynamicIcon name="Clock" className="h-5 w-5 text-white" strokeWidth={3} />
-                  </div>
-                  <div className="flex flex-col">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Diário</h4>
-                    <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
-                  </div>
-                </div>
-
-                {/* Rentabilidade Média */}
-                <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
-                  <div
-                    className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
-                    style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
-                  >
-                    <DynamicIcon name="Percent" className="h-6 w-6 text-white" strokeWidth={3} />
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Rentabilidade Média</h4>
+                  {/* Rentabilidade Média - Col 2 (Direita Topo) */}
+                  <div className="flex flex-col gap-1.5 items-end text-right">
+                    <div className="flex items-center gap-2">
+                      <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média</h4>
+                    </div>
                     <div className="flex items-baseline gap-1">
-                      <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
-                      <span className="text-[10px] font-black text-gray-500 uppercase">a.a.</span>
+                      <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{stats.avgProfitability.toFixed(2)}%</p>
+                      <span className="text-[9px] font-black text-[#166534]/60 uppercase">a.a.</span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
+                  {/* Rendimento Diário - Col 1 (Esquerda Base) */}
+                  <div className="flex flex-col gap-1.5 items-start">
+                    <div className="flex items-center gap-2">
+                      <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
+                    </div>
+                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                  </div>
+
+                  {/* Rendimento Mensal - Col 2 (Direita Base) */}
+                  <div className="flex flex-col gap-1.5 items-end text-right">
+                    <div className="flex items-center gap-2">
+                      <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
+                    </div>
+                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        ) : (
+          <div className={cn("grid gap-8", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
               {/* Form */}
               <div>
                 <Card
                   className={cn(
-                    "p-6 rounded-[24px] shadow-sm border border-blue-100 card-saldo",
+                    "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
                     isMobile && "border-none shadow-none bg-transparent p-4"
                   )}
                   style={{
-                    backgroundColor: "transparent",
-                    backgroundImage: "linear-gradient(135deg, rgba(215, 232, 255, 0.75), rgba(235, 245, 255, 0.8), rgba(215, 232, 255, 0.75))"
+                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+                    backgroundBlendMode: "soft-light",
+                    backdropFilter: "blur(6px)",
+                    outline: "1px solid rgba(0, 102, 255, 0.08)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                   }}
                 >
                   <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
@@ -1425,23 +1354,71 @@ export default function Investments() { // Alterado para export default function
                     )}
                   </div>
                 </Card>
-                {isMobile && (
-                  <div className="mt-4"> {/* Adiciona margem superior para separar da lista */}
-                    <StatCard
-                      mainStatTitle="Saldo Líquido Total"
-                      mainStatValue={stats.totalCurrentBalance}
-                      icon="DollarSign"
-                      variant="income" // Usar variant income para cor verde
-                      isMobile={isMobile}
-                    />
+
+                {/* 🔹 NOVO: Card de resumo unificado, FLAT e Deep Glass Green (Agregado ao container da lista) */}
+                <Card
+                  className={cn(
+                    "rounded-[24px] overflow-hidden mt-8",
+                    isMobile ? "p-5" : "p-8"
+                  )}
+                  style={{
+                    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
+                    backgroundBlendMode: "soft-light",
+                    backdropFilter: "blur(6px)",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    outline: "1px solid rgba(34, 197, 94, 0.08)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                  }}
+                >
+                  <div className={cn(
+                    "grid gap-y-7 items-start",
+                    isMobile ? "grid-cols-2" : "grid-cols-2"
+                  )}>
+                    {/* Total Investido - Col 1 (Esquerda Topo) */}
+                    <div className="flex flex-col gap-1.5 items-start">
+                      <div className="flex items-center gap-2">
+                        <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
+                      </div>
+                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-xl")}>{formatCurrency(stats.totalCurrentBalance)}</p>
+                    </div>
+
+                    {/* Rentabilidade Média - Col 2 (Direita Topo) */}
+                    <div className="flex flex-col gap-1.5 items-end text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média</h4>
+                      </div>
+                      <div className="flex items-baseline justify-end gap-1">
+                        <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{stats.avgProfitability.toFixed(2)}%</p>
+                        <span className="text-[10px] font-black text-[#166534]/60 uppercase">a.a.</span>
+                      </div>
+                    </div>
+
+                    {/* Rendimento Diário - Col 1 (Esquerda Base) */}
+                    <div className="flex flex-col gap-1.5 items-start">
+                      <div className="flex items-center gap-2">
+                        <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
+                      </div>
+                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{formatCurrency(stats.totalDailyYieldRS)}</p>
+                    </div>
+
+                    {/* Rendimento Mensal - Col 2 (Direita Base) */}
+                    <div className="flex flex-col gap-1.5 items-end text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
+                      </div>
+                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                    </div>
                   </div>
-                )}
-              </div >
-            </div >
-          </>
-        )
+                </Card>
+                </div>
+              </div>
+          )
         }
-      </main >
+      </main>
 
       <Footer isMobile={isMobile} user={user} className={cn(isMobile && "py-2")} /> {/* Adicionado className para reduzir padding-y em mobile */}
 
@@ -1526,6 +1503,6 @@ export default function Investments() { // Alterado para export default function
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div >
+    </div>
   );
 }

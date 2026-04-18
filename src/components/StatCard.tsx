@@ -40,6 +40,7 @@ interface StatCardProps {
   forceTransparentBackground?: boolean; // NEW: Force transparent background
   secondaryStatContent?: React.ReactNode; // NEW: Custom content for secondary stat
   bottomRightContent?: React.ReactNode; // NEW: Content for bottom-right corner matching bottom-left alignment
+  glass?: boolean; // NEW: Glassmorphism style
 }
 
 export const StatCard = ({
@@ -65,6 +66,7 @@ export const StatCard = ({
   forceTransparentBackground = false,
   secondaryStatContent, // Destructure new prop
   bottomRightContent, // Destructure new prop
+  glass = false, // Destructure new prop
 }: StatCardProps) => {
   const variantStyles = {
     // MODIFIED: Reduced opacity for a lighter, softer background
@@ -102,19 +104,38 @@ export const StatCard = ({
       id={id}
       // 🔹 NOVO: apenas cor de fundo controlada aqui
       style={{
-        backgroundColor: forceTransparentBackground ? "transparent" : (backgroundColors[variant] || undefined),
+        backgroundColor: forceTransparentBackground ? "transparent" : (glass ? undefined : (backgroundColors[variant] || undefined)),
+        ...(glass && {
+          background: variant === "income" 
+            ? "linear-gradient(135deg, #f1f9f5 0%, #e2f0e8 60%, rgba(34, 197, 94, 0.12) 100%)"
+            : variant === "expense"
+            ? "linear-gradient(135deg, #fff7f8 0%, #f9eef1 60%, rgba(232, 84, 84, 0.12) 100%)"
+            : "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+          backgroundBlendMode: "soft-light",
+          backdropFilter: "blur(6px)",
+          outline: variant === "income" 
+            ? "1px solid rgba(34, 197, 94, 0.08)"
+            : variant === "expense"
+            ? "1px solid rgba(232, 84, 84, 0.08)"
+            : "1px solid rgba(0, 102, 255, 0.08)",
+          boxShadow: variant === "income"
+            ? "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.10)"
+            : variant === "expense"
+            ? "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(232, 84, 84, 0.10)"
+            : "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+        })
       }}
       className={cn(
         cardPaddingClass,
         "transition-all duration-300 animate-fade-in flex flex-col h-full relative", // Adicionado 'relative' aqui
         isMobile && "min-h-[90px]", // Reduzido de 110px para 90px
-        variantStyles[variant],
-        neumorphism
+        !glass && variantStyles[variant],
+        glass ? "rounded-[24px]" : (neumorphism
           ? cn(
             "rounded-3xl",
             "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]"
           )
-          : cn("rounded-xl shadow-sm"),
+          : cn("rounded-xl shadow-sm")),
         className
       )}
     >
