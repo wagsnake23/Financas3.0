@@ -28,9 +28,8 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[16px] h-11"
+          "w-full rounded-[14px] font-black text-[#dc2626] border border-[#fecaca] bg-[#fef2f2] transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[16px] h-11 hover:bg-[#fee2e2]"
         )}
-        style={{ "--cor-topo": "#E54D4D", "--cor-base": "#C53030" } as any}
         disabled={loading}
       >
         Excluir
@@ -39,9 +38,13 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button" // Alterado para type="button" para que o onClick do formulário controle o submit
         onClick={onCancel}
         className={cn(
-          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[16px] h-11"
+          "w-full rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-[16px] h-11"
         )}
-        style={{ "--cor-topo": "#94A3B8", "--cor-base": "#64748B" } as any}
+        style={{ 
+          "--cor-topo": "#E2E8F0", 
+          "--cor-base": "#CBD5E1",
+          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
+        } as any}
         disabled={loading}
       >
         Cancelar
