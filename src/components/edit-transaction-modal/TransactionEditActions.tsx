@@ -4,24 +4,28 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
 
 interface TransactionEditActionsProps {
-  onTriggerDeleteConfirmation: () => void; // Nova prop para acionar o diálogo
+  onTriggerDeleteConfirmation: () => void; 
   onSave: (e?: React.FormEvent) => void;
   onCancel: () => void;
-  loading: boolean;
+  isSaving: boolean;
+  isDeleting: boolean;
   isMobile: boolean;
-  isRecurringTransaction: boolean; // Nova prop para indicar se é transação recorrente
-  className?: string; // Adicionado className para receber classes externas
+  isRecurringTransaction: boolean; 
+  className?: string; 
 }
 
 export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   onTriggerDeleteConfirmation,
   onSave,
   onCancel,
-  loading,
+  isSaving,
+  isDeleting,
   isMobile,
   isRecurringTransaction,
-  className, // Receber a prop className
+  className, 
 }) => {
+  const isLoading = isSaving || isDeleting;
+
   return (
     <div className={cn("grid grid-cols-3 gap-2", className)}> {/* Grid layout for equal widths */}
       <Button
@@ -30,7 +34,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         className={cn(
           "w-full rounded-[14px] font-black text-[#dc2626] border border-[#fecaca] bg-[#fef2f2] transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[16px] h-11 hover:bg-[#fee2e2]"
         )}
-        disabled={loading}
+        disabled={isLoading}
       >
         Excluir
       </Button>
@@ -45,7 +49,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
           "--cor-base": "#CBD5E1",
           boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
         } as any}
-        disabled={loading}
+        disabled={isLoading}
       >
         Cancelar
       </Button>
@@ -55,10 +59,10 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
           "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
-        disabled={loading}
+        disabled={isLoading}
         onClick={onSave}
       >
-        {loading ? "Salvando..." : "Salvar"}
+        {isSaving ? "Salvando..." : "Salvar"}
       </Button>
     </div>
   );

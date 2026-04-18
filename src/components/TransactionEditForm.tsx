@@ -115,6 +115,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
     setSelectedSaveScope,
     pendingFutureItemsCount,
     isFetchingOptions,
+    isDeleting,
     isRecurringTransaction,
     filteredCategories,
     handleSubmit,
@@ -192,7 +193,8 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
           onTriggerDeleteConfirmation={handleTriggerDeleteConfirmation}
           onSave={handleSubmit}
           onCancel={onCancelEdit}
-          loading={loading || isFetchingOptions}
+          isSaving={loading}
+          isDeleting={isDeleting}
           isMobile={isMobile}
           isRecurringTransaction={isRecurringTransaction}
           className={cn("w-full px-2 pt-0 pb-0 mt-3")}

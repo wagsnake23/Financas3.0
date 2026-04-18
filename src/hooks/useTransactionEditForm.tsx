@@ -79,6 +79,7 @@ export const useTransactionEditForm = ({
 
   const [pendingFutureItemsCount, setPendingFutureItemsCount] = useState(0);
   const [isFetchingOptions, setIsFetchingOptions] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isRecurringTransaction = useMemo(() => {
     return (
@@ -348,10 +349,12 @@ export const useTransactionEditForm = ({
   const handleTriggerDeleteConfirmation = useCallback(async () => {
     if (!editingTransaction) return;
 
+    setIsDeleting(true);
     setIsFetchingOptions(true);
     const futureItems = await fetchPendingFutureItems(editingTransaction);
     setPendingFutureItemsCount(futureItems);
     setIsFetchingOptions(false);
+    setIsDeleting(false);
 
     const totalItemsInSeries =
       editingTransaction.totalInstallments ??
@@ -432,6 +435,7 @@ export const useTransactionEditForm = ({
     setSelectedSaveScope,
     pendingFutureItemsCount,
     isFetchingOptions,
+    isDeleting,
     isRecurringTransaction,
     filteredCategories,
     cartoes,
