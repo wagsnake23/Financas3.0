@@ -158,22 +158,31 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99vw] max-w-[99vw] !rounded-[28px] !border-2 !border-white shadow-2xl pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[28px] !border-2 !border-white shadow-2xl"
+             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[25px] pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[25px]",
+             "shadow-none border-none"
           )}
+          style={{
+            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "2px solid rgba(37, 99, 235, 0.25)",
+            outline: "1px solid rgba(37, 99, 235, 0.10)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
+          }}
         >
           <DialogHeader
             className={cn(
-              "flex flex-col items-center justify-center gap-0 space-y-0",
-              isMobile && "absolute top-3.5 left-4 right-12 text-left items-start",
-              !isMobile && "-mt-2"
+              "flex flex-col items-start justify-start gap-0 space-y-0",
+              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              !isMobile && "-mt-4"
             )}
           >
-            <div className="flex flex-row items-center gap-1.5">
+            <div className="flex flex-row items-center gap-1.5 transition-all">
               <span className="text-2xl select-none mr-0.5">📝</span>
-              <DialogTitle className="text-xl font-bold pb-[1px] m-0 leading-none">Editar Lançamento</DialogTitle>
+              <DialogTitle className="text-xl font-bold pb-[1px] m-0 leading-none text-left text-[#1e3a8a]">Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
-              <p className={cn("text-[13px] font-medium text-slate-500", isMobile && "ml-[42px] -mt-[14px]")}>
+              <p className={cn("text-[13px] font-medium text-slate-500", !isMobile ? "mt-1" : "mt-0.5 ml-[42px] -mt-[14px]")}>
                 Registrado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
               </p>
             )}
