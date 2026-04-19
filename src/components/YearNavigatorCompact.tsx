@@ -27,10 +27,7 @@ export const YearNavigatorCompact: React.FC<YearNavigatorCompactProps> = ({
         <div
             className={cn(
                 "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border shadow-none cursor-default",
-                currentStyle.border,
-                // Align with MonthNavigatorCompact mobile logic if needed, currently just passed isMobile
-                // MonthNavigatorCompact used -mr-1 on desktop, let's keep it clean here or add if needed
-                isMobile ? "" : "-mr-1"
+                currentStyle.border
             )}
             style={{
                 ...currentStyle.containerVars,
