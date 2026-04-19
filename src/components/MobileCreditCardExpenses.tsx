@@ -103,7 +103,7 @@ export const MobileCreditCardExpenses: React.FC<
     <Card
       className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
-        borderRadius: "24px",
+        borderRadius: "18px",
         background: "linear-gradient(135deg, #f6f5f9 0%, #efedf4 60%, rgba(124, 58, 237, 0.10) 100%)",
         backgroundBlendMode: "soft-light",
         backdropFilter: "blur(6px)",
