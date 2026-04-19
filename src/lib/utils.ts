@@ -298,7 +298,7 @@ export function calcularRendimentoComCDI({
       }
 
       // 1. Converter IPCA mensal para diário (Decomposição exponencial pro-rata)
-      const diasNoMes = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      const diasNoMes = new Date(dRef.getFullYear(), dRef.getMonth() + 1, 0).getDate();
       const ipcaDiario = Math.pow(1 + ipcaMensal, 1 / diasNoMes) - 1;
 
       // 2. Aplicação da Taxa Real (Juros Spread) - Diariamente
