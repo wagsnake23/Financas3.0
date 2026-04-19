@@ -185,6 +185,43 @@ export default function Dashboard() {
     return { totalIncome, totalExpenses, balance };
   }, [monthlyFilteredTransactions]);
 
+  const monthlyTrends = useMemo(() => {
+    const prevMonthDate = subMonths(selectedMonth, 1);
+    const prevYear = getYear(prevMonthDate);
+    const prevMonthIdx = getMonth(prevMonthDate);
+
+    const prevIncome = allRevenues
+      .filter(r => {
+        const d = new Date(r.data);
+        return getYear(d) === prevYear && getMonth(d) === prevMonthIdx;
+      })
+      .reduce((sum, r) => sum + r.valor, 0);
+
+    const prevExpenses = allExpenseInstallments
+      .filter(p => {
+        const d = new Date(p.vencimento);
+        return getYear(d) === prevYear && getMonth(d) === prevMonthIdx;
+      })
+      .reduce((sum, p) => sum + p.valor_parcela, 0);
+
+    const prevBalance = prevIncome - prevExpenses;
+
+    const calcTrend = (curr: number, prev: number) => {
+      if (prev === 0) return curr > 0 ? "+100%" : "0%";
+      const diff = ((curr - prev) / Math.abs(prev)) * 100;
+      return `${diff > 0 ? '+' : ''}${diff.toFixed(0)}%`;
+    };
+
+    return {
+      incomeTrend: calcTrend(stats.totalIncome, prevIncome),
+      incomeIsPositive: stats.totalIncome >= prevIncome,
+      expenseTrend: calcTrend(stats.totalExpenses, prevExpenses),
+      expenseIsPositive: stats.totalExpenses >= prevExpenses, 
+      balanceTrend: calcTrend(stats.balance, prevBalance),
+      balanceIsPositive: stats.balance >= prevBalance,
+    };
+  }, [allRevenues, allExpenseInstallments, selectedMonth, stats]);
+
   const totalPaidMonthlyExpenses = useMemo(() => {
     return monthlyFilteredTransactions
       .filter((t) => t.type === "expense" && t.status === "Recebida")
@@ -723,16 +760,12 @@ export default function Dashboard() {
                 annualTotalLabel="Total Anual"
                 annualTotalValue={totalAnnualExpenses}
                 neumorphism={true}
+                trend={monthlyTrends.expenseTrend}
+                trendIsPositive={monthlyTrends.expenseIsPositive}
                 className="card-despesas overflow-hidden"
                 forceTransparentBackground={true}
-                bottomRightContent={
-                  <>
-                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Pago este mês</p>
-                    <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
-                      {formatCurrency(totalPaidMonthlyExpenses)}
-                    </p>
-                  </>
-                }
+                secondaryStatTitle="Pago este mês"
+                secondaryStatValue={totalPaidMonthlyExpenses}
               >
 
                 <div className="h-12 md:h-[52px] w-full" />
@@ -769,16 +802,12 @@ export default function Dashboard() {
                 annualTotalLabel="Receita Anual"
                 annualTotalValue={totalAnnualRevenues}
                 neumorphism={true}
+                trend={monthlyTrends.incomeTrend}
+                trendIsPositive={monthlyTrends.incomeIsPositive}
                 className="card-receitas overflow-hidden"
                 forceTransparentBackground={true}
-                bottomRightContent={
-                  <>
-                    <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Receita Atual</p>
-                    <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
-                      {formatCurrency(totalReceivedMonthlyIncome)}
-                    </p>
-                  </>
-                }
+                secondaryStatTitle="Receita Atual"
+                secondaryStatValue={totalReceivedMonthlyIncome}
               >
 
                 <div className="h-12 md:h-[52px] w-full" />
@@ -812,6 +841,8 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
+                trend={monthlyTrends.balanceTrend}
+                trendIsPositive={monthlyTrends.balanceIsPositive}
                 annualTotalLabel="Saldo Anual"
                 annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 icon="Wallet"
@@ -909,7 +940,8 @@ export default function Dashboard() {
                   icon="TrendingDown"
                   variant="expense"
                   isMobile={isMobile}
-
+                  trend={monthlyTrends.expenseTrend}
+                  trendIsPositive={monthlyTrends.expenseIsPositive}
                   topRightContent={
                     <MonthNavigatorCompact
                       selectedMonth={selectedMonth}
@@ -923,23 +955,16 @@ export default function Dashboard() {
                     <MonthlyExpenseBarChart
                       expenseInstallments={allExpenseInstallments}
                       currentDate={selectedMonth}
-                      isMobile={true}
+                      isMobile={false}
                       onMonthClick={handleMonthClick}
                     />
                   }
                   annualTotalLabel="Total Anual"
                   annualTotalValue={totalAnnualExpenses}
                   neumorphism={true}
-                  bottomRightContent={
-                    <>
-                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Pago este mês</p>
-                      <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
-                        {formatCurrency(totalPaidMonthlyExpenses)}
-                      </p>
-                    </>
-                  }
+                  secondaryStatTitle="Pago este mês"
+                  secondaryStatValue={totalPaidMonthlyExpenses}
                 >
-
                   <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
@@ -952,7 +977,8 @@ export default function Dashboard() {
                   icon="TrendingUp"
                   variant="income"
                   isMobile={isMobile}
-
+                  trend={monthlyTrends.incomeTrend}
+                  trendIsPositive={monthlyTrends.incomeIsPositive}
                   topRightContent={
                     <MonthNavigatorCompact
                       selectedMonth={selectedMonth}
@@ -966,23 +992,16 @@ export default function Dashboard() {
                     <MonthlyRevenueBarChart
                       revenues={allRevenues}
                       currentDate={selectedMonth}
-                      isMobile={true}
+                      isMobile={false}
                       onMonthClick={handleMonthClick}
                     />
                   }
                   annualTotalLabel="Receita Anual"
                   annualTotalValue={totalAnnualRevenues}
                   neumorphism={true}
-                  bottomRightContent={
-                    <>
-                      <p className="text-xs md:text-sm text-muted-foreground font-roboto leading-none mb-0.5">Receita Atual</p>
-                      <p className="text-sm md:text-base font-bold text-success font-roboto leading-none">
-                        {formatCurrency(totalReceivedMonthlyIncome)}
-                      </p>
-                    </>
-                  }
+                  secondaryStatTitle="Receita Atual"
+                  secondaryStatValue={totalReceivedMonthlyIncome}
                 >
-
                   <div className="h-12 md:h-[52px] w-full" />
                 </StatCard>
               )}
@@ -991,6 +1010,8 @@ export default function Dashboard() {
                 <StatCard
                   mainStatTitle="Saldo Mensal"
                   mainStatValue={stats.balance}
+                  trend={monthlyTrends.balanceTrend}
+                  trendIsPositive={monthlyTrends.balanceIsPositive}
                   topRightContent={
                     <MonthNavigatorCompact
                       selectedMonth={selectedMonth}
@@ -1007,11 +1028,12 @@ export default function Dashboard() {
                       revenues={allRevenues}
                       expenseInstallments={allExpenseInstallments}
                       currentDate={selectedMonth}
-                      isMobile={true}
+                      isMobile={false}
                       onMonthClick={handleMonthClick}
                     />
                   }
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                  annualTotalLabel="Saldo Anual"
                   icon="Wallet"
                   neumorphism={true}
                 >

@@ -18,7 +18,8 @@ interface StatCardProps {
   // Existing props, adjusted
   icon?: string; // Make icon optional, as it might be hidden
   variant: "income" | "expense" | "balance" | "yield";
-  trend?: string; // Still for main stat
+  trend?: string; // Percentual de tendência (ex: "+12%" ou "-8%")
+  trendIsPositive?: boolean; // NEW: Se a tendência é positiva (melhorar) ou negativa (piorar)
 
   // Content for the top-right corner (e.g., MonthBadge or MonthNavigatorCompact)
   topRightContent?: React.ReactNode;
@@ -57,8 +58,9 @@ export const StatCard = ({
   chartContent,
   isMobile,
   childrenAlignment = "end",
-  annualTotalValue, // Destructure new prop
-  annualTotalLabel, // Destructure new prop
+  annualTotalValue,
+  annualTotalLabel,
+  trendIsPositive, // NEW
   neumorphism = false, // Default to false
   id, // Destructure new prop
   isPercentage = false,
@@ -91,8 +93,17 @@ export const StatCard = ({
       background: "linear-gradient(135deg, #f8f6ff 0%, #f0ebff 60%, rgba(147, 51, 234, 0.12) 100%)",
       outline: "1px solid rgba(147, 51, 234, 0.08)",
       shadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(147, 51, 234, 0.12)",
-      titleColor: "hsl(var(--yield-darker))"
+      titleColor: "hsl(var(--yield-darker))",
+      badgeBg: "bg-purple-600",
+      badgeShadow: "shadow-[0_0_12px_rgba(147,51,234,0.4)]"
     }
+  };
+
+  const headerBadgeStyles = {
+    income: "bg-green-100/50 text-green-600 border border-green-200",
+    expense: "bg-red-100/50 text-red-600 border border-red-200",
+    balance: "bg-blue-100/50 text-blue-600 border border-blue-200",
+    yield: "bg-purple-100/50 text-purple-600 border border-purple-200",
   };
 
   const labelStyles = {
@@ -121,25 +132,37 @@ export const StatCard = ({
         className
       )}
     >
-      {/* Top Section: Title/Value and Month Navigator */}
+      {/* Top Section: Trend, Title/Value and Month Navigator */}
       <div className="flex justify-between items-start mb-1">
-        <div className="flex flex-col">
-          <h2 
-            className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
-            style={{ color: currentStyle.titleColor }}
-          >
-            {mainStatTitle}
-          </h2>
-          <p 
-            className={cn("font-[800] tracking-tight leading-none", isMobile ? "text-[18px]" : "text-[20px]")} 
-            style={{ 
-              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', 
-              color: "rgba(17, 24, 39, 0.92)", 
-              WebkitFontSmoothing: "antialiased" 
-            }}
-          >
-            {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
-          </p>
+        <div className="flex items-center gap-3">
+          {/* Tendência integrada ao Header (Formato Vertical Pill Compacto) */}
+          {trend && trend.includes('%') && (
+            <div className={cn(
+              "flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-bold leading-none min-w-[34px] gap-0.5 self-center",
+              headerBadgeStyles[variant]
+            )}>
+              <DynamicIcon 
+                name={trendIsPositive ? "TrendingUp" : "TrendingDown"} 
+                className="h-3 w-3" 
+                strokeWidth={3} 
+              />
+              <span className="mt-0.5">{trend.split(' ')[0]}</span>
+            </div>
+          )}
+
+          <div className="flex flex-col">
+            <h2 
+              className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
+              style={{ color: currentStyle.titleColor }}
+            >
+              {mainStatTitle}
+            </h2>
+            <p 
+              className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}
+            >
+              {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
+            </p>
+          </div>
         </div>
 
         {topRightContent && (
@@ -149,12 +172,14 @@ export const StatCard = ({
         )}
       </div>
 
-      {/* Middle Section: Trend */}
-      {trend && (
-        <p className={cn("text-[9px] md:text-[10px] font-bold opacity-80 mb-2", labelStyles[variant])}>
-          {trend}
-        </p>
-      )}
+      {/* Middle Section: Trend Info (Legacy text position remains for other info if needed, but trend goes to badge) */}
+      <div className="flex flex-col gap-1 mt-1">
+        {trend && !trend.includes('%') && (
+          <p className={cn("text-[9px] md:text-[10px] font-bold opacity-80 mb-2", labelStyles[variant])}>
+            {trend}
+          </p>
+        )}
+      </div>
 
       {/* Chart Content (100% Width) */}
       {chartContent && (
@@ -166,38 +191,44 @@ export const StatCard = ({
         </div>
       )}
 
-      {/* Bottom Section: Annual Totals and Secondary Stats */}
+      {/* Bottom Section: Metrics Aligned at the Bottom */}
       <div className="mt-0.5 flex justify-between items-end min-h-[40px]">
-        <div className="flex flex-col gap-2">
-          {annualTotalValue !== undefined && (
+        {/* Left Side: Secondary Stats & Children (Horizontal alignment for metrics) */}
+        <div className="flex items-end gap-4">
+          {secondaryStatValue !== undefined && (
             <div className="flex flex-col items-start">
-              <span className="text-[10px] font-bold opacity-70 uppercase tracking-tighter" style={{ color: currentStyle.titleColor }}>
-                {annualTotalLabel || "Total Anual"}
-              </span>
-              <span className="text-sm font-bold text-slate-700 leading-none">
-                {formatCurrency(annualTotalValue)}
-              </span>
+              <p className={cn("mb-1 font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+                {secondaryStatTitle}
+              </p>
+              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
+                {formatCurrency(secondaryStatValue)}
+              </p>
             </div>
           )}
 
-          {secondaryStatTitle && secondaryStatValue !== undefined && (
-            <div className="flex flex-col items-start">
-              <span className="text-[10px] font-bold opacity-70 uppercase tracking-tighter" style={{ color: currentStyle.titleColor }}>
-                {secondaryStatTitle}
-              </span>
-              <span className="text-sm font-bold text-slate-700 leading-none">
-                {formatCurrency(secondaryStatValue)}
-              </span>
+          {children && (
+            <div className={cn(
+              "flex items-center gap-2",
+              childrenAlignment === "start" ? "justify-start" : "justify-end"
+            )}>
+              {children}
             </div>
           )}
         </div>
 
-        {/* Buttons / Children */}
-        {children && (
-          <div className={cn("flex gap-2", childrenAlignment === "end" ? "justify-end" : "justify-start")}>
-            {children}
-          </div>
-        )}
+        {/* Right Side: Annual Totals (Aligned at bottom) */}
+        <div className="flex items-end">
+          {annualTotalValue !== undefined && (
+            <div className="flex flex-col items-end">
+              <p className={cn("mb-1 font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+                {annualTotalLabel || "Total Anual"}
+              </p>
+              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
+                {formatCurrency(annualTotalValue)}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Legacy Port Case */}

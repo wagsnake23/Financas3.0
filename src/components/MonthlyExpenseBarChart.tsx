@@ -100,6 +100,9 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
               fill={entry.isCurrentMonth ? "hsl(var(--destructive))" : "hsl(var(--destructive))"}
               fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
               className="transition-all duration-300"
+              style={{
+                filter: entry.isCurrentMonth ? "drop-shadow(0 0 10px rgba(239, 68, 68, 0.5))" : "none"
+              }}
             />
           ))}
 

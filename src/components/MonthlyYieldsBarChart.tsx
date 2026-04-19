@@ -88,6 +88,9 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                             fill={entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--yield))"}
                             fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
                             className="transition-all duration-300"
+                            style={{
+                                filter: entry.isCurrentMonth ? "drop-shadow(0 0 10px rgba(147, 51, 234, 0.5))" : "none"
+                            }}
                         />
                     ))}
                 </Bar>
