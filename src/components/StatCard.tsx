@@ -150,7 +150,7 @@ export const StatCard = ({
             </div>
           )}
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5">
             <h2 
               className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
               style={{ color: currentStyle.titleColor }}
@@ -196,8 +196,8 @@ export const StatCard = ({
         {/* Left Side: Secondary Stats & Children (Horizontal alignment for metrics) */}
         <div className="flex items-end gap-4">
           {secondaryStatValue !== undefined && (
-            <div className="flex flex-col items-start">
-              <p className={cn("mb-1 font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+            <div className="flex flex-col items-start gap-0.5">
+              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
                 {secondaryStatTitle}
               </p>
               <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
@@ -219,8 +219,8 @@ export const StatCard = ({
         {/* Right Side: Annual Totals (Aligned at bottom) */}
         <div className="flex items-end">
           {annualTotalValue !== undefined && (
-            <div className="flex flex-col items-end">
-              <p className={cn("mb-1 font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+            <div className="flex flex-col items-end gap-0.5">
+              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
                 {annualTotalLabel || "Total Anual"}
               </p>
               <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
