@@ -186,41 +186,51 @@ export default function Dashboard() {
   }, [monthlyFilteredTransactions]);
 
   const monthlyTrends = useMemo(() => {
-    const prevMonthDate = subMonths(selectedMonth, 1);
-    const prevYear = getYear(prevMonthDate);
-    const prevMonthIdx = getMonth(prevMonthDate);
+    const currentMonthStr = format(selectedMonth, "yyyy-MM");
+    const prevMonthStr = format(subMonths(selectedMonth, 1), "yyyy-MM");
 
-    const prevIncome = allRevenues
-      .filter(r => {
-        const d = new Date(r.data);
-        return getYear(d) === prevYear && getMonth(d) === prevMonthIdx;
-      })
-      .reduce((sum, r) => sum + r.valor, 0);
+    const calculateIncome = (monthStr: string) => {
+      return allRevenues
+        .filter((r) => r.data.startsWith(monthStr))
+        .reduce((sum, r) => sum + r.valor, 0);
+    };
 
-    const prevExpenses = allExpenseInstallments
-      .filter(p => {
-        const d = new Date(p.vencimento);
-        return getYear(d) === prevYear && getMonth(d) === prevMonthIdx;
-      })
-      .reduce((sum, p) => sum + p.valor_parcela, 0);
+    const calculateExpenses = (monthStr: string) => {
+      return allExpenseInstallments
+        .filter((p) => p.vencimento.startsWith(monthStr))
+        .reduce((sum, p) => sum + p.valor_parcela, 0);
+    };
 
-    const prevBalance = prevIncome - prevExpenses;
+    const currentIncome = calculateIncome(currentMonthStr);
+    const currentExpenses = calculateExpenses(currentMonthStr);
+    const currentBalance = currentIncome - currentExpenses;
 
-    const calcTrend = (curr: number, prev: number) => {
-      if (prev === 0) return curr > 0 ? "+100%" : "0%";
-      const diff = ((curr - prev) / Math.abs(prev)) * 100;
-      return `${diff > 0 ? '+' : ''}${diff.toFixed(0)}%`;
+    const previousIncome = calculateIncome(prevMonthStr);
+    const previousExpenses = calculateExpenses(prevMonthStr);
+    const previousBalance = previousIncome - previousExpenses;
+
+    const calcTrendVar = (curr: number, prev: number) => {
+      if (prev === 0) return curr > 0 ? 100 : 0;
+      return ((curr - prev) / Math.abs(prev)) * 100;
+    };
+
+    const incomeVar = calcTrendVar(currentIncome, previousIncome);
+    const expenseVar = calcTrendVar(currentExpenses, previousExpenses);
+    const balanceVar = calcTrendVar(currentBalance, previousBalance);
+
+    const formatTrend = (val: number) => {
+      return `${val > 0 ? '+' : ''}${val.toFixed(0)}%`;
     };
 
     return {
-      incomeTrend: calcTrend(stats.totalIncome, prevIncome),
-      incomeIsPositive: stats.totalIncome >= prevIncome,
-      expenseTrend: calcTrend(stats.totalExpenses, prevExpenses),
-      expenseIsPositive: stats.totalExpenses >= prevExpenses, 
-      balanceTrend: calcTrend(stats.balance, prevBalance),
-      balanceIsPositive: stats.balance >= prevBalance,
+      incomeTrend: formatTrend(incomeVar),
+      incomeIsPositive: currentIncome >= previousIncome,
+      expenseTrend: formatTrend(expenseVar),
+      expenseIsPositive: currentExpenses >= previousExpenses, 
+      balanceTrend: formatTrend(balanceVar),
+      balanceIsPositive: currentBalance >= previousBalance,
     };
-  }, [allRevenues, allExpenseInstallments, selectedMonth, stats]);
+  }, [allRevenues, allExpenseInstallments, selectedMonth]);
 
   const totalPaidMonthlyExpenses = useMemo(() => {
     return monthlyFilteredTransactions
