@@ -22,28 +22,28 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
 
   const variantStyles = {
     balance: {
-      containerVars: { "--cor-topo": "#E6F0FF", "--cor-base": "#DCEBFF" },
-      border: "border-blue-200",
-      text: "text-[#1E6BCE]",
-      buttonGradient: "linear-gradient(180deg, #6B95FF 0%, #4A74D4 100%)"
+      containerVars: { "--cor-topo": "#F0F7FF", "--cor-base": "#E0EFFF" },
+      border: "border-blue-300/50",
+      text: "text-blue-700",
+      buttonGradient: "linear-gradient(180deg, #2563EB 0%, #1E40AF 100%)"
     },
     expense: {
       containerVars: { "--cor-topo": "#FFF5F5", "--cor-base": "#FFEBEB" },
-      border: "border-rose-200",
-      text: "text-[#E54D4D]",
-      buttonGradient: "linear-gradient(180deg, #FF7D7D 0%, #D64545 100%)"
+      border: "border-rose-300/50",
+      text: "text-rose-700",
+      buttonGradient: "linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)"
     },
     income: {
       containerVars: { "--cor-topo": "#F0FDF4", "--cor-base": "#DCFCE7" },
-      border: "border-emerald-200",
-      text: "text-[#1AA361]",
-      buttonGradient: "linear-gradient(180deg, #66E0A3 0%, #2DAD70 100%)"
+      border: "border-emerald-300/50",
+      text: "text-emerald-700",
+      buttonGradient: "linear-gradient(180deg, #22C55E 0%, #15803D 100%)"
     },
     yield: {
-      containerVars: { "--cor-topo": "#FFF8F1", "--cor-base": "#FFEEDD" },
-      border: "border-orange-200",
-      text: "text-orange-600",
-      buttonGradient: "linear-gradient(180deg, #FDBA74 0%, #EA580C 100%)"
+      containerVars: { "--cor-topo": "#F5F3FF", "--cor-base": "#EDE9FE" },
+      border: "border-purple-300/50",
+      text: "text-purple-700",
+      buttonGradient: "linear-gradient(180deg, #9333EA 0%, #6B21A8 100%)"
     }
   };
 
@@ -58,15 +58,15 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
       )}
       style={{
         ...currentStyle.containerVars,
-        boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+        boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.4), inset 0px -1px 2px rgba(0, 0, 0, 0.05)"
       } as any}
     >
       <button
         onClick={(e) => { e.stopPropagation(); onPreviousMonth(); }}
-        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-md shrink-0 ring-1 ring-black/10"
         style={{
           background: currentStyle.buttonGradient,
-          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
+          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), 0px 2px 4px rgba(0, 0, 0, 0.1)"
         }}
       >
         <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -81,10 +81,10 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
 
       <button
         onClick={(e) => { e.stopPropagation(); onNextMonth(); }}
-        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-md shrink-0 ring-1 ring-black/10"
         style={{
           background: currentStyle.buttonGradient,
-          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
+          boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), 0px 2px 4px rgba(0, 0, 0, 0.1)"
         }}
       >
         <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />

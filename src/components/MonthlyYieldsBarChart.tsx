@@ -61,7 +61,7 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                     interval={0}
                     tick={({ x, y, payload }) => {
                         const entry = chartData[payload.index];
-                        const color = entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--muted-foreground))";
+                        const color = entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--yield-darker))";
                         return (
                             <text
                                 x={x}
@@ -85,7 +85,9 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                     {chartData.map((entry, index) => (
                         <Cell
                             key={`cell-${index}`}
-                            fill={entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--soft-orange))"}
+                            fill={entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--yield))"}
+                            fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
+                            className="transition-all duration-300"
                         />
                     ))}
                 </Bar>

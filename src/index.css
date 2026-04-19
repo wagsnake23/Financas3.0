@@ -33,8 +33,14 @@ All colors MUST be HSL.
     --success: 150 65% 40%;
     /* Verde mais escuro */
     --success-foreground: 0 0% 100%;
-    --success-darker: 150 65% 30%;
+    --success-darker: 150 65% 20%;
     /* Verde ainda mais escuro para texto */
+
+    --primary-darker: 215 96% 25%;
+    /* Azul escuro para labels */
+    
+    --destructive-darker: 0 70% 30%;
+    /* Vermelho escuro para labels */
 
     --warning: 40 95% 55%;
     --warning-foreground: 0 0% 100%;
@@ -92,8 +98,15 @@ All colors MUST be HSL.
     --soft-green-background: 162 100% 97.5%;
     /* NEW: Cor de fundo para o card de receitas (#F2FFFB) */
 
-    --yield: 24 95% 53%;
-    /* #F97316 */
+    --yield: 270 70% 45%;
+    /* #9333EA equivalent - Purple */
+    --yield-darker: 270 70% 25%;
+    /* Dark purple for labels */
+    --soft-purple: 270 70% 90%;
+    /* Light purple for bars */
+    --soft-purple-background: 270 70% 98.5%;
+    /* Light purple background */
+
     --soft-orange: 24 100% 90%;
     /* Light orange for bars */
     --soft-orange-background: 24 100% 98.5%;

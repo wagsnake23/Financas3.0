@@ -69,7 +69,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           interval={0}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
-            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--muted-foreground))";
+            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--success-darker))";
             return (
               <text
                 x={x}
@@ -94,7 +94,9 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--soft-green))"}
+              fill={entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--success))"}
+              fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
+              className="transition-all duration-300"
             />
           ))}
         </Bar>

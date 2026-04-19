@@ -52,17 +52,17 @@ export const ProjectedYieldCard = ({
                         "flex flex-col items-start",
                         isMobile ? "pl-2 -mt-1 -space-y-2" : "pl-2 -mt-1 -space-y-1"
                     )}>
-                        <p className={cn("font-semibold text-muted-foreground leading-none", isMobile ? "text-xs" : "text-sm", "font-roboto")}>
+                        <div className={cn("font-medium mb-1 text-[hsl(var(--yield-darker))] leading-none", isMobile ? "text-xs" : "text-sm", "font-roboto")}>
                             <div className="flex items-center gap-2">
-                                <div className="rounded-xl shadow-sm p-1.5 -ml-1.5 translate-y-1 bg-[#7C3AED]/10 text-[#7C3AED]">
+                                <div className="rounded-xl shadow-sm p-1.5 -ml-1.5 translate-y-1 bg-yield/15 text-yield">
                                     <DynamicIcon name="LineChart" className="h-4 w-4" />
                                 </div>
                                 Projeção Mensal
                             </div>
-                        </p>
+                        </div>
                         <p className={cn(
-                            "font-bold leading-none text-[#7C3AED] pl-[34px]",
-                            isMobile ? "text-sm" : "text-base",
+                            "font-semibold leading-none text-slate-950 pl-[34px]",
+                            isMobile ? "text-base" : "text-lg",
                             "font-roboto"
                         )}>
                             {formatCurrency(mainStatValue)}
@@ -92,10 +92,10 @@ export const ProjectedYieldCard = ({
                  */}
                 {annualTotalValue !== undefined && (
                     <div className="flex flex-col">
-                        <p className={cn("text-muted-foreground leading-none font-roboto", isMobile ? "text-xs" : "text-xs")}>
+                        <p className={cn("text-[hsl(var(--yield-darker))] mb-1 font-medium leading-none font-roboto", isMobile ? "text-xs" : "text-sm")}>
                             {annualTotalLabel || "Total Anual"}
                         </p>
-                        <p className={cn("font-bold text-[#7C3AED] font-roboto leading-none", isMobile ? "text-sm" : "text-sm")}>
+                        <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-base" : "text-lg")}>
                             {formatCurrency(annualTotalValue)}
                         </p>
                     </div>
@@ -105,10 +105,10 @@ export const ProjectedYieldCard = ({
             {projectedPatrimonyValue !== undefined && (
                 <div className={cn(
                     "absolute flex flex-col items-end text-right",
-                    isMobile ? "bottom-2.5 right-[14px]" : "bottom-4 right-8"
+                    isMobile ? "bottom-1.5 right-[14px]" : "bottom-3 right-8"
                 )}>
-                    <p className={cn("text-muted-foreground leading-none font-roboto", isMobile ? "text-xs" : "text-xs")}>{projectedPatrimonyLabel || "Patrimônio Projetado"}</p>
-                    <p className={cn("font-bold text-[#7C3AED] font-roboto leading-none", isMobile ? "text-sm" : "text-sm")}>{formatCurrency(projectedPatrimonyValue)}</p>
+                    <p className={cn("text-[hsl(var(--yield-darker))] mb-1 font-medium leading-none font-roboto", isMobile ? "text-xs" : "text-sm")}>{projectedPatrimonyLabel || "Patrimônio Projetado"}</p>
+                    <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-base" : "text-lg")}>{formatCurrency(projectedPatrimonyValue)}</p>
                 </div>
             )}
         </Card>

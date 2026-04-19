@@ -93,7 +93,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                         const isPositive = entry.balance >= 0;
                         const color = entry.isCurrentMonth
                             ? (isPositive ? "hsl(var(--primary))" : "hsl(var(--destructive))")
-                            : "hsl(var(--muted-foreground))";
+                            : (isPositive ? "hsl(var(--primary-darker))" : "hsl(var(--destructive-darker))");
                         return (
                             <text
                                 x={x}
@@ -124,6 +124,8 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                             <Cell
                                 key={`cell-${index}`}
                                 fill={fill}
+                                fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
+                                className="transition-all duration-300"
                             />
                         );
                     })}
