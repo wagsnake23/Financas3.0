@@ -53,8 +53,7 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
     <div
       className={cn(
         "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border shadow-none cursor-default",
-        currentStyle.border,
-        isMobile ? "" : "-mr-1"
+        currentStyle.border
       )}
       style={{
         ...currentStyle.containerVars,

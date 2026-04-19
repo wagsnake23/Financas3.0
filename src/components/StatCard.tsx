@@ -166,7 +166,7 @@ export const StatCard = ({
         </div>
 
         {topRightContent && (
-          <div className="flex items-center -mr-2 mt-0">
+          <div className="flex items-center mt-0 ml-2">
             {topRightContent}
           </div>
         )}
