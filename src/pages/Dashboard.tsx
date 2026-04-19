@@ -545,6 +545,9 @@ export default function Dashboard() {
                       />
                     }
                     annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                    annualTotalLabel="Saldo Anual"
+                    trend={monthlyTrends.balanceTrend}
+                    trendIsPositive={monthlyTrends.balanceIsPositive}
                     icon="Wallet"
                     neumorphism={true}
                     className="card-saldo overflow-hidden h-full"
@@ -658,6 +661,8 @@ export default function Dashboard() {
                   }
                   annualTotalLabel="Saldo Anual"
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
+                  trend={monthlyTrends.balanceTrend}
+                  trendIsPositive={monthlyTrends.balanceIsPositive}
                   icon="Wallet"
                   neumorphism={true}
                   className="card-saldo overflow-hidden"
