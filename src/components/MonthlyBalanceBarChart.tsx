@@ -124,11 +124,11 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                             <Cell
                                 key={`cell-${index}`}
                                 fill={fill}
-                                fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
+                                fillOpacity={entry.isCurrentMonth ? 1 : 0.6}
                                 className="transition-all duration-300"
                                 style={{
                                     filter: entry.isCurrentMonth 
-                                        ? (entry.balance >= 0 ? "drop-shadow(0 0 10px rgba(59, 130, 246, 0.5))" : "drop-shadow(0 0 10px rgba(239, 68, 68, 0.5))")
+                                        ? (entry.balance >= 0 ? "drop-shadow(0 0 6px rgba(59, 130, 246, 0.2))" : "drop-shadow(0 0 6px rgba(239, 68, 68, 0.2))")
                                         : "none"
                                 }}
                             />

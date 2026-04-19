@@ -98,7 +98,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
               fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
               className="transition-all duration-300"
               style={{
-                filter: entry.isCurrentMonth ? "drop-shadow(0 0 10px rgba(34, 197, 94, 0.5))" : "none"
+                filter: entry.isCurrentMonth ? "drop-shadow(0 0 6px rgba(34, 197, 94, 0.2))" : "none"
               }}
             />
           ))}
