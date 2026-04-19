@@ -108,7 +108,7 @@ export default function Investments() { // Alterado para export default function
     queryFn: async () => {
       const { data, error } = await supabase
         .from("indexadores")
-        .select("tipo, taxa_anual, data_inicio, taxa_diaria")
+        .select("tipo, taxa_anual, data_inicio, taxa_diaria, taxa_mensal")
         .order("data_inicio", { ascending: true });
       if (error) throw error;
       return data as IndexadorHistorico[];
@@ -123,8 +123,11 @@ export default function Investments() { // Alterado para export default function
 
   const ipca = useMemo(() => {
     const ipcas = indexadores.filter(i => i.tipo === "IPCA");
-    if (ipcas.length === 0) return 5.0;
-    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
+    if (ipcas.length === 0) return 4.5; // Fallback aprox
+    const latest = [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0];
+    const mensal = latest.taxa_mensal || 0;
+    // Anualizar IPCA mensal: (1 + ipcaMensal)^12 - 1
+    return (Math.pow(1 + mensal, 12) - 1) * 100;
   }, [indexadores]);
 
   const indexadorMapCDI = useMemo(() => {
@@ -141,8 +144,13 @@ export default function Investments() { // Alterado para export default function
 
   const taxaEstimada = useMemo(() => {
     if (tipoRentabilidade === "fixo") return profitability || 0;
-    const taxaBase = indexador === "CDI" ? cdi : ipca;
-    return (taxaBase * (percentualIndexador || 0) / 100);
+    if (indexador === "CDI") {
+      return (cdi * (percentualIndexador || 100) / 100);
+    }
+    // IPCA+ (composta conforme instrução): (1 + ipcaAnual) * (1 + taxaReal) - 1
+    const ipcaAnualDec = ipca / 100;
+    const taxaRealDec = (percentualIndexador || 0) / 100;
+    return ((1 + ipcaAnualDec) * (1 + taxaRealDec) - 1) * 100;
   }, [tipoRentabilidade, indexador, percentualIndexador, profitability, cdi, ipca]);
 
   const metricsNewForm = useMemo(() => {
@@ -151,7 +159,8 @@ export default function Investments() { // Alterado para export default function
     const aliquota = getAliquotaIR(date || new Date(), new Date(), tipoTributacao);
     
     const taxaAnual = taxaEstimada / 100;
-    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / 252) - 1;
+    const baseDias = indexador === "IPCA" ? 365 : 252;
+    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / baseDias) - 1;
     const rendimentoBrutoDia = (amount || 0) * taxaDiaria;
     
     const rendimentoLiquidoDia = rendimentoBrutoDia * (1 - aliquota / 100);
@@ -389,6 +398,7 @@ export default function Investments() { // Alterado para export default function
         valorInicial: inv.valor,
         dataInicio: inv.data,
         indexadorMap: idxMap || new Map<string, number>(),
+        indexador: inv.indexador ?? "CDI",
         percentualIndexador: pIndexador,
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
         tipoTributacao
@@ -406,7 +416,9 @@ export default function Investments() { // Alterado para export default function
         ...inv,
         tipoTributacao,
         rentabilidade: inv.tipo_rentabilidade === "indexado" 
-          ? (inv.indexador === "CDI" ? cdi : (inv.indexador === "IPCA" ? ipca : 0)) * (inv.percentual_indexador || 100) / 100
+          ? (inv.indexador === "CDI" 
+              ? (cdi * (inv.percentual_indexador || 100) / 100)
+              : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
           : (inv.taxa_fixa || 0),
         valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto para fins informativos
         rendimentoHojeVirtual: rendimentoHojeLiquido,

@@ -20,6 +20,7 @@ export type Database = {
           tipo: string
           taxa_anual: number
           taxa_diaria: number | null
+          taxa_mensal: number | null
           data_inicio: string
           data_fim: string | null
           created_at: string
@@ -29,6 +30,7 @@ export type Database = {
           tipo: string
           taxa_anual: number
           taxa_diaria?: number | null
+          taxa_mensal?: number | null
           data_inicio: string
           data_fim?: string | null
           created_at?: string
@@ -38,6 +40,7 @@ export type Database = {
           tipo?: string
           taxa_anual?: number
           taxa_diaria?: number | null
+          taxa_mensal?: number | null
           data_inicio?: string
           data_fim?: string | null
           created_at?: string

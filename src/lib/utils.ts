@@ -101,7 +101,19 @@ export interface IndexadorHistorico {
   tipo: string;
   taxa_anual: number;
   taxa_diaria: number;
+  taxa_mensal?: number; // IPCA
   data_inicio: string;
+}
+
+/**
+ * Retorna uma chave formatada YYYY-MM para busca de IPCA.
+ */
+export function getIPCAKey(date: Date): string {
+  const d = new Date(date);
+  // IPCA é mensal, usamos o ano e mês
+  const ano = d.getFullYear();
+  const mes = String(d.getMonth() + 1).padStart(2, "0");
+  return `${ano}-${mes}`;
 }
 
 /**
@@ -157,9 +169,22 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
   if (!indexadores || indexadores.length === 0) return map;
 
   for (const item of indexadores) {
-    if (!item.data_inicio || item.taxa_diaria == null) continue;
-    const key = item.data_inicio.split('T')[0];
-    map.set(key, Number(item.taxa_diaria));
+    if (!item.data_inicio) continue;
+    
+    if (item.tipo === "IPCA") {
+      // IPCA usa chave YYYY-MM e taxa_mensal (Extração direta da string para evitar timezone)
+      const parts = item.data_inicio.split("-");
+      const key = `${parts[0]}-${parts[1]}`;
+      if (item.taxa_mensal != null) {
+        map.set(key, Number(item.taxa_mensal));
+      }
+    } else {
+      // CDI usa chave YYYY-MM-DD e taxa_diaria
+      const key = item.data_inicio.split('T')[0];
+      if (item.taxa_diaria != null) {
+        map.set(key, Number(item.taxa_diaria));
+      }
+    }
   }
 
   return map;
@@ -175,14 +200,18 @@ export function buildIndexadorMap(indexadores: IndexadorHistorico[]): Map<string
 export function calcularRendimentoComCDI({
   valorInicial,
   dataInicio,
+  dataFim = null, // Novo: data limite do cálculo
   indexadorMap,
+  indexador = "CDI",
   percentualIndexador = 100,
   taxaFixaAnual = null,
   tipoTributacao = "regressivo",
 }: {
   valorInicial: number;
   dataInicio: string | Date;
+  dataFim?: string | Date | null;
   indexadorMap: Map<string, number>;
+  indexador?: string;
   percentualIndexador?: number;
   taxaFixaAnual?: number | null;
   tipoTributacao?: TipoTributacao;
@@ -192,20 +221,27 @@ export function calcularRendimentoComCDI({
   // 🔥 Normalização Interna:
   // Voltamos 1 dia na data de aplicação para que o proximoDiaUtil(data - 1) 
   // resulte na própria data de aplicação caso seja dia útil, 
-  // iniciando o rendimento exatamente na data informada pelo usuário.
+  // Início do rendimento: 
+  // IPCA começa no mesmo dia (D+0).
+  // CDI mantém o padrão de mercado (D+1 útil após normalizar).
   const inicioNormalizado = normalizarDataAplicacao(dataInicio);
+  let primeiroDiaYield: Date;
   
-  const hoje = new Date();
-  hoje.setHours(12, 0, 0, 0);
+  if (indexador === "IPCA") {
+    primeiroDiaYield = typeof dataInicio === 'string' ? new Date(dataInicio + "T12:00:00") : new Date(dataInicio);
+    primeiroDiaYield.setHours(12, 0, 0, 0);
+  } else {
+    primeiroDiaYield = proximoDiaUtil(inicioNormalizado);
+  }
 
-  // Início do rendimento (D+1 da data normalizada = Data UI original se for dia útil)
-  const primeiroDiaYield = proximoDiaUtil(inicioNormalizado);
+  const hoje = dataFim ? (typeof dataFim === 'string' ? new Date(dataFim + "T12:00:00") : new Date(dataFim)) : new Date();
+  hoje.setHours(12, 0, 0, 0);
 
   let ultimaTaxa = 0;
   let ultimaTaxaAplicada = 0;
 
-  // Busca de semente retroativa (Fallback para indexadores)
-  if (indexadorMap.size > 0 && taxaFixaAnual === null) {
+  // Busca de semente retroativa (Fallback para indexadores - Apenas CDI)
+  if (indexador === "CDI" && indexadorMap.size > 0 && taxaFixaAnual === null) {
     let dataSemente = new Date(inicioNormalizado);
     for (let i = 0; i < 730; i++) {
       const key = formatDateKey(dataSemente);
@@ -220,32 +256,91 @@ export function calcularRendimentoComCDI({
 
   const taxaDiariaFixa = taxaFixaAnual !== null ? (Math.pow(1 + taxaFixaAnual / 100, 1 / 252) - 1) : 0;
 
+  let ultimoMesProcessado = -1;
+
   // Loop de Capitalização Bruta
   for (let d = new Date(primeiroDiaYield); d < hoje; d.setDate(d.getDate() + 1)) {
-    if (!isDiaUtil(d)) continue;
+    // CDI só roda em dias úteis. IPCA roda todos os dias (inflação é mensal, juros são diários).
+    if (indexador !== "IPCA" && !isDiaUtil(d)) continue;
 
-    const key = formatDateKey(d);
-    let taxaBase: number | undefined = undefined;
-
-    if (taxaFixaAnual !== null) {
-      taxaBase = taxaDiariaFixa;
-    } else {
-      const taxaDia = indexadorMap.get(key);
-      const isHoje = formatDateKey(d) === formatDateKey(hoje);
-
-      if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
-        taxaBase = taxaDia;
-      } else if (isHoje && ultimaTaxa > 0) {
-        taxaBase = ultimaTaxa;
+    if (indexador === "IPCA") {
+      // IPCA usa defasagem variável (Padrão Tesouro/Mercado): 
+      // Até dia 15 (M-2), Após dia 15 (M-1)
+      const dRef = new Date(d);
+      if (d.getDate() <= 15) {
+        dRef.setMonth(dRef.getMonth() - 2);
+      } else {
+        dRef.setMonth(dRef.getMonth() - 1);
       }
-    }
+      const year = dRef.getFullYear();
+      const month = String(dRef.getMonth() + 1).padStart(2, "0");
+      const chaveMes = `${year}-${month}`;
+      let ipcaMensal = indexadorMap.get(chaveMes);
 
-    if (taxaBase !== undefined && taxaBase > 0) {
-      const taxa = taxaBase * (percentualIndexador / 100);
-      valorBruto *= (1 + taxa);
+      // Fallback robusto: buscar meses anteriores se não houver IPCA no mês de referência (M-1)
+      if (ipcaMensal === undefined || ipcaMensal === null) {
+        let dataBusca = new Date(dRef);
+        for (let i = 0; i < 12; i++) {
+          dataBusca.setMonth(dataBusca.getMonth() - 1);
+          const partsAnterior = [dataBusca.getFullYear(), String(dataBusca.getMonth() + 1).padStart(2, "0")];
+          const chaveAnterior = `${partsAnterior[0]}-${partsAnterior[1]}`;
+          const ipcaAnterior = indexadorMap.get(chaveAnterior);
+          if (ipcaAnterior !== undefined && ipcaAnterior !== null) {
+            ipcaMensal = ipcaAnterior;
+            break;
+          }
+        }
+      }
+
+      // Fallback final: se ainda for nulo, usa zero
+      if (ipcaMensal === undefined || ipcaMensal === null) {
+        ipcaMensal = 0;
+      }
+
+      // 1. Converter IPCA mensal para diário (Decomposição exponencial pro-rata)
+      const diasNoMes = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      const ipcaDiario = Math.pow(1 + ipcaMensal, 1 / diasNoMes) - 1;
+
+      // 2. Aplicação da Taxa Real (Juros Spread) - Diariamente
+      const taxaFixaAnualDecimal = (percentualIndexador || 0) > 1 
+        ? (percentualIndexador || 0) / 100 
+        : (percentualIndexador || 0);
+
+      // Taxa fixa diária (Base 365 dias calendarizados)
+      const taxaFixaDiaria = Math.pow(1 + taxaFixaAnualDecimal, 1 / 365) - 1;
       
-      ultimaTaxa = indexadorMap.get(key) || ultimaTaxa; 
-      ultimaTaxaAplicada = taxa;
+      // Composição diária: IPCA (M-1) + Spread Fixa
+      const taxaDia = (1 + ipcaDiario) * (1 + taxaFixaDiaria) - 1;
+
+      valorBruto *= (1 + taxaDia);
+      
+      ultimaTaxa = ipcaMensal;
+      ultimaTaxaAplicada = taxaDia;
+    } else {
+      // LOGICA CDI (MANTIDA)
+      const key = formatDateKey(d);
+      let taxaBase: number | undefined = undefined;
+
+      if (taxaFixaAnual !== null) {
+        taxaBase = taxaDiariaFixa;
+      } else {
+        const taxaDia = indexadorMap.get(key);
+        const isHoje = formatDateKey(d) === formatDateKey(hoje);
+
+        if (taxaDia !== undefined && taxaDia !== null && taxaDia > 0) {
+          taxaBase = taxaDia;
+        } else if (isHoje && ultimaTaxa > 0) {
+          taxaBase = ultimaTaxa;
+        }
+      }
+
+      if (taxaBase !== undefined && taxaBase > 0) {
+        const taxa = taxaBase * (percentualIndexador / 100);
+        valorBruto *= (1 + taxa);
+        
+        ultimaTaxa = indexadorMap.get(key) || ultimaTaxa; 
+        ultimaTaxaAplicada = taxa;
+      }
     }
   }
 
