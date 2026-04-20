@@ -316,8 +316,8 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{
-                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
-                                        backgroundBlendMode: "soft-light",
+                                        background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                        backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -385,8 +385,8 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "17px",
-                                        background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
-                                        backgroundBlendMode: "soft-light",
+                                        background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
+                                        backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(255, 59, 48, 0.08)",
@@ -444,8 +444,8 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "17px",
-                                        background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
-                                        backgroundBlendMode: "soft-light",
+                                        background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
+                                        backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
                                         border: "1px solid rgba(0,0,0,0.06)",
                                         outline: "1px solid rgba(34, 197, 94, 0.08)",
@@ -516,8 +516,8 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
-                                backgroundBlendMode: "soft-light",
+                                background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(0, 102, 255, 0.08)",
@@ -586,8 +586,8 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "17px",
-                                background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
-                                backgroundBlendMode: "soft-light",
+                                background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
+                                backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(34, 197, 94, 0.08)",
@@ -645,8 +645,8 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "17px",
-                                background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
-                                backgroundBlendMode: "soft-light",
+                                background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
+                                backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
                                 border: "1px solid rgba(0,0,0,0.06)",
                                 outline: "1px solid rgba(255, 59, 48, 0.08)",
