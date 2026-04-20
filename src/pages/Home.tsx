@@ -314,7 +314,7 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[18px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
                                     style={{
                                         background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
                                         backgroundBlendMode: "soft-light",
@@ -384,7 +384,7 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "18px",
+                                        borderRadius: "17px",
                                         background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
                                         backgroundBlendMode: "soft-light",
                                         backdropFilter: "blur(6px)",
@@ -443,7 +443,7 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "18px",
+                                        borderRadius: "17px",
                                         background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
                                         backgroundBlendMode: "soft-light",
                                         backdropFilter: "blur(6px)",
@@ -514,7 +514,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[18px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
                                 backgroundBlendMode: "soft-light",
@@ -585,7 +585,7 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "18px",
+                                borderRadius: "17px",
                                 background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
                                 backgroundBlendMode: "soft-light",
                                 backdropFilter: "blur(6px)",
@@ -644,7 +644,7 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "18px",
+                                borderRadius: "17px",
                                 background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
                                 backgroundBlendMode: "soft-light",
                                 backdropFilter: "blur(6px)",

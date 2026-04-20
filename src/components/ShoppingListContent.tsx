@@ -448,8 +448,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       <div className={cn("flex flex-col items-center gap-1 w-full text-center", isMobile ? "mb-2" : "mb-4")}>
         <h2
           className={cn(
-            "text-2xl font-bold text-primary w-full",
-            isMobile && "text-xl -mt-1"
+            "text-2xl font-bold text-primary w-full -mt-[4px] mb-[3px]",
+            isMobile && "text-xl"
           )}
         >
           🛒 Lista de Compras

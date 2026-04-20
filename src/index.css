@@ -440,8 +440,8 @@ body {
   background-size: 105% 105%;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 22px;
-  /* Ajustado para 22px */
+  border-radius: 17px;
+  /* Ajustado para 15px */
   box-shadow:
     0px 10px 22px rgba(0, 0, 0, 0.10),
     /* profundidade mais suave */
@@ -558,7 +558,7 @@ body {
 .card-yield {
   position: relative;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: 17px;
   backdrop-filter: blur(14px);
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.03),
