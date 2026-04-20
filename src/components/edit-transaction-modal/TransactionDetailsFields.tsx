@@ -82,7 +82,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   tipoPagamento,
 }) => {
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[rgba(37,99,235,0.4)] border";
+    return validationErrors[errorKey] ? "!border-destructive !border-[1px]" : "!border-slate-300/40 !border-[1px]";
   };
 
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
@@ -188,7 +188,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
-              className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium !text-blue-500 shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !border-blue-300 !bg-transparent", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium !text-blue-500 shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !border-blue-300/30 !border-[1px] !bg-transparent", isMobile && "h-9 text-sm")}
             />
           </div>
         )}
