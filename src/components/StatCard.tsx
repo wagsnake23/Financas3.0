@@ -128,7 +128,7 @@ export const StatCard = ({
       }}
       className={cn(
         "transition-all duration-300 animate-fade-in flex flex-col relative overflow-hidden",
-        isMobile ? "p-3 min-h-[140px]" : "p-6 h-full min-h-[200px]",
+        isMobile ? "p-3 min-h-[140px]" : "p-6 h-full min-h-[200px] rounded-3xl",
         className
       )}
     >

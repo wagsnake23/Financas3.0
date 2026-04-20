@@ -19,9 +19,7 @@ export default function ShoppingList() {
     <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-14 md:pt-16", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
       <Navigation />
       <main className={cn("container mx-auto flex-grow", isMobile ? "px-0 pt-4 pb-20 flex flex-col min-h-0 shrink" : "max-w-[1200px] px-6 py-8")}>
-        {!isMobile && (
-          <h1 className="text-3xl font-bold mb-6 text-center">Lista de Compras</h1>
-        )}
+
         <ShoppingListContent user={user} isMobile={isMobile} />
       </main>
       <Footer

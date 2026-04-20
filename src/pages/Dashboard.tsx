@@ -540,7 +540,7 @@ export default function Dashboard() {
                         revenues={allRevenues}
                         expenseInstallments={allExpenseInstallments}
                         currentDate={selectedMonth}
-                        isMobile={true}
+                        isMobile={isMobile}
                         onMonthClick={handleMonthClick}
                       />
                     }
@@ -655,7 +655,7 @@ export default function Dashboard() {
                       revenues={allRevenues}
                       expenseInstallments={allExpenseInstallments}
                       currentDate={selectedMonth}
-                      isMobile={true}
+                      isMobile={isMobile}
                       onMonthClick={handleMonthClick}
                     />
                   }
@@ -897,7 +897,7 @@ export default function Dashboard() {
                     expenseInstallments={allExpenseInstallments}
                     currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
                     projectedMonthlyYield={currentYieldStats.monthYields}
-                    isMobile={true}
+                    isMobile={isMobile}
                     onMonthClick={(date) => {
                       setSelectedMonth(date);
                       const el = document.getElementById("stat-expenses");
@@ -1084,7 +1084,7 @@ export default function Dashboard() {
                       expenseInstallments={allExpenseInstallments}
                       currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
                       projectedMonthlyYield={currentYieldStats.monthYields}
-                      isMobile={true}
+                      isMobile={isMobile}
                       onMonthClick={(date) => {
                         setSelectedMonth(date);
                         window.scrollTo({ top: 0, behavior: 'smooth' });

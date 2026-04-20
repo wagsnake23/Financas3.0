@@ -82,7 +82,7 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
     }
 
     return (
-        <ResponsiveContainer width="100%" height={isMobile ? 90 : 'auto'} minHeight={isMobile ? undefined : 260}>
+        <ResponsiveContainer width="100%" height={isMobile ? 90 : 105} minHeight={isMobile ? undefined : 105}>
             <BarChart data={chartData} margin={{ top: 3, right: 0, left: 0, bottom: 6 }} barCategoryGap="10%">
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
