@@ -82,7 +82,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   tipoPagamento,
 }) => {
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[rgba(37,99,235,0.18)] border";
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[rgba(37,99,235,0.4)] border";
   };
 
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);

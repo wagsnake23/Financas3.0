@@ -162,7 +162,7 @@ const Lancamentos = () => {
              "shadow-none border-none"
           )}
           style={{
-            background: "linear-gradient(180deg, #f8fafc 0%, #fcfdfe 40%, #eef2f8 100%)",
+            background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
             border: "2px solid rgba(37, 99, 235, 0.25)",
