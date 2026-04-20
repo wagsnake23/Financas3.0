@@ -130,27 +130,48 @@ const CategoryItem = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[20px] !pb-4" : "!pb-4 !rounded-[20px]")}>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center justify-center gap-2">
-                    <Trash2 className="h-5 w-5 text-destructive" />
+              <AlertDialogContent 
+                className={cn(
+                  isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[25px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[25px] !pb-6",
+                  "!border border-slate-200 shadow-none"
+                )}
+                style={{
+                  background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+                  backgroundBlendMode: "soft-light",
+                  backdropFilter: "blur(6px)",
+                  outline: "1px solid rgba(220, 38, 38, 0.08)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(220, 38, 38, 0.12)"
+                }}
+              >
+                <AlertDialogHeader className="pt-2">
+                  <AlertDialogTitle className="flex items-center justify-center gap-2 text-center text-xl font-bold text-slate-800">
+                    <Trash2 className="h-6 w-6 text-red-500" />
                     Confirmar Exclusão
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-center">
+                  <AlertDialogDescription className="text-center text-slate-600 font-medium pt-2">
                     Tem certeza que deseja excluir a subcategoria{" "}
                     <span className="font-bold text-foreground">"{category.nome}"</span>?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
+                <AlertDialogFooter className={cn(
+                  "flex flex-row gap-2 mt-4",
+                  isMobile && "items-center justify-between"
+                )}>
                   <AlertDialogCancel className={cn(
-                    "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-                    isMobile && "h-12 text-lg"
-                  )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
+                    "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
+                    isMobile && "h-11"
+                  )}
+                  style={{ 
+                    "--cor-topo": "#E2E8F0", 
+                    "--cor-base": "#CBD5E1",
+                    boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
+                  } as any}
+                  >Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDeleteCategory(category.id)}
                     className={cn(
-                      "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                      isMobile && "h-12 text-lg"
+                      "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                      isMobile && "h-11"
                     )}
                     style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
                   >
