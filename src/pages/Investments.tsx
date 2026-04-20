@@ -825,13 +825,13 @@ export default function Investments() { // Alterado para export default function
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
                           <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-start gap-2">
-                              <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80" />
+                            <div className="flex items-start gap-[5px] -ml-1.5">
+                              <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               <div className="flex flex-col">
                                 <h3 className="font-bold text-gray-800 leading-tight text-base">
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className="text-xs text-gray-600 font-bold -mt-[3px]">{typeLabel}</p>
+                                <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
                               </div>
                             </div>
 
@@ -1286,13 +1286,13 @@ export default function Investments() { // Alterado para export default function
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
                             <div className="flex items-start justify-between mb-5">
-                              <div className="flex items-start gap-2">
-                                <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80" />
+                              <div className="flex items-start gap-[5px] -ml-1.5">
+                                <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                                 <div className="flex flex-col">
                                   <h3 className={cn("font-bold text-gray-800 leading-tight", isMobile ? "text-base" : "text-[1.1rem]")}>
                                     {investmentNameDisplay}
                                   </h3>
-                                  <p className="text-xs text-gray-600 font-bold -mt-[3px]">{typeLabel}</p>
+                                  <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
                                 </div>
                               </div>
 
