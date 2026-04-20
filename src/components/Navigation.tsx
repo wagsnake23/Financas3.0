@@ -149,13 +149,16 @@ export const Navigation = () => {
                 className="h-8 w-8 transition-transform group-hover:scale-110"
               />
               <span className={cn(
-                "font-black text-lg tracking-tight transition-all duration-300",
+                "font-semibold text-lg tracking-[0.5px] transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
               )}
               style={{
-                filter: "drop-shadow(0px 1px 1.5px rgba(0,0,0,0.25))"
-              }}>Minhas Finanças</span>
+                fontFamily: "'Inter', sans-serif",
+                filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
+              }}>
+                Minhas Finança<span style={{ color: "#22c55e", textShadow: "0 0 12px rgba(34, 197, 94, 0.4)" }}>$</span>
+              </span>
             </div>
 
             {/* Área da direita */}
