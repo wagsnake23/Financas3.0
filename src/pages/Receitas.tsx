@@ -525,10 +525,10 @@ export default function Receitas() {
               type="submit"
               form="income-form"
               className={cn(
-                "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
                 isMobile ? "h-11 text-lg" : "h-11 text-lg"
               )}
-              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}
               disabled={loading}
             >
               {loading ? "Salvando..." : "Salvar Receita"}
@@ -597,7 +597,7 @@ export default function Receitas() {
                 />
               </Button>
               <div className="flex flex-col">
-                <h1 className={cn("font-black tracking-tight -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")}>
+                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Nova Receita
                 </h1>
                 <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-white" : "text-sm text-slate-500")}>
