@@ -279,7 +279,7 @@ export default function Auth() {
     <>
       <div className={cn("mb-4 text-center", isMobile && "-mt-[37px]")}>
         <img src="/favicon.ico" alt="Controle Financeiro Logo" className={cn("mx-auto", isMobile ? "h-16 w-16" : "h-[56px] w-[56px] mb-1")} />
-        <h1 className={cn("text-[26px] font-[900] tracking-[0.5px] mb-0", isMobile ? "mt-2" : "mt-1")} style={{ fontFamily: "'Inter', sans-serif", color: "#04469E", textShadow: "0px 1px 0px rgba(255,255,255,0.8), 0px 2px 3px rgba(0,0,0,0.1)" }}>
+        <h1 className="text-[26px] font-[900] tracking-[0.5px] mt-1 mb-0" style={{ fontFamily: "'Inter', sans-serif", color: "#04469E", textShadow: "0px 1px 0px rgba(255,255,255,0.8), 0px 2px 3px rgba(0,0,0,0.1)" }}>
           Minhas Finança<span style={{ color: "#22c55e", fontWeight: "600", textShadow: "0 0 10px rgba(34, 197, 94, 0.3)" }}>$</span>
         </h1>
         <p className="text-sm text-muted-foreground -mt-1">
