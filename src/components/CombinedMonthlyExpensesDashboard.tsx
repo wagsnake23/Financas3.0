@@ -545,7 +545,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         <span className="font-bold text-gray-800 text-[18px] leading-tight tracking-tight">{chartData[activePieIndex]?.name}</span>
                       </div>
                       <div className="ml-auto flex flex-col items-end">
-                        <span className="text-[19px] font-black text-[#1E6BCE] tracking-tighter leading-none">
+                        <span className="text-[17px] font-black text-[#1E6BCE] tracking-tighter leading-none">
                           {formatCurrency(chartData[activePieIndex]?.value)}
                         </span>
                         <span className="text-xs font-black text-gray-500/70 mt-0.5">
@@ -814,7 +814,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                           </div>
                         </div>
                         <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
-                          <span className="text-xl font-black text-indigo-600 tracking-tighter">
+                          <span className="text-lg font-black text-indigo-600 tracking-tighter">
                             {formatCurrency(subcategoryChartData[activeBarIndex].value)}
                           </span>
                           <span className="text-xs font-bold text-gray-400">
