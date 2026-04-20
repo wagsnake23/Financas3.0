@@ -96,8 +96,10 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                             className="transition-all duration-300"
                             style={{
                                 filter: entry.isCurrentMonth 
-                                    ? "drop-shadow(0 0 6px rgba(147, 51, 234, 0.2)) drop-shadow(2px 2px 3px rgba(0,0,0,0.1))" 
-                                    : "drop-shadow(2px 2px 3px rgba(0,0,0,0.08))"
+                                    ? "drop-shadow(2px 2px 0px rgba(0,0,0,0.12)) drop-shadow(4px 4px 8px rgba(0,0,0,0.15))" 
+                                    : "drop-shadow(1px 1px 0px rgba(0,0,0,0.08)) drop-shadow(3px 3px 6px rgba(0,0,0,0.1))",
+                                stroke: "rgba(255,255,255,0.25)",
+                                strokeWidth: 1
                             }}
                         />
                     ))}
