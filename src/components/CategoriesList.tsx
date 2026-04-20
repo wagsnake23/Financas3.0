@@ -132,7 +132,7 @@ const CategoryItem = ({
               </AlertDialogTrigger>
               <AlertDialogContent 
                 className={cn(
-                  isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[25px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[25px] !pb-6",
+                  isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[22px] !pb-6",
                   "!border border-slate-200 shadow-none"
                 )}
                 style={{

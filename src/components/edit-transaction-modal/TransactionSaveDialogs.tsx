@@ -43,7 +43,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
     >
       <AlertDialogContent
         className={cn(
-          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 min-h-[180px] !pb-5 !rounded-[25px] shadow-none border-none" : "sm:max-w-[425px] !pb-5 !rounded-[25px] shadow-none border-none"
+          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 min-h-[180px] !pb-5 !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-5 !rounded-[22px] shadow-none border-none"
         )}
         style={{
           background: "linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)",

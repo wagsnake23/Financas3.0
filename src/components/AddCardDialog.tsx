@@ -110,7 +110,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(
-        isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[28px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[28px] overflow-y-auto !border-2 !border-white shadow-2xl"
+        isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto !border-2 !border-white shadow-2xl"
       )}>
         <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
           <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">

@@ -1438,7 +1438,7 @@ export default function Investments() { // Alterado para export default function
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent 
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[25px] !px-4 !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[25px]",
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
             "!border border-slate-200 shadow-none"
           )}
           style={{
@@ -1476,7 +1476,7 @@ export default function Investments() { // Alterado para export default function
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <AlertDialogContent 
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[25px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[25px] !pb-6",
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[22px] !pb-6",
             "!border border-slate-200 shadow-none"
           )}
           style={{
