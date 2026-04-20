@@ -407,19 +407,23 @@ export default function Investments() { // Alterado para export default function
       const rendimentoLiquido = valorLiquido - inv.valor;
       const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
       const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
+      
+      const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado" 
+          ? (inv.indexador === "CDI" 
+              ? (cdi * (inv.percentual_indexador || 100) / 100)
+              : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
+          : (inv.taxa_fixa || 0);
 
-      // Usamos o valor líquido atual para projetar o rendimento de hoje
+      const rentabilidadeLiquida = rentabilidadeBruta * (1 - aliquotaIR / 100);
+      
       const rendimentoBrutoDia = valorLiquido * taxaDiaria;
       const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
 
       return {
         ...inv,
         tipoTributacao,
-        rentabilidade: inv.tipo_rentabilidade === "indexado" 
-          ? (inv.indexador === "CDI" 
-              ? (cdi * (inv.percentual_indexador || 100) / 100)
-              : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
-          : (inv.taxa_fixa || 0),
+        rentabilidade: rentabilidadeBruta,
+        rentabilidadeLiquida,
         valorAtualVirtual: inv.valor + rendimentoBruto, // Saldo bruto para fins informativos
         rendimentoHojeVirtual: rendimentoHojeLiquido,
         taxaDiaria,
@@ -877,18 +881,18 @@ export default function Investments() { // Alterado para export default function
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
                                   <div
-                                    className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3 py-1 rounded-full text-[11px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
+                                    className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                                   >
-                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                    <div className="flex flex-col items-start leading-none">
-                                      <span className="text-[11px]">
+                                    <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                    <div className="flex flex-col items-start leading-[1.1]">
+                                      <span className="text-[13px] font-black">
+                                        {investment.rentabilidadeLiquida.toFixed(2)}%
+                                      </span>
+                                      <span className="text-[10px] opacity-70 font-bold">
                                         {investment.tipo_rentabilidade === "indexado"
                                           ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                          : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
+                                          : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
                                       </span>
-                                      {investment.tipo_rentabilidade === "indexado" && (
-                                        <span className="text-[9px] opacity-70 font-medium">≈ {investment.rentabilidade.toFixed(2)}% a.a.</span>
-                                      )}
                                     </div>
                                   </div>
 
@@ -1339,18 +1343,18 @@ export default function Investments() { // Alterado para export default function
                               <div className="flex flex-col items-end gap-2">
                                 {/* Profitability Badge */}
                                   <div
-                                    className="inline-flex items-center gap-1.5 text-[#1E3A8A] px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-[#A5C2F9]/30 border border-blue-200/50"
+                                    className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                                   >
-                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                    <div className="flex flex-col items-start leading-none">
-                                      <span className="text-[12px]">
+                                    <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                    <div className="flex flex-col items-start leading-[1.1]">
+                                      <span className="text-[13px] font-black">
+                                        {investment.rentabilidadeLiquida.toFixed(2)}%
+                                      </span>
+                                      <span className="text-[10px] opacity-70 font-bold">
                                         {investment.tipo_rentabilidade === "indexado"
                                           ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                          : `${investment.taxa_fixa || investment.rentabilidade}% a.a.`}
+                                          : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
                                       </span>
-                                      {investment.tipo_rentabilidade === "indexado" && (
-                                        <span className="text-[10px] opacity-70 font-medium">≈ {investment.rentabilidade.toFixed(2)}% a.a.</span>
-                                      )}
                                     </div>
                                   </div>
 
