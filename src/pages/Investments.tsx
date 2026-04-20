@@ -794,7 +794,7 @@ export default function Investments() { // Alterado para export default function
                       </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar pr-1">
+                <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
                   {calculatedInvestments.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
@@ -1250,7 +1250,7 @@ export default function Investments() { // Alterado para export default function
                         </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
-                  <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar pr-1">
+                  <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
                     {calculatedInvestments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
