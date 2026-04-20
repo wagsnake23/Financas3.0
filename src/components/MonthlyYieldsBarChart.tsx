@@ -61,7 +61,7 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                     interval={0}
                     tick={({ x, y, payload }) => {
                         const entry = chartData[payload.index];
-                        const color = entry.isCurrentMonth ? "hsl(var(--yield))" : "hsl(var(--yield-darker))";
+                        const color = entry.isCurrentMonth ? "hsl(var(--yield))" : "#000000";
                         return (
                             <text
                                 x={x}
@@ -74,7 +74,7 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                                     fontWeight: "bold", 
                                     cursor: "pointer", 
                                     fontFamily: "Roboto",
-                                    filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                                    filter: entry.isCurrentMonth ? "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))" : "none"
                                 }}
                                 onClick={() => onMonthClick(entry.fullDate)}
                             >

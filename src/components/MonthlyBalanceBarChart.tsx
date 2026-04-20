@@ -93,7 +93,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                         const isPositive = entry.balance >= 0;
                         const color = entry.isCurrentMonth
                             ? (isPositive ? "hsl(var(--primary))" : "hsl(var(--destructive))")
-                            : (isPositive ? "hsl(var(--primary-darker))" : "hsl(var(--destructive-darker))");
+                            : "#000000";
                         return (
                             <text
                                 x={x}
@@ -106,7 +106,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                                     fontWeight: "bold", 
                                     cursor: "pointer", 
                                     fontFamily: "Roboto",
-                                    filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                                    filter: entry.isCurrentMonth ? "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))" : "none"
                                 }}
                                 onClick={() => onMonthClick(entry.fullDate)}
                             >

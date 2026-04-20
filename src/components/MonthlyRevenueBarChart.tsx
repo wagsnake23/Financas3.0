@@ -69,7 +69,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           interval={0}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
-            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "hsl(var(--success-darker))";
+            const color = entry.isCurrentMonth ? "hsl(var(--success))" : "#000000";
             return (
               <text
                 x={x}
@@ -82,7 +82,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                   fontWeight: "bold", 
                   cursor: "pointer", 
                   fontFamily: "Roboto",
-                  filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                  filter: entry.isCurrentMonth ? "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))" : "none"
                 }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
