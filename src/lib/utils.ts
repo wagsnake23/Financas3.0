@@ -35,25 +35,32 @@ export const formatCurrency = (value?: number | null, showSymbol: boolean = true
 interface GetBorderClassProps {
   isValid?: boolean;
   isInvalid?: boolean;
+  variant?: "blue" | "green";
 }
 
 export const getBorderClass = ({
   isValid,
   isInvalid,
+  variant = "blue",
 }: GetBorderClassProps): string => {
   let borderClass = "";
+  
   if (isInvalid) {
     borderClass = "border-destructive focus:border-destructive focus:ring-destructive/10";
   } else if (isValid) {
-    borderClass = "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
+    borderClass = variant === "green"
+      ? "border-[#22C55E] focus:border-[#22C55E] focus:ring-[#22C55E]/10"
+      : "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   } else {
-    borderClass = "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
+    borderClass = variant === "green"
+      ? "focus:border-[#22C55E] focus:ring-[#22C55E]/10"
+      : "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   }
 
   return cn(
     borderClass,
-    "focus-visible:ring-4 focus-visible:outline-none transition-all duration-200",
-    "focus:ring-4 focus:outline-none"
+    "focus-visible:ring-1 focus-visible:outline-none transition-all duration-200",
+    "focus:ring-1 focus:outline-none"
   );
 };
 

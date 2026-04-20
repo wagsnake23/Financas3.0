@@ -543,10 +543,10 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                      "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
-                      getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
+                      getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
                     )}>
                       <SelectValue placeholder="Selecione o investimento" />
                     </SelectTrigger>
@@ -590,7 +590,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -604,7 +604,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-2 animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -626,9 +626,9 @@ export default function Investments() { // Alterado para export default function
                     }}
                     disabled={loadingForm}
                     className={cn(
-                      "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
+                      "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200 placeholder:text-gray-400",
                       isMobile && "h-9 text-sm",
-                      getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
+                      getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                     )}
                   />
                 </div>
@@ -650,9 +650,9 @@ export default function Investments() { // Alterado para export default function
                       fixedDecimalScale={false}
                       maxLength={7}
                       className={cn(
-                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-gray-400",
+                        "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
-                        getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
+                        getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                       )}
                     />
                   </div>
@@ -665,8 +665,8 @@ export default function Investments() { // Alterado para export default function
                         onValueChange={(v) => setPercentualIndexador(v.floatValue)}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl bg-white border-[#A5C2F9]/50 text-xs font-bold",
-                          getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                          "h-9 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-xs font-bold",
+                          getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
                     </div>
@@ -709,10 +709,10 @@ export default function Investments() { // Alterado para export default function
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "bg-white border-[#A5C2F9]/50 transition-all duration-200",
+                          "bg-white border-[rgba(115,145,130,0.35)] border-[1px] transition-all duration-200",
                           !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
-                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
                         )}
                         disabled={loadingForm}
                       >
