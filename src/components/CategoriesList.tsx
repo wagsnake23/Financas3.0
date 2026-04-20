@@ -82,31 +82,9 @@ const CategoryItem = ({
           borderWidth: level === 0 ? "1px" : "0.5px",
         }} // Apply effectiveColor to border
       >
-        <div className="flex items-center flex-1 min-w-0 gap-1.5">
-          <div className="flex items-center justify-center w-4 flex-shrink-0">
-            {hasSubcategories ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsExpanded((prev) => !prev)}
-                className={cn(
-                  "h-5 w-5 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-transform",
-                  isExpanded && "text-primary"
-                )}
-              >
-                {isExpanded ? (
-                  <ChevronDown className="h-3.5 w-3.5" strokeWidth={4} />
-                ) : (
-                  <ChevronRight className="h-3.5 w-3.5" strokeWidth={4} />
-                )}
-              </Button>
-            ) : (
-              <div className="w-4" /> // Fixed space when no subcategories
-            )}
-          </div>
-
+        <div className="flex items-center flex-1 min-w-0 gap-2">
           {categoryNumber && (
-            <span className="font-bold text-[11px] text-muted-foreground min-w-[22px] text-left">
+            <span className="font-bold text-[12px] text-muted-foreground min-w-[28px] text-left ml-1">
               {categoryNumber}
             </span>
           )}
@@ -129,7 +107,7 @@ const CategoryItem = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5 ml-2">
           {!isDefault && category.parent_id !== null && (
             <Button
               variant="ghost"
@@ -181,6 +159,20 @@ const CategoryItem = ({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          )}
+
+          {hasSubcategories && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsExpanded((prev) => !prev)}
+              className={cn(
+                "h-8 w-8 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all",
+                isExpanded && "text-primary rotate-180"
+              )}
+            >
+              <ChevronDown className="h-5 w-5" strokeWidth={4} />
+            </Button>
           )}
         </div>
       </div>
