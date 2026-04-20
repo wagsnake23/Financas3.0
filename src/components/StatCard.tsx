@@ -138,7 +138,7 @@ export const StatCard = ({
           {/* Tendência integrada ao Header (Formato Vertical Pill Compacto) */}
           {trend && trend.includes('%') && (
             <div className={cn(
-              "flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-bold leading-none min-w-[34px] gap-0.5 self-center",
+              "flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-bold leading-none min-w-[34px] gap-0.5 self-center relative -top-[2px]",
               headerBadgeStyles[variant]
             )}>
               <DynamicIcon 

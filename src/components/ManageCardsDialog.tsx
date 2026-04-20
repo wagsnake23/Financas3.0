@@ -207,7 +207,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent className={cn(
           isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] !border-2 !border-white shadow-2xl"
         )}>
-          <DialogHeader className={cn("mt-4", !isMobile && "mt-0")}>
+          <DialogHeader className={cn("mt-2", !isMobile && "-mt-2")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
               <span>💳</span>
               <span>Gerenciar Cartões</span>
@@ -231,20 +231,20 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     </div>
                     <div className="flex gap-2">
                       <Button
-                        variant="ghost"
                         size="icon"
                         onClick={() => handleEditClick(card)}
-                        className="text-primary hover:bg-primary/10"
+                        className="btn-3d w-8 h-8 p-0 rounded-xl border-none shadow-sm transition-all active:scale-95"
+                        style={{ "--cor-topo": "#F0F9FF", "--cor-base": "#E0F2FE" } as any}
                       >
-                        <DynamicIcon name="Pencil" className="h-4 w-4" />
+                        <DynamicIcon name="SquarePen" className="h-4 w-4 text-sky-600" />
                       </Button>
                       <Button
-                        variant="ghost"
                         size="icon"
                         onClick={() => handleDeleteConfirm(card.id)}
-                        className="text-destructive hover:bg-destructive/10"
+                        className="btn-3d w-8 h-8 p-0 rounded-xl border-none shadow-sm transition-all active:scale-95"
+                        style={{ "--cor-topo": "#F0F9FF", "--cor-base": "#E0F2FE" } as any}
                       >
-                        <DynamicIcon name="Trash2" className="h-4 w-4" />
+                        <DynamicIcon name="Trash2" className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
                   </Card>
@@ -273,7 +273,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent className={cn(
           isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto !border-2 !border-white shadow-2xl"
         )}>
-          <DialogHeader className={cn(isMobile ? "mt-2" : "-mt-4")}>
+          <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-6")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
               <span>💳</span>
               <span>Editar Cartão</span>
@@ -389,31 +389,45 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         </DialogContent>
       </Dialog>
 
-      {/* Alert Dialog for Delete Confirmation */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className={cn(
-          isMobile ? "dialog-mobile w-[96%] p-6 !pb-7 !rounded-[22px]" : "sm:max-w-[500px] p-6 !pb-7 !rounded-[22px]"
-        )}>
-          <AlertDialogHeader className="flex flex-col items-center justify-center text-center">
-            <AlertDialogTitle className="text-xl font-bold flex items-center justify-center gap-2 mb-2">
-              <Trash2 className="h-5 w-5 text-red-500" />
-              Tem certeza?
+        <AlertDialogContent 
+          className={cn(
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[22px] !pb-6",
+            "!border border-slate-200 shadow-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            outline: "1px solid rgba(220, 38, 38, 0.08)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(220, 38, 38, 0.12)"
+          }}
+        >
+          <AlertDialogHeader className="pt-2">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center text-xl font-bold text-slate-800">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-red-500" />
+              Confirmar Exclusão
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-700">
-              Deseja realmente excluir este cartão?
+            <AlertDialogDescription className="text-center text-slate-600 font-medium pt-2">
+              Deseja realmente excluir este cartão? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className={cn(
-            "flex gap-3 mt-6",
-            isMobile ? "flex-row justify-center" : "sm:justify-center"
+            "flex flex-row gap-2 mt-4",
+            isMobile && "items-center justify-between"
           )}>
             <AlertDialogCancel
               onClick={() => setIsConfirmDeleteOpen(false)}
+              disabled={loading}
               className={cn(
-                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 m-0",
-                isMobile && "h-12 text-lg"
+                "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
+                isMobile && "h-11"
               )}
-              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+              style={{ 
+                "--cor-topo": "#E2E8F0", 
+                "--cor-base": "#CBD5E1",
+                boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
+              } as any}
             >
               Cancelar
             </AlertDialogCancel>
@@ -421,8 +435,8 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               onClick={handleDeleteCard}
               disabled={loading}
               className={cn(
-                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 m-0",
-                isMobile && "h-12 text-lg"
+                "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-11"
               )}
               style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
