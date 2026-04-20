@@ -104,7 +104,13 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                                 dy={7}
                                 textAnchor="middle"
                                 fill={color}
-                                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
+                                style={{ 
+                                    fontSize: isMobile ? "11px" : "13px", 
+                                    fontWeight: "bold", 
+                                    cursor: "pointer", 
+                                    fontFamily: "Roboto",
+                                    filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                                }}
                                 onClick={() => onMonthClick(entry.fullDate)}
                             >
                                 {payload.value.substring(0, 3)}
@@ -116,20 +122,21 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                     hide={true}
                     domain={[0, 'dataMax']}
                 />
-                <Bar dataKey="absValue" radius={[4, 4, 0, 0]} barSize={isMobile ? 18 : 24} activeBar={false}>
+                <Bar dataKey="absValue" radius={[4, 4, 4, 4]} barSize={isMobile ? 18 : 24} activeBar={false}>
                     {chartData.map((entry, index) => {
-                        const isPositive = entry.value >= 0;
-                        // Purple logic
                         const fill = entry.isCurrentMonth
                             ? "#7C3AED" // Violet 600 (Current Month)
                             : "#C4B5FD"; // Violet 300 (Other Months)
 
-                        // If negative, maybe a slightly different shade or keep implied?  
-                        // Let's stick to purple shades as requested "inves de vermelho a cor será o roxo".
                         return (
                             <Cell
                                 key={`cell-${index}`}
                                 fill={fill}
+                                style={{
+                                    filter: entry.isCurrentMonth 
+                                        ? "drop-shadow(0 0 6px rgba(124, 58, 237, 0.2)) drop-shadow(2px 2px 3px rgba(0,0,0,0.1))" 
+                                        : "drop-shadow(2px 2px 3px rgba(0,0,0,0.08))"
+                                }}
                             />
                         );
                     })}

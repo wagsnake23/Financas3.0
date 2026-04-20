@@ -119,7 +119,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                     hide={true}
                     domain={[0, 'dataMax']}
                 />
-                <Bar dataKey="absBalance" radius={[4, 4, 0, 0]} barSize={isMobile ? 18 : 24} activeBar={false}>
+                <Bar dataKey="absBalance" radius={[4, 4, 4, 4]} barSize={isMobile ? 18 : 24} activeBar={false}>
                     {chartData.map((entry, index) => {
                         const isPositive = entry.balance >= 0;
                         const fill = entry.isCurrentMonth

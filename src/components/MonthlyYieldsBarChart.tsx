@@ -87,7 +87,7 @@ export const MonthlyYieldsBarChart: React.FC<MonthlyYieldsBarChartProps> = ({
                     hide={true}
                     domain={[0, 'dataMax']}
                 />
-                <Bar dataKey="yields" radius={[4, 4, 0, 0]} barSize={isMobile ? 14 : undefined} activeBar={false}>
+                <Bar dataKey="yields" radius={[4, 4, 4, 4]} barSize={isMobile ? 14 : undefined} activeBar={false}>
                     {chartData.map((entry, index) => (
                         <Cell
                             key={`cell-${index}`}

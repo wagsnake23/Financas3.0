@@ -99,7 +99,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           domain={[0, 'dataMax']}
         />
         {/* Removido Tooltip */}
-        <Bar dataKey="expenses" radius={[4, 4, 0, 0]} barSize={isMobile ? 18 : 24} activeBar={false}>
+        <Bar dataKey="expenses" radius={[4, 4, 4, 4]} barSize={isMobile ? 18 : 24} activeBar={false}>
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
