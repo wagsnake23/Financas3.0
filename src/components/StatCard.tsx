@@ -135,21 +135,6 @@ export const StatCard = ({
       {/* Top Section: Trend, Title/Value and Month Navigator */}
       <div className="flex justify-between items-start mb-1">
         <div className="flex items-center gap-3">
-          {/* Tendência integrada ao Header (Formato Vertical Pill Compacto) */}
-          {trend && trend.includes('%') && (
-            <div className={cn(
-              "flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-bold leading-none min-w-[34px] gap-0.5 self-center relative -top-[2px]",
-              headerBadgeStyles[variant]
-            )}>
-              <DynamicIcon 
-                name={trendIsPositive ? "TrendingUp" : "TrendingDown"} 
-                className="h-3 w-3" 
-                strokeWidth={3} 
-              />
-              <span className="mt-0.5">{trend.split(' ')[0]}</span>
-            </div>
-          )}
-
           <div className="flex flex-col gap-0.5">
             <h2 
               className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
@@ -203,6 +188,21 @@ export const StatCard = ({
               <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
                 {formatCurrency(secondaryStatValue)}
               </p>
+            </div>
+          )}
+
+          {/* Tendência integrada ao Bottom (Pill Horizontal Compacto) */}
+          {trend && trend.includes('%') && (
+            <div className={cn(
+              "flex flex-col items-center justify-center py-0.5 px-1 rounded-[10px] text-[9px] font-black leading-none gap-0 self-end mb-0.5",
+              headerBadgeStyles[variant]
+            )}>
+              <DynamicIcon 
+                name={trendIsPositive ? "TrendingUp" : "TrendingDown"} 
+                className="h-2.5 w-2.5" 
+                strokeWidth={4} 
+              />
+              <span className="mt-0.5">{trend.split(' ')[0].replace(/[+-]/g, '')}</span>
             </div>
           )}
 
