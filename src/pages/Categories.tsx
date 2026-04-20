@@ -307,7 +307,7 @@ const Categories = () => {
       <main
         className={cn(
           "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "pt-16 pb-32" : "-mt-24 pb-20",
+          isMobile ? "pt-16 pb-10" : "-mt-24 pb-20",
           !isMobile && "px-6"
         )}
       >
@@ -345,7 +345,7 @@ const Categories = () => {
             <Card
               className={cn(
                 "rounded-[24px] shadow-md border-2 border-white card-yellow overflow-hidden relative",
-                isMobile && "mb-32"
+                isMobile && "mb-4"
               )}
               style={{ backgroundColor: "transparent" }}
             >
