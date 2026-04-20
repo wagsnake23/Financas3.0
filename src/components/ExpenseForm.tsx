@@ -428,7 +428,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       )}
 
       <div>
-        <Label htmlFor="subcategoria" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <Label htmlFor="subcategoria" className={cn("text-gray-600 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           Subcategoria
         </Label>
         <div className="flex gap-2">
@@ -545,7 +545,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {createPortal && <></>} {/* Dummy usage to ensure import is used if tree-shaking is aggressive? No need. */}
 
       <div>
-        <Label htmlFor="descricao" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
+        <Label htmlFor="descricao" className={cn("text-gray-600 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
           Descrição
         </Label>
         <Textarea
