@@ -42,7 +42,7 @@ export const ProjectedYieldCard = ({
                     </div>
 
                     {/* Título + Valor */}
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-0.5">
                         <h2 className={cn("font-[800] tracking-tight text-[hsl(var(--yield-darker))] leading-none", isMobile ? "text-[13px]" : "text-[14px]", "font-roboto")}>
                             Projeção Mensal
                         </h2>
@@ -74,7 +74,7 @@ export const ProjectedYieldCard = ({
                 {/* Left side: Annual Total */}
                 <div className="flex items-end">
                     {annualTotalValue !== undefined && (
-                        <div className="flex flex-col items-start gap-1">
+                        <div className="flex flex-col items-start gap-0.5">
                             <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]")}>
                                 {annualTotalLabel || "Projeção Anual"}
                             </p>
@@ -88,7 +88,7 @@ export const ProjectedYieldCard = ({
                 {/* Right side: Patrimony */}
                 <div className="flex items-end">
                     {projectedPatrimonyValue !== undefined && (
-                        <div className="flex flex-col items-end gap-1">
+                        <div className="flex flex-col items-end gap-0.5">
                             <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]")}>
                                 {projectedPatrimonyLabel || "Patrimônio Projetado"}
                             </p>
