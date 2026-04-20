@@ -71,12 +71,12 @@ export const categories: AppCategory[] = [
   { id: "obrigacoes_renegociacao", nome: "Renegociação / Parcelamentos", icone: "RefreshCw", cor: "#F59E0B", parent_id: "obrigacoes_financeiras" },
   { id: "obrigacoes_atrasos", nome: "Atrasos / Contas vencidas", icone: "Clock", cor: "#F59E0B", parent_id: "obrigacoes_financeiras" },
 
-  { id: "trabalho", nome: "Trabalho", icone: "Briefcase", cor: "#6366F1", parent_id: null },
-  { id: "trabalho_ferramentas", nome: "Ferramentas / Softwares", icone: "Tool", cor: "#6366F1", parent_id: "trabalho" },
-  { id: "trabalho_materiais", nome: "Materiais", icone: "Package", cor: "#6366F1", parent_id: "trabalho" },
-  { id: "trabalho_servicos", nome: "Serviços contratados", icone: "Handshake", cor: "#6366F1", parent_id: "trabalho" },
-  { id: "trabalho_marketing", nome: "Marketing", icone: "Megaphone", cor: "#6366F1", parent_id: "trabalho" },
-  { id: "trabalho_equipamentos", nome: "Equipamentos", icone: "Monitor", cor: "#6366F1", parent_id: "trabalho" },
+  { id: "trabalho_negocio", nome: "Trabalho", icone: "Briefcase", cor: "#6366F1", parent_id: null },
+  { id: "trabalho_ferramentas", nome: "Ferramentas / Softwares", icone: "Tool", cor: "#6366F1", parent_id: "trabalho_negocio" },
+  { id: "trabalho_materiais", nome: "Materiais", icone: "Package", cor: "#6366F1", parent_id: "trabalho_negocio" },
+  { id: "trabalho_servicos", nome: "Serviços contratados", icone: "Handshake", cor: "#6366F1", parent_id: "trabalho_negocio" },
+  { id: "trabalho_marketing", nome: "Marketing", icone: "Megaphone", cor: "#6366F1", parent_id: "trabalho_negocio" },
+  { id: "trabalho_equipamentos", nome: "Equipamentos", icone: "Monitor", cor: "#6366F1", parent_id: "trabalho_negocio" },
 
   { id: "familia_filhos", nome: "Família", icone: "Users", cor: "#EC4899", parent_id: null },
   { id: "familia_atividades_extracurriculares", nome: "Atividades extracurriculares", icone: "Puzzle", cor: "#EC4899", parent_id: "familia_filhos" },

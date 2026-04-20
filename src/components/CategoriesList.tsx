@@ -110,10 +110,14 @@ const CategoryItem = ({
           )}
 
           <div
-            className="p-2 rounded-lg flex items-center justify-center text-2xl"
-            style={{ backgroundColor: effectiveColor }} // Apply effectiveColor to icon badge background
+            className="w-10 h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 flex-shrink-0"
+            style={{ 
+                background: `linear-gradient(135deg, ${effectiveColor} 0%, ${effectiveColor}dd 100%)`,
+                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 ${effectiveColor}aa, 0 4px 8px rgba(0,0,0,0.15)`,
+                border: `1px solid ${effectiveColor}33`
+            }}
           >
-            <DynamicIcon name={category.icone} className="h-6 w-6" />
+            <DynamicIcon name={category.icone} className="h-5 w-5 text-white drop-shadow-sm" />
           </div>
           <div className="flex-1">
             <p className="font-semibold">{category.nome}</p>

@@ -9,7 +9,7 @@ export const CATEGORY_COLOR_MAP: Record<string, string> = {
     "lazer": "#A855F7",
     "pessoais": "#DB2777",
     "obrigacoes_financeiras": "#F59E0B",
-    "trabalho": "#6366F1",
+    "trabalho_negocio": "#6366F1",
     "familia_filhos": "#EC4899",
     "receitas_e_investimentos": "#22C55E",
 };
