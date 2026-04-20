@@ -188,7 +188,7 @@ export default function Despesas() {
                 />
               </Button>
               <div className="flex flex-col">
-                <h1 className={cn("font-black tracking-tight -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")}>
+                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Nova Despesa
                 </h1>
                 <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-white" : "text-sm text-slate-500")}>

@@ -584,10 +584,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             type="submit"
             form="expense-form"
             className={cn(
-              "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+              "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
               isMobile ? "h-11 text-lg" : "h-11 text-lg"
             )}
-            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
+            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B", fontFamily: "'Inter', sans-serif" } as any}
             disabled={loading}
           >
             {loading ? "Salvando..." : "Salvar Despesa"}
