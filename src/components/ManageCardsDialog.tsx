@@ -205,8 +205,17 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           </Button>
         </DialogTrigger>
         <DialogContent className={cn(
-          isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] !border-2 !border-white shadow-2xl"
-        )}>
+          isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] shadow-none",
+          "border-none"
+        )}
+        style={{
+          background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
+          backgroundBlendMode: "soft-light",
+          backdropFilter: "blur(6px)",
+          border: "2px solid rgba(37, 99, 235, 0.25)",
+          outline: "1px solid rgba(37, 99, 235, 0.10)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
+        }}>
           <DialogHeader className={cn("mt-2", !isMobile && "-mt-2")}>
             <DialogTitle className="flex items-center justify-center gap-2 w-full">
               <span>💳</span>
@@ -271,8 +280,17 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
         <DialogContent className={cn(
-          isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto !border-2 !border-white shadow-2xl"
-        )}>
+          isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
+          "border-none"
+        )}
+        style={{
+          background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
+          backgroundBlendMode: "soft-light",
+          backdropFilter: "blur(6px)",
+          border: "2px solid rgba(37, 99, 235, 0.25)",
+          outline: "1px solid rgba(37, 99, 235, 0.10)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
+        }}>
           <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-6")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
               <span>💳</span>
