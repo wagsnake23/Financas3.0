@@ -149,10 +149,13 @@ export const Navigation = () => {
                 className="h-8 w-8 transition-transform group-hover:scale-110"
               />
               <span className={cn(
-                "font-bold text-lg tracking-tight",
+                "font-black text-lg tracking-tight transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
-              )}>Minhas Finanças</span>
+              )}
+              style={{
+                filter: "drop-shadow(0px 1px 1.5px rgba(0,0,0,0.25))"
+              }}>Minhas Finanças</span>
             </div>
 
             {/* Área da direita */}
