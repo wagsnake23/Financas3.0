@@ -360,7 +360,7 @@ export default function Home() {
                                         <div className="flex flex-col items-start gap-0.5 mt-1">
                                             <div className={cn(
                                                 "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
-                                                dStats.balanceVar >= 0 ? "text-[#22c55e] bg-[#f0fdf4]" : "text-[#ef4444] bg-[#fef2f2]"
+                                                dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                             )}>
                                                 {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
@@ -401,7 +401,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#ef4444] -mr-2 mt-1 border-none"
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#dc2626] -mr-2 mt-1 border-none"
                                             style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -421,7 +421,7 @@ export default function Home() {
                                             <div className="flex flex-col items-start gap-0.5">
                                                 <div className={cn(
                                                      "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
-                                                     dStats.expenseVar >= 0 ? "text-[#ef4444] bg-[#fef2f2]" : "text-[#22c55e] bg-[#f0fdf4]"
+                                                     dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
                                                 )}>
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
@@ -460,7 +460,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#22c55e] -mr-2 mt-1 border-none"
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#16a34a] -mr-2 mt-1 border-none"
                                             style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -480,7 +480,7 @@ export default function Home() {
                                             <div className="flex flex-col items-start gap-0.5">
                                                 <div className={cn(
                                                      "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
-                                                     dStats.incomeVar >= 0 ? "text-[#22c55e] bg-[#f0fdf4]" : "text-[#ef4444] bg-[#fef2f2]"
+                                                     dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                                 )}>
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
@@ -560,7 +560,7 @@ export default function Home() {
                                 <div className="flex flex-col items-start gap-0.5 mt-1">
                                     <div className={cn(
                                         "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none",
-                                        dStats.balanceVar >= 0 ? "text-[#22c55e] bg-[#f0fdf4]" : "text-[#ef4444] bg-[#fef2f2]"
+                                        dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                     )}>
                                         {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                     </div>
@@ -602,7 +602,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#22c55e] -mr-2 mt-1 md:text-[14px] border-none"
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#16a34a] -mr-2 mt-1 md:text-[14px] border-none"
                                     style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -622,7 +622,7 @@ export default function Home() {
                                     <div className="flex flex-col items-start gap-0.5 mt-1">
                                         <div className={cn(
                                              "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
-                                             dStats.incomeVar >= 0 ? "text-[#22c55e] bg-[#f0fdf4]" : "text-[#ef4444] bg-[#fef2f2]"
+                                             dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                         )}>
                                             {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
@@ -661,7 +661,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#ef4444] -mr-2 mt-1 md:text-[14px] border-none"
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#dc2626] -mr-2 mt-1 md:text-[14px] border-none"
                                     style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -681,7 +681,7 @@ export default function Home() {
                                     <div className="flex flex-col items-start gap-0.5 mt-1">
                                         <div className={cn(
                                              "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
-                                             dStats.expenseVar >= 0 ? "text-[#ef4444] bg-[#fef2f2]" : "text-[#22c55e] bg-[#f0fdf4]"
+                                             dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
                                         )}>
                                             {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
