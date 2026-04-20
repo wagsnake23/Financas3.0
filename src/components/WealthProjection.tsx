@@ -25,28 +25,25 @@ interface WealthProjectionProps {
 export function WealthProjection({ investments, isMobile }: WealthProjectionProps) {
     const [projectionMonths, setProjectionMonths] = useState(12);
 
-    // 1. Motor de juros compostos (já capitalizado até hoje)
+    // 1. Ponto de partida consolidado do Dashboard (Hoje)
     const virtualInvestments = useMemo(() => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        return (investments as any[]).map(inv => {
+            // Preservamos o valor bruto original para o cálculo de pesos da taxa média
+            const valorAtualVirtualOriginal = inv.valorAtualVirtual;
 
-        return investments.map(inv => {
-            // taxa_diaria = (1 + (rentabilidade / 100))^(1 / 252) - 1
-            const taxaDiaria = Math.pow(1 + ((inv.rentabilidade || 0) / 100), 1 / 252) - 1;
-
-            const [year, month, day] = inv.data.split('-').map(Number);
-            const investDate = new Date(year, month - 1, day);
-            investDate.setHours(0, 0, 0, 0);
-
-            const diasUteisPassados = differenceInBusinessDays(today, investDate);
-
-            // valor_atual = valor_inicial × (1 + taxa_diaria)^(dias_uteis_passados)
-            const valorAtualVirtual = inv.valor * Math.pow(1 + taxaDiaria, Math.max(0, diasUteisPassados));
+            // Usamos o valor líquido real (pós-IR) calculado pela engine para "Hoje" (m=0)
+            const valorHoje = inv.valorLiquido !== undefined ? inv.valorLiquido : inv.valor;
+            
+            // Projeção futura baseada na rentabilidade atual
+            const taxaDiaria = inv.taxaDiaria !== undefined 
+                ? inv.taxaDiaria 
+                : Math.pow(1 + ((inv.rentabilidade || 0) / 100), 1 / 252) - 1;
 
             return {
                 ...inv,
                 taxaDiaria,
-                valorAtualVirtual
+                valorAtualVirtualOriginal,
+                valorAtualVirtual: valorHoje
             };
         });
     }, [investments]);
@@ -129,15 +126,20 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
 
         const lucroAcumulado = patrimonioFuturo - patrimonioHoje;
 
-        // Calcular taxa_media ponderada (baseada no valor atual virtual hoje)
-        const weightedSumRates = virtualInvestments.reduce((sum, inv) => {
-            return sum + (inv.valorAtualVirtual * ((inv.rentabilidade || 0) / 100));
+        // Calcular taxa_media ponderada (baseada no peso BRUTO histórico para consistência com o Dashboard)
+        const weightedSumRates = virtualInvestments.reduce((sum, inv: any) => {
+            // Em Dashboard.tsx a taxa é (rendimentoBrutoTotal / totalLiquido)
+            // Aqui fazemos a soma dos rendimentos anuais teóricos (Base Bruta x Taxa)
+            const baseParaPeso = inv.valorAtualVirtualOriginal !== undefined ? inv.valorAtualVirtualOriginal : inv.valorAtualVirtual;
+            return sum + (baseParaPeso * ((inv.rentabilidade || 0) / 100));
         }, 0);
 
         const taxaMediaAnualPonderada = patrimonioHoje > 0 ? weightedSumRates / patrimonioHoje : 0;
 
-        // renda_mensal_futura = patrimonio_futuro × ((1 + taxa_media)^(1/12) - 1)
-        const rendaMensalFutura = patrimonioFuturo * (Math.pow(1 + taxaMediaAnualPonderada, 1 / 12) - 1);
+        // renda_mensal_futura = patrimonio_futuro * taxa_mensal
+        // Usando a mesma lógica do Dashboard: (1 + taxaAnual)^(1/12) - 1
+        const taxaMensal = Math.pow(1 + taxaMediaAnualPonderada, 1 / 12) - 1;
+        const rendaMensalFutura = patrimonioFuturo * taxaMensal;
 
         return {
             patrimonioFuturo,
