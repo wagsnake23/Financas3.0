@@ -75,36 +75,38 @@ const CategoryItem = ({
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white"
+          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white w-full"
         )}
         style={{
           borderColor: effectiveColor,
           borderWidth: level === 0 ? "1px" : "0.5px",
         }} // Apply effectiveColor to border
       >
-        <div className="flex items-center gap-2 flex-1">
-          {level > 0 && <div style={{ width: `${level * 1.5}rem` }} />}
-
-          {hasSubcategories && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsExpanded((prev) => !prev)}
-              className={cn(
-                "h-6 w-6 text-muted-foreground hover:bg-muted/50 hover:text-primary",
-                isExpanded && "text-primary"
-              )}
-            >
-              {isExpanded ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-            </Button>
-          )}
+        <div className="flex items-center flex-1 min-w-0 gap-1.5">
+          <div className="flex items-center justify-center w-4 flex-shrink-0">
+            {hasSubcategories ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsExpanded((prev) => !prev)}
+                className={cn(
+                  "h-5 w-5 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-transform",
+                  isExpanded && "text-primary"
+                )}
+              >
+                {isExpanded ? (
+                  <ChevronDown className="h-3.5 w-3.5" strokeWidth={4} />
+                ) : (
+                  <ChevronRight className="h-3.5 w-3.5" strokeWidth={4} />
+                )}
+              </Button>
+            ) : (
+              <div className="w-4" /> // Fixed space when no subcategories
+            )}
+          </div>
 
           {categoryNumber && (
-            <span className="font-bold text-sm text-muted-foreground mr-1">
+            <span className="font-bold text-[11px] text-muted-foreground min-w-[22px] text-left">
               {categoryNumber}
             </span>
           )}
@@ -119,8 +121,8 @@ const CategoryItem = ({
           >
             <DynamicIcon name={category.icone} className="h-5 w-5 text-white drop-shadow-sm" />
           </div>
-          <div className="flex-1">
-            <p className="font-semibold">{category.nome}</p>
+          <div className="flex-1 min-w-0 py-1 ml-0.5">
+            <p className="font-semibold line-clamp-2 break-words leading-tight">{category.nome}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               {paymentLabel && <span>{paymentLabel}</span>}
             </div>
@@ -218,13 +220,14 @@ const CategoriesList = ({
   categories,
   onDeleteCategory,
   onEditCategory,
-  maxHeight = "600px",
+  maxHeight,
   isMobile,
   allFlatCategories, // Use the new prop
   hideCardWrapper = false,
   hideTitle = false,
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const effectiveMaxHeight = maxHeight || (isMobile ? "925px" : "600px");
 
   const flatCategories = useMemo(() => {
     const flatten = (cats: HierarchicalCategory[], acc: AppCategory[] = []) => {
@@ -305,10 +308,9 @@ const CategoriesList = ({
     <Container
       className={cn(
         "flex flex-col",
-        !hideCardWrapper && "p-6 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-6 pb-6 pt-5" : "px-6 pb-6 pt-2")
+        !hideCardWrapper && "p-4 rounded-xl shadow-sm",
+        hideCardWrapper && (isMobile ? "px-4 pb-6 pt-5" : "px-4 pb-6 pt-2")
       )}
-      style={{ height: maxHeight, backgroundColor: hideCardWrapper ? "transparent" : undefined }}
     >
       <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-4")}>
         <div className={cn("flex flex-col sm:flex-row sm:items-center gap-4", isMobile ? "mb-2" : "mb-4", !hideTitle ? "sm:justify-between" : "sm:justify-start")}>
@@ -331,7 +333,7 @@ const CategoriesList = ({
         </div>
       </div>
 
-      <ScrollArea className="flex-1 -mr-4 pr-4">
+      <div className="flex-1">
         {filteredCategories.length === 0 ? (
           <p className="text-muted-foreground text-center py-8">
             {searchTerm
@@ -339,7 +341,7 @@ const CategoriesList = ({
               : "Nenhuma categoria cadastrada ainda."}
           </p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 px-1">
             {filteredCategories.map((category, index) => (
               <CategoryItem
                 key={category.id}
@@ -354,7 +356,7 @@ const CategoriesList = ({
             ))}
           </div>
         )}
-      </ScrollArea>
+      </div>
     </Container>
   );
 };
