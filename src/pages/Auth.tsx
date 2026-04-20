@@ -278,7 +278,7 @@ export default function Auth() {
   const formContent = (
     <>
       <div className={cn("mb-4 text-center", isMobile && "-mt-8")}>
-        <img src="/favicon.ico" alt="Controle Financeiro Logo" className="mx-auto h-16 w-16" />
+        <img src="/favicon.ico" alt="Controle Financeiro Logo" className={cn("mx-auto", isMobile ? "h-16 w-16" : "h-[56px] w-[56px] mb-1")} />
         <h1 className="text-[26px] font-[900] tracking-[0.5px] mt-2 mb-0" style={{ fontFamily: "'Inter', sans-serif", color: "#04469E", textShadow: "0px 1px 0px rgba(255,255,255,0.8), 0px 2px 3px rgba(0,0,0,0.1)" }}>
           Minhas Finança<span style={{ color: "#22c55e", fontWeight: "600", textShadow: "0 0 10px rgba(34, 197, 94, 0.3)" }}>$</span>
         </h1>
@@ -361,7 +361,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center items-center gap-1" style={{ marginTop: "20px" }}>
+          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center items-center gap-1" style={{ marginTop: isMobile ? "20px" : "11px" }}>
             <span className="text-gray-600 font-medium">Não possui uma conta?</span>
             <button
               type="button"
@@ -636,18 +636,18 @@ export default function Auth() {
           {formContent}
           <Footer
             isMobile={isMobile}
-            className="fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0"
+            className="fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0 text-xs"
             user={null}
           />
         </div>
       ) : (
-        <Card className="w-full max-w-[350px] px-6 pt-5 pb-1 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border-t border-l border-white/20 bg-white/95 backdrop-blur-sm rounded-3xl flex flex-col relative z-10 transition-all duration-300">
+        <Card className="w-full max-w-[350px] px-6 pt-4 pb-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border-t border-l border-white/20 bg-white/95 backdrop-blur-sm rounded-3xl flex flex-col relative z-10 transition-all duration-300">
           <div className="flex-grow">
             {formContent}
           </div>
           <Footer
             isMobile={isMobile}
-            className="mt-3 py-2"
+            className="mt-1 py-1"
             user={null}
           />
         </Card>
