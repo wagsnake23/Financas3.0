@@ -80,7 +80,13 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                 dy={7}
                 textAnchor="middle"
                 fill={color}
-                style={{ fontSize: isMobile ? "11px" : "13px", fontWeight: "bold", cursor: "pointer", fontFamily: "Roboto" }}
+                style={{ 
+                  fontSize: isMobile ? "11px" : "13px", 
+                  fontWeight: "bold", 
+                  cursor: "pointer", 
+                  fontFamily: "Roboto",
+                  filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                }}
                 onClick={() => onMonthClick(entry.fullDate)}
               >
                 {payload.value.substring(0, 3)}
@@ -101,7 +107,9 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
               fillOpacity={entry.isCurrentMonth ? 1 : 0.4}
               className="transition-all duration-300"
               style={{
-                filter: entry.isCurrentMonth ? "drop-shadow(0 0 6px rgba(239, 68, 68, 0.2))" : "none"
+                filter: entry.isCurrentMonth 
+                  ? "drop-shadow(0 0 6px rgba(239, 68, 68, 0.2)) drop-shadow(2px 2px 3px rgba(0,0,0,0.1))" 
+                  : "drop-shadow(2px 2px 3px rgba(0,0,0,0.08))"
               }}
             />
           ))}
