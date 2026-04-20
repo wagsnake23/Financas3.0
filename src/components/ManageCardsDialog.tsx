@@ -196,8 +196,8 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             type="button"
             size="icon"
             className={cn(
-              "btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-200 transition-all active:scale-90",
-              isMobile && "h-9 w-9"
+              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-300/40 transition-all active:scale-90 flex-shrink-0",
+              isMobile ? "h-9 w-8" : "h-10 w-9"
             )}
             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
           >

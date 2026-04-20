@@ -445,7 +445,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             <SelectTrigger
               className={cn(
                 "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-                isMobile && "h-9 text-sm",
+                isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
                   isValid: validationErrors.selectedSubcategoryId === false,
@@ -479,8 +479,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             size="icon"
             onClick={() => setIsAddSubcategoryModalOpen(true)}
             className={cn(
-              "btn-3d w-9 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-300/40 transition-all active:scale-90",
-              isMobile && "w-9 h-9"
+              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-red-300/40 transition-all active:scale-90 flex-shrink-0",
+              isMobile ? "h-9 w-8" : "h-10 w-9"
             )}
             style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
           >

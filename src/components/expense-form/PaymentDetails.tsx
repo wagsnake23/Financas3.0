@@ -123,7 +123,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             className={cn(
-              isMobile && "h-9 text-sm",
+              isMobile ? "h-9 text-sm" : "h-10",
               "text-gray-800 font-medium transition-all duration-200 input-3d-premium",
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )}
@@ -142,7 +142,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           >
             <SelectTrigger className={cn(
               "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-              isMobile && "h-9 text-sm",
+              isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({})
             )}>
               <SelectValue />
@@ -178,7 +178,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           >
             <SelectTrigger className={cn(
               "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-              isMobile && "h-9 text-sm",
+              isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({})
             )}>
               <SelectValue />
@@ -214,7 +214,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               placeholder=""
               className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-                isMobile && "h-9 text-sm",
+                isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
               )}
             />
@@ -235,7 +235,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             >
               <SelectTrigger className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
-                isMobile && "h-9 text-sm",
+                isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
               )}>
                 <SelectValue placeholder="Selecione o cartão" />
