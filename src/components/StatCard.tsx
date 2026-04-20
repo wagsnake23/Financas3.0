@@ -72,27 +72,27 @@ export const StatCard = ({
 }: StatCardProps) => {
   const premiumStyles = {
     income: {
-      background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
-      outline: "1px solid rgba(34, 197, 94, 0.08)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)",
+      background: "linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 60%, rgba(34, 197, 94, 0.08) 100%)",
+      outline: "1px solid rgba(34, 197, 94, 0.05)",
+      shadow: "inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -4px 12px rgba(0,0,0,0.02), inset 0 0 14px rgba(34, 197, 94, 0.08)",
       titleColor: "#16a34a"
     },
     expense: {
-      background: "linear-gradient(135deg, #f8f6f6 0%, #f1eeee 60%, rgba(255, 59, 48, 0.10) 100%)",
-      outline: "1px solid rgba(255, 59, 48, 0.08)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)",
+      background: "linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 60%, rgba(239, 68, 68, 0.08) 100%)",
+      outline: "1px solid rgba(239, 68, 68, 0.05)",
+      shadow: "inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -4px 12px rgba(0,0,0,0.02), inset 0 0 14px rgba(239, 68, 68, 0.08)",
       titleColor: "#dc2626"
     },
     balance: {
-      background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 60%, rgba(0, 102, 255, 0.08) 100%)",
-      outline: "1px solid rgba(0, 102, 255, 0.08)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)",
+      background: "linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 60%, rgba(59, 130, 246, 0.08) 100%)",
+      outline: "1px solid rgba(59, 130, 246, 0.05)",
+      shadow: "inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -4px 12px rgba(0,0,0,0.02), inset 0 0 14px rgba(59, 130, 246, 0.08)",
       titleColor: "#2563eb"
     },
     yield: {
-      background: "linear-gradient(135deg, #f8f6ff 0%, #f0ebff 60%, rgba(147, 51, 234, 0.12) 100%)",
-      outline: "1px solid rgba(147, 51, 234, 0.08)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(147, 51, 234, 0.12)",
+      background: "linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 60%, rgba(147, 51, 234, 0.10) 100%)",
+      outline: "1px solid rgba(147, 51, 234, 0.05)",
+      shadow: "inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -4px 12px rgba(0,0,0,0.02), inset 0 0 14px rgba(147, 51, 234, 0.10)",
       titleColor: "hsl(var(--yield-darker))",
       badgeBg: "bg-purple-600",
       badgeShadow: "shadow-[0_0_12px_rgba(147,51,234,0.4)]"

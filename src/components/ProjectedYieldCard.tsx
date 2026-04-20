@@ -26,12 +26,12 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                backgroundColor: "#F5F3FF",
+                background: "linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 60%, rgba(124, 58, 237, 0.08) 100%)",
             }}
             className={cn(
                 "rounded-3xl card-3d flex flex-col relative transition-all duration-300 animate-fade-in",
-                "bg-gradient-to-br from-[#7C3AED]/8 to-[#7C3AED]/4 border-[#7C3AED]/20",
-                "shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.7)]",
+                "border-[#7C3AED]/20",
+                "shadow-[inset_0_1px_0_rgba(255,255,255,0.8),_inset_0_-4px_12px_rgba(0,0,0,0.02),_inset_0_0_14px_rgba(124,58,237,0.08)]",
                 isMobile ? "p-3 min-h-[140px]" : "p-6 h-full min-h-[200px]"
             )}>
             <div className="flex items-start justify-between mb-1 w-full">
