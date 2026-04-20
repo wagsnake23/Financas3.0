@@ -197,7 +197,7 @@ export const StatCard = ({
         <div className="flex items-end gap-4">
           {secondaryStatValue !== undefined && (
             <div className="flex flex-col items-start gap-0.5">
-              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
                 {secondaryStatTitle}
               </p>
               <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
@@ -220,7 +220,7 @@ export const StatCard = ({
         <div className="flex items-end">
           {annualTotalValue !== undefined && (
             <div className="flex flex-col items-end gap-0.5">
-              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]", labelStyles[variant])}>
+              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
                 {annualTotalLabel || "Total Anual"}
               </p>
               <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>

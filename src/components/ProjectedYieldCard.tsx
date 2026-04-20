@@ -43,7 +43,7 @@ export const ProjectedYieldCard = ({
 
                     {/* Título + Valor */}
                     <div className="flex flex-col gap-1">
-                        <h2 className={cn("font-[800] tracking-tight text-[hsl(var(--yield-darker))] leading-none", isMobile ? "text-[12px]" : "text-[13px]", "font-roboto")}>
+                        <h2 className={cn("font-[800] tracking-tight text-[hsl(var(--yield-darker))] leading-none", isMobile ? "text-[13px]" : "text-[14px]", "font-roboto")}>
                             Projeção Mensal
                         </h2>
                         <p className={cn(
@@ -75,7 +75,7 @@ export const ProjectedYieldCard = ({
                 <div className="flex items-end">
                     {annualTotalValue !== undefined && (
                         <div className="flex flex-col items-start gap-1">
-                            <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]")}>
+                            <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]")}>
                                 {annualTotalLabel || "Projeção Anual"}
                             </p>
                             <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
@@ -89,7 +89,7 @@ export const ProjectedYieldCard = ({
                 <div className="flex items-end">
                     {projectedPatrimonyValue !== undefined && (
                         <div className="flex flex-col items-end gap-1">
-                            <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[10px]" : "text-[11px]")}>
+                            <p className={cn("text-[hsl(var(--yield-darker))] font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]")}>
                                 {projectedPatrimonyLabel || "Patrimônio Projetado"}
                             </p>
                             <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
