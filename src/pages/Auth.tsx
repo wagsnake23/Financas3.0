@@ -293,9 +293,9 @@ export default function Auth() {
       {viewMode === "login" && (
         <form onSubmit={handleLogin} className="space-y-3">
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-[#374151] font-medium mb-1.5 opacity-90">Email</Label>
             <div className="relative">
-              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="email"
                 type="email"
@@ -309,14 +309,14 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
           <div>
-            <Label htmlFor="password">Senha</Label>
+            <Label htmlFor="password" className="text-[#374151] font-medium mb-1.5 opacity-90">Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -330,7 +330,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -343,7 +343,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -380,7 +380,7 @@ export default function Auth() {
       {viewMode === "signup" && (
         <form onSubmit={handleSignup} className="space-y-3">
           <div>
-            <Label htmlFor="nome">Nome</Label>
+            <Label htmlFor="nome" className="text-[#374151] font-medium mb-1.5 opacity-90">Nome</Label>
             <Input
               id="nome"
               type="text"
@@ -395,13 +395,13 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className={cn("rounded-xl", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
+              className={cn("h-11 rounded-[10px] bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
-            <Label htmlFor="signup-email">Email</Label>
+            <Label htmlFor="signup-email" className="text-[#374151] font-medium mb-1.5 opacity-90">Email</Label>
             <div className="relative">
-              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="signup-email"
                 type="email"
@@ -415,14 +415,14 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
           <div>
-            <Label htmlFor="signup-password">Senha</Label>
+            <Label htmlFor="signup-password" className="text-[#374151] font-medium mb-1.5 opacity-90">Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
@@ -436,7 +436,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -448,9 +448,9 @@ export default function Auth() {
             </div>
           </div>
           <div>
-            <Label htmlFor="confirm-password">Confirmar Senha</Label>
+            <Label htmlFor="confirm-password" className="text-[#374151] font-medium mb-1.5 opacity-90">Confirmar Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
@@ -463,7 +463,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -476,7 +476,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -500,9 +500,9 @@ export default function Auth() {
       {viewMode === "forgot-password" && (
         <form onSubmit={handleForgotPassword} className="space-y-3">
           <div>
-            <Label htmlFor="forgot-email">Email</Label>
+            <Label htmlFor="forgot-email" className="text-[#374151] font-medium mb-1.5 opacity-90">Email</Label>
             <div className="relative">
-              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="📧" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="forgot-email"
                 type="email"
@@ -516,13 +516,13 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
@@ -547,9 +547,9 @@ export default function Auth() {
       {viewMode === "reset-password" && (
         <form onSubmit={handleResetPassword} className="space-y-3">
           <div>
-            <Label htmlFor="new-password">Nova Senha</Label>
+            <Label htmlFor="new-password" className="text-[#374151] font-medium mb-1.5 opacity-90">Nova Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="new-password"
                 type={showPassword ? "text" : "password"}
@@ -563,7 +563,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -575,9 +575,9 @@ export default function Auth() {
             </div>
           </div>
           <div>
-            <Label htmlFor="new-confirm-password">Confirmar Nova Senha</Label>
+            <Label htmlFor="new-confirm-password" className="text-[#374151] font-medium mb-1.5 opacity-90">Confirmar Nova Senha</Label>
             <div className="relative">
-              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <DynamicIcon name="🔒" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-60" />
               <Input
                 id="new-confirm-password"
                 type={showConfirmPassword ? "text" : "password"}
@@ -590,7 +590,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("rounded-xl pl-9", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -603,7 +603,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
             size="lg"
             disabled={loading}
           >
