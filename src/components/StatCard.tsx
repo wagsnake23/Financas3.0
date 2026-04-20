@@ -72,25 +72,25 @@ export const StatCard = ({
 }: StatCardProps) => {
   const premiumStyles = {
     income: {
-      background: "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FCFCFC 50%, rgba(34, 197, 94, 0.09) 100%)",
+      background: "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
       outline: "1px solid rgba(34, 197, 94, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
       titleColor: "#16a34a"
     },
     expense: {
-      background: "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FCFCFC 50%, rgba(239, 68, 68, 0.09) 100%)",
+      background: "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
       outline: "1px solid rgba(239, 68, 68, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
       titleColor: "#dc2626"
     },
     balance: {
-      background: "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FCFCFC 50%, rgba(59, 130, 246, 0.09) 100%)",
+      background: "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
       outline: "1px solid rgba(59, 130, 246, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
       titleColor: "#2563eb"
     },
     yield: {
-      background: "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FCFCFC 50%, rgba(147, 51, 234, 0.09) 100%)",
+      background: "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
       outline: "1px solid rgba(147, 51, 234, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
       titleColor: "hsl(var(--yield-darker))",

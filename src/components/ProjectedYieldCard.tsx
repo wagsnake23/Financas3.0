@@ -26,7 +26,7 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                background: "linear-gradient(135deg, rgba(124, 58, 237, 0.09) 0%, #FCFCFC 50%, rgba(124, 58, 237, 0.09) 100%)",
+                background: "linear-gradient(135deg, rgba(124, 58, 237, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(124, 58, 237, 0.09) 100%)",
             }}
             className={cn(
                 "rounded-3xl card-3d flex flex-col relative transition-all duration-300 animate-fade-in",
