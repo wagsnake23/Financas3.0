@@ -75,19 +75,19 @@ export const StatCard = ({
       background: "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
       outline: "1px solid rgba(34, 197, 94, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
-      titleColor: "#16a34a"
+      titleColor: "#15803d"
     },
     expense: {
       background: "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
       outline: "1px solid rgba(239, 68, 68, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
-      titleColor: "#dc2626"
+      titleColor: "#b91c1c"
     },
     balance: {
       background: "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
       outline: "1px solid rgba(59, 130, 246, 0.05)",
       shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
-      titleColor: "#2563eb"
+      titleColor: "#1d4ed8"
     },
     yield: {
       background: "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
@@ -137,7 +137,7 @@ export const StatCard = ({
         <div className="flex items-center gap-3">
           <div className="flex flex-col gap-0.5">
             <h2 
-              className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
+              className={cn("font-[800] tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")} 
               style={{ color: currentStyle.titleColor }}
             >
               {mainStatTitle}
