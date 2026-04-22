@@ -236,7 +236,7 @@ All colors MUST be HSL.
     padding-top: 0.8rem !important;
     /* Aumentado para descer o título */
     /* padding-bottom: 0 !important; REMOVIDO para permitir espaçamento customizado */
-    top: 50% !important;
+    top: 53% !important;
     /* Centered the modal on the screen */
   }
 
