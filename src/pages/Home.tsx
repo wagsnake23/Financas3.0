@@ -401,8 +401,15 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#dc2626] -mr-2 mt-1 border-none"
-                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            style={{ 
+                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
+                                                border: "1px solid rgba(0,0,0,0.08)",
+                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
+                                                color: "#b91c1c",
+                                                filter: "saturate(0.95)", 
+                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                            }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -460,8 +467,15 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#16a34a] -mr-2 mt-1 border-none"
-                                            style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            style={{ 
+                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
+                                                border: "1px solid rgba(0,0,0,0.08)",
+                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
+                                                color: "#15803d",
+                                                filter: "saturate(0.95)", 
+                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                            }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -602,8 +616,15 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#16a34a] -mr-2 mt-1 md:text-[14px] border-none"
-                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1 md:text-[14px]"
+                                    style={{ 
+                                        background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
+                                        border: "1px solid rgba(0,0,0,0.08)",
+                                        borderBottom: "2px solid rgba(0,0,0,0.12)", 
+                                        color: "#15803d",
+                                        filter: "saturate(0.95)", 
+                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                    }}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
@@ -661,8 +682,15 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] text-[#dc2626] -mr-2 mt-1 md:text-[14px] border-none"
-                                    style={{ background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", borderBottom: "2px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1 md:text-[14px]"
+                                    style={{ 
+                                        background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
+                                        border: "1px solid rgba(0,0,0,0.08)",
+                                        borderBottom: "2px solid rgba(0,0,0,0.12)", 
+                                        color: "#b91c1c",
+                                        filter: "saturate(0.95)", 
+                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                    }}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
                                     Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
