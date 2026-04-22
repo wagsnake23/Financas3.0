@@ -86,7 +86,7 @@ const Categories = () => {
 
       // Normalização: Garante que "Família e Filhos" seja exibido sempre como "Família"
       const normalizedData = (data as AppCategory[]).map(cat => {
-        if (cat.id === "familia_filhos" || cat.nome === "Família e Filhos" || cat.nome === "Família e filhos") {
+        if (cat.id === "familia_filhos") {
           return { ...cat, nome: "Família" };
         }
         return cat;

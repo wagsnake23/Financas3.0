@@ -57,7 +57,7 @@ export const categories: AppCategory[] = [
   { id: "pessoais_presentes", nome: "Presentes", icone: "Gift", cor: "#DB2777", parent_id: "pessoais" },
   { id: "pessoais_assinaturas", nome: "Assinaturas", icone: "Package", cor: "#DB2777", parent_id: "pessoais" },
 
-  { id: "obrigacoes_financeiras", nome: "Obrigações Financeiras", icone: "Receipt", cor: "#F59E0B", parent_id: null },
+  { id: "obrigacoes_financeiras", nome: "Financeiro", icone: "Receipt", cor: "#F59E0B", parent_id: null },
   { id: "obrigacoes_impostos", nome: "Impostos", icone: "Landmark", cor: "#F59E0B", parent_id: "obrigacoes_financeiras" },
   { id: "obrigacoes_multas", nome: "Multas", icone: "AlertTriangle", cor: "#F59E0B", parent_id: "obrigacoes_financeiras" },
   { id: "obrigacoes_tarifas_bancarias", nome: "Tarifas bancárias", icone: "Banknote", cor: "#F59E0B", parent_id: "obrigacoes_financeiras" },
