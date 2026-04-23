@@ -2,7 +2,6 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { format } from "date-fns";
@@ -38,42 +37,52 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
 
   return (
     <div className={cn("grid gap-4", "grid-cols-1")}> {/* Ajustado para sempre 1 coluna */}
-      <div>
+      <div className="relative">
         <Label htmlFor="dataVencimento" className={cn("text-gray-600 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
           {dateLabel}
         </Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
+        
+        <div className="relative w-full">
+          <Button
+            type="button"
+            variant={"outline"}
+            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            className={cn(
+              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+              "rounded-xl text-gray-800 font-medium",
+              !dataVencimento && "text-muted-foreground",
+              isMobile && "h-9 text-sm",
+              getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+            )}
+          >
+            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-gray-500", isMobile && "h-4 w-4")} />
+            {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+          </Button>
+
+          {isCalendarOpen && (
+            <div 
               className={cn(
-                "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
-                "rounded-xl text-gray-800 font-medium",
-                !dataVencimento && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
-                getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+                "absolute top-full left-0 z-[100] mt-1 w-full min-w-full max-w-full overflow-hidden",
+                "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
+                isMobile ? "h-[340px]" : "h-[460px]"
               )}
             >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-gray-500", isMobile && "h-4 w-4")} />
-              {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={dataVencimento}
-              onSelect={(date) => {
-                setDataVencimento(date);
-                setIsCalendarOpen(false);
-                setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
-              }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
+              <Calendar
+                mode="single"
+                selected={dataVencimento}
+                onSelect={(date) => {
+                  setDataVencimento(date);
+                  setIsCalendarOpen(false);
+                  setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
+                }}
+                initialFocus
+                locale={ptBR}
+                showOutsideDays={true}
+                className="w-full h-full p-2"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Removido o bloco de Número de Parcelas */}

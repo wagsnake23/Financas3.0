@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, isValidUuid } from "@/lib/utils";
@@ -252,39 +251,49 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       )}
 
       {/* Data (abaixo de Valor e Parcela) */}
-      <div className={cn(isMobile && "space-y-1")}>
+      <div className={cn("relative", isMobile && "space-y-1")}>
         <Label htmlFor="date" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Data</Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
+        
+        <div className="relative w-full">
+          <Button
+            type="button"
+            variant={"outline"}
+            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            className={cn(
+              "w-full justify-start text-left font-medium rounded-xl transition-all duration-200 input-3d-premium text-gray-800",
+              !date && "text-muted-foreground",
+              isMobile ? "h-9 text-sm" : "h-10",
+              getBorderColor("date"),
+              getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+            )}
+          >
+            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
+            {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+          </Button>
+
+          {isCalendarOpen && (
+            <div 
               className={cn(
-                "w-full justify-start text-left font-medium rounded-xl transition-all duration-200 input-3d-premium text-gray-800",
-                !date && "text-muted-foreground",
-                isMobile ? "h-9 text-sm" : "h-10",
-                getBorderColor("date"),
-                getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                "absolute top-full left-0 z-[100] mt-1 w-full min-w-full max-w-full overflow-hidden",
+                "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
+                isMobile ? "h-[340px]" : "h-[460px]"
               )}
             >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
-              {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(selectedDate) => {
-                setDate(selectedDate);
-                setIsCalendarOpen(false);
-              }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(selectedDate) => {
+                  setDate(selectedDate);
+                  setIsCalendarOpen(false);
+                }}
+                initialFocus
+                locale={ptBR}
+                showOutsideDays={true}
+                className="w-full h-full p-2"
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
