@@ -42,8 +42,6 @@ function Calendar({
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse",
         head_row: "flex justify-center gap-0.5 mb-1.5",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] text-center",
         row: "flex w-full justify-center gap-0.5 mt-0.5",
         cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
         day: cn(
@@ -98,6 +96,31 @@ function Calendar({
             </Select>
           )
         },
+        Head: () => {
+          const days = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+          return (
+            <thead>
+              <tr className="flex justify-center gap-0.5 mb-1.5">
+                {days.map((day, i) => {
+                  const isWeekend = i === 0 || i === 6;
+                  return (
+                    <th
+                      key={i}
+                      className={cn(
+                        "rounded-md w-9 text-[0.75rem] text-center uppercase transition-colors",
+                        isWeekend 
+                          ? "text-red-500 font-black" 
+                          : "text-gray-500 font-semibold"
+                      )}
+                    >
+                      {day}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+          );
+        },
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
@@ -106,8 +129,8 @@ function Calendar({
         saturday: (date) => date.getDay() === 6,
       }}
       modifiersClassNames={{
-        sunday: "bg-red-50/50 text-red-600 font-medium",
-        saturday: "bg-green-50/50 text-green-600 font-medium",
+        sunday: "bg-red-50/50 text-red-600 font-medium rounded-[6px]",
+        saturday: "bg-green-50/50 text-green-600 font-medium rounded-[6px]",
       }}
       captionLayout="dropdown-buttons"
       fromYear={1900}
