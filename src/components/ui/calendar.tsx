@@ -49,7 +49,7 @@ function Calendar({
         ),
         day_selected:
           "bg-[linear-gradient(135deg,#3b82f6,#8b5cf6)] text-white hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground shadow-[0_4px_12px_rgba(59,130,246,0.4)] !rounded-[10px]",
-        day_today: "bg-accent text-accent-foreground font-semibold",
+        day_today: "bg-blue-50 text-blue-600 font-semibold rounded-[6px]",
         day_outside: "text-muted-foreground opacity-50",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
@@ -69,6 +69,15 @@ function Calendar({
             } as React.ChangeEvent<HTMLSelectElement>
             onChange?.(changeEvent)
           }
+
+          // Helper para capitalizar apenas se for string
+          const formatLabel = (label: any) => {
+            if (typeof label === "string" && isNaN(Number(label))) {
+              return label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+            }
+            return label;
+          };
+
           return (
             <Select
               value={value?.toString()}
@@ -77,7 +86,7 @@ function Calendar({
               }}
             >
               <SelectTrigger className="h-8 pr-2 pl-3 py-1 font-medium bg-transparent border-none focus:ring-0 focus:ring-offset-0 hover:bg-accent/50 transition-colors gap-1 rounded-lg">
-                <SelectValue>{selected?.props.children}</SelectValue>
+                <SelectValue>{formatLabel(selected?.props.children)}</SelectValue>
               </SelectTrigger>
               <SelectContent position="popper" className="max-h-[300px] rounded-xl border-slate-200/60 shadow-xl">
                 <ScrollArea className="h-full">
@@ -87,7 +96,7 @@ function Calendar({
                       value={option.props.value?.toString() ?? ""}
                       className="rounded-lg py-1.5 focus:bg-blue-50 focus:text-blue-600 transition-colors"
                     >
-                      {option.props.children}
+                      {formatLabel(option.props.children)}
                     </SelectItem>
                   ))}
                 </ScrollArea>
