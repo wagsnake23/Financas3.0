@@ -130,7 +130,7 @@ function Calendar({
       }}
       modifiersClassNames={{
         sunday: "bg-red-50/50 text-red-600 font-medium rounded-[6px]",
-        saturday: "bg-green-50/50 text-green-600 font-medium rounded-[6px]",
+        saturday: "bg-red-50/50 text-red-600 font-medium rounded-[6px]",
       }}
       captionLayout="dropdown-buttons"
       fromYear={1900}
