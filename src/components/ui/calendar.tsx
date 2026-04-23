@@ -35,8 +35,7 @@ function Calendar({
         caption_dropdowns: "flex justify-center gap-1 z-10",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-opacity"
+          "flex items-center justify-center h-7 w-7 p-0 bg-gradient-to-b from-gray-100 to-gray-200/60 border border-gray-300/40 shadow-[0_2px_4px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] !rounded-xl opacity-90 hover:opacity-100 hover:bg-gray-200/80 transition-all active:scale-95 active:shadow-inner"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",

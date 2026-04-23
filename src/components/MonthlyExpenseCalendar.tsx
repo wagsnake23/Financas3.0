@@ -75,10 +75,11 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Button 
-              variant="outline" 
-              size="icon" 
               onClick={handlePreviousMonth} 
-              className={cn("h-10 w-10 rounded-2xl border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:text-blue-700 transition-all shadow-sm", isMobile && "h-8 w-8 rounded-xl")}
+              className={cn(
+                "flex items-center justify-center h-10 w-10 p-0 bg-gradient-to-b from-gray-100 to-gray-200/60 border border-gray-300/40 shadow-[0_2px_4px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] !rounded-xl opacity-90 hover:opacity-100 hover:bg-gray-200/80 transition-all active:scale-95 active:shadow-inner",
+                isMobile && "h-8 w-8"
+              )}
             >
               <DynamicIcon name="ChevronLeft" className={cn("h-5 w-5", isMobile && "h-4 w-4")} />
             </Button>
@@ -91,12 +92,13 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
                 {format(displayMonth, "yyyy")}
               </span>
             </div>
-
+ 
             <Button 
-              variant="outline" 
-              size="icon" 
               onClick={handleNextMonth} 
-              className={cn("h-10 w-10 rounded-2xl border-blue-100 bg-blue-50/50 hover:bg-blue-100 hover:text-blue-700 transition-all shadow-sm", isMobile && "h-8 w-8 rounded-xl")}
+              className={cn(
+                "flex items-center justify-center h-10 w-10 p-0 bg-gradient-to-b from-gray-100 to-gray-200/60 border border-gray-300/40 shadow-[0_2px_4px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] !rounded-xl opacity-90 hover:opacity-100 hover:bg-gray-200/80 transition-all active:scale-95 active:shadow-inner",
+                isMobile && "h-8 w-8"
+              )}
             >
               <DynamicIcon name="ChevronRight" className={cn("h-5 w-5", isMobile && "h-4 w-4")} />
             </Button>
