@@ -48,7 +48,7 @@ function Calendar({
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground"
         ),
         day_selected:
-          "bg-[linear-gradient(135deg,#3b82f6,#8b5cf6)] text-white hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground shadow-[0_4px_12px_rgba(59,130,246,0.4)] !rounded-[10px]",
+          "bg-[linear-gradient(135deg,#3b82f6,#8b5cf6)] text-white hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground !rounded-[10px]",
         day_today: "bg-blue-50 text-blue-600 font-semibold rounded-[6px]",
         day_outside: "text-muted-foreground opacity-50",
         day_disabled: "text-muted-foreground opacity-50",
@@ -137,8 +137,8 @@ function Calendar({
         saturday: (date) => date.getDay() === 6,
       }}
       modifiersClassNames={{
-        sunday: "bg-red-50/50 text-red-600 font-medium rounded-[6px]",
-        saturday: "bg-red-50/50 text-red-600 font-medium rounded-[6px]",
+        sunday: "bg-red-50/50 text-red-600 font-medium !rounded-[6px]",
+        saturday: "bg-red-50/50 text-red-600 font-medium !rounded-[6px]",
       }}
       captionLayout="dropdown-buttons"
       fromYear={1900}
