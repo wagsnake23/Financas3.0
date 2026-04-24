@@ -134,10 +134,47 @@ export default function Receitas() {
           .from("categorias")
           .select("*")
           .or(`user_id.eq.${user.id},user_id.is.null`)
-          .order("nome");
-        if (error) throw error;
-        return data as AppCategory[];
-      },
+        .order("nome");
+      if (error) throw error;
+      
+      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
+      let cryptoAdded = false;
+      let poupancaAdded = false;
+      const normalizedData = (data as AppCategory[])
+        .filter(cat => {
+          const lowerNome = cat.nome.toLowerCase();
+          
+          // Filtro de Aportes
+          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+
+          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+          }
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            if (cryptoAdded) return false;
+            cryptoAdded = true;
+          }
+          // Consolidação de Poupança
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            if (poupancaAdded) return false;
+            poupancaAdded = true;
+          }
+          return true;
+        })
+        .map(cat => {
+          if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
+          const lowerNome = cat.nome.toLowerCase();
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            return { ...cat, nome: "Criptomoedas" };
+          }
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            return { ...cat, nome: "Poupança" };
+          }
+          return cat;
+        });
+
+      return normalizedData;
+    },
       enabled: !!user && !authLoading,
     });
 

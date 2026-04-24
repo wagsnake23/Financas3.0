@@ -79,7 +79,44 @@ export default function Investments() { // Alterado para export default function
         .not("parent_id", "is", null) // Only subcategories
         .order("nome");
       if (error) throw error;
-      return data as AppCategory[];
+      
+      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
+      let cryptoAdded = false;
+      let poupancaAdded = false;
+      const normalizedData = (data as AppCategory[])
+        .filter(cat => {
+          const lowerNome = cat.nome.toLowerCase();
+          
+          // Filtro de Aportes
+          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+
+          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+          }
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            if (cryptoAdded) return false;
+            cryptoAdded = true;
+          }
+          // Consolidação de Poupança
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            if (poupancaAdded) return false;
+            poupancaAdded = true;
+          }
+          return true;
+        })
+        .map(cat => {
+          if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
+          const lowerNome = cat.nome.toLowerCase();
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            return { ...cat, nome: "Criptomoedas" };
+          }
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            return { ...cat, nome: "Poupança" };
+          }
+          return cat;
+        });
+
+      return normalizedData;
     },
     enabled: !!user && !authLoading,
   });
@@ -620,63 +657,65 @@ export default function Investments() { // Alterado para export default function
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                  <CurrencyBR
-                    value={amount}
-                    onChange={(v) => {
-                      setAmount(v);
-                      setValidationErrors(prev => ({ ...prev, amount: false }));
-                    }}
-                    disabled={loadingForm}
-                    className={cn(
-                      "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200 placeholder:text-gray-400",
-                      isMobile && "h-9 text-sm",
-                      getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
-                    )}
-                  />
-                </div>
+                <div className={cn("grid gap-2", "grid-cols-2")}>
+                  {tipoRentabilidade === "fixo" ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+                      <NumericInput
+                        id="profitability"
+                        value={profitability}
+                        onValueChange={(values) => {
+                          setProfitability(values.floatValue);
+                          setValidationErrors(prev => ({ ...prev, profitability: false }));
+                        }}
+                        placeholder="0,0000"
+                        required
+                        disabled={loadingForm}
+                        decimalScale={4}
+                        fixedDecimalScale={false}
+                        maxLength={7}
+                        className={cn(
+                          "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200 placeholder:text-gray-400",
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
+                        )}
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
+                      <NumericInput
+                        value={percentualIndexador}
+                        onValueChange={(v) => {
+                          setPercentualIndexador(v.floatValue);
+                          setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
+                        }}
+                        placeholder="0,00"
+                        className={cn(
+                          "h-9 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-medium",
+                          getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
+                        )}
+                      />
+                    </div>
+                  )}
 
-                {tipoRentabilidade === "fixo" ? (
                   <div className="space-y-2">
-                    <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
-                    <NumericInput
-                      id="profitability"
-                      value={profitability}
-                      onValueChange={(values) => {
-                        setProfitability(values.floatValue);
-                        setValidationErrors(prev => ({ ...prev, profitability: false }));
+                    <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                    <CurrencyBR
+                      value={amount}
+                      onChange={(v) => {
+                        setAmount(v);
+                        setValidationErrors(prev => ({ ...prev, amount: false }));
                       }}
-                      placeholder="0,0000"
-                      required
                       disabled={loadingForm}
-                      decimalScale={4}
-                      fixedDecimalScale={false}
-                      maxLength={7}
                       className={cn(
                         "rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-medium transition-all duration-200 placeholder:text-gray-400",
                         isMobile && "h-9 text-sm",
-                        getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
+                        getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
                     />
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
-                    <NumericInput
-                      value={percentualIndexador}
-                      onValueChange={(v) => {
-                        setPercentualIndexador(v.floatValue);
-                        setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
-                      }}
-                      placeholder="0,00"
-                      className={cn(
-                        "h-9 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-medium",
-                        getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
-                      )}
-                    />
-                  </div>
-                )}
+                </div>
 
                 {/* Card de Simulação Compacto e Unificado */}
                 {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
@@ -1078,63 +1117,65 @@ export default function Investments() { // Alterado para export default function
                       )}
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                      <CurrencyBR
-                        value={amount}
-                        onChange={(v) => {
-                          setAmount(v);
-                          setValidationErrors(prev => ({ ...prev, amount: false }));
-                        }}
-                        disabled={loadingForm}
-                        className={cn(
-                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                          isMobile && "h-9 text-sm",
-                          getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
-                        )}
-                      />
-                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {tipoRentabilidade === "fixo" ? (
+                        <div className="space-y-2">
+                          <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+                          <NumericInput
+                            id="profitability"
+                            value={profitability}
+                            onValueChange={(values) => {
+                              setProfitability(values.floatValue);
+                              setValidationErrors(prev => ({ ...prev, profitability: false }));
+                            }}
+                            placeholder="0,0000"
+                            required
+                            disabled={loadingForm}
+                            decimalScale={4}
+                            fixedDecimalScale={false}
+                            maxLength={7}
+                            className={cn(
+                              "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
+                              isMobile && "h-9 text-sm",
+                              getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
+                            )}
+                          />
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
+                          <NumericInput
+                            value={percentualIndexador}
+                            onValueChange={(v) => {
+                              setPercentualIndexador(v.floatValue);
+                              setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
+                            }}
+                            placeholder="0,00"
+                            className={cn(
+                              "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                              getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                            )}
+                          />
+                        </div>
+                      )}
 
-                    {tipoRentabilidade === "fixo" ? (
                       <div className="space-y-2">
-                        <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
-                        <NumericInput
-                          id="profitability"
-                          value={profitability}
-                          onValueChange={(values) => {
-                            setProfitability(values.floatValue);
-                            setValidationErrors(prev => ({ ...prev, profitability: false }));
+                        <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                        <CurrencyBR
+                          value={amount}
+                          onChange={(v) => {
+                            setAmount(v);
+                            setValidationErrors(prev => ({ ...prev, amount: false }));
                           }}
-                          placeholder="0,0000"
-                          required
                           disabled={loadingForm}
-                          decimalScale={4}
-                          fixedDecimalScale={false}
-                          maxLength={7}
                           className={cn(
-                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
+                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
                             isMobile && "h-9 text-sm",
-                            getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
+                            getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                           )}
                         />
                       </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
-                        <NumericInput
-                          value={percentualIndexador}
-                          onValueChange={(v) => {
-                            setPercentualIndexador(v.floatValue);
-                            setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
-                          }}
-                          placeholder="0,00"
-                          className={cn(
-                            "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
-                            getBorderClass({ isInvalid: validationErrors.percentualIndexador })
-                          )}
-                        />
-                      </div>
-                    )}
+                    </div>
 
                     {/* Card de Simulação Desktop Compacto e Unificado */}
                     {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
@@ -1275,7 +1316,28 @@ export default function Investments() { // Alterado para export default function
                       calculatedInvestments.map((investment) => {
                         const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                         const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                        const investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                        let investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                        const lowerDisplay = investmentNameDisplay.toLowerCase();
+                        
+                        // Consolidação visual para Criptomoedas na lista
+                        if (lowerDisplay.includes("criptomoedas") || 
+                            lowerDisplay.includes("crypto") || 
+                            lowerDisplay.includes("bitcoin")) {
+                          investmentNameDisplay = "Criptomoedas";
+                        }
+                        
+                        // Consolidação visual para Ações na lista
+                        if (lowerDisplay.includes("ações") || lowerDisplay.includes("acoes")) {
+                          if (lowerDisplay.includes("dividendos") || lowerDisplay.includes("venda")) {
+                            investmentNameDisplay = "Ações";
+                          }
+                        }
+                        
+                        // Consolidação visual para Poupança na lista
+                        if (lowerDisplay.includes("poupança") || lowerDisplay.includes("poupanca")) {
+                          investmentNameDisplay = "Poupança";
+                        }
+                        
                         const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
 
                         // Yield calculation based on virtual current balance
