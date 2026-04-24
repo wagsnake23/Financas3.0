@@ -16,7 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; /
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI
-import { format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, differenceInBusinessDays, parseISO
+import { format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
 import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
@@ -138,6 +138,7 @@ export default function Investments() { // Alterado para export default function
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
+  const [simulationPeriod, setSimulationPeriod] = useState<"diário" | "mensal" | "anual">("diário");
 
   // Fetch active indexers (CDI/IPCA)
   const { data: indexadores = [] } = useQuery<IndexadorHistorico[]>({
@@ -193,18 +194,41 @@ export default function Investments() { // Alterado para export default function
   const metricsNewForm = useMemo(() => {
     const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
     const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
-    const aliquota = getAliquotaIR(date || new Date(), new Date(), tipoTributacao);
+    
+    // Calcular data fim baseada no período da simulação para projetar IR
+    let endDate = new Date();
+    if (simulationPeriod === "mensal") {
+      endDate = addDays(new Date(), 31);
+    } else if (simulationPeriod === "anual") {
+      endDate = addDays(new Date(), 366);
+    }
+
+    const aliquota = getAliquotaIR(date || new Date(), endDate, tipoTributacao);
     
     const taxaAnual = taxaEstimada / 100;
     const baseDias = indexador === "IPCA" ? 365 : 252;
     const taxaDiaria = Math.pow(1 + taxaAnual, 1 / baseDias) - 1;
-    const rendimentoBrutoDia = (amount || 0) * taxaDiaria;
     
-    const rendimentoLiquidoDia = rendimentoBrutoDia * (1 - aliquota / 100);
+    const dias = 
+      simulationPeriod === "diário" ? 1 :
+      simulationPeriod === "mensal" ? 21 :
+      252;
+
+    const rendimentoBrutoPeriodo = (amount || 0) * (Math.pow(1 + taxaDiaria, dias) - 1);
+    const rendimentoLiquidoPeriodo = rendimentoBrutoPeriodo * (1 - aliquota / 100);
+    const valorIR = rendimentoBrutoPeriodo - rendimentoLiquidoPeriodo;
     const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
 
-    return { tipoTributacao, aliquota, rendimentoBrutoDia, rendimentoLiquidoDia, taxaLiquida };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId]);
+    return { 
+      tipoTributacao, 
+      aliquota, 
+      rendimentoBrutoPeriodo, 
+      rendimentoLiquidoPeriodo, 
+      valorIR, 
+      taxaLiquida, 
+      taxaBruta: taxaEstimada 
+    };
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -723,10 +747,20 @@ export default function Investments() { // Alterado para export default function
                     {/* Linha 1: Header */}
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-green-600 text-[10px] font-bold">Ativo</span>
-                      </div>
+                      
+                      <Select 
+                        value={simulationPeriod} 
+                        onValueChange={(v: any) => setSimulationPeriod(v)}
+                      >
+                        <SelectTrigger className="w-auto h-7 bg-slate-100 border-slate-200 rounded-xl px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 transition-colors focus:ring-0 focus:ring-offset-0 border shadow-none font-medium gap-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
+                          <SelectItem value="diário" className="text-xs">Diário</SelectItem>
+                          <SelectItem value="mensal" className="text-xs">Mensal</SelectItem>
+                          <SelectItem value="anual" className="text-xs">Anual</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="grid grid-cols-2 gap-y-0.5">
@@ -736,10 +770,10 @@ export default function Investments() { // Alterado para export default function
 
                       {/* Linha 3: Valores (Agora acima) */}
                       <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
-                        - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
+                        - {formatCurrency(metricsNewForm.valorIR)}
                       </span>
                       <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
-                        {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
+                        {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
                       </span>
 
                       {/* Linha 4: Percentuais (Agora abaixo) */}
@@ -1183,10 +1217,20 @@ export default function Investments() { // Alterado para export default function
                         {/* Linha 1: Header */}
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-green-600 text-[10px] font-bold">Ativo</span>
-                          </div>
+                          
+                          <Select 
+                            value={simulationPeriod} 
+                            onValueChange={(v: any) => setSimulationPeriod(v)}
+                          >
+                            <SelectTrigger className="w-auto h-7 bg-slate-100 border-slate-200 rounded-xl px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 transition-colors focus:ring-0 focus:ring-offset-0 border shadow-none font-medium gap-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
+                              <SelectItem value="diário" className="text-xs">Diário</SelectItem>
+                              <SelectItem value="mensal" className="text-xs">Mensal</SelectItem>
+                              <SelectItem value="anual" className="text-xs">Anual</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-y-0.5">
@@ -1196,10 +1240,10 @@ export default function Investments() { // Alterado para export default function
 
                           {/* Linha 3: Valores (Agora acima) */}
                           <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
-                            - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
+                            - {formatCurrency(metricsNewForm.valorIR)}
                           </span>
                           <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
-                            {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
+                            {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
                           </span>
 
                           {/* Linha 4: Percentuais (Agora abaixo) */}
