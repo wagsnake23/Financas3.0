@@ -168,6 +168,12 @@ export default function Investments() { // Alterado para export default function
     return (Math.pow(1 + mensal, 12) - 1) * 100;
   }, [indexadores]);
 
+  const ipcaAnualReal = useMemo(() => {
+    const ipcas = indexadores.filter(i => i.tipo === "IPCA");
+    if (ipcas.length === 0) return 4.5;
+    return [...ipcas].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual || 4.5;
+  }, [indexadores]);
+
   const indexadorMapCDI = useMemo(() => {
     const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI"));
     console.log("CDI Map size:", map.size);
@@ -205,6 +211,9 @@ export default function Investments() { // Alterado para export default function
 
     const aliquota = getAliquotaIR(date || new Date(), endDate, tipoTributacao);
     
+    // Usar IPCA anual real se o período for anual, caso contrário usar IPCA projetado (global)
+    const ipcaUtilizado = simulationPeriod === "anual" ? ipcaAnualReal : ipca;
+    
     const taxaAnual = taxaEstimada / 100;
     const baseDias = indexador === "IPCA" ? 365 : 252;
     const taxaDiaria = Math.pow(1 + taxaAnual, 1 / baseDias) - 1;
@@ -225,7 +234,7 @@ export default function Investments() { // Alterado para export default function
     
     if (simulationPeriod === "diário") {
       const cdiDia = (Math.pow(1 + (cdi / 100), 1 / 252) - 1) * 100;
-      const ipcaDia = (Math.pow(1 + (ipca / 100), 1 / 365) - 1) * 100;
+      const ipcaDia = (Math.pow(1 + (ipcaUtilizado / 100), 1 / 365) - 1) * 100;
       cdiLabel = `CDI: ${cdiDia.toFixed(4).replace('.', ',')}% a.d.`;
       ipcaLabel = `IPCA: ${ipcaDia.toFixed(4).replace('.', ',')}% a.d.`;
     } else if (simulationPeriod === "mensal") {
@@ -235,7 +244,7 @@ export default function Investments() { // Alterado para export default function
       ipcaLabel = `IPCA: ${ipcaMes.toFixed(2).replace('.', ',')}% a.m.`;
     } else {
       cdiLabel = `CDI: ${cdi.toFixed(2).replace('.', ',')}% a.a.`;
-      ipcaLabel = `IPCA: ${ipca.toFixed(2).replace('.', ',')}% a.a.`;
+      ipcaLabel = `IPCA: ${ipcaAnualReal.toFixed(2).replace('.', ',')}% a.a.`;
     }
 
     return { 
@@ -249,7 +258,7 @@ export default function Investments() { // Alterado para export default function
       cdiLabel,
       ipcaLabel
     };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, ipca]);
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, ipca, ipcaAnualReal]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
