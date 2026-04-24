@@ -159,6 +159,12 @@ export default function Investments() { // Alterado para export default function
     return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_anual;
   }, [indexadores]);
 
+  const cdiDiario = useMemo(() => {
+    const cdis = indexadores.filter(i => i.tipo === "CDI");
+    if (cdis.length === 0) return Math.pow(1 + 0.1065, 1 / 252) - 1;
+    return [...cdis].sort((a, b) => b.data_inicio.localeCompare(a.data_inicio))[0].taxa_diaria;
+  }, [indexadores]);
+
   const ipca = useMemo(() => {
     const ipcas = indexadores.filter(i => i.tipo === "IPCA");
     if (ipcas.length === 0) return 4.5; // Fallback aprox
@@ -214,9 +220,26 @@ export default function Investments() { // Alterado para export default function
     // Usar IPCA anual real se o período for anual, caso contrário usar IPCA projetado (global)
     const ipcaUtilizado = simulationPeriod === "anual" ? ipcaAnualReal : ipca;
     
-    const taxaAnual = taxaEstimada / 100;
-    const baseDias = indexador === "IPCA" ? 365 : 252;
-    const taxaDiaria = Math.pow(1 + taxaAnual, 1 / baseDias) - 1;
+    // Taxa Estimada Bruta (sem arredondamento)
+    let taxaBrutaSimulacao = 0;
+    if (tipoRentabilidade === "fixo") {
+      taxaBrutaSimulacao = (profitability || 0) / 100;
+    } else if (indexador === "CDI") {
+      taxaBrutaSimulacao = (cdi / 100) * (percentualIndexador || 100) / 100;
+    } else {
+      // IPCA+
+      const ipcaDec = ipcaUtilizado / 100;
+      const realDec = (percentualIndexador || 0) / 100;
+      taxaBrutaSimulacao = (1 + ipcaDec) * (1 + realDec) - 1;
+    }
+
+    // Taxa Diária Exata (Conforme solicitado para CDI ou Juros Compostos para os demais)
+    let taxaDiaria = 0;
+    if (indexador === "CDI" && tipoRentabilidade === "indexado") {
+      taxaDiaria = (cdiDiario || (Math.pow(1 + cdi/100, 1/252) - 1)) * (percentualIndexador || 100) / 100;
+    } else {
+      taxaDiaria = Math.pow(1 + taxaBrutaSimulacao, 1 / 252) - 1;
+    }
     
     const dias = 
       simulationPeriod === "diário" ? 1 :
@@ -226,7 +249,7 @@ export default function Investments() { // Alterado para export default function
     const rendimentoBrutoPeriodo = (amount || 0) * (Math.pow(1 + taxaDiaria, dias) - 1);
     const rendimentoLiquidoPeriodo = rendimentoBrutoPeriodo * (1 - aliquota / 100);
     const valorIR = rendimentoBrutoPeriodo - rendimentoLiquidoPeriodo;
-    const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
+    const taxaLiquida = (taxaBrutaSimulacao * 100) * (1 - aliquota / 100);
 
     // Indicadores dinâmicos para exibição no card
     let cdiLabel = "";
@@ -258,7 +281,7 @@ export default function Investments() { // Alterado para export default function
       cdiLabel,
       ipcaLabel
     };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, ipca, ipcaAnualReal]);
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, cdiDiario, ipca, ipcaAnualReal]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
