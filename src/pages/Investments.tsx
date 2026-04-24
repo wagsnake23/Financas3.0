@@ -241,12 +241,16 @@ export default function Investments() { // Alterado para export default function
       taxaDiaria = Math.pow(1 + taxaBrutaSimulacao, 1 / 252) - 1;
     }
     
-    const dias = 
-      simulationPeriod === "diário" ? 1 :
-      simulationPeriod === "mensal" ? 21 :
-      252;
+    let rendimentoBrutoPeriodo = 0;
+    if (simulationPeriod === "diário") {
+      rendimentoBrutoPeriodo = (amount || 0) * taxaDiaria;
+    } else if (simulationPeriod === "mensal") {
+      const taxaMensal = Math.pow(1 + taxaBrutaSimulacao, 1 / 12) - 1;
+      rendimentoBrutoPeriodo = (amount || 0) * taxaMensal;
+    } else if (simulationPeriod === "anual") {
+      rendimentoBrutoPeriodo = (amount || 0) * taxaBrutaSimulacao;
+    }
 
-    const rendimentoBrutoPeriodo = (amount || 0) * (Math.pow(1 + taxaDiaria, dias) - 1);
     const rendimentoLiquidoPeriodo = rendimentoBrutoPeriodo * (1 - aliquota / 100);
     const valorIR = rendimentoBrutoPeriodo - rendimentoLiquidoPeriodo;
     const taxaLiquida = (taxaBrutaSimulacao * 100) * (1 - aliquota / 100);
@@ -805,7 +809,7 @@ export default function Investments() { // Alterado para export default function
                         value={simulationPeriod} 
                         onValueChange={(v: any) => setSimulationPeriod(v)}
                       >
-                        <SelectTrigger className="w-auto h-7 bg-slate-100 border-slate-200 rounded-xl px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 transition-colors focus:ring-0 focus:ring-offset-0 border shadow-none font-medium gap-1">
+                        <SelectTrigger className="w-auto h-7 bg-slate-200 border border-slate-300 border-b-2 rounded-xl px-2 text-[10px] text-slate-700 font-bold hover:bg-slate-300 transition-all active:translate-y-[1px] active:border-b-0 shadow-sm gap-1 focus:ring-0 focus:ring-offset-0">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
@@ -1283,7 +1287,7 @@ export default function Investments() { // Alterado para export default function
                             value={simulationPeriod} 
                             onValueChange={(v: any) => setSimulationPeriod(v)}
                           >
-                            <SelectTrigger className="w-auto h-7 bg-slate-100 border-slate-200 rounded-xl px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 transition-colors focus:ring-0 focus:ring-offset-0 border shadow-none font-medium gap-1">
+                            <SelectTrigger className="w-auto h-7 bg-slate-200 border border-slate-300 border-b-2 rounded-xl px-2 text-[10px] text-slate-700 font-bold hover:bg-slate-300 transition-all active:translate-y-[1px] active:border-b-0 shadow-sm gap-1 focus:ring-0 focus:ring-offset-0">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
