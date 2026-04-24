@@ -661,47 +661,56 @@ export default function Investments() { // Alterado para export default function
                     />
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
-                      <NumericInput
-                        value={percentualIndexador}
-                        onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-                        placeholder="0,00"
-                        className={cn(
-                          "h-9 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-xs font-bold",
-                          getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
-                        )}
-                      />
+                  <div className="space-y-2">
+                    <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
+                    <NumericInput
+                      value={percentualIndexador}
+                      onValueChange={(v) => {
+                        setPercentualIndexador(v.floatValue);
+                        setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
+                      }}
+                      placeholder="0,00"
+                      className={cn(
+                        "h-9 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-medium",
+                        getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
+                      )}
+                    />
+                  </div>
+                )}
+
+                {/* Card de Simulação Compacto e Unificado */}
+                {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
+                  <div className="p-3 rounded-xl bg-gray-50/30 border border-gray-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                    {/* Linha 1: Header */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                        <span className="text-green-600 text-[10px] font-bold">Ativo</span>
+                      </div>
                     </div>
 
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+                      {/* Linha 2: Labels */}
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold">IR (IMPOSTO)</span>
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold">RENTABILIDADE LÍQUIDA</span>
 
-                    {/* Preview Indexado */}
-                    {amount !== undefined && percentualIndexador !== undefined && (
-                      <div className="p-3 rounded-xl bg-[#218C5C]/5 border border-[#218C5C]/20 animate-fade-in shadow-sm">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-black text-[#218C5C] uppercase tracking-wider">Simulação</span>
-                          <div className="flex items-center gap-1">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#218C5C] animate-pulse" />
-                            <span className="text-[10px] font-bold text-[#218C5C]">Ativo</span>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">IR / Líquido Anual</p>
-                            <p className="text-sm font-black text-[#218C5C]">
-                              {metricsNewForm.aliquota}% / {metricsNewForm.taxaLiquida.toFixed(2)}%
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Rend. Líquido Est.</p>
-                            <p className="text-sm font-black text-[#218C5C]">
-                              {amount ? formatCurrency(metricsNewForm.rendimentoLiquidoDia) : "R$ 0,00"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                      {/* Linha 3: Valores (Agora acima) */}
+                      <span className="text-base font-semibold text-red-400 leading-tight">
+                        - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
+                      </span>
+                      <span className="text-base font-semibold text-green-500 leading-tight">
+                        {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
+                      </span>
+
+                      {/* Linha 4: Percentuais (Agora abaixo) */}
+                      <span className="text-base font-semibold text-red-400 leading-tight">
+                        {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
+                      </span>
+                      <span className="text-base font-semibold text-green-500 leading-tight">
+                        {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
+                      </span>
+                    </div>
                   </div>
                 )}
 
@@ -1110,53 +1119,56 @@ export default function Investments() { // Alterado para export default function
                         />
                       </div>
                     ) : (
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
-                          <NumericInput
-                            value={percentualIndexador}
-                            onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-                            placeholder="0,00"
-                            className={cn(
-                              "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
-                              getBorderClass({ isInvalid: validationErrors.percentualIndexador })
-                            )}
-                          />
+                      <div className="space-y-2">
+                        <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
+                        <NumericInput
+                          value={percentualIndexador}
+                          onValueChange={(v) => {
+                            setPercentualIndexador(v.floatValue);
+                            setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
+                          }}
+                          placeholder="0,00"
+                          className={cn(
+                            "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                            getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Card de Simulação Desktop Compacto e Unificado */}
+                    {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
+                      <div className="p-3 rounded-xl bg-gray-50/30 border border-gray-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                        {/* Linha 1: Header */}
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                            <span className="text-green-600 text-[10px] font-bold">Ativo</span>
+                          </div>
                         </div>
 
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+                          {/* Linha 2: Labels */}
+                          <span className="text-[10px] text-muted-foreground uppercase font-bold">IR (IMPOSTO)</span>
+                          <span className="text-[10px] text-muted-foreground uppercase font-bold">RENTABILIDADE LÍQUIDA</span>
 
-                        {/* Preview Indexado Desktop */}
-                        {amount !== undefined && percentualIndexador !== undefined && (
-                          <div className="p-4 rounded-2xl bg-[#218C5C]/5 border border-[#218C5C]/20 animate-fade-in shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-[11px] font-black text-[#218C5C] uppercase tracking-[0.1em]">Simulação Estimada</span>
-                              <div className="flex items-center gap-1.5">
-                                <span className="h-2 w-2 rounded-full bg-[#218C5C] animate-pulse" />
-                                <span className="text-[11px] font-bold text-[#218C5C]">Tempo Real</span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <div>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Bruto / IR / Líquido</p>
-                                <p className="text-sm font-black text-[#218C5C] tracking-tight">
-                                  {taxaEstimada.toFixed(2)}% / {metricsNewForm.tipoTributacao === "isento" ? "ISENTO" : `${metricsNewForm.aliquota}%`} / {metricsNewForm.taxaLiquida.toFixed(2)}%
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Rendimento Diário</p>
-                                <p className="text-xl font-black text-[#218C5C] tracking-tight">
-                                  {formatCurrency(metricsNewForm.rendimentoBrutoDia)}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">Estimativa Líquida</p>
-                                <p className="text-xl font-black text-[#218C5C] tracking-tight">
-                                  {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                          {/* Linha 3: Valores (Agora acima) */}
+                          <span className="text-base font-semibold text-red-400 leading-tight">
+                            - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
+                          </span>
+                          <span className="text-base font-semibold text-green-500 leading-tight">
+                            {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
+                          </span>
+
+                          {/* Linha 4: Percentuais (Agora abaixo) */}
+                          <span className="text-base font-semibold text-red-400 leading-tight">
+                            {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
+                          </span>
+                          <span className="text-base font-semibold text-green-500 leading-tight">
+                            {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
+                          </span>
+                        </div>
                       </div>
                     )}
 
