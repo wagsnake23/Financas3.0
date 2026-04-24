@@ -719,7 +719,7 @@ export default function Investments() { // Alterado para export default function
 
                 {/* Card de Simulação Compacto e Unificado */}
                 {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
-                  <div className="p-3 rounded-xl bg-gray-50/30 border border-gray-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
                     {/* Linha 1: Header */}
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
@@ -729,24 +729,24 @@ export default function Investments() { // Alterado para export default function
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+                    <div className="grid grid-cols-2 gap-y-0.5">
                       {/* Linha 2: Labels */}
-                      <span className="text-[10px] text-muted-foreground uppercase font-bold">IR (IMPOSTO)</span>
-                      <span className="text-[10px] text-muted-foreground uppercase font-bold">RENTABILIDADE LÍQUIDA</span>
+                      <span className="text-[11px] text-slate-500 uppercase font-medium opacity-90">IR (IMPOSTO)</span>
+                      <span className="text-[11px] text-slate-500 uppercase font-medium border-l border-slate-200/50 pl-4 whitespace-nowrap">RENT. LÍQUIDA</span>
 
                       {/* Linha 3: Valores (Agora acima) */}
-                      <span className="text-base font-semibold text-red-400 leading-tight">
+                      <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
                         - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
                       </span>
-                      <span className="text-base font-semibold text-green-500 leading-tight">
+                      <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
                         {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
                       </span>
 
                       {/* Linha 4: Percentuais (Agora abaixo) */}
-                      <span className="text-base font-semibold text-red-400 leading-tight">
+                      <span className="text-[11px] font-medium text-red-400/90 leading-tight opacity-90">
                         {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
                       </span>
-                      <span className="text-base font-semibold text-green-500 leading-tight">
+                      <span className="text-sm font-medium text-green-500/80 leading-tight border-l border-slate-200/50 pl-4">
                         {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
                       </span>
                     </div>
@@ -1179,7 +1179,7 @@ export default function Investments() { // Alterado para export default function
 
                     {/* Card de Simulação Desktop Compacto e Unificado */}
                     {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
-                      <div className="p-3 rounded-xl bg-gray-50/30 border border-gray-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
                         {/* Linha 1: Header */}
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
@@ -1189,24 +1189,24 @@ export default function Investments() { // Alterado para export default function
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+                        <div className="grid grid-cols-2 gap-y-0.5">
                           {/* Linha 2: Labels */}
-                          <span className="text-[10px] text-muted-foreground uppercase font-bold">IR (IMPOSTO)</span>
-                          <span className="text-[10px] text-muted-foreground uppercase font-bold">RENTABILIDADE LÍQUIDA</span>
+                          <span className="text-[11px] text-slate-500 uppercase font-medium opacity-90">IR (IMPOSTO)</span>
+                          <span className="text-[11px] text-slate-500 uppercase font-medium border-l border-slate-200/50 pl-4 whitespace-nowrap">RENT. LÍQUIDA</span>
 
                           {/* Linha 3: Valores (Agora acima) */}
-                          <span className="text-base font-semibold text-red-400 leading-tight">
+                          <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
                             - {formatCurrency(metricsNewForm.rendimentoBrutoDia - metricsNewForm.rendimentoLiquidoDia)}
                           </span>
-                          <span className="text-base font-semibold text-green-500 leading-tight">
+                          <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
                             {formatCurrency(metricsNewForm.rendimentoLiquidoDia)}
                           </span>
 
                           {/* Linha 4: Percentuais (Agora abaixo) */}
-                          <span className="text-base font-semibold text-red-400 leading-tight">
+                          <span className="text-[11px] font-medium text-red-400/90 leading-tight opacity-90">
                             {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
                           </span>
-                          <span className="text-base font-semibold text-green-500 leading-tight">
+                          <span className="text-sm font-medium text-green-500/80 leading-tight border-l border-slate-200/50 pl-4">
                             {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
                           </span>
                         </div>
