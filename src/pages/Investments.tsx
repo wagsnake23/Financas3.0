@@ -219,6 +219,25 @@ export default function Investments() { // Alterado para export default function
     const valorIR = rendimentoBrutoPeriodo - rendimentoLiquidoPeriodo;
     const taxaLiquida = taxaEstimada * (1 - aliquota / 100);
 
+    // Indicadores dinâmicos para exibição no card
+    let cdiLabel = "";
+    let ipcaLabel = "";
+    
+    if (simulationPeriod === "diário") {
+      const cdiDia = (Math.pow(1 + (cdi / 100), 1 / 252) - 1) * 100;
+      const ipcaDia = (Math.pow(1 + (ipca / 100), 1 / 365) - 1) * 100;
+      cdiLabel = `CDI: ${cdiDia.toFixed(4).replace('.', ',')}% a.d.`;
+      ipcaLabel = `IPCA: ${ipcaDia.toFixed(4).replace('.', ',')}% a.d.`;
+    } else if (simulationPeriod === "mensal") {
+      const cdiMes = (Math.pow(1 + (cdi / 100), 1 / 12) - 1) * 100;
+      const ipcaMes = (Math.pow(1 + (ipca / 100), 1 / 12) - 1) * 100;
+      cdiLabel = `CDI: ${cdiMes.toFixed(2).replace('.', ',')}% a.m.`;
+      ipcaLabel = `IPCA: ${ipcaMes.toFixed(2).replace('.', ',')}% a.m.`;
+    } else {
+      cdiLabel = `CDI: ${cdi.toFixed(2).replace('.', ',')}% a.a.`;
+      ipcaLabel = `IPCA: ${ipca.toFixed(2).replace('.', ',')}% a.a.`;
+    }
+
     return { 
       tipoTributacao, 
       aliquota, 
@@ -226,9 +245,11 @@ export default function Investments() { // Alterado para export default function
       rendimentoLiquidoPeriodo, 
       valorIR, 
       taxaLiquida, 
-      taxaBruta: taxaEstimada 
+      taxaBruta: taxaEstimada,
+      cdiLabel,
+      ipcaLabel
     };
-  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador]);
+  }, [amount, taxaEstimada, date, allSubcategories, selectedInvestmentCategoryId, simulationPeriod, indexador, cdi, ipca]);
 
   // States for editing investment
   const [editingInvestment, setEditingInvestment] = useState<Investment | null>(null);
@@ -763,26 +784,34 @@ export default function Investments() { // Alterado para export default function
                       </Select>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-y-0.5">
-                      {/* Linha 2: Labels */}
-                      <span className="text-[11px] text-slate-500 uppercase font-medium opacity-90">IR (IMPOSTO)</span>
-                      <span className="text-[11px] text-slate-500 uppercase font-medium border-l border-slate-200/50 pl-4 whitespace-nowrap">RENT. LÍQUIDA</span>
+                    <div className="grid grid-cols-2">
+                      {/* Coluna Esquerda: IR */}
+                      <div className="flex flex-col gap-y-0.5 opacity-90">
+                        <span className="text-[11px] text-slate-500 uppercase font-medium">IR (IMPOSTO)</span>
+                        <span className="text-sm font-semibold text-red-400 leading-tight">
+                          - {formatCurrency(metricsNewForm.valorIR)}
+                        </span>
+                        <span className="text-[11px] font-medium text-red-400/90 leading-tight">
+                          {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                          {metricsNewForm.ipcaLabel}
+                        </span>
+                      </div>
 
-                      {/* Linha 3: Valores (Agora acima) */}
-                      <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
-                        - {formatCurrency(metricsNewForm.valorIR)}
-                      </span>
-                      <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
-                        {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
-                      </span>
-
-                      {/* Linha 4: Percentuais (Agora abaixo) */}
-                      <span className="text-[11px] font-medium text-red-400/90 leading-tight opacity-90">
-                        {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
-                      </span>
-                      <span className="text-sm font-medium text-green-500/80 leading-tight border-l border-slate-200/50 pl-4">
-                        {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
-                      </span>
+                      {/* Coluna Direita: Rentabilidade */}
+                      <div className="flex flex-col gap-y-0.5 items-end text-right border-l border-slate-200/50 pl-4">
+                        <span className="text-[11px] text-slate-500 uppercase font-medium whitespace-nowrap">RENT. LÍQUIDA</span>
+                        <span className="text-sm font-semibold text-green-600 leading-tight">
+                          {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
+                        </span>
+                        <span className="text-[11px] font-medium text-green-500/80 leading-tight">
+                          {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                          {metricsNewForm.cdiLabel}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1233,26 +1262,34 @@ export default function Investments() { // Alterado para export default function
                           </Select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-y-0.5">
-                          {/* Linha 2: Labels */}
-                          <span className="text-[11px] text-slate-500 uppercase font-medium opacity-90">IR (IMPOSTO)</span>
-                          <span className="text-[11px] text-slate-500 uppercase font-medium border-l border-slate-200/50 pl-4 whitespace-nowrap">RENT. LÍQUIDA</span>
+                        <div className="grid grid-cols-2">
+                          {/* Coluna Esquerda: IR */}
+                          <div className="flex flex-col gap-y-0.5 opacity-90">
+                            <span className="text-[11px] text-slate-500 uppercase font-medium">IR (IMPOSTO)</span>
+                            <span className="text-sm font-semibold text-red-400 leading-tight">
+                              - {formatCurrency(metricsNewForm.valorIR)}
+                            </span>
+                            <span className="text-[11px] font-medium text-red-400/90 leading-tight">
+                              {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                              {metricsNewForm.ipcaLabel}
+                            </span>
+                          </div>
 
-                          {/* Linha 3: Valores (Agora acima) */}
-                          <span className="text-sm font-semibold text-red-400 leading-tight opacity-90">
-                            - {formatCurrency(metricsNewForm.valorIR)}
-                          </span>
-                          <span className="text-lg font-bold text-green-600 leading-tight border-l border-slate-200/50 pl-4">
-                            {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
-                          </span>
-
-                          {/* Linha 4: Percentuais (Agora abaixo) */}
-                          <span className="text-[11px] font-medium text-red-400/90 leading-tight opacity-90">
-                            {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
-                          </span>
-                          <span className="text-sm font-medium text-green-500/80 leading-tight border-l border-slate-200/50 pl-4">
-                            {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
-                          </span>
+                          {/* Coluna Direita: Rentabilidade */}
+                          <div className="flex flex-col gap-y-0.5 items-end text-right border-l border-slate-200/50 pl-4">
+                            <span className="text-[11px] text-slate-500 uppercase font-medium whitespace-nowrap">RENT. LÍQUIDA</span>
+                            <span className="text-sm font-semibold text-green-600 leading-tight">
+                              {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
+                            </span>
+                            <span className="text-[11px] font-medium text-green-500/80 leading-tight">
+                              {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                              {metricsNewForm.cdiLabel}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     )}
