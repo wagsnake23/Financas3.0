@@ -134,7 +134,7 @@ export default function Investments() { // Alterado para export default function
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
   const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
-  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("fixo");
+  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">(isMobile ? "fixo" : "indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
@@ -1192,8 +1192,8 @@ export default function Investments() { // Alterado para export default function
               <div>
                 <Card
                   className={cn(
-                    "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
-                    isMobile && "border-none shadow-none bg-transparent p-4"
+                    "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full",
+                    isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                   )}
                   style={{
                     background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
@@ -1349,7 +1349,7 @@ export default function Investments() { // Alterado para export default function
                     </div>
 
                     {/* Card de Simulação Desktop Compacto e Unificado */}
-                    {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
+                    {(!isMobile || (amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined))) && (
                       <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
                         {/* Linha 1: Header */}
                         <div className="flex items-center justify-between mb-2">
@@ -1496,7 +1496,7 @@ export default function Investments() { // Alterado para export default function
                         </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
-                  <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
+                  <div className={cn("space-y-5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[565px]")}>
                     {calculatedInvestments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.

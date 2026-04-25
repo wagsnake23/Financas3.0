@@ -1134,11 +1134,7 @@ export default function Dashboard() {
                 />
               </div>
             )}
-            <Card className="p-6 animate-slide-up rounded-xl shadow-sm">
-              <p className={cn("text-muted-foreground", "font-roboto")}>
-                Mais conteúdo do Dashboard virá aqui.
-              </p>
-            </Card>
+
 
           </>
         )}
