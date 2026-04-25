@@ -191,7 +191,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       icone: data.icone,
     }));
 
-    const limit = isMobile ? rawData.length : 8; // Top 8 for desktop, all for mobile
+    const limit = rawData.length; // Show all items as requested
     return groupSubcategories(rawData, limit);
   }, [expensesBySubcategory, isMobile]);
 
@@ -424,6 +424,46 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 )}
               </div>
 
+              {/* Legenda Fixa (Active Item Summary) - Moved outside flex for full width on desktop */}
+              {!isMobile && (
+                <div className="mt-4 mb-[10px] h-20 relative overflow-hidden">
+                  <div className={cn(
+                    "flex items-center gap-2 pl-4 pr-5 py-3.5 rounded-xl transition-all duration-300 border border-transparent w-full",
+                    activePieIndex !== null ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
+                  )}
+                    style={{
+                      backgroundColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}15` : 'transparent',
+                      borderColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}30` : 'transparent'
+                    }}>
+                    {activePieIndex !== null && (
+                      <>
+                        <span className="text-3xl drop-shadow-md">{chartData[activePieIndex]?.icone}</span>
+                        <div className="flex flex-col mr-2">
+                          <span className="text-[11px] font-black uppercase text-gray-500/80 tracking-wider leading-none mb-0.5">Categoria</span>
+                          <span className="font-bold text-gray-800 text-[18px] leading-tight tracking-tight">{chartData[activePieIndex]?.name}</span>
+                        </div>
+                        <div className="ml-auto flex flex-col items-end">
+                          <span className="text-[16px] font-black text-[#1E6BCE] tracking-tighter leading-none">
+                            {formatCurrency(chartData[activePieIndex]?.value)}
+                          </span>
+                          <span className="text-xs font-black text-gray-500/70 mt-0.5">
+                            {((chartData[activePieIndex]?.value / totalMonthlyExpense) * 100).toFixed(1)}% do total
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  {activePieIndex === null && (
+                    <div className="flex items-center justify-center h-full text-xs font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
+                      Selecione uma categoria no gráfico abaixo
+                    </div>
+                  )}
+                </div>
+              )}
+
+
+
+
 
               {chartData.length === 0 ? (
                 <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
@@ -433,9 +473,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
               ) : (
                 <div
                   className={cn(
-                    "h-[350px] w-full outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                    "w-full outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 cursor-pointer",
                     "select-none [&_*]:outline-none [&_*]:focus:outline-none [&_*]:focus-visible:outline-none",
-                    isMobile && "h-[320px]"
+                    isMobile ? "h-[320px]" : "h-[550px]"
                   )}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
@@ -461,8 +501,8 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         data={chartData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={isMobile ? "55%" : "70%"}
-                        outerRadius={isMobile ? "78%" : "90%"}
+                        innerRadius={isMobile ? "55%" : "60%"}
+                        outerRadius={isMobile ? "78%" : "85%"}
                         paddingAngle={5}
                         dataKey="value"
                         animationBegin={0}
@@ -508,9 +548,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         <Legend
                           verticalAlign="bottom"
                           align="center"
-                          layout="horizontal"
+                          layout="vertical"
                           iconType="circle"
-                          wrapperStyle={{ paddingTop: '20px' }}
+                          wrapperStyle={{ paddingTop: '30px' }}
                           formatter={(value, entry: any) => {
                             const payload = entry.payload;
                             const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
@@ -527,40 +567,42 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                 </div>
               )}
 
-              {/* Legenda Fixa - Agora na parte inferior do card, mais próxima da borda */}
-              <div className="mt-4 h-20 relative overflow-hidden -mb-4">
-                <div className={cn(
-                  "flex items-center gap-2 pl-2 pr-3 py-3.5 rounded-xl transition-all duration-300 border border-transparent",
-                  activePieIndex !== null ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
-                )}
-                  style={{
-                    backgroundColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}15` : 'transparent',
-                    borderColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}30` : 'transparent'
-                  }}>
-                  {activePieIndex !== null && (
-                    <>
-                      <span className="text-3xl drop-shadow-md">{chartData[activePieIndex]?.icone}</span>
-                      <div className="flex flex-col mr-2">
-                        <span className="text-[11px] font-black uppercase text-gray-500/80 tracking-wider leading-none mb-0.5">Categoria</span>
-                        <span className="font-bold text-gray-800 text-[18px] leading-tight tracking-tight">{chartData[activePieIndex]?.name}</span>
-                      </div>
-                      <div className="ml-auto flex flex-col items-end">
-                        <span className="text-[16px] font-black text-[#1E6BCE] tracking-tighter leading-none">
-                          {formatCurrency(chartData[activePieIndex]?.value)}
-                        </span>
-                        <span className="text-xs font-black text-gray-500/70 mt-0.5">
-                          {((chartData[activePieIndex]?.value / totalMonthlyExpense) * 100).toFixed(1)}% do total
-                        </span>
-                      </div>
-                    </>
+              {/* Legenda Fixa - Mobile Only (Already moved up for desktop) */}
+              {isMobile && (
+                <div className="mt-4 h-20 relative overflow-hidden -mb-4">
+                  <div className={cn(
+                    "flex items-center gap-2 pl-2 pr-3 py-3.5 rounded-xl transition-all duration-300 border border-transparent",
+                    activePieIndex !== null ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
+                  )}
+                    style={{
+                      backgroundColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}15` : 'transparent',
+                      borderColor: activePieIndex !== null ? `${chartData[activePieIndex]?.color}30` : 'transparent'
+                    }}>
+                    {activePieIndex !== null && (
+                      <>
+                        <span className="text-3xl drop-shadow-md">{chartData[activePieIndex]?.icone}</span>
+                        <div className="flex flex-col mr-2">
+                          <span className="text-[11px] font-black uppercase text-gray-500/80 tracking-wider leading-none mb-0.5">Categoria</span>
+                          <span className="font-bold text-gray-800 text-[18px] leading-tight tracking-tight">{chartData[activePieIndex]?.name}</span>
+                        </div>
+                        <div className="ml-auto flex flex-col items-end">
+                          <span className="text-[16px] font-black text-[#1E6BCE] tracking-tighter leading-none">
+                            {formatCurrency(chartData[activePieIndex]?.value)}
+                          </span>
+                          <span className="text-xs font-black text-gray-500/70 mt-0.5">
+                            {((chartData[activePieIndex]?.value / totalMonthlyExpense) * 100).toFixed(1)}% do total
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  {activePieIndex === null && (
+                    <div className="flex items-center justify-center h-full text-xs font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
+                      Toque em uma fatia para detalhes
+                    </div>
                   )}
                 </div>
-                {activePieIndex === null && (
-                  <div className="flex items-center justify-center h-full text-xs font-black uppercase tracking-widest text-gray-400/60 animate-pulse">
-                    Toque em uma fatia para detalhes
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
 

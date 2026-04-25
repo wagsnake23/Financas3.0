@@ -1114,7 +1114,7 @@ export default function Dashboard() {
               </div>
             )}
 
-            {!filter && (
+            {(!filter || filter === "expenses") && (
               <div className="grid grid-cols-1">
                 <CombinedMonthlyExpensesDashboard
                   allRevenues={allRevenues}
