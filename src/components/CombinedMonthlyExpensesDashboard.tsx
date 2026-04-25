@@ -301,7 +301,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
   return (
     <div className="space-y-6">
       <Card className={cn(
-        "p-6 animate-slide-up rounded-[2xl] border border-white/20 bg-white/75 backdrop-blur-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.08)]",
+        "p-6 animate-slide-up rounded-[32px] border border-white/20 bg-white/75 backdrop-blur-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.08)]",
         isMobile && "p-0 bg-transparent shadow-none border-0 backdrop-blur-none"
       )} style={{ WebkitBackdropFilter: 'blur(10px)' }}>
         {!isMobile && (
