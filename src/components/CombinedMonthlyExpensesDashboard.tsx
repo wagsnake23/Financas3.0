@@ -191,7 +191,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
       icone: data.icone,
     }));
 
-    const limit = rawData.length; // Show all items as requested
+    const limit = isMobile ? rawData.length : 25; // Top 25 for desktop to avoid too long cards
     return groupSubcategories(rawData, limit);
   }, [expensesBySubcategory, isMobile]);
 
@@ -475,13 +475,13 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                   className={cn(
                     "w-full outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 cursor-pointer",
                     "select-none [&_*]:outline-none [&_*]:focus:outline-none [&_*]:focus-visible:outline-none",
-                    isMobile ? "h-[320px]" : "h-[550px]"
+                    isMobile ? "h-[320px]" : "h-[480px]"
                   )}
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart
-                      margin={{ top: 10, right: 25, left: 25, bottom: 10 }}
+                      margin={{ top: 10, right: 25, left: 25, bottom: 0 }}
                       style={{ outline: 'none' }}
                     >
                       <defs>
@@ -500,9 +500,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       <Pie
                         data={chartData}
                         cx="50%"
-                        cy="50%"
-                        innerRadius={isMobile ? "55%" : "60%"}
-                        outerRadius={isMobile ? "78%" : "85%"}
+                        cy={isMobile ? "50%" : "35%"}
+                        innerRadius={isMobile ? "55%" : "45%"}
+                        outerRadius={isMobile ? "78%" : "65%"}
                         paddingAngle={5}
                         dataKey="value"
                         animationBegin={0}
@@ -544,26 +544,58 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         />
                       </Pie>
                       <Tooltip content={<></>} />
-                      {!isMobile && (
-                        <Legend
-                          verticalAlign="bottom"
-                          align="center"
-                          layout="vertical"
-                          iconType="circle"
-                          wrapperStyle={{ paddingTop: '30px' }}
-                          formatter={(value, entry: any) => {
-                            const payload = entry.payload;
-                            const percentage = ((payload.value / totalMonthlyExpense) * 100).toFixed(0);
-                            return (
-                              <span className="text-sm font-semibold text-gray-600 pl-2">
-                                {value} <span className="text-primary/60 ml-1">{percentage}%</span>
-                              </span>
-                            );
-                          }}
-                        />
-                      )}
                     </PieChart>
                   </ResponsiveContainer>
+
+                  {/* Legenda Customizada - Fora do SVG para ocupar seu próprio espaço */}
+                  {!isMobile && (
+                    <div className="mt-[-80px] px-4 space-y-1 pb-4">
+                      {chartData.map((entry, index) => {
+                        const percentage = ((entry.value / totalMonthlyExpense) * 100).toFixed(0);
+                        const isActive = index === activePieIndex;
+                        return (
+                          <div 
+                            key={`legend-${index}`}
+                            onClick={() => handleSelect(index)}
+                            className={cn(
+                              "flex items-center gap-4 py-1 px-3 rounded-xl transition-all duration-300 cursor-pointer border border-transparent",
+                              isActive ? "bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] border-blue-100 translate-x-1" : "hover:bg-white/50 hover:translate-x-1"
+                            )}
+                          >
+                            {/* Bolinha da Cor */}
+                            <div 
+                              className="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)]"
+                              style={{ backgroundColor: entry.color }}
+                            />
+                            
+                            {/* Ícone Emoji */}
+                            <span className="text-xl drop-shadow-sm min-w-[28px] text-center">{entry.icone}</span>
+                            
+                            {/* Nome da Categoria */}
+                            <span className={cn(
+                              "text-[15px] flex-1 tracking-tight",
+                              isActive ? "font-black text-gray-900" : "font-bold text-gray-600"
+                            )}>
+                              {entry.name}
+                            </span>
+                            
+                            {/* Valor e Porcentagem */}
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-black text-[#1E6BCE]/70">
+                                {formatCurrency(entry.value)}
+                              </span>
+                              <span className={cn(
+                                "font-black px-2.5 py-1 rounded-xl text-[13px] transition-colors",
+                                isActive ? "bg-primary text-white" : "bg-primary/5 text-primary"
+                              )}>
+                                {percentage}%
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 
