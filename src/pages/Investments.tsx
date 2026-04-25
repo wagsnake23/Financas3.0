@@ -631,7 +631,79 @@ export default function Investments() { // Alterado para export default function
       {/* Main Content */}
       <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 pt-16 pb-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
         {!isMobile && (
-          <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
+          <>
+            <div className="flex items-center gap-4 mb-8">
+              <div
+                className="btn-3d p-2.5 rounded-xl flex items-center justify-center shadow-sm border-none transition-all h-auto w-auto"
+                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              >
+                <DynamicIcon
+                  name="📈"
+                  className="h-6 w-6"
+                />
+              </div>
+              <h1 
+                className="text-3xl font-extrabold tracking-[0.5px] transition-all duration-300 text-slate-800"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
+                }}
+              >
+                Meus Investimento<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
+              </h1>
+            </div>
+            
+            {/* 🔹 NOVO: Card de resumo unificado (DESKTOP) - SINGLE LINE */}
+            <Card
+              className="rounded-[24px] overflow-hidden mb-8 hidden lg:block shadow-sm"
+              style={{
+                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
+                backgroundBlendMode: "soft-light",
+                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(0,0,0,0.08)",
+                outline: "1px solid rgba(34, 197, 94, 0.08)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+              }}
+            >
+              <div className="grid grid-cols-4 items-center h-24">
+                {/* Total Investido */}
+                <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
+                  <div className="flex items-center gap-2">
+                    <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
+                  </div>
+                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalCurrentBalance)}</p>
+                </div>
+
+                {/* Rentabilidade Média */}
+                <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
+                  <div className="flex items-center gap-2">
+                    <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média a.a.</h4>
+                  </div>
+                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{stats.avgProfitability.toFixed(2)}%</p>
+                </div>
+
+                {/* Rendimento Diário */}
+                <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
+                  <div className="flex items-center gap-2">
+                    <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
+                  </div>
+                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                </div>
+
+                {/* Rendimento Mensal */}
+                <div className="flex flex-col gap-1.5 items-center h-full justify-center">
+                  <div className="flex items-center gap-2">
+                    <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
+                  </div>
+                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                </div>
+              </div>
+            </Card>
+          </>
         )}
 
         {/* REMOVIDO: MonthNavigator global */}
@@ -1562,65 +1634,6 @@ export default function Investments() { // Alterado para export default function
                   </div>
                 </Card>
 
-                {/* 🔹 NOVO: Card de resumo unificado, FLAT e Deep Glass Green (Agregado ao container da lista) */}
-                <Card
-                  className={cn(
-                    "rounded-[24px] overflow-hidden mt-8",
-                    isMobile ? "p-5" : "p-8"
-                  )}
-                  style={{
-                    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
-                    backgroundBlendMode: "soft-light",
-                    backdropFilter: "blur(6px)",
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    outline: "1px solid rgba(34, 197, 94, 0.08)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
-                  }}
-                >
-                  <div className={cn(
-                    "grid gap-y-7 items-start",
-                    isMobile ? "grid-cols-2" : "grid-cols-2"
-                  )}>
-                    {/* Total Investido - Col 1 (Esquerda Topo) */}
-                    <div className="flex flex-col gap-1.5 items-start">
-                      <div className="flex items-center gap-2">
-                        <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
-                      </div>
-                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-xl")}>{formatCurrency(stats.totalCurrentBalance)}</p>
-                    </div>
-
-                    {/* Rentabilidade Média - Col 2 (Direita Topo) */}
-                    <div className="flex flex-col gap-1.5 items-end text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média</h4>
-                      </div>
-                      <div className="flex items-baseline justify-end gap-1">
-                        <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{stats.avgProfitability.toFixed(2)}%</p>
-                        <span className="text-[10px] font-black text-[#166534]/60 uppercase">a.a.</span>
-                      </div>
-                    </div>
-
-                    {/* Rendimento Diário - Col 1 (Esquerda Base) */}
-                    <div className="flex flex-col gap-1.5 items-start">
-                      <div className="flex items-center gap-2">
-                        <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
-                      </div>
-                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{formatCurrency(stats.totalDailyYieldRS)}</p>
-                    </div>
-
-                    {/* Rendimento Mensal - Col 2 (Direita Base) */}
-                    <div className="flex flex-col gap-1.5 items-end text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                        <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
-                      </div>
-                      <p className={cn("font-bold text-[#1e293b] tracking-tight leading-none", isMobile ? "text-base" : "text-lg")}>{formatCurrency(stats.totalMonthlyYieldRS)}</p>
-                    </div>
-                  </div>
-                </Card>
                 </div>
               </div>
           )

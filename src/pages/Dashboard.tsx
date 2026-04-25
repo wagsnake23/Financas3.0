@@ -519,7 +519,7 @@ export default function Dashboard() {
             {!isMobile ? (
               <>
                 {/* Desktop Layout: Side-by-side Saldo and Cockpit */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
                   <StatCard
                     mainStatTitle="Saldo Mensal"
                     mainStatValue={stats.balance}
@@ -556,17 +556,16 @@ export default function Dashboard() {
                     <div className="h-12 md:h-[52px] w-full" />
                   </StatCard>
 
-                  {/* Investment Cockpit - Replaced with Investments Module design - Using 2/3 of space on large screens */}
-                  <div className="lg:col-span-2 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="card-receitas border-none rounded-[32px] p-8 shadow-sm h-full flex items-center">
-                      <div className="grid grid-cols-2 xl:grid-cols-4 items-center gap-x-8 gap-y-10 w-full">
+                  <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="card-receitas border-none rounded-[24px] p-6 shadow-sm h-full flex items-center">
+                      <div className="grid grid-cols-2 items-center gap-x-8 gap-y-10 w-full">
                         {/* Total Investido */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-start gap-4">
                           <div
-                            className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
+                            className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
                           >
-                            <DynamicIcon name="DollarSign" className="h-6 w-6 text-white" strokeWidth={3} />
+                            <DynamicIcon name="DollarSign" className="h-5 w-5 text-white" strokeWidth={3} />
                           </div>
                           <div className="flex flex-col">
                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Saldo Líquido Total</h4>
@@ -575,7 +574,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Rendimento Mensal */}
-                        <div className="flex items-center lg:justify-center gap-4 border-l border-success/10 h-10">
+                        <div className="flex items-center justify-start gap-4 border-l border-success/10 h-10 pl-8">
                           <div
                             className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
@@ -589,7 +588,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Rendimento Diário */}
-                        <div className="flex items-center lg:justify-center gap-4 border-l border-success/10 h-10">
+                        <div className="flex items-center justify-start gap-4 h-10">
                           <div
                             className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
@@ -603,14 +602,14 @@ export default function Dashboard() {
                         </div>
 
                         {/* Rentabilidade Média */}
-                        <div className="flex flex-row-reverse items-center gap-4 border-l border-success/10 h-10">
+                        <div className="flex items-center justify-start gap-4 border-l border-success/10 h-10 pl-8">
                           <div
-                            className="btn-3d p-3 rounded-2xl shadow-sm border-none flex items-center justify-center"
+                            className="btn-3d p-2.5 rounded-xl shadow-sm border-none flex items-center justify-center"
                             style={{ "--cor-topo": "#1AA361", "--cor-base": "#15803d" } as any}
                           >
-                            <DynamicIcon name="Percent" className="h-6 w-6 text-white" strokeWidth={3} />
+                            <DynamicIcon name="Percent" className="h-5 w-5 text-white" strokeWidth={3} />
                           </div>
-                          <div className="flex flex-col items-end">
+                          <div className="flex flex-col">
                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Média</h4>
                             <div className="flex items-baseline gap-1">
                               <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{currentYieldStats.avgProfitability.toFixed(2)}%</p>
