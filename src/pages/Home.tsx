@@ -296,7 +296,7 @@ export default function Home() {
             </div>
 
             <main className={cn(
-                "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1050px] !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
+                "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1050px] flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
                 isMobile ? "-mt-32 pb-10" : "-mt-24 md:mt-2"
             )} style={{ background: 'transparent' }}>
 
