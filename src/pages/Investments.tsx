@@ -1041,13 +1041,13 @@ export default function Investments() { // Alterado para export default function
                       return (
                         <div
                           key={investment.id}
-                          className="relative group overflow-hidden transition-all duration-300 p-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm"
+                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm"
                           style={{
                             backgroundColor: "#FFFFFF"
                           }}
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
-                          <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-[5px] -ml-1.5">
                               <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               <div className="flex flex-col">
@@ -1192,7 +1192,7 @@ export default function Investments() { // Alterado para export default function
               <div>
                 <Card
                   className={cn(
-                    "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full",
+                    "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full",
                     isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                   )}
                   style={{
@@ -1443,7 +1443,7 @@ export default function Investments() { // Alterado para export default function
                       type="submit"
                       className={cn(
                         "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
-                        isMobile ? "h-11 text-lg" : "h-11 text-lg"
+                        isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]"
                       )}
                       style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
                       disabled={loadingForm}
@@ -1496,7 +1496,7 @@ export default function Investments() { // Alterado para export default function
                         </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
-                  <div className={cn("space-y-5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[565px]")}>
+                  <div className={cn("space-y-5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[560px]")}>
                     {calculatedInvestments.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
@@ -1542,8 +1542,8 @@ export default function Investments() { // Alterado para export default function
                           <div
                             key={investment.id}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300 p-5 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
-                              isMobile && "p-4"
+                              "relative group overflow-hidden transition-all duration-300 py-[18px] px-5 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
+                              isMobile && "py-[14px] px-4"
                             )}
                             style={{
                               backgroundColor: "#FFFFFF",
@@ -1552,7 +1552,7 @@ export default function Investments() { // Alterado para export default function
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
-                            <div className="flex items-start justify-between mb-5">
+                            <div className={cn("flex items-start justify-between mb-4", isMobile && "mb-3")}>
                               <div className="flex items-start gap-[5px] -ml-1.5">
                                 <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                                 <div className="flex flex-col">
