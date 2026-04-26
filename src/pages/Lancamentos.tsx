@@ -172,7 +172,7 @@ const Lancamentos = () => {
         >
           <DialogHeader
             className={cn(
-              "flex flex-col items-start justify-start gap-0 space-y-0",
+              "flex flex-col items-start justify-start gap-0 space-y-0 mb-[-6px]",
               isMobile && "absolute top-3.5 left-4 right-12 text-left",
               !isMobile && "-mt-4"
             )}
@@ -182,14 +182,14 @@ const Lancamentos = () => {
               <DialogTitle className="text-xl font-extrabold tracking-[0.5px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
-              <p className={cn("text-[12px] font-medium text-gray-800 opacity-90", !isMobile ? "-mt-1" : "ml-[42px] -mt-[22px]")}>
+              <p className={cn("text-[12px] font-medium text-gray-800 opacity-90 relative", !isMobile ? "top-[0px]" : "ml-[42px] top-[-6px]")}>
                 Registrado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
               </p>
             )}
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
-            <div className={cn("form-body pb-0", isMobile && "pt-6")}>
+            <div className={cn("form-body pb-0", isMobile && "pt-[18px]")}>
               <TransactionEditForm
                 editingTransaction={editingTransaction}
                 onUpdateTransaction={handleUpdateTransaction}
