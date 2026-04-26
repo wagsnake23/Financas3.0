@@ -134,7 +134,7 @@ export default function Investments() { // Alterado para export default function
   const [loadingForm, setLoadingForm] = useState(false); // Novo estado para loading do formulário
   const [isCalendarOpen, setIsCalendarOpen] = useState(false); // Estado para controlar a abertura do calendário
   const [yieldViewMode, setYieldViewMode] = useState<"daily" | "monthly">("daily");
-  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">(isMobile ? "fixo" : "indexado");
+  const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
@@ -342,7 +342,7 @@ export default function Investments() { // Alterado para export default function
       setAmount(undefined); // Reset para undefined
       setProfitability(undefined); // Reset para undefined
       setPercentualIndexador(undefined); // Reset percentual indexador
-      setTipoRentabilidade("fixo"); // Reinicia como fixo
+      setTipoRentabilidade("indexado"); // Reinicia como indexado
       setDate(new Date()); // Reset para Date
       setType("fixed");
       setValidationErrors({}); // Clear errors on success
