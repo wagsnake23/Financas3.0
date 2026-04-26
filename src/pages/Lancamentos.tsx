@@ -182,7 +182,7 @@ const Lancamentos = () => {
               <DialogTitle className="text-xl font-extrabold tracking-[0.5px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
-              <p className={cn("text-[13px] font-medium text-slate-500", !isMobile ? "mt-1" : "mt-0.5 ml-[42px] -mt-[14px]")}>
+              <p className={cn("text-[12px] font-medium text-gray-800 opacity-90", !isMobile ? "-mt-1" : "ml-[42px] -mt-[22px]")}>
                 Registrado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
               </p>
             )}
