@@ -20,7 +20,7 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
       {/* MOBILE */}
       <div className={cn(
         "md:hidden text-center text-muted-foreground font-roboto w-full",
-        isMobile ? "text-[11px] py-1.5 pb-2" : "py-6 text-sm"
+        isMobile ? "text-[11px] py-1.5 pb-1" : "py-6 text-sm"
       )}>
         © {new Date().getFullYear()} Minhas Finanças — By{" "}
         <a

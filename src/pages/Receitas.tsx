@@ -709,7 +709,7 @@ export default function Receitas() {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-transparent z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 bg-transparent z-50 m-0" : "mt-8")}
         user={user}
       />
     </div>
