@@ -163,7 +163,7 @@ export const MobileCreditCardExpenses: React.FC<
                 <p className="text-[0.65rem] text-[#22c55e] font-bold md:text-sm">Pago</p>
               </div>
               <p className="text-[13px] md:text-[16px] leading-none" style={{ color: "#1f2937", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                <FormatCurrencyStyled value={totalPaid} />
+                <FormatCurrencyStyled value={totalPaid} prefixColor="#22c55e" />
               </p>
             </div>
 
@@ -178,7 +178,7 @@ export const MobileCreditCardExpenses: React.FC<
                 <p className="text-[0.65rem] text-[#ef4444] font-bold md:text-sm">Pendente</p>
               </div>
               <p className="text-[13px] md:text-[16px] leading-none" style={{ color: "#1f2937", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                <FormatCurrencyStyled value={totalPending} />
+                <FormatCurrencyStyled value={totalPending} prefixColor="#ef4444" />
               </p>
             </div>
 
@@ -192,7 +192,7 @@ export const MobileCreditCardExpenses: React.FC<
                 <p className="text-[0.65rem] text-[#4b5563] font-bold md:text-sm">Total</p>
               </div>
               <p className="text-[13px] md:text-[16px] leading-none" style={{ color: "#1f2937", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                <FormatCurrencyStyled value={totalCardExpenses} />
+                <FormatCurrencyStyled value={totalCardExpenses} prefixColor="#4b5563" />
               </p>
             </div>
           </div>
@@ -209,13 +209,13 @@ export const MobileCreditCardExpenses: React.FC<
   );
 };
 
-const FormatCurrencyStyled = ({ value }: { value: number }) => {
+const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixColor?: string }) => {
   const formatted = formatCurrency(value);
   const match = formatted.match(/^(R\$)\s?(.*)$/);
   if (match) {
     return (
       <>
-        <span style={{ opacity: 0.85, fontSize: "0.85em", fontWeight: 500, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
+        <span style={{ color: prefixColor, opacity: prefixColor ? 1 : 0.85, fontSize: "0.85em", fontWeight: 500, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
         {match[2]}
       </>
     );
