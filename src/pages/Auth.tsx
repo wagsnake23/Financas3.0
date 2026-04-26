@@ -647,6 +647,7 @@ export default function Auth() {
           </div>
           <Footer
             isMobile={isMobile}
+            forceMobileStyle={true}
             className="mt-1 py-1"
             user={null}
           />

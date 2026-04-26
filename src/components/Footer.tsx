@@ -6,11 +6,12 @@ import { User } from "@supabase/supabase-js"; // Importar o tipo User do Supabas
 
 interface FooterProps {
   isMobile?: boolean;
+  forceMobileStyle?: boolean; // Adicionado para forçar o estilo mobile em desktop
   className?: string;
   user: User | null; // Adicionado a prop user
 }
 
-export const Footer = ({ isMobile, className, user }: FooterProps) => {
+export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterProps) => {
   const userName = user?.user_metadata?.nome?.trim() || "Usuário não identificado"; // Acessar o nome do user_metadata
   const mensagem = `Olá Vagner! Meu nome é ${userName} e estou usando a aplicação Minhas Finanças. Preciso de ajuda!`;
   const linkWhatsApp = `https://api.whatsapp.com/send?phone=5514991188921&text=${encodeURIComponent(mensagem)}`; // URL atualizada
@@ -19,8 +20,9 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
     <footer className={cn("w-full", className)}>
       {/* MOBILE */}
       <div className={cn(
-        "md:hidden text-center text-muted-foreground font-roboto w-full",
-        isMobile ? "text-[11px] py-1.5 pb-1" : "py-6 text-sm"
+        !forceMobileStyle && "md:hidden",
+        "text-center text-gray-800 font-roboto w-full font-medium",
+        (isMobile || forceMobileStyle) ? "text-[11px] py-1.5 pb-1" : "py-6 text-sm"
       )}>
         © {new Date().getFullYear()} Minhas Finanças — By{" "}
         <a
@@ -32,8 +34,8 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
         >
           Vagner
           <svg
-            width={isMobile ? "12" : "15"} // Tamanho responsivo para o SVG
-            height={isMobile ? "12" : "15"} // Tamanho responsivo para o SVG
+            width={(isMobile || forceMobileStyle) ? "12" : "15"} // Tamanho responsivo para o SVG
+            height={(isMobile || forceMobileStyle) ? "12" : "15"} // Tamanho responsivo para o SVG
             viewBox="0 0 32 32"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +47,8 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
       </div>
 
       {/* DESKTOP */}
-      <div className="hidden md:flex bg-[#0F172A] border-t border-gray-800 shadow-2xl py-8 w-full">
+      {!forceMobileStyle && (
+        <div className="hidden md:flex bg-[#0F172A] border-t border-gray-800 shadow-2xl py-8 w-full">
         <div className="max-w-[1600px] mx-auto px-8 w-full flex justify-between items-center">
           
           {/* LADO ESQUERDO */}
@@ -93,7 +96,8 @@ export const Footer = ({ isMobile, className, user }: FooterProps) => {
           </div>
 
         </div>
-      </div>
+        </div>
+      )}
     </footer>
   );
 };
