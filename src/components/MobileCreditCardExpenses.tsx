@@ -139,7 +139,7 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="rounded-[14px] w-full h-[32px] text-xs font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+          className="rounded-[14px] w-full h-[32px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
           style={{ background: "linear-gradient(135deg, #6d28d9, #7c3aed)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
