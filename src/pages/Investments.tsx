@@ -1662,7 +1662,7 @@ export default function Investments() { // Alterado para export default function
             isMobile ? "-mt-2 -mb-2" : "-mt-4 pl-1"
           )}>
             <span className="text-2xl select-none">📝</span>
-            <DialogTitle className="text-xl font-bold pb-[1px] text-left text-[#22935D]">Editar Investimento</DialogTitle>
+            <DialogTitle className="text-xl font-extrabold tracking-[0.5px] pb-[1px] text-left text-[#22935D]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
