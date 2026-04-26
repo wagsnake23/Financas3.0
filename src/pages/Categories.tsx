@@ -383,7 +383,7 @@ const Categories = () => {
             <Card
               className={cn(
                 "rounded-[24px] shadow-md border-2 border-white card-yellow overflow-hidden relative",
-                isMobile && "mb-4"
+                isMobile && "mb-1"
               )}
               style={{ backgroundColor: "transparent" }}
             >
@@ -417,7 +417,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-10 mb-4 px-4 bg-transparent" : "mt-8")} />
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-0 mb-2 px-4 bg-transparent" : "mt-8")} />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal
