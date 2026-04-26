@@ -816,7 +816,7 @@ export default function Investments() { // Alterado para export default function
                       <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                       <NumericInput
                         id="profitability"
-                        value={profitability}
+                        value={profitability === undefined ? "" : profitability}
                         onValueChange={(values) => {
                           setProfitability(values.floatValue);
                           setValidationErrors(prev => ({ ...prev, profitability: false }));
@@ -838,7 +838,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-2">
                       <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
                       <NumericInput
-                        value={percentualIndexador}
+                        value={percentualIndexador === undefined ? "" : percentualIndexador}
                         onValueChange={(v) => {
                           setPercentualIndexador(v.floatValue);
                           setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
@@ -1294,7 +1294,7 @@ export default function Investments() { // Alterado para export default function
                           <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                           <NumericInput
                             id="profitability"
-                            value={profitability}
+                            value={profitability === undefined ? "" : profitability}
                             onValueChange={(values) => {
                               setProfitability(values.floatValue);
                               setValidationErrors(prev => ({ ...prev, profitability: false }));
@@ -1316,7 +1316,7 @@ export default function Investments() { // Alterado para export default function
                         <div className="space-y-2">
                           <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
                           <NumericInput
-                            value={percentualIndexador}
+                            value={percentualIndexador === undefined ? "" : percentualIndexador}
                             onValueChange={(v) => {
                               setPercentualIndexador(v.floatValue);
                               setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
