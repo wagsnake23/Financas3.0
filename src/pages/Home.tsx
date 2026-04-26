@@ -60,6 +60,20 @@ const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLi
     );
 };
 
+const FormatCurrencyStyled = ({ value }: { value: number }) => {
+    const formatted = formatCurrency(value);
+    const match = formatted.match(/^(R\$)\s?(.*)$/);
+    if (match) {
+        return (
+            <>
+                <span style={{ opacity: 0.85, fontSize: "0.85em", fontWeight: 500, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
+                {match[2]}
+            </>
+        );
+    }
+    return <>{formatted}</>;
+};
+
 export default function Home() {
     const { user, loading: authLoading } = useAuth();
     const isMobile = useIsMobile();
@@ -327,8 +341,8 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
                                             <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                            <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                                {formatCurrency(dStats.currentBalance)}
+                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                                <FormatCurrencyStyled value={dStats.currentBalance} />
                                             </p>
                                         </div>
                                         {/* Seletor de Mês (Posição Top Right) */}
@@ -396,8 +410,8 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[16px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
-                                            <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                                {formatCurrency(dStats.currentExpenses)}
+                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                                <FormatCurrencyStyled value={dStats.currentExpenses} />
                                             </p>
                                         </div>
                                         <Button
@@ -462,8 +476,8 @@ export default function Home() {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
                                             <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
-                                            <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                                {formatCurrency(dStats.currentIncome)}
+                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                                <FormatCurrencyStyled value={dStats.currentIncome} />
                                             </p>
                                         </div>
                                         <Button
@@ -541,8 +555,8 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                    <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                        {formatCurrency(dStats.currentBalance)}
+                                    <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <FormatCurrencyStyled value={dStats.currentBalance} />
                                     </p>
                                 </div>
                                 {/* Seletor de Mês (Posição Top Right) */}
@@ -611,8 +625,8 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
-                                    <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                        {formatCurrency(dStats.currentIncome)}
+                                    <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <FormatCurrencyStyled value={dStats.currentIncome} />
                                     </p>
                                 </div>
                                 <Button
@@ -677,8 +691,8 @@ export default function Home() {
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
-                                    <p className="text-[21px] font-[900] tracking-tighter leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "rgba(17, 24, 39, 0.92)", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
-                                        {formatCurrency(dStats.currentExpenses)}
+                                    <p className="text-[21px] font-[600] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.15)" }}>
+                                        <FormatCurrencyStyled value={dStats.currentExpenses} />
                                     </p>
                                 </div>
                                 <Button
