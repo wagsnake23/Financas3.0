@@ -417,7 +417,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 z-50 m-0 bg-[#F9FAFB] border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]" : "mt-8")} />
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-10 mb-4 px-4 bg-transparent" : "mt-8")} />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal

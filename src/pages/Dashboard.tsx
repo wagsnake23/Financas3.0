@@ -1141,7 +1141,7 @@ export default function Dashboard() {
       </main>
       <Footer
         isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "mt-10 mb-4 px-4 bg-transparent" : "mt-8")}
         user={user}
       />
     </div>
