@@ -476,13 +476,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           </Select>
           <Button
             type="button"
-            size="icon"
+            variant="ghost"
             onClick={() => setIsAddSubcategoryModalOpen(true)}
             className={cn(
-              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-rose-200 transition-all active:scale-90 flex-shrink-0",
+              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-[#E54D4D] transition-all active:scale-90 flex-shrink-0 !bg-transparent",
               isMobile ? "h-9 w-8" : "h-10 w-9"
             )}
-            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
+            style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D" } as any}
           >
             <Plus className="h-[18px] w-[18px] text-white" />
           </Button>
@@ -587,7 +587,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
               isMobile ? "h-11 text-lg" : "h-11 text-lg"
             )}
-            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B", fontFamily: "'Inter', sans-serif" } as any}
+            style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
             disabled={loading}
           >
             {loading ? "Salvando..." : "Salvar Despesa"}
