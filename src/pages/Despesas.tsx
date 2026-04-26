@@ -233,7 +233,7 @@ export default function Despesas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-[24px] left-0 right-0 z-[60] px-4 pt-1 pb-3 bg-transparent"
+                isMobile && "fixed bottom-[20px] left-0 right-0 z-[60] px-4 pt-[1px] pb-3 bg-transparent"
               )}
             />
           </div>
