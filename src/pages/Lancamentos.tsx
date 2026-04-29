@@ -89,21 +89,55 @@ const Lancamentos = () => {
         isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-16 bg-background"
       )}>
       <Navigation />
+
+      {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
+      {!isMobile && (
+        <div className="relative h-[160px] w-full overflow-hidden bg-background">
+          <div className="container mx-auto px-6 relative z-10 max-w-[1200px] pt-12 md:pt-16 flex justify-between items-start">
+            <div>
+              <div className="flex items-start gap-3">
+                <div 
+                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-default h-auto w-auto mt-1"
+                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                >
+                  <span className="text-2xl select-none">🧾</span>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Lançamentos
+                  </h1>
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 uppercase tracking-wider opacity-80">
+                    Registro de Despesas e Receitas
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => navigate(-1)}
+              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1e3a8a] bg-white hover:bg-white/90"
+              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+            >
+              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1e3a8a]" strokeWidth={3} />
+              Voltar
+            </Button>
+          </div>
+        </div>
+      )}
+
       <main
         className={cn(
           "container mx-auto flex-grow",
-          isMobile ? "px-0 pt-0 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-0 pb-8"
+          isMobile ? "px-0 pt-0 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-0 pb-8 -mt-6"
         )}
       >
-
-
         <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8 px-4" : "mt-3 mb-6 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
             onNextMonth={handleNextMonth}
             isMobile={isMobile}
-            onBack={() => navigate(-1)}
+            onBack={isMobile ? () => navigate(-1) : undefined}
             backButtonColor="#E54D4D"
             hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || searchTerm !== ""}
             onClearFilters={() => {
