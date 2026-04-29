@@ -292,7 +292,7 @@ export default function Home() {
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
-                    "container mx-auto px-6 relative z-10 max-w-[800px] md:max-w-[1050px]",
+                    "container mx-auto px-6 relative z-10 max-w-[800px] md:max-w-[1070px]",
                     isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
@@ -310,7 +310,7 @@ export default function Home() {
             </div>
 
             <main className={cn(
-                "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1050px] flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
+                "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1070px] flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
                 isMobile ? "-mt-32 pb-10" : "-mt-24 md:mt-2"
             )} style={{ background: 'transparent' }}>
 
@@ -415,7 +415,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                             style={{ 
                                                 background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                                 border: "1px solid rgba(0,0,0,0.08)",
@@ -481,7 +481,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                             style={{ 
                                                 background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                                 border: "1px solid rgba(0,0,0,0.08)",
@@ -539,10 +539,10 @@ export default function Home() {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px]">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                 backgroundBlendMode: "normal",
@@ -552,7 +552,7 @@ export default function Home() {
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                             }}
                         >
-                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
+                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
                                     <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
@@ -561,7 +561,7 @@ export default function Home() {
                                 </div>
                                 {/* Seletor de Mês (Posição Top Right) */}
                                 <div
-                                    className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
+                                    className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[150px] -mr-2 bg-white/10 cursor-pointer"
                                     style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
                                 >
                                     <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
@@ -576,7 +576,7 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center mt-1 md:mt-0 gap-2">
+                            <div className="flex items-center mt-1 md:mt-[3px] gap-2 md:gap-[11px]">
                                 {/* Investments Icon Button */}
                                 <Button
                                     onClick={() => navigate("/dashboard?filter=investments")}
@@ -611,7 +611,7 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "17px",
                                 background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
@@ -622,7 +622,7 @@ export default function Home() {
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
                             }}
                         >
-                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
+                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
                                     <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
@@ -630,7 +630,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1 md:text-[14px]"
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                     style={{ 
                                         background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                         border: "1px solid rgba(0,0,0,0.08)",
@@ -645,7 +645,7 @@ export default function Home() {
                                 </Button>
                             </div>
 
-                            <div className="flex items-center justify-between mt-1 md:mt-0">
+                            <div className="flex items-center justify-between mt-1 md:mt-[3px]">
                                 <div className="flex items-start gap-2">
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=revenues")}
@@ -665,7 +665,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <Button
-                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
                                     style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate("/receitas")}
                                 >
@@ -677,7 +677,7 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[170px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "17px",
                                 background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
@@ -688,7 +688,7 @@ export default function Home() {
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
                             }}
                         >
-                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-4">
+                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
                                     <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
@@ -696,7 +696,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-3 rounded-[14px] font-bold text-[13px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1 md:text-[14px]"
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                     style={{ 
                                         background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                         border: "1px solid rgba(0,0,0,0.08)",
@@ -711,7 +711,7 @@ export default function Home() {
                                 </Button>
                             </div>
 
-                            <div className="flex items-center justify-between mt-1 md:mt-0">
+                            <div className="flex items-center justify-between mt-1 md:mt-[3px]">
                                 <div className="flex items-start gap-2">
                                     <Button
                                         onClick={() => navigate("/dashboard?filter=expenses")}
@@ -731,7 +731,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <Button
-                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2 md:text-[15px]"
+                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
                                     style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate("/despesas")}
                                 >
@@ -742,7 +742,7 @@ export default function Home() {
                         </Card>
 
                         {/* CARD DE CARTÃO DE CRÉDITO */}
-                        <div id="cartoes-section" className="md:h-[170px] mb-4">
+                        <div id="cartoes-section" className="md:h-[185px] mb-4">
                             <MobileCreditCardExpenses
                                 cartoes={cartoes}
                                 expenseInstallments={dExpenses}
