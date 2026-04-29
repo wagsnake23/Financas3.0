@@ -401,8 +401,8 @@ const CategoriesList = ({
                 className={cn(
                   "w-full flex items-center gap-3 p-3 rounded-xl transition-all border text-left",
                   isActive 
-                    ? "bg-white shadow-sm ring-1 ring-primary/20 border-primary/20" 
-                    : "bg-slate-50/50 border-transparent hover:bg-white hover:border-slate-200"
+                    ? "bg-[#FEF9C3]/70 shadow-sm border-[rgba(245,158,11,0.35)]" 
+                    : "bg-white border-[rgba(245,158,11,0.12)] hover:border-[rgba(245,158,11,0.25)]"
                 )}
               >
                 <div 
@@ -435,7 +435,7 @@ const CategoriesList = ({
       <div className="overflow-y-auto custom-scrollbar px-2" style={{ maxHeight: effectiveMaxHeight }}>
         {activeCategory ? (
           <div className="space-y-3">
-             <div className="flex items-center gap-2 mb-4 sticky top-0 bg-white/95 backdrop-blur-sm py-2 z-20 border-b border-slate-100/50 -mx-2 px-2">
+             <div className="flex items-center gap-2 mb-4 sticky top-0 bg-[#FEF9C3]/70 backdrop-blur-sm py-2 z-20 border border-[rgba(245,158,11,0.35)] rounded-xl px-3 shadow-sm">
                 <div 
                   className="h-6 w-1 rounded-full flex-shrink-0" 
                   style={{ backgroundColor: getCategoryColor(activeCategory, allFlatCategories) }} 
