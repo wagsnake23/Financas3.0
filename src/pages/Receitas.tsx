@@ -687,7 +687,7 @@ export default function Receitas() {
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
             <div className="space-y-6">
               <Card
-                className="p-6 lg:px-6 rounded-[24px] shadow-sm border border-[#EDFDF5] card-receitas"
+                className="p-6 lg:px-6 rounded-[24px] shadow-sm card-receitas"
                 style={{ backgroundColor: "transparent" }}
               >
                 {oneOffFormContent}
