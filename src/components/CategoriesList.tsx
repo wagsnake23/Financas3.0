@@ -280,7 +280,7 @@ const CategoriesList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
-  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "420px");
+  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "440px");
 
   const flatCategories = useMemo(() => {
     const flatten = (cats: HierarchicalCategory[], acc: AppCategory[] = []) => {
@@ -435,8 +435,11 @@ const CategoriesList = ({
       <div className="overflow-y-auto custom-scrollbar px-2" style={{ maxHeight: effectiveMaxHeight }}>
         {activeCategory ? (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-4 sticky top-0 bg-white/95 backdrop-blur-sm py-2 z-20 border-b border-slate-100/50 -mx-2 px-2">
-               <div className="h-6 w-1 rounded-full bg-primary/60" />
+             <div className="flex items-center gap-2 mb-4 sticky top-0 bg-white/95 backdrop-blur-sm py-2 z-20 border-b border-slate-100/50 -mx-2 px-2">
+                <div 
+                  className="h-6 w-1 rounded-full flex-shrink-0" 
+                  style={{ backgroundColor: getCategoryColor(activeCategory, allFlatCategories) }} 
+                />
                <h3 className="font-bold text-slate-700 uppercase tracking-wider text-[11px] flex items-center gap-2">
                  Subcategorias de {activeCategory.nome} 
                  <DynamicIcon name={activeCategory.icone} className="h-3.5 w-3.5 text-slate-500" />
