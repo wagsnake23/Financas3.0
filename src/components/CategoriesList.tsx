@@ -477,10 +477,12 @@ const CategoriesList = ({
       className={cn(
         "flex flex-col h-auto",
         !hideCardWrapper && "p-4 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "md:pl-4 md:pr-2 pb-1 pt-0.5 md:pt-[5px]")
+        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "md:pl-4 md:pr-2 pb-2 pt-0.5 md:pt-0")
       )}
     >
-      <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-1")}>
+      <div className={cn(
+        isMobile ? "flex-shrink-0 mb-2" : "sticky top-[-4px] z-30 bg-transparent py-2 mb-2 mt-[-4px]"
+      )}>
         <div className={cn(
           "flex flex-col sm:flex-row sm:items-center gap-2", 
           isMobile ? "mb-2" : "mb-0", 
@@ -500,7 +502,7 @@ const CategoriesList = ({
           )}
 
           {!isMobile && activeCategory && (
-            <div className="flex items-center gap-2 bg-[#FEF9C3]/70 backdrop-blur-sm py-1 px-3 border border-[rgba(245,158,11,0.35)] rounded-xl shadow-sm animate-in fade-in slide-in-from-right-4 duration-300 ml-auto">
+            <div className="flex items-center gap-2 bg-[#FEF9C3] py-1 px-3 border border-[rgba(245,158,11,0.35)] rounded-xl shadow-sm animate-in fade-in slide-in-from-right-4 duration-300 ml-auto">
                 <div 
                   className="h-3.5 w-1 rounded-full flex-shrink-0" 
                   style={{ backgroundColor: getCategoryColor(activeCategory, allFlatCategories) }} 

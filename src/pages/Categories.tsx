@@ -429,7 +429,7 @@ const Categories = () => {
                 "rounded-[24px] overflow-hidden relative card-yellow",
                 isMobile 
                   ? "px-2 py-4 border-2 border-white shadow-md mb-1" 
-                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-1"
+                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-2"
               )}
               style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
             >
