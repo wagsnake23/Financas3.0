@@ -360,17 +360,18 @@ const Categories = () => {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "pt-16 pb-10" : "-mt-24 pb-20"
+          isMobile ? "px-3 pt-16 pb-10" : "-mt-24 pb-20"
         )}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
           <Card
             className={cn(
-              "p-6 rounded-[24px] shadow-md border-2 border-white card-yellow relative overflow-hidden"
+              "rounded-[24px] relative overflow-hidden card-yellow",
+              isMobile 
+                ? "p-6 border-2 border-white shadow-md" 
+                : "p-[28px_24px] max-w-[420px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
             )}
-            style={{
-              backgroundColor: "transparent"
-            }}
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
           >
             <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
               {!isMobile ? (
@@ -396,21 +397,19 @@ const Categories = () => {
           <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
             <Card
               className={cn(
-                "rounded-[24px] shadow-md border-2 border-white card-yellow overflow-hidden relative",
-                isMobile && "mb-1"
+                "rounded-[24px] overflow-hidden relative card-yellow",
+                isMobile 
+                  ? "px-2 py-4 border-2 border-white shadow-md mb-1" 
+                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-4"
               )}
-              style={{ backgroundColor: "transparent" }}
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
             >
-              <div className={cn("flex items-center p-4 md:p-6 pb-0", isMobile ? "gap-1.5" : "gap-2")}>
-                {!isMobile ? (
-                  <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                {isMobile && (
+                  <div className={cn("flex items-center px-4 pb-0 gap-1.5")}>
                     <span className="text-xl">🗃️</span>
+                    <h2 className="text-xl font-black text-[#374151]">Categorias Cadastradas</h2>
                   </div>
-                ) : (
-                  <span className="text-xl">🗃️</span>
                 )}
-                <h2 className="text-xl font-black text-[#374151]">Categorias Cadastradas</h2>
-              </div>
               <React.Suspense fallback={
                 <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
                   Carregando lista de categorias...
@@ -423,7 +422,7 @@ const Categories = () => {
                   isMobile={isMobile}
                   allFlatCategories={allCategories}
                   hideCardWrapper={true}
-                  hideTitle={true}
+                  hideTitle={isMobile}
                 />
               </React.Suspense>
             </Card>

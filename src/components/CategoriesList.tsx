@@ -280,7 +280,7 @@ const CategoriesList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
-  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "70vh");
+  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "420px");
 
   const flatCategories = useMemo(() => {
     const flatten = (cats: HierarchicalCategory[], acc: AppCategory[] = []) => {
@@ -389,7 +389,7 @@ const CategoriesList = ({
   const renderDesktopView = () => (
     <div className="grid grid-cols-[320px_1fr] gap-4 h-full min-h-[500px]">
       {/* Master Column (Categories) */}
-      <div className="flex flex-col border-r border-slate-100 pr-2 overflow-y-auto custom-scrollbar" style={{ maxHeight: effectiveMaxHeight }}>
+      <div className="flex flex-col border-r border-slate-100 pr-[6px] overflow-y-auto custom-scrollbar" style={{ maxHeight: effectiveMaxHeight }}>
         <div className="space-y-1.5 pb-4">
           {filteredCategories.map((category, index) => {
             const color = getCategoryColor(category, allFlatCategories);
@@ -442,7 +442,7 @@ const CategoriesList = ({
                </h3>
             </div>
             {activeCategory.subCategories && activeCategory.subCategories.length > 0 ? (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-3 pb-8">
+              <div className="grid grid-cols-2 gap-[14px] pb-8">
                 {activeCategory.subCategories.map((sub, idx) => (
                   <CategoryItem
                     key={sub.id}
@@ -477,20 +477,31 @@ const CategoriesList = ({
   return (
     <Container
       className={cn(
-        "flex flex-col",
+        "flex flex-col h-auto",
         !hideCardWrapper && "p-4 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-4 pb-6 pt-5" : "px-4 pb-6 pt-2")
+        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "px-4 md:px-6 pb-6 pt-1 md:pt-4")
       )}
     >
-      <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-4")}>
-        <div className={cn("flex flex-col sm:flex-row sm:items-center gap-4", isMobile ? "mb-2" : "mb-4", !hideTitle ? "sm:justify-between" : "sm:justify-start")}>
+      <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-3")}>
+        <div className={cn(
+          "flex flex-col sm:flex-row sm:items-center gap-4", 
+          isMobile ? "mb-2" : "mb-0", 
+          !hideTitle ? "justify-between" : "justify-start"
+        )}>
           {!hideTitle && (
-            <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
-              🗃️ Categorias Cadastradas
-            </h2>
+            <div className="flex items-center gap-2">
+              {!isMobile && (
+                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                  <span className="text-xl">🗃️</span>
+                </div>
+              )}
+              <h2 className="text-xl font-black text-[#374151]">
+                Categorias Cadastradas
+              </h2>
+            </div>
           )}
 
-          <div className="relative flex-1 px-1">
+          <div className={cn("relative px-1", !isMobile && "flex-1 max-w-[320px]")}>
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"

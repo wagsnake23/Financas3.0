@@ -172,7 +172,7 @@ export const CategoryForm = ({
       <form
         id="category-form"
         onSubmit={handleSubmit}
-        className={cn("space-y-4", isMobile && "space-y-2")}
+        className={cn(isMobile ? "space-y-2" : "space-y-[14px]")}
       >
         <div className="space-y-1">
           <Label className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
@@ -198,7 +198,7 @@ export const CategoryForm = ({
               id="parent_id"
               className={cn(
                 "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-11",
+                isMobile ? "h-9 text-sm" : "h-[42px]",
                 getBorderClass({}),
                 "!bg-white"
               )}
@@ -243,14 +243,14 @@ export const CategoryForm = ({
             required
             className={cn(
               "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium !bg-white",
-              isMobile ? "h-9 text-sm" : "h-11",
+              isMobile ? "h-9 text-sm" : "h-[42px]",
               getBorderClass({})
             )}
             disabled={editingCategory?.user_id === null}
           />
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1 !mb-4">
           <Label className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Ícone / Emoji</Label>
           <div className="relative">
             <button
@@ -298,7 +298,7 @@ export const CategoryForm = ({
         </div>
 
         {isMobile && <div className="h-4" />}
-        <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "mt-6")}>
+        <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "mt-1.5")}>
           {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
               type="button"
