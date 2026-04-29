@@ -86,34 +86,43 @@ const CategoryItem = ({
       <div
         className={cn(
           "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white w-full",
-          !isMobile && level > 0 && "min-h-[64px]"
+          (!isMobile && level > 0) ? "h-[68px]" : "min-h-[64px]"
         )}
         style={{
           borderColor: effectiveColor,
           borderWidth: level === 0 ? "1px" : "0.5px",
         }} // Apply effectiveColor to border
       >
-        <div className="flex items-center flex-1 min-w-0 gap-2">
+        <div className={cn(
+          "flex items-center flex-1 min-w-0",
+          (!isMobile && level > 0) ? "gap-1.5" : "gap-2"
+        )}>
           {categoryNumber && (
-            <span className="font-bold text-[12px] text-muted-foreground min-w-[28px] text-left ml-1">
+            <span className={cn(
+                "font-bold text-muted-foreground text-left ml-0.5",
+                (!isMobile && level > 0) ? "text-[11px] min-w-[16px] mr-0.5" : "text-[12px] min-w-[28px] ml-1"
+            )}>
               {categoryNumber}
             </span>
           )}
 
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 flex-shrink-0"
+            className={cn(
+                "rounded-xl flex items-center justify-center relative transition-all duration-300 flex-shrink-0",
+                (!isMobile && level > 0) ? "w-8 h-8" : "w-10 h-10"
+            )}
             style={{ 
                 background: `linear-gradient(135deg, ${effectiveColor} 0%, ${effectiveColor}dd 100%)`,
                 boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 3px 0 ${effectiveColor}aa, 0 4px 8px rgba(0,0,0,0.15)`,
                 border: `1px solid ${effectiveColor}33`
             }}
           >
-            <DynamicIcon name={category.icone} className="h-5 w-5 text-white drop-shadow-sm" />
+            <DynamicIcon name={category.icone} className={cn("text-white drop-shadow-sm", (!isMobile && level > 0) ? "h-4 w-4" : "h-5 w-5")} />
           </div>
-          <div className="flex-1 min-w-0 py-1 ml-0.5">
+          <div className="flex-1 min-w-0 py-0.5 ml-0.5">
             <p className={cn(
-                "leading-tight",
-                (!isMobile && level > 0) ? "text-[14px] font-semibold truncate" : "font-semibold line-clamp-2 break-words"
+                "leading-[1.2]",
+                (!isMobile && level > 0) ? "text-[14px] font-semibold line-clamp-2" : "font-semibold line-clamp-2 break-words"
             )}>{category.nome}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               {paymentLabel && <span>{paymentLabel}</span>}
@@ -424,7 +433,7 @@ const CategoriesList = ({
                </h3>
             </div>
             {activeCategory.subCategories && activeCategory.subCategories.length > 0 ? (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 pb-8">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-3 pb-8">
                 {activeCategory.subCategories.map((sub, idx) => (
                   <CategoryItem
                     key={sub.id}
@@ -434,7 +443,7 @@ const CategoriesList = ({
                     level={1}
                     allFlatCategories={allFlatCategories}
                     isMobile={isMobile}
-                    categoryNumber={`${filteredCategories.findIndex(c => c.id === selectedCategoryId) + 1}.${idx + 1}`}
+                    categoryNumber={`${idx + 1}`}
                   />
                 ))}
               </div>
