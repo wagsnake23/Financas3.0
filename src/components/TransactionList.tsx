@@ -386,7 +386,7 @@ export const TransactionList = ({
   const transactionsToDisplay = sortedTransactions;
 
   return (
-    <div className={cn("p-6 pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "")}>
+    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "pb-6")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
@@ -394,7 +394,7 @@ export const TransactionList = ({
         !isMobile && "flex-row items-center gap-3 mb-6"
       )}>
         {/* Campo de Pesquisa */}
-        <div className="relative flex-grow group">
+        <div className={cn("relative group", !isMobile && "flex-1")}>
           <Input
             placeholder="Digite para buscar..."
             value={localSearch}
@@ -420,18 +420,18 @@ export const TransactionList = ({
         {/* Container de Filtros */}
         <div className={cn(
           "flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap shrink-0",
-          !isMobile && "flex-grow-0"
+          !isMobile && "flex-[3] overflow-visible"
         )}>
           {/* Chip: Tipo */}
           <Select value={filterType} onValueChange={setFilterType}>
             <SelectTrigger
               className={cn(
-                "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
                 filterType !== "all"
                   ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
                 hideTypeFilter && "hidden",
-                !isMobile && "w-[160px]"
+                !isMobile && "flex-1"
               )}
             >
               <div className="flex items-center gap-1.5">
@@ -449,11 +449,11 @@ export const TransactionList = ({
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger
               className={cn(
-                "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
                 filterCategory !== "all"
                   ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
-                !isMobile && "w-[180px]"
+                !isMobile && "flex-1"
               )}
             >
               <SelectValue placeholder="Subcategoria" />
@@ -477,14 +477,14 @@ export const TransactionList = ({
           <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
             <SelectTrigger
               className={cn(
-                "h-9 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border",
+                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
                 filterPaymentOptionId !== "all"
                   ? (isValidUuid(filterPaymentOptionId)
                     ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90"
                     : (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90")
                   ) + " text-white border-transparent font-bold"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
-                !isMobile && "w-[200px]"
+                !isMobile && "flex-1"
               )}
             >
               <SelectValue placeholder="Forma de Pagamento" />
