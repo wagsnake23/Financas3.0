@@ -234,10 +234,10 @@ export default function Despesas() {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
             <div className="space-y-6 flex flex-col">
               <Card
-                className="p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm border border-rose-100 card-despesas"
+                className="p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm card-despesas"
                 style={{ backgroundColor: "transparent" }}
               >
                 {formContent}
@@ -256,7 +256,7 @@ export default function Despesas() {
         )}
       </main>
 
-      <Footer isMobile={isMobile} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 z-50 m-0 bg-transparent" : "mt-8")} user={user} />
+      <Footer isMobile={isMobile} className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 z-50 m-0 bg-transparent" : "mt-auto pt-8")} user={user} />
     </div>
   );
 }

@@ -74,7 +74,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
     }, {} as Record<string, { nome: string, value: number; color: string, icone: string }>);
 
     const rawData = Object.values(grouped);
-    const limit = isMobile ? 5 : 15;
+    const limit = isMobile ? 5 : 16;
     return groupSubcategories(rawData, limit);
   }, [monthlyInstallments, allCategories, isMobile]);
 
@@ -85,7 +85,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
 
 
   return (
-    <div className="grid grid-cols-1 gap-6 mb-8">
+    <div className="grid grid-cols-1 gap-6 mb-8 h-full">
       {isMobile && (
         <TotalExpensesCard
           expenseInstallments={expenseInstallments}
@@ -105,7 +105,10 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
         />
       )}
 
-      <Card className={cn("p-6 animate-fade-in rounded-2xl shadow-sm border border-gray-100 bg-white flex flex-col", !isMobile && "h-full")}>
+      <Card 
+        className={cn("p-6 lg:pb-4 animate-fade-in rounded-[24px] shadow-sm card-despesas flex flex-col", !isMobile && "h-full")}
+        style={{ backgroundColor: "transparent" }}
+      >
         <div className="flex items-center gap-2 mb-6 shrink-0">
           <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
           <h2 className="text-xl font-bold text-gray-800 tracking-tight">Despesas por Subcategoria</h2>
@@ -118,7 +121,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
           </div>
         ) : (
           <div 
-            className={cn("w-full", !isMobile ? "flex-grow min-h-[540px]" : "")}
+            className={cn("w-full", !isMobile ? "flex-grow min-h-[480px]" : "")}
             style={isMobile ? { 
               height: Math.max(240, expensesBySubcategory.length * 40) 
             } : undefined}
@@ -191,14 +194,14 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
         )}
 
         {!isMobile && expensesBySubcategory.length > 0 && (
-          <div className="mt-8 pt-6 border-t border-rose-50 flex items-center justify-between px-2">
+          <div className="mt-[18px] pt-12 border-t border-rose-50/50 flex items-center justify-between px-2">
             <div className="flex flex-col">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Mensal</span>
-              <span className="text-2xl font-black text-rose-600 tracking-tight">{formatCurrency(monthlyTotalValue)}</span>
+              <span className="text-xl font-black text-rose-600 tracking-tight">{formatCurrency(monthlyTotalValue)}</span>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Anual</span>
-              <span className="text-xl font-bold text-slate-700 tracking-tight">{formatCurrency(annualTotalValue)}</span>
+              <span className="text-lg font-bold text-slate-700 tracking-tight">{formatCurrency(annualTotalValue)}</span>
             </div>
           </div>
         )}
