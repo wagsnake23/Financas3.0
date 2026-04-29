@@ -1203,7 +1203,7 @@ export default function Investments() { // Alterado para export default function
             </div>
           </div>
         ) : (
-          <div className={cn("grid gap-8 lg:mb-[40px]", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2")}>
+          <div className={cn("grid gap-8 lg:mb-[40px]", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
               {/* Form */}
               <div>
                 <Card
