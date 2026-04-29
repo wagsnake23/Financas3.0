@@ -506,8 +506,8 @@ export default function Dashboard() {
       <Navigation />
       <main
         className={cn(
-          "container mx-auto flex-grow",
-          isMobile ? "pt-4 px-4 pb-16" : "py-8 max-w-[1200px] px-6"
+          "container-app flex-grow",
+          isMobile ? "pt-4 pb-16" : "py-8"
         )}
       >
         {!isMobile && !filter && (

@@ -136,7 +136,7 @@ export const Navigation = () => {
           )
           : "h-16 bg-[#0B213F] text-white shadow-md backdrop-blur-sm"
       )}>
-        <div className="container mx-auto px-4 h-full">
+        <div className="container-app h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo / Título */}
             <div

@@ -629,7 +629,7 @@ export default function Investments() { // Alterado para export default function
       <Navigation />
 
       {/* Main Content */}
-      <main className={cn("container mx-auto flex-grow", isMobile ? "px-4 pt-16 pb-4" : "max-w-[1200px] px-6 py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
+      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
         {!isMobile && (
           <>
             <div className="flex items-center gap-4 mb-8">

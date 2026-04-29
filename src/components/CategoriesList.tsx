@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,11 +59,21 @@ const CategoryItem = ({
   allFlatCategories,
   categoryNumber,
   isMobile,
-}: CategoryItemProps) => {
+  expandedId,
+  onToggleExpand,
+}: CategoryItemProps & { expandedId?: string | null; onToggleExpand?: (id: string) => void }) => {
   const paymentLabel = getPaymentMethodLabel(category.forma_pagamento);
   const hasSubcategories =
     category.subCategories && category.subCategories.length > 0;
-  const [isExpanded, setIsExpanded] = useState(initialExpanded);
+  
+  const [localExpanded, setLocalExpanded] = useState(initialExpanded);
+  
+  // Use expandedId from parent for root level (desktop master-detail), 
+  // fallback to local state for mobile/nested accordions.
+  const isExpanded = (level === 0 && expandedId !== undefined) 
+    ? expandedId === category.id 
+    : localExpanded;
+  
   const isDefault = category.user_id === null;
 
   // Determine the effective color based on level and parent
@@ -75,7 +85,8 @@ const CategoryItem = ({
     <>
       <div
         className={cn(
-          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white w-full"
+          "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white w-full",
+          !isMobile && level > 0 && "min-h-[64px]"
         )}
         style={{
           borderColor: effectiveColor,
@@ -100,7 +111,10 @@ const CategoryItem = ({
             <DynamicIcon name={category.icone} className="h-5 w-5 text-white drop-shadow-sm" />
           </div>
           <div className="flex-1 min-w-0 py-1 ml-0.5">
-            <p className="font-semibold line-clamp-2 break-words leading-tight">{category.nome}</p>
+            <p className={cn(
+                "leading-tight",
+                (!isMobile && level > 0) ? "text-[14px] font-semibold truncate" : "font-semibold line-clamp-2 break-words"
+            )}>{category.nome}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               {paymentLabel && <span>{paymentLabel}</span>}
             </div>
@@ -186,7 +200,13 @@ const CategoryItem = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsExpanded((prev) => !prev)}
+              onClick={() => {
+                if (level === 0 && onToggleExpand) {
+                  onToggleExpand(category.id);
+                } else {
+                  setLocalExpanded(prev => !prev);
+                }
+              }}
               className={cn(
                 "h-8 w-8 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all",
                 isExpanded && "text-primary rotate-180"
@@ -198,7 +218,7 @@ const CategoryItem = ({
         </div>
       </div>
       {isExpanded && hasSubcategories && (
-        <div className="space-y-2 mt-2">
+        <div className="flex flex-col gap-2 mt-2 w-full max-w-full">
           {category.subCategories?.map((subCat, index) => (
             <CategoryItem
               key={subCat.id}
@@ -224,7 +244,7 @@ interface CategoriesListProps {
   onEditCategory: (category: AppCategory) => void;
   maxHeight?: string;
   isMobile: boolean;
-  allFlatCategories: AppCategory[]; // NEW: Receive all flat categories
+  allFlatCategories: AppCategory[];
   hideCardWrapper?: boolean;
   hideTitle?: boolean;
 }
@@ -235,12 +255,14 @@ const CategoriesList = ({
   onEditCategory,
   maxHeight,
   isMobile,
-  allFlatCategories, // Use the new prop
+  allFlatCategories,
   hideCardWrapper = false,
   hideTitle = false,
 }: CategoriesListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const effectiveMaxHeight = maxHeight || (isMobile ? "925px" : "600px");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+
+  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "70vh");
 
   const flatCategories = useMemo(() => {
     const flatten = (cats: HierarchicalCategory[], acc: AppCategory[] = []) => {
@@ -315,6 +337,123 @@ const CategoriesList = ({
     return buildFilteredHierarchy(includedFlatCategories);
   }, [searchTerm, flatCategories, categories]);
 
+  // Select first category by default on desktop if none selected
+  useEffect(() => {
+    if (!isMobile && !selectedCategoryId && filteredCategories.length > 0) {
+      setSelectedCategoryId(filteredCategories[0].id);
+    }
+  }, [isMobile, filteredCategories, selectedCategoryId]);
+
+  const activeCategory = useMemo(() => {
+    return filteredCategories.find(c => c.id === selectedCategoryId);
+  }, [filteredCategories, selectedCategoryId]);
+
+
+
+  const renderMobileView = () => (
+    <div className="flex flex-col gap-[10px] pb-4 w-full max-w-full">
+      {filteredCategories.map((category, index) => (
+        <div key={category.id} className="w-full max-w-full">
+          <CategoryItem
+            category={category}
+            onDeleteCategory={onDeleteCategory}
+            onEditCategory={onEditCategory}
+            initialExpanded={!!searchTerm.trim()}
+            allFlatCategories={allFlatCategories}
+            categoryNumber={`${index + 1}`}
+            isMobile={isMobile}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderDesktopView = () => (
+    <div className="grid grid-cols-[320px_1fr] gap-4 h-full min-h-[500px]">
+      {/* Master Column (Categories) */}
+      <div className="flex flex-col border-r border-slate-100 pr-2 overflow-y-auto custom-scrollbar" style={{ maxHeight: effectiveMaxHeight }}>
+        <div className="space-y-1.5 pb-4">
+          {filteredCategories.map((category, index) => {
+            const color = getCategoryColor(category, allFlatCategories);
+            const isActive = selectedCategoryId === category.id;
+            return (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategoryId(category.id)}
+                className={cn(
+                  "w-full flex items-center gap-3 p-3 rounded-xl transition-all border text-left",
+                  isActive 
+                    ? "bg-white shadow-sm ring-1 ring-primary/20 border-primary/20" 
+                    : "bg-slate-50/50 border-transparent hover:bg-white hover:border-slate-200"
+                )}
+              >
+                <div 
+                  className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300",
+                    isActive && "scale-110"
+                  )}
+                  style={{ 
+                    background: `linear-gradient(135deg, ${color} 0%, ${color}dd 100%)`,
+                    boxShadow: isActive ? `0 4px 12px ${color}44` : 'none'
+                  }}
+                >
+                  <DynamicIcon name={category.icone} className="h-5 w-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={cn("font-bold text-[14px] truncate", isActive ? "text-primary" : "text-slate-700")}>
+                    {category.nome}
+                  </p>
+                  <p className="text-[11px] text-slate-400 font-medium">
+                    {category.subCategories?.length || 0} subcategorias
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Detail Column (Subcategories) */}
+      <div className="overflow-y-auto custom-scrollbar px-2" style={{ maxHeight: effectiveMaxHeight }}>
+        {activeCategory ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-4 sticky top-0 bg-transparent pt-1 z-10">
+               <div className="h-6 w-1 rounded-full bg-primary/40" />
+               <h3 className="font-black text-slate-400 uppercase tracking-widest text-[11px]">
+                 Subcategorias de {activeCategory.nome}
+               </h3>
+            </div>
+            {activeCategory.subCategories && activeCategory.subCategories.length > 0 ? (
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 pb-8">
+                {activeCategory.subCategories.map((sub, idx) => (
+                  <CategoryItem
+                    key={sub.id}
+                    category={sub}
+                    onDeleteCategory={onDeleteCategory}
+                    onEditCategory={onEditCategory}
+                    level={1}
+                    allFlatCategories={allFlatCategories}
+                    isMobile={isMobile}
+                    categoryNumber={`${filteredCategories.findIndex(c => c.id === selectedCategoryId) + 1}.${idx + 1}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-slate-400 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                <DynamicIcon name="Layers" className="h-10 w-10 mb-2 opacity-20" />
+                <p className="text-sm font-medium">Nenhuma subcategoria cadastrada</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full text-slate-400">
+            Selecione uma categoria
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   const Container = hideCardWrapper ? "div" : Card;
 
   return (
@@ -346,7 +485,12 @@ const CategoriesList = ({
         </div>
       </div>
 
-      <div className="flex-1">
+      <div 
+        className={cn(
+          "flex-1",
+          isMobile && "overflow-y-auto px-1 pr-[6px] custom-scrollbar"
+        )}
+      >
         {filteredCategories.length === 0 ? (
           <p className="text-muted-foreground text-center py-8">
             {searchTerm
@@ -354,24 +498,13 @@ const CategoriesList = ({
               : "Nenhuma categoria cadastrada ainda."}
           </p>
         ) : (
-          <div className="space-y-2 px-1">
-            {filteredCategories.map((category, index) => (
-              <CategoryItem
-                key={category.id}
-                category={category}
-                onDeleteCategory={onDeleteCategory}
-                onEditCategory={onEditCategory}
-                initialExpanded={!!searchTerm.trim()}
-                allFlatCategories={allFlatCategories} // Pass allFlatCategories here
-                categoryNumber={`${index + 1}`} // Pass initial number for root categories
-                isMobile={isMobile}
-              />
-            ))}
-          </div>
+          isMobile ? renderMobileView() : renderDesktopView()
         )}
       </div>
     </Container>
   );
 };
+
+// Removed level0ItemStyle as we're back to vertical list
 
 export default CategoriesList;

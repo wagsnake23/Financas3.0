@@ -204,6 +204,13 @@ All colors MUST be HSL.
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Global App Container */
+  .container-app {
+    @apply mx-auto w-full;
+    max-width: 1440px;
+    padding-inline: clamp(20px, 3vw, 32px);
+  }
 }
 
 /* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */
@@ -276,7 +283,7 @@ body {
   /* Tabela com layout fluido e centralizada */
   .lancamentos-table {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     table-layout: fixed !important;
     /* Alterado para fixed para controle de largura */
     margin: 0 auto;

@@ -292,7 +292,7 @@ export default function Home() {
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
-                    "container mx-auto px-6 relative z-10 max-w-[800px] md:max-w-[1070px]",
+                    "container-app relative z-10",
                     isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-16 md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
@@ -310,7 +310,7 @@ export default function Home() {
             </div>
 
             <main className={cn(
-                "container mx-auto px-4 relative z-20 max-w-[800px] md:max-w-[1070px] flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
+                "container-app relative z-20 flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
                 isMobile ? "-mt-32 pb-10" : "-mt-24 md:mt-2"
             )} style={{ background: 'transparent' }}>
 

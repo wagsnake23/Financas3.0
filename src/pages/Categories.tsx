@@ -308,7 +308,7 @@ const Categories = () => {
       {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-background">
-          <div className="container mx-auto px-6 relative z-10 max-w-[1200px] pt-12 md:pt-16 flex justify-between items-start">
+          <div className="container-app relative z-10 pt-12 md:pt-16 flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <Button
@@ -344,12 +344,11 @@ const Categories = () => {
 
       <main
         className={cn(
-          "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "pt-16 pb-10" : "-mt-24 pb-20",
-          !isMobile && "px-6"
+          "container-app relative z-20 space-y-6",
+          isMobile ? "pt-16 pb-10" : "-mt-24 pb-20"
         )}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6 items-start">
           <Card
             className={cn(
               "p-6 rounded-[24px] shadow-md border-2 border-white card-yellow relative overflow-hidden"

@@ -166,7 +166,7 @@ export default function Despesas() {
         isMobile ? "bg-gradient-to-b from-[#CC4B4B] via-[#CC4B4B] via-45% to-transparent" : "bg-background"
       )}>
         <div className={cn(
-          "container mx-auto px-6 relative z-10 max-w-[1200px]",
+          "container-app relative z-10",
           isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-[#D44D4D]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
         )}>
           <div>
@@ -210,9 +210,8 @@ export default function Despesas() {
 
       <main
         className={cn(
-          "container mx-auto px-4 relative z-20 max-w-[1200px] space-y-6",
-          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20",
-          !isMobile && "px-6"
+          "container-app relative z-20 space-y-6",
+          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20"
         )}
       >
         {isMobile ? (

@@ -93,7 +93,7 @@ const Lancamentos = () => {
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
       {!isMobile && (
         <div className="relative h-[160px] w-full overflow-hidden bg-background">
-          <div className="container mx-auto px-6 relative z-10 max-w-[1200px] pt-12 md:pt-16 flex justify-between items-start">
+          <div className="container-app relative z-10 pt-12 md:pt-16 flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <div 
@@ -127,8 +127,8 @@ const Lancamentos = () => {
 
       <main
         className={cn(
-          "container mx-auto flex-grow",
-          isMobile ? "px-0 pt-0 pb-0 flex flex-col min-h-0" : "max-w-[1200px] px-6 pt-0 pb-8 -mt-6"
+          "container-app flex-grow",
+          isMobile ? "px-0 pt-0 pb-0 flex flex-col min-h-0" : "pt-0 pb-8 -mt-6"
         )}
       >
         <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8 px-4" : "mt-3 mb-6 h-10")}>
