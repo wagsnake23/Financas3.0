@@ -235,16 +235,16 @@ export default function Despesas() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6 items-start">
-            <div className="space-y-6">
+            <div className="space-y-6 flex flex-col">
               <Card
-                className="p-6 lg:px-6 rounded-[24px] shadow-sm border border-rose-100 card-despesas"
+                className="p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm border border-rose-100 card-despesas"
                 style={{ backgroundColor: "transparent" }}
               >
                 {formContent}
               </Card>
             </div>
 
-            <div className="space-y-6 h-full">
+            <div className="space-y-6 h-full flex flex-col">
               <ExpensesDashboard
                 expenses={expenses}
                 expenseInstallments={expenseInstallments}

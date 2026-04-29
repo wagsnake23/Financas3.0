@@ -7,7 +7,7 @@ import DynamicIcon from "./DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { TotalExpensesCard } from "./TotalExpensesCard";
 import { MonthlyExpenseBarChart } from "./MonthlyExpenseBarChart";
-import { formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/categoryColors";
 
 const groupSubcategories = (data: any[], limit: number) => {
@@ -105,25 +105,23 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
         />
       )}
 
-      <Card className="p-6 animate-fade-in rounded-2xl shadow-sm border border-gray-100 bg-white">
-        <div className="flex items-center gap-2 mb-6">
+      <Card className={cn("p-6 animate-fade-in rounded-2xl shadow-sm border border-gray-100 bg-white flex flex-col", !isMobile && "h-full")}>
+        <div className="flex items-center gap-2 mb-6 shrink-0">
           <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
           <h2 className="text-xl font-bold text-gray-800 tracking-tight">Despesas por Subcategoria</h2>
         </div>
 
         {expensesBySubcategory.length === 0 ? (
-          <div className="h-60 flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+          <div className="flex-grow flex flex-col items-center justify-center text-muted-foreground bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
             <DynamicIcon name="BarChart2" className="h-12 w-12 mb-2 opacity-20" />
             <p className="text-sm font-medium">Nenhuma despesa registrada</p>
           </div>
         ) : (
           <div 
-            className="w-full"
-            style={{ 
-              height: isMobile 
-                ? Math.max(240, expensesBySubcategory.length * 40) 
-                : Math.max(350, expensesBySubcategory.length * 36) 
-            }}
+            className={cn("w-full", !isMobile ? "flex-grow min-h-[540px]" : "")}
+            style={isMobile ? { 
+              height: Math.max(240, expensesBySubcategory.length * 40) 
+            } : undefined}
           >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -139,19 +137,22 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                   width={isMobile ? 100 : 180}
                   axisLine={false}
                   tickLine={false}
-                  tick={({ x, y, payload }) => (
-                    <g transform={`translate(${x},${y})`}>
-                      <text
-                        x={-10}
-                        y={0}
-                        dy={4}
-                        textAnchor="end"
-                        className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
-                      >
-                        {payload.value}
-                      </text>
-                    </g>
-                  )}
+                  tick={({ x, y, payload, index }) => {
+                    const item = expensesBySubcategory[index];
+                    return (
+                      <g transform={`translate(${x},${y})`}>
+                        <text
+                          x={-10}
+                          y={0}
+                          dy={4}
+                          textAnchor="end"
+                          className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
+                        >
+                          {item?.icone} {payload.value}
+                        </text>
+                      </g>
+                    );
+                  }}
                 />
                 <Tooltip
                   cursor={{ fill: 'rgba(0,0,0,0.02)' }}
