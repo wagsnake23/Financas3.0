@@ -102,7 +102,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
               <YAxis
                 dataKey="name"
                 type="category"
-                width={isMobile ? 110 : 140}
+                width={isMobile ? 110 : 180}
                 axisLine={false}
                 tickLine={false}
                 tick={({ x, y, payload }) => {
@@ -119,7 +119,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                           isMobile ? "text-[10px]" : "text-[12px]"
                         )}
                       >
-                        {item?.icone} {payload.value.length > (isMobile ? 13 : 20) ? `${payload.value.substring(0, isMobile ? 11 : 18)}..` : payload.value}
+                        {item?.icone} {payload.value}
                       </text>
                     </g>
                   );

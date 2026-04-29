@@ -684,10 +684,10 @@ export default function Receitas() {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
             <div className="space-y-6">
               <Card
-                className="p-6 rounded-[24px] shadow-sm border border-[#EDFDF5] card-receitas"
+                className="p-6 lg:px-6 rounded-[24px] shadow-sm border border-[#EDFDF5] card-receitas"
                 style={{ backgroundColor: "transparent" }}
               >
                 {oneOffFormContent}
@@ -696,7 +696,12 @@ export default function Receitas() {
 
             <div className="h-full">
               <RevenueByTypeChart
-                revenues={revenues}
+                revenues={revenues.filter(r => {
+                  const revenueDate = new Date(r.data);
+                  const now = new Date();
+                  return revenueDate.getMonth() === now.getMonth() && 
+                         revenueDate.getFullYear() === now.getFullYear();
+                })}
                 revenueTypes={incomeSubcategories}
                 annualTotalValue={revenues
                   .filter(r => new Date(r.data).getFullYear() === new Date().getFullYear())
