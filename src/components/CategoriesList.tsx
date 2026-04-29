@@ -95,12 +95,12 @@ const CategoryItem = ({
       >
         <div className={cn(
           "flex items-center flex-1 min-w-0",
-          (!isMobile && level > 0) ? "gap-1.5" : "gap-2"
+          (!isMobile && level > 0) ? "gap-1.5" : "gap-1"
         )}>
           {categoryNumber && (
             <span className={cn(
-                "font-bold text-muted-foreground text-left ml-0.5",
-                (!isMobile && level > 0) ? "text-[11px] min-w-[16px] mr-0.5" : "text-[12px] min-w-[28px] ml-1"
+                "font-bold text-muted-foreground text-left",
+                (!isMobile && level > 0) ? "text-[11px] min-w-[16px] mr-0.5 ml-0.5" : "text-[12px] min-w-[20px] ml-0.5"
             )}>
               {categoryNumber}
             </span>
