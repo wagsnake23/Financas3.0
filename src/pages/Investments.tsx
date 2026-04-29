@@ -1590,7 +1590,7 @@ export default function Investments() { // Alterado para export default function
                                   <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
                                   <span className={cn(
                                     "font-bold tracking-tight text-[#0556C3]",
-                                    isMobile ? "text-2xl" : "text-3xl"
+                                    isMobile ? "text-[1.4rem]" : "text-[1.5rem]"
                                   )}>
                                     {formatCurrency(investment.valorLiquido)}
                                   </span>
