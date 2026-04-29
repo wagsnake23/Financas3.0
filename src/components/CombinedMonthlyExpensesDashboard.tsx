@@ -742,7 +742,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       <YAxis
                         dataKey="name"
                         type="category"
-                        width={isMobile ? 110 : 140}
+                        width={isMobile ? 110 : 180}
                         axisLine={false}
                         tickLine={false}
                         tick={({ x, y, payload, index }) => {
@@ -799,7 +799,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                   isActive ? "fill-indigo-600" : "fill-gray-500"
                                 )}
                               >
-                                {item?.icone} {isMobile && payload.value.length > 13 ? `${payload.value.substring(0, 11)}..` : payload.value}
+                                {item?.icone} {payload.value}
                               </text>
                             </g>
                           );

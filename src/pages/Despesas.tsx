@@ -8,9 +8,6 @@ import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useExpenseData } from "@/hooks/useExpenseData";
 import { ExpenseForm } from "@/components/ExpenseForm";
-import { TopCategoriesByValue } from "@/components/TopCategoriesByValue";
-import { MostUsedCategories } from "@/components/MostUsedCategories";
-import { CategoryDistributionSummary } from "@/components/CategoryDistributionSummary";
 import { Footer } from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
@@ -25,7 +22,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
-import { TopExpensesBarChart } from "@/components/TopExpensesBarChart";
 
 interface Cartao {
   id: string;
@@ -238,26 +234,20 @@ export default function Despesas() {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6 items-start">
             <div className="space-y-6">
               <Card
-                className="p-6 rounded-[24px] shadow-sm border border-rose-100 card-despesas"
+                className="p-6 lg:px-6 rounded-[24px] shadow-sm border border-rose-100 card-despesas"
                 style={{ backgroundColor: "transparent" }}
               >
                 {formContent}
               </Card>
+            </div>
 
+            <div className="space-y-6 h-full">
               <ExpensesDashboard
                 expenses={expenses}
                 expenseInstallments={expenseInstallments}
-                categories={allSubcategories}
-                isMobile={isMobile}
-              />
-            </div>
-
-            <div className="space-y-6">
-              <TopExpensesBarChart
-                expenses={expenses}
                 categories={allSubcategories}
                 isMobile={isMobile}
               />

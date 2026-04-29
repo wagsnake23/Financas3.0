@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Tables } from "@/integrations/supabase/types";
+import { format } from "date-fns";
 import DynamicIcon from "./DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { TotalExpensesCard } from "./TotalExpensesCard";
@@ -35,31 +36,47 @@ interface ExpensesDashboardProps {
 }
 
 export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, isMobile }: ExpensesDashboardProps) => {
-  const filteredExpenseInstallments = expenseInstallments;
-  const totalExpenses = filteredExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
   const allCategories = categories;
   const subcategories = allCategories.filter(c => c.parent_id !== null);
-  const parentCategories = allCategories.filter(c => c.parent_id === null);
+
+  const currentMonthStr = useMemo(() => format(new Date(), "yyyy-MM"), []);
+  const currentYearStr = useMemo(() => format(new Date(), "yyyy"), []);
+
+  const monthlyInstallments = useMemo(() => {
+    return expenseInstallments.filter(p => p.vencimento.startsWith(currentMonthStr));
+  }, [expenseInstallments, currentMonthStr]);
+
+  const annualInstallments = useMemo(() => {
+    return expenseInstallments.filter(p => p.vencimento.startsWith(currentYearStr));
+  }, [expenseInstallments, currentYearStr]);
+
+  const monthlyTotalValue = useMemo(() => {
+    return monthlyInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+  }, [monthlyInstallments]);
+
+  const annualTotalValue = useMemo(() => {
+    return annualInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+  }, [annualInstallments]);
 
   const expensesBySubcategory = useMemo(() => {
-    const grouped = expenses.reduce((acc, expense) => {
-      const subcategory = subcategories.find(c => c.id === expense.categoria_id);
-      const id = subcategory?.id || "others";
+    const grouped = monthlyInstallments.reduce((acc, installment) => {
+      const subcategoryId = installment.despesas?.categoria_id || "others";
+      const subcategory = allCategories.find(c => c.id === subcategoryId);
       const name = subcategory?.nome || "Outros";
       const icon = subcategory?.icone || "📁";
       const color = subcategory ? getCategoryColor(subcategory, allCategories) : "hsl(215, 15%, 50%)";
 
-      if (!acc[id]) {
-        acc[id] = { nome: name, value: 0, color, icone: icon };
+      if (!acc[subcategoryId]) {
+        acc[subcategoryId] = { nome: name, value: 0, color, icone: icon };
       }
-      acc[id].value += expense.valor_total;
+      acc[subcategoryId].value += installment.valor_parcela;
       return acc;
     }, {} as Record<string, { nome: string, value: number; color: string, icone: string }>);
 
     const rawData = Object.values(grouped);
-    const limit = isMobile ? 5 : 8;
+    const limit = isMobile ? 5 : 15;
     return groupSubcategories(rawData, limit);
-  }, [expenses, subcategories, isMobile, allCategories]);
+  }, [monthlyInstallments, allCategories, isMobile]);
 
   const totalMonthlyAmount = useMemo(() => {
     return expensesBySubcategory.reduce((sum, item) => sum + item.value, 0);
@@ -100,7 +117,14 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
             <p className="text-sm font-medium">Nenhuma despesa registrada</p>
           </div>
         ) : (
-          <div className="h-[350px] w-full">
+          <div 
+            className="w-full"
+            style={{ 
+              height: isMobile 
+                ? Math.max(240, expensesBySubcategory.length * 40) 
+                : Math.max(350, expensesBySubcategory.length * 36) 
+            }}
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={expensesBySubcategory}
@@ -112,7 +136,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                 <YAxis
                   dataKey="nome"
                   type="category"
-                  width={isMobile ? 100 : 130}
+                  width={isMobile ? 100 : 180}
                   axisLine={false}
                   tickLine={false}
                   tick={({ x, y, payload }) => (
@@ -124,7 +148,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                         textAnchor="end"
                         className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
                       >
-                        {payload.value.length > 15 ? `${payload.value.substring(0, 13)}...` : payload.value}
+                        {payload.value}
                       </text>
                     </g>
                   )}
@@ -164,6 +188,20 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
             </ResponsiveContainer>
           </div>
         )}
+
+        {!isMobile && expensesBySubcategory.length > 0 && (
+          <div className="mt-8 pt-6 border-t border-rose-50 flex items-center justify-between px-2">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Mensal</span>
+              <span className="text-2xl font-black text-rose-600 tracking-tight">{formatCurrency(monthlyTotalValue)}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Anual</span>
+              <span className="text-xl font-bold text-slate-700 tracking-tight">{formatCurrency(annualTotalValue)}</span>
+            </div>
+          </div>
+        )}
+
       </Card>
 
 
