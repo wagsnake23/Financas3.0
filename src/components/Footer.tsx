@@ -56,7 +56,7 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
             <img src="/favicon.ico" alt="Logo" className="w-10 h-10 object-contain" />
             <div className="flex flex-col">
               <span 
-                className="font-extrabold text-2xl tracking-[0.5px] leading-none text-white"
+                className="font-extrabold text-lg tracking-[0.5px] leading-none text-white"
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
