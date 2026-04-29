@@ -25,13 +25,65 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
         .order("nome");
       if (error) throw error;
 
-      // Normalização: Garante que "Família e Filhos" seja exibido sempre como "Família"
-      const normalizedData = (data as AppCategory[]).map(cat => {
-        if (cat.id === "familia_filhos") {
-          return { ...cat, nome: "Família" };
-        }
-        return cat;
-      });
+      // Normalização e Limpeza de Categorias
+      let cryptoAdded = false;
+      let poupancaAdded = false;
+      const normalizedData = (data as AppCategory[])
+        .filter(cat => {
+          const lowerNome = cat.nome.toLowerCase();
+          
+          // Filtro de Aportes
+          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+
+          // Filtro de Ações: remover dividendos e venda
+          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+          }
+          
+          // Consolidação de Criptomoedas
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            if (cryptoAdded) return false;
+            cryptoAdded = true;
+          }
+
+          // Consolidação de Poupança
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            if (poupancaAdded) return false;
+            poupancaAdded = true;
+          }
+
+          // Novos filtros solicitados: remover subcategorias específicas
+          const filterOut = [
+            "juros sobre capital",
+            "reembolsos",
+            "tesouro",
+            "rendimentos de fundos",
+            "outros rendimentos",
+            "dividendos",
+            "receitas extras",
+            "aluguel de imóveis",
+            "criptomoedas"
+          ];
+          
+          if (filterOut.some(term => lowerNome.includes(term))) return false;
+          
+          return true;
+        })
+        .map(cat => {
+          if (cat.id === "familia_filhos") {
+            return { ...cat, nome: "Família" };
+          }
+          const lowerNome = cat.nome.toLowerCase();
+          // Normalização para Criptomoedas
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            return { ...cat, nome: "Criptomoedas" };
+          }
+          // Normalização para Poupança
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            return { ...cat, nome: "Poupança" };
+          }
+          return cat;
+        });
 
       return normalizedData;
     },

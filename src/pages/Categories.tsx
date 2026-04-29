@@ -110,6 +110,21 @@ const Categories = () => {
             if (poupancaAdded) return false;
             poupancaAdded = true;
           }
+
+          // Novos filtros solicitados: remover subcategorias específicas
+          const filterOut = [
+            "juros sobre capital",
+            "reembolsos",
+            "tesouro",
+            "rendimentos de fundos",
+            "outros rendimentos",
+            "dividendos",
+            "receitas extras",
+            "aluguel de imóveis",
+            "criptomoedas"
+          ];
+          
+          if (filterOut.some(term => lowerNome.includes(term))) return false;
           
           return true;
         })
@@ -344,7 +359,7 @@ const Categories = () => {
 
       <main
         className={cn(
-          "container-app relative z-20 space-y-6",
+          "container-app relative z-20 space-y-6 flex-grow",
           isMobile ? "pt-16 pb-10" : "-mt-24 pb-20"
         )}
       >

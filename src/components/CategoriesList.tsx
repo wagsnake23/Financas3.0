@@ -8,7 +8,7 @@ import { AppCategory } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
 import {
   Search,
-  Pencil,
+  SquarePen,
   Trash2,
   ChevronRight,
   ChevronDown,
@@ -130,15 +130,21 @@ const CategoryItem = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 ml-2">
+        <div className={cn(
+          "flex items-center gap-1.5 ml-auto",
+          (!isMobile && category.parent_id !== null) && "flex-col justify-center gap-[6px]"
+        )}>
           {!isDefault && category.parent_id !== null && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onEditCategory(category)}
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              className={cn(
+                "text-muted-foreground hover:text-foreground",
+                (!isMobile && category.parent_id !== null) ? "w-7 h-7 p-0" : "h-8 w-8"
+              )}
             >
-              <Pencil className="h-4 w-4" />
+              <SquarePen className={cn((!isMobile && category.parent_id !== null) ? "h-4 w-4" : "h-4 w-4")} />
             </Button>
           )}
 
@@ -148,9 +154,12 @@ const CategoryItem = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className={cn(
+                    "text-destructive hover:text-destructive hover:bg-destructive/10",
+                    (!isMobile && category.parent_id !== null) ? "w-7 h-7 p-0" : "h-8 w-8"
+                  )}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className={cn((!isMobile && category.parent_id !== null) ? "h-4 w-4" : "h-4 w-4")} />
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent 

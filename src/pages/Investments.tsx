@@ -102,6 +102,22 @@ export default function Investments() { // Alterado para export default function
             if (poupancaAdded) return false;
             poupancaAdded = true;
           }
+
+          // Novos filtros solicitados: remover subcategorias específicas
+          const filterOut = [
+            "juros sobre capital",
+            "reembolsos",
+            "tesouro",
+            "rendimentos de fundos",
+            "outros rendimentos",
+            "dividendos",
+            "receitas extras",
+            "aluguel de imóveis",
+            "criptomoedas"
+          ];
+          
+          if (filterOut.some(term => lowerNome.includes(term))) return false;
+          
           return true;
         })
         .map(cat => {

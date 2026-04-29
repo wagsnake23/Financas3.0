@@ -70,7 +70,64 @@ export default function Despesas() {
         .or(`user_id.eq.${user.id},user_id.is.null`)
         .order("nome");
       if (error) throw error;
-      return data as AppCategory[];
+      
+      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
+      let cryptoAdded = false;
+      let poupancaAdded = false;
+      const normalizedData = (data as AppCategory[])
+        .filter(cat => {
+          const lowerNome = cat.nome.toLowerCase();
+          
+          // Filtro de Aportes
+          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+
+          // Filtro de Ações: remover dividendos e venda
+          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+          }
+          
+          // Consolidação de Criptomoedas
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            if (cryptoAdded) return false;
+            cryptoAdded = true;
+          }
+
+          // Consolidação de Poupança
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            if (poupancaAdded) return false;
+            poupancaAdded = true;
+          }
+
+          // Novos filtros solicitados: remover subcategorias específicas
+          const filterOut = [
+            "juros sobre capital",
+            "reembolsos",
+            "tesouro",
+            "rendimentos de fundos",
+            "outros rendimentos",
+            "dividendos",
+            "receitas extras",
+            "aluguel de imóveis",
+            "criptomoedas"
+          ];
+          
+          if (filterOut.some(term => lowerNome.includes(term))) return false;
+          
+          return true;
+        })
+        .map(cat => {
+          if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
+          const lowerNome = cat.nome.toLowerCase();
+          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+            return { ...cat, nome: "Criptomoedas" };
+          }
+          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+            return { ...cat, nome: "Poupança" };
+          }
+          return cat;
+        });
+
+      return normalizedData;
     },
     enabled: !!user && !authLoading,
   });
@@ -210,7 +267,7 @@ export default function Despesas() {
 
       <main
         className={cn(
-          "container-app relative z-20 space-y-6",
+          "container-app relative z-20 space-y-6 flex-grow",
           isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20"
         )}
       >
