@@ -265,6 +265,8 @@ interface CategoriesListProps {
   allFlatCategories: AppCategory[];
   hideCardWrapper?: boolean;
   hideTitle?: boolean;
+  searchTerm?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 const CategoriesList = ({
@@ -276,9 +278,11 @@ const CategoriesList = ({
   allFlatCategories,
   hideCardWrapper = false,
   hideTitle = false,
+  searchTerm = "",
+  onSearchChange,
 }: CategoriesListProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+
 
   const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "440px");
 
@@ -387,10 +391,10 @@ const CategoriesList = ({
   );
 
   const renderDesktopView = () => (
-    <div className="grid grid-cols-[320px_1fr] gap-4 h-full min-h-[500px]">
+    <div className="grid grid-cols-[320px_1fr] gap-4 h-full">
       {/* Master Column (Categories) */}
       <div className="flex flex-col border-r border-slate-100 pr-[6px] overflow-y-auto custom-scrollbar" style={{ maxHeight: effectiveMaxHeight }}>
-        <div className="space-y-1.5 pb-4">
+        <div className="space-y-1.5 pb-1">
           {filteredCategories.map((category, index) => {
             const color = getCategoryColor(category, allFlatCategories);
             const isActive = selectedCategoryId === category.id;
@@ -434,19 +438,9 @@ const CategoriesList = ({
       {/* Detail Column (Subcategories) */}
       <div className="overflow-y-auto custom-scrollbar px-2" style={{ maxHeight: effectiveMaxHeight }}>
         {activeCategory ? (
-          <div className="space-y-3">
-             <div className="flex items-center gap-2 mb-4 sticky top-0 bg-[#FEF9C3]/70 backdrop-blur-sm py-2 z-20 border border-[rgba(245,158,11,0.35)] rounded-xl px-3 shadow-sm">
-                <div 
-                  className="h-6 w-1 rounded-full flex-shrink-0" 
-                  style={{ backgroundColor: getCategoryColor(activeCategory, allFlatCategories) }} 
-                />
-               <h3 className="font-bold text-slate-700 uppercase tracking-wider text-[11px] flex items-center gap-2">
-                 Subcategorias de {activeCategory.nome} 
-                 <DynamicIcon name={activeCategory.icone} className="h-3.5 w-3.5 text-slate-500" />
-               </h3>
-            </div>
+          <div className="space-y-1.5">
             {activeCategory.subCategories && activeCategory.subCategories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-[14px] pb-8">
+              <div className="grid grid-cols-2 gap-[14px] pb-1">
                 {activeCategory.subCategories.map((sub, idx) => (
                   <CategoryItem
                     key={sub.id}
@@ -483,12 +477,12 @@ const CategoriesList = ({
       className={cn(
         "flex flex-col h-auto",
         !hideCardWrapper && "p-4 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "md:pl-4 md:pr-2 pb-0 pt-1 md:pt-[9px]")
+        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "md:pl-4 md:pr-2 pb-1 pt-0.5 md:pt-[5px]")
       )}
     >
-      <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-3")}>
+      <div className={cn("flex-shrink-0", isMobile ? "mb-2" : "mb-1")}>
         <div className={cn(
-          "flex flex-col sm:flex-row sm:items-center gap-4", 
+          "flex flex-col sm:flex-row sm:items-center gap-2", 
           isMobile ? "mb-2" : "mb-0", 
           !hideTitle ? "justify-between" : "justify-start"
         )}>
@@ -505,16 +499,33 @@ const CategoriesList = ({
             </div>
           )}
 
-          <div className={cn("relative px-1", !isMobile && "flex-1 max-w-[320px]")}>
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Buscar categoria..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full rounded-xl"
-            />
-          </div>
+          {!isMobile && activeCategory && (
+            <div className="flex items-center gap-2 bg-[#FEF9C3]/70 backdrop-blur-sm py-1 px-3 border border-[rgba(245,158,11,0.35)] rounded-xl shadow-sm animate-in fade-in slide-in-from-right-4 duration-300 ml-auto">
+                <div 
+                  className="h-3.5 w-1 rounded-full flex-shrink-0" 
+                  style={{ backgroundColor: getCategoryColor(activeCategory, allFlatCategories) }} 
+                />
+               <h3 className="font-bold text-slate-700 uppercase tracking-wider text-[11px] flex items-center gap-2 whitespace-nowrap">
+                 Subcategorias de {activeCategory.nome} 
+                 <DynamicIcon name={activeCategory.icone} className="h-3.5 w-3.5 text-slate-500" />
+               </h3>
+            </div>
+          )}
+
+
+
+          {isMobile && (
+            <div className="relative flex-1 px-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Buscar categoria..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange ? onSearchChange(e.target.value) : undefined}
+                className="pl-10 w-full rounded-xl"
+              />
+            </div>
+          )}
         </div>
       </div>
 

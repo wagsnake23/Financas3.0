@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { EditCategoryModal } from "@/components/EditCategoryModal";
 import { Card } from "@/components/ui/card";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
@@ -67,7 +69,8 @@ const Categories = () => {
   const queryClient = useQueryClient();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
-  const [formKey, setFormKey] = useState(0); // Estado para resetar o formulário
+  const [formKey, setFormKey] = useState(0);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para resetar o formulário
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
@@ -360,39 +363,65 @@ const Categories = () => {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "px-3 pt-16 pb-10" : "-mt-24 pb-[100px]"
+          isMobile ? "px-3 pt-16 pb-10" : "-mt-24 pb-[40px]"
         )}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
-          <Card
-            className={cn(
-              "rounded-[24px] relative overflow-hidden card-yellow",
-              isMobile 
-                ? "p-6 border-2 border-white shadow-md" 
-                : "p-[28px_24px] max-w-[420px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-            )}
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
-          >
-            <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
-              {!isMobile ? (
-                <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
-                  <span className="text-xl">🗂️</span>
+          <div className={cn("flex flex-col gap-4", !isMobile && "max-w-[420px]")}>
+            {!isMobile && (
+              <Card
+                className="p-[14px] rounded-[24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative overflow-hidden"
+                style={{ background: "linear-gradient(to bottom, #f3efe3, #f7f4ea)" }}
+              >
+                <div className="flex items-center gap-2 mb-3 px-1">
+                  <Search className="h-4 w-4 text-[#374151]" strokeWidth={3} />
+                  <h4 className="text-xs font-black text-[#374151] uppercase tracking-widest">Buscar Categoria</h4>
                 </div>
-              ) : (
-                <span className="text-xl">🗂️</span>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="O que você procura?"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full h-10 rounded-xl bg-white/80 border-slate-200 focus:bg-white transition-all pl-3"
+                  />
+                </div>
+              </Card>
+            )}
+
+            <Card
+              className={cn(
+                "rounded-[24px] relative overflow-hidden card-yellow",
+                isMobile 
+                  ? "p-6 border-2 border-white shadow-md" 
+                  : "p-[28px_24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
               )}
-              <h2 className="text-xl font-black text-[#374151]">Nova Subcategoria</h2>
-            </div>
-            <CategoryForm
-              key={formKey}
-              onAddCategory={handleAddCategory}
-              onUpdateCategory={handleUpdateCategory}
-              editingCategory={null}
-              onCancelEdit={handleCancelEdit}
-              allCategories={allCategories}
-              hideCardWrapper={true}
-            />
-          </Card>
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.45)",
+                backgroundImage: "none"
+              }}
+            >
+              <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
+                {!isMobile ? (
+                  <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                    <span className="text-xl">🗂️</span>
+                  </div>
+                ) : (
+                  <span className="text-xl">🗂️</span>
+                )}
+                <h2 className="text-xl font-black text-[#374151]">Nova Subcategoria</h2>
+              </div>
+              <CategoryForm
+                key={formKey}
+                onAddCategory={handleAddCategory}
+                onUpdateCategory={handleUpdateCategory}
+                editingCategory={null}
+                onCancelEdit={handleCancelEdit}
+                allCategories={allCategories}
+                hideCardWrapper={true}
+              />
+            </Card>
+          </div>
 
           <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
             <Card
@@ -400,7 +429,7 @@ const Categories = () => {
                 "rounded-[24px] overflow-hidden relative card-yellow",
                 isMobile 
                   ? "px-2 py-4 border-2 border-white shadow-md mb-1" 
-                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-0"
+                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-1"
               )}
               style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
             >
@@ -423,6 +452,8 @@ const Categories = () => {
                   allFlatCategories={allCategories}
                   hideCardWrapper={true}
                   hideTitle={isMobile}
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
                 />
               </React.Suspense>
             </Card>
