@@ -309,7 +309,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -343,7 +343,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -395,7 +395,7 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className={cn("h-11 rounded-[10px] bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
+              className={cn("h-11 rounded-[10px] bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
@@ -415,7 +415,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -436,7 +436,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -463,7 +463,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -476,7 +476,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -516,13 +516,13 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -563,7 +563,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -590,7 +590,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#f9fafb] border-[#e5e7eb] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-none", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[10px] pl-9 bg-[#F3F4F6] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -603,7 +603,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:opacity-90 active:translate-y-0.5"
+            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-gradient-to-b from-[#4871E5] to-[#16358D] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >

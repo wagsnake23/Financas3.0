@@ -96,7 +96,7 @@ const Lancamentos = () => {
           <div className="container-app relative z-10 pt-12 md:pt-16 flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
-                <div 
+                <div
                   className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-default h-auto w-auto mt-1"
                   style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 >
@@ -192,16 +192,16 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
-             "shadow-none border-none"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
+            "shadow-none border-none"
           )}
           style={{
-            background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
+            background: "linear-gradient(180deg, #f7fafc 0%, #f1f5fa 40%, #eaf0f7 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            border: "2px solid rgba(37, 99, 235, 0.25)",
-            outline: "1px solid rgba(37, 99, 235, 0.10)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
+            border: "2px solid rgba(37, 99, 235, 0.15)",
+            outline: "1px solid rgba(37, 99, 235, 0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 20px rgba(0,0,0,0.015), inset 0 0 18px rgba(37, 99, 235, 0.06)"
           }}
         >
           <DialogHeader
