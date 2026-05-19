@@ -213,7 +213,7 @@ const Lancamentos = () => {
           >
             <div className="flex flex-row items-center gap-1.5 transition-all">
               <span className="text-2xl select-none mr-0.5">📝</span>
-              <DialogTitle className="text-xl font-extrabold tracking-[0.5px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+              <DialogTitle className="text-xl font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
               <p className={cn("text-[12px] font-medium text-gray-800 opacity-90 relative", !isMobile ? "top-[0px]" : "ml-[42px] top-[-6px]")}>
