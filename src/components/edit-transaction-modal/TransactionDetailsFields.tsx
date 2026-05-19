@@ -81,7 +81,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   tipoPagamento,
 }) => {
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive !border-[1px]" : "!border-slate-300/40 !border-[1px]";
+    return validationErrors[errorKey] ? "!border-destructive !border-[1px]" : "!border-slate-300/70 !border-[1px]";
   };
 
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
@@ -142,7 +142,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn(isMobile && "space-y-1")}>
         <Label htmlFor="category" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -175,7 +175,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("amount"), getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("amount"), getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
@@ -187,7 +187,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
-              className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium !text-blue-500 shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !border-blue-300/30 !border-[1px] !bg-transparent", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !text-blue-500 !border-blue-300/50 !border-[1px] !bg-transparent", isMobile && "h-9 text-sm")}
             />
           </div>
         )}
@@ -201,7 +201,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("formaPagamento"), getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("formaPagamento"), getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
@@ -232,7 +232,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("cartaoId"), getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("cartaoId"), getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -253,14 +253,14 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("relative", isMobile && "space-y-1")}>
         <Label htmlFor="date" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Data</Label>
-        
+
         <div className="relative w-full">
           <Button
             type="button"
             variant={"outline"}
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
             className={cn(
-              "w-full justify-start text-left font-medium rounded-xl transition-all duration-200 input-3d-premium text-gray-800",
+              "w-full justify-start text-left font-medium rounded-xl transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800",
               !date && "text-muted-foreground",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderColor("date"),
@@ -272,7 +272,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           </Button>
 
           {isCalendarOpen && (
-            <div 
+            <div
               className={cn(
                 "absolute top-full left-0 z-[100] mt-1 w-full min-w-full max-w-full overflow-hidden",
                 "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
@@ -307,7 +307,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           rows={2}
           maxLength={45}
           className={cn(
-            "rounded-xl font-medium transition-all duration-200 input-3d-premium text-gray-800 resize-none min-h-[56px] h-[56px] py-1.5 px-3",
+            "rounded-xl font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800 resize-none min-h-[56px] h-[56px] py-1.5 px-3",
             isMobile && "text-sm",
             getBorderColor("description")
           )}
