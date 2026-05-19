@@ -134,63 +134,63 @@ export default function Receitas() {
           .from("categorias")
           .select("*")
           .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
-      
-      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
-      let cryptoAdded = false;
-      let poupancaAdded = false;
-      const normalizedData = (data as AppCategory[])
-        .filter(cat => {
-          const lowerNome = cat.nome.toLowerCase();
-          
-          // Filtro de Aportes
-          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+          .order("nome");
+        if (error) throw error;
 
-          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
-            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
-          }
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            if (cryptoAdded) return false;
-            cryptoAdded = true;
-          }
-          // Consolidação de Poupança
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            if (poupancaAdded) return false;
-            poupancaAdded = true;
-          }
+        // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
+        let cryptoAdded = false;
+        let poupancaAdded = false;
+        const normalizedData = (data as AppCategory[])
+          .filter(cat => {
+            const lowerNome = cat.nome.toLowerCase();
 
-          // Novos filtros solicitados: remover subcategorias específicas
-          const filterOut = [
-            "juros sobre capital",
-            "reembolsos",
-            "tesouro",
-            "rendimentos de fundos",
-            "outros rendimentos",
-            "dividendos",
-            "receitas extras",
-            "aluguel de imóveis",
-            "criptomoedas"
-          ];
-          
-          if (filterOut.some(term => lowerNome.includes(term))) return false;
-          
-          return true;
-        })
-        .map(cat => {
-          if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
-          const lowerNome = cat.nome.toLowerCase();
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            return { ...cat, nome: "Criptomoedas" };
-          }
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            return { ...cat, nome: "Poupança" };
-          }
-          return cat;
-        });
+            // Filtro de Aportes
+            if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
 
-      return normalizedData;
-    },
+            if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+              if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+            }
+            if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+              if (cryptoAdded) return false;
+              cryptoAdded = true;
+            }
+            // Consolidação de Poupança
+            if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+              if (poupancaAdded) return false;
+              poupancaAdded = true;
+            }
+
+            // Novos filtros solicitados: remover subcategorias específicas
+            const filterOut = [
+              "juros sobre capital",
+              "reembolsos",
+              "tesouro",
+              "rendimentos de fundos",
+              "outros rendimentos",
+              "dividendos",
+              "receitas extras",
+              "aluguel de imóveis",
+              "criptomoedas"
+            ];
+
+            if (filterOut.some(term => lowerNome.includes(term))) return false;
+
+            return true;
+          })
+          .map(cat => {
+            if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
+            const lowerNome = cat.nome.toLowerCase();
+            if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+              return { ...cat, nome: "Criptomoedas" };
+            }
+            if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+              return { ...cat, nome: "Poupança" };
+            }
+            return cat;
+          });
+
+        return normalizedData;
+      },
       enabled: !!user && !authLoading,
     });
 
@@ -683,7 +683,7 @@ export default function Receitas() {
         {isMobile ? (
           <div className="relative">
             <Card
-              className="!fixed top-[118px] left-4 right-4 py-2 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[92px] overflow-hidden z-30 card-receitas"
+              className="!fixed top-[118px] left-4 right-4 py-2 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[67px] overflow-hidden z-30 card-receitas"
               style={{ backgroundColor: "transparent" }}
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
@@ -694,7 +694,7 @@ export default function Receitas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-[20px] left-0 right-0 z-[60] px-4 pt-[1px] pb-3 bg-transparent"
+                isMobile && "fixed bottom-0 left-0 right-0 z-[60] px-4 pt-[1px] pb-[11px] bg-transparent"
               )}
             />
           </div>
@@ -714,8 +714,8 @@ export default function Receitas() {
                 revenues={revenues.filter(r => {
                   const revenueDate = new Date(r.data);
                   const now = new Date();
-                  return revenueDate.getMonth() === now.getMonth() && 
-                         revenueDate.getFullYear() === now.getFullYear();
+                  return revenueDate.getMonth() === now.getMonth() &&
+                    revenueDate.getFullYear() === now.getFullYear();
                 })}
                 revenueTypes={incomeSubcategories}
                 annualTotalValue={revenues
@@ -727,11 +727,13 @@ export default function Receitas() {
           </div>
         )}
       </main>
-      <Footer
-        isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 bg-transparent z-50 m-0" : "mt-auto pt-8")}
-        user={user}
-      />
+      {!isMobile && (
+        <Footer
+          isMobile={isMobile}
+          className="mt-auto pt-8"
+          user={user}
+        />
+      )}
     </div>
   );
 }
