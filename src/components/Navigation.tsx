@@ -253,9 +253,10 @@ export const Navigation = () => {
                             to={item.to}
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-4 px-4 py-2 rounded-2xl transition-all mx-1",
+                              "flex items-center gap-4 px-4 py-2 transition-all mx-1",
+                              isActive ? "rounded-xl" : "rounded-2xl",
                               isActive
-                                ? "bg-gradient-to-b from-[#5582FF] to-[#1E40AF] text-white font-bold shadow-[0_5px_15px_rgba(30,64,175,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)]"
+                                ? "bg-[#2B457D] text-white font-bold border-b-[1px] border-[#1a2c54] shadow-none"
                                 : "text-[#4A6B8A] hover:bg-white/30 hover:text-[#1E3A5F]"
                             )}
                           >
