@@ -496,7 +496,7 @@ export default function Dashboard() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen pt-16",
+        "flex flex-col min-h-screen pt-[72px]",
         isMobile ? "bg-white" : "bg-[#F6FAFF]"
       )}
     >

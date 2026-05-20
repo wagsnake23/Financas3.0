@@ -85,13 +85,13 @@ const Lancamentos = () => {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background relative",
-        isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-16 bg-background"
+        isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-[72px] bg-background"
       )}>
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
       {!isMobile && (
         <div className="relative h-[160px] w-full overflow-hidden bg-background">
-          <div className="container-app relative z-10 pt-12 md:pt-16 flex justify-between items-start">
+          <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <div

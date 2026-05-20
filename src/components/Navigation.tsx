@@ -134,8 +134,13 @@ export const Navigation = () => {
                         ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
                         : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
-          : "h-16 bg-[#0B213F] text-white shadow-md backdrop-blur-sm"
-      )}>
+          : "h-[72px] text-white"
+      )}
+      style={!isMobile ? {
+        background: "linear-gradient(135deg, #1d3357 0%, #243b63 55%, #2b4975 100%)",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        boxShadow: "0 2px 10px rgba(15,23,42,0.10)"
+      } : undefined}>
         <div className="container-app h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo / Título */}

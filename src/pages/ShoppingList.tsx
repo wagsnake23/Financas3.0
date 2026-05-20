@@ -11,7 +11,7 @@ export default function ShoppingList() {
   const isMobile = useIsMobile();
 
   return (
-    <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-14 md:pt-16", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
+    <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-14 md:pt-[72px]", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
       <main className={cn("container-app flex-grow", isMobile ? "px-0 pt-4 pb-20 flex flex-col min-h-0 shrink" : "py-8")}>
 
         <ShoppingListContent user={user} isMobile={isMobile} />

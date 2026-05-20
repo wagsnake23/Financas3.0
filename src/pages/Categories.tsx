@@ -316,7 +316,7 @@ const Categories = () => {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background md:pt-16",
+        "flex flex-col min-h-screen bg-background md:pt-[72px]",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
@@ -324,7 +324,7 @@ const Categories = () => {
       {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-background">
-          <div className="container-app relative z-10 pt-12 md:pt-16 flex justify-between items-start">
+          <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <Button

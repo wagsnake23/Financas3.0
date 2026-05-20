@@ -640,7 +640,7 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className={cn("flex flex-col bg-background", isMobile ? "bg-slate-50" : "pt-16")}> {/* Alterado para bg-slate-50 em mobile conforme solicitado */}
+    <div className={cn("flex flex-col bg-background", isMobile ? "bg-slate-50" : "pt-[72px]")}> {/* Alterado para bg-slate-50 em mobile conforme solicitado */}
 
       {/* Main Content */}
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}

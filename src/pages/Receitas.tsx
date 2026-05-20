@@ -619,7 +619,7 @@ export default function Receitas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background md:pt-16",
+        "flex flex-col min-h-screen bg-background md:pt-[72px]",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
@@ -631,7 +631,7 @@ export default function Receitas() {
       )}>
         <div className={cn(
           "container-app relative z-10",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-[#218C5C]/0 justify-between" : "pt-12 md:pt-16 flex justify-between items-start"
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-[#218C5C]/0 justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
