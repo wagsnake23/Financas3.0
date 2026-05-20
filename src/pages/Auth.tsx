@@ -627,10 +627,13 @@ export default function Auth() {
   );
 
   return (
-    <div className={cn(
-      "min-h-screen flex flex-col items-center justify-center p-4",
-      isMobile ? "bg-white" : "bg-gradient-to-br from-[#3B7ADD] to-[#0F1E38]"
-    )}>
+    <div 
+      className={cn(
+        "min-h-screen flex flex-col items-center justify-center p-4",
+        isMobile ? "bg-white" : "bg-cover bg-center bg-no-repeat"
+      )}
+      style={!isMobile ? { backgroundImage: "url('/backgrounds/login_desktop.webp')" } : undefined}
+    >
       {isMobile ? (
         <div className="w-full max-w-md p-4 flex flex-col pb-16">
           {formContent}
