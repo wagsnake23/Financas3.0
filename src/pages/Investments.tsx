@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Navigation } from "@/components/Navigation";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -53,7 +52,7 @@ const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border
 const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
 export default function Investments() { // Alterado para export default function
-  const { user, loading: authLoading } = useAuth(); // Obter authLoading
+  const { user } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -134,7 +133,7 @@ export default function Investments() { // Alterado para export default function
 
       return normalizedData;
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const incomeInvestmentSubcategories = useMemo(() => {
@@ -332,7 +331,7 @@ export default function Investments() { // Alterado para export default function
       if (error) throw error;
       return data as Investment[];
     },
-    enabled: !!user && !authLoading, // Passando enabled
+    enabled: !!user, // Passando enabled
   });
 
   // Mutation for adding a new investment
@@ -632,9 +631,9 @@ export default function Investments() { // Alterado para export default function
     };
   }, [investments, calculatedInvestments]);
 
-  if (authLoading || isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
+  if (isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
       </div>
     );
@@ -642,7 +641,6 @@ export default function Investments() { // Alterado para export default function
 
   return (
     <div className={cn("flex flex-col bg-background", isMobile ? "bg-slate-50" : "pt-16")}> {/* Alterado para bg-slate-50 em mobile conforme solicitado */}
-      <Navigation />
 
       {/* Main Content */}
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}

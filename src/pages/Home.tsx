@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -75,7 +74,7 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
 };
 
 export default function Home() {
-    const { user, loading: authLoading } = useAuth();
+    const { user } = useAuth();
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -99,7 +98,7 @@ export default function Home() {
             if (error) throw error;
             return data.filter((r: any) => r.data !== '1900-01-01');
         },
-        enabled: !!user && !authLoading,
+        enabled: !!user,
         placeholderData: keepPreviousData,
     });
 
@@ -137,7 +136,7 @@ export default function Home() {
                 if (error) throw error;
                 return data;
             },
-            enabled: !!user && !authLoading,
+            enabled: !!user,
             placeholderData: keepPreviousData,
         });
 
@@ -154,7 +153,7 @@ export default function Home() {
             if (error) throw error;
             return data;
         },
-        enabled: !!user && !authLoading,
+        enabled: !!user,
     });
 
     // Fetch categories
@@ -170,7 +169,7 @@ export default function Home() {
             if (error) throw error;
             return data;
         },
-        enabled: !!user && !authLoading,
+        enabled: !!user,
     });
 
     // Fetch profile data
@@ -186,7 +185,7 @@ export default function Home() {
             if (error) return null;
             return data;
         },
-        enabled: !!user && !authLoading,
+        enabled: !!user,
     });
 
     const stats = useMemo(() => {
@@ -237,7 +236,7 @@ export default function Home() {
 
     const isPlaceholder = isPlaceholderRevenues || isPlaceholderExpenses;
 
-    if (!isPlaceholder && !isLoadingRevenues && !isLoadingExpenses && !authLoading) {
+    if (!isPlaceholder && !isLoadingRevenues && !isLoadingExpenses) {
         lastStableData.current = {
             stats,
             allExpenseInstallments,
@@ -262,7 +261,7 @@ export default function Home() {
     // Só mostra o Loading se for o carregamento inicial (sem dados de receitas ou despesas ainda)
     const isInitialLoad = (isLoadingRevenues && allRevenues.length === 0) || (isLoadingExpenses && allExpenseInstallments.length === 0);
 
-    if (authLoading || (isInitialLoad && !allRevenues.length && !allExpenseInstallments.length)) {
+    if (isInitialLoad && !allRevenues.length && !allExpenseInstallments.length) {
         return <Loading />;
     }
 
@@ -287,8 +286,6 @@ export default function Home() {
         <div
             className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden sky-bg")}
         >
-            <Navigation />
-
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(

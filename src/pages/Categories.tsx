@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from "react";
 import { AppCategory } from "@/types/finance";
 import { categories as defaultCategories } from "@/data/categories"; // Manter para referência, mas não para uso direto
 import { CategoryForm } from "@/components/CategoryForm";
-import { Navigation } from "@/components/Navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,7 +64,7 @@ const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border
 const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
 
 const Categories = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [editingCategory, setEditingCategory] = useState<AppCategory | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Novo estado para o modal
@@ -150,7 +149,7 @@ const Categories = () => {
 
       return normalizedData;
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const allCategories = fetchedCategories;
@@ -306,9 +305,9 @@ const Categories = () => {
     setIsEditModalOpen(false);
   };
 
-  if (authLoading || isLoadingCategories) {
+  if (isLoadingCategories) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">Carregando Categorias...</div>
       </div>
     );
@@ -321,7 +320,6 @@ const Categories = () => {
         isMobile && "bg-[#F9FAFB]"
       )}
     >
-      <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
       {!isMobile && (

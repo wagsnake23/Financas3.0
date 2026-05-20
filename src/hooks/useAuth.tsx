@@ -1,37 +1,46 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
-import { toast } from "sonner"; // Importar toast
 
-export const useAuth = () => {
+interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("useAuth: Initializing auth listener..."); // ADDED LOG
-    // Set up auth state listener first
+    console.log("AuthProvider: Initializing auth listener...");
+    
+    // First, check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("AuthProvider: getSession result - Session:", session);
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log("useAuth: Auth state changed - Event:", event, "Session:", session); // ADDED LOG
+        console.log("AuthProvider: Auth state changed - Event:", event, "Session:", session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
-    // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("useAuth: getSession result - Session:", session); // ADDED LOG
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
     return () => {
-      console.log("useAuth: Unsubscribing from auth listener."); // ADDED LOG
+      console.log("AuthProvider: Unsubscribing from auth listener.");
       subscription.unsubscribe();
     };
   }, []);
@@ -41,12 +50,19 @@ export const useAuth = () => {
     navigate("/auth");
   };
 
-  console.log("useAuth: Current state - User:", user?.id, "Loading:", loading); // ADDED LOG
+  console.log("AuthProvider: Current state - User:", user?.id, "Loading:", loading);
 
-  return {
-    user,
-    session,
-    loading,
-    signOut,
-  };
+  return (
+    <AuthContext.Provider value={{ user, session, loading, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

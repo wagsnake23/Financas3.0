@@ -3,6 +3,8 @@ import { ToastProvider } from "@/contexts/ToastContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute"; // Importar ProtectedRoute
+import { AuthProvider } from "./hooks/useAuth";
+import { AppLayout } from "./components/AppLayout";
 
 // Importações diretas para diagnóstico
 // import Index from "./pages/Index"; // Removed as Dashboard will be the root
@@ -25,22 +27,27 @@ const App = () => (
     <TooltipProvider>
       <ToastProvider>
         <BrowserRouter>
-          {/* Removido React.Suspense para as rotas principais para diagnóstico */}
-          <Routes>
-            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} /> {/* Set Home as the root page */}
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> {/* Move Dashboard to /dashboard */}
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/categorias" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
-            <Route path="/investimentos" element={<ProtectedRoute><Investments /></ProtectedRoute>} />
-            <Route path="/receitas" element={<ProtectedRoute><Receitas /></ProtectedRoute>} />
-            <Route path="/despesas" element={<ProtectedRoute><Despesas /></ProtectedRoute>} />
-            <Route path="/lancamentos" element={<ProtectedRoute><Lancamentos /></ProtectedRoute>} />
-            <Route path="/charts" element={<ProtectedRoute><Charts /></ProtectedRoute>} />
-            <Route path="/lista-de-compras" element={<ProtectedRoute><ShoppingList /></ProtectedRoute>} /> {/* NOVO: Rota para Lista de Compras */}
-            {/* Removed duplicate Dashboard route */}
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              
+              {/* Rotas protegidas sob o AppLayout global para evitar re-render e desmontagem da navegação */}
+              <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/categorias" element={<Categories />} />
+                <Route path="/investimentos" element={<Investments />} />
+                <Route path="/receitas" element={<Receitas />} />
+                <Route path="/despesas" element={<Despesas />} />
+                <Route path="/lancamentos" element={<Lancamentos />} />
+                <Route path="/charts" element={<Charts />} />
+                <Route path="/lista-de-compras" element={<ShoppingList />} />
+              </Route>
+
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </ToastProvider>
     </TooltipProvider>

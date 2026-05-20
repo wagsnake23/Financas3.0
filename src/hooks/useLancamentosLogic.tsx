@@ -15,14 +15,11 @@ import { useTransactionMutations } from "./useTransactionMutations";
 type ReceitaStatus = Database['public']['Enums']['receita_status']; // Definir ReceitaStatus aqui
 
 export const useLancamentosLogic = (
-  user: User | null,
-  authLoading: boolean
+  user: User | null
 ) => {
   console.log(
     "useLancamentosLogic: User received as prop:",
-    user?.id,
-    "AuthLoading:",
-    authLoading
+    user?.id
   );
 
   const queryClient = useQueryClient();
@@ -69,7 +66,7 @@ export const useLancamentosLogic = (
   } = useTransactionsData({
     user,
     selectedMonth,
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   // Usar o hook de mutações para gerenciar as operações de CRUD
@@ -96,7 +93,7 @@ export const useLancamentosLogic = (
       if (error) throw error;
       return data.filter((r: any) => r.data !== '1900-01-01');
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const { data: allExpenseInstallments = [] } = useQuery<(Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[]>({
@@ -110,7 +107,7 @@ export const useLancamentosLogic = (
       if (error) throw error;
       return data;
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   // Lógica para carregar dados completos da transação para edição (mantida aqui, pois depende de queryClient e setStates específicos)
@@ -179,7 +176,6 @@ export const useLancamentosLogic = (
   );
 
   const isLoading =
-    authLoading ||
     isLoadingTransactionsData ||
     isLoadingCategories;
 

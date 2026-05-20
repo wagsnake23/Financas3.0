@@ -1,5 +1,4 @@
 import React from "react";
-import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,16 +7,11 @@ import Loading from "@/components/Loading";
 import { ShoppingListContent } from "@/components/ShoppingListContent"; // Will create this next
 
 export default function ShoppingList() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const isMobile = useIsMobile();
-
-  if (authLoading) {
-    return <Loading />;
-  }
 
   return (
     <div className={cn("flex flex-col bg-lancamentos-mobile-bg pt-14 md:pt-16", isMobile ? "h-screen overflow-hidden" : "min-h-screen")}>
-      <Navigation />
       <main className={cn("container-app flex-grow", isMobile ? "px-0 pt-4 pb-20 flex flex-col min-h-0 shrink" : "py-8")}>
 
         <ShoppingListContent user={user} isMobile={isMobile} />

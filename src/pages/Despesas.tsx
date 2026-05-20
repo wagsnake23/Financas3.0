@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { Navigation } from "@/components/Navigation";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { ExpensesDashboard } from "@/components/ExpensesDashboard";
 import Loading from "@/components/Loading";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -35,7 +34,7 @@ interface Cartao {
 const UNSELECTED_VALUE = "unselected";
 
 export default function Despesas() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
@@ -56,7 +55,7 @@ export default function Despesas() {
     expenses,
     expenseInstallments,
     isLoading: isLoadingExpenseData,
-  } = useExpenseData(user, UNSELECTED_VALUE, !!user && !authLoading);
+  } = useExpenseData(user, UNSELECTED_VALUE, !!user);
 
   const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<
     AppCategory[]
@@ -129,14 +128,14 @@ export default function Despesas() {
 
       return normalizedData;
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   useEffect(() => {
-    if (user && !authLoading) {
+    if (user) {
       loadCartoes();
     }
-  }, [user, authLoading]);
+  }, [user]);
 
   const loadCartoes = async () => {
     const { data, error } = await supabase
@@ -179,9 +178,9 @@ export default function Despesas() {
   // Removed:   toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
   // Removed: };
 
-  if (authLoading || isLoadingExpenseData || isLoadingCategories) {
+  if (isLoadingExpenseData || isLoadingCategories) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">
           Carregando Despesas...
         </div>
@@ -215,7 +214,6 @@ export default function Despesas() {
         isMobile && "bg-[#F9FAFB]"
       )}
     >
-      <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
       <div className={cn(

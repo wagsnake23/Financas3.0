@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/contexts/ToastContext";
-import { Navigation } from "@/components/Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tables } from "@/integrations/supabase/types";
@@ -55,7 +54,7 @@ const UNSELECTED_VALUE = "unselected";
 const RECURRING_INSTALLMENTS_COUNT = 120;
 
 export default function Receitas() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { showSuccessToast, showErrorToast } = useToast();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
@@ -122,7 +121,7 @@ export default function Receitas() {
       if (error) throw error;
       return data.filter((r: any) => r.data !== '1900-01-01');
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const { data: fetchedCategories = [], isLoading: isLoadingCategories } =
@@ -191,7 +190,7 @@ export default function Receitas() {
 
         return normalizedData;
       },
-      enabled: !!user && !authLoading,
+      enabled: !!user,
     });
 
   const incomeSubcategories = useMemo(() => {
@@ -607,9 +606,9 @@ export default function Receitas() {
     </>
   );
 
-  if (authLoading || isLoadingRevenues || isLoadingCategories) {
+  if (isLoadingRevenues || isLoadingCategories) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">
           Carregando Receitas...
         </div>
@@ -624,7 +623,6 @@ export default function Receitas() {
         isMobile && "bg-[#F9FAFB]"
       )}
     >
-      <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
       <div className={cn(

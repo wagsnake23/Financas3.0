@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { TotalExpensesCard } from "@/components/TotalExpensesCard";
@@ -46,7 +45,7 @@ import { WealthProjection } from "@/components/WealthProjection";
 import { Investment } from "@/types/finance";
 
 export default function Dashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
@@ -79,7 +78,7 @@ export default function Dashboard() {
       if (error) throw error;
       return data.filter((r: any) => r.data !== '1900-01-01');
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const { data: allExpenseInstallments = [], isLoading: isLoadingAllExpenses } =
@@ -112,7 +111,7 @@ export default function Dashboard() {
         if (error) throw error;
         return data;
       },
-      enabled: !!user && !authLoading,
+      enabled: !!user,
     });
 
   // Fetch investments
@@ -128,7 +127,7 @@ export default function Dashboard() {
       if (error) throw error;
       return data as Investment[];
     },
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   // Fetch active indexers (CDI/IPCA)
@@ -168,7 +167,7 @@ export default function Dashboard() {
   } = useTransactionsData({
     user,
     selectedMonth,
-    enabled: !!user && !authLoading,
+    enabled: !!user,
   });
 
   const stats = useMemo(() => {
@@ -455,18 +454,16 @@ export default function Dashboard() {
   }, [allRevenues, allExpenseInstallments]);
 
   const isLoading =
-    authLoading ||
     isLoadingTransactionsData ||
     isLoadingAllRevenues ||
     isLoadingAllExpenses ||
     isLoadingCategories ||
-    isLoadingInvestments; // Adicionado isLoadingInvestments
+    isLoadingInvestments;
 
   const isInitialLoad =
-    authLoading ||
     (isLoadingCategories && allSubcategories.length === 0) ||
     (isLoadingAllRevenues && allRevenues.length === 0) ||
-    (isLoadingInvestments && investments.length === 0) || // Adicionado isLoadingInvestments
+    (isLoadingInvestments && investments.length === 0) ||
     (isLoadingAllExpenses && allExpenseInstallments.length === 0);
 
   const handlePreviousMonth = () => {
@@ -483,7 +480,7 @@ export default function Dashboard() {
 
   if (isInitialLoad) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse text-muted-foreground">
           Carregando Dashboard...
         </div>
@@ -503,7 +500,6 @@ export default function Dashboard() {
         isMobile ? "bg-white" : "bg-[#F6FAFF]"
       )}
     >
-      <Navigation />
       <main
         className={cn(
           "container-app flex-grow",

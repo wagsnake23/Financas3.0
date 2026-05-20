@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/Navigation";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -29,7 +28,7 @@ import { ptBR } from "date-fns/locale";
 const Lancamentos = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const {
@@ -69,7 +68,7 @@ const Lancamentos = () => {
     refetchCartoes,
     allRevenues,
     allExpenseInstallments,
-  } = useLancamentosLogic(user, authLoading);
+  } = useLancamentosLogic(user);
 
   console.log(
     "Lancamentos.tsx: User from useAuth:",
@@ -78,7 +77,7 @@ const Lancamentos = () => {
     !user
   );
 
-  if (authLoading || isLoading) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -88,7 +87,6 @@ const Lancamentos = () => {
         "flex flex-col min-h-screen bg-background relative",
         isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-16 bg-background"
       )}>
-      <Navigation />
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
       {!isMobile && (
