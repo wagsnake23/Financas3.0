@@ -343,7 +343,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
+            className="w-full rounded-xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -476,7 +476,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
+            className="w-full rounded-xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -522,7 +522,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
+            className="w-full rounded-xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
@@ -603,7 +603,7 @@ export default function Auth() {
           </div>
           <Button
             type="submit"
-            className="w-full rounded-2xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
+            className="w-full rounded-xl text-lg font-bold transition-all duration-100 bg-[#0556C3] text-white shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
           >
