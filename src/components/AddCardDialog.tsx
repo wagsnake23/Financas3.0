@@ -100,13 +100,14 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         <Button
           type="button"
           size="icon"
+          variant="ghost"
           className={cn(
-            "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-[#E55B5B] transition-all active:scale-90 flex-shrink-0",
-            isMobile ? "h-9 w-8" : "h-10 w-9"
+            "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
+            isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
           )}
-          style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
+          style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any}
         >
-          <Plus className="h-[18px] w-[18px] text-white" />
+          <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(

@@ -444,7 +444,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           >
             <SelectTrigger
               className={cn(
-                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
@@ -477,14 +477,15 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           <Button
             type="button"
             size="icon"
+            variant="ghost"
             onClick={() => setIsAddSubcategoryModalOpen(true)}
             className={cn(
-              "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-md border border-[#CC4B4B] transition-all active:scale-90 flex-shrink-0",
-              isMobile ? "h-9 w-8" : "h-10 w-9"
+              "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
+              isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
             )}
-            style={{ "--cor-topo": "#E55B5B", "--cor-base": "#CC4B4B" } as any}
+            style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any}
           >
-            <Plus className="h-[18px] w-[18px] text-white" />
+            <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
           </Button>
         </div>
       </div>
@@ -556,7 +557,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           rows={2}
           maxLength={45}
           className={cn(
-            "rounded-xl text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none input-3d-premium min-h-[56px] h-[56px] py-1.5 px-3",
+            "rounded-xl text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] min-h-[56px] h-[56px] py-1.5 px-3",
             isMobile && "text-sm",
             getBorderClass({})
           )}

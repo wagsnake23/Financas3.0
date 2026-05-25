@@ -211,25 +211,25 @@ export default function Despesas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background md:pt-[72px]",
-        isMobile && "bg-[#F9FAFB]"
+        isMobile && "bg-slate-50"
       )}
     >
 
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
       <div className={cn(
         "relative h-[220px] w-full overflow-hidden",
-        isMobile ? "bg-gradient-to-b from-[#CC4B4B] via-[#CC4B4B] via-45% to-transparent" : "bg-background"
+        isMobile ? "bg-slate-50" : "bg-background"
       )}>
         <div className={cn(
           "container-app relative z-10",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-[#D44D4D]/0 justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-transparent justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
               <Button
                 variant="ghost"
                 className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
-                style={isMobile ? { "--cor-topo": "#FFF5F5", "--cor-base": "#FFE4E6" } as any : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 onClick={() => navigate("/lancamentos?type=expense")}
               >
                 <DynamicIcon
@@ -239,10 +239,10 @@ export default function Despesas() {
                 />
               </Button>
               <div className="flex flex-col">
-                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-white" : "text-2xl text-slate-800")} style={{ fontFamily: "'Inter', sans-serif" }}>
+                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-[#E54D4D]" : "text-2xl text-[#E54D4D]")} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Nova Despesa
                 </h1>
-                <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-white" : "text-sm text-slate-500")}>
+                <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-slate-500" : "text-sm text-slate-500")}>
                   Registre seus gastos
                 </p>
               </div>

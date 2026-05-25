@@ -80,7 +80,7 @@ export const Navigation = () => {
   const isReceitas = location.pathname.startsWith("/receitas");
   const isInvestimentos = location.pathname.startsWith("/investimentos");
   const isCategorias = location.pathname.startsWith("/categorias");
-  const isDarkPage = location.pathname === "/" || isDespesas || isReceitas;
+  const isDarkPage = location.pathname === "/" || isReceitas;
 
   const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,7 +108,7 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias;
+  const forceDarkText = isInvestimentos || isCategorias || isDespesas;
   const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
   const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
 
@@ -121,19 +121,17 @@ export const Navigation = () => {
         isMobile
           ? cn(
             "h-14 shadow-none border-none",
-            isDespesas
-              ? cn("bg-[#D44D4D]", !scrolled && "bg-transparent")
-              : isReceitas
-                ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
-                : isInvestimentos
-                  ? "bg-slate-50"
-                  : isCategorias
-                    ? "bg-[#F9FAFB]"
-                    : !scrolled
-                      ? "bg-transparent"
-                      : isDarkPage
-                        ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
-                        : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
+            isReceitas
+              ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
+              : (isInvestimentos || isDespesas)
+                ? "bg-slate-50"
+                : isCategorias
+                  ? "bg-[#F9FAFB]"
+                  : !scrolled
+                    ? "bg-transparent"
+                    : isDarkPage
+                      ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
+                      : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
           : "h-[72px] text-white"
       )}
