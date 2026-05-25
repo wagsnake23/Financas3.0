@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" as="style" />
+    <script>
+      (() => {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Controle Financeiro Pessoal</title>
@@ -9,8 +21,6 @@
       content="Sistema completo de controle financeiro pessoal. Gerencie suas receitas, despesas e visualize relatórios detalhados."
     />
     <meta name="author" content="Controle Financeiro" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
@@ -19,7 +29,6 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <!-- Adicionado Roboto -->
     <!-- PWA and Favicon Configuration -->
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/favicon.ico" />

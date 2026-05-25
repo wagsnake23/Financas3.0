@@ -115,7 +115,8 @@ export const Navigation = () => {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[60] transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[60]",
+        !isMobile && "transition-all duration-300",
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
@@ -149,12 +150,13 @@ export const Navigation = () => {
               onClick={() => navigate("/")}
             >
               <img
-                src="/favicon.ico"
+                src="/icons/logo.png"
                 alt="Logo"
                 className="h-8 w-8 transition-transform group-hover:scale-110"
               />
               <span className={cn(
-                "font-extrabold text-lg tracking-[0.5px] transition-all duration-300",
+                "font-extrabold text-lg tracking-[0.5px]",
+                !isMobile && "transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
               )}
@@ -206,7 +208,8 @@ export const Navigation = () => {
                   <button
                     onClick={() => navigate("/lista-de-compras")}
                     className={cn(
-                      "relative p-2 rounded-full transition-colors",
+                      "relative p-2 rounded-full",
+                      !isMobile && "transition-colors",
                       isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
                     )}
                   >
@@ -222,7 +225,8 @@ export const Navigation = () => {
                   <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
                       <button className={cn(
-                        "p-2 rounded-full transition-colors",
+                        "p-2 rounded-full",
+                        !isMobile && "transition-colors",
                         isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
                       )}>
                         <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />

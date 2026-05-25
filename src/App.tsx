@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -6,19 +7,18 @@ import { ProtectedRoute } from "./components/ProtectedRoute"; // Importar Protec
 import { AuthProvider } from "./hooks/useAuth";
 import { AppLayout } from "./components/AppLayout";
 
-// Importações diretas para diagnóstico
-// import Index from "./pages/Index"; // Removed as Dashboard will be the root
-import Auth from "./pages/Auth";
-import Categories from "./pages/Categories";
-import Investments from "./pages/Investments";
-import Receitas from "./pages/Receitas";
-import Despesas from "./pages/Despesas";
-import Lancamentos from "./pages/Lancamentos";
-import Charts from "./components/Charts";
-import Dashboard from "./pages/Dashboard";
-import Home from "./pages/Home"; // NOVO: Importar Home
-import NotFound from "./pages/NotFound";
-import ShoppingList from "./pages/ShoppingList"; // NOVO: Importar ShoppingList
+// Importações Dinâmicas (Lazy Loading) apenas para as páginas internas
+const Auth = lazy(() => import("./pages/Auth"));
+const Categories = lazy(() => import("./pages/Categories"));
+const Investments = lazy(() => import("./pages/Investments"));
+const Receitas = lazy(() => import("./pages/Receitas"));
+const Despesas = lazy(() => import("./pages/Despesas"));
+const Lancamentos = lazy(() => import("./pages/Lancamentos"));
+const Charts = lazy(() => import("./components/Charts"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Home = lazy(() => import("./pages/Home"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ShoppingList = lazy(() => import("./pages/ShoppingList"));
 
 const queryClient = new QueryClient();
 

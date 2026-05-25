@@ -756,3 +756,17 @@ body {
 .no-rim::before {
   display: none !important;
 }
+
+/* Scoped Mobile PWA Performance Optimization to prevent repaints and lag */
+@media (max-width: 767px) {
+  html,
+  body,
+  header,
+  nav,
+  .navbar,
+  [class*="navbar"],
+  [class*="header"] {
+    transition: none !important;
+    animation: none !important;
+  }
+}
