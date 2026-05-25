@@ -80,7 +80,7 @@ export const Navigation = () => {
   const isReceitas = location.pathname.startsWith("/receitas");
   const isInvestimentos = location.pathname.startsWith("/investimentos");
   const isCategorias = location.pathname.startsWith("/categorias");
-  const isDarkPage = location.pathname === "/" || isReceitas;
+  const isDarkPage = location.pathname === "/";
 
   const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,7 +108,7 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias || isDespesas;
+  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas;
   const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
   const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
 
@@ -121,9 +121,7 @@ export const Navigation = () => {
         isMobile
           ? cn(
             "h-14 shadow-none border-none",
-            isReceitas
-              ? cn("bg-[#218C5C]", !scrolled && "bg-transparent")
-              : (isInvestimentos || isDespesas)
+            (isReceitas || isInvestimentos || isDespesas)
                 ? "bg-slate-50"
                 : isCategorias
                   ? "bg-[#F9FAFB]"
