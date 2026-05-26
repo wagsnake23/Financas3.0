@@ -272,7 +272,7 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[112px] left-0 right-0 py-2 bottom-[56px] overflow-hidden z-30"
+              className="!fixed top-[112px] left-[1px] right-[1px] py-2 bottom-[56px] overflow-hidden z-30"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
                 {formContent}
@@ -282,7 +282,7 @@ export default function Despesas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-0 left-0 right-0 z-[60] px-4 pt-[1px] pb-[9px] bg-transparent"
+                isMobile && "fixed bottom-0 left-[1px] right-[1px] z-[60] px-4 pt-[1px] pb-[9px] bg-transparent"
               )}
             />
           </div>
