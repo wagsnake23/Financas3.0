@@ -266,7 +266,7 @@ export default function Despesas() {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "-mt-32 pb-32" : "-mt-24 pb-20"
+          isMobile ? "-mt-32 pb-32" : "-mt-[86px] pb-20"
         )}
       >
         {isMobile ? (
