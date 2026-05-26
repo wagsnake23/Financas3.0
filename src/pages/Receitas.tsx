@@ -346,9 +346,9 @@ export default function Receitas() {
       <form
         id="income-form"
         onSubmit={handleSubmitOneOff}
-        className={cn("w-full", isMobile ? "space-y-4" : "space-y-6")}
+        className={cn(isMobile ? "space-y-3 w-full" : "space-y-6 w-full")}
       >
-        <div className={cn("space-y-2 pt-2", isMobile && "w-full mx-auto")}>
+        <div className="pt-2">
           <ToggleGroup
             type="single"
             value={isRecurring ? "recorrente" : "avulsa"}
@@ -400,8 +400,8 @@ export default function Receitas() {
           </ToggleGroup>
         </div>
 
-        <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="tipo" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <div>
+          <Label htmlFor="tipo" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
             Subcategoria de Receita
           </Label>
           <div className="flex gap-2">
@@ -414,7 +414,7 @@ export default function Receitas() {
             >
               <SelectTrigger
                 className={cn(
-                  "flex-1 transition-all duration-200 bg-white border border-slate-300/70 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
+                  "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderClass({
                     isInvalid: validationErrors.tipoReceitaId,
@@ -459,20 +459,21 @@ export default function Receitas() {
             <Button
               type="button"
               size="icon"
+              variant="ghost"
               onClick={() => setIsAddSubcategoryModalOpen(true)}
               className={cn(
-                "btn-3d w-8 h-9 p-0 flex items-center justify-center rounded-xl shadow-sm border border-green-200 transition-all active:scale-90 flex-shrink-0",
-                isMobile ? "h-9 w-8" : "h-10 w-9"
+                "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
+                isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
               )}
-              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1 } as any}
             >
-              <Plus className="h-[18px] w-[18px] !text-white" />
+              <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
             </Button>
           </div>
         </div>
 
-        <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="valor" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <div>
+          <Label htmlFor="valor" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
             Valor (R$)
           </Label>
           <CurrencyBR
@@ -482,8 +483,8 @@ export default function Receitas() {
               setValidationErrors((prev) => ({ ...prev, valor: false }));
             }}
             className={cn(
-              "w-full transition-all duration-200 bg-white border border-slate-300/70 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
               isMobile ? "h-9 text-sm" : "h-10",
+              "w-full text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
               getBorderClass({
                 isInvalid: validationErrors.valor,
                 isValid: validationErrors.valor === false,
@@ -492,8 +493,8 @@ export default function Receitas() {
           />
         </div>
 
-        <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="data" className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <div>
+          <Label htmlFor="data" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
             Data
           </Label>
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -501,7 +502,7 @@ export default function Receitas() {
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200 bg-white border border-slate-300/70 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
+                  "w-full justify-start text-left text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
                   isMobile ? "h-9 text-sm" : "h-10",
                   !data && "text-muted-foreground",
                   getBorderClass({
@@ -542,8 +543,8 @@ export default function Receitas() {
           </Popover>
         </div>
 
-        <div className={cn(isMobile && "w-full mx-auto")}>
-          <Label htmlFor="descricao" className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
+        <div>
+          <Label htmlFor="descricao" className={cn("text-slate-500 font-semibold mb-0.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
             Descrição
           </Label>
           <Textarea
@@ -554,14 +555,15 @@ export default function Receitas() {
             rows={2}
             maxLength={45}
             className={cn(
-              "w-full transition-all duration-200 bg-white border border-slate-300/70 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl resize-none min-h-[56px] h-[56px] py-1.5 px-3",
-              isMobile ? "text-sm" : "",
+              "rounded-xl text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] min-h-[56px] h-[56px] py-1.5 px-3",
+              isMobile && "text-sm",
+              getBorderClass({})
             )}
           />
         </div>
 
         {!isRecurring && (
-          <div className={cn("space-y-2", isMobile && "w-full mx-auto")}>
+          <div className={cn(isMobile && "mt-2")}>
             <RevenueStatusToggle
               status={status}
               setStatus={(val) => setStatus(val as ReceitaStatus)}
@@ -589,11 +591,7 @@ export default function Receitas() {
 
           return isMobile && submitPortalRef
             ? createPortal(SubmitButton, submitPortalRef)
-            : (
-              <div className={cn(isMobile && "w-full mx-auto")}>
-                {SubmitButton}
-              </div>
-            );
+            : SubmitButton;
         })()}
       </form>
       <AddSubcategoryModal
@@ -680,19 +678,18 @@ export default function Receitas() {
       >
         {isMobile ? (
           <div className="relative">
-            <Card
-              className="!fixed top-[118px] left-4 right-4 py-2 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[67px] overflow-hidden z-30 card-receitas"
-              style={{ backgroundColor: "transparent" }}
+            <div
+              className="!fixed top-[112px] left-[1px] right-[1px] py-2 bottom-[56px] overflow-hidden z-30"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
                 {oneOffFormContent}
               </div>
-            </Card>
+            </div>
             <div
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-0 left-0 right-0 z-[60] px-4 pt-[1px] pb-[11px] bg-transparent"
+                isMobile && "fixed bottom-0 left-[1px] right-[1px] z-[60] px-4 pt-[1px] pb-[9px] bg-transparent"
               )}
             />
           </div>
