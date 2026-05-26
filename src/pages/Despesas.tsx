@@ -211,14 +211,14 @@ export default function Despesas() {
     <div
       className={cn(
         "flex flex-col min-h-screen bg-background md:pt-[72px]",
-        isMobile && "bg-soft-red-background"
+        isMobile && "bg-slate-50"
       )}
     >
 
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
       <div className={cn(
         "relative h-[220px] w-full overflow-hidden",
-        isMobile ? "bg-soft-red-background" : "bg-background"
+        isMobile ? "bg-slate-50" : "bg-background"
       )}>
         <div className={cn(
           "container-app relative z-10",
