@@ -505,15 +505,28 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Normalization for non-textarea inputs to ensure exact 36px height */
+/* Normalization for non-textarea inputs to ensure exact height */
 .input-3d-premium:not(textarea) {
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
   display: flex !important;
   align-items: center !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .input-3d-premium:not(textarea) {
+    height: 2.25rem !important;
+    min-height: 2.25rem !important;
+    max-height: 2.25rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .input-3d-premium:not(textarea) {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+  }
 }
 
 .input-3d-premium:focus,

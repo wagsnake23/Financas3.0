@@ -7,6 +7,11 @@ import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DateAndInstallmentFieldsProps {
   dataVencimento: Date | undefined;
@@ -30,15 +35,60 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   setValidationErrors,
   isMobile,
   tipoPagamento,
-  // Removido: numeroParcelas,
-  // Removido: setNumeroParcelas,
 }) => {
   const dateLabel = tipoPagamento === "parcelado" ? "Data da Primeira Parcela" : "Data de Vencimento";
 
+  if (isMobile) {
+    return (
+      <div className="grid gap-4 grid-cols-1">
+        <div className="relative">
+          <Label htmlFor="dataVencimento" className="text-slate-500 font-semibold mb-1.5 inline-block text-[13px]">
+            {dateLabel}
+          </Label>
+          
+          <div className="relative w-full">
+            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+                    !dataVencimento && "text-muted-foreground",
+                    "h-9 text-sm",
+                    getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+                  )}
+                >
+                  <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
+                  {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-1">
+                <Calendar
+                  mode="single"
+                  selected={dataVencimento}
+                  onSelect={(date) => {
+                    setDataVencimento(date);
+                    setIsCalendarOpen(false);
+                    setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
+                  }}
+                  initialFocus
+                  locale={ptBR}
+                  showOutsideDays={false}
+                  className="text-sm"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={cn("grid gap-4", "grid-cols-1")}> {/* Ajustado para sempre 1 coluna */}
+    <div className="grid gap-4 grid-cols-1">
       <div className="relative">
-        <Label htmlFor="dataVencimento" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
+        <Label htmlFor="dataVencimento" className="text-slate-500 font-semibold mb-1.5 inline-block text-[15px]">
           {dateLabel}
         </Label>
         
@@ -48,22 +98,21 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
             variant={"outline"}
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
             className={cn(
-              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10",
               !dataVencimento && "text-muted-foreground",
-              isMobile && "h-9 text-sm",
               getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
             )}
           >
-            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-gray-500", isMobile && "h-4 w-4")} />
+            <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
             {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
           </Button>
 
           {isCalendarOpen && (
             <div 
               className={cn(
-                "absolute top-full left-0 z-[100] mt-1 w-full min-w-full max-w-full overflow-hidden",
+                "absolute top-full left-0 z-[100] mt-1 overflow-hidden",
                 "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
-                isMobile ? "h-[340px]" : "h-[460px]"
+                "w-auto h-auto"
               )}
             >
               <Calendar
@@ -77,14 +126,12 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
                 initialFocus
                 locale={ptBR}
                 showOutsideDays={true}
-                className="w-full h-full p-2"
+                className="p-3"
               />
             </div>
           )}
         </div>
       </div>
-
-      {/* Removido o bloco de Número de Parcelas */}
     </div>
   );
 };
