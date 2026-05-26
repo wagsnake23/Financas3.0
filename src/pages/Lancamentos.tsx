@@ -176,12 +176,13 @@ const Lancamentos = () => {
           setSearchTerm={setSearchTerm}
         />
       </main>
-      <Footer
-        isMobile={isMobile}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 !bg-transparent z-50 m-0" : "mt-auto pt-8")}
-        user={user}
-      />{" "}
-      {/* Passando a prop user */}
+      {!isMobile && (
+        <Footer
+          isMobile={isMobile}
+          className="mt-auto pt-8"
+          user={user}
+        />
+      )}
       {isEditModalOpen && loadingEditData && (
         <div className="absolute inset-0 z-[70] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
