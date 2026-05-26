@@ -272,7 +272,7 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[112px] left-4 right-4 py-2 bottom-[67px] overflow-hidden z-30"
+              className="!fixed top-[112px] left-0 right-0 py-2 bottom-[67px] overflow-hidden z-30"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
                 {formContent}
