@@ -502,7 +502,7 @@ export default function Receitas() {
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
+                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
                   isMobile ? "h-9 text-sm" : "h-10",
                   !data && "text-muted-foreground",
                   getBorderClass({
@@ -555,7 +555,7 @@ export default function Receitas() {
             rows={2}
             maxLength={45}
             className={cn(
-              "rounded-xl text-gray-800 font-medium placeholder:text-gray-400 transition-all duration-200 resize-none bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] min-h-[56px] h-[56px] py-1.5 px-3",
+              "input-3d-premium resize-none min-h-[56px] h-[56px] py-1.5 px-3",
               isMobile && "text-sm",
               getBorderClass({})
             )}

@@ -394,7 +394,7 @@ export const TransactionList = ({
         !isMobile && "flex-row items-center gap-3 mb-6"
       )}>
         {/* Campo de Pesquisa */}
-        <div className={cn("relative group", !isMobile && "flex-1")}>
+        <div className={cn("relative group w-full", !isMobile && "flex-1")}>
           <Input
             placeholder="Digite para buscar..."
             value={localSearch}

@@ -107,7 +107,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           )}
           style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any}
         >
-          <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
+          <Plus className="h-[18px] w-[18px] !text-white" strokeWidth={3.5} style={{ color: "#ffffff" }} />
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(

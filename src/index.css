@@ -682,15 +682,15 @@ body {
   }
 
   .card-despesas {
-    background: linear-gradient(to top right, rgba(255, 59, 48, 0.10) 0%, transparent 45%), linear-gradient(135deg, #fafafa 0%, #f7f5f5 100%) !important;
+    background: linear-gradient(to top right, rgba(255, 59, 48, 0.05) 0%, transparent 45%), linear-gradient(135deg, #fefefe 0%, #fafafa 100%) !important;
     background-blend-mode: normal !important;
     backdrop-filter: blur(6px) !important;
-    border: 1px solid rgba(0,0,0,0.04) !important;
-    outline: 1px solid rgba(255, 59, 48, 0.03) !important;
+    border: 1px solid rgba(0,0,0,0.02) !important;
+    outline: 1px solid rgba(255, 59, 48, 0.02) !important;
     box-shadow: 
       inset 0 1px 0 rgba(255,255,255,0.6), 
-      inset 0 -8px 20px rgba(0,0,0,0.02), 
-      inset 0 0 18px rgba(255, 59, 48, 0.06) !important;
+      inset 0 -8px 20px rgba(0,0,0,0.01), 
+      inset 0 0 18px rgba(255, 59, 48, 0.04) !important;
   }
 }
 
@@ -777,5 +777,38 @@ body {
   [class*="header"] {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* Scoped Mobile Input Premium styling for Pure White background, Black Semibold text, and slate-400 border */
+@media (max-width: 767px) {
+  #expense-form input,
+  #expense-form textarea,
+  #expense-form [role="combobox"],
+  #expense-form [aria-haspopup="dialog"],
+  #income-form input,
+  #income-form textarea,
+  #income-form [role="combobox"],
+  #income-form [aria-haspopup="dialog"] {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-weight: 600 !important; /* Semibold text */
+    border: 1px solid rgba(203, 213, 225, 0.9) !important; /* Soft but more visible 3D border (slate-300/90) */
+    box-shadow: inset 0 2px 5px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(0,0,0,0.02) !important; /* 3D inner shadow */
+  }
+
+  /* Lucide and calendar icons inside popover trigger buttons in mobile */
+  #expense-form [aria-haspopup="dialog"]:not(.btn-3d) svg,
+  #income-form [aria-haspopup="dialog"]:not(.btn-3d) svg {
+    color: #000000 !important;
+  }
+
+  /* Placeholder text color inside input/textarea */
+  #expense-form input::placeholder,
+  #expense-form textarea::placeholder,
+  #income-form input::placeholder,
+  #income-form textarea::placeholder {
+    color: #94A3B8 !important; /* Slate-400 placeholder */
+    font-weight: 400 !important;
   }
 }
