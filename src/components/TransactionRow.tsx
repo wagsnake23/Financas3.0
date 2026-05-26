@@ -68,7 +68,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "rounded-2xl py-2.5 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
+          "rounded-[3px] py-2.5 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
           transaction.status === "Recebida" ? "bg-success/[0.03] border-l-4 border-l-success" : "bg-white border-l-4 border-l-[#FF8888]"
         )}
       >
