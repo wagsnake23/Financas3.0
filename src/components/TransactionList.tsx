@@ -501,7 +501,7 @@ export const TransactionList = ({
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
-        <div className={cn("mt-4", isMobile && "w-[90%] mx-auto mt-0")}> {/* Removido a margem superior no mobile para aproximar dos filtros */}
+        <div className={cn("mt-4", isMobile && "w-full px-4 mt-0")}> {/* Removido a margem superior no mobile para aproximar dos filtros */}
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
@@ -520,7 +520,7 @@ export const TransactionList = ({
 
       <div className={cn(
         !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-        isMobile ? "flex-1 overflow-y-auto w-[92%] mx-auto mt-1 px-1 no-scrollbar" : ""
+        isMobile ? "flex-1 overflow-y-auto w-full px-4 mt-1 no-scrollbar" : ""
       )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
