@@ -38,7 +38,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   return (
     <div className={cn("grid gap-4", "grid-cols-1")}> {/* Ajustado para sempre 1 coluna */}
       <div className="relative">
-        <Label htmlFor="dataVencimento" className={cn("text-gray-600 font-medium mb-1.5 inline-block", isMobile && "text-xs")}>
+        <Label htmlFor="dataVencimento" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
           {dateLabel}
         </Label>
         

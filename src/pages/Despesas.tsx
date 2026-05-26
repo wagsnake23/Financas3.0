@@ -271,14 +271,13 @@ export default function Despesas() {
       >
         {isMobile ? (
           <div className="relative">
-            <Card
-              className="!fixed top-[118px] left-4 right-4 py-2 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none bottom-[67px] overflow-hidden z-30 card-despesas"
-              style={{ backgroundColor: "transparent" }}
+            <div
+              className="!fixed top-[112px] left-4 right-4 py-2 bottom-[67px] overflow-hidden z-30"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
                 {formContent}
               </div>
-            </Card>
+            </div>
             <div
               ref={setSubmitPortalRef}
               className={cn(
