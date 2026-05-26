@@ -832,10 +832,12 @@ body {
   #expense-form textarea,
   #expense-form [role="combobox"],
   #expense-form [aria-haspopup="dialog"],
+  #expense-form button.input-3d-premium,
   #income-form input,
   #income-form textarea,
   #income-form [role="combobox"],
-  #income-form [aria-haspopup="dialog"] {
+  #income-form [aria-haspopup="dialog"],
+  #income-form button.input-3d-premium {
     font-size: 1.125rem !important; /* text-lg */
     font-weight: 700 !important; /* bold */
   }

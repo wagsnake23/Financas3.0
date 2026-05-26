@@ -110,7 +110,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
           {isCalendarOpen && (
             <div 
               className={cn(
-                "absolute top-full left-0 z-[100] mt-1 overflow-hidden",
+                "absolute top-full left-1/2 -translate-x-1/2 z-[100] mt-1 overflow-hidden",
                 "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
                 "w-auto h-auto"
               )}
