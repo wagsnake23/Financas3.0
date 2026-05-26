@@ -838,7 +838,7 @@ body {
   #income-form [role="combobox"],
   #income-form [aria-haspopup="dialog"],
   #income-form button.input-3d-premium {
-    font-size: 1.125rem !important; /* text-lg */
+    font-size: 1rem !important; /* text-base */
     font-weight: 700 !important; /* bold */
   }
 }
