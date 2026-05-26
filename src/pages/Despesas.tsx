@@ -222,7 +222,7 @@ export default function Despesas() {
       )}>
         <div className={cn(
           "container-app relative z-10",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-4 flex items-center bg-transparent justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
+          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 px-5 flex items-center bg-transparent justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
         )}>
           <div>
             <div className="flex items-start gap-3">
@@ -272,9 +272,9 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[112px] left-[2px] right-[2px] py-2 bottom-[56px] overflow-hidden z-30"
+              className="!fixed top-[112px] left-0 right-0 py-2 bottom-[56px] overflow-hidden z-30"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-4 pb-2">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 px-5 pb-2">
                 {formContent}
               </div>
             </div>
@@ -282,7 +282,7 @@ export default function Despesas() {
               ref={setSubmitPortalRef}
               className={cn(
                 "px-1",
-                isMobile && "fixed bottom-0 left-[2px] right-[2px] z-[60] px-4 pt-[1px] pb-[9px] bg-transparent"
+                isMobile && "fixed bottom-0 left-0 right-0 z-[60] px-5 pt-[1px] pb-[9px] bg-transparent"
               )}
             />
           </div>
