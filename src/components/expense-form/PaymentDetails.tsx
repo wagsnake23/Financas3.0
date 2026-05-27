@@ -124,7 +124,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
             className={cn(
               isMobile ? "h-9 text-sm" : "h-10",
-              "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+              "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )}
           />
@@ -141,7 +141,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({})
             )}>
@@ -177,7 +177,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             }}
           >
             <SelectTrigger className={cn(
-              "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+              "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
               isMobile ? "h-9 text-sm" : "h-10",
               getBorderClass({})
             )}>
@@ -213,7 +213,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               onChange={handleNumeroParcelasChange}
               placeholder=""
               className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
               )}
@@ -234,7 +234,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               }}
             >
               <SelectTrigger className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
               )}>

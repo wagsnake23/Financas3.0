@@ -444,7 +444,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           >
             <SelectTrigger
               className={cn(
-                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
+                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderClass({
                   isInvalid: validationErrors.selectedSubcategoryId,
@@ -558,8 +558,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           maxLength={45}
           className={cn(
             "input-3d-premium resize-none min-h-[56px] h-[56px] py-1.5 px-3",
+            "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
             isMobile && "text-sm",
-            getBorderClass({})
+            getBorderClass({ isValid: false })
           )}
         />
       </div>
