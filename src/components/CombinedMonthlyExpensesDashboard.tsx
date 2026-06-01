@@ -799,7 +799,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                   isActive ? "fill-indigo-600" : "fill-gray-700"
                                 )}
                               >
-                                {item?.icone} {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
+                                {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())} {item?.icone}
                               </text>
                             </g>
                           );

@@ -151,7 +151,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                           textAnchor="end"
                           className="fill-gray-700 text-[12px] md:text-[14px] font-semibold"
                         >
-                          {item?.icone} {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
+                          {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())} {item?.icone}
                         </text>
                       </g>
                     );
