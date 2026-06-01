@@ -441,7 +441,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     <div
       className={cn(
         "w-full flex flex-col",
-        isMobile ? "h-full overflow-hidden pt-0 pb-2" : "h-full p-6"
+        isMobile ? "h-full overflow-hidden pt-0 pb-2 px-[4px]" : "h-full p-6"
       )}
     >
       {/* Main container with padding */}
@@ -791,9 +791,10 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
       {/* Buttons Container */}
       <div className={cn(
-        "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-[28px] left-0 right-0 px-[18px] py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
+        "shrink-0 w-full",
+        isMobile ? "fixed bottom-[28px] left-0 right-0 py-2 bg-transparent z-40 mb-0 container-app" : "mt-4 mb-2"
       )}>
+        <div className={cn("flex w-full gap-3 justify-between", isMobile && "px-[4px]")}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -851,6 +852,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
         {/* Salvar Button */}
         {/* Salvar Button (Removed) */}
+        </div>
       </div>
     </div>
   );
