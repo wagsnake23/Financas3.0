@@ -681,7 +681,7 @@ export default function Receitas() {
             <div
               className="!fixed top-[112px] left-0 right-0 py-2 bottom-[56px] overflow-hidden z-30 container-app"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 pb-2 px-[2px]">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 pb-2 px-[4px]">
                 {oneOffFormContent}
               </div>
             </div>
@@ -690,7 +690,7 @@ export default function Receitas() {
                 isMobile && "fixed bottom-0 left-0 right-0 z-[60] pt-[1px] pb-[9px] bg-transparent container-app"
               )}
             >
-              <div ref={setSubmitPortalRef} className="px-[2px]" />
+              <div ref={setSubmitPortalRef} className="px-[4px]" />
             </div>
           </div>
         ) : (
