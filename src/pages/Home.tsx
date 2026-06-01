@@ -278,30 +278,27 @@ export default function Home() {
     };
 
     const greeting = getGreeting();
-    const formattedDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    // Capitalize "Segunda-feira" properly (e.g. "Segunda-Feira")
-    const parts = formattedDate.split(",");
-    const weekday = parts[0].split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("-");
-    const todayStr = weekday + "," + parts[1];
+    const rawDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    const todayStr = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
 
     return (
         <div
-            className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden sky-bg")}
+            className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden global-bg")}
         >
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center bg-transparent justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center bg-[#F7F9FC] justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-semibold text-white tracking-[0.1px] leading-none", isMobile ? "text-lg" : "text-2xl")}
+                            className={cn("font-extrabold tracking-[0.5px] leading-none", isMobile ? "text-xl" : "text-2xl")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
-                            {greeting}, {userName} 👋
+                            <span className={cn(isMobile ? "text-[#1f2937]" : "text-slate-800")}>{greeting},</span> <span className="text-[#0556C3]">{userName}</span> 👋
                         </h1>
-                        <p className={cn("text-blue-100/80 font-medium uppercase tracking-widest leading-none", isMobile ? "text-[10px] -mt-0.5" : "text-sm -mt-0.5")}>
+                        <p className={cn("font-medium leading-none", isMobile ? "text-[12px] text-slate-500 mt-0" : "text-sm text-slate-500 mt-1")}>
                             {todayStr}
                         </p>
                     </div>
@@ -316,7 +313,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 container-app pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
+                            className="!fixed top-[96px] left-0 right-0 bottom-[28px] overflow-hidden z-30 container-app pt-[14px] !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
                                 className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
@@ -327,7 +324,7 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center mt-[2px]"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                         backgroundBlendMode: "normal",
@@ -339,9 +336,9 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                                <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#1e3a8a" />
+                                                <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#0556C3" />
                                             </p>
                                         </div>
                                         {/* Seletor de Mês (Posição Top Right) */}

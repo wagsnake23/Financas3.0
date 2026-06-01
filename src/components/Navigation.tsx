@@ -108,9 +108,9 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas;
-  const mobileTextColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
-  const mobileIconColor = (isDarkPage || (isModalOpen && !forceDarkText)) ? "text-white" : "text-[#0556C3]";
+  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isDarkPage;
+  const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
+  const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
 
   return (
     <>
@@ -121,15 +121,15 @@ export const Navigation = () => {
         isMobile
           ? cn(
             "h-14 shadow-none border-none",
-            (isReceitas || isInvestimentos || isDespesas)
-                ? "bg-slate-50"
-                : isCategorias
-                  ? "bg-[#F9FAFB]"
-                  : !scrolled
-                    ? "bg-transparent"
-                    : isDarkPage
-                      ? "bg-[#1D5DDC]/95 backdrop-blur-md border-b border-white/10 shadow-md"
-                      : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
+            isDarkPage
+                ? "bg-[#F7F9FC]"
+                : (isReceitas || isInvestimentos || isDespesas)
+                    ? "bg-slate-50"
+                    : isCategorias
+                    ? "bg-[#F9FAFB]"
+                    : !scrolled
+                        ? "bg-transparent"
+                        : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
           : "h-[72px] text-white"
       )}
