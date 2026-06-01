@@ -126,7 +126,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       if (isParcelado) {
         const current = String(transaction.installmentNumber).padStart(2, '0');
         const total = String(transaction.totalInstallments).padStart(2, '0');
-        return `Parc. ${current}/${total}`;
+        return `${current}/${total}`;
+      }
+      if (transaction.type === 'income') {
+        return "Receita";
       }
       const isDebit =
         transaction.forma_pagamento === "debit" ||
@@ -149,17 +152,17 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         <div className="flex flex-col w-full gap-1">
           {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
           <div className="flex items-center justify-between w-full mb-1">
-            <div className="flex items-center gap-1 min-w-0 flex-1 mr-2">
+            <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[0.72rem] text-gray-500 font-extrabold whitespace-nowrap shrink-0">
+              <span className="text-[0.72rem] text-gray-400 font-medium whitespace-nowrap shrink-0">
                 {formattedDate}
               </span>
               
               {/* Forma de Pagamento */}
               {paymentDetails.name && (
                 <>
-                  <span className="text-[0.72rem] text-gray-500 shrink-0">·</span>
-                  <span className="text-[0.72rem] text-gray-500 font-medium truncate">
+                  <span className="text-[0.72rem] text-gray-400 shrink-0">·</span>
+                  <span className="text-[0.72rem] text-gray-600 font-medium truncate">
                     {paymentDetails.name}
                   </span>
                 </>
@@ -168,8 +171,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {/* Parcela ou Tipo */}
               {cardOrPaymentType && (
                 <>
-                  <span className="text-[0.72rem] text-gray-500 shrink-0">·</span>
-                  <span className="text-[0.72rem] text-gray-500 font-medium shrink-0">
+                  <span className="text-[0.72rem] text-gray-400 shrink-0">·</span>
+                  <span className={cn(
+                    "text-[0.72rem] shrink-0",
+                    isParcelado ? "text-purple-600/90 font-semibold" : 
+                    transaction.type === "income" ? "text-success/90 font-semibold" : 
+                    "text-gray-500 font-medium"
+                  )}>
                     {cardOrPaymentType}
                   </span>
                 </>
@@ -196,7 +204,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="h-6 w-6"
+                  className="h-7 w-7"
                   style={{ color: categoryColor }}
                 />
               </div>
