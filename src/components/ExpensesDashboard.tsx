@@ -144,15 +144,23 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                     const item = expensesBySubcategory[index];
                     return (
                       <g transform={`translate(${x},${y})`}>
-                        <text
-                          x={-10}
-                          y={0}
-                          dy={4}
-                          textAnchor="end"
-                          className="fill-gray-700 text-[12px] md:text-[14px] font-semibold"
+                        <foreignObject
+                          x={isMobile ? -165 : -180}
+                          y={-20}
+                          width={isMobile ? 162 : 175}
+                          height={40}
                         >
-                          {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())} {item?.icone}
-                        </text>
+                          <div className="w-full flex flex-col items-end justify-center pr-0.5 select-none pointer-events-none" style={{ height: '40px' }}>
+                            <div className="flex flex-row items-baseline justify-end gap-1.5 w-full">
+                              <div className="text-right text-gray-700 text-[13px] md:text-[14px] font-semibold leading-[1.1] overflow-hidden break-words whitespace-normal" style={{ maxHeight: '2.2em' }}>
+                                {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
+                              </div>
+                              <div className="shrink-0 text-[1.15em] leading-normal translate-y-[2px]">
+                                {item?.icone}
+                              </div>
+                            </div>
+                          </div>
+                        </foreignObject>
                       </g>
                     );
                   }}
