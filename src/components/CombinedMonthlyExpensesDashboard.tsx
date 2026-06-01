@@ -742,7 +742,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                       <YAxis
                         dataKey="name"
                         type="category"
-                        width={isMobile ? 110 : 180}
+                        width={isMobile ? 165 : 180}
                         axisLine={false}
                         tickLine={false}
                         tick={({ x, y, payload, index }) => {
@@ -759,7 +759,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                             >
                               {/* Transparent clickable area for the entire row */}
                               <rect
-                                x={isMobile ? -110 : -140}
+                                x={isMobile ? -165 : -140}
                                 y={-20}
                                 width={1000}
                                 height={40}
@@ -768,7 +768,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                               {/* Background highlight for the entire row */}
                               {isActive && (
                                 <rect
-                                  x={isMobile ? -110 : -140}
+                                  x={isMobile ? -165 : -140}
                                   y={-20}
                                   width={1000}
                                   height={40}
@@ -781,7 +781,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                               {/* Tiny color indicator on the left if active */}
                               {isActive && (
                                 <rect
-                                  x={isMobile ? -110 : -140}
+                                  x={isMobile ? -165 : -140}
                                   y={-10}
                                   width={4}
                                   height={20}
@@ -795,11 +795,11 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                 dy={4}
                                 textAnchor="end"
                                 className={cn(
-                                  "text-[10px] md:text-[12px] font-black uppercase tracking-tight transition-all duration-300",
+                                  "text-[10px] md:text-[12px] font-black tracking-tight transition-all duration-300",
                                   isActive ? "fill-indigo-600" : "fill-gray-500"
                                 )}
                               >
-                                {item?.icone} {payload.value}
+                                {item?.icone} {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                               </text>
                             </g>
                           );

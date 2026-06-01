@@ -137,7 +137,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                 <YAxis
                   dataKey="nome"
                   type="category"
-                  width={isMobile ? 100 : 180}
+                  width={isMobile ? 165 : 180}
                   axisLine={false}
                   tickLine={false}
                   tick={({ x, y, payload, index }) => {
@@ -151,7 +151,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                           textAnchor="end"
                           className="fill-gray-600 text-[11px] md:text-[13px] font-bold"
                         >
-                          {item?.icone} {payload.value}
+                          {item?.icone} {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                         </text>
                       </g>
                     );
