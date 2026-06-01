@@ -154,13 +154,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           <div className="flex items-center justify-between w-full mb-1">
             <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[13px] text-gray-600 font-semibold whitespace-nowrap shrink-0">
+              <span className="text-[13px] text-gray-600 font-medium whitespace-nowrap shrink-0">
                 {formattedDate}
               </span>
               
               {/* Forma de Pagamento */}
               {paymentDetails.name && (
-                <span className="text-[13px] text-gray-600 font-semibold truncate">
+                <span className="text-[13px] text-gray-600 font-medium truncate">
                   {paymentDetails.name}
                 </span>
               )}
@@ -173,9 +173,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   )}
                   <span className={cn(
                     "text-[13px] shrink-0",
-                    isParcelado ? "text-purple-600/90 font-semibold" : 
-                    transaction.type === "income" ? "text-success/90 font-semibold" : 
-                    "text-gray-500 font-medium"
+                    isParcelado ? "text-purple-600/90 font-medium" : 
+                    transaction.type === "income" ? "text-success/90 font-medium" : 
+                    "text-gray-600 font-medium"
                   )}>
                     {cardOrPaymentType}
                   </span>
