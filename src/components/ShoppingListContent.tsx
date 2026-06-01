@@ -792,7 +792,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       {/* Buttons Container */}
       <div className={cn(
         "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-[34px] left-0 right-0 px-[18px] py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
+        isMobile ? "fixed bottom-[28px] left-0 right-0 px-[18px] py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
       )}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
@@ -800,7 +800,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             <Button
               className={cn(
                 "btn-3d",
-                "rounded-xl flex-1 h-9 text-sm font-bold"
+                "rounded-xl flex-1",
+                isMobile ? "h-[39px] text-[14.5px] font-[800]" : "h-9 text-sm font-bold"
               )}
               style={
                 {

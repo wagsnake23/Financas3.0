@@ -19,7 +19,7 @@ export default function ShoppingList() {
       <Footer
         isMobile={isMobile}
         user={user}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 py-2 bg-lancamentos-mobile-bg z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pb-2 pt-0 bg-transparent z-50 m-0" : "mt-8")}
       />
     </div>
   );
