@@ -274,17 +274,17 @@ export default function Despesas() {
             <div
               className="!fixed top-[112px] left-0 right-0 py-2 bottom-[56px] overflow-hidden z-30 container-app"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 pb-2">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 pb-2 px-[2px]">
                 {formContent}
               </div>
             </div>
             <div
-              ref={setSubmitPortalRef}
               className={cn(
-                "px-1",
                 isMobile && "fixed bottom-0 left-0 right-0 z-[60] pt-[1px] pb-[9px] bg-transparent container-app"
               )}
-            />
+            >
+              <div ref={setSubmitPortalRef} className="px-[2px]" />
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
