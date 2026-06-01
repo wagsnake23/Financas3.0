@@ -121,8 +121,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       };
     })();
 
-    const isParcelado = !!(transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1);
+    const isFixo = transaction.type === "expense" && transaction.tipo_pagamento === "fixo";
+    const isParcelado = !isFixo && !!(transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1);
     const cardOrPaymentType = (() => {
+      if (isFixo) {
+        return "Fixo";
+      }
       if (isParcelado) {
         const current = String(transaction.installmentNumber).padStart(2, '0');
         const total = String(transaction.totalInstallments).padStart(2, '0');
@@ -173,6 +177,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   )}
                   <span className={cn(
                     "text-[13px] shrink-0",
+                    isFixo ? "text-[#3B82F6] font-medium" :
                     isParcelado ? "text-purple-600/90 font-medium" : 
                     transaction.type === "income" ? "text-success/90 font-medium" : 
                     "text-gray-600 font-medium"
