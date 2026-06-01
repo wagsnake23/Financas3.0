@@ -289,16 +289,16 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center bg-[#F7F9FC] justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[4px] bg-[#F7F9FC] justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-extrabold tracking-[0.5px] leading-none", isMobile ? "text-xl" : "text-2xl")}
+                            className={cn("font-extrabold leading-none", isMobile ? "text-xl tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
                             <span className={cn(isMobile ? "text-[#1f2937]" : "text-slate-800")}>{greeting},</span> <span className="text-[#0556C3]">{userName}</span> 👋
                         </h1>
-                        <p className={cn("font-medium leading-none", isMobile ? "text-[12px] text-slate-500 mt-0" : "text-sm text-slate-500 mt-1")}>
+                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-slate-600 mt-0" : "text-sm text-slate-500 mt-1")}>
                             {todayStr}
                         </p>
                     </div>

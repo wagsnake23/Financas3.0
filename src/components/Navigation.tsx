@@ -121,9 +121,9 @@ export const Navigation = () => {
         isMobile
           ? cn(
             "h-14 shadow-none border-none",
-            isDarkPage
+            (isDarkPage || isDespesas)
                 ? "bg-[#F7F9FC]"
-                : (isReceitas || isInvestimentos || isDespesas)
+                : (isReceitas || isInvestimentos)
                     ? "bg-slate-50"
                     : isCategorias
                     ? "bg-[#F9FAFB]"
