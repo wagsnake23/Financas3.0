@@ -172,10 +172,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "rounded-[7px] py-[9px] px-3 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
+          "rounded-[7px] py-[9px] px-3 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all shadow-[inset_0_1px_4px_rgba(0,0,0,0.03)]",
           transaction.status === "Recebida" 
-            ? "shadow-sm border border-gray-100 bg-success/[0.03] border-l-4 border-l-success" 
-            : "bg-[#FFFFFF] border border-[#E7EAF0] border-l-4 border-l-[#FF8888] shadow-[inset_0_1px_4px_rgba(0,0,0,0.03)]"
+            ? "bg-success/[0.03] border border-success/20 border-l-4 border-l-success" 
+            : "bg-[#FFFFFF] border border-[#E7EAF0] border-l-4 border-l-[#FF8888]"
         )}
       >
         <div className="flex flex-col w-full gap-1">
