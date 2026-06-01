@@ -173,11 +173,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {cardOrPaymentType && (
                 <>
                   {paymentDetails.name && (
-                    <span className="text-[13px] text-gray-400 shrink-0">·</span>
+                    <span className="text-[13px] text-gray-400 shrink-0 mx-0.5">·</span>
                   )}
                   <span className={cn(
                     "text-[13px] shrink-0",
-                    isFixo ? "text-[#3B82F6] font-medium" :
+                    isFixo ? "text-[#6699EE] font-medium" :
                     isParcelado ? "text-purple-600/90 font-medium" : 
                     transaction.type === "income" ? "text-success/90 font-medium" : 
                     "text-gray-600 font-medium"
@@ -215,11 +215,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
               {/* Nome e Descrição */}
               <div className="flex flex-col min-w-0">
-                <span className="font-bold text-gray-800 text-[0.88rem] leading-tight truncate">
+                <span className="font-semibold text-slate-700 text-[0.88rem] leading-tight truncate">
                   {categoryName}
                 </span>
                 {transaction.description && (
-                  <span className="text-[0.75rem] text-slate-400 font-normal line-clamp-1 truncate mt-0.5">
+                  <span className="text-[0.75rem] text-slate-500 font-normal line-clamp-1 truncate mt-0.5">
                     {transaction.description}
                   </span>
                 )}
