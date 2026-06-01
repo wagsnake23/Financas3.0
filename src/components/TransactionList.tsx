@@ -390,7 +390,7 @@ export const TransactionList = ({
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
-        "flex flex-col gap-2 mb-1 px-4",
+        "flex flex-col gap-2 mb-1",
         !isMobile && "flex-row items-center gap-3 mb-6"
       )}>
         {/* Campo de Pesquisa */}
@@ -501,7 +501,7 @@ export const TransactionList = ({
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
-        <div className={cn("mt-4", isMobile && "w-full px-4 mt-0")}> {/* Removido a margem superior no mobile para aproximar dos filtros */}
+        <div className={cn("mt-4", isMobile && "w-full mt-0")}> {/* Removido a margem superior no mobile para aproximar dos filtros */}
           <CreditCardInvoiceSummary
             totalPaid={totalPaidCard}
             totalPending={totalPendingCard}
@@ -520,7 +520,7 @@ export const TransactionList = ({
 
       <div className={cn(
         !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-        isMobile ? "flex-1 overflow-y-auto w-full px-4 mt-1 no-scrollbar" : ""
+        isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar" : ""
       )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
@@ -601,7 +601,7 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto relative z-20",
-        isMobile ? "w-full px-2 mb-1 mt-1" : "mt-8 w-full px-0 mb-4"
+        isMobile ? "w-full mb-1 mt-1" : "mt-8 w-full px-0 mb-4"
       )}>
         <div className={cn(
           "bg-slate-50 flex items-center justify-between w-full gap-2 px-4 border-t border-gray-300",

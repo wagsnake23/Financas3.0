@@ -209,7 +209,7 @@ All colors MUST be HSL.
   .container-app {
     @apply mx-auto w-full;
     max-width: 1440px;
-    padding-inline: clamp(16px, 4vw, 32px);
+    padding-inline: clamp(18px, 4vw, 32px);
   }
 }
 

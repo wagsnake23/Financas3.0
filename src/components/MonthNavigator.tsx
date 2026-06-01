@@ -35,7 +35,7 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
           onClick={onBack}
           className={cn(
             "absolute inset-y-0 flex items-center justify-center rounded-xl transition-all active:scale-95 btn-3d bg-white border border-rose-100 !shadow-none",
-            isMobile ? "h-8 w-8 left-2" : "h-10 w-10 left-0"
+            isMobile ? "h-8 w-8 left-0" : "h-10 w-10 left-0"
           )}
           style={{
             "--cor-topo": "#FFF5F5",
@@ -85,7 +85,7 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
           title="Limpar todos os filtros"
           className={cn(
             "absolute inset-y-0 right-0 rounded-xl btn-3d bg-white border border-rose-100 !shadow-none transition-all flex items-center justify-center active:scale-95",
-            isMobile ? "h-8 w-8 right-2" : "h-10 w-10 right-0"
+            isMobile ? "h-8 w-8 right-0" : "h-10 w-10 right-0"
           )}
           style={{
             "--cor-topo": "#FFF5F5",

@@ -361,7 +361,7 @@ const Categories = () => {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "px-3 pt-16 pb-10" : "-mt-24 pb-[40px]"
+          isMobile ? "pt-16 pb-10" : "-mt-24 pb-[40px]"
         )}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
@@ -459,7 +459,7 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-0 mb-2 px-4 bg-transparent" : "mt-8")} />
+      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-0 mb-2 bg-transparent" : "mt-8")} />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal

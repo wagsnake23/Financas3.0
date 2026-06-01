@@ -441,7 +441,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
     <div
       className={cn(
         "w-full flex flex-col",
-        isMobile ? "h-full overflow-hidden pt-0 px-2 pb-2" : "h-full p-6"
+        isMobile ? "h-full overflow-hidden pt-0 pb-2" : "h-full p-6"
       )}
     >
       {/* Main container with padding */}
@@ -512,7 +512,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col w-full min-h-0">
-        <div className={cn("mb-4 shrink-0 relative mt-2", isMobile ? "w-full px-1" : "w-full")}>
+        <div className={cn("mb-4 shrink-0 relative mt-2 w-full")}>
           <input
             ref={newItemInputRef}
             type="text"
@@ -534,7 +534,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <div
           className={cn(
             "w-full flex-1 min-h-0 overflow-y-auto no-scrollbar",
-            isMobile ? "px-1" : "rounded-xl border bg-lancamentos-mobile-bg mb-2 font-roboto"
+            isMobile ? "" : "rounded-xl border bg-lancamentos-mobile-bg mb-2 font-roboto"
           )}
         >
           {/* Sticky Header - Oculto em mobile */}
@@ -792,7 +792,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       {/* Buttons Container */}
       <div className={cn(
         "shrink-0 flex w-full gap-3 justify-between",
-        isMobile ? "fixed bottom-[34px] left-0 right-0 px-4 py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
+        isMobile ? "fixed bottom-[34px] left-0 right-0 px-[18px] py-2 bg-transparent z-40 mb-0" : "mt-4 mb-2"
       )}>
         {/* Limpar Lista Button with Confirmation Modal */}
         <AlertDialog>
