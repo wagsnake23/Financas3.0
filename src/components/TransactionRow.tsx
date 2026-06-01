@@ -252,9 +252,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               >
                 <div
                   className={cn(
-                    "w-[14px] h-[14px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
+                    "w-[16px] h-[16px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
                     transaction.status === "Recebida"
-                      ? "translate-x-[20px]"
+                      ? "translate-x-[16px]"
                       : "translate-x-0"
                   )}
                 />
