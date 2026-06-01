@@ -795,8 +795,8 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                 dy={4}
                                 textAnchor="end"
                                 className={cn(
-                                  "text-[10px] md:text-[12px] font-black tracking-tight transition-all duration-300",
-                                  isActive ? "fill-indigo-600" : "fill-gray-500"
+                                  "text-[11px] md:text-[13px] font-semibold tracking-tight transition-all duration-300",
+                                  isActive ? "fill-indigo-600" : "fill-gray-700"
                                 )}
                               >
                                 {item?.icone} {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
