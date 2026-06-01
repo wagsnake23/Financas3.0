@@ -64,31 +64,121 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   })();
 
   if (isMobile) {
+    const formattedDate = (() => {
+      try {
+        const day = format(transactionDate, "dd", { locale: ptBR });
+        const mmmRaw = format(transactionDate, "MMM", { locale: ptBR });
+        const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
+        return `${day} ${mmm}`;
+      } catch (e) {
+        return "";
+      }
+    })();
+
+    const paymentDetails = (() => {
+      const fp = transaction.forma_pagamento;
+      if (fp === "cartao") {
+        const cartao = cartoes.find(c => c.id === transaction.cartao_id);
+        return {
+          icon: "💳",
+          name: cartao ? cartao.nome : "Cartão"
+        };
+      } else if (fp === "pix") {
+        return {
+          icon: "📲",
+          name: "Pix"
+        };
+      } else if (fp === "dinheiro" || fp === "cash") {
+        return {
+          icon: "💰",
+          name: "Dinheiro"
+        };
+      } else if (fp === "boleto") {
+        return {
+          icon: "📄",
+          name: "Boleto"
+        };
+      } else if (fp === "debit") {
+        return {
+          icon: "💳",
+          name: "Débito"
+        };
+      } else if (fp === "credit") {
+        return {
+          icon: "💳",
+          name: "Crédito"
+        };
+      } else if (fp) {
+        const name = fp.charAt(0).toUpperCase() + fp.slice(1);
+        return {
+          icon: "💳",
+          name
+        };
+      }
+      return {
+        icon: "",
+        name: ""
+      };
+    })();
+
+    const isParcelado = !!(transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1);
+    const cardOrPaymentType = (() => {
+      if (isParcelado) {
+        const current = String(transaction.installmentNumber).padStart(2, '0');
+        const total = String(transaction.totalInstallments).padStart(2, '0');
+        return `Parc. ${current}/${total}`;
+      }
+      const isDebit =
+        transaction.forma_pagamento === "debit" ||
+        category?.forma_pagamento === "debit" ||
+        (transaction.forma_pagamento !== "cartao" && (transaction.forma_pagamento === "pix" || transaction.forma_pagamento === "dinheiro" || transaction.forma_pagamento === "cash"));
+
+      return isDebit ? "Débito" : "Crédito";
+    })();
+
+    const categoryColor = category?.cor || "#6B7280";
+
     return (
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "rounded-[7px] py-2.5 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
+          "rounded-[7px] py-2.5 px-3 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
           transaction.status === "Recebida" ? "bg-success/[0.03] border-l-4 border-l-success" : "bg-white border-l-4 border-l-[#FF8888]"
         )}
       >
         <div className="flex flex-col w-full gap-1">
-          {/* 📌 PRIMEIRA LINHA: Data, Subcategoria e Valor */}
-          <div className="flex items-start justify-between w-full">
-            <div className="flex items-start gap-3 min-w-0">
+          {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
+          <div className="flex items-center justify-between w-full mb-1">
+            <div className="flex items-center gap-1 min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[0.72rem] text-gray-600 font-black whitespace-nowrap min-w-[38px] text-center pt-0.5">
-                {format(transactionDate, "dd", { locale: ptBR })}/
-                {format(transactionDate, "MMM", { locale: ptBR }).charAt(0).toUpperCase() + format(transactionDate, "MMM", { locale: ptBR }).slice(1).replace(".", "")}
+              <span className="text-[0.72rem] text-gray-500 font-extrabold whitespace-nowrap shrink-0">
+                {formattedDate}
               </span>
-              {/* Subcategoria */}
-              <span className="font-bold text-gray-800 text-[0.85rem] leading-tight truncate">
-                {categoryName}
-              </span>
+              
+              {/* Forma de Pagamento */}
+              {paymentDetails.name && (
+                <>
+                  <span className="text-[0.72rem] text-gray-500 shrink-0">·</span>
+                  <span className="text-[0.72rem] text-gray-500 font-medium truncate">
+                    {paymentDetails.name}
+                  </span>
+                </>
+              )}
+
+              {/* Parcela ou Tipo */}
+              {cardOrPaymentType && (
+                <>
+                  <span className="text-[0.72rem] text-gray-500 shrink-0">·</span>
+                  <span className="text-[0.72rem] text-gray-500 font-medium shrink-0">
+                    {cardOrPaymentType}
+                  </span>
+                </>
+              )}
             </div>
+
             {/* Valor */}
             <span className={cn(
-              "font-extrabold text-sm tracking-tight whitespace-nowrap leading-tight pt-0.5",
+              "font-extrabold text-sm tracking-tight whitespace-nowrap leading-tight shrink-0",
               transaction.type === 'income'
                 ? "text-success"
                 : (transaction.status === "Recebida" ? "text-[#FF8888]/80" : "text-destructive")
@@ -97,31 +187,35 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </span>
           </div>
 
-          {/* 📌 SEGUNDA LINHA: Ícone, Descrição e Status */}
-          <div className="flex items-start justify-between w-full">
-            <div className="flex items-start gap-3 min-w-0 flex-1">
-              {/* Ícone (abaixo da data) */}
-              <div className={cn(
-                "flex items-center justify-center h-4 w-4 shrink-0 min-w-[38px]",
-                transaction.type === 'income' ? "text-success" : "text-destructive"
-              )}>
+          {/* 📌 LINHA 2 & 3: Ícone Subcategoria, Nome do Item, Descrição e Status */}
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              {/* Quadrado arredondado com fundo suave do ícone da subcategoria */}
+              <div
+                className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 bg-[#F4F5F7]"
+              >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="h-3.5 w-3.5"
+                  className="h-6 w-6"
+                  style={{ color: categoryColor }}
                 />
               </div>
-              {/* Descrição */}
-              <div className="min-w-0 flex-1">
+
+              {/* Nome e Descrição */}
+              <div className="flex flex-col min-w-0">
+                <span className="font-bold text-gray-800 text-[0.88rem] leading-tight truncate">
+                  {categoryName}
+                </span>
                 {transaction.description && (
-                  <span className="text-[0.75rem] text-gray-400 line-clamp-1 truncate block">
+                  <span className="text-[0.75rem] text-slate-400 font-normal line-clamp-1 truncate mt-0.5">
                     {transaction.description}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Status Group (Label + Botão) */}
-            <div className="flex items-center gap-0.5 shrink-0 ml-3">
+            {/* Status (Pago ou Pendente) */}
+            <div className="flex items-center gap-0.5 shrink-0 ml-3 self-center">
               <span className={cn(
                 "text-[0.75rem] tracking-tight",
                 transaction.status === "Recebida"
@@ -153,7 +247,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </div>
           </div>
         </div>
-      </div >
+      </div>
     );
   }
 
