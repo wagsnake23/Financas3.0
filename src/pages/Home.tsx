@@ -278,9 +278,11 @@ export default function Home() {
     };
 
     const greeting = getGreeting();
-    const formattedDate = format(new Date(), "eee, dd MMM yyyy", { locale: ptBR });
-    // Capitalize first letter of abbreviated weekday
-    const todayStr = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    const formattedDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    // Capitalize "Segunda-feira" properly (e.g. "Segunda-Feira")
+    const parts = formattedDate.split(",");
+    const weekday = parts[0].split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("-");
+    const todayStr = weekday + "," + parts[1];
 
     return (
         <div
@@ -290,7 +292,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 px-6 flex items-center bg-transparent justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center bg-transparent justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
@@ -314,7 +316,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 px-[14px] pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
+                            className="!fixed top-[96px] left-0 right-0 bottom-[20px] overflow-hidden z-30 container-app pt-2 !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
                                 className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
