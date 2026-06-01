@@ -390,7 +390,7 @@ export const TransactionList = ({
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
-        "flex flex-col gap-2 mb-2 px-4",
+        "flex flex-col gap-2 mb-1 px-4",
         !isMobile && "flex-row items-center gap-3 mb-6"
       )}>
         {/* Campo de Pesquisa */}
@@ -605,7 +605,7 @@ export const TransactionList = ({
       )}>
         <div className={cn(
           "bg-slate-50 flex items-center justify-between w-full gap-2 px-4 border-t border-gray-300",
-          isMobile ? "pt-1 pb-2.5 border-b-0" : "pt-3 pb-3 shadow-sm",
+          isMobile ? "pt-[6px] pb-[8px] border-b-0" : "pt-3 pb-3 shadow-sm",
           !isMobile && "w-full bg-background border border-gray-200 rounded-2xl"
         )}>
           {/* 1: Lançamentos */}
