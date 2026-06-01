@@ -188,7 +188,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>
               </SelectItem>
               <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📲</span> Pix</span>
+                <span className="flex items-center gap-2"><span className="emoji">🪙</span> Pix</span>
               </SelectItem>
               <SelectItem value="dinheiro" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>

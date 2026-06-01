@@ -172,7 +172,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 <span className="flex items-center gap-2"><span className="emoji">💰</span> Dinheiro</span>
               </SelectItem>
               <SelectItem value="pix" className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2"><span className="emoji">📲</span> Pix</span>
+                <span className="flex items-center gap-2"><span className="emoji">🪙</span> Pix</span>
               </SelectItem>
               <SelectItem value="cartao" className={cn(isMobile && "text-sm")}>
                 <span className="flex items-center gap-2"><span className="emoji">💳</span> Cartão</span>

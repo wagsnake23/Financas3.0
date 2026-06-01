@@ -93,7 +93,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
     const baseOptions = [
       { value: UNSELECTED_VALUE, label: "Selecione a forma de pagamento", disabled: true },
       { value: "dinheiro", label: "💰 Dinheiro" },
-      { value: "pix", label: "📲 Pix" },
+      { value: "pix", label: "🪙 Pix" },
     ];
 
     if (isMobile) {

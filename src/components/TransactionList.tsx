@@ -115,7 +115,7 @@ export const TransactionList = ({
     const options = [
       { value: "all", label: "Forma de Pagamento" },
       { value: "dinheiro", label: "💰 Dinheiro" },
-      { value: "pix", label: "📲 Pix" },
+      { value: "pix", label: "🪙 Pix" },
     ];
     cartoes.forEach(card => {
       options.push({

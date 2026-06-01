@@ -79,23 +79,35 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       const fp = transaction.forma_pagamento;
       if (fp === "cartao") {
         const cartao = cartoes.find(c => c.id === transaction.cartao_id);
+        const name = cartao ? cartao.nome : "Cartão";
+        let icon = "💳";
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes("pix")) {
+          icon = "🪙";
+        } else if (lowerName.includes("dinheiro") || lowerName.includes("cash")) {
+          icon = "💵";
+        } else if (lowerName.includes("boleto")) {
+          icon = "🧾";
+        } else if (lowerName.includes("conta") || lowerName.includes("banco") || lowerName.includes("bancária")) {
+          icon = "🏦";
+        }
         return {
-          icon: "💳",
-          name: cartao ? cartao.nome : "Cartão"
+          icon,
+          name
         };
       } else if (fp === "pix") {
         return {
-          icon: "📲",
+          icon: "🪙",
           name: "Pix"
         };
       } else if (fp === "dinheiro" || fp === "cash") {
         return {
-          icon: "💰",
+          icon: "💵",
           name: "Dinheiro"
         };
       } else if (fp === "boleto") {
         return {
-          icon: "📄",
+          icon: "🧾",
           name: "Boleto"
         };
       } else if (fp === "debit") {
@@ -110,8 +122,19 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
         };
       } else if (fp) {
         const name = fp.charAt(0).toUpperCase() + fp.slice(1);
+        let icon = "💳";
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes("pix")) {
+          icon = "🪙";
+        } else if (lowerName.includes("dinheiro") || lowerName.includes("cash")) {
+          icon = "💵";
+        } else if (lowerName.includes("boleto")) {
+          icon = "🧾";
+        } else if (lowerName.includes("conta") || lowerName.includes("banco") || lowerName.includes("bancária")) {
+          icon = "🏦";
+        }
         return {
-          icon: "💳",
+          icon,
           name
         };
       }
@@ -166,6 +189,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {paymentDetails.name && (
                 <span className="text-[13px] text-gray-600 font-medium truncate">
                   {paymentDetails.name}
+                  {paymentDetails.icon && (
+                    <span className="emoji ml-1 shrink-0">{paymentDetails.icon}</span>
+                  )}
                 </span>
               )}
 
