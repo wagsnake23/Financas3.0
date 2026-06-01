@@ -152,7 +152,7 @@ export const MobileCreditCardExpenses: React.FC<
         {selectedCardId !== UNSELECTED_VALUE && (
           <div className="grid grid-cols-3 gap-2 text-center mt-2 pt-0.5 md:mt-6">
             {/* Pago */}
-            <div className="flex flex-col items-center">
+            <div className={cn("flex flex-col items-center transition-opacity duration-300", totalPending > 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5 mb-1">
                 <div
                   className="flex items-center justify-center rounded-full bg-[#22c55e] text-white font-black"
@@ -168,7 +168,7 @@ export const MobileCreditCardExpenses: React.FC<
             </div>
 
             {/* Pendente */}
-            <div className="flex flex-col items-center">
+            <div className={cn("flex flex-col items-center transition-opacity duration-300", totalPending <= 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5 mb-1">
                 <DynamicIcon
                   name="Circle"
@@ -187,12 +187,12 @@ export const MobileCreditCardExpenses: React.FC<
               <div className="flex items-center gap-1.5 mb-1">
                 <DynamicIcon
                   name="CreditCard"
-                  className="h-3.5 w-3.5 text-[#4b5563]"
+                  className="h-3.5 w-3.5 text-[#6b7280]"
                 />
-                <p className="text-[0.65rem] text-[#4b5563] font-bold md:text-sm">Total</p>
+                <p className="text-[0.65rem] text-[#6b7280] font-medium md:text-sm">Total</p>
               </div>
-              <p className="text-[13px] md:text-[16px] leading-none" style={{ color: "#1f2937", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 800, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                <FormatCurrencyStyled value={totalCardExpenses} prefixColor="#4b5563" />
+              <p className="text-[13px] md:text-[16px] leading-none" style={{ color: "#4b5563", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', fontWeight: 600, WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "none" }}>
+                <FormatCurrencyStyled value={totalCardExpenses} prefixColor="#6b7280" />
               </p>
             </div>
           </div>

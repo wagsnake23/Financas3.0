@@ -61,7 +61,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           )}>
 
             {/* Group: Pago */}
-            <div className="flex flex-col gap-0">
+            <div className={cn("flex flex-col gap-0 transition-opacity duration-300", totalPending > 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5">
                 <div
                   className="flex items-center justify-center rounded-full bg-[#44E37F]/90 text-white font-black"
@@ -81,7 +81,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             </div>
 
             {/* Group: Pendente */}
-            <div className="flex flex-col gap-0">
+            <div className={cn("flex flex-col gap-0 transition-opacity duration-300", totalPending <= 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5">
                 <DynamicIcon
                   name="Circle"
@@ -103,14 +103,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               <div className="flex items-center gap-1.5">
                 <DynamicIcon
                   name="CreditCard"
-                  className="h-3.5 w-3.5 text-gray-500"
+                  className="h-3.5 w-3.5 text-gray-400"
                 />
-                <span className="text-[0.65rem] text-gray-500 font-bold">
+                <span className="text-[0.65rem] text-gray-500 font-medium">
                   Total
                 </span>
               </div>
               <div className="leading-none">
-                <span className="text-[11px] font-bold text-gray-700">
+                <span className="text-[11px] font-semibold text-gray-500">
                   {formatCurrency(totalCardExpenses)}
                 </span>
               </div>
