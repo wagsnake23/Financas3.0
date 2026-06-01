@@ -177,10 +177,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   )}
                   <span className={cn(
                     "text-[13px] shrink-0",
-                    isFixo ? "text-[#6699EE] font-medium" :
+                    isFixo ? "text-[#FF8888] font-medium" :
                     isParcelado ? "text-purple-600/90 font-medium" : 
                     transaction.type === "income" ? "text-success/90 font-medium" : 
-                    "text-gray-600 font-medium"
+                    "text-[#6699EE] font-medium"
                   )}>
                     {cardOrPaymentType}
                   </span>
@@ -204,7 +204,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             <div className="flex items-center gap-3 min-w-0 flex-1">
               {/* Quadrado arredondado com fundo suave do ícone da subcategoria */}
               <div
-                className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 bg-[#F4F5F7]"
+                className={cn(
+                  "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border",
+                  isFixo ? "bg-red-100 border-red-200" :
+                  isParcelado ? "bg-purple-100 border-purple-200" :
+                  transaction.type === "income" ? "bg-green-100 border-green-200" :
+                  "bg-blue-100 border-blue-200"
+                )}
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
