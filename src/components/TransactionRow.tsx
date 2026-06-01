@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
-import { SquarePen, Trash2, Check, Clock, Circle } from "lucide-react";
+import { SquarePen, Trash2, Check, Clock } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -227,9 +227,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </div>
 
             {/* Status (Pago ou Pendente) */}
-            <div className="flex items-center gap-0.5 shrink-0 ml-3 self-center">
+            <div className="flex flex-col items-end shrink-0 ml-3 justify-center">
               <span className={cn(
-                "text-[0.75rem] tracking-tight",
+                "text-[0.75rem] tracking-tight leading-none mb-1.5",
                 transaction.status === "Recebida"
                   ? "text-[#10B955] font-extrabold"
                   : "text-[#FF8888] font-medium"
@@ -244,17 +244,20 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   onToggleStatus(transaction.id, transaction.type, newStatus);
                 }}
                 className={cn(
-                  "h-[18px] w-[18px] rounded-full flex items-center justify-center transition-all relative",
+                  "w-[38px] h-[20px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center shadow-inner",
                   transaction.status === "Recebida"
-                    ? "bg-[#25D366] border border-[#25D366] shadow-sm"
-                    : "bg-transparent border-none shadow-none"
+                    ? "bg-[#D1FAE5] border-[#A7F3D0]"
+                    : "bg-[#FEE2E2] border-[#FECACA]"
                 )}
               >
-                {transaction.status === "Recebida" ? (
-                  <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
-                ) : (
-                  <Circle className="absolute text-[#FF8888] w-[16px] h-[16px]" strokeWidth={2.5} />
-                )}
+                <div
+                  className={cn(
+                    "w-[14px] h-[14px] rounded-full transition-transform duration-300 shadow-[0_1px_2px_rgba(0,0,0,0.15)]",
+                    transaction.status === "Recebida"
+                      ? "translate-x-[20px] bg-[#10B981]"
+                      : "translate-x-0 bg-[#EF4444]"
+                  )}
+                />
               </div>
             </div>
           </div>
