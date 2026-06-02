@@ -706,8 +706,8 @@ export default function Receitas() {
 
                     <Button
                       onClick={() => navigate(-1)}
-                      className="btn-3d h-8 px-2 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90"
-                      style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90"
+                      style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", border: "1px solid rgba(15,23,42,0.10)", boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" } as any}
                     >
                       <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
                       Voltar
