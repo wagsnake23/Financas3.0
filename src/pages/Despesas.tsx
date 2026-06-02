@@ -215,78 +215,115 @@ export default function Despesas() {
     >
 
       {/* HEADER PREMIUM — FINTECH STYLE (DESPESAS THEME) */}
-      <div className={cn(
-        "relative h-[220px] w-full overflow-hidden bg-transparent"
-      )}>
-        <div className={cn(
-          "container-app relative z-10",
-          isMobile ? "fixed top-[46px] left-0 right-0 h-[70px] z-40 flex items-center bg-[#F7F9FC] justify-between" : "pt-12 md:pt-[72px] flex justify-between items-start"
-        )}>
-          <div>
-            <div className="flex items-start gap-3">
-              <Button
-                variant="ghost"
-                className={cn(
-                  "p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto",
-                  isMobile
-                    ? "mt-0 -ml-1 border border-slate-200/60 !shadow-none bg-[#F7F9FC]"
-                    : "btn-3d shadow-sm border-none mt-1"
-                )}
-                style={isMobile ? { boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)" } : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-                onClick={() => navigate("/lancamentos?type=expense")}
-              >
-                <DynamicIcon
-                  name="TrendingDown"
-                  className={cn("!text-[#EF4444]", isMobile ? "h-4 w-4" : "h-5 w-5")}
-                  strokeWidth={4}
-                />
-              </Button>
-              <div className="flex flex-col">
-                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-[#EF4444]" : "text-2xl text-[#EF4444]")} style={{ fontFamily: "'Inter', sans-serif" }}>
-                  Nova Despesa
-                </h1>
-                <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-slate-500" : "text-sm text-slate-500")}>
-                  Registre seus gastos
-                </p>
+      {!isMobile && (
+        <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
+          <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
+            <div>
+              <div className="flex items-start gap-3">
+                <Button
+                  variant="ghost"
+                  className="btn-3d shadow-sm border-none mt-1 p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto"
+                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                  onClick={() => navigate("/lancamentos?type=expense")}
+                >
+                  <DynamicIcon
+                    name="TrendingDown"
+                    className="!text-[#EF4444] h-5 w-5"
+                    strokeWidth={4}
+                  />
+                </Button>
+                <div className="flex flex-col">
+                  <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-2xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Nova Despesa
+                  </h1>
+                  <p className="font-bold -mt-0.5 leading-none text-sm text-slate-500">
+                    Registre seus gastos
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <Button
-            onClick={() => navigate(-1)}
-            className={cn(
-              "btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90",
-              isMobile ? "h-8 px-2" : ""
-            )}
-            style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-          >
-            <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
-            Voltar
-          </Button>
+            <Button
+              onClick={() => navigate(-1)}
+              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90"
+              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+            >
+              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
+              Voltar
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       <main
         className={cn(
-          "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "-mt-32 pb-32" : "-mt-[86px] pb-20"
+          "container-app relative z-20 flex-grow",
+          isMobile ? "pb-0" : "-mt-[86px] pb-20 space-y-6"
         )}
       >
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[112px] left-0 right-0 py-2 bottom-[56px] overflow-hidden z-30 container-app"
+              className="!fixed top-[46px] left-0 right-0 py-2 bottom-[72px] overflow-hidden z-30 container-app"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden space-y-4 pb-2 px-[4px]">
-                {formContent}
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-6 px-0 pt-3">
+                <div
+                  className="flex flex-col gap-6"
+                  style={{
+                    background: "#FFFFFF",
+                    border: "1px solid rgba(15,23,42,0.05)",
+                    borderRadius: "20px",
+                    padding: "15px 20px 20px 20px",
+                    boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
+                  }}
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-start gap-3">
+                      <Button
+                        variant="ghost"
+                        className="p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-0 -ml-1 border border-slate-200/60 !shadow-none bg-[#F7F9FC]"
+                        style={{ boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)" }}
+                        onClick={() => navigate("/lancamentos?type=expense")}
+                      >
+                        <DynamicIcon
+                          name="TrendingDown"
+                          className="!text-[#EF4444] h-4 w-4"
+                          strokeWidth={4}
+                        />
+                      </Button>
+                      <div className="flex flex-col">
+                        <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                          Nova Despesa
+                        </h1>
+                        <p className="font-bold -mt-0.5 leading-none text-xs text-slate-500">
+                          Registre seus gastos
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={() => navigate(-1)}
+                      className="btn-3d h-8 px-2 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90"
+                      style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                    >
+                      <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
+                      Voltar
+                    </Button>
+                  </div>
+
+                  {formContent}
+                </div>
               </div>
             </div>
+            
             <div
-              className={cn(
-                isMobile && "fixed bottom-0 left-0 right-0 z-[60] pt-[1px] pb-[9px] bg-transparent container-app"
-              )}
+              className="fixed bottom-0 left-0 right-0 z-[60] pt-[12px] pb-[16px] container-app"
+              style={{
+                background: "rgba(248, 250, 252, 0.92)",
+                backdropFilter: "blur(12px)"
+              }}
             >
-              <div ref={setSubmitPortalRef} className="px-[4px]" />
+              <div ref={setSubmitPortalRef} className="px-[20px]" />
             </div>
           </div>
         ) : (

@@ -20,6 +20,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
+import { Save } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
@@ -586,12 +587,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             type="submit"
             form="expense-form"
             className={cn(
-              "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+              "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
               isMobile ? "h-11 text-lg" : "h-11 text-lg"
             )}
             style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
             disabled={loading}
           >
+            <Save className="h-5 w-5" strokeWidth={2.5} />
             {loading ? "Salvando..." : "Salvar Despesa"}
           </Button>
         );

@@ -152,14 +152,18 @@ export const Navigation = () => {
                 className="h-8 w-8 transition-transform group-hover:scale-110"
               />
               <span className={cn(
-                "font-extrabold text-lg tracking-[0.5px]",
+                "font-extrabold tracking-[0.5px]",
+                isMobile && isDarkPage ? "text-[21px]" : "text-lg",
                 !isMobile && "transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
               )}
               style={{
                 fontFamily: "'Inter', sans-serif",
-                filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
+                filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
+                textShadow: isMobile && isDarkPage && mobileTextColor === "text-[#0556C3]"
+                  ? "0 1px 1px rgba(0,0,0,0.12)"
+                  : undefined
               }}>
                 Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
               </span>
