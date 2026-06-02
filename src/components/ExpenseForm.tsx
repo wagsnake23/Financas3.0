@@ -426,7 +426,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       )}
 
-      <div>
+      <div style={isMobile ? { marginTop: "-5px" } : undefined}>
         <Label htmlFor="subcategoria" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
           Subcategoria
         </Label>
@@ -581,7 +581,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
 
       {/* Submit Button Logic */}
-      <div style={isMobile ? { marginTop: "18px" } : undefined}>
+      <div style={isMobile ? { marginTop: "15px" } : undefined}>
         <Button
           type="submit"
           form="expense-form"

@@ -272,7 +272,7 @@ export default function Despesas() {
                     background: "#FFFFFF",
                     border: "1px solid rgba(15,23,42,0.05)",
                     borderRadius: "20px",
-                    padding: "15px 20px 18px 20px",
+                    padding: "15px 20px 15px 20px",
                     boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
                   }}
                 >
