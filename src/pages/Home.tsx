@@ -293,7 +293,7 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-extrabold leading-none", isMobile ? "text-xl tracking-tight" : "text-2xl tracking-[0.5px]")}
+                            className={cn("font-extrabold leading-none", isMobile ? "text-[19px] tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
                             <span className={cn(isMobile ? "text-[#1f2937]" : "text-slate-800")}>{greeting},</span> <span className="text-[#0556C3]">{userName}</span> 👋
@@ -336,7 +336,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-1" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#0556C3" />
                                             </p>
@@ -379,7 +379,7 @@ export default function Home() {
                                     </div>
 
                                     {/* Mini gráfico de barras (Posição Bottom Right) */}
-                                    <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible">
+                                    <div className="absolute bottom-[3px] right-5 pointer-events-none flex items-end overflow-visible">
                                         <div className="p-2 rounded-xl flex items-end">
                                             <MiniFinanceBars
                                                 expenses={dStats.currentExpenses}
@@ -405,7 +405,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[16px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
+                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-1 md:text-[16px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor="#b91c1c" />
                                             </p>
@@ -471,7 +471,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
+                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-1 md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentIncome} prefixColor="#15803d" />
                                             </p>
