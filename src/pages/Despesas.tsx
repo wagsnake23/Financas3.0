@@ -266,7 +266,7 @@ export default function Despesas() {
             <div
               className="!fixed top-[46px] left-0 right-0 py-2 bottom-[58px] overflow-hidden z-30 container-app"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-3">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-[6px]">
                 <div
                   className="flex flex-col gap-6"
                   style={{
@@ -317,7 +317,7 @@ export default function Despesas() {
             </div>
             
             <div
-              className="fixed bottom-0 left-0 right-0 z-[60] pt-0 pb-[12px] container-app"
+              className="fixed bottom-0 left-0 right-0 z-[60] pt-0 pb-[10px] container-app"
               style={{
                 background: "rgba(238, 243, 250, 0.92)",
                 backdropFilter: "blur(12px)"
