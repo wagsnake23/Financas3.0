@@ -273,15 +273,21 @@ export default function Despesas() {
                     border: "1px solid rgba(15,23,42,0.05)",
                     borderRadius: "20px",
                     padding: "15px 20px 15px 20px",
-                    boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
+                    boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
                   }}
                 >
-                  <div className="flex justify-between items-start">
+                  <div 
+                    className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 py-4 rounded-t-[20px]"
+                    style={{ 
+                      background: "linear-gradient(90deg, rgba(239,68,68,0.03), rgba(239,68,68,0.01))",
+                      borderBottom: "1px solid rgba(15,23,42,0.05)"
+                    }}
+                  >
                     <div className="flex items-start gap-3">
                       <Button
                         variant="ghost"
-                        className="p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-0 -ml-1 border border-slate-200/60 !shadow-none bg-[#F7F9FC]"
-                        style={{ boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)" }}
+                        className="p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-0 -ml-1 border-none !shadow-none"
+                        style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.03))" }}
                         onClick={() => navigate("/lancamentos?type=expense")}
                       >
                         <DynamicIcon
