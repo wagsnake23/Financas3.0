@@ -95,21 +95,22 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
   };
 
   return (
-    <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
-      <DialogTrigger asChild>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className={cn(
-            "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-            isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
-          )}
-          style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", opacity: 1 } as any}
-        >
-          <Plus className="h-[18px] w-[18px] !text-white" strokeWidth={3.5} style={{ color: "#ffffff" }} />
-        </Button>
-      </DialogTrigger>
+    <>
+      <Button
+        type="button"
+        size="icon"
+        variant="ghost"
+        onClick={() => setDialogAddCartaoOpen(true)}
+        className={cn(
+          "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
+          isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
+        )}
+        style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", opacity: 1 } as any}
+      >
+        <Plus className="h-[18px] w-[18px] !text-white" strokeWidth={3.5} style={{ color: "#ffffff" }} />
+      </Button>
+
+      <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogContent className={cn(
         isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
         "border-none"
@@ -236,6 +237,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
           </Button>
         </div>
       </DialogContent>
-    </Dialog>
+      </Dialog>
+    </>
   );
 };
