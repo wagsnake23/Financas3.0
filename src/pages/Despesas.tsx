@@ -265,7 +265,7 @@ export default function Despesas() {
             <div
               className="!fixed top-[46px] left-0 right-0 py-2 bottom-2 overflow-hidden z-30 container-app"
             >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-[6px]">
+              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-[6px]">
                 <div
                   className="flex flex-col gap-6"
                   style={{
@@ -311,6 +311,10 @@ export default function Despesas() {
                   </div>
 
                   {formContent}
+                </div>
+
+                <div style={{ marginTop: "9px", marginBottom: "0px" }}>
+                  <Footer isMobile={isMobile} user={user} />
                 </div>
               </div>
             </div>
