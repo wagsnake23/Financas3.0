@@ -112,7 +112,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
 
       <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogContent className={cn(
-        isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
+        isMobile ? "w-[98vw] max-w-[98vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
         "border-none"
       )}
       style={{
@@ -230,7 +230,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
               isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
             )}
-            style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444" } as any}
+            style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
             disabled={loading}
           >
             {loading ? "Adicionando..." : "Adicionar Cartão"}
