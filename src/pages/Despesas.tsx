@@ -41,7 +41,7 @@ export default function Despesas() {
   const navigate = useNavigate();
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [submitPortalRef, setSubmitPortalRef] = useState<HTMLDivElement | null>(null);
+
   // Removed: const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
 
   // Removed: Estados para preencher o formulário com dados da NFC-e
@@ -198,7 +198,6 @@ export default function Despesas() {
       isMobile={isMobile}
       isRecurring={isRecurring}
       setIsRecurring={setIsRecurring}
-      submitPortalRef={submitPortalRef}
     // Removed: Passar dados da NFC-e para o formulário
     // Removed: initialValor={nfceValor}
     // Removed: initialFormaPagamento={nfceFormaPagamento}
@@ -264,7 +263,7 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[46px] left-0 right-0 py-2 bottom-[58px] overflow-hidden z-30 container-app"
+              className="!fixed top-[46px] left-0 right-0 py-2 bottom-2 overflow-hidden z-30 container-app"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-[6px]">
                 <div
@@ -273,7 +272,7 @@ export default function Despesas() {
                     background: "#FFFFFF",
                     border: "1px solid rgba(15,23,42,0.05)",
                     borderRadius: "20px",
-                    padding: "15px 20px 20px 20px",
+                    padding: "15px 20px 18px 20px",
                     boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
                   }}
                 >
@@ -315,16 +314,7 @@ export default function Despesas() {
                 </div>
               </div>
             </div>
-            
-            <div
-              className="fixed bottom-0 left-0 right-0 z-[60] pt-0 pb-[10px] container-app"
-              style={{
-                background: "rgba(238, 243, 250, 0.92)",
-                backdropFilter: "blur(12px)"
-              }}
-            >
-              <div ref={setSubmitPortalRef} className="px-[20px]" />
-            </div>
+
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">

@@ -66,7 +66,6 @@ interface ExpenseFormProps {
   initialFormaPagamento?: "dinheiro" | "pix" | "cartao";
   initialCartaoId?: string;
   initialDescricao?: string;
-  submitPortalRef?: HTMLDivElement | null;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -85,7 +84,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialFormaPagamento,
   initialCartaoId,
   initialDescricao,
-  submitPortalRef,
 }) => {
   const { showSuccessToast, showErrorToast } = useToast();
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
@@ -583,27 +581,21 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
 
       {/* Submit Button Logic */}
-      {(() => {
-        const SubmitButton = (
-          <Button
-            type="submit"
-            form="expense-form"
-            className={cn(
-              "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-              isMobile ? "h-11 text-lg" : "h-11 text-lg"
-            )}
-            style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
-            disabled={loading}
-          >
-            <Save className="h-5 w-5" strokeWidth={2.5} />
-            {loading ? "Salvando..." : "Salvar Despesa"}
-          </Button>
-        );
-
-        return isMobile && submitPortalRef
-          ? createPortal(SubmitButton, submitPortalRef)
-          : SubmitButton;
-      })()}
+      <div style={isMobile ? { marginTop: "18px" } : undefined}>
+        <Button
+          type="submit"
+          form="expense-form"
+          className={cn(
+            "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
+            isMobile ? "h-11 text-lg" : "h-11 text-lg"
+          )}
+          style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
+          disabled={loading}
+        >
+          <Save className="h-5 w-5" strokeWidth={2.5} />
+          {loading ? "Salvando..." : "Salvar Despesa"}
+        </Button>
+      </div>
     </form >
   );
 };

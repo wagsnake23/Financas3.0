@@ -60,7 +60,7 @@ export default function Receitas() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  const [submitPortalRef, setSubmitPortalRef] = useState<HTMLDivElement | null>(null);
+
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
   const [data, setData] = useState<Date | undefined>(new Date());
@@ -573,27 +573,21 @@ export default function Receitas() {
         )}
 
         {/* Submit Button Logic */}
-        {(() => {
-          const SubmitButton = (
-            <Button
-              type="submit"
-              form="income-form"
-              className={cn(
-                "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-                isMobile ? "h-11 text-lg" : "h-11 text-lg"
-              )}
-              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}
-              disabled={loading}
-            >
-              <Save className="h-5 w-5" strokeWidth={2.5} />
-              {loading ? "Salvando..." : "Salvar Receita"}
-            </Button>
-          );
-
-          return isMobile && submitPortalRef
-            ? createPortal(SubmitButton, submitPortalRef)
-            : SubmitButton;
-        })()}
+        <div style={isMobile ? { marginTop: "24px" } : undefined}>
+          <Button
+            type="submit"
+            form="income-form"
+            className={cn(
+              "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
+              isMobile ? "h-11 text-lg" : "h-11 text-lg"
+            )}
+            style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}
+            disabled={loading}
+          >
+            <Save className="h-5 w-5" strokeWidth={2.5} />
+            {loading ? "Salvando..." : "Salvar Receita"}
+          </Button>
+        </div>
       </form>
       <AddSubcategoryModal
         isOpen={isAddSubcategoryModalOpen}
@@ -673,7 +667,7 @@ export default function Receitas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[46px] left-0 right-0 py-2 bottom-[58px] overflow-hidden z-30 container-app"
+              className="!fixed top-[46px] left-0 right-0 py-2 bottom-2 overflow-hidden z-30 container-app"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-[6px]">
                 <div
@@ -682,7 +676,7 @@ export default function Receitas() {
                     background: "#FFFFFF",
                     border: "1px solid rgba(15,23,42,0.05)",
                     borderRadius: "20px",
-                    padding: "15px 20px 20px 20px",
+                    padding: "15px 20px 24px 20px",
                     boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
                   }}
                 >
@@ -724,16 +718,7 @@ export default function Receitas() {
                 </div>
               </div>
             </div>
-            
-            <div
-              className="fixed bottom-0 left-0 right-0 z-[60] pt-0 pb-[10px] container-app"
-              style={{
-                background: "rgba(248, 250, 252, 0.92)",
-                backdropFilter: "blur(12px)"
-              }}
-            >
-              <div ref={setSubmitPortalRef} className="px-[20px]" />
-            </div>
+
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
