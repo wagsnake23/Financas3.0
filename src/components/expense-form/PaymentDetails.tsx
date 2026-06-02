@@ -7,7 +7,8 @@ import { ManageCardsDialog } from "@/components/ManageCardsDialog"; // Corrigido
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
-import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
+import CurrencyBR from "@/components/ui/currency-br";
+import { TransactionStatusToggle } from "./TransactionStatusToggle";
 
 interface Cartao {
   id: string;
@@ -32,6 +33,8 @@ interface PaymentDetailsProps {
   setValidationErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   isMobile: boolean;
   UNSELECTED_VALUE: string;
+  isPaid?: boolean;
+  setIsPaid?: (paid: boolean) => void;
   // PROPS PARA TIPO DE PAGAMENTO
   tipoPagamento: "avista" | "parcelado" | "fixo"; // Tipo atualizado
   setTipoPagamento: (value: "avista" | "parcelado" | "fixo") => void; // Tipo atualizado
@@ -62,6 +65,8 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setNumeroParcelas, // NOVA PROP
   isRecurring, // NOVA PROP
   setIsRecurring, // NOVA PROP
+  isPaid,
+  setIsPaid,
 }) => {
   const handleNumeroParcelasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -163,7 +168,13 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {/* Forma de Pagamento e Número de Parcelas (condicional) */}
-      <div className={cn("grid gap-4", tipoPagamento === "parcelado" && !isRecurring ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : "grid-cols-1")}>
+      <div 
+        className={cn(
+          "grid gap-4 items-start", 
+          tipoPagamento === "parcelado" && !isRecurring ? (isMobile ? "grid-cols-2 gap-2" : "grid-cols-2") : 
+          (isMobile && tipoPagamento === "avista" && !isRecurring ? "grid-cols-2 gap-2" : "grid-cols-1")
+        )}
+      >
         {/* Forma de Pagamento */}
         <div>
           <Label className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Forma de Pagamento</Label>
@@ -218,6 +229,13 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
               )}
             />
+          </div>
+        )}
+
+        {/* Status Toggle na mesma linha apenas no mobile e se à vista */}
+        {isMobile && tipoPagamento === "avista" && !isRecurring && isPaid !== undefined && setIsPaid && (
+          <div className="w-full">
+            <TransactionStatusToggle isPaid={isPaid} setIsPaid={setIsPaid} isMobile={isMobile} />
           </div>
         )}
       </div>

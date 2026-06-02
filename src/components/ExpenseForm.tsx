@@ -520,6 +520,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         setNumeroParcelas={setNumeroParcelas}
         isRecurring={isRecurring}
         setIsRecurring={setIsRecurring}
+        isPaid={isPaid}
+        setIsPaid={setIsPaid}
       />
 
       {
@@ -567,8 +569,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       </div>
 
       {
-        !isRecurring && tipoPagamento === "avista" && (
-          <div className={cn(isMobile && "mt-2")}>
+        !isMobile && !isRecurring && tipoPagamento === "avista" && (
+          <div className="mt-2">
             {" "}
             <TransactionStatusToggle
               isPaid={isPaid}

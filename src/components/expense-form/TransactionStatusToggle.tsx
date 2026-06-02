@@ -12,6 +12,39 @@ interface TransactionStatusToggleProps {
 export const TransactionStatusToggle: React.FC<
   TransactionStatusToggleProps
 > = ({ isPaid, setIsPaid, isMobile }) => {
+  if (isMobile) {
+    return (
+      <div className="w-full h-full text-center">
+        <span className={cn(
+          "font-bold mb-1.5 inline-block text-[13px]", 
+          isPaid ? "text-[#22C55E]" : "text-[#EF4444]"
+        )}>
+          {isPaid ? "Pago" : "Pendente"}
+        </span>
+        <div className="h-9 flex items-center justify-center">
+          <div
+            onClick={() => setIsPaid(!isPaid)}
+            className={cn(
+              "w-[38px] h-[20px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
+              isPaid
+                ? "bg-[#22C55E] border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
+                : "bg-[#E85454] border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(232,84,84,0.35)]"
+            )}
+          >
+            <div
+              className={cn(
+                "w-[16px] h-[16px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
+                isPaid
+                  ? "translate-x-[16px]"
+                  : "translate-x-0"
+              )}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex justify-center">
       <RadioGroup

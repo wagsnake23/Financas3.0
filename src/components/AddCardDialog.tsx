@@ -229,7 +229,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
               isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
             )}
-            style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
+            style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444" } as any}
             disabled={loading}
           >
             {loading ? "Adicionando..." : "Adicionar Cartão"}
