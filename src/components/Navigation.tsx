@@ -153,7 +153,7 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-extrabold tracking-[0.5px]",
-                isMobile && isDarkPage ? "text-[21px]" : "text-lg",
+                isMobile ? "text-[21px]" : "text-lg",
                 !isMobile && "transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
