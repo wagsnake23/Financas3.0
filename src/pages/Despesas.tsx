@@ -226,18 +226,23 @@ export default function Despesas() {
             <div className="flex items-start gap-3">
               <Button
                 variant="ghost"
-                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
-                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                className={cn(
+                  "p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto",
+                  isMobile
+                    ? "mt-0 -ml-1 border border-slate-200/60 !shadow-none bg-[#F7F9FC]"
+                    : "btn-3d shadow-sm border-none mt-1"
+                )}
+                style={isMobile ? { boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)" } : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 onClick={() => navigate("/lancamentos?type=expense")}
               >
                 <DynamicIcon
                   name="TrendingDown"
-                  className={cn("!text-[#E54D4D]", isMobile ? "h-4 w-4" : "h-5 w-5")}
+                  className={cn("!text-[#EF4444]", isMobile ? "h-4 w-4" : "h-5 w-5")}
                   strokeWidth={4}
                 />
               </Button>
               <div className="flex flex-col">
-                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-[#E54D4D]" : "text-2xl text-[#E54D4D]")} style={{ fontFamily: "'Inter', sans-serif" }}>
+                <h1 className={cn("font-extrabold tracking-[0.5px] -mt-0.5", isMobile ? "text-xl text-[#EF4444]" : "text-2xl text-[#EF4444]")} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Nova Despesa
                 </h1>
                 <p className={cn("font-bold -mt-0.5 leading-none", isMobile ? "text-xs text-slate-500" : "text-sm text-slate-500")}>

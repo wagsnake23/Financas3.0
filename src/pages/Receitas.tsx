@@ -635,8 +635,13 @@ export default function Receitas() {
             <div className="flex items-start gap-3">
               <Button
                 variant="ghost"
-                className={cn("btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto", isMobile ? "mt-0" : "mt-1")}
-                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                className={cn(
+                  "p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto",
+                  isMobile
+                    ? "mt-0 -ml-1 border border-slate-200/60 !shadow-none bg-[#F7F9FC]"
+                    : "btn-3d shadow-sm border-none mt-1"
+                )}
+                style={isMobile ? { boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)" } : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 onClick={() => navigate("/lancamentos?type=income")}
               >
                 <DynamicIcon

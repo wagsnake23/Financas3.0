@@ -105,7 +105,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
             isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
           )}
-          style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any}
+          style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", opacity: 1 } as any}
         >
           <Plus className="h-[18px] w-[18px] !text-white" strokeWidth={3.5} style={{ color: "#ffffff" }} />
         </Button>

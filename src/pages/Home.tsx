@@ -324,13 +324,13 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.06)",
-                                        outline: "1px solid rgba(0, 102, 255, 0.08)",
+                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        outline: "none",
                                         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                                     }}
                                 >
@@ -394,12 +394,12 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "17px",
+                                        borderRadius: "14px",
                                         background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.06)",
-                                        outline: "1px solid rgba(255, 59, 48, 0.08)",
+                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        outline: "none",
                                         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
                                     }}
                                 >
@@ -460,12 +460,12 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "17px",
+                                        borderRadius: "14px",
                                         background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.06)",
-                                        outline: "1px solid rgba(34, 197, 94, 0.08)",
+                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        outline: "none",
                                         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
                                     }}
                                 >
@@ -538,13 +538,13 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px]">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[17px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(0,0,0,0.06)",
-                                outline: "1px solid rgba(0, 102, 255, 0.08)",
+                                border: "1px solid rgba(15,23,42,0.06)",
+                                outline: "none",
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                             }}
                         >
@@ -609,12 +609,12 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "17px",
+                                borderRadius: "14px",
                                 background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(0,0,0,0.06)",
-                                outline: "1px solid rgba(34, 197, 94, 0.08)",
+                                border: "1px solid rgba(15,23,42,0.06)",
+                                outline: "none",
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
                             }}
                         >
@@ -675,12 +675,12 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "17px",
+                                borderRadius: "14px",
                                 background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(0,0,0,0.06)",
-                                outline: "1px solid rgba(255, 59, 48, 0.08)",
+                                border: "1px solid rgba(15,23,42,0.06)",
+                                outline: "none",
                                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
                             }}
                         >

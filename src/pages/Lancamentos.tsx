@@ -84,8 +84,8 @@ const Lancamentos = () => {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background relative",
-        isMobile ? "pt-14 bg-gray-50 text-black h-screen overflow-hidden" : "pt-[72px] bg-background"
+        "flex flex-col min-h-screen relative",
+        isMobile ? "pt-14 bg-[#F7F9FC] text-black h-screen overflow-hidden" : "pt-[72px] bg-background"
       )}>
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
