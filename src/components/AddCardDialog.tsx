@@ -129,7 +129,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
             <span>Novo Cartão</span>
           </DialogTitle>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-2")}>
+        <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-2")} data-dialog-card-form>
           <div>
             <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input
@@ -144,6 +144,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 getBorderColor("newCardNome"),
                 getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false })
               )}
+              style={{ background: "#FFFFFF", border: validationErrors.newCardNome ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
             />
           </div>
           <div>
@@ -160,6 +161,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 getBorderColor("newCardBanco"),
                 getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false })
               )}
+              style={{ background: "#FFFFFF", border: validationErrors.newCardBanco ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
             />
           </div>
           <div>
@@ -177,6 +179,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 getBorderColor("newCardUltimosDigitos"),
                 getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false })
               )}
+              style={{ background: "#FFFFFF", border: validationErrors.newCardUltimosDigitos ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -197,6 +200,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   getBorderColor("newCardDiaFechamento"),
                   getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false })
                 )}
+                style={{ background: "#FFFFFF", border: validationErrors.newCardDiaFechamento ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
               />
             </div>
             <div>
@@ -216,6 +220,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   getBorderColor("newCardDiaVencimento"),
                   getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false })
                 )}
+                style={{ background: "#FFFFFF", border: validationErrors.newCardDiaVencimento ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
               />
             </div>
           </div>
