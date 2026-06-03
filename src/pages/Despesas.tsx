@@ -277,7 +277,7 @@ export default function Despesas() {
                   }}
                 >
                   <div 
-                    className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 py-4 rounded-t-[20px]"
+                    className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 pt-4 pb-[13px] rounded-t-[20px]"
                     style={{ 
                       background: "linear-gradient(90deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02))",
                       borderBottom: "1px solid rgba(15,23,42,0.05)"

@@ -426,7 +426,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       )}
 
-      <div style={isMobile ? { marginTop: "-17px" } : undefined}>
+      <div style={isMobile ? { marginTop: "-19px" } : undefined}>
         <Label htmlFor="subcategoria" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
           Subcategoria
         </Label>
