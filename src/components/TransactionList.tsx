@@ -624,7 +624,7 @@ export const TransactionList = ({
         {isMobile ? (
           /* Mobile premium bottom bar */
           <div 
-            className="bg-white rounded-t-[10px] overflow-hidden border-t border-black/[0.04] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]"
+            className="bg-white rounded-t-[10px] overflow-hidden border-t border-black/[0.06] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]"
             style={{ 
               marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
               marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 
@@ -634,15 +634,15 @@ export const TransactionList = ({
               {/* LINHA 1: CONTEXTO E FILTRO */}
               <div className="flex items-center justify-between w-full pb-1.5 border-b border-black/[0.04]">
                 {footerStatusFilter === "all" ? (
-                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                     📄 {totalCount} {totalCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                   </span>
                 ) : footerStatusFilter === "paid" ? (
-                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                     📄 {paidCount} {paidCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                   </span>
                 ) : (
-                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                     📄 {pendingCount} {pendingCount === 1 ? "item" : "itens"} • <span className="text-[#FF8888] font-bold">{pendingPercentage}% pendentes</span>
                   </span>
                 )}
@@ -651,16 +651,16 @@ export const TransactionList = ({
                   value={footerStatusFilter} 
                   onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
                 >
-                  <SelectTrigger className="h-[26px] py-0 px-3 text-[11px] font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 gap-1.5 focus:ring-0 focus:ring-offset-0 w-auto transition-all">
+                  <SelectTrigger className="h-[26px] py-0 px-3 text-xs font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 gap-1.5 focus:ring-0 focus:ring-offset-0 w-auto transition-all">
                     <div className="flex items-center gap-1 max-w-[85px]">
                       <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
                       <SelectValue />
                     </div>
                   </SelectTrigger>
                   <SelectContent className="rounded-[14px] border border-slate-100 shadow-xl overflow-hidden">
-                    <SelectItem value="all" className="text-xs font-medium py-2">Todos</SelectItem>
-                    <SelectItem value="paid" className="text-xs font-medium py-2">Pagos</SelectItem>
-                    <SelectItem value="pending" className="text-xs font-medium py-2">Pendentes</SelectItem>
+                    <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
+                    <SelectItem value="paid" className="text-[13px] font-medium py-2">Pagos</SelectItem>
+                    <SelectItem value="pending" className="text-[13px] font-medium py-2">Pendentes</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
