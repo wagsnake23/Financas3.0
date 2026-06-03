@@ -279,28 +279,28 @@ export default function Despesas() {
                   <div 
                     className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 py-4 rounded-t-[20px]"
                     style={{ 
-                      background: "linear-gradient(90deg, rgba(239,68,68,0.03), rgba(239,68,68,0.01))",
+                      background: "linear-gradient(90deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02))",
                       borderBottom: "1px solid rgba(15,23,42,0.05)"
                     }}
                   >
                     <div className="flex items-start gap-3">
                       <Button
                         variant="ghost"
-                        className="p-2 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-0 -ml-1 border-none !shadow-none"
-                        style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.03))" }}
+                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0 -ml-1"
+                        style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                         onClick={() => navigate("/lancamentos?type=expense")}
                       >
                         <DynamicIcon
                           name="TrendingDown"
-                          className="!text-[#EF4444] h-4 w-4"
-                          strokeWidth={4}
+                          className="h-[18px] w-[18px] !text-white"
+                          strokeWidth={3}
                         />
                       </Button>
                       <div className="flex flex-col">
                         <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
                           Nova Despesa
                         </h1>
-                        <p className="font-bold -mt-0.5 leading-none text-xs text-slate-500">
+                        <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
                           Registre seus gastos
                         </p>
                       </div>
