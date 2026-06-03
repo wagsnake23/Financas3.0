@@ -624,7 +624,7 @@ export const TransactionList = ({
         {isMobile ? (
           /* Mobile premium bottom bar */
           <div 
-            className="bg-white rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]"
+            className="bg-white rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
             style={{ 
               marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
               marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 
@@ -632,7 +632,7 @@ export const TransactionList = ({
           >
             <div className="flex flex-col w-full">
               {/* LINHA 1: CONTEXTO E FILTRO */}
-              <div className="flex items-center justify-between w-full pb-1.5 border-b border-black/[0.04]">
+              <div className="flex items-center justify-between w-full pb-1 border-b border-black/[0.04]">
                 {footerStatusFilter === "all" ? (
                   <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                     📄 {totalCount} {totalCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
@@ -666,7 +666,7 @@ export const TransactionList = ({
               </div>
 
               {/* LINHAS 2 E 3: INDICADORES */}
-              <div className="grid grid-cols-3 w-full pt-2 text-center">
+              <div className="grid grid-cols-3 w-full pt-1 text-center">
                 {/* Coluna 1 */}
                 <div className="flex flex-col items-center">
                   <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
