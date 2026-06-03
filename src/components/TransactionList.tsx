@@ -17,7 +17,7 @@ import TransactionRow from "./TransactionRow";
 import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
-import { ArrowUp, ArrowDown, X } from "lucide-react"; // Importar ícones de seta, X
+import { ArrowUp, ArrowDown, X, Filter } from "lucide-react"; // Importar ícones de seta, X
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -83,6 +83,7 @@ export const TransactionList = ({
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const [localSearch, setLocalSearch] = useState(searchTerm);
+  const [footerStatusFilter, setFooterStatusFilter] = useState<"all" | "paid" | "pending">("all");
 
   // Sync local search with global search term (e.g. when filters are cleared)
   useEffect(() => {
@@ -240,6 +241,13 @@ export const TransactionList = ({
     );
   }, [filteredTransactions]);
 
+  const totalCount = filteredTransactions.length;
+  const paidCount = useMemo(() => filteredTransactions.filter(t => t.status === "Recebida").length, [filteredTransactions]);
+  const pendingCount = totalCount - paidCount;
+
+  const paidPercentage = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
+  const pendingPercentage = totalCount > 0 ? Math.round((pendingCount / totalCount) * 100) : 0;
+
   const accumulatedValue = filterType === "expense"
     ? summary.expense - summary.paidExpense
     : filterType === "income"
@@ -382,8 +390,18 @@ export const TransactionList = ({
 
   const hideTypeFilter = isMobile && filterPaymentOptionId !== "all";
 
+  const mobileStatusFilteredTransactions = useMemo(() => {
+    if (!isMobile) return sortedTransactions;
+    return sortedTransactions.filter(t => {
+      if (footerStatusFilter === "all") return true;
+      if (footerStatusFilter === "paid") return t.status === "Recebida";
+      if (footerStatusFilter === "pending") return t.status !== "Recebida";
+      return true;
+    });
+  }, [sortedTransactions, footerStatusFilter, isMobile]);
+
   // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
-  const transactionsToDisplay = sortedTransactions;
+  const transactionsToDisplay = isMobile ? mobileStatusFilteredTransactions : sortedTransactions;
 
   return (
     <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "pb-6")}>
@@ -601,57 +619,131 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto relative z-20",
-        isMobile ? "w-full mb-1 mt-1" : "mt-8 w-full px-0 mb-4"
+        isMobile ? "w-full" : "mt-8 w-full px-0 mb-4"
       )}>
-        <div className={cn(
-          "bg-slate-50 flex items-center justify-between w-full gap-2 px-4 border-t border-gray-300",
-          isMobile ? "pt-[6px] pb-[8px] border-b-0" : "pt-3 pb-3 shadow-sm",
-          !isMobile && "w-full bg-background border border-gray-200 rounded-2xl"
-        )}>
-          {/* 1: Lançamentos */}
-          <div className="flex flex-col items-center justify-center flex-1">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Lançamentos</span>
-            <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
-          </div>
+        {isMobile ? (
+          /* Mobile premium bottom bar */
+          <div className="w-screen relative left-1/2 -translate-x-1/2 bg-white rounded-t-[12px] border-t border-black/[0.04] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]">
+            <div className="flex flex-col w-full">
+              {/* LINHA 1: CONTEXTO E FILTRO */}
+              <div className="flex items-center justify-between w-full pb-1.5 border-b border-black/[0.04]">
+                {footerStatusFilter === "all" ? (
+                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                    📄 {totalCount} {totalCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
+                  </span>
+                ) : footerStatusFilter === "paid" ? (
+                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                    📄 {paidCount} {paidCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
+                  </span>
+                ) : (
+                  <span className="text-[11px] xs:text-xs text-slate-500 font-medium">
+                    📄 {pendingCount} {pendingCount === 1 ? "item" : "itens"} • <span className="text-[#FF8888] font-bold">{pendingPercentage}% pendentes</span>
+                  </span>
+                )}
 
-          {/* 2: Receitas / Valor Pago */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
-              {filterType === 'expense' ? 'Valor Pago' : 'Receitas'}
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">
-              {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, !isMobile)}
-            </span>
-          </div>
+                <Select 
+                  value={footerStatusFilter} 
+                  onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
+                >
+                  <SelectTrigger className="h-[26px] py-0 px-3 text-[11px] font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 gap-1.5 focus:ring-0 focus:ring-offset-0 w-auto transition-all">
+                    <div className="flex items-center gap-1 max-w-[85px]">
+                      <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
+                      <SelectValue />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="rounded-[14px] border border-slate-100 shadow-xl overflow-hidden">
+                    <SelectItem value="all" className="text-xs font-medium py-2">Todos</SelectItem>
+                    <SelectItem value="paid" className="text-xs font-medium py-2">Pagos</SelectItem>
+                    <SelectItem value="pending" className="text-xs font-medium py-2">Pendentes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          {/* 3: Despesas / Pendente */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
-              {filterType === 'income' ? 'Pendente' : 'Despesas'}
-            </span>
-            <span className={cn(
-              "text-xs sm:text-sm font-bold whitespace-nowrap",
-              filterType === 'income' ? "text-orange-500" : "text-destructive"
-            )}>
-              {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, !isMobile)}
-            </span>
-          </div>
+              {/* LINHAS 2 E 3: INDICADORES */}
+              <div className="grid grid-cols-3 w-full pt-2 text-center">
+                {/* Coluna 1 */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                    {filterType === 'expense' ? 'Pago' : 'Receitas'}
+                  </span>
+                  <span className="text-sm xs:text-[15px] font-black text-[#22C55E] mt-0.5 whitespace-nowrap">
+                    {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, true)}
+                  </span>
+                </div>
 
-          {/* 4: Saldo / Recebidas */}
-          <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-            <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Saldo</span>
-            <span className={cn(
-              "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
-              filterType === 'expense'
-                ? (accumulatedValue > 0 ? "text-destructive" : "text-primary")
-                : filterType === 'income'
-                  ? "text-primary"
-                  : (accumulatedValue >= 0 ? "text-primary" : "text-destructive")
-            )}>
-              {formatCurrency(accumulatedValue, !isMobile)}
-            </span>
+                {/* Coluna 2 */}
+                <div className="flex flex-col items-center border-l border-black/[0.04]">
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                    {filterType === 'income' ? 'Pendente' : 'Despesas'}
+                  </span>
+                  <span className={cn(
+                    "text-sm xs:text-[15px] font-black mt-0.5 whitespace-nowrap",
+                    filterType === 'income' ? "text-[#FF8888]" : "text-destructive"
+                  )}>
+                    {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, true)}
+                  </span>
+                </div>
+
+                {/* Coluna 3 */}
+                <div className="flex flex-col items-center border-l border-black/[0.04]">
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                    Saldo
+                  </span>
+                  <span className="text-sm xs:text-[15px] font-black text-primary mt-0.5 whitespace-nowrap">
+                    {formatCurrency(accumulatedValue, true)}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Desktop version (UNCHANGED) */
+          <div className="bg-slate-50 flex items-center justify-between w-full gap-2 px-4 border-t border-gray-300 pt-3 pb-3 shadow-sm w-full bg-background border border-gray-200 rounded-2xl">
+            {/* 1: Lançamentos */}
+            <div className="flex flex-col items-center justify-center flex-1">
+              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Lançamentos</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
+            </div>
+
+            {/* 2: Receitas / Valor Pago */}
+            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
+              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
+                {filterType === 'expense' ? 'Valor Pago' : 'Receitas'}
+              </span>
+              <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">
+                {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, !isMobile)}
+              </span>
+            </div>
+
+            {/* 3: Despesas / Pendente */}
+            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
+              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
+                {filterType === 'income' ? 'Pendente' : 'Despesas'}
+              </span>
+              <span className={cn(
+                "text-xs sm:text-sm font-bold whitespace-nowrap",
+                filterType === 'income' ? "text-orange-500" : "text-destructive"
+              )}>
+                {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, !isMobile)}
+              </span>
+            </div>
+
+            {/* 4: Saldo / Recebidas */}
+            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
+              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Saldo</span>
+              <span className={cn(
+                "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
+                filterType === 'expense'
+                  ? (accumulatedValue > 0 ? "text-destructive" : "text-primary")
+                  : filterType === 'income'
+                    ? "text-primary"
+                    : (accumulatedValue >= 0 ? "text-primary" : "text-destructive")
+              )}>
+                {formatCurrency(accumulatedValue, !isMobile)}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
