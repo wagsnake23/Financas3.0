@@ -624,7 +624,7 @@ export const TransactionList = ({
         {isMobile ? (
           /* Mobile premium bottom bar */
           <div 
-            className="bg-white rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
+            className="bg-[#FFFFFF] rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
             style={{ 
               marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
               marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 

@@ -125,7 +125,7 @@ export const Navigation = () => {
             (isDarkPage || isDespesas)
                 ? "bg-[#F7F9FC]"
                 : isLancamentos
-                    ? "bg-white"
+                    ? "bg-[#FFFFFF]"
                 : (isReceitas || isInvestimentos)
                     ? "bg-slate-50"
                     : isCategorias
