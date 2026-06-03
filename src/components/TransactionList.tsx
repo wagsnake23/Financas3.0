@@ -623,7 +623,13 @@ export const TransactionList = ({
       )}>
         {isMobile ? (
           /* Mobile premium bottom bar */
-          <div className="w-screen relative left-1/2 -translate-x-1/2 bg-white rounded-t-[12px] border-t border-black/[0.04] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]">
+          <div 
+            className="bg-white rounded-t-[10px] overflow-hidden border-t border-black/[0.04] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))]"
+            style={{ 
+              marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
+              marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 
+            }}
+          >
             <div className="flex flex-col w-full">
               {/* LINHA 1: CONTEXTO E FILTRO */}
               <div className="flex items-center justify-between w-full pb-1.5 border-b border-black/[0.04]">
