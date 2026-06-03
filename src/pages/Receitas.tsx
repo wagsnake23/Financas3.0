@@ -674,7 +674,7 @@ export default function Receitas() {
                   className="flex flex-col gap-6"
                   style={{
                     background: "#FFFFFF",
-                    border: "1px solid rgba(15,23,42,0.05)",
+                    border: "1px solid rgba(15,23,42,0.10)",
                     borderRadius: "20px",
                     padding: "15px 20px 24px 20px",
                     boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
@@ -691,7 +691,7 @@ export default function Receitas() {
                       <Button
                         variant="ghost"
                         className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0 -ml-1"
-                        style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                        style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                         onClick={() => navigate("/lancamentos?type=income")}
                       >
                         <DynamicIcon
@@ -712,7 +712,7 @@ export default function Receitas() {
 
                     <Button
                       onClick={() => navigate(-1)}
-                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90"
+                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 -mr-1"
                       style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", border: "1px solid rgba(15,23,42,0.10)", boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" } as any}
                     >
                       <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
