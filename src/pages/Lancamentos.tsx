@@ -126,7 +126,7 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container-app flex-grow",
-          isMobile ? "pt-0 pb-0 flex flex-col min-h-0" : "pt-0 pb-8 -mt-6"
+          isMobile ? "pt-0 pb-0 flex flex-col min-h-0 bg-[#FFFFFF]" : "pt-0 pb-8 -mt-6"
         )}
       >
         <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "mt-3 mb-6 h-10")}>

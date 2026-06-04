@@ -404,7 +404,7 @@ export const TransactionList = ({
   const transactionsToDisplay = isMobile ? mobileStatusFilteredTransactions : sortedTransactions;
 
   return (
-    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full" : "pb-6")}>
+    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#FFFFFF]" : "pb-6")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
@@ -538,7 +538,7 @@ export const TransactionList = ({
 
       <div className={cn(
         !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-        isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar" : ""
+        isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : ""
       )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
@@ -624,7 +624,7 @@ export const TransactionList = ({
         {isMobile ? (
           /* Mobile premium bottom bar */
           <div 
-            className="bg-[#FFFFFF] rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] shadow-[0_-6px_24px_rgba(0,0,0,0.06)] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
+            className="bg-[#FFFFFF] rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
             style={{ 
               marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
               marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 
