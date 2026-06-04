@@ -113,6 +113,30 @@ export const Navigation = () => {
   const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
   const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
 
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    let color = "#FFFFFF";
+    if (isDarkPage || isDespesas) {
+      color = "#F7F9FC";
+    } else if (isLancamentos) {
+      color = "#FFFFFF";
+    } else if (isReceitas || isInvestimentos) {
+      color = "#F8FAFC"; // equivalente a slate-50
+    } else if (isCategorias) {
+      color = "#F9FAFB";
+    } else if (!scrolled) {
+      color = "#FFFFFF";
+    } else {
+      color = "#FFFFFF";
+    }
+
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", color);
+    }
+  }, [isMobile, isDarkPage, isDespesas, isLancamentos, isReceitas, isInvestimentos, isCategorias, scrolled]);
+
   return (
     <>
       <nav className={cn(
@@ -121,7 +145,7 @@ export const Navigation = () => {
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 shadow-none border-none",
+            "h-14 shadow-none border-t border-black/[0.04]",
             (isDarkPage || isDespesas)
                 ? "bg-[#F7F9FC]"
                 : isLancamentos
@@ -131,7 +155,7 @@ export const Navigation = () => {
                     : isCategorias
                     ? "bg-[#F9FAFB]"
                     : !scrolled
-                        ? "bg-transparent"
+                        ? "bg-transparent border-transparent"
                         : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
           )
           : "h-[72px] text-white"
