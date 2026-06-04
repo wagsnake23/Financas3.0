@@ -280,8 +280,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 className={cn(
                   "w-[38px] h-[20px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
                   transaction.status === "Recebida"
-                    ? "bg-[#22C55E] border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
-                    : "bg-[#E85454] border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(232,84,84,0.35)]"
+                    ? "bg-[#22C55E]/90 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
+                    : "bg-[#E85454]/80 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(232,84,84,0.35)]"
                 )}
               >
                 <div
