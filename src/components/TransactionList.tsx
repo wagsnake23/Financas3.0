@@ -632,7 +632,7 @@ export const TransactionList = ({
           >
             <div className="flex flex-col w-full">
               {/* LINHA 1: CONTEXTO E FILTRO */}
-              <div className="flex items-center justify-between w-full pb-1 border-b border-black/[0.04]">
+              <div className="flex items-center justify-between w-full pb-2 border-b border-black/[0.04]">
                 {footerStatusFilter === "all" ? (
                   <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                     📄 {totalCount} {totalCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
