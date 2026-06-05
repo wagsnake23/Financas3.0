@@ -101,7 +101,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-[20px] pr-[20px] pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("px-3 pt-[10px] pb-[10px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
@@ -114,7 +114,7 @@ export const MobileCreditCardExpenses: React.FC<
       }}
     >
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-[2px]">
         <div className="mb-[7px]">
           <Select value={selectedCardId} onValueChange={setSelectedCardId}>
             <SelectTrigger 
@@ -155,7 +155,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-2 text-center mt-[12px] pt-0.5 md:mt-6">
+          <div className="grid grid-cols-3 gap-2 text-center mt-[10px] pt-0.5 md:mt-6">
             {/* Pago */}
             <div className={cn("flex flex-col items-center transition-opacity duration-300", totalPending > 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5 mb-1">
