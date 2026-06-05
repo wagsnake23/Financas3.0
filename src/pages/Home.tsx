@@ -326,15 +326,17 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
-                                        background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                        borderRadius: "14px",
+                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                                     }}
                                 >
-                                    <div className="flex justify-between items-start mb-2">
+                                    <div className="flex justify-between items-start mb-2 relative z-20">
                                         <div className="flex flex-col">
                                             <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 -mt-1" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
@@ -395,12 +397,13 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "14px",
-                                        background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
+                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
+                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -461,12 +464,13 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "14px",
-                                        background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
+                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.06)",
+                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -540,15 +544,17 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                background: "linear-gradient(to top right, rgba(0, 102, 255, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                borderRadius: "14px",
+                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.06)",
+                                border: "1px solid rgba(15,23,42,0.08)",
+                                backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                             }}
                         >
-                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
+                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px] relative z-20">
                                 <div className="flex flex-col md:mt-3">
                                     <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
                                     <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
@@ -610,12 +616,13 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "14px",
-                                background: "linear-gradient(to top right, rgba(34, 197, 94, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f4f8f6 0%, #edf4f0 100%)",
+                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.06)",
+                                border: "1px solid rgba(15,23,42,0.08)",
+                                backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
@@ -676,12 +683,13 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
                                 borderRadius: "14px",
-                                background: "linear-gradient(to top right, rgba(255, 59, 48, 0.20) 0%, transparent 45%), linear-gradient(135deg, #f8f6f6 0%, #f1eeee 100%)",
+                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
                                 backgroundBlendMode: "normal",
                                 backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.06)",
+                                border: "1px solid rgba(15,23,42,0.08)",
+                                backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(255, 59, 48, 0.12)"
+                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
