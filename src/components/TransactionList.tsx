@@ -631,10 +631,10 @@ export const TransactionList = ({
                 {finalDisplayTransactions.map((transaction, index) => (
                   <React.Fragment key={transaction.id}>
                     {todayMarkerIndex === index && (
-                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '16px', marginBottom: '12px', minHeight: '20px' }}>
+                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full my-1 h-[20px]">
                         <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-bold px-3">
-                          <span className="text-[14px]">📍</span>
+                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
+                          <span className="text-[12px] leading-none">📍</span>
                           <span>{getTodayMarkerText()}</span>
                         </div>
                         <div className="h-[1px] bg-slate-200/80 flex-1"></div>
@@ -654,10 +654,10 @@ export const TransactionList = ({
                   </React.Fragment>
                 ))}
                 {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
-                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '16px', marginBottom: '12px', minHeight: '20px' }}>
+                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full my-1 h-[20px]">
                     <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-bold px-3">
-                      <span className="text-[14px]">📍</span>
+                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
+                      <span className="text-[12px] leading-none">📍</span>
                       <span>{getTodayMarkerText()}</span>
                     </div>
                     <div className="h-[1px] bg-slate-200/80 flex-1"></div>
