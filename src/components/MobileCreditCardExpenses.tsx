@@ -114,14 +114,23 @@ export const MobileCreditCardExpenses: React.FC<
       }}
     >
 
-      <div className="space-y-1">
-        <Select value={selectedCardId} onValueChange={setSelectedCardId}>
-          <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border shadow-sm font-medium" style={{ background: "rgba(255,255,255,0.6)", borderColor: "rgba(124,58,237,0.15)", color: "#1e293b" }}>
-            <div className="flex items-center gap-2">
-              <DynamicIcon name="CreditCard" className="h-4 w-4" style={{ color: "#6d28d9" }} />
-              <SelectValue placeholder="Selecione um cartão" />
-            </div>
-          </SelectTrigger>
+      <div className="flex flex-col">
+        <div className="mb-[7px]">
+          <Select value={selectedCardId} onValueChange={setSelectedCardId}>
+            <SelectTrigger 
+              className="rounded-xl w-full h-[33px] text-[13px] border font-bold tracking-tight transition-all [&>svg]:opacity-40 [&>svg]:text-[#6d28d9] [&>svg]:w-3.5 [&>svg]:h-3.5" 
+              style={{ 
+                background: "linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%)", 
+                borderColor: "rgba(139, 92, 246, 0.25)", 
+                color: "#1e293b",
+                boxShadow: "0 2px 10px -2px rgba(109, 40, 217, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(0,0,0,0.02)"
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <DynamicIcon name="CreditCard" className="h-4 w-4" style={{ color: "#6d28d9" }} />
+                <SelectValue placeholder="Selecione um cartão" />
+              </div>
+            </SelectTrigger>
           <SelectContent className="rounded-xl">
             {cartoes.map((card) => (
               <SelectItem key={card.id} value={card.id} className="text-sm">
@@ -130,9 +139,10 @@ export const MobileCreditCardExpenses: React.FC<
             ))}
           </SelectContent>
         </Select>
+        </div>
 
         <Button
-          className="rounded-[14px] w-full h-[32px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5"
+          className="rounded-[14px] w-full h-[33px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5"
           style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)", filter: "saturate(0.95)", boxShadow: "0 4px 12px rgba(124,58,237,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
@@ -145,7 +155,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="grid grid-cols-3 gap-2 text-center mt-2 pt-0.5 md:mt-6">
+          <div className="grid grid-cols-3 gap-2 text-center mt-[12px] pt-0.5 md:mt-6">
             {/* Pago */}
             <div className={cn("flex flex-col items-center transition-opacity duration-300", totalPending > 0 && "opacity-40 grayscale")}>
               <div className="flex items-center gap-1.5 mb-1">
