@@ -403,10 +403,16 @@ export const TransactionList = ({
   // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
   const transactionsToDisplay = isMobile ? mobileStatusFilteredTransactions : sortedTransactions;
 
-  // Lógica do marcador "Hoje" (apenas Mobile)
-  const todayMarkerRef = useRef<HTMLDivElement>(null);
-  const scrolledMonthRef = useRef<string | null>(null);
+  // Remove auto-scroll
+  const getTodayMarkerText = () => {
+    const date = new Date();
+    const day = format(date, "dd", { locale: ptBR });
+    const mmmRaw = format(date, "MMM", { locale: ptBR });
+    const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
+    return `Hoje • ${day} ${mmm}`;
+  };
 
+  // Recuperar a lógica original de exibição e cálculo do índice "Hoje"
   const todayMarkerIndex = useMemo(() => {
     if (!isMobile || !sortColumn) return -1;
     
@@ -437,23 +443,19 @@ export const TransactionList = ({
     return -1;
   }, [transactionsToDisplay, isMobile, selectedMonth, sortColumn, sortDirection]);
 
+  // Posicionamento instantâneo sem animação e sem setTimeout
+  const todayMarkerRef = useRef<HTMLDivElement>(null);
+  const scrolledMonthRef = useRef<string | null>(null);
+
   useEffect(() => {
     const monthKey = `${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`;
     if (todayMarkerIndex !== -1 && todayMarkerRef.current && scrolledMonthRef.current !== monthKey) {
       scrolledMonthRef.current = monthKey;
-      setTimeout(() => {
-        todayMarkerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 300);
+      todayMarkerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
   }, [todayMarkerIndex, selectedMonth]);
 
-  const getTodayMarkerText = () => {
-    const date = new Date();
-    const day = format(date, "dd", { locale: ptBR });
-    const mmmRaw = format(date, "MMM", { locale: ptBR });
-    const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
-    return `Hoje • ${day} ${mmm}`;
-  };
+
 
   return (
     <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#FFFFFF]" : "pb-6")}>
@@ -603,10 +605,10 @@ export const TransactionList = ({
                 {transactionsToDisplay.map((transaction, index) => (
                   <React.Fragment key={transaction.id}>
                     {todayMarkerIndex === index && (
-                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '4px', marginBottom: '4px', minHeight: '20px', maxHeight: '24px' }}>
+                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '16px', marginBottom: '12px', minHeight: '20px' }}>
                         <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-2">
-                          <span className="text-[12px]">📍</span>
+                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-bold px-3">
+                          <span className="text-[14px]">📍</span>
                           <span>{getTodayMarkerText()}</span>
                         </div>
                         <div className="h-[1px] bg-slate-200/80 flex-1"></div>
@@ -626,10 +628,10 @@ export const TransactionList = ({
                   </React.Fragment>
                 ))}
                 {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
-                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '4px', marginBottom: '4px', minHeight: '20px', maxHeight: '24px' }}>
+                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '16px', marginBottom: '12px', minHeight: '20px' }}>
                     <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-2">
-                      <span className="text-[12px]">📍</span>
+                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-bold px-3">
+                      <span className="text-[14px]">📍</span>
                       <span>{getTodayMarkerText()}</span>
                     </div>
                     <div className="h-[1px] bg-slate-200/80 flex-1"></div>
