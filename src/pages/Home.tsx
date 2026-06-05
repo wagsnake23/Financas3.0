@@ -324,16 +324,16 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "14px",
-                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                        borderRadius: "16px",
+                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(5,86,195,0.03)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2 relative z-20">
@@ -365,7 +365,7 @@ export default function Home() {
                                         <Button
                                             onClick={() => navigate("/dashboard?filter=investments")}
                                             className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                         >
                                             <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                         </Button>
@@ -396,14 +396,14 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "14px",
-                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                        borderRadius: "16px",
+                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(185,28,28,0.03)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -434,7 +434,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
                                                 className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                                style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(239,68,68,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -463,14 +463,14 @@ export default function Home() {
                                 <Card
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "14px",
-                                        background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
+                                        borderRadius: "16px",
+                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
                                         backgroundBlendMode: "normal",
                                         backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(15,23,42,0.08)",
+                                        border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(21,128,61,0.03)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -501,7 +501,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
                                                 className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                                style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(34,197,94,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
