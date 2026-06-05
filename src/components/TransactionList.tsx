@@ -455,6 +455,32 @@ export const TransactionList = ({
     }
   }, [todayMarkerIndex, selectedMonth]);
 
+  // Ordenação customizada EXCLUSIVA para os lançamentos de Hoje
+  const finalDisplayTransactions = useMemo(() => {
+    if (!isMobile || sortColumn !== "date" || transactionsToDisplay.length === 0) return transactionsToDisplay;
+
+    const todayStr = format(new Date(), "yyyy-MM-dd");
+    const todayItems = transactionsToDisplay.filter(t => t.date === todayStr);
+
+    if (todayItems.length <= 1) return transactionsToDisplay;
+
+    // Ordena os itens de hoje por created_at DESC
+    const sortedTodayItems = [...todayItems].sort((a, b) => {
+      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      if (timeA === 0 && timeB === 0) return 0;
+      return timeB - timeA;
+    });
+
+    // Mapeia preservando exatamente a mesma estrutura global
+    return transactionsToDisplay.map(t => {
+      if (t.date === todayStr) {
+        return sortedTodayItems.shift()!;
+      }
+      return t;
+    });
+  }, [transactionsToDisplay, isMobile, sortColumn]);
+
 
 
   return (
@@ -596,13 +622,13 @@ export const TransactionList = ({
       )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
-            {transactionsToDisplay.length === 0 ? (
+            {finalDisplayTransactions.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
                 <p className="text-muted-foreground font-medium">Nenhum lançamento encontrado</p>
               </div>
             ) : (
               <>
-                {transactionsToDisplay.map((transaction, index) => (
+                {finalDisplayTransactions.map((transaction, index) => (
                   <React.Fragment key={transaction.id}>
                     {todayMarkerIndex === index && (
                       <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '16px', marginBottom: '12px', minHeight: '20px' }}>
