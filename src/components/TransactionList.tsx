@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -403,6 +403,58 @@ export const TransactionList = ({
   // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
   const transactionsToDisplay = isMobile ? mobileStatusFilteredTransactions : sortedTransactions;
 
+  // Lógica do marcador "Hoje" (apenas Mobile)
+  const todayMarkerRef = useRef<HTMLDivElement>(null);
+  const scrolledMonthRef = useRef<string | null>(null);
+
+  const todayMarkerIndex = useMemo(() => {
+    if (!isMobile || !sortColumn) return -1;
+    
+    const today = new Date();
+    const isCurrentMonth = selectedMonth.getMonth() === today.getMonth() && selectedMonth.getFullYear() === today.getFullYear();
+    if (!isCurrentMonth || transactionsToDisplay.length === 0) return -1;
+    
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    if (sortColumn === "date" && sortDirection === "desc") {
+      const idx = transactionsToDisplay.findIndex(t => {
+        const [y, m, d] = t.date.split("-").map(Number);
+        const tDate = new Date(y, m - 1, d);
+        tDate.setHours(0, 0, 0, 0);
+        return tDate.getTime() <= todayStart.getTime();
+      });
+      return idx === -1 ? transactionsToDisplay.length : idx;
+    } else if (sortColumn === "date" && sortDirection === "asc") {
+      const idx = transactionsToDisplay.findIndex(t => {
+        const [y, m, d] = t.date.split("-").map(Number);
+        const tDate = new Date(y, m - 1, d);
+        tDate.setHours(0, 0, 0, 0);
+        return tDate.getTime() >= todayStart.getTime();
+      });
+      return idx === -1 ? transactionsToDisplay.length : idx;
+    }
+    return -1;
+  }, [transactionsToDisplay, isMobile, selectedMonth, sortColumn, sortDirection]);
+
+  useEffect(() => {
+    const monthKey = `${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`;
+    if (todayMarkerIndex !== -1 && todayMarkerRef.current && scrolledMonthRef.current !== monthKey) {
+      scrolledMonthRef.current = monthKey;
+      setTimeout(() => {
+        todayMarkerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [todayMarkerIndex, selectedMonth]);
+
+  const getTodayMarkerText = () => {
+    const date = new Date();
+    const day = format(date, "dd", { locale: ptBR });
+    const mmmRaw = format(date, "MMM", { locale: ptBR });
+    const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
+    return `Hoje • ${day} ${mmm}`;
+  };
+
   return (
     <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#FFFFFF]" : "pb-6")}>
 
@@ -547,20 +599,43 @@ export const TransactionList = ({
                 <p className="text-muted-foreground font-medium">Nenhum lançamento encontrado</p>
               </div>
             ) : (
-              transactionsToDisplay.map((transaction) => (
-                <TransactionRow
-                  key={transaction.id}
-                  transaction={transaction}
-                  onDeleteTransaction={onDeleteTransaction}
-                  onEditTransaction={onEditTransaction}
-                  allCategories={allCategories}
-                  cartoes={cartoes}
-                  isMobile={isMobile}
-                  queryClient={queryClient}
-                  user={user}
-                  onToggleStatus={onToggleTransactionStatus}
-                />
-              ))
+              <>
+                {transactionsToDisplay.map((transaction, index) => (
+                  <React.Fragment key={transaction.id}>
+                    {todayMarkerIndex === index && (
+                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '4px', marginBottom: '4px', minHeight: '20px', maxHeight: '24px' }}>
+                        <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-2">
+                          <span className="text-[12px]">📍</span>
+                          <span>{getTodayMarkerText()}</span>
+                        </div>
+                        <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+                      </div>
+                    )}
+                    <TransactionRow
+                      transaction={transaction}
+                      onDeleteTransaction={onDeleteTransaction}
+                      onEditTransaction={onEditTransaction}
+                      allCategories={allCategories}
+                      cartoes={cartoes}
+                      isMobile={isMobile}
+                      queryClient={queryClient}
+                      user={user}
+                      onToggleStatus={onToggleTransactionStatus}
+                    />
+                  </React.Fragment>
+                ))}
+                {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
+                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full" style={{ marginTop: '4px', marginBottom: '4px', minHeight: '20px', maxHeight: '24px' }}>
+                    <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-2">
+                      <span className="text-[12px]">📍</span>
+                      <span>{getTodayMarkerText()}</span>
+                    </div>
+                    <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         ) : (
