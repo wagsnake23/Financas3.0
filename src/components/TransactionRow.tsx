@@ -177,7 +177,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "rounded-[8px] py-[10px] px-[14px] flex flex-col justify-center mb-2.5 animate-fade-in active:scale-[0.99] transition-all bg-white border border-[#E5E7EB] shadow-[0_1px_3px_rgba(0,0,0,0.02),_0_1px_2px_rgba(0,0,0,0.01),_inset_0_1px_0_rgba(255,255,255,1),_inset_1px_0_0_rgba(255,255,255,0.8),_inset_0_-1px_1px_rgba(0,0,0,0.03),_inset_-1px_0_1px_rgba(0,0,0,0.02)]",
+          "rounded-[8px] py-[9.5px] px-[14px] flex flex-col justify-center mb-[9px] animate-fade-in active:scale-[0.99] transition-all bg-white border border-[#E5E7EB] shadow-[0_1px_3px_rgba(0,0,0,0.02),_0_1px_2px_rgba(0,0,0,0.01),_inset_0_1px_0_rgba(255,255,255,1),_inset_1px_0_0_rgba(255,255,255,0.8),_inset_0_-1px_1px_rgba(0,0,0,0.03),_inset_-1px_0_1px_rgba(0,0,0,0.02)]",
           transaction.status === "Recebida" 
             ? "border-l-[3px] border-l-[#10B981]/70" 
             : "border-l-[3px] border-l-[#F43F5E]/70"
@@ -270,7 +270,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             {/* Status (Pago ou Pendente) */}
             <div className="flex flex-col items-end shrink-0 ml-3 justify-center">
               <span className={cn(
-                "text-[10px] tracking-wide leading-none mb-1.5 font-medium",
+                "text-[11px] tracking-wide leading-none mb-1.5 font-medium",
                 transaction.status === "Recebida"
                   ? "text-[#10B955]/70"
                   : "text-[#EF4444]/60"
