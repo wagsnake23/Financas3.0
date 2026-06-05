@@ -113,22 +113,14 @@ export const MobileCreditCardExpenses: React.FC<
         boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(168,85,247,0.03)"
       }}
     >
-      <div className="flex items-center justify-between mb-1">
-        <div className="flex items-center gap-2">
-          <DynamicIcon name="CreditCard" className="h-6 w-6" style={{ color: "#6d28d9" }} />
-          <h2 className="text-[15px] font-extrabold leading-none tracking-tight md:text-[17px]" style={{ color: "#6d28d9", fontFamily: "'Inter', sans-serif" }}>
-            Cartões
-          </h2>
-        </div>
-        <span className="text-[12px] font-bold text-[#111827] uppercase tracking-tight" style={{ letterSpacing: "0.5px" }}>
-          {format(selectedMonth, "MMM / yyyy", { locale: ptBR }).replace(".", "")}
-        </span>
-      </div>
 
       <div className="space-y-1">
         <Select value={selectedCardId} onValueChange={setSelectedCardId}>
           <SelectTrigger className="rounded-xl w-full h-[30px] text-[13px] border shadow-sm font-medium" style={{ background: "rgba(255,255,255,0.6)", borderColor: "rgba(124,58,237,0.15)", color: "#1e293b" }}>
-            <SelectValue placeholder="Selecione um cartão" />
+            <div className="flex items-center gap-2">
+              <DynamicIcon name="CreditCard" className="h-4 w-4" style={{ color: "#6d28d9" }} />
+              <SelectValue placeholder="Selecione um cartão" />
+            </div>
           </SelectTrigger>
           <SelectContent className="rounded-xl">
             {cartoes.map((card) => (
@@ -140,13 +132,15 @@ export const MobileCreditCardExpenses: React.FC<
         </Select>
 
         <Button
-          className="rounded-[14px] w-full h-[32px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+          className="rounded-[14px] w-full h-[32px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5"
           style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)", filter: "saturate(0.95)", boxShadow: "0 4px 12px rgba(124,58,237,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
         >
-          <DynamicIcon name="Eye" className="h-3.5 w-3.5 mr-2" />
-          <span>Ver Fatura</span>
+          <DynamicIcon name="Eye" className="h-3.5 w-3.5" />
+          <span className="tracking-tight">Ver Fatura</span>
+          <span className="text-white/40 font-normal mx-0.5">|</span>
+          <span className="text-white/85 font-semibold tracking-tight">{format(selectedMonth, "MMM yyyy", { locale: ptBR }).toUpperCase().replace(".", "")}</span>
         </Button>
 
         {/* 📌 Indicadores */}

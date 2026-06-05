@@ -111,7 +111,7 @@ export const Navigation = () => {
   // Cores dinâmicas baseadas no tema da página ou estado do modal
   const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isDarkPage;
   const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
-  const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
+  const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]";
 
   useEffect(() => {
     if (!isMobile) return;
@@ -179,7 +179,7 @@ export const Navigation = () => {
               />
               <span className={cn(
                 "font-extrabold tracking-[0.5px]",
-                isMobile ? "text-[21px]" : "text-lg",
+                isMobile ? "text-[20px]" : "text-lg",
                 !isMobile && "transition-all duration-300",
                 isMobile ? mobileTextColor : "text-white",
                 isModalOpen && "shadow-none drop-shadow-none filter-none"
