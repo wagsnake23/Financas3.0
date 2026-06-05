@@ -293,12 +293,12 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-extrabold leading-none", isMobile ? "text-[19px] tracking-tight" : "text-2xl tracking-[0.5px]")}
+                            className={cn("font-extrabold leading-none", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
-                            <span className={cn(isMobile ? "text-[#1f2937]" : "text-slate-800")}>{greeting},</span> <span className="text-[#0556C3]">{userName}</span> 👋
+                            <span className={cn(isMobile ? "text-[#4b5563]" : "text-slate-600")}>{greeting},</span> <span className="text-[#4b5563]">{userName}</span> 👋
                         </h1>
-                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-slate-600 mt-0" : "text-sm text-slate-500 mt-1")}>
+                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-[#6b7280] mt-0.5" : "text-sm text-slate-500 mt-1")}>
                             {todayStr}
                         </p>
                     </div>

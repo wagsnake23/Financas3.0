@@ -110,7 +110,7 @@ export const Navigation = () => {
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
   const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isDarkPage;
-  const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#0556C3]";
+  const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#2563eb]";
   const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]";
 
   useEffect(() => {
@@ -187,7 +187,7 @@ export const Navigation = () => {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
-                textShadow: isMobile && isDarkPage && mobileTextColor === "text-[#0556C3]"
+                textShadow: isMobile && isDarkPage && mobileTextColor === "text-[#2563eb]"
                   ? "0 1px 1px rgba(0,0,0,0.12)"
                   : undefined
               }}>
