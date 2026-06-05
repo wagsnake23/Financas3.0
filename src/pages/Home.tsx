@@ -289,7 +289,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[4px] bg-[#F7F9FC] justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[6px] bg-[#F7F9FC] justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
@@ -298,7 +298,7 @@ export default function Home() {
                         >
                             <span className={cn(isMobile ? "text-[#4b5563]" : "text-slate-600")}>{greeting},</span> <span className="text-[#4b5563]">{userName}</span> 👋
                         </h1>
-                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-[#6b7280] mt-0.5" : "text-sm text-slate-500 mt-1")}>
+                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-[#6b7280] -mt-[1px]" : "text-sm text-slate-500 mt-1")}>
                             {todayStr}
                         </p>
                     </div>
