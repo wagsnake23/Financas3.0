@@ -119,14 +119,14 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
           {/* Action Button Area */}
           <div className={cn(
-            "w-full mt-1 pt-[5px] border-t border-slate-50/50",
+            "w-full mt-1 pt-[3px] border-t border-slate-50/50",
             !isMobile && "w-auto mt-0 pt-0 border-t-0"
           )}>
             <button
               onClick={onPayInvoice}
               disabled={loadingPayInvoice || disablePayInvoiceButton}
               className={cn(
-                "w-full md:w-auto h-[44px] px-4 rounded-[14px] transition-all duration-300 flex items-center justify-between md:justify-center gap-4",
+                "w-full md:w-auto h-[40px] px-4 rounded-[14px] transition-all duration-300 flex items-center justify-between md:justify-center gap-4",
                 "text-white shadow-sm border-none outline-none",
                 "disabled:opacity-40 disabled:grayscale hover:-translate-y-[1px] active:translate-y-[1px]"
               )}
