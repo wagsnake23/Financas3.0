@@ -293,7 +293,7 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-extrabold leading-none", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
+                            className={cn("font-bold leading-none", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
                             <span className={cn(isMobile ? "text-[#4b5563]" : "text-slate-600")}>{greeting},</span> <span className="text-[#4b5563]">{userName}</span> 👋
