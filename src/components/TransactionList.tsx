@@ -406,10 +406,12 @@ export const TransactionList = ({
   // Remove auto-scroll
   const getTodayMarkerText = () => {
     const date = new Date();
+    const weekdayRaw = format(date, "EEEE", { locale: ptBR });
+    const weekday = weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1);
     const day = format(date, "dd", { locale: ptBR });
     const mmmRaw = format(date, "MMM", { locale: ptBR });
     const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
-    return `Hoje • ${day} ${mmm}`;
+    return `Hoje • ${weekday}, ${day} ${mmm}`;
   };
 
   // Recuperar a lógica original de exibição e cálculo do índice "Hoje"
@@ -524,12 +526,12 @@ export const TransactionList = ({
           <Select value={filterType} onValueChange={setFilterType}>
             <SelectTrigger
               className={cn(
-                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
+                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
                 filterType !== "all"
                   ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
+                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
                 hideTypeFilter && "hidden",
-                !isMobile && "flex-1"
+                !isMobile && "flex-1 h-9"
               )}
             >
               <div className="flex items-center gap-1.5">
@@ -547,11 +549,11 @@ export const TransactionList = ({
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger
               className={cn(
-                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
+                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
                 filterCategory !== "all"
                   ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
-                !isMobile && "flex-1"
+                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                !isMobile && "flex-1 h-9"
               )}
             >
               <SelectValue placeholder="Subcategoria" />
@@ -575,14 +577,14 @@ export const TransactionList = ({
           <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
             <SelectTrigger
               className={cn(
-                "h-9 px-4 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-xl",
+                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
                 filterPaymentOptionId !== "all"
                   ? (isValidUuid(filterPaymentOptionId)
                     ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90"
                     : (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90")
                   ) + " text-white border-transparent font-bold"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300",
-                !isMobile && "flex-1"
+                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                !isMobile && "flex-1 h-9"
               )}
             >
               <SelectValue placeholder="Forma de Pagamento" />

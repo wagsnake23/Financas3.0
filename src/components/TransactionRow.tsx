@@ -223,7 +223,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 ? "text-[#059669]"
                 : (transaction.status === "Recebida" ? "text-[#D45555]/80" : "text-[#D45555]")
             )}>
-              {transaction.type === 'income' ? "+" : "-"} {formatCurrency(transaction.amount, false)}
+              {formatCurrency(transaction.amount, true)}
             </span>
           </div>
 
