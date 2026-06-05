@@ -185,22 +185,22 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       >
         <div className="flex flex-col w-full gap-1">
           {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
-          <div className="flex items-center justify-between w-full mb-2">
-            <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-2">
+          <div className="flex items-baseline justify-between w-full mb-2">
+            <div className="flex items-baseline gap-[5px] min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[12px] text-slate-400 font-normal whitespace-nowrap shrink-0">
+              <span className="text-[13px] text-slate-500 font-medium whitespace-nowrap shrink-0">
                 {formattedDate}
               </span>
               
               {/* Forma de Pagamento */}
               {paymentDetails.name && (
                 <>
-                  <span className="text-[12px] text-slate-300 shrink-0 font-light px-0.5">|</span>
-                  <span className="text-[12px] text-slate-400 font-normal truncate flex items-center gap-1">
-                    {paymentDetails.name}
+                  <span className="text-[12px] text-slate-300 shrink-0 font-light">|</span>
+                  <span className="text-[12px] text-slate-400 font-normal truncate flex items-baseline gap-[3px]">
                     {paymentDetails.icon && (
                       <span className="emoji text-[11px] opacity-80">{paymentDetails.icon}</span>
                     )}
+                    <span>{paymentDetails.name}</span>
                   </span>
                 </>
               )}
@@ -208,7 +208,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {/* Parcela ou Tipo */}
               {cardOrPaymentType && (
                 <>
-                  <span className="text-[12px] text-slate-300 shrink-0 font-light px-0.5">|</span>
+                  <span className="text-[12px] text-slate-300 shrink-0 font-light">•</span>
                   <span className={cn(
                     "text-[12px] shrink-0 font-medium",
                     isFixo ? "text-[#FF8888]/90" :
@@ -229,7 +229,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 ? "text-[#059669]"
                 : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
             )}>
-              <span className="text-[11px] font-medium opacity-[0.65]">{currencySymbol}</span>
+              <span className="text-[11.5px] font-medium opacity-[0.65]">{currencySymbol}</span>
               <span className="text-[15px]">{valueStr}</span>
             </span>
           </div>
