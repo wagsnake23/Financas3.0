@@ -168,47 +168,53 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
     const categoryColor = category?.cor || "#6B7280";
 
+    const formattedAmountStr = formatCurrency(transaction.amount, true);
+    const amountParts = formattedAmountStr.split(/\s+/);
+    const currencySymbol = amountParts.length > 1 ? amountParts[0] : "R$";
+    const valueStr = amountParts.length > 1 ? amountParts.slice(1).join(" ") : formattedAmountStr;
+
     return (
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "rounded-[7px] py-[9px] px-3 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all border-0 border-b-[0.7px]",
+          "rounded-[8px] py-[10px] px-[14px] flex flex-col justify-center mb-2.5 animate-fade-in active:scale-[0.99] transition-all bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.05)] border border-slate-100/80",
           transaction.status === "Recebida" 
-            ? "bg-success/[0.03] border-b-success/20 border-l-4 border-l-success shadow-[inset_0_2px_6px_rgba(0,0,0,0.04)]" 
-            : "bg-[#FFFFFF] border-b-[#E2E8F0] border-l-4 border-l-[#FF8888] shadow-[inset_0_2px_6px_rgba(0,0,0,0.04)]"
+            ? "border-l-[3px] border-l-[#10B981]/60" 
+            : "border-l-[3px] border-l-[#F43F5E]/60"
         )}
       >
         <div className="flex flex-col w-full gap-1">
           {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
-          <div className="flex items-center justify-between w-full mb-1">
-            <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
+          <div className="flex items-center justify-between w-full mb-2">
+            <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[13px] text-gray-600 font-medium whitespace-nowrap shrink-0">
+              <span className="text-[12px] text-slate-400 font-normal whitespace-nowrap shrink-0">
                 {formattedDate}
               </span>
               
               {/* Forma de Pagamento */}
               {paymentDetails.name && (
-                <span className="text-[13px] text-gray-600 font-medium truncate">
-                  {paymentDetails.name}
-                  {paymentDetails.icon && (
-                    <span className="emoji ml-1 shrink-0">{paymentDetails.icon}</span>
-                  )}
-                </span>
+                <>
+                  <span className="text-[12px] text-slate-300 shrink-0 font-light px-0.5">|</span>
+                  <span className="text-[12px] text-slate-400 font-normal truncate flex items-center gap-1">
+                    {paymentDetails.name}
+                    {paymentDetails.icon && (
+                      <span className="emoji text-[11px] opacity-80">{paymentDetails.icon}</span>
+                    )}
+                  </span>
+                </>
               )}
 
               {/* Parcela ou Tipo */}
               {cardOrPaymentType && (
                 <>
-                  {paymentDetails.name && (
-                    <span className="text-[13px] text-gray-400 shrink-0 mx-0.5">·</span>
-                  )}
+                  <span className="text-[12px] text-slate-300 shrink-0 font-light px-0.5">|</span>
                   <span className={cn(
-                    "text-[13px] shrink-0",
-                    isFixo ? "text-[#FF8888] font-medium" :
-                    isParcelado ? "text-purple-600/90 font-medium" : 
-                    transaction.type === "income" ? "text-success/90 font-medium" : 
-                    "text-[#6699EE] font-medium"
+                    "text-[12px] shrink-0 font-medium",
+                    isFixo ? "text-[#FF8888]/90" :
+                    isParcelado ? "text-purple-500/90" : 
+                    transaction.type === "income" ? "text-success/90" : 
+                    "text-[#6699EE]/90"
                   )}>
                     {cardOrPaymentType}
                   </span>
@@ -218,12 +224,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
             {/* Valor */}
             <span className={cn(
-              "font-semibold text-sm tracking-tight whitespace-nowrap leading-tight shrink-0",
+              "font-semibold tracking-tight whitespace-nowrap leading-none shrink-0 flex items-baseline gap-[3px]",
               transaction.type === 'income'
                 ? "text-[#059669]"
-                : (transaction.status === "Recebida" ? "text-[#D45555]/80" : "text-[#D45555]")
+                : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
             )}>
-              {formatCurrency(transaction.amount, true)}
+              <span className="text-[11px] font-medium opacity-[0.65]">{currencySymbol}</span>
+              <span className="text-[15px]">{valueStr}</span>
             </span>
           </div>
 
@@ -233,27 +240,27 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {/* Quadrado arredondado com fundo suave do ícone da subcategoria */}
               <div
                 className={cn(
-                  "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border",
-                  isFixo ? "bg-red-100 border-red-200" :
-                  isParcelado ? "bg-purple-100 border-purple-200" :
-                  transaction.type === "income" ? "bg-green-100 border-green-200" :
-                  "bg-blue-100 border-blue-200"
+                  "h-[38px] w-[38px] rounded-[10px] flex items-center justify-center shrink-0 border border-slate-100 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] bg-gradient-to-br",
+                  isFixo ? "from-red-50/80 to-red-100/40" :
+                  isParcelado ? "from-purple-50/80 to-purple-100/40" :
+                  transaction.type === "income" ? "from-green-50/80 to-green-100/40" :
+                  "from-blue-50/80 to-blue-100/40"
                 )}
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="h-7 w-7"
+                  className="h-5 w-5 opacity-90 drop-shadow-sm"
                   style={{ color: categoryColor }}
                 />
               </div>
 
               {/* Nome e Descrição */}
-              <div className="flex flex-col min-w-0">
-                <span className="font-semibold text-slate-700 text-[0.88rem] leading-tight truncate">
+              <div className="flex flex-col min-w-0 justify-center">
+                <span className="font-semibold text-slate-800 text-[14px] tracking-tight leading-none truncate">
                   {categoryName}
                 </span>
                 {transaction.description && (
-                  <span className="text-[0.75rem] text-slate-500 font-normal line-clamp-1 truncate mt-0.5">
+                  <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[4px] leading-none">
                     {transaction.description}
                   </span>
                 )}
@@ -263,10 +270,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             {/* Status (Pago ou Pendente) */}
             <div className="flex flex-col items-end shrink-0 ml-3 justify-center">
               <span className={cn(
-                "text-[0.75rem] tracking-tight leading-none mb-1.5",
+                "text-[10px] tracking-wide leading-none mb-1.5 font-medium",
                 transaction.status === "Recebida"
-                  ? "text-[#10B955] font-extrabold"
-                  : "text-[#FF8888] font-medium"
+                  ? "text-[#10B955]/70"
+                  : "text-[#EF4444]/60"
               )}>
                 {transaction.status === "Recebida"
                   ? (transaction.type === "income" ? "Recebido" : "Pago")
