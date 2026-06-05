@@ -117,42 +117,42 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             </div>
           </div>
 
-          {/* Right Section: Dates & Action */}
+          {/* Action Button Area */}
           <div className={cn(
-            "flex items-center justify-between md:justify-end gap-3 pt-1 border-t border-slate-50/50",
-            !isMobile && "pt-0 border-t-0"
+            "w-full mt-1 pt-[5px] border-t border-slate-50/50",
+            !isMobile && "w-auto mt-0 pt-0 border-t-0"
           )}>
-            {/* Date Details */}
-            <div className="flex flex-col items-end text-right">
-              <div className="flex items-center gap-1">
-                <span className="text-[11px] font-bold text-[#64748b] capitalize">
-                  {formattedBadgeMonth}
-                </span>
-                <span className="text-[10px] font-medium text-[#64748b]/80">
-                  {formattedBadgeYear}
-                </span>
-              </div>
-              {formattedDueDate && (
-                <span className="text-[10px] font-medium text-[#64748b] mt-0">
-                  Venc. <span className="font-semibold text-[#475569]">{formattedDueDate}</span>
-                </span>
-              )}
-            </div>
-
-            {/* Action Button */}
             <button
               onClick={onPayInvoice}
               disabled={loadingPayInvoice || disablePayInvoiceButton}
               className={cn(
-                "h-8 px-8 rounded-xl transition-all duration-300 flex items-center justify-center btn-3d",
-                "text-white font-bold text-[12px] shadow-sm",
-                "disabled:opacity-40 disabled:grayscale",
-                isMobile && "flex-1"
+                "w-full md:w-auto h-[44px] px-4 rounded-[14px] transition-all duration-300 flex items-center justify-between md:justify-center gap-4",
+                "text-white shadow-sm border-none outline-none",
+                "disabled:opacity-40 disabled:grayscale hover:-translate-y-[1px] active:translate-y-[1px]"
               )}
-              style={{ "--cor-topo": "#4D8EFF", "--cor-base": "#2B75D6" } as React.CSSProperties}
+              style={{ 
+                background: "linear-gradient(135deg, #4D8EFF, #2B75D6)", 
+                boxShadow: "0 4px 12px rgba(43,117,214,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" 
+              }}
             >
-              <DynamicIcon name="CreditCard" className="mr-2 h-4 w-4 text-white opacity-90" />
-              {loadingPayInvoice ? "Processando" : "Pagar Fatura"}
+              <div className="flex items-center gap-2">
+                <DynamicIcon name="CreditCard" className="h-[18px] w-[18px] text-white" />
+                <span className="font-bold text-[13px] tracking-tight">{loadingPayInvoice ? "Processando..." : "Pagar Fatura"}</span>
+              </div>
+              
+              <div className="flex items-center gap-2.5">
+                <span className="text-white/40 font-normal text-[14px]">|</span>
+                <div className="flex flex-col items-start text-left leading-none">
+                  <span className="font-semibold text-[11px] text-white/90 tracking-tight">
+                    {format(selectedMonth, "MMM yyyy", { locale: ptBR }).toUpperCase().replace(".", "")}
+                  </span>
+                  {formattedDueDate && (
+                    <span className="font-medium text-[9.5px] text-white/70 mt-[3px]">
+                      Venc. {formattedDueDate}
+                    </span>
+                  )}
+                </div>
+              </div>
             </button>
           </div>
 
