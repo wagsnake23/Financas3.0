@@ -671,49 +671,48 @@ export default function Investments() { // Alterado para export default function
             <Card
               className="rounded-[24px] overflow-hidden mb-8 hidden lg:block shadow-sm"
               style={{
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
-                backgroundBlendMode: "soft-light",
-                backdropFilter: "blur(6px)",
-                border: "1px solid rgba(0,0,0,0.08)",
-                outline: "1px solid rgba(34, 197, 94, 0.08)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                background: "linear-gradient(135deg, #ffffff 0%, #f6fdf9 50%, #eaf8f0 100%)",
+                backgroundBlendMode: "normal",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(226, 232, 240, 0.8)",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 10px rgba(34, 197, 94, 0.04)"
               }}
             >
               <div className="grid grid-cols-4 items-center h-24">
                 {/* Total Investido */}
                 <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
                   <div className="flex items-center gap-2">
-                    <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
+                    <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Saldo Líquido</h4>
                   </div>
-                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalCurrentBalance)}</p>
+                  <p className="font-bold text-slate-700 tracking-tight leading-none text-xl" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalCurrentBalance)}</p>
                 </div>
 
                 {/* Rentabilidade Média */}
                 <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
                   <div className="flex items-center gap-2">
-                    <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média a.a.</h4>
+                    <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Média a.a.</h4>
                   </div>
-                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{stats.avgProfitability.toFixed(2)}%</p>
+                  <p className="font-bold text-slate-700 tracking-tight leading-none text-xl" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{stats.avgProfitability.toFixed(2)}%</p>
                 </div>
 
                 {/* Rendimento Diário */}
                 <div className="flex flex-col gap-1.5 items-center border-r border-green-200/50 h-full justify-center">
                   <div className="flex items-center gap-2">
-                    <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
+                    <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Diário</h4>
                   </div>
-                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                  <p className="font-bold text-slate-700 tracking-tight leading-none text-xl" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalDailyYieldRS)}</p>
                 </div>
 
                 {/* Rendimento Mensal */}
                 <div className="flex flex-col gap-1.5 items-center h-full justify-center">
                   <div className="flex items-center gap-2">
-                    <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
+                    <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                    <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Mensal</h4>
                   </div>
-                  <p className="font-bold text-[#1e293b] tracking-tight leading-none text-xl">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                  <p className="font-bold text-slate-700 tracking-tight leading-none text-xl" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                 </div>
               </div>
             </Card>
@@ -1149,52 +1148,51 @@ export default function Investments() { // Alterado para export default function
                   "p-5"
                 )}
                 style={{
-                  background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 60%, rgba(34, 197, 94, 0.10) 100%)",
-                  backgroundBlendMode: "soft-light",
-                  backdropFilter: "blur(6px)",
-                  border: "1px solid rgba(0,0,0,0.08)",
-                  outline: "1px solid rgba(34, 197, 94, 0.08)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+                  background: "linear-gradient(135deg, #ffffff 0%, #f6fdf9 50%, #eaf8f0 100%)",
+                  backgroundBlendMode: "normal",
+                  backdropFilter: "blur(8px)",
+                  border: "1px solid rgba(226, 232, 240, 0.8)",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -2px 10px rgba(34, 197, 94, 0.04)"
                 }}
               >
                 <div className="grid grid-cols-2 gap-y-7 gap-x-4 items-start">
                   {/* Total Investido - Col 1 (Esquerda Topo) */}
                   <div className="flex flex-col gap-1.5 items-start">
                     <div className="flex items-center gap-2">
-                      <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Saldo Líquido</h4>
+                      <DynamicIcon name="DollarSign" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Saldo Líquido</h4>
                     </div>
-                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalCurrentBalance)}</p>
+                    <p className="font-bold text-slate-700 tracking-tight leading-none text-base" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
 
                   {/* Rentabilidade Média - Col 2 (Direita Topo) */}
                   <div className="flex flex-col gap-1.5 items-end text-right">
                     <div className="flex items-center gap-2">
-                      <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Média</h4>
+                      <DynamicIcon name="Percent" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Média</h4>
                     </div>
                     <div className="flex items-baseline gap-1">
-                      <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{stats.avgProfitability.toFixed(2)}%</p>
-                      <span className="text-[9px] font-black text-[#166534]/60 uppercase">a.a.</span>
+                      <p className="font-bold text-slate-700 tracking-tight leading-none text-base" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{stats.avgProfitability.toFixed(2)}%</p>
+                      <span className="text-[9px] font-black text-[#2E5C43]/60 uppercase">a.a.</span>
                     </div>
                   </div>
 
                   {/* Rendimento Diário - Col 1 (Esquerda Base) */}
                   <div className="flex flex-col gap-1.5 items-start">
                     <div className="flex items-center gap-2">
-                      <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Diário</h4>
+                      <DynamicIcon name="Clock" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Diário</h4>
                     </div>
-                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalDailyYieldRS)}</p>
+                    <p className="font-bold text-slate-700 tracking-tight leading-none text-base" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalDailyYieldRS)}</p>
                   </div>
 
                   {/* Rendimento Mensal - Col 2 (Direita Base) */}
                   <div className="flex flex-col gap-1.5 items-end text-right">
                     <div className="flex items-center gap-2">
-                      <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#166534" }} strokeWidth={3} />
-                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#166534" }}>Mensal</h4>
+                      <DynamicIcon name="Calendar" className="h-3.5 w-3.5" style={{ color: "#2E5C43" }} strokeWidth={3} />
+                      <h4 className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#2E5C43" }}>Mensal</h4>
                     </div>
-                    <p className="font-bold text-[#1e293b] tracking-tight leading-none text-base">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
+                    <p className="font-bold text-slate-700 tracking-tight leading-none text-base" style={{ textShadow: "0 1px 1px rgba(255,255,255,1), 0 -1px 0 rgba(0,0,0,0.05)" }}>{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                   </div>
                 </div>
               </Card>
