@@ -296,7 +296,7 @@ export default function Home() {
                             className={cn("font-bold leading-none", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif" }}
                         >
-                            <span className={cn(isMobile ? "text-[#4b5563]" : "text-slate-600")}>{greeting},</span> <span className="text-[#4b5563]">{userName}</span> 👋
+                            <span className={cn(isMobile ? "text-[#374151]" : "text-slate-600")}>{greeting},</span> <span className="text-[#374151]">{userName}</span> 👋
                         </h1>
                         <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-[#6b7280] -mt-[1px]" : "text-sm text-slate-500 mt-1")}>
                             {todayStr}
