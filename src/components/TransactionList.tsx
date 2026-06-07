@@ -519,8 +519,9 @@ export const TransactionList = ({
 
         {/* Container de Filtros */}
         <div className={cn(
-          "flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-nowrap shrink-0",
-          !isMobile && "flex-[3] overflow-visible"
+          "flex gap-2 overflow-x-auto no-scrollbar py-0.5 shrink-0",
+          (isMobile && isValidUuid(filterPaymentOptionId)) ? "flex-wrap items-start" : "items-center flex-nowrap",
+          !isMobile && "flex-[3] overflow-visible items-center"
         )}>
           {/* Chip: Tipo */}
           <Select value={filterType} onValueChange={setFilterType}>
@@ -553,6 +554,7 @@ export const TransactionList = ({
                 filterCategory !== "all"
                   ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                   : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                (isMobile && isValidUuid(filterPaymentOptionId)) && "hidden",
                 !isMobile && "flex-1 h-9"
               )}
             >
@@ -581,7 +583,7 @@ export const TransactionList = ({
                 filterPaymentOptionId !== "all"
                   ? (isValidUuid(filterPaymentOptionId)
                     ? (isMobile 
-                        ? "bg-white border-[#2B75D6] border-[1.5px] text-[#2B75D6] hover:bg-blue-50/50 [&>svg]:text-[#2B75D6] [&>svg]:opacity-100 font-semibold" 
+                        ? "bg-white border-[#2B75D6] border-[1.5px] text-[#2B75D6] hover:bg-blue-50/50 [&>svg]:text-[#2B75D6] [&>svg]:opacity-100 font-semibold w-full justify-between" 
                         : "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold")
                     : (filterType === "expense" 
                         ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
