@@ -520,6 +520,7 @@ export const TransactionList = ({
         {/* Container de Filtros */}
         <div className={cn(
           "flex gap-2 overflow-x-auto no-scrollbar py-0.5 shrink-0",
+          (isMobile && filterType === "income") && "w-full",
           (isMobile && isValidUuid(filterPaymentOptionId)) ? "flex-wrap items-start" : "items-center flex-nowrap",
           !isMobile && "flex-[3] overflow-visible items-center"
         )}>
@@ -528,10 +529,13 @@ export const TransactionList = ({
             <SelectTrigger
               className={cn(
                 "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                filterType !== "all"
-                  ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                (isMobile && filterType === "income")
+                  ? "bg-gradient-to-r from-[#1EA35E] to-[#10B981] hover:opacity-90 text-white border-transparent font-bold shadow-sm"
+                  : filterType !== "all"
+                    ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
+                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
                 hideTypeFilter && "hidden",
+                (isMobile && filterType === "income") && "flex-1 w-full justify-between",
                 !isMobile && "flex-1 h-9"
               )}
             >
@@ -551,10 +555,13 @@ export const TransactionList = ({
             <SelectTrigger
               className={cn(
                 "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                filterCategory !== "all"
-                  ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                (isMobile && filterType === "income")
+                  ? "bg-gradient-to-r from-[#1EA35E] to-[#10B981] hover:opacity-90 text-white border-transparent font-bold shadow-sm"
+                  : filterCategory !== "all"
+                    ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
+                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
                 (isMobile && isValidUuid(filterPaymentOptionId)) && "hidden",
+                (isMobile && filterType === "income") && "flex-1 w-full justify-between",
                 !isMobile && "flex-1 h-9"
               )}
             >
@@ -590,6 +597,7 @@ export const TransactionList = ({
                         : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
                   )
                   : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                (isMobile && filterType === "income") && "hidden",
                 !isMobile && "flex-1 h-9"
               )}
             >
