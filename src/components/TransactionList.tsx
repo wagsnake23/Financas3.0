@@ -269,6 +269,20 @@ export const TransactionList = ({
     return { totalPaidCard: paid, totalPendingCard: pending, totalCardExpenses: paid + pending };
   }, [filteredTransactions]);
 
+  const lastPaymentDate = useMemo(() => {
+    const paidExpenses = filteredTransactions.filter(
+      t => t.type === "expense" && t.status === "Recebida" && t.paymentTimestamp
+    );
+    if (paidExpenses.length === 0) return null;
+
+    const sorted = [...paidExpenses].sort((a, b) => {
+      const dateA = a.paymentTimestamp ? new Date(a.paymentTimestamp).getTime() : 0;
+      const dateB = b.paymentTimestamp ? new Date(b.paymentTimestamp).getTime() : 0;
+      return dateB - dateA;
+    });
+    return sorted[0].paymentTimestamp;
+  }, [filteredTransactions]);
+
   const selectableCategories = useMemo(() => {
     if (filterType === "income") {
       return allCategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
@@ -628,6 +642,7 @@ export const TransactionList = ({
             onPayInvoice={handlePayInvoice}
             loadingPayInvoice={loadingPayInvoice}
             disablePayInvoiceButton={disablePayInvoiceButton}
+            paymentDate={lastPaymentDate}
           />
         </div>
       )}
