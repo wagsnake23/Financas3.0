@@ -333,7 +333,7 @@ export default function Home() {
                                         border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(5,86,195,0.03)"
+                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2 relative z-20">
@@ -403,7 +403,7 @@ export default function Home() {
                                         border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(185,28,28,0.03)"
+                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -414,7 +414,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            className="h-9 px-4 rounded-[11px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                             style={{ 
                                                 background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                                 border: "1px solid rgba(0,0,0,0.08)",
@@ -449,7 +449,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
                                             style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
@@ -470,7 +470,7 @@ export default function Home() {
                                         border: "1px solid rgba(0,0,0,0.04)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(21,128,61,0.03)"
+                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -481,7 +481,7 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                            className="h-9 px-4 rounded-[11px] font-bold text-sm whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                             style={{ 
                                                 background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                                 border: "1px solid rgba(0,0,0,0.08)",
@@ -516,7 +516,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
                                             style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
@@ -633,7 +633,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <Button
-                                    className="h-9 px-4 rounded-[14px] font-bold text-sm whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
+                                    className="h-9 px-4 rounded-[11px] font-bold text-sm whitespace-nowrap w-[150px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-2 mt-1"
                                     style={{ 
                                         background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                         border: "1px solid rgba(0,0,0,0.08)",
@@ -668,7 +668,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <Button
-                                    className="h-9 px-4 rounded-[14px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
+                                    className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
                                     style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                     onClick={() => navigate("/receitas")}
                                 >

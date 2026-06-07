@@ -110,7 +110,7 @@ export const MobileCreditCardExpenses: React.FC<
         border: "1px solid rgba(0,0,0,0.04)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.02), inset 0 1px 1px rgba(255,255,255,1), inset 1px 0 1px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.01), inset 0 0 40px rgba(168,85,247,0.03)"
+        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
       }}
     >
 
@@ -142,8 +142,8 @@ export const MobileCreditCardExpenses: React.FC<
         </div>
 
         <Button
-          className="rounded-[14px] w-full h-[33px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5"
-          style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)", filter: "saturate(0.95)", boxShadow: "0 4px 12px rgba(124,58,237,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+          className="rounded-[11px] w-full h-[33px] text-[13px] font-bold text-[#ffffff] border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5"
+          style={{ background: "linear-gradient(135deg, #6D28D9, #8B5CF6)", filter: "saturate(0.95)", boxShadow: "0 4px 12px rgba(109,40,217,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
           onClick={handlePayMonthlyBill}
           disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
         >
