@@ -555,7 +555,7 @@ export const TransactionList = ({
             <SelectTrigger
               className={cn(
                 "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                (isMobile && filterType === "income")
+                (isMobile && filterType === "income" && filterCategory !== "all")
                   ? "bg-gradient-to-r from-[#1EA35E] to-[#10B981] hover:opacity-90 text-white border-transparent font-bold shadow-sm"
                   : filterCategory !== "all"
                     ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
