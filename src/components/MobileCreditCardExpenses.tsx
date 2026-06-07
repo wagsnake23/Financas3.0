@@ -107,7 +107,7 @@ export const MobileCreditCardExpenses: React.FC<
         background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
         backgroundBlendMode: "normal",
         backdropFilter: "blur(6px)",
-        border: "1px solid rgba(0,0,0,0.04)",
+        border: "1px solid rgba(0,0,0,0.05)",
         backgroundClip: "padding-box",
         outline: "none",
         boxShadow: "0 6px 18px rgba(15,23,42,.06)"
