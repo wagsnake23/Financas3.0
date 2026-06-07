@@ -74,7 +74,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         style={{
           borderRadius: "18px",
           background: isPaid 
-            ? "linear-gradient(135deg, #16A34A 0%, #1EB55A 50%, #22C55E 100%)" 
+            ? "linear-gradient(135deg, rgba(22, 163, 74, 0.9) 0%, rgba(30, 181, 90, 0.9) 50%, rgba(34, 197, 94, 0.9) 100%)" 
             : "linear-gradient(135deg, #0D47D9 0%, #2563EB 55%, #5B9DFF 100%)",
           boxShadow: isPaid 
             ? "0 4px 16px -4px rgba(22, 163, 74, 0.4)" 
