@@ -229,9 +229,8 @@ export const Navigation = () => {
                 </div>
               )}
 
-              {/* Icones Mobile Topo - Apenas se necessário (ex: notificações ou carrinho) */}
               {isMobile && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 -mr-2">
                   <button
                     onClick={() => navigate("/lista-de-compras")}
                     className={cn(
