@@ -49,7 +49,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
     <div className={cn(
       "w-full animate-fade-in transition-all duration-300",
       !isMobile && "mb-6",
-      isMobile && "mt-[1px]"
+      isMobile && "mt-[3px]"
     )}>
       <Card
         className={cn(
