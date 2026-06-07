@@ -19,6 +19,20 @@ interface CreditCardInvoiceSummaryProps {
   disablePayInvoiceButton: boolean;
 }
 
+const FormatCurrencyPrefixLight = ({ value }: { value: number }) => {
+  const formatted = formatCurrency(value);
+  const match = formatted.match(/^(R\$)\s?(.*)$/);
+  if (match) {
+    return (
+      <>
+        <span className="text-[11px] font-normal opacity-80 mr-[2px] tracking-normal">{match[1]}</span>
+        {match[2]}
+      </>
+    );
+  }
+  return <>{formatted}</>;
+};
+
 export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> = ({
   totalCardExpenses,
   isMobile,
@@ -34,39 +48,40 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
   return (
     <div className={cn(
       "w-full animate-fade-in transition-all duration-300",
-      !isMobile && "mb-6"
+      !isMobile && "mb-6",
+      isMobile && "mt-[-3px]"
     )}>
       <Card
         className={cn(
           "relative overflow-hidden w-full flex flex-col justify-center text-white",
-          isMobile ? "px-3 py-3 mb-0.5" : "px-5 py-4 mb-6"
+          isMobile ? "px-3 pt-2 pb-3 mb-0.5" : "px-5 py-4 mb-6"
         )}
         style={{
-          borderRadius: "20px",
+          borderRadius: "18px",
           background: "linear-gradient(135deg, #0D47D9 0%, #2563EB 55%, #5B9DFF 100%)",
           boxShadow: "0 4px 16px -4px rgba(37, 99, 235, 0.4)",
           border: "none",
           minHeight: "auto"
         }}
       >
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center w-full justify-between mt-1 px-1">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center w-full justify-between mt-0.5 px-1">
             {/* Esquerda - Fatura Atual */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-1 whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 Fatura atual
               </span>
               <div className="text-[16px] font-semibold tracking-tight leading-none whitespace-nowrap" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
-                {formatCurrency(totalCardExpenses)}
+                <FormatCurrencyPrefixLight value={totalCardExpenses} />
               </div>
             </div>
 
             {/* Separador 1 */}
-            <div className="h-7 w-[1px] bg-white/25 shrink-0 mx-0.5"></div>
+            <div className="h-6 w-[1px] bg-white/25 shrink-0 mx-0.5"></div>
 
             {/* Centro - Vencimento */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-1 whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 Vence em
               </span>
               <div className="text-[16px] font-semibold tracking-tight leading-none whitespace-nowrap">
@@ -75,11 +90,11 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             </div>
 
             {/* Separador 2 */}
-            <div className="h-7 w-[1px] bg-white/25 shrink-0 mx-0.5"></div>
+            <div className="h-6 w-[1px] bg-white/25 shrink-0 mx-0.5"></div>
 
             {/* Direita - Mês/Ano */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-1 whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 {formattedBadgeMonth}
               </span>
               <div className="text-[16px] font-semibold tracking-tight leading-none whitespace-nowrap">
@@ -88,7 +103,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             </div>
           </div>
 
-          <div className="flex justify-center mt-0.5 mb-0.5">
+          <div className="flex justify-center mt-0 mb-0">
             <Button
               className="w-[90%] rounded-[12px] h-[34px] bg-white text-[#0D47D9] border-none transition-all hover:bg-white/95 hover:-translate-y-[1px] active:translate-y-[1px] flex items-center justify-center gap-1.5 px-0"
               style={{
