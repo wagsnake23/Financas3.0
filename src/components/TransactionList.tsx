@@ -580,9 +580,13 @@ export const TransactionList = ({
                 "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
                 filterPaymentOptionId !== "all"
                   ? (isValidUuid(filterPaymentOptionId)
-                    ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90"
-                    : (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90")
-                  ) + " text-white border-transparent font-bold"
+                    ? (isMobile 
+                        ? "bg-white border-[#2B75D6] border-[1.5px] text-[#2B75D6] hover:bg-blue-50/50 [&>svg]:text-[#2B75D6] [&>svg]:opacity-100 font-semibold" 
+                        : "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold")
+                    : (filterType === "expense" 
+                        ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
+                        : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
+                  )
                   : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
                 !isMobile && "flex-1 h-9"
               )}
