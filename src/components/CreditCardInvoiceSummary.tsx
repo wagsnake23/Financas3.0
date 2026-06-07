@@ -49,7 +49,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
     <div className={cn(
       "w-full animate-fade-in transition-all duration-300",
       !isMobile && "mb-6",
-      isMobile && "mt-[-3px]"
+      isMobile && "mt-[1px]"
     )}>
       <Card
         className={cn(
@@ -71,7 +71,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 Fatura atual
               </span>
-              <div className="text-[15px] font-semibold tracking-tight leading-none whitespace-nowrap" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
+              <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
                 <FormatCurrencyPrefixLight value={totalCardExpenses} />
               </div>
             </div>
@@ -84,7 +84,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 Vence em
               </span>
-              <div className="text-[15px] font-semibold tracking-tight leading-none whitespace-nowrap">
+              <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap">
                 {formattedDueDate || "05/07"}
               </div>
             </div>
@@ -97,7 +97,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
                 {formattedBadgeMonth}
               </span>
-              <div className="text-[15px] font-semibold tracking-tight leading-none whitespace-nowrap">
+              <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap">
                 {formattedBadgeYear}
               </div>
             </div>
