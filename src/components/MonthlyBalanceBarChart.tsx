@@ -136,33 +136,38 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                     const newHeight = height;
                     const newY = y;
                     
-                    const radius = 6;
-                    const path = `M${x},${newY + radius} A${radius},${radius} 0 0,1 ${x + radius},${newY} L${x + width - radius},${newY} A${radius},${radius} 0 0,1 ${x + width},${newY + radius} L${x + width},${newY + newHeight} L${x},${newY + newHeight} Z`;
+                    const r = Math.min(4, newHeight / 2);
+                    const path = `M${x},${newY + r} A${r},${r} 0 0,1 ${x + r},${newY} L${x + width - r},${newY} A${r},${r} 0 0,1 ${x + width},${newY + r} L${x + width},${newY + newHeight - r} A${r},${r} 0 0,1 ${x + width - r},${newY + newHeight} L${x + r},${newY + newHeight} A${r},${r} 0 0,1 ${x},${newY + newHeight - r} Z`;
 
                     let gradientColors = isPositive 
-                        ? { start: "#93c5fd", end: "#3b82f6" } 
-                        : { start: "#fca5a5", end: "#ef4444" };
+                        ? { start: "#bfdbfe", end: "#3b82f6" } 
+                        : { start: "#fecaca", end: "#ef4444" };
                     if (isCurrentMonth) {
                        gradientColors = isPositive 
                            ? { start: "#3b82f6", end: "#1d4ed8" }
                            : { start: "#ef4444", end: "#b91c1c" };
                     }
 
-                    const gradientId = `barGrad-balance-${isPositive ? 'pos' : 'neg'}-${isCurrentMonth ? 'active' : 'inactive'}`;
+                    const gradientId = `barGrad-bal-${isPositive ? 'pos' : 'neg'}-${isCurrentMonth ? 'act' : 'inact'}`;
+                    const strokeGradId = `strokeGrad-bal-${isPositive ? 'pos' : 'neg'}-${isCurrentMonth ? 'act' : 'inact'}`;
 
                     return (
                         <g>
                             <defs>
                                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : 0.6} />
-                                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : 0.4} />
+                                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : 0.85} />
+                                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : 0.65} />
+                                </linearGradient>
+                                <linearGradient id={strokeGradId} x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.4 : 0.2} />
+                                    <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.1 : 0.05} />
                                 </linearGradient>
                             </defs>
                             {isCurrentMonth && (
                                 <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="4" opacity="0.10" filter="blur(2px)" />
                             )}
-                            <path d={path} fill={`url(#${gradientId})`} />
-                            <rect x={x + 2} y={newY + 2} width={width - 4} height={isMobile ? 3 : 4} rx={isMobile ? 1.5 : 2} fill="#ffffff" opacity={isCurrentMonth ? 0.35 : 0.15} />
+                            <path d={path} fill={`url(#${gradientId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" />
+                            <rect x={x + 2} y={newY + 1.5} width={width - 4} height={3} rx={1.5} fill="#ffffff" opacity={isCurrentMonth ? 0.4 : 0.2} />
                         </g>
                     );
                 }}

@@ -137,15 +137,15 @@ export const StatCard = ({
       {/* Top Section: Trend, Title/Value and Month Navigator */}
       <div className="flex justify-between items-start mb-1">
         <div className="flex items-center gap-3">
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0">
             <h2 
-              className={cn("font-[800] tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")} 
+              className={cn("font-bold tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")} 
               style={{ color: currentStyle.titleColor }}
             >
               {mainStatTitle}
             </h2>
             <p 
-              className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}
+              className={cn("font-bold text-slate-800 font-roboto leading-none tracking-tight -mt-1", isMobile ? "text-base" : "text-lg")}
             >
               {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
             </p>
@@ -184,10 +184,10 @@ export const StatCard = ({
         <div className="flex items-end gap-4">
           {secondaryStatValue !== undefined && (
             <div className="flex flex-col items-start gap-0.5">
-              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
+              <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
                 {secondaryStatTitle}
               </p>
-              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
+              <p className={cn("font-bold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")}>
                 {formatCurrency(secondaryStatValue)}
               </p>
             </div>
@@ -227,15 +227,15 @@ export const StatCard = ({
             )}>
               {dashboardPremiumStyle ? (
                 <div className="flex items-center gap-1.5 mb-0.5">
-                  <DynamicIcon name="Wallet" className="h-3 w-3 text-slate-400" />
-                  <p className="font-semibold text-[9px] text-slate-500 uppercase tracking-widest leading-none">{annualTotalLabel || "Total Anual"}</p>
+                  <DynamicIcon name="Wallet" className={cn("h-3 w-3 opacity-75", labelStyles[variant])} />
+                  <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>{annualTotalLabel || "Total anual"}</p>
                 </div>
               ) : (
-                <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
-                  {annualTotalLabel || "Total Anual"}
+                <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
+                  {annualTotalLabel || "Total anual"}
                 </p>
               )}
-              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base", dashboardPremiumStyle && "text-[13px] tracking-tight text-slate-700")}>
+              <p className={cn("font-bold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>

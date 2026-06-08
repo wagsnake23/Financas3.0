@@ -362,7 +362,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           <div className={cn(
             "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
             isMobile ? "pt-3 pb-5 px-3" : "pt-4 pb-6 px-6"
-          )}>
+          )} style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAFBFC 100%)" }}>
             {/* Overlay sutil para clarear o azul sem escondê-lo */}
             <div className="absolute inset-0 bg-white/40 pointer-events-none" />
 
@@ -642,7 +642,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
           <div className={cn(
             "relative overflow-hidden px-4 rounded-[24px] border border-blue-100 card-fatura shadow-[0_4px_12px_rgba(0,0,0,0.03)]",
             isMobile ? "pt-3 pb-5 px-3" : "pt-4 pb-6 px-6"
-          )}>
+          )} style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAFBFC 100%)" }}>
             {/* Overlay sutil para clarear o azul sem escondê-lo */}
             <div className="absolute inset-0 bg-white/40 pointer-events-none" />
 

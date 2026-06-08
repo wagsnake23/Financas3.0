@@ -517,7 +517,7 @@ export default function Dashboard() {
                 {/* Desktop Layout: Side-by-side Saldo and Cockpit */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
                   <StatCard dashboardPremiumStyle={true}
-                    mainStatTitle="Saldo Mensal"
+                    mainStatTitle="Saldo mensal"
                     mainStatValue={stats.balance}
                     topRightContent={
                       <MonthNavigatorCompact premiumMode={true}
@@ -541,7 +541,7 @@ export default function Dashboard() {
                       />
                     }
                     annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
-                    annualTotalLabel="Saldo Anual"
+                    annualTotalLabel="Saldo anual"
                     trend={monthlyTrends.balanceTrend}
                     trendIsPositive={monthlyTrends.balanceIsPositive}
                     icon="Wallet"
@@ -631,7 +631,7 @@ export default function Dashboard() {
                 {/* Mobile Layout: Stacked elements */}
                 {/* Saldo Mensal (Primeiro) */}
                 <StatCard dashboardPremiumStyle={true}
-                  mainStatTitle="Saldo Mensal"
+                  mainStatTitle="Saldo mensal"
                   mainStatValue={stats.balance}
                   topRightContent={
                     <MonthNavigatorCompact premiumMode={true}
@@ -654,7 +654,7 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                     />
                   }
-                  annualTotalLabel="Saldo Anual"
+                  annualTotalLabel="Saldo anual"
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                   trend={monthlyTrends.balanceTrend}
                   trendIsPositive={monthlyTrends.balanceIsPositive}
@@ -743,7 +743,7 @@ export default function Dashboard() {
             {(!filter || filter === "expenses") && (
               <StatCard dashboardPremiumStyle={true}
                 id="stat-expenses"
-                mainStatTitle="Total de Despesas"
+                mainStatTitle="Total de despesas"
                 mainStatValue={stats.totalExpenses}
 
                 topRightContent={
@@ -767,7 +767,7 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Total Anual"
+                annualTotalLabel="Total anual"
                 annualTotalValue={totalAnnualExpenses}
                 neumorphism={true}
                 trend={monthlyTrends.expenseTrend}
@@ -785,7 +785,7 @@ export default function Dashboard() {
             {(!filter || filter === "revenues") && (
               <StatCard dashboardPremiumStyle={true}
                 id="stat-revenues"
-                mainStatTitle="Total de Receitas"
+                mainStatTitle="Total de receitas"
                 mainStatValue={stats.totalIncome}
 
                 topRightContent={
@@ -809,14 +809,14 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                   />
                 }
-                annualTotalLabel="Receita Anual"
+                annualTotalLabel="Receita anual"
                 annualTotalValue={totalAnnualRevenues}
                 neumorphism={true}
                 trend={monthlyTrends.incomeTrend}
                 trendIsPositive={monthlyTrends.incomeIsPositive}
                 className="card-receitas overflow-hidden"
                 forceTransparentBackground={true}
-                secondaryStatTitle="Receita Atual"
+                secondaryStatTitle="Receita atual"
                 secondaryStatValue={totalReceivedMonthlyIncome}
               >
 
@@ -828,7 +828,7 @@ export default function Dashboard() {
 
             {!filter && (
               <StatCard dashboardPremiumStyle={true}
-                mainStatTitle="Saldo Mensal"
+                mainStatTitle="Saldo mensal"
                 mainStatValue={stats.balance}
                 topRightContent={
                   <MonthNavigatorCompact premiumMode={true}
@@ -853,7 +853,7 @@ export default function Dashboard() {
                 }
                 trend={monthlyTrends.balanceTrend}
                 trendIsPositive={monthlyTrends.balanceIsPositive}
-                annualTotalLabel="Saldo Anual"
+                annualTotalLabel="Saldo anual"
                 annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                 icon="Wallet"
                 neumorphism={true}
@@ -876,7 +876,7 @@ export default function Dashboard() {
                 projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
                 projectedPatrimonyLabel="Patrimônio Projetado"
                 annualTotalValue={projectedYearValues.annualBalance}
-                annualTotalLabel="Projeção Anual"
+                annualTotalLabel="Projeção anual"
                 isMobile={isMobile}
                 topRightContent={
                   <YearNavigatorCompact
@@ -945,7 +945,7 @@ export default function Dashboard() {
             <div className={cn("grid gap-4 mb-4", "grid-cols-1 md:grid-cols-2")}>
               {(!filter || filter === "expenses") && (
                 <StatCard dashboardPremiumStyle={true}
-                  mainStatTitle="Total de Despesas"
+                  mainStatTitle="Total de despesas"
                   mainStatValue={stats.totalExpenses}
                   icon="TrendingDown"
                   variant="expense"
@@ -969,7 +969,7 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                     />
                   }
-                  annualTotalLabel="Total Anual"
+                  annualTotalLabel="Total anual"
                   annualTotalValue={totalAnnualExpenses}
                   neumorphism={true}
                   secondaryStatTitle="Pago este mês"
@@ -982,7 +982,7 @@ export default function Dashboard() {
               {(!filter || filter === "revenues") && (
                 <StatCard dashboardPremiumStyle={true}
                   id="stat-revenues"
-                  mainStatTitle="Total de Receitas"
+                  mainStatTitle="Total de receitas"
                   mainStatValue={stats.totalIncome}
                   icon="TrendingUp"
                   variant="income"
@@ -1006,10 +1006,10 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                     />
                   }
-                  annualTotalLabel="Receita Anual"
+                  annualTotalLabel="Receita anual"
                   annualTotalValue={totalAnnualRevenues}
                   neumorphism={true}
-                  secondaryStatTitle="Receita Atual"
+                  secondaryStatTitle="Receita atual"
                   secondaryStatValue={totalReceivedMonthlyIncome}
                 >
                   <div className="h-12 md:h-[52px] w-full" />
@@ -1018,7 +1018,7 @@ export default function Dashboard() {
 
               {!filter && (
                 <StatCard dashboardPremiumStyle={true}
-                  mainStatTitle="Saldo Mensal"
+                  mainStatTitle="Saldo mensal"
                   mainStatValue={stats.balance}
                   trend={monthlyTrends.balanceTrend}
                   trendIsPositive={monthlyTrends.balanceIsPositive}
@@ -1043,7 +1043,7 @@ export default function Dashboard() {
                     />
                   }
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
-                  annualTotalLabel="Saldo Anual"
+                  annualTotalLabel="Saldo anual"
                   icon="Wallet"
                   neumorphism={true}
                 >
@@ -1063,7 +1063,7 @@ export default function Dashboard() {
                   projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
                   projectedPatrimonyLabel="Patrimônio Projetado"
                   annualTotalValue={projectedYearValues.annualBalance}
-                  annualTotalLabel="Projeção Anual"
+                  annualTotalLabel="Projeção anual"
                   isMobile={isMobile}
                   topRightContent={
                     <YearNavigatorCompact
