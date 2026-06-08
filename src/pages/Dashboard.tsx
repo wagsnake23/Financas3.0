@@ -497,7 +497,7 @@ export default function Dashboard() {
     <div
       className={cn(
         "flex flex-col min-h-screen pt-[72px]",
-        isMobile ? "bg-white" : "bg-[#F6FAFF]"
+        isMobile ? "global-bg" : "bg-[#F6FAFF]"
       )}
     >
       <main
@@ -516,11 +516,11 @@ export default function Dashboard() {
               <>
                 {/* Desktop Layout: Side-by-side Saldo and Cockpit */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-                  <StatCard
+                  <StatCard dashboardPremiumStyle={true}
                     mainStatTitle="Saldo Mensal"
                     mainStatValue={stats.balance}
                     topRightContent={
-                      <MonthNavigatorCompact
+                      <MonthNavigatorCompact premiumMode={true}
                         selectedMonth={selectedMonth}
                         onPreviousMonth={handlePreviousMonth}
                         onNextMonth={handleNextMonth}
@@ -630,11 +630,11 @@ export default function Dashboard() {
               <>
                 {/* Mobile Layout: Stacked elements */}
                 {/* Saldo Mensal (Primeiro) */}
-                <StatCard
+                <StatCard dashboardPremiumStyle={true}
                   mainStatTitle="Saldo Mensal"
                   mainStatValue={stats.balance}
                   topRightContent={
-                    <MonthNavigatorCompact
+                    <MonthNavigatorCompact premiumMode={true}
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
                       onNextMonth={handleNextMonth}
@@ -741,13 +741,13 @@ export default function Dashboard() {
         ) : isMobile ? (
           <div className="grid grid-cols-1 gap-4">
             {(!filter || filter === "expenses") && (
-              <StatCard
+              <StatCard dashboardPremiumStyle={true}
                 id="stat-expenses"
                 mainStatTitle="Total de Despesas"
                 mainStatValue={stats.totalExpenses}
 
                 topRightContent={
-                  <MonthNavigatorCompact
+                  <MonthNavigatorCompact premiumMode={true}
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
                     onNextMonth={handleNextMonth}
@@ -783,13 +783,13 @@ export default function Dashboard() {
             )}
 
             {(!filter || filter === "revenues") && (
-              <StatCard
+              <StatCard dashboardPremiumStyle={true}
                 id="stat-revenues"
                 mainStatTitle="Total de Receitas"
                 mainStatValue={stats.totalIncome}
 
                 topRightContent={
-                  <MonthNavigatorCompact
+                  <MonthNavigatorCompact premiumMode={true}
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
                     onNextMonth={handleNextMonth}
@@ -827,11 +827,11 @@ export default function Dashboard() {
 
 
             {!filter && (
-              <StatCard
+              <StatCard dashboardPremiumStyle={true}
                 mainStatTitle="Saldo Mensal"
                 mainStatValue={stats.balance}
                 topRightContent={
-                  <MonthNavigatorCompact
+                  <MonthNavigatorCompact premiumMode={true}
                     selectedMonth={selectedMonth}
                     onPreviousMonth={handlePreviousMonth}
                     onNextMonth={handleNextMonth}
@@ -944,7 +944,7 @@ export default function Dashboard() {
           <>
             <div className={cn("grid gap-4 mb-4", "grid-cols-1 md:grid-cols-2")}>
               {(!filter || filter === "expenses") && (
-                <StatCard
+                <StatCard dashboardPremiumStyle={true}
                   mainStatTitle="Total de Despesas"
                   mainStatValue={stats.totalExpenses}
                   icon="TrendingDown"
@@ -953,7 +953,7 @@ export default function Dashboard() {
                   trend={monthlyTrends.expenseTrend}
                   trendIsPositive={monthlyTrends.expenseIsPositive}
                   topRightContent={
-                    <MonthNavigatorCompact
+                    <MonthNavigatorCompact premiumMode={true}
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
                       onNextMonth={handleNextMonth}
@@ -980,7 +980,7 @@ export default function Dashboard() {
               )}
 
               {(!filter || filter === "revenues") && (
-                <StatCard
+                <StatCard dashboardPremiumStyle={true}
                   id="stat-revenues"
                   mainStatTitle="Total de Receitas"
                   mainStatValue={stats.totalIncome}
@@ -990,7 +990,7 @@ export default function Dashboard() {
                   trend={monthlyTrends.incomeTrend}
                   trendIsPositive={monthlyTrends.incomeIsPositive}
                   topRightContent={
-                    <MonthNavigatorCompact
+                    <MonthNavigatorCompact premiumMode={true}
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
                       onNextMonth={handleNextMonth}
@@ -1017,13 +1017,13 @@ export default function Dashboard() {
               )}
 
               {!filter && (
-                <StatCard
+                <StatCard dashboardPremiumStyle={true}
                   mainStatTitle="Saldo Mensal"
                   mainStatValue={stats.balance}
                   trend={monthlyTrends.balanceTrend}
                   trendIsPositive={monthlyTrends.balanceIsPositive}
                   topRightContent={
-                    <MonthNavigatorCompact
+                    <MonthNavigatorCompact premiumMode={true}
                       selectedMonth={selectedMonth}
                       onPreviousMonth={handlePreviousMonth}
                       onNextMonth={handleNextMonth}

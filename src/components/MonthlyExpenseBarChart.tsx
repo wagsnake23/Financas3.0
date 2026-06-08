@@ -61,62 +61,87 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
   }
 
   return (
-    <ResponsiveContainer width="100%" height={isMobile ? 90 : 105} minHeight={isMobile ? undefined : 105}>
-      <BarChart data={chartData} margin={{ top: 3, right: 0, left: 0, bottom: 6 }} barCategoryGap="10%">
-        <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+    <ResponsiveContainer width="100%" height="100%" minHeight={isMobile ? 120 : 140}>
+      <BarChart data={chartData} margin={{ top: 25, right: 0, left: 0, bottom: 0 }} barCategoryGap="15%">
+        <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 3" />
         <XAxis
           dataKey="month"
-          height={12}
+          height={24}
           axisLine={false}
           tickLine={false}
           interval={0}
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
-            const color = entry.isCurrentMonth ? "hsl(var(--destructive))" : "#000000";
+            const isCurrentMonth = entry.isCurrentMonth;
+            const color = isCurrentMonth ? "#b91c1c" : "#94a3b8";
+            
             return (
-              <text
-                x={x}
-                y={y}
-                dy={7}
-                textAnchor="middle"
-                fill={color}
-                style={{ 
-                  fontSize: isMobile ? "11px" : "13px", 
-                  fontWeight: "bold", 
-                  cursor: "pointer", 
-                  fontFamily: "Roboto",
-                  filter: entry.isCurrentMonth ? "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))" : "none"
-                }}
-                onClick={() => onMonthClick(entry.fullDate)}
-              >
-                {payload.value.substring(0, 3)}
-              </text>
+              <g>
+                <text
+                  x={x}
+                  y={y}
+                  dy={10}
+                  textAnchor="middle"
+                  fill={color}
+                  style={{ 
+                    fontSize: isMobile ? "9px" : "10px", 
+                    fontWeight: isCurrentMonth ? "800" : "600", 
+                    cursor: "pointer", 
+                    fontFamily: "Inter, sans-serif",
+                    letterSpacing: "0.5px"
+                  }}
+                  onClick={() => onMonthClick(entry.fullDate)}
+                >
+                  {payload.value.substring(0, 3).toUpperCase()}
+                </text>
+                {isCurrentMonth && (
+                  <circle cx={x} cy={y + 18} r={2.5} fill="#dc2626" />
+                )}
+              </g>
             );
           }}
         />
-        <YAxis
-          hide={true} // Hide Y-axis for a cleaner look
-          domain={[0, 'dataMax']}
-        />
-        {/* Removido Tooltip */}
-        <Bar dataKey="expenses" radius={[4, 4, 4, 4]} barSize={isMobile ? 18 : 24} activeBar={false}>
-          {chartData.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={entry.isCurrentMonth ? "#dc2626" : "hsl(var(--destructive))"}
-              fillOpacity={entry.isCurrentMonth ? 1 : 0.55}
-              className="transition-all duration-300"
-              style={{
-                filter: entry.isCurrentMonth 
-                  ? "drop-shadow(2px 2px 0px rgba(0,0,0,0.12)) drop-shadow(4px 4px 8px rgba(0,0,0,0.15))" 
-                  : "drop-shadow(1px 1px 0px rgba(0,0,0,0.08)) drop-shadow(3px 3px 6px rgba(0,0,0,0.1))",
-                stroke: "rgba(255,255,255,0.25)",
-                strokeWidth: 1
-              }}
-            />
-          ))}
+        <YAxis hide={true} domain={[0, 'dataMax']} />
+        
+        <Bar 
+          dataKey="expenses" 
+          barSize={isMobile ? 18 : 24} 
+          activeBar={false}
+          shape={(props: any) => {
+            const { x, y, width, height, payload } = props;
+            if (height === 0 || Number.isNaN(height)) return null;
 
-        </Bar>
+            const isCurrentMonth = payload.isCurrentMonth;
+            const newHeight = height;
+            const newY = y;
+            
+            const radius = 6;
+            const path = `M${x},${newY + radius} A${radius},${radius} 0 0,1 ${x + radius},${newY} L${x + width - radius},${newY} A${radius},${radius} 0 0,1 ${x + width},${newY + radius} L${x + width},${newY + newHeight} L${x},${newY + newHeight} Z`;
+
+            let gradientColors = { start: "#fca5a5", end: "#ef4444" };
+            if (isCurrentMonth) {
+               gradientColors = { start: "#ef4444", end: "#b91c1c" };
+            }
+
+            const gradientId = `barGrad-expense-${isCurrentMonth ? 'active' : 'inactive'}`;
+
+            return (
+              <g>
+                <defs>
+                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : 0.6} />
+                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : 0.4} />
+                  </linearGradient>
+                </defs>
+                {isCurrentMonth && (
+                  <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="4" opacity="0.10" filter="blur(2px)" />
+                )}
+                <path d={path} fill={`url(#${gradientId})`} />
+                <rect x={x + 2} y={newY + 2} width={width - 4} height={isMobile ? 3 : 4} rx={isMobile ? 1.5 : 2} fill="#ffffff" opacity={isCurrentMonth ? 0.35 : 0.15} />
+              </g>
+            );
+          }}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

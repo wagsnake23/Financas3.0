@@ -10,6 +10,7 @@ interface MonthNavigatorCompactProps {
   onNextMonth: () => void;
   isMobile?: boolean;
   variant: "income" | "expense" | "balance" | "yield";
+  premiumMode?: boolean;
 }
 
 export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
@@ -18,6 +19,7 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   onNextMonth,
   isMobile,
   variant,
+  premiumMode,
 }) => {
 
   const variantStyles = {
@@ -52,18 +54,23 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   return (
     <div
       className={cn(
-        "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border shadow-none cursor-default",
-        currentStyle.border
+        "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border cursor-default",
+        premiumMode ? "bg-white border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.03)]" : cn("shadow-none", currentStyle.border)
       )}
-      style={{
+      style={premiumMode ? {} : {
         ...currentStyle.containerVars,
         boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.4), inset 0px -1px 2px rgba(0, 0, 0, 0.05)"
       } as any}
     >
       <button
         onClick={(e) => { e.stopPropagation(); onPreviousMonth(); }}
-        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-md shrink-0 ring-1 ring-black/10"
-        style={{
+        className={cn(
+          "hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shrink-0",
+          premiumMode 
+            ? "bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/60" 
+            : "text-white shadow-md ring-1 ring-black/10"
+        )}
+        style={premiumMode ? {} : {
           background: currentStyle.buttonGradient,
           boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), 0px 2px 4px rgba(0, 0, 0, 0.1)"
         }}
@@ -72,16 +79,21 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
       </button>
 
       <span className={cn(
-        "text-[12px] font-black px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap",
-        currentStyle.text
+        "text-[12px] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap",
+        premiumMode ? "text-slate-700 font-bold" : cn("font-black", currentStyle.text)
       )}>
         {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
       </span>
 
       <button
         onClick={(e) => { e.stopPropagation(); onNextMonth(); }}
-        className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-md shrink-0 ring-1 ring-black/10"
-        style={{
+        className={cn(
+          "hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shrink-0",
+          premiumMode 
+            ? "bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/60" 
+            : "text-white shadow-md ring-1 ring-black/10"
+        )}
+        style={premiumMode ? {} : {
           background: currentStyle.buttonGradient,
           boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), 0px 2px 4px rgba(0, 0, 0, 0.1)"
         }}

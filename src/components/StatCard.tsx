@@ -42,6 +42,7 @@ interface StatCardProps {
   secondaryStatContent?: React.ReactNode; // NEW: Custom content for secondary stat
   bottomRightContent?: React.ReactNode; // NEW: Content for bottom-right corner matching bottom-left alignment
   glass?: boolean; // NEW: Glassmorphism style
+  dashboardPremiumStyle?: boolean; // NEW: Apply premium dashboard modern styles
 }
 
 export const StatCard = ({
@@ -69,30 +70,31 @@ export const StatCard = ({
   secondaryStatContent, // Destructure new prop
   bottomRightContent, // Destructure new prop
   glass = false, // Destructure new prop
+  dashboardPremiumStyle = false, // Destructure new prop
 }: StatCardProps) => {
   const premiumStyles = {
     income: {
-      background: "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
-      outline: "1px solid rgba(34, 197, 94, 0.05)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, #FFFFFF 0%, #F8FFF9 100%)" : "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
+      outline: dashboardPremiumStyle ? "1px solid rgba(34, 197, 94, 0.10)" : "1px solid rgba(34, 197, 94, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 4px 24px -4px rgba(0,0,0,0.04), 0 2px 8px -2px rgba(34,197,94,0.04)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
       titleColor: "#16a34a"
     },
     expense: {
-      background: "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
-      outline: "1px solid rgba(239, 68, 68, 0.05)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, #FFFFFF 0%, #FFF8F8 100%)" : "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
+      outline: dashboardPremiumStyle ? "1px solid rgba(239, 68, 68, 0.10)" : "1px solid rgba(239, 68, 68, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 4px 24px -4px rgba(0,0,0,0.04), 0 2px 8px -2px rgba(239,68,68,0.04)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
       titleColor: "#dc2626"
     },
     balance: {
-      background: "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
-      outline: "1px solid rgba(59, 130, 246, 0.05)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%)" : "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
+      outline: dashboardPremiumStyle ? "1px solid rgba(59, 130, 246, 0.10)" : "1px solid rgba(59, 130, 246, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 4px 24px -4px rgba(0,0,0,0.04), 0 2px 8px -2px rgba(59,130,246,0.04)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
       titleColor: "#2563eb"
     },
     yield: {
-      background: "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
-      outline: "1px solid rgba(147, 51, 234, 0.05)",
-      shadow: "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, #FFFFFF 0%, #F8F5FF 100%)" : "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
+      outline: dashboardPremiumStyle ? "1px solid rgba(147, 51, 234, 0.10)" : "1px solid rgba(147, 51, 234, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 4px 24px -4px rgba(0,0,0,0.04), 0 2px 8px -2px rgba(147,51,234,0.04)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
       titleColor: "hsl(var(--yield-darker))",
       badgeBg: "bg-purple-600",
       badgeShadow: "shadow-[0_0_12px_rgba(147,51,234,0.4)]"
@@ -169,8 +171,8 @@ export const StatCard = ({
       {/* Chart Content (100% Width) */}
       {chartContent && (
         <div className={cn(
-          "w-full flex items-end mt-10 pointer-events-none",
-          isMobile ? "h-[50px]" : "h-[70px]"
+          "w-full flex items-end pointer-events-none mt-6",
+          isMobile ? "h-[75px]" : "h-[100px]" // Increased by ~50% from 50/70
         )}>
           {chartContent}
         </div>
@@ -195,14 +197,14 @@ export const StatCard = ({
           {trend && trend.includes('%') && (
             <div className={cn(
               "flex flex-col items-center justify-center py-0.5 px-1 rounded-[10px] text-[9px] font-black leading-none gap-0 self-end mb-0.5",
-              headerBadgeStyles[variant]
+              dashboardPremiumStyle ? "bg-slate-50 border border-slate-200/60 text-slate-700 shadow-[0_1px_2px_rgba(0,0,0,0.02)] px-2 py-1 flex-row gap-1" : headerBadgeStyles[variant]
             )}>
               <DynamicIcon 
                 name={trendIsPositive ? "TrendingUp" : "TrendingDown"} 
-                className="h-2.5 w-2.5" 
+                className={cn("h-2.5 w-2.5", dashboardPremiumStyle && (trendIsPositive ? "text-emerald-500" : "text-rose-500"))} 
                 strokeWidth={4} 
               />
-              <span className="mt-0.5">{trend.split(' ')[0].replace(/[+-]/g, '')}</span>
+              <span className={cn(dashboardPremiumStyle ? "mt-0" : "mt-0.5")}>{trend.split(' ')[0].replace(/[+-]/g, '')}</span>
             </div>
           )}
 
@@ -219,11 +221,21 @@ export const StatCard = ({
         {/* Right Side: Annual Totals (Aligned at bottom) */}
         <div className="flex items-end">
           {annualTotalValue !== undefined && (
-            <div className="flex flex-col items-end gap-0.5">
-              <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
-                {annualTotalLabel || "Total Anual"}
-              </p>
-              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base")}>
+            <div className={cn(
+              "flex flex-col items-end gap-0.5",
+              dashboardPremiumStyle && "items-end"
+            )}>
+              {dashboardPremiumStyle ? (
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <DynamicIcon name="Wallet" className="h-3 w-3 text-slate-400" />
+                  <p className="font-semibold text-[9px] text-slate-500 uppercase tracking-widest leading-none">{annualTotalLabel || "Total Anual"}</p>
+                </div>
+              ) : (
+                <p className={cn("font-medium leading-none font-roboto", isMobile ? "text-[11px]" : "text-[12px]", labelStyles[variant])}>
+                  {annualTotalLabel || "Total Anual"}
+                </p>
+              )}
+              <p className={cn("font-semibold text-slate-950 font-roboto leading-none", isMobile ? "text-sm" : "text-base", dashboardPremiumStyle && "text-[13px] tracking-tight text-slate-700")}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>
