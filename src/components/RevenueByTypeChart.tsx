@@ -83,7 +83,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
             <BarChart
               data={chartData}
               layout="vertical"
-              margin={{ left: 0, right: 45, top: 0, bottom: 0 }}
+              margin={{ left: isMobile ? 0 : 30, right: 45, top: 0, bottom: 0 }}
               barGap={2}
             >
               <defs>
@@ -102,25 +102,32 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
               <YAxis
                 dataKey="name"
                 type="category"
-                width={isMobile ? 110 : 180}
+                width={isMobile ? 165 : 180}
                 axisLine={false}
                 tickLine={false}
                 tick={({ x, y, payload }) => {
                   const item = chartData.find(d => d.name === payload.value);
                   return (
                     <g transform={`translate(${x},${y})`}>
-                      <text
-                        x={isMobile ? -8 : -15}
-                        y={0}
-                        dy={4}
-                        textAnchor="end"
-                        className={cn(
-                          "fill-gray-700 font-black uppercase tracking-tight",
-                          isMobile ? "text-[10px]" : "text-[12px]"
-                        )}
+                      <foreignObject
+                        x={isMobile ? -165 : -180}
+                        y={-20}
+                        width={isMobile ? 162 : 175}
+                        height={40}
                       >
-                        {item?.icone} {payload.value}
-                      </text>
+                        <div className="w-full flex flex-col items-end justify-center pr-0.5 select-none pointer-events-none" style={{ height: '40px' }}>
+                          <div className="flex flex-row items-baseline justify-end gap-1.5 w-full">
+                            <div className={cn(
+                              "text-right text-[12px] md:text-[13px] font-semibold leading-[1.1] overflow-hidden break-words whitespace-normal text-gray-700 uppercase tracking-tight"
+                            )} style={{ maxHeight: '2.2em' }}>
+                              {String(payload.value)}
+                            </div>
+                            <div className="shrink-0 text-[1.15em] leading-normal translate-y-[2px]">
+                              {item?.icone}
+                            </div>
+                          </div>
+                        </div>
+                      </foreignObject>
                     </g>
                   );
                 }}
