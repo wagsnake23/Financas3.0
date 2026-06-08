@@ -899,7 +899,7 @@ export default function Investments() { // Alterado para export default function
 
                 {/* Card de Simulação Compacto e Unificado */}
                 {amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined) && (
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                  <div className="px-3 pt-[10px] pb-[9px] rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
                     {/* Linha 1: Header */}
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
