@@ -82,9 +82,9 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
 
     return (
         <div className={cn(
-            "card-yield p-6 flex flex-col",
+            "card-cloud p-6 flex flex-col border border-slate-200",
             isMobile ? "px-3 py-5" : "h-full justify-between"
-        )}>
+        )} style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FCFBF9 100%)" }}>
             <div>
                 <div className="flex items-center gap-2 mb-6">
                     <div className="h-8 w-2 bg-[#FB923C] rounded-full" />
