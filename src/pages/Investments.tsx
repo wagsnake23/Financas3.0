@@ -668,7 +668,7 @@ export default function Investments() { // Alterado para export default function
             </div>
             
             {/* 🔹 NOVO: Card de resumo unificado (DESKTOP) */}
-            <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-slate-200/60" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
+            <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-slate-200/60" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 60%, rgba(209, 250, 229, 0.5) 100%)" }}>
               <div className="grid grid-cols-4 items-center gap-x-6 w-full">
                 {/* Total Investido */}
                 <div className="flex items-center justify-start gap-4">
@@ -1003,7 +1003,7 @@ export default function Investments() { // Alterado para export default function
             </Card>
 
             {/* Investments List */}
-            <div>
+            <div className="mt-2">
               <Card
                 className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
                 style={{ 
@@ -1156,7 +1156,7 @@ export default function Investments() { // Alterado para export default function
               </Card>
 
               {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
-              <div className="mt-6 p-6 shadow-sm rounded-[24px] border border-slate-200/60" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
+              <div className="mt-6 p-6 shadow-sm rounded-[24px] border border-slate-200/60" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 60%, rgba(209, 250, 229, 0.5) 100%)" }}>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
