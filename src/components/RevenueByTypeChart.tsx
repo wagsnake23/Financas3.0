@@ -5,7 +5,7 @@ import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/categoryColors";
 import DynamicIcon from "./DynamicIcon";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 interface RevenueByTypeChartProps {
   revenues: Tables<'receitas'>[];
@@ -15,6 +15,23 @@ interface RevenueByTypeChartProps {
 }
 
 export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTotalValue }: RevenueByTypeChartProps) => {
+  const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+  const [tooltipY, setTooltipY] = useState(0);
+
+  const handleBarSelect = (index: number, e?: React.PointerEvent) => {
+    if (activeBarIndex === index) {
+      setActiveBarIndex(null);
+      return;
+    }
+    if (e && e.currentTarget) {
+      const rect = (e.currentTarget as HTMLElement).closest('.bar-chart-container')?.getBoundingClientRect();
+      if (rect) {
+        setTooltipY(e.clientY - rect.top);
+      }
+    }
+    setActiveBarIndex(index);
+  };
+
   const chartData = useMemo(() => {
     const incomeByType = revenues
       .reduce((acc, revenue) => {
@@ -72,7 +89,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
         </div>
 
         <div
-          className="w-full"
+          className="w-full relative bar-chart-container"
           style={{
             height: isMobile
               ? Math.max(200, chartData.length * 35)
@@ -105,10 +122,16 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                 width={isMobile ? 165 : 180}
                 axisLine={false}
                 tickLine={false}
-                tick={({ x, y, payload }) => {
+                tick={({ x, y, payload, index }) => {
                   const item = chartData.find(d => d.name === payload.value);
                   return (
-                    <g transform={`translate(${x},${y})`}>
+                    <g transform={`translate(${x},${y})`}
+                       className="cursor-pointer"
+                       onPointerDown={(e) => {
+                           e.stopPropagation();
+                           handleBarSelect(index, e as unknown as React.PointerEvent);
+                       }}
+                    >
                       <foreignObject
                         x={isMobile ? -165 : -180}
                         y={-20}
@@ -132,33 +155,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                   );
                 }}
               />
-              <Tooltip
-                cursor={{ fill: 'transparent' }}
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload;
-                    const perc = totalRevenue > 0 ? ((data.value / totalRevenue) * 100).toFixed(1) : "0.0";
-                    return (
-                      <div className="bg-white/90 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.15)] border border-white/60 rounded-2xl animate-in zoom-in-95" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-2xl drop-shadow-sm">{data.icone}</span>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Categoria</span>
-                            <span className="font-bold text-gray-800 leading-tight">{data.name}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-baseline gap-2 pt-1 border-t border-gray-100">
-                          <span className="text-xl font-black text-[#1AA361] tracking-tighter">
-                            {formatCurrency(data.value)}
-                          </span>
-                          <span className="text-xs font-bold text-gray-400">({perc}%)</span>
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
+
               <Bar
                 dataKey="value"
                 radius={[0, 10, 10, 0]}
@@ -166,17 +163,31 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                 className="cursor-pointer transition-all duration-300"
                 isAnimationActive={true}
               >
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.color}
-                  />
-                ))}
+                {chartData.map((entry, index) => {
+                  const isActive = index === activeBarIndex;
+                  return (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      className={cn(
+                          "cursor-pointer transition-all duration-300",
+                          isActive ? "opacity-100" : (activeBarIndex !== null ? "opacity-30" : "opacity-100")
+                      )}
+                      style={{
+                          filter: isActive ? 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))' : 'none'
+                      }}
+                      onPointerDown={(e) => {
+                          e.stopPropagation();
+                          handleBarSelect(index, e as unknown as React.PointerEvent);
+                      }}
+                    />
+                  );
+                })}
                 <LabelList
                   dataKey="value"
                   position="right"
                   content={(props: any) => {
-                    const { x, y, width, value } = props;
+                    const { x, y, width, value, index } = props;
                     const percentage = totalRevenue > 0
                       ? `${((value / totalRevenue) * 100).toFixed(1)}%`
                       : "0%";
@@ -184,10 +195,14 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                       <text
                         x={x + width + 10}
                         y={y + (isMobile ? 14 : 18)}
-                        fill="#334155"
+                        fill={index === activeBarIndex ? "#16a34a" : "#334155"}
                         fontSize={isMobile ? 11 : 12}
                         fontWeight="900"
-                        className="font-roboto"
+                        className="font-roboto cursor-pointer select-none transition-all duration-300"
+                        onPointerDown={(e) => {
+                            e.stopPropagation();
+                            handleBarSelect(index, e as unknown as React.PointerEvent);
+                        }}
                       >
                         {percentage}
                       </text>
@@ -197,6 +212,37 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+
+          {/* Custom Absolute Tooltip */}
+          {activeBarIndex !== null && chartData[activeBarIndex] && (
+              <div
+                  className="absolute pointer-events-none z-50 animate-in zoom-in-95 duration-200"
+                  style={{
+                      top: tooltipY,
+                      left: isMobile ? '50%' : '70%',
+                      transform: 'translate(-50%, -100%) translateY(-20px)',
+                  }}
+              >
+                  <div className="bg-white/95 backdrop-blur-md pt-[9px] pb-3 px-[11px] shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl max-w-[190px] relative" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+                      <div className="flex items-center gap-2 mb-1.5">
+                          <span className="text-xl drop-shadow-sm">{chartData[activeBarIndex].icone}</span>
+                          <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-800 leading-tight line-clamp-2" style={{ wordBreak: 'break-word' }}>{chartData[activeBarIndex].name}</span>
+                          </div>
+                      </div>
+                      <div className="flex items-baseline gap-1.5 pt-1 border-t border-gray-100">
+                          <span className="text-[15px] font-bold text-[#1AA361] tracking-tighter">
+                              {formatCurrency(chartData[activeBarIndex].value)}
+                          </span>
+                          <span className="text-[11px] font-semibold text-gray-400">
+                              ({totalRevenue > 0 ? ((chartData[activeBarIndex].value / totalRevenue) * 100).toFixed(1) : "0.0"}%)
+                          </span>
+                      </div>
+                      {/* Seta indicadora (Arrow) */}
+                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 border-b border-r border-white/60 transform rotate-45" />
+                  </div>
+              </div>
+          )}
         </div>
       </div>
 
