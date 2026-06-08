@@ -503,7 +503,7 @@ export default function Dashboard() {
       <main
         className={cn(
           "container-app flex-grow",
-          isMobile ? "pt-[2px] pb-16" : "py-8"
+          isMobile ? "pt-[2px] pb-2" : "py-8"
         )}
       >
         {!isMobile && !filter && (
