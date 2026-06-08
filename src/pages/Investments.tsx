@@ -753,8 +753,8 @@ export default function Investments() { // Alterado para export default function
             >
               <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+                <div className="space-y-[6px]">
+                  <Label htmlFor="investment-category" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome do Investimento</Label>
                   <Select
                     value={selectedInvestmentCategoryId}
                     onValueChange={(value) => {
@@ -798,8 +798,8 @@ export default function Investments() { // Alterado para export default function
                   "grid gap-2",
                   tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
                 )}>
-                  <div className="space-y-2">
-                    <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+                  <div className="space-y-[6px]">
+                    <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Rentabilidade</Label>
                     <Select
                       value={tipoRentabilidade}
                       onValueChange={(v: "fixo" | "indexado") => {
@@ -822,8 +822,8 @@ export default function Investments() { // Alterado para export default function
                   </div>
 
                   {tipoRentabilidade === "indexado" && (
-                    <div className="space-y-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                      <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
+                    <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
+                      <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
                         <SelectTrigger className={cn("rounded-xl bg-white transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
@@ -839,8 +839,8 @@ export default function Investments() { // Alterado para export default function
 
                 <div className={cn("grid gap-2", "grid-cols-2")}>
                   {tipoRentabilidade === "fixo" ? (
-                    <div className="space-y-2">
-                      <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+                    <div className="space-y-[6px]">
+                      <Label htmlFor="profitability" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Rentabilidade % a.a</Label>
                       <NumericInput
                         id="profitability"
                         value={profitability === undefined ? "" : profitability}
@@ -862,8 +862,8 @@ export default function Investments() { // Alterado para export default function
                       />
                     </div>
                   ) : (
-                    <div className="space-y-2">
-                      <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
+                    <div className="space-y-[6px]">
+                      <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
                       <NumericInput
                         value={percentualIndexador === undefined ? "" : percentualIndexador}
                         onValueChange={(v) => {
@@ -879,8 +879,8 @@ export default function Investments() { // Alterado para export default function
                     </div>
                   )}
 
-                  <div className="space-y-2">
-                    <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                  <div className="space-y-[6px]">
+                    <Label htmlFor="amount" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Valor Investido (R$)</Label>
                     <CurrencyBR
                       value={amount}
                       onChange={(v) => {
@@ -951,8 +951,8 @@ export default function Investments() { // Alterado para export default function
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+                <div className="space-y-[6px]">
+                  <Label htmlFor="date" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data do Investimento</Label>
                   <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
