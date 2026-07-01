@@ -227,7 +227,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               "font-semibold tracking-tight whitespace-nowrap leading-none shrink-0 flex items-baseline gap-[3px]",
               transaction.type === 'income'
                 ? "text-[#059669]"
-                : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
+                : transaction.status === "Recebida"
+                  ? "text-slate-500"
+                  : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
             )}>
               <span className="text-[10.5px] font-medium opacity-[0.65]">{currencySymbol}</span>
               <span className="text-[14px]">{valueStr}</span>
