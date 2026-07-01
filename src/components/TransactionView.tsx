@@ -87,7 +87,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   );
 
   return (
-    <div className={cn(isMobile ? "flex-1 flex flex-col min-h-0 bg-[#FFFFFF]" : "")}>
+    <div className={cn(isMobile ? "flex-1 flex flex-col min-h-0 bg-[#F7F9FC]" : "")}>
       {content}
     </div>
   );
