@@ -290,8 +290,8 @@ export default function Home() {
                     {/* Camada 1: Gradiente vertical principal (Transição rápida concentrada no topo) */}
                     <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0B4CCF 0%, #2F73E8 12%, #6EA9FF 22%, #BFD9FF 38%, #DDEBFF 55%, #EAF3FF 100%)" }} />
                     
-                    {/* Camada 2: Enorme radial atrás do Header (iluminação discreta no topo) */}
-                    <div className="absolute -top-[15%] -left-[10%] w-[120%] h-[40%]" style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(130, 185, 255, 0.2) 0%, transparent 70%)" }} />
+                    {/* Camada 2: Enorme radial atrás do Header (iluminação discreta no topo, deslocada para baixo para não afetar a Status Bar) */}
+                    <div className="absolute top-[0%] left-[0%] w-[100%] h-[35%]" style={{ background: "radial-gradient(ellipse at 50% 80%, rgba(130, 185, 255, 0.2) 0%, transparent 70%)" }} />
 
                     {/* Camada 3: Glow gigantesco e suave atrás do card de Saldo Mensal (iluminando a transição) */}
                     <div className="absolute top-[18%] left-[50%] -translate-x-1/2 w-[800px] h-[800px]" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 60%)" }} />
@@ -302,8 +302,8 @@ export default function Home() {
                     {/* Camada 5: Iluminação inferior muito leve (gelo) */}
                     <div className="absolute bottom-0 left-0 right-0 h-[400px]" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.4) 0%, transparent 75%)" }} />
 
-                    {/* Camada 6: Textura orgânica quase imperceptível */}
-                    <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+                    {/* Camada 6: Textura orgânica quase imperceptível (esmaecida no topo absoluto para garantir match de cor perfeito com a Status Bar) */}
+                    <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`, WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, black 5%)', maskImage: 'linear-gradient(180deg, transparent 0%, black 5%)' }} />
                 </div>
             )}
             {/* HEADER AREA */}
