@@ -110,14 +110,16 @@ export const Navigation = () => {
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
   const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isDarkPage;
-  const mobileTextColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]";
-  const mobileIconColor = (isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]";
+  const mobileTextColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]");
+  const mobileIconColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]");
 
   useEffect(() => {
     if (!isMobile) return;
     
     let color = "#FFFFFF";
-    if (isDarkPage || isDespesas) {
+    if (isDarkPage) {
+      color = "#0B4CCF";
+    } else if (isDespesas) {
       color = "#F7F9FC";
     } else if (isLancamentos) {
       color = "#F7F9FC";
@@ -146,9 +148,11 @@ export const Navigation = () => {
         isMobile
           ? cn(
             "h-14 shadow-none",
-            (isDarkPage || isDespesas)
-                ? "bg-[#F7F9FC]"
-                : isLancamentos
+            isDarkPage
+                ? "bg-transparent"
+                : isDespesas
+                    ? "bg-[#F7F9FC]"
+                    : isLancamentos
                     ? "bg-[#F7F9FC]"
                 : (isReceitas || isInvestimentos)
                     ? "bg-slate-50"
