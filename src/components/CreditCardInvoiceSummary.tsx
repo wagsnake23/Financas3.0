@@ -125,17 +125,19 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
           <div className="flex justify-center mt-0 mb-0">
             <Button
               className={cn(
-                "h-[34px] transition-all flex items-center justify-center px-0",
+                "h-[34px] transition-all flex items-center justify-center px-0 font-bold",
                 isPaid 
                   ? "w-[95%] rounded-[12px] pointer-events-none" 
-                  : "w-[95%] rounded-[12px] bg-white text-[#0D47D9] border-none hover:bg-white/95 hover:-translate-y-[1px] active:translate-y-[1px]"
+                  : "w-[95%] rounded-[12px] text-[#0D47D9] border-none hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.15)]"
               )}
               style={isPaid ? {
                 background: "#F0FDF4",
                 border: "1px solid rgba(22, 163, 74, 0.2)",
                 color: "#16A34A",
               } : {
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1), inset 0 -2px 0 rgba(0,0,0,0.04)"
+                background: "linear-gradient(135deg, #fdfbfb 0%, #f3f4f6 100%)",
+                borderBottom: "1px solid rgba(0,0,0,0.1)",
+                boxShadow: "0 6px 14px rgba(0,0,0,0.08)"
               }}
               onClick={isPaid ? undefined : onPayInvoice}
               disabled={isPaid ? false : (loadingPayInvoice || disablePayInvoiceButton)}

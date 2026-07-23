@@ -99,7 +99,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
                 type="button"
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10",
+                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10 !bg-white",
                   !dataVencimento && "text-muted-foreground",
                   getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
                 )}

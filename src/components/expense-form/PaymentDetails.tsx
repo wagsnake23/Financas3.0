@@ -128,7 +128,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               setValidationErrors(prev => ({ ...prev, valor: false }));
             }}
             className={cn(
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-9 text-sm" : "h-10 !bg-white",
               "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
               getBorderClass({ isInvalid: validationErrors.valor, isValid: validationErrors.valor === false })
             )}
@@ -147,7 +147,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           >
             <SelectTrigger className={cn(
               "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-9 text-sm" : "h-10 !bg-white",
               getBorderClass({})
             )}>
               <SelectValue />
@@ -189,7 +189,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           >
             <SelectTrigger className={cn(
               "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-9 text-sm" : "h-10 !bg-white",
               getBorderClass({})
             )}>
               <SelectValue />
@@ -225,7 +225,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               placeholder=""
               className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-10",
+                isMobile ? "h-9 text-sm" : "h-10 !bg-white",
                 getBorderClass({ isInvalid: validationErrors.numeroParcelas, isValid: validationErrors.numeroParcelas === false })
               )}
             />
@@ -253,7 +253,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             >
               <SelectTrigger className={cn(
                 "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-10",
+                isMobile ? "h-9 text-sm" : "h-10 !bg-white",
                 getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false })
               )}>
                 <SelectValue placeholder="Selecione o cartão" />
