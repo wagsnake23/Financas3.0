@@ -93,27 +93,28 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
         </Label>
         
         <div className="relative w-full">
-          <Button
-            type="button"
-            variant={"outline"}
-            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-            className={cn(
-              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10",
-              !dataVencimento && "text-muted-foreground",
-              getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
-            )}
-          >
-            <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
-            {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-          </Button>
-
-          {isCalendarOpen && (
-            <div 
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10",
+                  !dataVencimento && "text-muted-foreground",
+                  getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+                )}
+              >
+                <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
+                {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+              </Button>
+            </PopoverTrigger>
+            
+            <PopoverContent 
               className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 z-[100] mt-1 overflow-hidden",
-                "rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
-                "w-auto h-auto"
-              )}
+                "w-auto p-0 rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] z-[100]"
+              )} 
+              align="center"
+              sideOffset={4}
             >
               <Calendar
                 mode="single"
@@ -128,8 +129,8 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
                 showOutsideDays={true}
                 className="p-3"
               />
-            </div>
-          )}
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
