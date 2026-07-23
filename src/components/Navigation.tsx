@@ -145,7 +145,7 @@ export const Navigation = () => {
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 shadow-none border-t border-black/[0.04]",
+            "h-14 shadow-none",
             (isDarkPage || isDespesas)
                 ? "bg-[#F7F9FC]"
                 : isLancamentos
