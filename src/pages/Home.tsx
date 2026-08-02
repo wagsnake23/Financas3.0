@@ -316,6 +316,32 @@ export default function Home() {
                             {todayStr}
                         </p>
                     </div>
+                    {isMobile && (
+                        <div className="flex items-center gap-[6px] select-none -mt-1 mr-1">
+                            <button 
+                                onClick={handlePrevMonth} 
+                                className="text-white hover:opacity-85 active:opacity-60 transition-opacity p-1 bg-transparent border-none outline-none cursor-pointer flex items-center justify-center font-sans"
+                                style={{ fontSize: '18px', lineHeight: 1 }}
+                            >
+                                ◀
+                            </button>
+                            <div className="flex flex-col items-center justify-center leading-none">
+                                <span className="text-[20px] font-bold text-white tracking-wide uppercase font-sans">
+                                    {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
+                                </span>
+                                <span className="text-[13px] font-medium text-white/80 font-sans" style={{ marginTop: '2px' }}>
+                                    {format(selectedMonth, "yyyy")}
+                                </span>
+                            </div>
+                            <button 
+                                onClick={handleNextMonth} 
+                                className="text-white hover:opacity-85 active:opacity-60 transition-opacity p-1 bg-transparent border-none outline-none cursor-pointer flex items-center justify-center font-sans"
+                                style={{ fontSize: '18px', lineHeight: 1 }}
+                            >
+                                ▶
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -338,7 +364,7 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
+                                    className="pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
                                         background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
@@ -350,58 +376,65 @@ export default function Home() {
                                         boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
                                     }}
                                 >
-                                    <div className="flex justify-between items-start mb-2 relative z-20">
-                                        <div className="flex flex-col">
-                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 -mt-1" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                                <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#0556C3" />
-                                            </p>
-                                        </div>
-                                        {/* Seletor de Mês (Posição Top Right) */}
-                                        <div
-                                            className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[135px] -mr-2 bg-white/10 cursor-pointer"
-                                            style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
-                                        >
-                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
-                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
-                                            </button>
-                                            <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap">
-                                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
-                                            </span>
-                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
-                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center mt-1 gap-2">
-                                        {/* Investments Icon Button */}
-                                        <Button
-                                            onClick={() => navigate("/dashboard?filter=investments")}
-                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
-                                        >
-                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                        </Button>
-                                        <div className="flex flex-col items-start gap-0.5 mt-1">
-                                            <div className={cn(
-                                                "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
-                                                dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
-                                            )}>
-                                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                    <div className="flex justify-between items-stretch w-full relative z-20">
+                                        <div className="flex flex-col justify-between py-0.5">
+                                            <div>
+                                                <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                                <p className="text-[21px] font-[800] leading-none" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                                    <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#0556C3" />
+                                                </p>
                                             </div>
-                                            <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                            <div className="flex items-center mt-3 gap-2">
+                                                {/* Investments Icon Button */}
+                                                <Button
+                                                    onClick={() => navigate("/dashboard?filter=investments")}
+                                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                >
+                                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                                </Button>
+                                                <div className="flex flex-col items-start gap-0.5">
+                                                    <div className={cn(
+                                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
+                                                        dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
+                                                    )}>
+                                                        {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                                    </div>
+                                                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* Mini gráfico de barras (Posição Bottom Right) */}
-                                    <div className="absolute bottom-[3px] right-5 pointer-events-none flex items-end overflow-visible">
-                                        <div className="p-2 rounded-xl flex items-end">
-                                            <MiniFinanceBars
-                                                expenses={dStats.currentExpenses}
-                                                revenues={dStats.currentIncome}
-                                                balance={dStats.currentBalance}
-                                            />
+                                        {/* Sparkline Graph */}
+                                        <div className="flex flex-col items-center justify-end pb-0.5 -mr-1">
+                                            <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[48px] overflow-visible">
+                                                <defs>
+                                                    <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor="#0556C3" stopOpacity="0.22" />
+                                                        <stop offset="100%" stopColor="#0556C3" stopOpacity="0.0" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <path
+                                                    d="M 5 38 C 15 38, 25 28, 35 28 C 45 28, 55 32, 65 32 C 75 32, 85 20, 95 20 C 105 20, 115 24, 125 24 C 135 24, 145 8, 155 8 L 155 44 L 5 44 Z"
+                                                    fill="url(#sparkline-grad)"
+                                                />
+                                                <path
+                                                    d="M 5 38 C 15 38, 25 28, 35 28 C 45 28, 55 32, 65 32 C 75 32, 85 20, 95 20 C 105 20, 115 24, 125 24 C 135 24, 145 8, 155 8"
+                                                    fill="none"
+                                                    stroke="#0556C3"
+                                                    strokeWidth="2.5"
+                                                    strokeLinecap="round"
+                                                />
+                                                <circle cx="5" cy="38" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                <circle cx="35" cy="28" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                <circle cx="65" cy="32" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                <circle cx="95" cy="20" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                <circle cx="125" cy="24" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                <circle cx="155" cy="8" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                            </svg>
+                                            <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
+                                                Últimos 6 meses
+                                            </span>
                                         </div>
                                     </div>
                                 </Card>
