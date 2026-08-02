@@ -417,7 +417,7 @@ export default function Home() {
                                         className="font-bold tracking-wide uppercase font-sans leading-none text-center"
                                         style={{ 
                                             fontSize: '16.5px', 
-                                            color: isCurrentMonth ? '#ef4444' : '#D6DEE8',
+                                            color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
                                             textShadow: '0 1px 2px rgba(0,0,0,0.15)',
                                             fontWeight: 800
                                         }}
@@ -441,7 +441,7 @@ export default function Home() {
                                 className="font-bold font-sans leading-none"
                                 style={{ 
                                     fontSize: '12.5px', 
-                                    color: '#FFFFFF',
+                                    color: '#D9E3F5',
                                     marginTop: '-0.5px',
                                     textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                 }}
