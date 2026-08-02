@@ -19,12 +19,12 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-primary text-primary-foreground sm:bg-background sm:text-foreground sm:border-b sm:px-4">
+    <header className="sticky top-0 z-30 w-full border-b-0 bg-transparent text-primary-foreground sm:bg-background sm:text-foreground sm:border-b sm:px-4">
       <div className="flex h-14 items-center justify-between px-4 sm:px-0">
         {/* ESQUERDA: Logo / Título */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-base font-semibold sm:text-lg"
+          className="flex items-center gap-2 text-base font-semibold sm:text-lg text-white sm:text-foreground [text-shadow:0_1px_2px_rgba(0,0,0,.15)] sm:[text-shadow:none]"
         >
           <DynamicIcon name="Wallet" className="h-6 w-6" />
           <span>Finanças Pessoais</span>
@@ -36,7 +36,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
           <button
             type="button"
             onClick={handleOpenShoppingList}
-            className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 sm:bg-muted sm:hover:bg-muted/80 transition"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 sm:bg-muted sm:hover:bg-muted/80 transition text-white sm:text-foreground [filter:drop-shadow(0_1px_2px_rgba(0,0,0,.18))] sm:[filter:none]"
             title={
               pendingCount > 0
                 ? `Lista de compras (${pendingCount} itens pendentes)`
@@ -57,7 +57,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9 bg-white/5 border-white/40 text-primary-foreground hover:bg-white/15 sm:bg-transparent sm:border-input sm:text-foreground"
+            className="h-9 w-9 bg-white/5 border-white/40 text-white sm:bg-transparent sm:border-input sm:text-foreground [filter:drop-shadow(0_1px_2px_rgba(0,0,0,.18))] sm:[filter:none]"
             onClick={toggleSidebar}
             aria-label="Abrir menu de navegação"
           >

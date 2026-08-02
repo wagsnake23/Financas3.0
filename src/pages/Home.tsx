@@ -286,25 +286,15 @@ export default function Home() {
             className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden global-bg")}
         >
             {isMobile && (
-                <div className="fixed top-0 left-0 right-0 bottom-0 z-20 pointer-events-none overflow-hidden">
-                    {/* Camada 1: Gradiente vertical principal (Transição rápida concentrada no topo) */}
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0B4CCF 0%, #2F73E8 12%, #6EA9FF 22%, #BFD9FF 38%, #DDEBFF 55%, #EAF3FF 100%)" }} />
-                    
-                    {/* Camada 2: Enorme radial atrás do Header (iluminação discreta no topo, deslocada para baixo para não afetar a Status Bar) */}
-                    <div className="absolute top-[0%] left-[0%] w-[100%] h-[35%]" style={{ background: "radial-gradient(ellipse at 50% 80%, rgba(130, 185, 255, 0.2) 0%, transparent 70%)" }} />
-
-                    {/* Camada 3: Glow gigantesco e suave atrás do card de Saldo Mensal (iluminando a transição) */}
-                    <div className="absolute top-[18%] left-[50%] -translate-x-1/2 w-[800px] h-[800px]" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 60%)" }} />
-
-                    {/* Camada 4: Glow lateral direito para a região dos cards centrais */}
-                    <div className="absolute top-[40%] -right-[20%] w-[600px] h-[600px]" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, transparent 60%)" }} />
-
-                    {/* Camada 5: Iluminação inferior muito leve (gelo) */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[400px]" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.4) 0%, transparent 75%)" }} />
-
-                    {/* Camada 6: Textura orgânica quase imperceptível (esmaecida no topo absoluto para garantir match de cor perfeito com a Status Bar) */}
-                    <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`, WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, black 5%)', maskImage: 'linear-gradient(180deg, transparent 0%, black 5%)' }} />
-                </div>
+                <div
+                    className="fixed top-0 left-0 right-0 bottom-0 z-20 pointer-events-none"
+                    style={{
+                        backgroundImage: "url('/sky.webp')",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center top",
+                        backgroundRepeat: "no-repeat"
+                    }}
+                />
             )}
             {/* HEADER AREA */}
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
@@ -314,12 +304,15 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-bold leading-none", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
-                            style={{ fontFamily: "'Inter', sans-serif" }}
+                            className={cn("font-bold leading-none text-white", isMobile ? "text-[18.5px] tracking-tight" : "text-2xl tracking-[0.5px]")}
+                            style={{ fontFamily: "'Inter', sans-serif", textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
                         >
                             <span className={cn(isMobile ? "text-white" : "text-slate-600")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#374151]")}>{userName}</span> 👋
                         </h1>
-                        <p className={cn("font-medium leading-none", isMobile ? "text-[13px] text-white/80 -mt-[1px]" : "text-sm text-slate-500 mt-1")}>
+                        <p 
+                            className={cn("font-medium leading-none", isMobile ? "text-[13px] -mt-[1px]" : "text-sm text-slate-500 mt-1")}
+                            style={{ color: isMobile ? "rgba(255,255,255,.92)" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
+                        >
                             {todayStr}
                         </p>
                     </div>
@@ -348,13 +341,13 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
-                                        backgroundBlendMode: "normal",
-                                        backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.05)",
+                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        border: "1px solid rgba(255,255,255,0.80)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
+                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2 relative z-20">
@@ -418,13 +411,13 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
-                                        backgroundBlendMode: "normal",
-                                        backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.05)",
+                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        border: "1px solid rgba(255,255,255,0.80)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
+                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -485,13 +478,13 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
-                                        backgroundBlendMode: "normal",
-                                        backdropFilter: "blur(6px)",
-                                        border: "1px solid rgba(0,0,0,0.05)",
+                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        border: "1px solid rgba(255,255,255,0.80)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 6px 18px rgba(15,23,42,.06)"
+                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
