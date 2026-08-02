@@ -222,7 +222,7 @@ export const MobileCreditCardExpenses: React.FC<
           {/* Right side: Purple Button (Exact 135px width) */}
           <div className="shrink-0">
             <Button
-              className="w-[135px] h-9 px-3 rounded-[11px] font-bold text-[12px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 mt-[5px]"
+              className="w-[135px] h-9 px-3 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 mt-[5px]"
               style={{ 
                 background: "linear-gradient(135deg, #6d28d9, #5b21b6)", 
                 borderBottom: "1px solid rgba(0,0,0,0.4)", 
