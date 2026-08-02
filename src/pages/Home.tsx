@@ -336,16 +336,18 @@ export default function Home() {
                                 >
                                     <DynamicIcon name="ChevronLeft" className="h-3 w-3 text-white" strokeWidth={3.5} />
                                 </button>
-                                <span 
-                                    className="font-bold tracking-wide uppercase font-sans leading-none"
-                                    style={{ 
-                                        fontSize: '18px', 
-                                        color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
-                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)'
-                                    }}
-                                >
-                                    {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
-                                </span>
+                                <div className="w-[38px] flex justify-center items-center">
+                                    <span 
+                                        className="font-bold tracking-wide uppercase font-sans leading-none text-center"
+                                        style={{ 
+                                            fontSize: '18px', 
+                                            color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
+                                            textShadow: '0 1px 2px rgba(0,0,0,0.15)'
+                                        }}
+                                    >
+                                        {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
+                                    </span>
+                                </div>
                                 <button 
                                     onClick={handleNextMonth} 
                                     className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer"
