@@ -403,7 +403,7 @@ export default function Home() {
                             <div className="flex items-center gap-[7px]">
                                 <button 
                                     onClick={handlePrevMonth} 
-                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer"
+                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
                                     style={{ 
                                         background: "rgba(255, 255, 255, 0.15)",
                                         boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
@@ -427,7 +427,7 @@ export default function Home() {
                                 </div>
                                 <button 
                                     onClick={handleNextMonth} 
-                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer"
+                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
                                     style={{ 
                                         background: "rgba(255, 255, 255, 0.15)",
                                         boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
@@ -442,7 +442,7 @@ export default function Home() {
                                 style={{ 
                                     fontSize: '12.5px', 
                                     color: '#FFFFFF',
-                                    marginTop: '1.5px',
+                                    marginTop: '-0.5px',
                                     textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                 }}
                             >
