@@ -175,7 +175,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-3 pr-[16px] pt-[8px] pb-[8px] rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
