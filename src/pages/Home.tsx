@@ -614,7 +614,7 @@ export default function Home() {
                                         </Button>
                                     </div>
 
-                                    <div className="flex items-center justify-between mt-1">
+                                    <div className="flex items-center justify-between mt-3">
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
@@ -684,7 +684,7 @@ export default function Home() {
                                         </Button>
                                     </div>
 
-                                    <div className="flex items-center justify-between mt-1">
+                                    <div className="flex items-center justify-between mt-2">
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
