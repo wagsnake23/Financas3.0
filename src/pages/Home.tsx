@@ -414,12 +414,12 @@ export default function Home() {
                                 </button>
                                 <div className="w-[38px] flex justify-center items-center">
                                     <span 
-                                        className="font-semibold tracking-wide uppercase font-sans leading-none text-center"
+                                        className="font-bold tracking-wide uppercase font-sans leading-none text-center"
                                         style={{ 
-                                            fontSize: '18px', 
-                                            color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
+                                            fontSize: '16.5px', 
+                                            color: isCurrentMonth ? '#ef4444' : '#D6DEE8',
                                             textShadow: '0 1px 2px rgba(0,0,0,0.15)',
-                                            fontWeight: 600
+                                            fontWeight: 800
                                         }}
                                     >
                                         {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
@@ -438,10 +438,10 @@ export default function Home() {
                                 </button>
                             </div>
                             <span 
-                                className="font-semibold font-sans leading-none"
+                                className="font-bold font-sans leading-none"
                                 style={{ 
                                     fontSize: '12.5px', 
-                                    color: isCurrentMonth ? '#E88383' : '#D6DEE8',
+                                    color: '#FFFFFF',
                                     marginTop: '1.5px',
                                     textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                 }}
