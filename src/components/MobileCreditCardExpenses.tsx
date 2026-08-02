@@ -175,7 +175,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("pl-3 pr-[16px] pt-[8px] pb-[8px] rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
@@ -302,7 +302,14 @@ export const MobileCreditCardExpenses: React.FC<
 
             {/* Lado direito: Título e Valor principal (Exact 135px width to align with button) */}
             <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right pb-[1px] pt-3">
-              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-1" style={{ color: totalPending > 0 ? "#B45309" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
+              {/* Período da fatura */}
+              <span 
+                className="text-[11px] font-semibold tracking-wide uppercase mb-0.5" 
+                style={{ color: "#6D28D9", fontFamily: "'Inter', sans-serif" }}
+              >
+                {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
+              </span>
+              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-1.5" style={{ color: totalPending > 0 ? "#B45309" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
               <p className="text-[21px] font-[800] leading-none" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
