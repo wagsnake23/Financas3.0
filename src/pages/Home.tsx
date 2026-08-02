@@ -323,24 +323,23 @@ export default function Home() {
                         </p>
                     </div>
                     {isMobile && (
-                        <div className="flex flex-col items-center select-none mr-1 -mt-[6px]">
-                            <div className="flex items-center gap-[6px]">
+                        <div className="flex flex-col items-center select-none -mr-[8px] -mt-[3px]">
+                            <div className="flex items-center gap-[7px]">
                                 <button 
                                     onClick={handlePrevMonth} 
-                                    className="text-white/90 bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 border-none outline-none cursor-pointer"
+                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer"
                                     style={{ 
-                                        fontSize: '11px', 
-                                        lineHeight: 1,
-                                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)' 
+                                        background: "rgba(255, 255, 255, 0.15)",
+                                        boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
+                                        borderBottom: "1px solid rgba(0,0,0,0.2)"
                                     }}
                                 >
-                                    ❮
+                                    <DynamicIcon name="ChevronLeft" className="h-3 w-3 text-white" strokeWidth={3.5} />
                                 </button>
                                 <span 
                                     className="font-bold tracking-wide uppercase font-sans leading-none"
                                     style={{ 
-                                        fontSize: '19px', 
+                                        fontSize: '18px', 
                                         color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
                                         textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                     }}
@@ -349,15 +348,14 @@ export default function Home() {
                                 </span>
                                 <button 
                                     onClick={handleNextMonth} 
-                                    className="text-white/90 bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 border-none outline-none cursor-pointer"
+                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer"
                                     style={{ 
-                                        fontSize: '11px', 
-                                        lineHeight: 1,
-                                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)' 
+                                        background: "rgba(255, 255, 255, 0.15)",
+                                        boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
+                                        borderBottom: "1px solid rgba(0,0,0,0.2)"
                                     }}
                                 >
-                                    ❯
+                                    <DynamicIcon name="ChevronRight" className="h-3 w-3 text-white" strokeWidth={3.5} />
                                 </button>
                             </div>
                             <span 
@@ -365,7 +363,7 @@ export default function Home() {
                                 style={{ 
                                     fontSize: '12.5px', 
                                     color: isCurrentMonth ? '#EF6C6C' : '#D6DEE8',
-                                    marginTop: '2.5px',
+                                    marginTop: '1.5px',
                                     textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                 }}
                             >
