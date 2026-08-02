@@ -317,7 +317,7 @@ export default function Home() {
                         </h1>
                         <p 
                             className={cn("font-medium leading-none", isMobile ? "text-[13px] -mt-[1px]" : "text-sm text-slate-500 mt-1")}
-                            style={{ color: isMobile ? "rgba(255,255,255,.92)" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
+                            style={{ color: isMobile ? "#D9E3F5" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
                         >
                             {todayStr}
                         </p>
@@ -338,11 +338,12 @@ export default function Home() {
                                 </button>
                                 <div className="w-[38px] flex justify-center items-center">
                                     <span 
-                                        className="font-bold tracking-wide uppercase font-sans leading-none text-center"
+                                        className="font-semibold tracking-wide uppercase font-sans leading-none text-center"
                                         style={{ 
                                             fontSize: '18px', 
                                             color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
-                                            textShadow: '0 1px 2px rgba(0,0,0,0.15)'
+                                            textShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                                            fontWeight: 600
                                         }}
                                     >
                                         {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
@@ -364,7 +365,7 @@ export default function Home() {
                                 className="font-semibold font-sans leading-none"
                                 style={{ 
                                     fontSize: '12.5px', 
-                                    color: isCurrentMonth ? '#EF6C6C' : '#D6DEE8',
+                                    color: isCurrentMonth ? '#E88383' : '#D6DEE8',
                                     marginTop: '1.5px',
                                     textShadow: '0 1px 2px rgba(0,0,0,0.15)'
                                 }}
@@ -398,7 +399,7 @@ export default function Home() {
                                     className="pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.80)",
@@ -425,12 +426,15 @@ export default function Home() {
                                                     <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                 </Button>
                                                 <div className="flex flex-col items-start gap-0.5">
-                                                    <div className={cn(
-                                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
-                                                        dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
-                                                    )}>
-                                                        {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
-                                                    </div>
+                                                    <div 
+                                                    className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none"
+                                                    style={{ 
+                                                        backgroundColor: dStats.balanceVar >= 0 ? 'rgba(46,204,113,0.08)' : 'rgba(255,90,90,0.08)',
+                                                        color: dStats.balanceVar >= 0 ? '#16a34a' : '#dc2626'
+                                                    }}
+                                                >
+                                                    {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                                </div>
                                                     <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
                                                 </div>
                                             </div>
@@ -441,8 +445,8 @@ export default function Home() {
                                             <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[48px] overflow-visible">
                                                 <defs>
                                                     <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#0556C3" stopOpacity="0.22" />
-                                                        <stop offset="100%" stopColor="#0556C3" stopOpacity="0.0" />
+                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.12" />
+                                                        <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.0" />
                                                     </linearGradient>
                                                 </defs>
                                                 <path
@@ -475,7 +479,7 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.80)",
@@ -517,10 +521,13 @@ export default function Home() {
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className={cn(
-                                                     "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
-                                                     dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
-                                                )}>
+                                                <div 
+                                                     className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
+                                                     style={{ 
+                                                         backgroundColor: dStats.expenseVar >= 0 ? 'rgba(255,90,90,0.08)' : 'rgba(46,204,113,0.08)',
+                                                         color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a'
+                                                     }}
+                                                >
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
                                                 <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
@@ -542,7 +549,7 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,252,254,0.95) 55%, rgba(248,250,253,0.94) 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.80)",
@@ -584,10 +591,13 @@ export default function Home() {
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start gap-0.5">
-                                                <div className={cn(
-                                                     "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]",
-                                                     dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
-                                                )}>
+                                                <div 
+                                                     className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
+                                                     style={{ 
+                                                         backgroundColor: dStats.incomeVar >= 0 ? 'rgba(46,204,113,0.08)' : 'rgba(255,90,90,0.08)',
+                                                         color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626'
+                                                     }}
+                                                >
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
                                                 <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
