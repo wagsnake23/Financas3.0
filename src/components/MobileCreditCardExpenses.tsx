@@ -313,7 +313,7 @@ export const MobileCreditCardExpenses: React.FC<
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
               <p className="text-[21px] font-[800] leading-none" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                <FormatCurrencyStyled value={totalPending > 0 ? totalPending : totalPaid} prefixColor={totalPending > 0 ? "#1f2937" : "#4b5563"} />
+                <FormatCurrencyStyled value={totalPending > 0 ? totalPending : totalPaid} prefixColor={totalPending > 0 ? "#6D28D9" : "#15803D"} />
               </p>
             </div>
           </div>
@@ -336,7 +336,7 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
   if (match) {
     return (
       <>
-        <span style={{ color: prefixColor, opacity: prefixColor ? 1 : 0.85, fontSize: "0.85em", fontWeight: 500, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
+        <span style={{ color: prefixColor, opacity: prefixColor ? 1 : 0.85, fontSize: "0.6em", fontWeight: 600, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
         {match[2]}
       </>
     );

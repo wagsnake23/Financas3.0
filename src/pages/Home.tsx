@@ -65,7 +65,7 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
     if (match) {
         return (
             <>
-                <span style={{ color: prefixColor, opacity: prefixColor ? 1 : 0.85, fontSize: "0.85em", fontWeight: 500, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
+                <span style={{ color: prefixColor, opacity: prefixColor ? 1 : 0.85, fontSize: "0.6em", fontWeight: 600, marginRight: "4px", verticalAlign: "baseline" }}>{match[1]}</span>
                 {match[2]}
             </>
         );
