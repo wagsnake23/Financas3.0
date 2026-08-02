@@ -323,7 +323,7 @@ export default function Home() {
                         </p>
                     </div>
                     {isMobile && (
-                        <div className="flex flex-col items-center select-none -mr-[8px] -mt-[3px]">
+                        <div className="flex flex-col items-center select-none mr-0 -mt-[3px]">
                             <div className="flex items-center gap-[7px]">
                                 <button 
                                     onClick={handlePrevMonth} 
