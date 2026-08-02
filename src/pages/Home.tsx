@@ -278,8 +278,14 @@ export default function Home() {
     };
 
     const greeting = getGreeting();
-    const rawDate = format(new Date(), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    const todayStr = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
+    const rawWeekday = format(new Date(), "EEEE", { locale: ptBR });
+    const capitalizedWeekday = rawWeekday.charAt(0).toUpperCase() + rawWeekday.slice(1);
+    const dayStr = format(new Date(), "dd");
+    const rawMonthAbbr = format(new Date(), "MMM", { locale: ptBR }).replace(".", "");
+    const capitalizedMonthAbbr = rawMonthAbbr.charAt(0).toUpperCase() + rawMonthAbbr.slice(1);
+    const yearStr = format(new Date(), "yyyy");
+    const todayStr = `${capitalizedWeekday}, ${dayStr} ${capitalizedMonthAbbr} de ${yearStr}`;
+    const isCurrentMonth = format(selectedMonth, "yyyy-MM") === format(new Date(), "yyyy-MM");
 
     return (
         <div
@@ -317,29 +323,54 @@ export default function Home() {
                         </p>
                     </div>
                     {isMobile && (
-                        <div className="flex items-center gap-[6px] select-none -mt-1 mr-1">
-                            <button 
-                                onClick={handlePrevMonth} 
-                                className="text-white hover:opacity-85 active:opacity-60 transition-opacity p-1 bg-transparent border-none outline-none cursor-pointer flex items-center justify-center font-sans"
-                                style={{ fontSize: '18px', lineHeight: 1 }}
-                            >
-                                ◀
-                            </button>
-                            <div className="flex flex-col items-center justify-center leading-none">
-                                <span className="text-[20px] font-bold text-white tracking-wide uppercase font-sans">
+                        <div className="flex flex-col items-center select-none mr-1 -mt-[6px]">
+                            <div className="flex items-center gap-[6px]">
+                                <button 
+                                    onClick={handlePrevMonth} 
+                                    className="text-white/90 bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 border-none outline-none cursor-pointer"
+                                    style={{ 
+                                        fontSize: '11px', 
+                                        lineHeight: 1,
+                                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)' 
+                                    }}
+                                >
+                                    ❮
+                                </button>
+                                <span 
+                                    className="font-bold tracking-wide uppercase font-sans leading-none"
+                                    style={{ 
+                                        fontSize: '19px', 
+                                        color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
+                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)'
+                                    }}
+                                >
                                     {format(selectedMonth, "MMM", { locale: ptBR }).replace(".", "")}
                                 </span>
-                                <span className="text-[13px] font-medium text-white/80 font-sans" style={{ marginTop: '2px' }}>
-                                    {format(selectedMonth, "yyyy")}
-                                </span>
+                                <button 
+                                    onClick={handleNextMonth} 
+                                    className="text-white/90 bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 border-none outline-none cursor-pointer"
+                                    style={{ 
+                                        fontSize: '11px', 
+                                        lineHeight: 1,
+                                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                                        textShadow: '0 1px 2px rgba(0,0,0,0.15)' 
+                                    }}
+                                >
+                                    ❯
+                                </button>
                             </div>
-                            <button 
-                                onClick={handleNextMonth} 
-                                className="text-white hover:opacity-85 active:opacity-60 transition-opacity p-1 bg-transparent border-none outline-none cursor-pointer flex items-center justify-center font-sans"
-                                style={{ fontSize: '18px', lineHeight: 1 }}
+                            <span 
+                                className="font-semibold font-sans leading-none"
+                                style={{ 
+                                    fontSize: '12.5px', 
+                                    color: isCurrentMonth ? '#EF6C6C' : '#D6DEE8',
+                                    marginTop: '2.5px',
+                                    textShadow: '0 1px 2px rgba(0,0,0,0.15)'
+                                }}
                             >
-                                ▶
-                            </button>
+                                {format(selectedMonth, "yyyy")}
+                            </span>
                         </div>
                     )}
                 </div>
