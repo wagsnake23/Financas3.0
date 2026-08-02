@@ -118,7 +118,7 @@ export const Navigation = () => {
     
     let color = "#FFFFFF";
     if (isDarkPage) {
-      color = "#181D66"; // Tom exato do topo da sky.webp (azul noturno profundo)
+      color = "#010856";
     } else if (isDespesas) {
       color = "#F7F9FC";
     } else if (isLancamentos) {
