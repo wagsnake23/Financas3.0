@@ -79,15 +79,15 @@ export default function Home() {
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-    // Fetch all revenues for memory-based filtering (needed for variations and 12-month graph)
+    // Fetch all revenues for memory-based filtering (needed for variations and 10-month graph)
     const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
         Tables<"receitas">[]
     >({
         queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy")],
         queryFn: async () => {
             if (!user?.id) return [];
-            // Fetch the whole calendar year of the selected month
-            const startRange = format(selectedMonth, "yyyy-01-01");
+            // Fetch current and previous year of the selected month
+            const startRange = format(subMonths(selectedMonth, 12), "yyyy-01-01");
             const endRange = format(selectedMonth, "yyyy-12-31");
             const { data, error } = await supabase
                 .from("receitas")
@@ -102,7 +102,7 @@ export default function Home() {
         placeholderData: keepPreviousData,
     });
 
-    // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 12-month graph)
+    // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 10-month graph)
     const { data: allExpenseInstallments = [], isLoading: isLoadingExpenses, isPlaceholderData: isPlaceholderExpenses } =
         useQuery<
             (Tables<"despesas_parcelas"> & {
@@ -123,8 +123,8 @@ export default function Home() {
             queryKey: ["allExpenseInstallments", user?.id, format(selectedMonth, "yyyy")],
             queryFn: async () => {
                 if (!user?.id) return [];
-                // Fetch the whole calendar year of the selected month
-                const startRange = format(selectedMonth, "yyyy-01-01");
+                // Fetch current and previous year of the selected month
+                const startRange = format(subMonths(selectedMonth, 12), "yyyy-01-01");
                 const endRange = format(selectedMonth, "yyyy-12-31");
                 const { data, error } = await supabase
                     .from("despesas_parcelas")
