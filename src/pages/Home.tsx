@@ -79,16 +79,16 @@ export default function Home() {
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-    // Fetch all revenues for memory-based filtering (needed for variations)
+    // Fetch all revenues for memory-based filtering (needed for variations and 12-month graph)
     const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
         Tables<"receitas">[]
     >({
-        queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy-MM")],
+        queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy")],
         queryFn: async () => {
             if (!user?.id) return [];
-            // Fetch current and previous month to calculate variations
-            const startRange = format(startOfMonth(subMonths(selectedMonth, 1)), "yyyy-MM-01");
-            const endRange = format(endOfMonth(selectedMonth), "yyyy-MM-dd");
+            // Fetch the whole calendar year of the selected month
+            const startRange = format(selectedMonth, "yyyy-01-01");
+            const endRange = format(selectedMonth, "yyyy-12-31");
             const { data, error } = await supabase
                 .from("receitas")
                 .select("*")
@@ -102,7 +102,7 @@ export default function Home() {
         placeholderData: keepPreviousData,
     });
 
-    // Fetch all expense installments for memory-based filtering and Credit Card card
+    // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 12-month graph)
     const { data: allExpenseInstallments = [], isLoading: isLoadingExpenses, isPlaceholderData: isPlaceholderExpenses } =
         useQuery<
             (Tables<"despesas_parcelas"> & {
@@ -120,11 +120,12 @@ export default function Home() {
                 > | null;
             })[]
         >({
-            queryKey: ["allExpenseInstallments", user?.id, format(selectedMonth, "yyyy-MM")],
+            queryKey: ["allExpenseInstallments", user?.id, format(selectedMonth, "yyyy")],
             queryFn: async () => {
                 if (!user?.id) return [];
-                const startRange = format(startOfMonth(subMonths(selectedMonth, 1)), "yyyy-MM-01");
-                const endRange = format(endOfMonth(selectedMonth), "yyyy-MM-dd");
+                // Fetch the whole calendar year of the selected month
+                const startRange = format(selectedMonth, "yyyy-01-01");
+                const endRange = format(selectedMonth, "yyyy-12-31");
                 const { data, error } = await supabase
                     .from("despesas_parcelas")
                     .select(
@@ -249,6 +250,69 @@ export default function Home() {
     const dMonth = lastStableData.current.selectedMonth;
 
     const location = useLocation();
+
+    const monthlyBalances = useMemo(() => {
+        const year = selectedMonth.getFullYear();
+        const list = [];
+        for (let i = 0; i < 12; i++) {
+            const m = new Date(year, i, 1);
+            const mStr = format(m, "yyyy-MM");
+            
+            const income = allRevenues
+                .filter((r) => r.data.startsWith(mStr))
+                .reduce((sum, r) => sum + r.valor, 0);
+                
+            const expenses = allExpenseInstallments
+                .filter((p) => p.vencimento.startsWith(mStr))
+                .reduce((sum, p) => sum + p.valor_parcela, 0);
+                
+            list.push({
+                monthStr: mStr,
+                balance: income - expenses,
+                date: m
+            });
+        }
+        return list;
+    }, [allRevenues, allExpenseInstallments, selectedMonth]);
+
+    const sparklinePoints = useMemo(() => {
+        if (monthlyBalances.length === 0) return [];
+        const balances = monthlyBalances.map(m => m.balance);
+        const minBal = Math.min(...balances);
+        const maxBal = Math.max(...balances);
+        const range = maxBal - minBal === 0 ? 1 : maxBal - minBal;
+        
+        return monthlyBalances.map((item, i) => {
+            // max balance maps to Y=5, min balance maps to Y=40
+            const y = 40 - ((item.balance - minBal) / range) * 35;
+            return {
+                x: 5 + i * (150 / 11),
+                y,
+                monthStr: item.monthStr,
+                balance: item.balance
+            };
+        });
+    }, [monthlyBalances]);
+
+    const linePath = useMemo(() => {
+        if (sparklinePoints.length === 0) return "";
+        let path = `M ${sparklinePoints[0].x} ${sparklinePoints[0].y}`;
+        for (let i = 0; i < sparklinePoints.length - 1; i++) {
+            const p0 = sparklinePoints[i];
+            const p1 = sparklinePoints[i + 1];
+            const cpX1 = p0.x + (p1.x - p0.x) / 2;
+            const cpY1 = p0.y;
+            const cpX2 = p0.x + (p1.x - p0.x) / 2;
+            const cpY2 = p1.y;
+            path += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
+        }
+        return path;
+    }, [sparklinePoints]);
+
+    const fillPath = useMemo(() => {
+        if (linePath === "") return "";
+        return `${linePath} L 155 44 L 5 44 Z`;
+    }, [linePath]);
 
     // Scroll to cartoes if hash is present
     React.useEffect(() => {
@@ -442,33 +506,44 @@ export default function Home() {
 
                                         {/* Sparkline Graph */}
                                         <div className="flex flex-col items-center justify-end pb-0.5 -mr-1">
-                                            <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[48px] overflow-visible">
+                                            <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
                                                 <defs>
                                                     <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.12" />
+                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.16" />
                                                         <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.0" />
                                                     </linearGradient>
                                                 </defs>
                                                 <path
-                                                    d="M 5 38 C 15 38, 25 28, 35 28 C 45 28, 55 32, 65 32 C 75 32, 85 20, 95 20 C 105 20, 115 24, 125 24 C 135 24, 145 8, 155 8 L 155 44 L 5 44 Z"
+                                                    d={fillPath}
                                                     fill="url(#sparkline-grad)"
+                                                    className="transition-all duration-300 ease-in-out"
                                                 />
                                                 <path
-                                                    d="M 5 38 C 15 38, 25 28, 35 28 C 45 28, 55 32, 65 32 C 75 32, 85 20, 95 20 C 105 20, 115 24, 125 24 C 135 24, 145 8, 155 8"
+                                                    d={linePath}
                                                     fill="none"
                                                     stroke="#0556C3"
                                                     strokeWidth="2.5"
                                                     strokeLinecap="round"
+                                                    className="transition-all duration-300 ease-in-out"
                                                 />
-                                                <circle cx="5" cy="38" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
-                                                <circle cx="35" cy="28" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
-                                                <circle cx="65" cy="32" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
-                                                <circle cx="95" cy="20" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
-                                                <circle cx="125" cy="24" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
-                                                <circle cx="155" cy="8" r="3" fill="#0556C3" stroke="#fff" strokeWidth="1.2" />
+                                                {sparklinePoints.map((pt, idx) => {
+                                                    const isSelected = idx === selectedMonth.getMonth();
+                                                    return (
+                                                        <circle
+                                                            key={idx}
+                                                            cx={pt.x}
+                                                            cy={pt.y}
+                                                            r={isSelected ? 4.6 : 3}
+                                                            fill={isSelected ? "#EF6C6C" : "#0556C3"}
+                                                            stroke="#fff"
+                                                            strokeWidth={isSelected ? 1.6 : 1.2}
+                                                            className="transition-all duration-300 ease-in-out"
+                                                        />
+                                                    );
+                                                })}
                                             </svg>
                                             <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                                Últimos 6 meses
+                                                Últimos 12 meses
                                             </span>
                                         </div>
                                     </div>
