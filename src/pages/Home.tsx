@@ -252,10 +252,15 @@ export default function Home() {
     const location = useLocation();
 
     const monthlyBalances = useMemo(() => {
-        const year = selectedMonth.getFullYear();
+        const today = new Date();
+        const diffMonths = (today.getFullYear() - selectedMonth.getFullYear()) * 12 + (today.getMonth() - selectedMonth.getMonth());
+        
+        // If selectedMonth is in the future or older than 9 months, shift window to end at selectedMonth
+        const endMonth = (diffMonths >= 0 && diffMonths < 10) ? today : selectedMonth;
+        
         const list = [];
-        for (let i = 0; i < 12; i++) {
-            const m = new Date(year, i, 1);
+        for (let i = 9; i >= 0; i--) {
+            const m = subMonths(endMonth, i);
             const mStr = format(m, "yyyy-MM");
             
             const income = allRevenues
@@ -275,6 +280,11 @@ export default function Home() {
         return list;
     }, [allRevenues, allExpenseInstallments, selectedMonth]);
 
+    const selectedMonthIdx = useMemo(() => {
+        const selStr = format(selectedMonth, "yyyy-MM");
+        return monthlyBalances.findIndex(item => item.monthStr === selStr);
+    }, [monthlyBalances, selectedMonth]);
+
     const sparklinePoints = useMemo(() => {
         if (monthlyBalances.length === 0) return [];
         const balances = monthlyBalances.map(m => m.balance);
@@ -284,9 +294,10 @@ export default function Home() {
         
         return monthlyBalances.map((item, i) => {
             // max balance maps to Y=5, min balance maps to Y=40
+            // start at X=22 (margin left), end at X=150 (margin right)
             const y = 40 - ((item.balance - minBal) / range) * 35;
             return {
-                x: 5 + i * (150 / 11),
+                x: 22 + i * (128 / 9),
                 y,
                 monthStr: item.monthStr,
                 balance: item.balance
@@ -300,9 +311,10 @@ export default function Home() {
         for (let i = 0; i < sparklinePoints.length - 1; i++) {
             const p0 = sparklinePoints[i];
             const p1 = sparklinePoints[i + 1];
-            const cpX1 = p0.x + (p1.x - p0.x) / 2;
+            const dx = (p1.x - p0.x) / 2.5;
+            const cpX1 = p0.x + dx;
             const cpY1 = p0.y;
-            const cpX2 = p0.x + (p1.x - p0.x) / 2;
+            const cpX2 = p1.x - dx;
             const cpY2 = p1.y;
             path += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
         }
@@ -311,7 +323,7 @@ export default function Home() {
 
     const fillPath = useMemo(() => {
         if (linePath === "") return "";
-        return `${linePath} L 155 44 L 5 44 Z`;
+        return `${linePath} L 150 44 L 22 44 Z`;
     }, [linePath]);
 
     // Scroll to cartoes if hash is present
@@ -509,14 +521,29 @@ export default function Home() {
                                             <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
                                                 <defs>
                                                     <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.16" />
-                                                        <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.0" />
+                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.20" />
+                                                        <stop offset="50%" stopColor="#2f80ff" stopOpacity="0.10" />
+                                                        <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.00" />
                                                     </linearGradient>
+                                                    <filter id="point-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                                        <feDropShadow dx="0" dy="1" stdDeviation="0.6" floodColor="#000" floodOpacity="0.15" />
+                                                    </filter>
+                                                    <filter id="red-glow" x="-40%" y="-40%" width="180%" height="180%">
+                                                        <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
+                                                        <feOffset dx="0" dy="1" />
+                                                        <feComponentTransfer in="blur" result="glow">
+                                                            <feFuncA type="linear" slope="0.3" />
+                                                        </feComponentTransfer>
+                                                        <feMerge>
+                                                            <feMergeNode in="glow" />
+                                                            <feMergeNode in="SourceGraphic" />
+                                                        </feMerge>
+                                                    </filter>
                                                 </defs>
                                                 <path
                                                     d={fillPath}
                                                     fill="url(#sparkline-grad)"
-                                                    className="transition-all duration-300 ease-in-out"
+                                                    style={{ transition: 'all 220ms ease-in-out' }}
                                                 />
                                                 <path
                                                     d={linePath}
@@ -524,26 +551,27 @@ export default function Home() {
                                                     stroke="#0556C3"
                                                     strokeWidth="2.5"
                                                     strokeLinecap="round"
-                                                    className="transition-all duration-300 ease-in-out"
+                                                    style={{ transition: 'all 220ms ease-in-out' }}
                                                 />
                                                 {sparklinePoints.map((pt, idx) => {
-                                                    const isSelected = idx === selectedMonth.getMonth();
+                                                    const isSelected = idx === selectedMonthIdx;
                                                     return (
                                                         <circle
                                                             key={idx}
                                                             cx={pt.x}
                                                             cy={pt.y}
-                                                            r={isSelected ? 4.6 : 3}
+                                                            r={isSelected ? 4.2 : 3}
                                                             fill={isSelected ? "#EF6C6C" : "#0556C3"}
                                                             stroke="#fff"
                                                             strokeWidth={isSelected ? 1.6 : 1.2}
-                                                            className="transition-all duration-300 ease-in-out"
+                                                            filter={isSelected ? "url(#red-glow)" : "url(#point-shadow)"}
+                                                            style={{ transition: 'all 220ms ease-in-out' }}
                                                         />
                                                     );
                                                 })}
                                             </svg>
                                             <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                                Últimos 12 meses
+                                                Últimos 10 meses
                                             </span>
                                         </div>
                                     </div>
