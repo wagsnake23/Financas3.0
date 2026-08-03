@@ -175,16 +175,16 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
-        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
+        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
         backdropFilter: "blur(18px) saturate(1.4)",
         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-        border: "1px solid rgba(255,255,255,0.80)",
+        border: "1px solid rgba(255,255,255,.75)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
+        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
 
@@ -219,15 +219,15 @@ export const MobileCreditCardExpenses: React.FC<
             </Select>
           </div>
 
-          {/* Right side: Purple Button (Exact 135px width) */}
+          {/* Right side: Purple Button (Responsive 135px/150px width) */}
           <div className="shrink-0">
             <Button
-              className="w-[135px] h-9 px-3 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 mt-[5px]"
+              className="w-[135px] md:w-[150px] h-9 px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 md:-mr-2 md:text-[15px]"
               style={{ 
                 background: "linear-gradient(135deg, #6d28d9, #5b21b6)", 
                 borderBottom: "1px solid rgba(0,0,0,0.4)", 
                 filter: "saturate(0.95)", 
-                boxShadow: "0 6px 14px rgba(109,40,217,0.15)" 
+                boxShadow: "0 6px 14px rgba(0,0,0,0.12)" 
               }}
               onClick={handlePayMonthlyBill}
               disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}

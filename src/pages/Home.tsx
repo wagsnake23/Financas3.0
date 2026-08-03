@@ -475,13 +475,13 @@ export default function Home() {
                                     className="pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,0.80)",
+                                        border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
+                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-stretch w-full relative z-20">
@@ -579,16 +579,16 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[16px]"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,0.80)",
+                                        border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
+                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -649,16 +649,16 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[16px]"
                                     style={{
                                         borderRadius: "16px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%)",
+                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,0.80)",
+                                        border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 32px rgba(15,23,42,0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
+                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -733,87 +733,138 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px]">
                         {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[14px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "14px",
-                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
-                                backgroundBlendMode: "normal",
-                                backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.09)",
+                                borderRadius: "16px",
+                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                backdropFilter: "blur(18px) saturate(1.4)",
+                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                border: "1px solid rgba(255,255,255,.75)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
-                            <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px] relative z-20">
-                                <div className="flex flex-col md:mt-3">
-                                    <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#1e3a8a", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                    <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                        <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#1e3a8a" />
-                                    </p>
-                                </div>
-                                {/* Seletor de Mês (Posição Top Right) */}
-                                <div
-                                    className="flex items-center justify-between px-1 rounded-[14px] transition-all h-9 w-[150px] -mr-2 bg-white/10 cursor-pointer"
-                                    style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(0,0,0,0.3)" }}
-                                >
-                                    <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
-                                        <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
-                                    </button>
-                                    <span className="text-[12px] font-bold text-[#111827] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
-                                        {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
-                                    </span>
-                                    <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[10px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:-translate-y-[1px] active:translate-y-[1px] hover:opacity-90" style={{ background: "rgba(0, 0, 0, 0.10)" }}>
-                                        <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center mt-1 md:mt-[3px] gap-2 md:gap-[11px]">
-                                {/* Investments Icon Button */}
-                                <Button
-                                    onClick={() => navigate("/dashboard?filter=investments")}
-                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                                >
-                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                </Button>
-                                <div className="flex flex-col items-start gap-0.5 mt-1">
-                                    <div className={cn(
-                                        "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none",
-                                        dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
-                                    )}>
-                                        {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                            <div className="flex justify-between items-stretch w-full relative z-20">
+                                <div className="flex flex-col justify-between py-0.5">
+                                    <div>
+                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#1f2937", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <FormatCurrencyStyled value={dStats.currentBalance} prefixColor="#0556C3" />
+                                        </p>
                                     </div>
-                                    <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                    <div className="flex items-center mt-3 gap-2">
+                                        {/* Investments Icon Button */}
+                                        <Button
+                                            onClick={() => navigate("/dashboard?filter=investments")}
+                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                        >
+                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                        </Button>
+                                        <div className="flex flex-col items-start gap-0.5 mt-1">
+                                            <div className={cn(
+                                                "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
+                                                dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
+                                            )}>
+                                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                            </div>
+                                            <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col items-end justify-between -mr-1 py-0.5">
+                                    {/* Seletor de Mês (Posição Top Right) */}
+                                    <div
+                                        className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                                        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                                    >
+                                        <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                            <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                                        </button>
+                                        <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                            {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                        </span>
+                                        <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                            <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                                        </button>
+                                    </div>
+
+                                    {/* Sparkline Graph */}
+                                    <div className="flex flex-col items-center justify-end pb-0.5 mt-2">
+                                        <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
+                                            <defs>
+                                                <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.20" />
+                                                    <stop offset="50%" stopColor="#2f80ff" stopOpacity="0.10" />
+                                                    <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.00" />
+                                                </linearGradient>
+                                                <filter id="point-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                                    <feDropShadow dx="0" dy="1" stdDeviation="0.6" floodColor="#000" floodOpacity="0.15" />
+                                                </filter>
+                                                <filter id="red-glow" x="-40%" y="-40%" width="180%" height="180%">
+                                                    <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
+                                                    <feOffset dx="0" dy="1" />
+                                                    <feComponentTransfer in="blur" result="glow">
+                                                        <feFuncA type="linear" slope="0.3" />
+                                                    </feComponentTransfer>
+                                                    <feMerge>
+                                                        <feMergeNode in="glow" />
+                                                        <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+                                            <path
+                                                d={fillPath}
+                                                fill="url(#sparkline-grad)"
+                                                style={{ transition: 'all 220ms ease-in-out' }}
+                                            />
+                                            <path
+                                                d={linePath}
+                                                fill="none"
+                                                stroke="#0556C3"
+                                                strokeWidth="2.5"
+                                                strokeLinecap="round"
+                                                style={{ transition: 'all 220ms ease-in-out' }}
+                                            />
+                                            {sparklinePoints.map((pt, idx) => {
+                                                const isSelected = idx === selectedMonthIdx;
+                                                return (
+                                                    <circle
+                                                        key={idx}
+                                                        cx={pt.x}
+                                                        cy={pt.y}
+                                                        r={isSelected ? 4.2 : 3}
+                                                        fill={isSelected ? "#EF6C6C" : "#0556C3"}
+                                                        stroke="#fff"
+                                                        strokeWidth={isSelected ? 1.6 : 1.2}
+                                                        filter={isSelected ? "url(#red-glow)" : "url(#point-shadow)"}
+                                                        style={{ transition: 'all 220ms ease-in-out' }}
+                                                    />
+                                                );
+                                            })}
+                                        </svg>
+                                        <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
+                                            Últimos 10 meses
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-
-                             <div className="absolute bottom-1.5 right-5 pointer-events-none flex items-end overflow-visible md:bottom-5 md:right-8">
-                                 <div className="p-2 rounded-xl flex items-end">
-                                     <MiniFinanceBars
-                                         expenses={dStats.currentExpenses}
-                                         revenues={dStats.currentIncome}
-                                         balance={dStats.currentBalance}
-                                         height={isMobile ? 32 : 48}
-                                         showScaleLines={false}
-                                     />
-                                 </div>
-                             </div>
                         </Card>
 
                         {/* CARD RECEITAS */}
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "14px",
-                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
-                                backgroundBlendMode: "normal",
-                                backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.09)",
+                                borderRadius: "16px",
+                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                backdropFilter: "blur(18px) saturate(1.4)",
+                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                border: "1px solid rgba(255,255,255,.75)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
@@ -873,14 +924,14 @@ export default function Home() {
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
-                                borderRadius: "14px",
-                                background: "linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%)",
-                                backgroundBlendMode: "normal",
-                                backdropFilter: "blur(6px)",
-                                border: "1px solid rgba(15,23,42,0.09)",
+                                borderRadius: "16px",
+                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                backdropFilter: "blur(18px) saturate(1.4)",
+                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                border: "1px solid rgba(255,255,255,.75)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "inset 0 -8px 20px rgba(0,0,0,0.03)"
+                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
                             <div className="flex justify-between items-start md:items-center mb-2 md:mb-[19px]">
