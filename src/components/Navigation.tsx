@@ -191,7 +191,7 @@ export const Navigation = () => {
               style={{
                 fontFamily: "'Inter', sans-serif",
                 filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
-                textShadow: isMobile && isDarkPage && mobileTextColor === "text-[#356DD8]"
+                textShadow: isMobile && isDarkPage
                   ? "0 1px 1px rgba(0,0,0,0.12)"
                   : undefined
               }}>
