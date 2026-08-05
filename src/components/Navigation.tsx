@@ -262,7 +262,15 @@ export const Navigation = () => {
                       side="right"
                       className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-white flex flex-col [&>button]:top-[10px] [&>button]:right-[10px] [&>button]:text-white/70 hover:[&>button]:text-white"
                     >
-                      <SheetHeader className="relative text-left pt-10 pb-5 px-5 bg-[#0B1B3D] border-none shadow-sm flex flex-row items-center gap-[12px]">
+                      <SheetHeader 
+                        className="relative text-left pt-10 pb-5 px-5 border-none shadow-sm flex flex-row items-center gap-[12px]"
+                        style={{
+                          backgroundImage: "url('/sky.webp')",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center top",
+                          backgroundRepeat: "no-repeat"
+                        }}
+                      >
                         <div className="w-[48px] h-[48px] rounded-[16px] border-[1.5px] border-[#1C2F55] shadow-sm overflow-hidden bg-[#EEF4FF] flex items-center justify-center shrink-0">
                           <span className="text-[34px] leading-none">
                             {avatarEmoji}
@@ -279,14 +287,14 @@ export const Navigation = () => {
                       </SheetHeader>
 
                       <div className="flex-1 overflow-y-auto pb-4">
-                        <div className="flex flex-col gap-0.5 mt-3 px-3">
+                        <div className="flex flex-col gap-0.5 mt-1 px-3">
                           {navItems.map((item) => (
                             <RouterNavLink
                               key={item.to}
                               to={item.to}
                               onClick={() => setIsOpen(false)}
                               className={({ isActive }) => cn(
-                                "flex items-center gap-3 px-4 py-2.5 transition-all mx-1 rounded-xl",
+                                "flex items-center gap-3 px-4 py-2 transition-all mx-1 rounded-xl",
                                 isActive
                                   ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                   : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
@@ -296,16 +304,12 @@ export const Navigation = () => {
                               <span className="text-[15px] tracking-tight">{item.label}</span>
                             </RouterNavLink>
                           ))}
-                        </div>
-                        
-                        <div className="h-px bg-[#E5E7EB] my-2 mx-4" />
-                        
-                        <div className="flex flex-col gap-0.5 px-3">
+                          
                           <RouterNavLink
                             to="/perfil"
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-3 px-4 py-2.5 transition-all mx-1 rounded-xl",
+                              "flex items-center gap-3 px-4 py-2 transition-all mx-1 rounded-xl",
                               isActive
                                 ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                 : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
@@ -314,15 +318,11 @@ export const Navigation = () => {
                             <span className="text-[18px]">👤</span>
                             <span className="text-[15px] tracking-tight">Meu Perfil</span>
                           </RouterNavLink>
-                        </div>
 
-                        <div className="h-px bg-[#E5E7EB] my-2 mx-4" />
-                        
-                        <div className="px-3">
                           <Button
                             variant="ghost"
                             onClick={signOut}
-                            className="w-full justify-start px-4 h-10 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
+                            className="w-full justify-start px-4 h-9 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
                           >
                             <LogOut className="h-5 w-5 mr-3" strokeWidth={2.5} />
                             <span className="text-[15px]">Sair da Conta</span>
@@ -331,7 +331,7 @@ export const Navigation = () => {
                       </div>
                       
                       {/* Rodapé Elegante */}
-                      <div className="bg-[#F1F5F9] px-5 py-3.5 flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
+                      <div className="bg-[#F1F5F9] px-5 py-2.5 flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
                         <div className="flex items-center gap-3">
                           <img src="/icons/logo.png" alt="Logo" className="w-7 h-7" />
                           <div className="flex flex-col">
