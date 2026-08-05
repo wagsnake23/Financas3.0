@@ -42,6 +42,27 @@ export const Navigation = () => {
     ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) 
     : new Intl.DateTimeFormat("pt-BR").format(new Date());
 
+  const sub = profile?.subscriptions && Array.isArray(profile.subscriptions) 
+    ? profile.subscriptions[0] 
+    : profile?.subscriptions;
+
+  const getSubscriptionDisplay = () => {
+    if (!sub || !sub.subscription_type) {
+      return { icon: "🟢", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+    }
+    if (sub.subscription_status === 'expired') {
+      return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-red-400/10" };
+    }
+    switch (sub.subscription_type) {
+      case 'lifetime': return { icon: "⭐", title: "Vitalício", color: "text-amber-400", bg: "bg-amber-400/10" };
+      case 'premium': return { icon: "💎", title: "Premium", color: "text-blue-400", bg: "bg-blue-400/10" };
+      case 'trial':
+      default: return { icon: "🟢", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+    }
+  };
+
+  const subDisplay = getSubscriptionDisplay();
+
   const avatarEmoji = profile?.avatar || "😎";
 
   const navItems = [
@@ -323,8 +344,15 @@ export const Navigation = () => {
                           <span className="text-[16px] font-bold text-white truncate drop-shadow-sm leading-tight">
                             {displayName}
                           </span>
-                          <span className="text-[11.5px] text-white/80 mt-0.5 whitespace-nowrap">
-                            Membro desde {memberSince} 👑
+                          <span className={cn(
+                            "inline-flex items-center justify-between gap-2 mt-0.5 px-1.5 py-0.5 -ml-1.5 rounded-md self-start max-w-[140px]",
+                            subDisplay.color,
+                            subDisplay.bg
+                          )}>
+                            <span className="text-[12.5px] font-medium tracking-[0.015em] leading-tight truncate">
+                              {subDisplay.title}
+                            </span>
+                            <span className="text-xs leading-none shrink-0">{subDisplay.icon}</span>
                           </span>
                         </div>
                       </SheetHeader>
