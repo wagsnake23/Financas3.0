@@ -160,7 +160,7 @@ export const Navigation = () => {
                     ? "bg-[#F9FAFB]"
                     : !scrolled
                         ? "bg-transparent border-transparent"
-                        : "bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm"
+                        : "bg-white"
           )
           : "h-[72px] text-white"
       )}
