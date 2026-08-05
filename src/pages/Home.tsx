@@ -375,7 +375,7 @@ export default function Home() {
                             className={cn("font-bold leading-none text-white", isMobile ? "text-[17px] tracking-tight" : "text-2xl tracking-[0.5px]")}
                             style={{ fontFamily: "'Inter', sans-serif", textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
                         >
-                            <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-slate-600")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#374151]")}>{userName}</span> 👋
+                            <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-slate-600")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#374151]")}>{userName}</span> {profile?.avatar || "😎"}
                         </h1>
                         <p 
                             className={cn("font-medium leading-none", isMobile ? "text-[13px] -mt-[3px]" : "text-sm text-slate-500 mt-1")}

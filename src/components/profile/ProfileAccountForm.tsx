@@ -13,7 +13,7 @@ import { User as UserIcon } from "lucide-react";
 
 const profileSchema = z.object({
   nome: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
-  apelido: z.string().optional(),
+  apelido: z.string().max(15, "O apelido pode ter no máximo 15 caracteres.").optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -39,11 +39,14 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
   const onSubmit = async (values: ProfileFormValues) => {
     try {
       setIsUpdating(true);
+      
+      const apelidoFormatado = values.apelido?.trim();
+
       const { error } = await supabase
         .from("profiles")
         .update({
           nome: values.nome,
-          apelido: values.apelido || null,
+          apelido: apelidoFormatado || null,
         })
         .eq("id", user.id);
 
@@ -114,11 +117,17 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
               <FormItem>
                 <FormLabel className="font-semibold text-slate-700">Apelido <span className="text-slate-400 font-normal">(Opcional)</span></FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Como prefere ser chamado" 
-                    className="h-12 rounded-[16px] bg-[#F8FAFC] border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus-visible:ring-[#3B5B96]" 
-                    {...field} 
-                  />
+                  <div className="relative">
+                    <Input 
+                      placeholder="Como prefere ser chamado" 
+                      maxLength={15}
+                      className="h-12 rounded-[16px] bg-[#F8FAFC] border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus-visible:ring-[#3B5B96] pr-16" 
+                      {...field} 
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-400 select-none pointer-events-none">
+                      {(field.value || "").length} / 15
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
