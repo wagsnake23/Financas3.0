@@ -116,12 +116,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         "border-none"
       )}
       style={{
-        background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
+        background: "linear-gradient(180deg, #f7fafc 0%, #f1f5fa 40%, #eaf0f7 100%)",
         backgroundBlendMode: "soft-light",
         backdropFilter: "blur(6px)",
-        border: "2px solid rgba(37, 99, 235, 0.25)",
-        outline: "1px solid rgba(37, 99, 235, 0.10)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
+        border: "2px solid rgba(37, 99, 235, 0.15)",
+        outline: "1px solid rgba(37, 99, 235, 0.06)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 20px rgba(0,0,0,0.015), inset 0 0 18px rgba(37, 99, 235, 0.06)"
       }}>
         <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
           <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">
@@ -131,7 +131,7 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
         </DialogHeader>
         <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-2")} data-dialog-card-form>
           <div>
-            <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
+            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input
               value={newCardNome}
               onChange={(e) => {
@@ -139,16 +139,16 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 setValidationErrors(prev => ({ ...prev, newCardNome: false }));
               }}
               className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderColor("newCardNome"),
                 getBorderClass({ isInvalid: validationErrors.newCardNome, isValid: validationErrors.newCardNome === false })
               )}
-              style={{ background: "#FFFFFF", border: validationErrors.newCardNome ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+              
             />
           </div>
           <div>
-            <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Banco</Label>
+            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Banco</Label>
             <Input
               value={newCardBanco}
               onChange={(e) => {
@@ -156,16 +156,16 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                 setValidationErrors(prev => ({ ...prev, newCardBanco: false }));
               }}
               className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderColor("newCardBanco"),
                 getBorderClass({ isInvalid: validationErrors.newCardBanco, isValid: validationErrors.newCardBanco === false })
               )}
-              style={{ background: "#FFFFFF", border: validationErrors.newCardBanco ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+              
             />
           </div>
           <div>
-            <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Últimos 4 Dígitos</Label>
+            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Últimos 4 Dígitos</Label>
             <Input
               value={newCardUltimosDigitos}
               onChange={(e) => {
@@ -174,17 +174,17 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
               }}
               maxLength={4}
               className={cn(
-                "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                 isMobile ? "h-9 text-sm" : "h-10",
                 getBorderColor("newCardUltimosDigitos"),
                 getBorderClass({ isInvalid: validationErrors.newCardUltimosDigitos, isValid: validationErrors.newCardUltimosDigitos === false })
               )}
-              style={{ background: "#FFFFFF", border: validationErrors.newCardUltimosDigitos ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+              
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Fechamento</Label>
+              <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Fechamento</Label>
               <Input
                 type="number"
                 min="1"
@@ -195,16 +195,16 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setValidationErrors(prev => ({ ...prev, newCardDiaFechamento: false }));
                 }}
                 className={cn(
-                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderColor("newCardDiaFechamento"),
                   getBorderClass({ isInvalid: validationErrors.newCardDiaFechamento, isValid: validationErrors.newCardDiaFechamento === false })
                 )}
-                style={{ background: "#FFFFFF", border: validationErrors.newCardDiaFechamento ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+                
               />
             </div>
             <div>
-              <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Vencimento</Label>
+              <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Dia Vencimento</Label>
               <Input
                 type="number"
                 min="1"
@@ -215,12 +215,12 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded 
                   setValidationErrors(prev => ({ ...prev, newCardDiaVencimento: false }));
                 }}
                 className={cn(
-                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderColor("newCardDiaVencimento"),
                   getBorderClass({ isInvalid: validationErrors.newCardDiaVencimento, isValid: validationErrors.newCardDiaVencimento === false })
                 )}
-                style={{ background: "#FFFFFF", border: validationErrors.newCardDiaVencimento ? "1px solid #ef4444" : "1px solid rgba(100, 130, 180, 0.35)", boxShadow: "inset 0 2px 5px rgba(20,40,80,0.07), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+                
               />
             </div>
           </div>
