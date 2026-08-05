@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ interface ProfileFormProps {
 
 export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
   const queryClient = useQueryClient();
+  const { showSuccessToast, showErrorToast } = useToast();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const form = useForm<ProfileFormValues>({
@@ -54,10 +55,10 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
       });
 
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      toast.success("Perfil atualizado com sucesso!");
+      showSuccessToast("Perfil atualizado com sucesso!");
     } catch (error: any) {
       console.error(error);
-      toast.error("Erro ao atualizar o perfil.");
+      showErrorToast("Erro ao atualizar o perfil.");
     } finally {
       setIsUpdating(false);
     }

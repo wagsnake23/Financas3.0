@@ -11,9 +11,17 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import DynamicIcon from "./DynamicIcon";
 import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
-import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown, ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { cn, getDisplayName } from "@/lib/utils";
 import { useProfile } from "@/hooks/useProfile";
 import packageJson from "../../package.json";
 
@@ -28,7 +36,7 @@ export const Navigation = () => {
 
   const { data: profile } = useProfile(user?.id);
 
-  const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+  const displayName = getDisplayName(profile, user);
   
   const memberSince = user?.created_at 
     ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) 
@@ -47,10 +55,6 @@ export const Navigation = () => {
     { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒", color: "hsl(270, 70%, 58%)" },
   ];
 
-  const desktopNavItems = [
-    ...navItems,
-    { to: "/perfil", label: "Meu Perfil", icon: "👤", color: "hsl(210, 70%, 50%)" }
-  ];
 
   const bottomNavItems = [
     { to: "/", label: "Home", icon: Home },
@@ -200,7 +204,7 @@ export const Navigation = () => {
               {/* Navegação Desktop */}
               {!isMobile && (
                 <div className="hidden md:flex items-center gap-1">
-                  {desktopNavItems.map((item) => (
+                  {navItems.map((item) => (
                     <RouterNavLink
                       key={item.to}
                       to={item.to}
@@ -208,24 +212,63 @@ export const Navigation = () => {
                       className={({ isActive }) => cn(
                         "px-3 py-2 rounded-xl text-sm transition-all flex items-center gap-2",
                         isActive
-                          ? "bg-[#FEF9C3] text-[#0B213F] font-bold shadow-sm"
-                          : "text-white hover:bg-white/10"
+                          ? "bg-[#FEF9C3] text-[#0B213F] font-semibold shadow-sm"
+                          : "text-white/90 hover:bg-white/10 hover:text-white"
                       )}
                     >
                       <DynamicIcon name={item.icon} className="h-4 w-4" />
-                      <span className="font-semibold">{item.label}</span>
+                      <span className="font-medium">
+                        {item.label === "Lista de Compras" ? "Compras" : item.label}
+                      </span>
                     </RouterNavLink>
                   ))}
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={signOut}
-                    className="ml-2 text-white hover:bg-red-500/20 hover:text-red-300 rounded-xl"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sair
-                  </Button>
+                  <div className="h-6 w-px bg-white/20 mx-2" />
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors text-white border border-white/20 ml-1 text-left">
+                        <span className="text-[23px] leading-none">{avatarEmoji}</span>
+                        <div className="flex flex-col justify-center">
+                          <span className="max-w-[120px] truncate font-semibold text-[13px] leading-[1.1]">
+                            {displayName}
+                          </span>
+                          <span className="max-w-[130px] truncate text-[11px] font-normal text-white/75 leading-[1.2] mt-0.5">
+                            {user?.email || ""}
+                          </span>
+                        </div>
+                        <ChevronDown className="h-4 w-4 opacity-70 ml-0.5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[260px] rounded-2xl p-2 mt-2 shadow-xl border-slate-100">
+                      <DropdownMenuLabel className="font-normal flex flex-col gap-1 p-3 pb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-[#EEF4FF] border border-[#1C2F55]/10 flex items-center justify-center shrink-0">
+                            <span className="text-2xl leading-none">{avatarEmoji}</span>
+                          </div>
+                          <div className="flex flex-col truncate">
+                            <span className="font-bold text-slate-800 truncate">{displayName}</span>
+                            <span className="text-xs text-slate-500">Membro desde {memberSince} 👑</span>
+                          </div>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                      <DropdownMenuItem asChild className="rounded-xl cursor-pointer p-3 hover:bg-slate-50">
+                        <RouterNavLink to="/perfil" className="flex items-center w-full">
+                          <span className="text-lg mr-3">👤</span>
+                          <span className="font-semibold text-slate-700">Meu Perfil</span>
+                        </RouterNavLink>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                      <DropdownMenuItem 
+                        onClick={signOut}
+                        className="rounded-xl cursor-pointer p-3 text-red-600 focus:text-red-600 focus:bg-red-50"
+                      >
+                        <LogOut className="h-5 w-5 mr-3" strokeWidth={2.5} />
+                        <span className="font-semibold">Sair da Conta</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               )}
 
@@ -278,7 +321,7 @@ export const Navigation = () => {
                         </div>
                         <div className="flex flex-col overflow-hidden justify-center flex-1">
                           <span className="text-[16px] font-bold text-white truncate drop-shadow-sm leading-tight">
-                            {fullName}
+                            {displayName}
                           </span>
                           <span className="text-[11.5px] text-white/80 mt-0.5 whitespace-nowrap">
                             Membro desde {memberSince} 👑

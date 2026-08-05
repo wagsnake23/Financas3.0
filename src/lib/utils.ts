@@ -370,3 +370,15 @@ export function calcularRendimentoComCDI({
     irProvisionado: ir 
   };
 }
+
+export const getFullName = (profile: any, user: any): string => {
+  return profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+};
+
+export const getDisplayName = (profile: any, user: any): string => {
+  if (profile?.apelido?.trim()) {
+    return profile.apelido.trim();
+  }
+  const fullName = getFullName(profile, user);
+  return fullName.split(' ')[0];
+};

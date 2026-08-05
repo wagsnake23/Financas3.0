@@ -17,7 +17,7 @@ import {
     isWithinInterval,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, getDisplayName } from "@/lib/utils";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -331,8 +331,7 @@ export default function Home() {
     const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
     const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
 
-    const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "UsuÃ¡rio";
-    const userName = fullName.trim().split(" ")[0];
+    const userName = getDisplayName(profile, user);
     const getGreeting = () => {
         const hour = new Date().getHours();
         if (hour >= 5 && hour < 12) return "Bom dia";
