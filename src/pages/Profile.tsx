@@ -78,7 +78,10 @@ export default function Profile() {
       >
         {isMobile && (
           <div className="mb-6 md:mb-8">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-2">Meu Perfil</h1>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-2 flex items-center gap-2">
+              <span className="text-[26px] leading-none">{profile.avatar || "😎"}</span>
+              Meu Perfil
+            </h1>
             <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações e configurações da conta</p>
           </div>
         )}
