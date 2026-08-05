@@ -65,7 +65,7 @@ export function ProfilePasswordModal() {
       if (!open) form.reset();
     }}>
       <DialogTrigger asChild>
-        <Button className="w-full rounded-[16px] bg-gradient-to-b from-[#FB923C] to-[#F97316] hover:opacity-90 text-white font-bold shadow-[0_4px_14px_rgba(249,115,22,0.3)] h-12 transition-all hover:translate-y-[-1px]">
+        <Button className="w-full rounded-[16px] bg-gradient-to-b from-[#FB923C] to-[#F97316] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(249,115,22,0.3)] h-12 transition-all hover:translate-y-[-1px]">
           <Lock className="w-4 h-4 mr-2 text-white/90" />
           Alterar Senha
         </Button>

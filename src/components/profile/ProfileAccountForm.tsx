@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, Save } from "lucide-react";
 
 const profileSchema = z.object({
   nome: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
@@ -176,8 +176,9 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
           <Button 
             type="submit" 
             disabled={isUpdating}
-            className="w-full md:w-auto h-12 px-8 rounded-[16px] font-bold bg-gradient-to-b from-[#4A72BA] to-[#3B5B96] hover:opacity-90 text-white shadow-[0_4px_14px_rgba(59,91,150,0.3)] hover:-translate-y-[1px] transition-all"
+            className="w-full md:w-auto h-12 px-8 rounded-[16px] font-bold text-[17px] bg-gradient-to-b from-[#4A72BA] to-[#3B5B96] hover:opacity-90 text-white shadow-[0_4px_14px_rgba(59,91,150,0.3)] hover:-translate-y-[1px] transition-all"
           >
+            <Save className="w-5 h-5 mr-2" />
             {isUpdating ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
