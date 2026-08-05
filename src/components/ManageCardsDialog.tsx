@@ -66,6 +66,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const isMobile = useIsMobile(); // Usar o hook
   const queryClient = useQueryClient();
+  const [optimisticPrincipalId, setOptimisticPrincipalId] = useState<string | null>(null);
 
   const handleTogglePrincipal = async (cardId: string, currentIsPrincipal: boolean) => {
     if (cards.length === 1) {
@@ -77,7 +78,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     // Snapshot
     const previousCards = queryClient.getQueryData<Cartao[]>(["cartoes", user?.id]);
     
-    // Optimistic UI update
+    // Instant local UI update
+    setOptimisticPrincipalId(cardId);
+    
+    // Optimistic UI update for global cache
     if (previousCards) {
       const updatedCards = previousCards.map(c => ({
         ...c,
@@ -96,6 +100,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] });
     } catch (e) {
       // Revert Optimistic UI
+      setOptimisticPrincipalId(null);
       if (previousCards) {
         queryClient.setQueryData(["cartoes", user?.id], previousCards);
       }
@@ -276,7 +281,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
         }}>
           <DialogHeader className={cn("mt-2", !isMobile && "-mt-2")}>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full">
+            <DialogTitle className="flex items-center justify-center gap-2 w-full font-bold">
               <span>💳</span>
               <span>Gerenciar Cartões</span>
             </DialogTitle>
@@ -291,21 +296,21 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     key={card.id}
                     className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm relative"
                   >
-                    <div>
+                    <div className="flex-1">
                       <p className="font-medium">{card.nome}</p>
                       <p className="text-sm text-muted-foreground">
                         {card.banco} (**** {card.ultimos_digitos})
                       </p>
                       <p 
                         className={cn(
-                          "mt-1.5 select-none transition-colors", 
-                          card.is_principal 
-                            ? "text-[#374151] font-semibold text-xs cursor-default" 
+                          "mt-1.5 select-none transition-colors w-fit", 
+                          (optimisticPrincipalId ? card.id === optimisticPrincipalId : card.is_principal)
+                            ? "text-[#0556C3] font-semibold text-xs cursor-default" 
                             : "text-slate-500 font-medium text-xs cursor-pointer hover:text-slate-700"
                         )}
                         onClick={(e) => { e.stopPropagation(); handleTogglePrincipal(card.id, !!card.is_principal); }}
                       >
-                        {card.is_principal ? "⭐ Cartão Principal" : "☆ Tornar Principal"}
+                        {(optimisticPrincipalId ? card.id === optimisticPrincipalId : card.is_principal) ? "⭐ Cartão Principal" : "☆ Tornar Principal"}
                       </p>
                     </div>
                     <div className="flex gap-2">
