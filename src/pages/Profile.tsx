@@ -26,6 +26,64 @@ export default function Profile() {
     );
   }
 
+  const sub = profile?.subscriptions && Array.isArray(profile.subscriptions) 
+    ? profile.subscriptions[0] 
+    : profile?.subscriptions;
+
+  const getSubscriptionDisplay = () => {
+    if (!sub || !sub.subscription_type) {
+      return {
+        bg: "bg-emerald-50/50 border-emerald-100/50",
+        badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
+        icon: "🟢",
+        title: "Trial",
+        subtitle: "30 dias de avaliação"
+      };
+    }
+
+    if (sub.subscription_status === 'expired') {
+      return {
+        bg: "bg-red-50/50 border-red-100/50",
+        badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+        icon: "🔴",
+        title: "Assinatura Expirada",
+        subtitle: "Renove sua assinatura"
+      };
+    }
+
+    const expiresAt = sub.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
+
+    switch (sub.subscription_type) {
+      case 'lifetime':
+        return {
+          bg: "bg-amber-50/50 border-amber-100/50",
+          badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
+          icon: "⭐",
+          title: "Vitalício",
+          subtitle: "Acesso permanente"
+        };
+      case 'premium':
+        return {
+          bg: "bg-blue-50/50 border-blue-100/50",
+          badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
+          icon: "💎",
+          title: "Premium",
+          subtitle: `Válido até ${expiresAt}`
+        };
+      case 'trial':
+      default:
+        return {
+          bg: "bg-emerald-50/50 border-emerald-100/50",
+          badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
+          icon: "🟢",
+          title: "Trial",
+          subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação"
+        };
+    }
+  };
+
+  const subDisplay = getSubscriptionDisplay();
+
   return (
     <div
       className={cn(
@@ -98,11 +156,11 @@ export default function Profile() {
             <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8">{user?.email}</p>
 
             <div className="w-full flex flex-col gap-4 mb-10">
-              <div className="flex items-center justify-between px-4 py-3.5 rounded-[20px] bg-emerald-50/50 border border-emerald-100/50">
-                <span className="text-sm font-semibold text-slate-500">Status</span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/60 text-emerald-700 text-xs font-bold shadow-[0_2px_10px_rgba(16,185,129,0.1)]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Conta Ativa
+              <div className={`flex items-center justify-between px-4 py-3.5 rounded-[20px] border ${subDisplay.bg}`}>
+                <span className="text-sm font-semibold text-slate-500">{subDisplay.subtitle}</span>
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${subDisplay.badgeBg}`}>
+                  <span className="text-sm leading-none">{subDisplay.icon}</span>
+                  {subDisplay.title}
                 </span>
               </div>
               

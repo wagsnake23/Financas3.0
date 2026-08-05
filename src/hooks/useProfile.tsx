@@ -6,14 +6,27 @@ export const useProfile = (userId: string | undefined) => {
     queryKey: ["profile", userId],
     queryFn: async () => {
       if (!userId) return null;
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+      const [profileRes, subRes] = await Promise.all([
+        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+        supabase.from("subscriptions" as any).select("subscription_type, subscription_status, expires_at").eq("user_id", userId).maybeSingle()
+      ]);
       
-      if (error) throw error;
-      return data;
+      console.log("================ DEBUG SUBSCRIPTIONS ================");
+      console.log("USER_ID", userId);
+      console.log("PROFILE", profileRes.data);
+      console.log("SUBSCRIPTION", subRes.data);
+      console.log("=====================================================");
+
+      if (profileRes.error) throw profileRes.error;
+      
+      if (subRes.error) {
+        console.error("Erro ao buscar subscription separadamente:", subRes.error);
+      }
+      
+      return {
+        ...profileRes.data,
+        subscriptions: subRes.data || null
+      } as any;
     },
     enabled: !!userId,
     staleTime: 1000 * 60 * 5, // Cache por 5 minutos para evitar refetches desnecessários
