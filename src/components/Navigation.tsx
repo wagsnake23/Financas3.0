@@ -116,27 +116,25 @@ export const Navigation = () => {
   useEffect(() => {
     if (!isMobile) return;
     
-    let color = "#FFFFFF";
+    let color = "#F7F9FC";
     if (isDarkPage) {
       color = "#010856";
-    } else if (isDespesas) {
-      color = "#F7F9FC";
-    } else if (isLancamentos) {
+    } else if (isDespesas || isLancamentos) {
       color = "#F7F9FC";
     } else if (isReceitas || isInvestimentos) {
       color = "#F8FAFC"; // equivalente a slate-50
     } else if (isCategorias) {
       color = "#F9FAFB";
-    } else if (!scrolled) {
-      color = "#FFFFFF";
     } else {
-      color = "#FFFFFF";
+      color = "#F7F9FC";
     }
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
       metaThemeColor.setAttribute("content", color);
     }
+    document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
   }, [isMobile, isDarkPage, isDespesas, isLancamentos, isReceitas, isInvestimentos, isCategorias, scrolled]);
 
   return (

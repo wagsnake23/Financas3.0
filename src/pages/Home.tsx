@@ -334,7 +334,7 @@ export default function Home() {
         }
     }, [location.hash]);
 
-    // Só mostra o Loading se for o carregamento inicial (sem dados de receitas ou despesas ainda)
+    // SÃ³ mostra o Loading se for o carregamento inicial (sem dados de receitas ou despesas ainda)
     const isInitialLoad = (isLoadingRevenues && allRevenues.length === 0) || (isLoadingExpenses && allExpenseInstallments.length === 0);
 
     if (isInitialLoad && !allRevenues.length && !allExpenseInstallments.length) {
@@ -344,7 +344,7 @@ export default function Home() {
     const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
     const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
 
-    const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+    const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "UsuÃ¡rio";
     const userName = fullName.trim().split(" ")[0];
     const getGreeting = () => {
         const hour = new Date().getHours();
@@ -470,7 +470,7 @@ export default function Home() {
                                     gridTemplateRows: 'repeat(4, 1fr)'
                                 }}
                             >
-                                {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
+                                {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
                                 <Card
                                     className="pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
@@ -509,9 +509,9 @@ export default function Home() {
                                                         color: dStats.balanceVar >= 0 ? '#16a34a' : '#dc2626'
                                                     }}
                                                 >
-                                                    {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                                    {dStats.balanceVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                                 </div>
-                                                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -571,7 +571,7 @@ export default function Home() {
                                                 })}
                                             </svg>
                                             <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                                Últimos 10 meses
+                                                Ãšltimos 10 meses
                                             </span>
                                         </div>
                                     </div>
@@ -631,9 +631,9 @@ export default function Home() {
                                                          color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a'
                                                      }}
                                                 >
-                                                    {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                                    {dStats.expenseVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                             </div>
                                         </div>
                                         <Button
@@ -701,9 +701,9 @@ export default function Home() {
                                                          color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626'
                                                      }}
                                                 >
-                                                    {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                                    {dStats.incomeVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                             </div>
                                         </div>
                                         <Button
@@ -731,7 +731,7 @@ export default function Home() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px]">
-                        {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
+                        {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
                         <Card
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo md:h-[185px] md:flex md:flex-col md:justify-center md:px-8"
                             style={{
@@ -767,15 +767,15 @@ export default function Home() {
                                                 "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                 dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                             )}>
-                                                {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                                {dStats.balanceVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
                                             </div>
-                                            <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                            <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col items-end justify-between -mr-1 py-0.5">
-                                    {/* Seletor de Mês (Posição Top Right) */}
+                                    {/* Seletor de MÃªs (PosiÃ§Ã£o Top Right) */}
                                     <div
                                         className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
                                         style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
@@ -846,7 +846,7 @@ export default function Home() {
                                             })}
                                         </svg>
                                         <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                            Últimos 10 meses
+                                            Ãšltimos 10 meses
                                         </span>
                                     </div>
                                 </div>
@@ -904,9 +904,9 @@ export default function Home() {
                                              "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
                                              dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
                                         )}>
-                                            {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                            {dStats.incomeVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                     </div>
                                 </div>
                                 <Button
@@ -971,9 +971,9 @@ export default function Home() {
                                              "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold md:text-[11px] border-none tracking-tight leading-none h-[18px] md:h-[20px]",
                                              dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
                                         )}>
-                                            {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                            {dStats.expenseVar >= 0 ? "â†‘ +" : "â†“ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                         </div>
-                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                        <span className="text-[12px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>MÃªs anterior</span>
                                     </div>
                                 </div>
                                 <Button
@@ -987,7 +987,7 @@ export default function Home() {
                             </div>
                         </Card>
 
-                        {/* CARD DE CARTÃO DE CRÉDITO */}
+                        {/* CARD DE CARTÃƒO DE CRÃ‰DITO */}
                         <div id="cartoes-section" className="md:h-[185px] mb-4">
                             <MobileCreditCardExpenses
                                 cartoes={cartoes}
