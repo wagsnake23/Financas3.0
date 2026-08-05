@@ -14,8 +14,8 @@ import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCou
 import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useProfile } from "@/hooks/useProfile";
+import packageJson from "../../package.json";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
@@ -26,22 +26,15 @@ export const Navigation = () => {
 
   const { data: pendingCount = 0 } = usePendingShoppingItemsCount(user);
 
-  const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("nome")
-        .eq("id", user.id)
-        .single();
-      if (error) return null;
-      return data;
-    },
-    enabled: !!user,
-  });
+  const { data: profile } = useProfile(user?.id);
 
   const fullName = profile?.nome || user?.user_metadata?.nome || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuário";
+  
+  const memberSince = user?.created_at 
+    ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) 
+    : new Intl.DateTimeFormat("pt-BR").format(new Date());
+
+  const avatarEmoji = profile?.avatar || "😎";
 
   const navItems = [
     { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" },
@@ -52,6 +45,11 @@ export const Navigation = () => {
     { to: "/categorias", label: "Categorias", icon: "🗂️", color: "hsl(285, 70%, 55%)" },
     { to: "/investimentos", label: "Investimentos", icon: "📈", color: "hsl(180, 70%, 50%)" },
     { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒", color: "hsl(270, 70%, 58%)" },
+  ];
+
+  const desktopNavItems = [
+    ...navItems,
+    { to: "/perfil", label: "Meu Perfil", icon: "👤", color: "hsl(210, 70%, 50%)" }
   ];
 
   const bottomNavItems = [
@@ -202,7 +200,7 @@ export const Navigation = () => {
               {/* Navegação Desktop */}
               {!isMobile && (
                 <div className="hidden md:flex items-center gap-1">
-                  {navItems.map((item) => (
+                  {desktopNavItems.map((item) => (
                     <RouterNavLink
                       key={item.to}
                       to={item.to}
@@ -262,49 +260,87 @@ export const Navigation = () => {
                     </SheetTrigger>
                     <SheetContent
                       side="right"
-                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-[#F8FAFF]"
+                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-white flex flex-col [&>button]:top-[10px] [&>button]:right-[10px] [&>button]:text-white/70 hover:[&>button]:text-white"
                     >
-                      {/* Efeito institucional moderno no topo */}
-                      <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" />
-
-                      <SheetHeader className="relative text-left pt-12 pb-6 px-6 bg-[#2B457D] border-b border-white/10 shadow-sm">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-xl font-bold text-white truncate drop-shadow-sm">
+                      <SheetHeader className="relative text-left pt-10 pb-5 px-5 bg-[#0B1B3D] border-none shadow-sm flex flex-row items-center gap-[12px]">
+                        <div className="w-[48px] h-[48px] rounded-[16px] border-[1.5px] border-[#1C2F55] shadow-sm overflow-hidden bg-[#EEF4FF] flex items-center justify-center shrink-0">
+                          <span className="text-[34px] leading-none">
+                            {avatarEmoji}
+                          </span>
+                        </div>
+                        <div className="flex flex-col overflow-hidden justify-center flex-1">
+                          <span className="text-[16px] font-bold text-white truncate drop-shadow-sm leading-tight">
                             {fullName}
                           </span>
-                          <span className="text-xs text-blue-100/70 truncate font-medium">
-                            {user?.email}
+                          <span className="text-[11.5px] text-white/80 mt-0.5 whitespace-nowrap">
+                            Membro desde {memberSince} 👑
                           </span>
                         </div>
                       </SheetHeader>
 
-                      <div className="relative flex flex-col gap-0.5 mt-4 px-3">
-                        {navItems.map((item) => (
+                      <div className="flex-1 overflow-y-auto pb-4">
+                        <div className="flex flex-col gap-0.5 mt-3 px-3">
+                          {navItems.map((item) => (
+                            <RouterNavLink
+                              key={item.to}
+                              to={item.to}
+                              onClick={() => setIsOpen(false)}
+                              className={({ isActive }) => cn(
+                                "flex items-center gap-3 px-4 py-2.5 transition-all mx-1 rounded-xl",
+                                isActive
+                                  ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
+                                  : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
+                              )}
+                            >
+                              <span className="text-[18px]">{item.icon}</span>
+                              <span className="text-[15px] tracking-tight">{item.label}</span>
+                            </RouterNavLink>
+                          ))}
+                        </div>
+                        
+                        <div className="h-px bg-[#E5E7EB] my-2 mx-4" />
+                        
+                        <div className="flex flex-col gap-0.5 px-3">
                           <RouterNavLink
-                            key={item.to}
-                            to={item.to}
+                            to="/perfil"
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-4 px-4 py-2 transition-all mx-1",
-                              isActive ? "rounded-xl" : "rounded-2xl",
+                              "flex items-center gap-3 px-4 py-2.5 transition-all mx-1 rounded-xl",
                               isActive
-                                ? "bg-[#2B457D] text-white font-bold border-b-[1px] border-[#1a2c54] shadow-none"
-                                : "text-[#4A6B8A] hover:bg-white/30 hover:text-[#1E3A5F]"
+                                ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
+                                : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
                             )}
                           >
-                            <span className="text-xl filter drop-shadow-lg">{item.icon}</span>
-                            <span className="text-[14px] font-bold tracking-tight">{item.label}</span>
+                            <span className="text-[18px]">👤</span>
+                            <span className="text-[15px] tracking-tight">Meu Perfil</span>
                           </RouterNavLink>
-                        ))}
-                        <div className="h-px bg-slate-300/30 my-2 mx-4" />
-                        <Button
-                          variant="ghost"
-                          onClick={signOut}
-                          className="justify-start px-4 py-2 text-rose-600 hover:bg-rose-50/50 hover:text-rose-700 rounded-2xl font-bold transition-colors mt-1"
-                        >
-                          <LogOut className="h-5 w-5 mr-4" strokeWidth={2.5} />
-                          <span className="text-[14px]">Sair da Conta</span>
-                        </Button>
+                        </div>
+
+                        <div className="h-px bg-[#E5E7EB] my-2 mx-4" />
+                        
+                        <div className="px-3">
+                          <Button
+                            variant="ghost"
+                            onClick={signOut}
+                            className="w-full justify-start px-4 h-10 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
+                          >
+                            <LogOut className="h-5 w-5 mr-3" strokeWidth={2.5} />
+                            <span className="text-[15px]">Sair da Conta</span>
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Rodapé Elegante */}
+                      <div className="bg-[#F1F5F9] px-5 py-3.5 flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
+                        <div className="flex items-center gap-3">
+                          <img src="/icons/logo.png" alt="Logo" className="w-7 h-7" />
+                          <div className="flex flex-col">
+                            <span className="text-[13px] font-extrabold text-[#1E3A8B] tracking-tight">
+                              Minhas Finança<span className="text-[#22c55e]">$</span>
+                            </span>
+                            <span className="text-[9px] font-medium text-slate-400">Versão 2.0.1</span>
+                          </div>
+                        </div>
                       </div>
                     </SheetContent>
                   </Sheet>

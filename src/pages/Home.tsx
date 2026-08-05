@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useProfile } from "@/hooks/useProfile";
 import { Tables } from "@/integrations/supabase/types";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { Wallet, TrendingUp, TrendingDown, Plus } from "lucide-react";
@@ -173,21 +174,7 @@ export default function Home() {
         enabled: !!user,
     });
 
-    // Fetch profile data
-    const { data: profile } = useQuery({
-        queryKey: ["profile", user?.id],
-        queryFn: async () => {
-            if (!user?.id) return null;
-            const { data, error } = await supabase
-                .from("profiles")
-                .select("nome")
-                .eq("id", user.id)
-                .single();
-            if (error) return null;
-            return data;
-        },
-        enabled: !!user,
-    });
+    const { data: profile } = useProfile(user?.id);
 
     const stats = useMemo(() => {
         const currentMonthStr = format(selectedMonth, "yyyy-MM");

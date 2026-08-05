@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Home = lazy(() => import("./pages/Home"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ShoppingList = lazy(() => import("./pages/ShoppingList"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
                 <Route path="/lancamentos" element={<Lancamentos />} />
                 <Route path="/charts" element={<Charts />} />
                 <Route path="/lista-de-compras" element={<ShoppingList />} />
+                <Route path="/perfil" element={<Profile />} />
               </Route>
 
               {/* Catch-all route */}
