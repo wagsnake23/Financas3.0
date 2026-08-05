@@ -14,6 +14,7 @@ import { Input }
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import DynamicIcon from "./DynamicIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,6 +40,7 @@ interface Cartao {
   ultimos_digitos: string;
   dia_fechamento: number;
   dia_vencimento: number;
+  is_principal?: boolean;
 }
 
 interface ManageCardsDialogProps {
@@ -63,6 +65,43 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const isMobile = useIsMobile(); // Usar o hook
+  const queryClient = useQueryClient();
+
+  const handleTogglePrincipal = async (cardId: string, currentIsPrincipal: boolean) => {
+    if (cards.length === 1) {
+      toast.info("O seu único cartão já é o principal.", { duration: toastDuration, style: toastSuccessStyle });
+      return;
+    }
+    if (currentIsPrincipal) return;
+
+    // Snapshot
+    const previousCards = queryClient.getQueryData<Cartao[]>(["cartoes", user?.id]);
+    
+    // Optimistic UI update
+    if (previousCards) {
+      const updatedCards = previousCards.map(c => ({
+        ...c,
+        is_principal: c.id === cardId
+      }));
+      queryClient.setQueryData(["cartoes", user?.id], updatedCards);
+    }
+    
+    // Immediately call onCardUpdated to trigger any parent refreshes if needed, though query cache handles most
+    onCardUpdated();
+
+    try {
+      await supabase.from("cartoes").update({ is_principal: false }).eq("user_id", user?.id);
+      await supabase.from("cartoes").update({ is_principal: true }).eq("id", cardId);
+      
+      queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] });
+    } catch (e) {
+      // Revert Optimistic UI
+      if (previousCards) {
+        queryClient.setQueryData(["cartoes", user?.id], previousCards);
+      }
+      toast.error("Erro ao definir cartão principal", { duration: toastDuration, style: toastErrorStyle });
+    }
+  };
 
   // Edit form states
   const [nomeCartao, setNomeCartao] = useState("");
@@ -171,6 +210,25 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
     }
 
     // If no associated expenses, proceed with deletion
+    
+    // Check if the card to delete is principal
+    const cardToDeleteObj = cards.find(c => c.id === cardToDelete);
+    if (cardToDeleteObj && cardToDeleteObj.is_principal) {
+      const index = cards.findIndex(c => c.id === cardToDelete);
+      let newPrincipalCard = null;
+      if (cards.length > 1) {
+        if (index < cards.length - 1) {
+          newPrincipalCard = cards[index + 1];
+        } else {
+          newPrincipalCard = cards[index - 1];
+        }
+      }
+      if (newPrincipalCard) {
+        await supabase.from("cartoes").update({ is_principal: false }).eq("id", cardToDelete);
+        await supabase.from("cartoes").update({ is_principal: true }).eq("id", newPrincipalCard.id);
+      }
+    }
+
     const { error } = await supabase.from("cartoes").delete().eq("id", cardToDelete);
 
     if (error) {
@@ -231,12 +289,23 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 cards.map((card) => (
                   <Card
                     key={card.id}
-                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm"
+                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm relative"
                   >
                     <div>
                       <p className="font-medium">{card.nome}</p>
                       <p className="text-sm text-muted-foreground">
                         {card.banco} (**** {card.ultimos_digitos})
+                      </p>
+                      <p 
+                        className={cn(
+                          "mt-1.5 select-none transition-colors", 
+                          card.is_principal 
+                            ? "text-[#374151] font-semibold text-xs cursor-default" 
+                            : "text-slate-500 font-medium text-xs cursor-pointer hover:text-slate-700"
+                        )}
+                        onClick={(e) => { e.stopPropagation(); handleTogglePrincipal(card.id, !!card.is_principal); }}
+                      >
+                        {card.is_principal ? "⭐ Cartão Principal" : "☆ Tornar Principal"}
                       </p>
                     </div>
                     <div className="flex gap-2">

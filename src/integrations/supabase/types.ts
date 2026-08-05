@@ -93,6 +93,7 @@ export type Database = {
           nome: string
           ultimos_digitos: string
           user_id: string
+          is_principal: boolean
         }
         Insert: {
           banco: string
@@ -103,6 +104,7 @@ export type Database = {
           nome: string
           ultimos_digitos: string
           user_id: string
+          is_principal?: boolean
         }
         Update: {
           banco?: string
@@ -113,6 +115,7 @@ export type Database = {
           nome?: string
           ultimos_digitos?: string
           user_id?: string
+          is_principal?: boolean
         }
         Relationships: []
       }

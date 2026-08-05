@@ -105,12 +105,12 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     }
   }, [tipoPagamento, isRecurring, setNumeroParcelas]);
 
-  // NEW: Effect to auto-select the first card if available
+    // Effect to auto-select the principal card or first card
   useEffect(() => {
     if (formaPagamento === "cartao" && cartoes.length > 0 && cartaoId === UNSELECTED_VALUE) {
-      setCartaoId(cartoes[0].id);
-    } else if (formaPagamento === "cartao" && cartoes.length === 0) {
-      // If "cartao" is selected but no cards are available, ensure UNSELECTED_VALUE
+      const principalCard = cartoes.find(c => (c as any).is_principal);
+      setCartaoId(principalCard ? principalCard.id : cartoes[0].id);
+    } else if ((formaPagamento === "cartao" && cartoes.length === 0) || (formaPagamento !== "cartao" && cartaoId !== UNSELECTED_VALUE)) {
       setCartaoId(UNSELECTED_VALUE);
     }
   }, [formaPagamento, cartoes, setCartaoId, UNSELECTED_VALUE, cartaoId]);

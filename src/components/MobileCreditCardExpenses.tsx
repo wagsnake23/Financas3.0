@@ -46,7 +46,8 @@ export const MobileCreditCardExpenses: React.FC<
 
   useEffect(() => {
     if (cartoes.length > 0 && selectedCardId === UNSELECTED_VALUE) {
-      setSelectedCardId(cartoes[0].id);
+      const principalCard = cartoes.find(c => (c as any).is_principal);
+      setSelectedCardId(principalCard ? principalCard.id : cartoes[0].id);
     } else if (cartoes.length === 0 && selectedCardId !== UNSELECTED_VALUE) {
       setSelectedCardId(UNSELECTED_VALUE);
     }
