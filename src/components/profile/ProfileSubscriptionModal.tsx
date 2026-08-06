@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Check } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/contexts/ToastContext";
 import { cn } from "@/lib/utils";
@@ -12,33 +12,36 @@ const PLANS = [
     title: "Trial",
     badgeIcon: "🧪",
     description: "30 dias gratuitos.",
-    price: "R$ 0,00",
+    price: "0,00",
     buttonLabel: "Continuar Trial",
     bg: "bg-emerald-50/50",
     border: "border-emerald-200/60",
-    text: "text-emerald-700"
+    text: "text-emerald-700",
+    level: 1
   },
   {
     id: "premium",
     title: "Premium",
     badgeIcon: "💎",
     description: "Acesso completo durante 1 ano.",
-    price: "R$ 99,90",
+    price: "99,90",
     buttonLabel: "Assinar Premium",
     bg: "bg-blue-50/50",
     border: "border-blue-200/60",
-    text: "text-blue-700"
+    text: "text-blue-700",
+    level: 2
   },
   {
     id: "lifetime",
     title: "Vitalício",
     badgeIcon: "👑",
     description: "Pagamento único com acesso permanente.",
-    price: "R$ 299,90",
+    price: "299,90",
     buttonLabel: "Comprar Vitalício",
     bg: "bg-amber-50/50",
     border: "border-amber-200/60",
-    text: "text-amber-700"
+    text: "text-amber-700",
+    level: 3
   }
 ];
 
@@ -54,6 +57,9 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
   const handleSelectPlan = (planId: string) => {
     showSuccessToast("Em breve você poderá contratar este plano diretamente pelo aplicativo.");
   };
+
+  const actualPlanId = currentPlanId || "trial";
+  const currentLevel = PLANS.find(p => p.id === actualPlanId)?.level || 1;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -77,19 +83,29 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
 
         <div className="flex flex-col gap-2.5 pb-2">
           {PLANS.map((plan) => {
-            const isCurrent = (currentPlanId === plan.id) || (!currentPlanId && plan.id === "trial");
+            const isCurrent = actualPlanId === plan.id;
+            const isInferior = plan.level < currentLevel;
+            const isLifetimeCurrent = isCurrent && plan.id === "lifetime";
 
             return (
               <div key={plan.id} className={cn(
-                "relative flex flex-col px-4 py-3 rounded-[16px] border shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all hover:shadow-md",
-                isCurrent ? "bg-blue-50/40 border-blue-300" : "bg-white border-slate-100"
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all",
+                isInferior 
+                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  : isLifetimeCurrent
+                    ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
+                    : isCurrent 
+                      ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
+                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
               )}>
                 {/* Identificador de Plano Atual discreto */}
                 {isCurrent && (
                   <div className="absolute top-3 right-3">
                     <span className={cn(
-                      "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border bg-white",
-                      plan.border, plan.text
+                      "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border",
+                      isLifetimeCurrent 
+                        ? "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
+                        : cn("bg-white", plan.border, plan.text)
                     )}>
                       Plano Atual
                     </span>
@@ -98,40 +114,61 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
 
                 <div className="flex items-center gap-2 mb-0.5">
                   <span className="text-lg">{plan.badgeIcon}</span>
-                  <h3 className="text-[15px] font-bold text-slate-800">{plan.title}</h3>
-                  {plan.id === "lifetime" && !isCurrent && (
+                  <h3 className={cn("text-[15px] font-bold", isLifetimeCurrent ? "text-white" : "text-slate-800")}>{plan.title}</h3>
+                  {plan.id === "lifetime" && !isCurrent && !isInferior && (
                     <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 shadow-[0_1px_2px_rgba(245,158,11,0.05)]">
                       ⭐ Recomendado
                     </span>
                   )}
                 </div>
                 
-                <p className="text-[12px] font-medium text-slate-500 mb-1.5 pr-16 leading-tight">{plan.description}</p>
+                <p className={cn("text-[12px] font-medium mb-1.5 pr-16 leading-tight", isLifetimeCurrent ? "text-white/80" : "text-slate-500")}>
+                  {plan.description}
+                </p>
                 
                 <div className="flex items-center justify-between mt-auto">
-                  <span className="text-[21px] font-extrabold text-slate-800">{plan.price}</span>
-                  <Button 
-                    onClick={() => handleSelectPlan(plan.id)}
-                    disabled={isCurrent}
-                    className={cn(
-                      "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
-                      isCurrent 
-                        ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
-                        : "bg-slate-800 text-white hover:bg-slate-700 active:scale-95 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
-                    )}
-                  >
-                    {isCurrent ? "Em uso" : plan.buttonLabel}
-                  </Button>
+                  <span className={cn("font-extrabold flex items-baseline gap-0.5", isLifetimeCurrent ? "text-white" : "text-slate-800")}>
+                    <span className="text-[14px] opacity-80">R$</span>
+                    <span className="text-[21px] tracking-tight">{plan.price}</span>
+                  </span>
+                  
+                  {isLifetimeCurrent ? (
+                    <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
+                      <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
+                      <span className="leading-none mt-[1px] whitespace-nowrap">Acesso vitalício ativo</span>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={() => handleSelectPlan(plan.id)}
+                      disabled={isCurrent || isInferior}
+                      className={cn(
+                        "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
+                        isCurrent || isInferior
+                          ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
+                          : "bg-slate-800 text-white hover:bg-slate-700 active:scale-95 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+                      )}
+                    >
+                      {isCurrent ? "Em uso" : plan.buttonLabel}
+                    </Button>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
         
-        <div className="mt-1 pt-3 border-t border-slate-100/80">
-          <p className="text-[11.5px] text-slate-600 font-semibold text-center px-2 leading-tight">
-            Todos os planos pagos incluem acesso completo a todas as funcionalidades do aplicativo.
-          </p>
+        <div className="mt-0.5 pt-2.5 border-t border-slate-100/80 flex flex-col items-center">
+          <div className="flex items-center justify-center gap-1.5 flex-wrap text-center">
+            <span className="text-[11.5px] text-slate-500 font-medium">
+              Obrigado por apoiar o desenvolvimento do
+            </span>
+            <div className="flex items-center gap-1">
+              <img src="/icons/logo.png" alt="Logo" className="w-3.5 h-3.5 object-contain opacity-90" />
+              <span className="font-extrabold text-[13px] tracking-tight text-[#1E3A8B]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Minhas Finança<span className="text-[#22c55e] font-medium drop-shadow-sm">$</span>
+              </span>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
