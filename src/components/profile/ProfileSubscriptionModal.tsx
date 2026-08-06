@@ -76,10 +76,11 @@ const DEFAULT_PLANS: SubscriptionPlan[] = [
 interface ProfileSubscriptionModalProps {
   currentPlanId?: string;
   subscriptionStatus?: string;
+  expiresAt?: string | null;
   onSelectPlan?: (plan: SubscriptionPlan) => void;
 }
 
-export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, onSelectPlan }: ProfileSubscriptionModalProps) {
+export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, expiresAt, onSelectPlan }: ProfileSubscriptionModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [premiumPeriod, setPremiumPeriod] = useState<"monthly" | "yearly">("yearly");
   const isMobile = useIsMobile();
@@ -131,6 +132,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
   const isTrialUser = actualPlanId === "trial" || (!isPremiumUser && !isLifetimeUser);
 
   const isBlocked = subscriptionStatus === "blocked";
+  const hasActivePremiumOrLifetime = (isPremiumUser || isLifetimeUser) && subscriptionStatus !== "expired" && subscriptionStatus !== "blocked";
 
   const formatPrice = (val: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -183,12 +185,14 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
 
             return (
               <div key={plan.code} className={cn(
-                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px] animate-in fade-in slide-in-from-bottom-1 duration-200 ease-out",
                 isExpired
                   ? "bg-red-50/30 border-[#F2AAAA] shadow-none"
                   : isCurrent 
                     ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
-                    : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
+                    : hasActivePremiumOrLifetime
+                      ? "opacity-[0.96] saturate-[0.85] bg-slate-50 border-slate-100 shadow-none"
+                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
               )}>
                 {isCurrent && (
                   <div className="absolute top-3 right-3">
@@ -211,7 +215,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                 </div>
                 
                 <p className={cn("mb-1.5 pr-16 text-[12px] font-medium leading-tight", 
-                  isExpired ? "text-slate-400" : "text-slate-500"
+                  isExpired ? "text-slate-400" : (hasActivePremiumOrLifetime && !isCurrent) ? "text-slate-400" : "text-slate-500"
                 )}>
                   {plan.description || "30 dias gratuitos."}
                 </p>
@@ -252,14 +256,16 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
 
             return (
               <div key="card-premium" className={cn(
-                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px] animate-in fade-in slide-in-from-bottom-1 duration-200 ease-out delay-75 fill-mode-backwards",
                 isInferior || (isBlocked && !isCurrent)
-                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  ? "opacity-[0.96] cursor-default bg-slate-50 border-slate-100 shadow-none" 
                   : isExpired
                     ? "bg-red-50/50 border-red-200/60 shadow-[0_2px_10px_rgba(239,68,68,0.05)]"
                     : isHighlighted
-                      ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
-                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+                      ? "bg-gradient-to-b from-[#355ea8] to-[#1E3A8B] border-[#81a1eb]/50 shadow-[0_8px_25px_rgba(30,58,139,0.18)]"
+                      : hasActivePremiumOrLifetime
+                        ? "opacity-[0.96] bg-slate-50 border-slate-100 shadow-none"
+                        : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
               )}>
                 {isCurrent && (
                   <div className="absolute top-3 right-3">
@@ -395,12 +401,14 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
 
             return (
               <div key={plan.code} className={cn(
-                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px] animate-in fade-in slide-in-from-bottom-1 duration-200 ease-out delay-150 fill-mode-backwards",
                 isBlocked && !isCurrent
-                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  ? "opacity-[0.96] cursor-default bg-slate-50 border-slate-100 shadow-none" 
                   : isHighlighted
-                    ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
-                    : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+                    ? "bg-gradient-to-b from-[#355ea8] to-[#1E3A8B] border-[#81a1eb]/50 shadow-[0_8px_25px_rgba(30,58,139,0.18)]"
+                    : hasActivePremiumOrLifetime
+                      ? "opacity-[0.96] bg-slate-50 border-slate-100 shadow-none"
+                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
               )}>
                 {isCurrent && (
                   <div className="absolute top-3 right-3">

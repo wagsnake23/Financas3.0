@@ -181,6 +181,7 @@ export default function Profile() {
               <ProfileSubscriptionModal 
                 currentPlanId={sub?.subscription_type} 
                 subscriptionStatus={sub?.subscription_status === 'blocked' ? 'blocked' : (isExpired ? 'expired' : sub?.subscription_status)}
+                expiresAt={sub?.expires_at}
               />
             </div>
 
