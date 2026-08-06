@@ -164,15 +164,6 @@ export default function Auth() {
     if (error) {
       showErrorToast("Erro ao criar conta", error.message);
     } else if (data.user) {
-      // Attempt to assign the role, but don't block the success message or change it based on this error
-      const { error: roleError } = await supabase
-        .from("user_roles")
-        .insert({ user_id: data.user.id, role: "conferente" });
-
-      if (roleError) {
-        console.error("Erro ao definir permissões para o novo usuário:", roleError.message);
-        // We still show the success message about email activation, but log the role error internally.
-      }
 
       showSuccessToast(
         "Cadastro concluído",
