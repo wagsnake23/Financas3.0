@@ -156,7 +156,7 @@ export default function Profile() {
             <h2 className="mt-5 text-2xl font-extrabold text-slate-800 tracking-tight text-center">{profile.nome || "Usuário"}</h2>
             <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8">{user?.email}</p>
 
-            <div className="w-full flex flex-col gap-4 mb-10">
+            <div className="w-full flex flex-col gap-4 mb-4">
               <div className={`flex items-center justify-between px-4 py-3.5 rounded-[20px] border ${subDisplay.bg}`}>
                 <span className="text-sm font-semibold text-slate-500">{subDisplay.subtitle}</span>
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold ${subDisplay.badgeBg}`}>
@@ -165,17 +165,11 @@ export default function Profile() {
                 </span>
               </div>
               
-              <div className="flex items-center justify-between px-4 py-3.5 rounded-[20px] bg-blue-50/50 border border-blue-100/50">
-                <span className="text-sm font-semibold text-slate-500">Membro desde</span>
-                <span className="text-[#3B5B96] text-[13px] font-bold flex items-center gap-1.5 bg-white px-3 py-1 rounded-full shadow-[0_2px_10px_rgba(59,91,150,0.08)]">
-                  <span className="text-base leading-none">👑</span> {new Intl.DateTimeFormat("pt-BR").format(new Date(user?.created_at || Date.now()))}
-                </span>
-              </div>
+              <ProfileSubscriptionModal currentPlanId={sub?.subscription_type} />
             </div>
 
-            <div className="w-full mt-auto flex flex-col">
+            <div className="w-full flex flex-col">
               <ProfilePasswordModal />
-              <ProfileSubscriptionModal currentPlanId={sub?.subscription_type} />
             </div>
           </div>
 
