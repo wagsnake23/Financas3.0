@@ -107,9 +107,11 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
 
             return (
               <div key={plan.id} className={cn(
-                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all",
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
                 isInferior || (isBlocked && !isCurrent)
                   ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  : isExpired && plan.id === 'trial'
+                    ? "bg-red-50/30 border-[#F2AAAA] shadow-none"
                   : isExpired
                     ? "bg-red-50/50 border-red-200/60 shadow-[0_2px_10px_rgba(239,68,68,0.05)]"
                     : isHighlighted
@@ -146,14 +148,26 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                   )}
                 </div>
                 
-                <p className={cn("text-[12px] font-medium mb-1.5 pr-16 leading-tight", isHighlighted ? "text-white/80" : "text-slate-500")}>
+                <p className={cn("mb-1.5 pr-16", 
+                  plan.id === 'lifetime' ? "text-[11px] font-normal leading-snug" : "text-[12px] font-medium leading-tight",
+                  isHighlighted ? "text-white/80" : 
+                  (isExpired && plan.id === 'trial') ? "text-slate-400" : 
+                  "text-slate-500"
+                )}>
                   {plan.description}
                 </p>
                 
                 <div className="flex items-center justify-between mt-auto">
-                  <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
+                  <span className={cn("font-extrabold flex items-baseline gap-0.5", 
+                    isHighlighted ? "text-white" : 
+                    (isExpired && plan.id === 'trial') ? "text-slate-400" :
+                    (isCurrent && !isExpired && plan.id === 'trial') ? "text-[#1E3A8B] text-[24px]" :
+                    "text-slate-800"
+                  )}>
                     <span className="text-[14px] opacity-80">R$</span>
-                    <span className="text-[21px] tracking-tight">{plan.price}</span>
+                    <span className={cn("tracking-tight", (isCurrent && !isExpired && plan.id === 'trial') ? "text-[26px]" : "text-[21px]")}>
+                      {plan.price}
+                    </span>
                   </span>
                   
                   {isHighlighted ? (
@@ -163,6 +177,12 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                         Acesso {plan.id === "lifetime" ? "vitalício" : "Premium"} ativo
                       </span>
                     </div>
+                  ) : plan.id === "trial" && isCurrent ? (
+                    isExpired ? (
+                      <span className="text-[12.5px] font-medium text-[#5B6475] text-right max-w-[120px] leading-tight flex-shrink-0">
+                        Seu período gratuito terminou.
+                      </span>
+                    ) : null
                   ) : (
                     <Button 
                       onClick={() => handleSelectPlan(plan.id)}
@@ -171,7 +191,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
                         (isCurrent && !isExpired) || isInferior || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
-                          : "bg-blue-600 text-white hover:bg-blue-500 active:scale-95 shadow-[0_2px_8px_rgba(37,99,235,0.25)]"
+                          : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
                       )}
                     >
                       {isCurrent 
