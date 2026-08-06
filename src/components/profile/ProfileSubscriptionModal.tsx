@@ -171,7 +171,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
                         (isCurrent && !isExpired) || isInferior || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
-                          : "bg-slate-800 text-white hover:bg-slate-700 active:scale-95 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+                          : "bg-blue-600 text-white hover:bg-blue-500 active:scale-95 shadow-[0_2px_8px_rgba(37,99,235,0.25)]"
                       )}
                     >
                       {isCurrent 
