@@ -269,7 +269,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                   </div>
                 )}
 
-                <div className="flex items-center justify-between mb-1 pr-2">
+                <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">💎</span>
                     <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : isExpired ? "text-red-700" : "text-slate-800")}>
@@ -283,7 +283,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                     value={premiumPeriod}
                     onValueChange={(v) => v && setPremiumPeriod(v as "monthly" | "yearly")}
                     className={cn(
-                      "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[115px] border shadow-none cursor-default",
+                      "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[130px] border shadow-none cursor-default",
                       isHighlighted ? "bg-white/10 border-white/20" : "bg-slate-100/90 border-slate-200/80"
                     )}
                     style={{
@@ -301,7 +301,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                           : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       )}
                     >
-                      MÊS
+                      Mensal
                     </ToggleGroupItem>
                     <ToggleGroupItem
                       value="yearly"
@@ -312,7 +312,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                           : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                       )}
                     >
-                      ANO
+                      Anual
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
@@ -323,29 +323,30 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                   {plan.description || (premiumPeriod === "yearly" ? "Acesso completo por 1 ano." : "Acesso completo por 1 mês.")}
                 </p>
 
-                <div className="h-[22px] mb-1.5 flex items-center">
-                  {premiumPeriod === "yearly" && savingsValue > 0 && (
-                    <span className={cn(
-                      "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1",
-                      isHighlighted
-                        ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
-                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    )}>
-                      💚 Economize R$ {formatPrice(savingsValue)}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between mt-auto">
-                  <div className="flex flex-col">
-                    <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
-                      <span className="text-[14px] opacity-80">R$</span>
-                      <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
-                      <span className="text-[11px] font-normal opacity-75 ml-0.5">
-                        /{premiumPeriod === "yearly" ? "ano" : "mês"}
+                <div className="mt-auto flex flex-col pt-1">
+                  <div className="h-[20px] mb-0.5 flex items-end">
+                    {premiumPeriod === "yearly" && savingsValue > 0 && (
+                      <span className={cn(
+                        "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1 leading-none",
+                        isHighlighted
+                          ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
+                          : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                      )}>
+                        💚 Economize R$ {formatPrice(savingsValue)}
                       </span>
-                    </span>
+                    )}
                   </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
+                        <span className="text-[14px] opacity-80">R$</span>
+                        <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
+                        <span className="text-[11px] font-normal opacity-75 ml-0.5">
+                          /{premiumPeriod === "yearly" ? "ano" : "mês"}
+                        </span>
+                      </span>
+                    </div>
                   
                   {isHighlighted ? (
                     <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
@@ -370,6 +371,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                         : "Assinar Premium"}
                     </Button>
                   )}
+                  </div>
                 </div>
               </div>
             );
