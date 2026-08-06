@@ -20,7 +20,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
-import { Save } from "lucide-react";
+import { Save, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { AppCategory } from "@/types/finance";
@@ -37,6 +37,7 @@ import { AddSubcategoryModal } from "./AddSubcategoryModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
+import { useProfile } from "@/hooks/useProfile";
 
 import { PaymentDetails } from "./expense-form/PaymentDetails";
 import { DateAndInstallmentFields } from "./expense-form/DateAndInstallmentFields";
@@ -86,6 +87,18 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialDescricao,
 }) => {
   const { showSuccessToast, showErrorToast } = useToast();
+  
+  const { data: profile } = useProfile(user?.id);
+  const isExpired = profile?.isExpired;
+  
+  const handleBlockedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    showErrorToast("🔒 Sua assinatura expirou. Renove para voltar a adicionar despesas.");
+    setTimeout(() => {
+      window.dispatchEvent(new Event("open-subscription-modal"));
+    }, 2000);
+  };
+
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>(UNSELECTED_VALUE);
   const [formaPagamento, setFormaPagamento] = useState<
@@ -583,17 +596,20 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {/* Submit Button Logic */}
       <div style={isMobile ? { marginTop: "15px" } : undefined}>
         <Button
-          type="submit"
-          form="expense-form"
+          type={isExpired ? "button" : "submit"}
+          form={isExpired ? undefined : "expense-form"}
+          onClick={isExpired ? handleBlockedClick : undefined}
           className={cn(
             "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-            isMobile ? "h-11 text-lg" : "h-11 text-lg"
+            isMobile ? "h-11 text-lg" : "h-11 text-lg",
+            isExpired && "opacity-80"
           )}
           style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
-          disabled={loading}
+          disabled={!isExpired && loading}
         >
           <Save className="h-5 w-5" strokeWidth={2.5} />
-          {loading ? "Salvando..." : "Salvar Despesa"}
+          {loading && !isExpired ? "Salvando..." : "Salvar Despesa"}
+          {isExpired && <span className="ml-1.5 text-base">🔒</span>}
         </Button>
       </div>
     </form >

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { Lock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { getDate, format } from "date-fns"; // Importar format
 import { formatInTimeZone, TARGET_TIMEZONE } from "@/lib/utils"; // NOVO: Importar formatInTimeZone e TARGET_TIMEZONE
 
 import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
+import { useProfile } from "@/hooks/useProfile";
 
 interface TransactionFormProps {
   onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
@@ -30,6 +32,17 @@ const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: 
 
 export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
   const { user } = useAuth();
+  const { data: profile } = useProfile(user?.id);
+  const isExpired = profile?.isExpired;
+
+  const handleBlockedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    setTimeout(() => {
+      window.dispatchEvent(new Event("open-subscription-modal"));
+    }, 2000);
+  };
+
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [date, setDate] = useState(formatInTimeZone(new Date(), TARGET_TIMEZONE, 'yyyy-MM-dd')); // Usar formatInTimeZone
@@ -357,9 +370,15 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           />
         </div>
 
-        <Button type="submit" className="w-full rounded-xl" size="lg">
+        <Button
+          type={isExpired ? "button" : "submit"}
+          onClick={isExpired ? handleBlockedClick : undefined}
+          className={cn("w-full rounded-xl", isExpired && "opacity-80")}
+          size="lg"
+        >
           <DynamicIcon name="Plus" className="mr-2 h-4 w-4" />
           Adicionar Lançamento
+          {isExpired && <span className="ml-1.5 text-base">🔒</span>}
         </Button>
       </form>
     </Card>

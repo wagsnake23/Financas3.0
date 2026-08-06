@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useProfile } from "@/hooks/useProfile";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card"; // Corrected line
@@ -24,7 +26,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Save } from "lucide-react";
+import { CalendarIcon, Save, Lock } from "lucide-react";
 import {
   cn,
   getBorderClass,
@@ -40,7 +42,6 @@ import {
 import { Footer } from "@/components/Footer";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { AddSubcategoryModal } from "@/components/AddSubcategoryModal";
 import { useMutation } from "@tanstack/react-query";
 
@@ -55,11 +56,20 @@ const RECURRING_INSTALLMENTS_COUNT = 120;
 
 export default function Receitas() {
   const { user } = useAuth();
+  const { data: profile } = useProfile(user?.id);
+  const isExpired = profile?.isExpired;
   const { showSuccessToast, showErrorToast } = useToast();
-  const queryClient = useQueryClient();
   const isMobile = useIsMobile();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  const handleBlockedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    showErrorToast("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.");
+    setTimeout(() => {
+      window.dispatchEvent(new Event("open-subscription-modal"));
+    }, 2000);
+  };
 
   const [tipoReceitaId, setTipoReceitaId] = useState(UNSELECTED_VALUE);
   const [valor, setValor] = useState<number | undefined>(undefined);
@@ -575,17 +585,20 @@ export default function Receitas() {
         {/* Submit Button Logic */}
         <div style={isMobile ? { marginTop: "24px" } : undefined}>
           <Button
-            type="submit"
-            form="income-form"
+            type={isExpired ? "button" : "submit"}
+            form={isExpired ? undefined : "income-form"}
+            onClick={isExpired ? handleBlockedClick : undefined}
             className={cn(
               "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-              isMobile ? "h-11 text-lg" : "h-11 text-lg"
+              isMobile ? "h-11 text-lg" : "h-11 text-lg",
+              isExpired && "opacity-80"
             )}
             style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}
-            disabled={loading}
+            disabled={!isExpired && loading}
           >
             <Save className="h-5 w-5" strokeWidth={2.5} />
-            {loading ? "Salvando..." : "Salvar Receita"}
+            {loading && !isExpired ? "Salvando..." : "Salvar Receita"}
+            {isExpired && <span className="ml-1.5 text-base">🔒</span>}
           </Button>
         </div>
       </form>

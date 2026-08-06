@@ -17,7 +17,7 @@ import { Investment, AppCategory } from "@/types/finance"; // Importar a interfa
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils"; // Importar getBorderClass, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI
 import { format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO } from "date-fns"; // Importar format, getYear, subMonths, addMonths, addDays, differenceInBusinessDays, parseISO
 import { ptBR } from "date-fns/locale"; // Importar ptBR
-import { CalendarIcon } from "lucide-react"; // Importar CalendarIcon
+import { CalendarIcon, Lock } from "lucide-react"; // Importar CalendarIcon e Lock
 import { Calendar } from "@/components/ui/calendar"; // Importar Calendar
 import {
   Popover,
@@ -44,7 +44,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"; // NOVO: Importar AlertDialog
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useProfile } from "@/hooks/useProfile";
 
 const UNSELECTED_VALUE = "unselected";
 const toastDuration = 1000; // 1 segundo para todos os dispositivos
@@ -141,6 +143,18 @@ export default function Investments() { // Alterado para export default function
   }, [allSubcategories]);
 
   // Form states for adding new investment
+  const { data: profile } = useProfile(user?.id);
+  const isExpired = profile?.isExpired;
+
+  const handleBlockedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    setTimeout(() => {
+      window.dispatchEvent(new Event("open-subscription-modal"));
+    }, 2000);
+  };
+
+  const [institution, setInstitution] = useState(UNSELECTED_VALUE); // Changed from 'name'
   const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(UNSELECTED_VALUE); // Changed from 'name'
   const [type, setType] = useState("fixed");
   const [amount, setAmount] = useState<number | undefined>(undefined); // Alterado para number | undefined
@@ -989,15 +1003,18 @@ export default function Investments() { // Alterado para export default function
                 </div>
 
                 <Button
-                  type="submit"
+                  type={isExpired ? "button" : "submit"}
+                  onClick={isExpired ? handleBlockedClick : undefined}
                   className={cn(
-                    "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
-                    isMobile ? "h-11 text-lg" : "h-11 text-lg"
+                    "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                    isMobile ? "h-11 text-lg" : "h-11 text-lg",
+                    isExpired && "opacity-80"
                   )}
                   style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
-                  disabled={loadingForm}
+                  disabled={!isExpired && loadingForm}
                 >
-                  {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
+                  {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
+                  {isExpired && <span className="ml-1.5 text-base">🔒</span>}
                 </Button>
               </form>
             </Card>
@@ -1470,15 +1487,18 @@ export default function Investments() { // Alterado para export default function
                     </div>
 
                     <Button
-                      type="submit"
+                      type={isExpired ? "button" : "submit"}
+                      onClick={isExpired ? handleBlockedClick : undefined}
                       className={cn(
-                        "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
-                        isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]"
+                        "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                        isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]",
+                        isExpired && "opacity-80"
                       )}
                       style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
-                      disabled={loadingForm}
+                      disabled={!isExpired && loadingForm}
                     >
-                      {loadingForm ? "Adicionando..." : "Adicionar Investimento"}
+                      {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
+                      {isExpired && <span className="ml-1.5 text-base">🔒</span>}
                     </Button>
                   </form>
                 </Card>

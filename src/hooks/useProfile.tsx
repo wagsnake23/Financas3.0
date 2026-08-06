@@ -23,9 +23,19 @@ export const useProfile = (userId: string | undefined) => {
         console.error("Erro ao buscar subscription separadamente:", subRes.error);
       }
       
+      const subscriptions = (subRes.data as any) || null;
+      let isExpired = false;
+      
+      if (subscriptions) {
+        const type = subscriptions.subscription_type || 'trial';
+        isExpired = subscriptions.subscription_status === 'expired' || 
+          (type === 'trial' && subscriptions.expires_at && new Date(subscriptions.expires_at) < new Date());
+      }
+
       return {
         ...profileRes.data,
-        subscriptions: subRes.data || null
+        subscriptions,
+        isExpired
       } as any;
     },
     enabled: !!userId,

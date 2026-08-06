@@ -42,9 +42,7 @@ export const Navigation = () => {
     ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) 
     : new Intl.DateTimeFormat("pt-BR").format(new Date());
 
-  const sub = profile?.subscriptions && Array.isArray(profile.subscriptions) 
-    ? profile.subscriptions[0] 
-    : profile?.subscriptions;
+  const sub = profile?.subscriptions;
 
   const getSubscriptionDisplay = () => {
     if (sub?.subscription_status === 'blocked') {
@@ -52,8 +50,7 @@ export const Navigation = () => {
     }
 
     const type = sub?.subscription_type || 'trial';
-    const isExpired = sub?.subscription_status === 'expired' || 
-                      (type === 'trial' && sub?.expires_at && new Date(sub.expires_at) < new Date());
+    const isExpired = profile?.isExpired;
 
     if (type === 'lifetime') {
       return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };

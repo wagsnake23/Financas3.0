@@ -3,9 +3,9 @@ import { useProfile } from "@/hooks/useProfile";
 import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
 import { ProfileAccountForm } from "@/components/profile/ProfileAccountForm";
 import { ProfilePasswordModal } from "@/components/profile/ProfilePasswordModal";
-import { ProfileSubscriptionModal } from "@/components/profile/ProfileSubscriptionModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -27,13 +27,9 @@ export default function Profile() {
     );
   }
 
-  const sub = profile?.subscriptions && Array.isArray(profile.subscriptions) 
-    ? profile.subscriptions[0] 
-    : profile?.subscriptions;
-
+  const sub = profile?.subscriptions;
   const type = sub?.subscription_type || 'trial';
-  const isExpired = sub?.subscription_status === 'expired' || 
-                    (type === 'trial' && sub?.expires_at && new Date(sub.expires_at) < new Date());
+  const isExpired = profile?.isExpired;
 
   const getSubscriptionDisplay = () => {
     if (sub?.subscription_status === 'blocked') {
@@ -178,11 +174,22 @@ export default function Profile() {
                 </span>
               </div>
               
-              <ProfileSubscriptionModal 
-                currentPlanId={sub?.subscription_type} 
-                subscriptionStatus={sub?.subscription_status === 'blocked' ? 'blocked' : (isExpired ? 'expired' : sub?.subscription_status)}
-                expiresAt={sub?.expires_at}
-              />
+              <Button 
+                onClick={() => window.dispatchEvent(new Event("open-subscription-modal"))}
+                className="w-full rounded-[16px] bg-gradient-to-b from-[#3B82F6] to-[#2563EB] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(37,99,235,0.3)] h-12 transition-all hover:translate-y-[-1px]"
+              >
+                {type.startsWith('premium') && isExpired ? (
+                  <>
+                    <span className="mr-2 text-lg leading-none">🔄</span>
+                    Renovar Assinatura
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2 text-white/90" />
+                    Gerenciar Assinatura
+                  </>
+                )}
+              </Button>
             </div>
 
             <div className="w-full flex flex-col">

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useProfile } from "@/hooks/useProfile";
 import CurrencyBR from "@/components/ui/currency-br";
 import { NumericInput } from "@/components/ui/numeric-input";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "./DynamicIcon";
 import { cn, getBorderClass, formatCurrency, formatInTimeZone, TARGET_TIMEZONE, getAliquotaIR, calcularRendimentoComCDI, getTipoTributacao, IndexadorHistorico } from "@/lib/utils";
+import { Lock } from "lucide-react";
 
 interface EditInvestmentDialogProps {
   investmentToEdit: Investment;
@@ -49,6 +51,17 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   indexadorMapCDI,
   indexadorMapIPCA,
 }) => {
+  const { data: profile } = useProfile(user?.id);
+  const isExpired = profile?.isExpired;
+
+  const handleBlockedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    setTimeout(() => {
+      window.dispatchEvent(new Event("open-subscription-modal"));
+    }, 2000);
+  };
+
   const [selectedInvestmentCategoryId, setSelectedInvestmentCategoryId] = useState(investmentToEdit.nome);
   const [type, setType] = useState(investmentToEdit.tipo);
   const [amount, setAmount] = useState<number | undefined>(investmentToEdit.valor);
@@ -431,7 +444,16 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         >
           Cancelar
         </Button>
-        <Button type="submit" className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11", isMobile && "h-11")} style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
+        <Button
+          type={isExpired ? "button" : "submit"}
+          onClick={isExpired ? handleBlockedClick : undefined}
+          className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center", isMobile && "h-11", isExpired && "opacity-80")}
+          style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
+          disabled={!isExpired && loading}
+        >
+          {loading && !isExpired ? "Salvando..." : "Salvar"}
+          {isExpired && <span className="ml-1.5 text-base">🔒</span>}
+        </Button>
       </div>
     </form>
   );

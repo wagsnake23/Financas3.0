@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Check } from "lucide-react";
@@ -77,14 +77,21 @@ interface ProfileSubscriptionModalProps {
   currentPlanId?: string;
   subscriptionStatus?: string;
   expiresAt?: string | null;
+  hideTrigger?: boolean;
   onSelectPlan?: (plan: SubscriptionPlan) => void;
 }
 
-export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, expiresAt, onSelectPlan }: ProfileSubscriptionModalProps) {
+export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, expiresAt, hideTrigger, onSelectPlan }: ProfileSubscriptionModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [premiumPeriod, setPremiumPeriod] = useState<"monthly" | "yearly">("yearly");
   const isMobile = useIsMobile();
   const { showSuccessToast } = useToast();
+
+  useEffect(() => {
+    const handleOpenModal = () => setIsOpen(true);
+    window.addEventListener("open-subscription-modal", handleOpenModal);
+    return () => window.removeEventListener("open-subscription-modal", handleOpenModal);
+  }, []);
 
   const { data: fetchedPlans } = useQuery({
     queryKey: ["subscription_plans"],
@@ -143,21 +150,23 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="w-full mt-3 rounded-[16px] bg-gradient-to-b from-[#3B82F6] to-[#2563EB] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(37,99,235,0.3)] h-12 transition-all hover:translate-y-[-1px]">
-          {isPremiumUser && subscriptionStatus === 'expired' ? (
-            <>
-              <span className="mr-2 text-lg leading-none">🔄</span>
-              Renovar Assinatura
-            </>
-          ) : (
-            <>
-              <CreditCard className="w-4 h-4 mr-2 text-white/90" />
-              Gerenciar Assinatura
-            </>
-          )}
-        </Button>
-      </DialogTrigger>
+      {!hideTrigger && (
+        <DialogTrigger asChild>
+          <Button className="w-full mt-3 rounded-[16px] bg-gradient-to-b from-[#3B82F6] to-[#2563EB] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(37,99,235,0.3)] h-12 transition-all hover:translate-y-[-1px]">
+            {isPremiumUser && subscriptionStatus === 'expired' ? (
+              <>
+                <span className="mr-2 text-lg leading-none">🔄</span>
+                Renovar Assinatura
+              </>
+            ) : (
+              <>
+                <CreditCard className="w-4 h-4 mr-2 text-white/90" />
+                Gerenciar Assinatura
+              </>
+            )}
+          </Button>
+        </DialogTrigger>
+      )}
       
       <DialogContent className={cn("rounded-3xl p-5 md:p-6 overflow-x-hidden overflow-y-auto max-h-[90vh]", isMobile ? "w-[95vw] max-w-[95vw]" : "w-full sm:max-w-[425px]")}>
         <DialogHeader className="mb-3">
