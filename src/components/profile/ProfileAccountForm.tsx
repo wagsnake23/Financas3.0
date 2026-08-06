@@ -97,11 +97,13 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
               name="nome"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold text-slate-700">Nome Completo</FormLabel>
+                  <FormLabel className="font-bold text-[#1E3A8B] flex items-center gap-1.5">
+                    📝 Nome Completo <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Seu nome completo" 
-                      className="h-12 rounded-[16px] bg-[#F8FAFC] border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus-visible:ring-[#3B5B96]" 
+                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 font-medium focus-visible:ring-[#3B5B96]" 
                       {...field} 
                     />
                 </FormControl>
@@ -115,13 +117,15 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
             name="apelido"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold text-slate-700">Apelido <span className="text-slate-400 font-normal">(Opcional)</span></FormLabel>
+                <FormLabel className="font-bold text-[#1E3A8B] flex items-center gap-1.5">
+                  🏷️ Apelido <span className="text-slate-400 font-normal">(Opcional)</span>
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input 
                       placeholder="Como prefere ser chamado" 
                       maxLength={15}
-                      className="h-12 rounded-[16px] bg-[#F8FAFC] border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus-visible:ring-[#3B5B96] pr-16" 
+                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 font-medium focus-visible:ring-[#3B5B96] pr-16" 
                       {...field} 
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-400 select-none pointer-events-none">
@@ -137,23 +141,27 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormItem>
-            <FormLabel className="font-semibold text-slate-700">Email Principal</FormLabel>
+            <FormLabel className="font-bold text-[#1E3A8B] flex items-center gap-1.5">
+              📧 Email
+            </FormLabel>
             <FormControl>
               <Input 
                 value={user.email} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-slate-100/50 border-transparent shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] text-slate-500 cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
               />
             </FormControl>
           </FormItem>
 
           <FormItem>
-            <FormLabel className="font-semibold text-slate-700">Membro desde</FormLabel>
+            <FormLabel className="font-bold text-[#1E3A8B] flex items-center gap-1.5">
+              🎂 Data de Cadastro
+            </FormLabel>
             <FormControl>
               <Input 
-                value={formatDate(user.created_at)} 
+                value={user.created_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) : "Indisponível"} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-slate-100/50 border-transparent shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] text-slate-500 cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
               />
             </FormControl>
           </FormItem>
@@ -161,12 +169,14 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormItem>
-            <FormLabel className="font-semibold text-slate-700">Último Acesso</FormLabel>
+            <FormLabel className="font-bold text-[#1E3A8B] flex items-center gap-1.5">
+              ⏱️ Último Acesso
+            </FormLabel>
             <FormControl>
               <Input 
                 value={formatDate(user.last_sign_in_at)} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-slate-100/50 border-transparent shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] text-slate-500 cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
               />
             </FormControl>
           </FormItem>
