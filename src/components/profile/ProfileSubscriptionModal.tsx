@@ -47,9 +47,10 @@ const PLANS = [
 
 interface ProfileSubscriptionModalProps {
   currentPlanId?: string;
+  subscriptionStatus?: string;
 }
 
-export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionModalProps) {
+export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: ProfileSubscriptionModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
   const { showSuccessToast } = useToast();
@@ -76,46 +77,60 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
             <span className="text-xl leading-none">💳</span>
             <DialogTitle className="text-[17px] font-extrabold text-[#1E3A8B] tracking-tight">Gerenciar Assinatura</DialogTitle>
           </div>
-          <DialogDescription className="text-slate-500 font-medium text-left text-[13px] leading-snug">
-            Escolha o plano que melhor atende às suas necessidades.
-          </DialogDescription>
+          {subscriptionStatus === 'blocked' ? (
+            <DialogDescription className="text-red-500 font-bold text-left text-[13px] leading-snug">
+              Sua conta está bloqueada. Não é possível realizar upgrades no momento.
+            </DialogDescription>
+          ) : (
+            <DialogDescription className="text-slate-500 font-medium text-left text-[13px] leading-snug">
+              Escolha o plano que melhor atende às suas necessidades.
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         <div className="flex flex-col gap-2.5 pb-1">
           {PLANS.map((plan) => {
             const isCurrent = actualPlanId === plan.id;
+            const isBlocked = subscriptionStatus === "blocked";
+            const isExpired = subscriptionStatus === "expired" && isCurrent;
             const isInferior = plan.level < currentLevel;
-            const isHighlighted = isCurrent && (plan.id === "lifetime" || plan.id === "premium");
+            const isHighlighted = isCurrent && !isExpired && (plan.id === "lifetime" || plan.id === "premium");
 
             return (
               <div key={plan.id} className={cn(
                 "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all",
-                isInferior 
+                isInferior || (isBlocked && !isCurrent)
                   ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
-                  : isHighlighted
-                    ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
-                    : isCurrent 
-                      ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
-                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+                  : isExpired
+                    ? "bg-red-50/50 border-red-200/60 shadow-[0_2px_10px_rgba(239,68,68,0.05)]"
+                    : isHighlighted
+                      ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
+                      : isCurrent 
+                        ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
+                        : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
               )}>
                 {/* Identificador de Plano Atual discreto */}
                 {isCurrent && (
                   <div className="absolute top-3 right-3">
                     <span className={cn(
                       "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border",
-                      isHighlighted 
-                        ? "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
-                        : cn("bg-white", plan.border, plan.text)
+                      isExpired
+                        ? "bg-red-100 text-red-700 border-red-200"
+                        : isHighlighted 
+                          ? "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
+                          : cn("bg-white", plan.border, plan.text)
                     )}>
-                      Plano Atual
+                      {isExpired ? "Plano Expirado" : "Plano Atual"}
                     </span>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 mb-0.5">
                   <span className="text-lg">{plan.badgeIcon}</span>
-                  <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : "text-slate-800")}>{plan.title}</h3>
-                  {plan.id === "lifetime" && !isCurrent && !isInferior && (
+                  <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : isExpired ? "text-red-700" : "text-slate-800")}>
+                    {plan.title} {isExpired ? "Expirado" : ""}
+                  </h3>
+                  {plan.id === "lifetime" && !isCurrent && !isInferior && !isBlocked && (
                     <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 shadow-[0_1px_2px_rgba(245,158,11,0.05)]">
                       ⭐ Recomendado
                     </span>
@@ -142,10 +157,10 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
                   ) : (
                     <Button 
                       onClick={() => handleSelectPlan(plan.id)}
-                      disabled={isCurrent || isInferior}
+                      disabled={isCurrent || isInferior || isBlocked}
                       className={cn(
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
-                        isCurrent || isInferior
+                        isCurrent || isInferior || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
                           : "bg-slate-800 text-white hover:bg-slate-700 active:scale-95 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
                       )}

@@ -31,56 +31,69 @@ export default function Profile() {
     ? profile.subscriptions[0] 
     : profile?.subscriptions;
 
-  const getSubscriptionDisplay = () => {
-    if (!sub || !sub.subscription_type) {
-      return {
-        bg: "bg-emerald-50/50 border-emerald-100/50",
-        badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
-        icon: "🧪",
-        title: "Trial",
-        subtitle: "30 dias de avaliação"
-      };
-    }
+  const type = sub?.subscription_type || 'trial';
+  const isExpired = sub?.subscription_status === 'expired' || 
+                    (type === 'trial' && sub?.expires_at && new Date(sub.expires_at) < new Date());
 
-    if (sub.subscription_status === 'expired') {
+  const getSubscriptionDisplay = () => {
+    if (sub?.subscription_status === 'blocked') {
       return {
         bg: "bg-red-50/50 border-red-100/50",
         badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
         icon: "🔴",
-        title: "Assinatura Expirada",
-        subtitle: "Renove sua assinatura"
+        title: "Conta Bloqueada",
+        subtitle: "Nenhum recurso pago disponível"
       };
     }
 
-    const expiresAt = sub.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
+    const expiresAt = sub?.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
 
-    switch (sub.subscription_type) {
-      case 'lifetime':
-        return {
-          bg: "bg-amber-50/50 border-amber-100/50",
-          badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
-          icon: "👑",
-          title: "Vitalício",
-          subtitle: "Acesso permanente"
-        };
-      case 'premium':
-        return {
-          bg: "bg-blue-50/50 border-blue-100/50",
-          badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
-          icon: "💎",
-          title: "Premium",
-          subtitle: `Válido até ${expiresAt}`
-        };
-      case 'trial':
-      default:
-        return {
-          bg: "bg-emerald-50/50 border-emerald-100/50",
-          badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
-          icon: "🧪",
-          title: "Trial",
-          subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação"
-        };
+    if (type === 'lifetime') {
+      return {
+        bg: "bg-amber-50/50 border-amber-100/50",
+        badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
+        icon: "👑",
+        title: "Vitalício",
+        subtitle: "Acesso permanente"
+      };
     }
+
+    if (type === 'premium') {
+      if (isExpired) {
+        return {
+          bg: "bg-red-50/50 border-red-100/50",
+          badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+          icon: "💎",
+          title: "Premium Expirado",
+          subtitle: `Premium expirado em ${expiresAt}`
+        };
+      }
+      return {
+        bg: "bg-blue-50/50 border-blue-100/50",
+        badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
+        icon: "💎",
+        title: "Premium",
+        subtitle: `Válido até ${expiresAt}`
+      };
+    }
+
+    if (isExpired) {
+      return {
+        bg: "bg-red-50/50 border-red-100/50",
+        badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+        icon: "🧪",
+        title: "Trial Expirado",
+        subtitle: `Expirou em ${expiresAt}`
+      };
+    }
+
+    return {
+      bg: "bg-emerald-50/50 border-emerald-100/50",
+      badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
+      icon: "🧪",
+      title: "Trial",
+      subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação"
+    };
   };
 
   const subDisplay = getSubscriptionDisplay();
@@ -165,7 +178,10 @@ export default function Profile() {
                 </span>
               </div>
               
-              <ProfileSubscriptionModal currentPlanId={sub?.subscription_type} />
+              <ProfileSubscriptionModal 
+                currentPlanId={sub?.subscription_type} 
+                subscriptionStatus={sub?.subscription_status === 'blocked' ? 'blocked' : (isExpired ? 'expired' : sub?.subscription_status)}
+              />
             </div>
 
             <div className="w-full flex flex-col">

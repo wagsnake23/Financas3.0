@@ -47,18 +47,30 @@ export const Navigation = () => {
     : profile?.subscriptions;
 
   const getSubscriptionDisplay = () => {
-    if (!sub || !sub.subscription_type) {
-      return { icon: "🧪", title: "Período de Avaliação", color: "text-[#34D399]", bg: "bg-transparent" };
+    if (sub?.subscription_status === 'blocked') {
+      return { icon: "🔴", title: "Conta Bloqueada", color: "text-red-500", bg: "bg-transparent" };
     }
-    if (sub.subscription_status === 'expired') {
-      return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-transparent" };
+
+    const type = sub?.subscription_type || 'trial';
+    const isExpired = sub?.subscription_status === 'expired' || 
+                      (type === 'trial' && sub?.expires_at && new Date(sub.expires_at) < new Date());
+
+    if (type === 'lifetime') {
+      return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };
     }
-    switch (sub.subscription_type) {
-      case 'lifetime': return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };
-      case 'premium': return { icon: "💎", title: "Membro Premium", color: "text-[#60A5FA]", bg: "bg-transparent" };
-      case 'trial':
-      default: return { icon: "🧪", title: "Período de Avaliação", color: "text-[#34D399]", bg: "bg-transparent" };
+
+    if (type === 'premium') {
+      if (isExpired) {
+        return { icon: "💎", title: "Premium Expirado", color: "text-red-400", bg: "bg-transparent" };
+      }
+      return { icon: "💎", title: "Membro Premium", color: "text-[#60A5FA]", bg: "bg-transparent" };
     }
+
+    if (isExpired) {
+      return { icon: "🧪", title: "Trial Expirado", color: "text-red-400", bg: "bg-transparent" };
+    }
+
+    return { icon: "🧪", title: "Período de Avaliação", color: "text-[#34D399]", bg: "bg-transparent" };
   };
 
   const subDisplay = getSubscriptionDisplay();
