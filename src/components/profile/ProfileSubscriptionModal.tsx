@@ -239,11 +239,16 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
 
           {/* 2. CARD PREMIUM */}
           {(() => {
-            const plan = selectedPremiumPlan;
             const isCurrent = isPremiumUser;
             const isExpired = subscriptionStatus === "expired" && isCurrent;
             const isInferior = isLifetimeUser;
             const isHighlighted = isCurrent && !isExpired;
+
+            const activePremiumPlan = plans.find(p => p.code === actualPlanId) || selectedPremiumPlan;
+            const plan = isHighlighted ? activePremiumPlan : selectedPremiumPlan;
+            const displayedPeriod = isHighlighted 
+              ? (plan.code === "premium_yearly" ? "yearly" : "monthly") 
+              : premiumPeriod;
 
             return (
               <div key="card-premium" className={cn(
@@ -278,64 +283,68 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                   </div>
 
                   {/* TOGGLE MENSAL / ANUAL */}
-                  <ToggleGroup
-                    type="single"
-                    value={premiumPeriod}
-                    onValueChange={(v) => v && setPremiumPeriod(v as "monthly" | "yearly")}
-                    className={cn(
-                      "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[130px] border shadow-none cursor-default",
-                      isHighlighted ? "bg-white/10 border-white/20" : "bg-slate-100/90 border-slate-200/80"
-                    )}
-                    style={{
-                      "--cor-topo": isHighlighted ? "rgba(255,255,255,0.15)" : "#E6F0FF",
-                      "--cor-base": isHighlighted ? "rgba(255,255,255,0.05)" : "#DCEBFF",
-                      boxShadow: isHighlighted ? "inset 0px 1px 2px rgba(255, 255, 255, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.2)" : "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
-                    } as any}
-                  >
-                    <ToggleGroupItem
-                      value="monthly"
+                  {!isHighlighted && (
+                    <ToggleGroup
+                      type="single"
+                      value={premiumPeriod}
+                      onValueChange={(v) => v && setPremiumPeriod(v as "monthly" | "yearly")}
                       className={cn(
-                        "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
-                        isHighlighted
-                          ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
-                          : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                        "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[130px] border shadow-none cursor-default",
+                        isHighlighted ? "bg-white/10 border-white/20" : "bg-slate-100/90 border-slate-200/80"
                       )}
+                      style={{
+                        "--cor-topo": isHighlighted ? "rgba(255,255,255,0.15)" : "#E6F0FF",
+                        "--cor-base": isHighlighted ? "rgba(255,255,255,0.05)" : "#DCEBFF",
+                        boxShadow: isHighlighted ? "inset 0px 1px 2px rgba(255, 255, 255, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.2)" : "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                      } as any}
                     >
-                      Mensal
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="yearly"
-                      className={cn(
-                        "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
-                        isHighlighted
-                          ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
-                          : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                      )}
-                    >
-                      Anual
-                    </ToggleGroupItem>
-                  </ToggleGroup>
+                      <ToggleGroupItem
+                        value="monthly"
+                        className={cn(
+                          "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
+                          isHighlighted
+                            ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
+                            : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                        )}
+                      >
+                        Mensal
+                      </ToggleGroupItem>
+                      <ToggleGroupItem
+                        value="yearly"
+                        className={cn(
+                          "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
+                          isHighlighted
+                            ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
+                            : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                        )}
+                      >
+                        Anual
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  )}
                 </div>
                 
                 <p className={cn("text-[12px] font-medium mb-1 pr-4 leading-tight", 
                   isHighlighted ? "text-white/80" : "text-slate-500"
                 )}>
-                  {plan.description || (premiumPeriod === "yearly" ? "Acesso completo por 1 ano." : "Acesso completo por 1 mês.")}
+                  {plan.description || (displayedPeriod === "yearly" ? "Acesso completo por 1 ano." : "Acesso completo por 1 mês.")}
                 </p>
 
                 <div className="mt-auto flex flex-col pt-1">
-                  <div className="h-[20px] mb-0.5 flex items-end">
-                    {premiumPeriod === "yearly" && savingsValue > 0 && (
-                      <span className={cn(
-                        "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1 leading-none",
-                        isHighlighted
-                          ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
-                          : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                      )}>
-                        💚 Economize R$ {formatPrice(savingsValue)}
-                      </span>
-                    )}
-                  </div>
+                  {!isHighlighted && (
+                    <div className="h-[20px] mb-0.5 flex items-end">
+                      {displayedPeriod === "yearly" && savingsValue > 0 && (
+                        <span className={cn(
+                          "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1 leading-none",
+                          isHighlighted
+                            ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
+                            : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        )}>
+                          💚 Economize R$ {formatPrice(savingsValue)}
+                        </span>
+                      )}
+                    </div>
+                  )}
                   
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
@@ -343,7 +352,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, on
                         <span className="text-[14px] opacity-80">R$</span>
                         <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
                         <span className="text-[11px] font-normal opacity-75 ml-0.5">
-                          /{premiumPeriod === "yearly" ? "ano" : "mês"}
+                          /{displayedPeriod === "yearly" ? "ano" : "mês"}
                         </span>
                       </span>
                     </div>
