@@ -81,18 +81,18 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-2.5 pb-2">
+        <div className="flex flex-col gap-2.5 pb-1">
           {PLANS.map((plan) => {
             const isCurrent = actualPlanId === plan.id;
             const isInferior = plan.level < currentLevel;
-            const isLifetimeCurrent = isCurrent && plan.id === "lifetime";
+            const isHighlighted = isCurrent && (plan.id === "lifetime" || plan.id === "premium");
 
             return (
               <div key={plan.id} className={cn(
                 "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all",
                 isInferior 
                   ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
-                  : isLifetimeCurrent
+                  : isHighlighted
                     ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
                     : isCurrent 
                       ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
@@ -103,7 +103,7 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
                   <div className="absolute top-3 right-3">
                     <span className={cn(
                       "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border",
-                      isLifetimeCurrent 
+                      isHighlighted 
                         ? "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
                         : cn("bg-white", plan.border, plan.text)
                     )}>
@@ -114,7 +114,7 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
 
                 <div className="flex items-center gap-2 mb-0.5">
                   <span className="text-lg">{plan.badgeIcon}</span>
-                  <h3 className={cn("text-[15px] font-bold", isLifetimeCurrent ? "text-white" : "text-slate-800")}>{plan.title}</h3>
+                  <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : "text-slate-800")}>{plan.title}</h3>
                   {plan.id === "lifetime" && !isCurrent && !isInferior && (
                     <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 shadow-[0_1px_2px_rgba(245,158,11,0.05)]">
                       ⭐ Recomendado
@@ -122,20 +122,22 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
                   )}
                 </div>
                 
-                <p className={cn("text-[12px] font-medium mb-1.5 pr-16 leading-tight", isLifetimeCurrent ? "text-white/80" : "text-slate-500")}>
+                <p className={cn("text-[12px] font-medium mb-1.5 pr-16 leading-tight", isHighlighted ? "text-white/80" : "text-slate-500")}>
                   {plan.description}
                 </p>
                 
                 <div className="flex items-center justify-between mt-auto">
-                  <span className={cn("font-extrabold flex items-baseline gap-0.5", isLifetimeCurrent ? "text-white" : "text-slate-800")}>
+                  <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
                     <span className="text-[14px] opacity-80">R$</span>
                     <span className="text-[21px] tracking-tight">{plan.price}</span>
                   </span>
                   
-                  {isLifetimeCurrent ? (
+                  {isHighlighted ? (
                     <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
                       <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
-                      <span className="leading-none mt-[1px] whitespace-nowrap">Acesso vitalício ativo</span>
+                      <span className="leading-none mt-[1px] whitespace-nowrap">
+                        Acesso {plan.id === "lifetime" ? "vitalício" : "Premium"} ativo
+                      </span>
                     </div>
                   ) : (
                     <Button 
@@ -157,14 +159,14 @@ export function ProfileSubscriptionModal({ currentPlanId }: ProfileSubscriptionM
           })}
         </div>
         
-        <div className="mt-0.5 pt-2.5 border-t border-slate-100/80 flex flex-col items-center">
-          <div className="flex items-center justify-center gap-1.5 flex-wrap text-center">
+        <div className="mt-0 pt-2 border-t border-slate-100/80 flex flex-col items-center pb-0">
+          <div className="flex items-center justify-center gap-1 flex-wrap text-center">
             <span className="text-[11.5px] text-slate-500 font-medium">
               Obrigado por apoiar o desenvolvimento do
             </span>
             <div className="flex items-center gap-1">
               <img src="/icons/logo.png" alt="Logo" className="w-3.5 h-3.5 object-contain opacity-90" />
-              <span className="font-extrabold text-[13px] tracking-tight text-[#1E3A8B]" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <span className="font-extrabold text-[12.5px] tracking-tight text-[#1E3A8B]" style={{ fontFamily: "'Inter', sans-serif" }}>
                 Minhas Finança<span className="text-[#22c55e] font-medium drop-shadow-sm">$</span>
               </span>
             </div>
