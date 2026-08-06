@@ -15,6 +15,10 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { AppCategory } from "@/types/finance";
 import { ptBR } from "date-fns/locale";
+import { AddCardDialog } from "@/components/AddCardDialog";
+import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
+import { CreditCard } from "lucide-react";
 
 interface MobileCreditCardExpensesProps {
   cartoes: Tables<"cartoes">[];
@@ -41,6 +45,8 @@ export const MobileCreditCardExpenses: React.FC<
   MobileCreditCardExpensesProps
 > = ({ cartoes, expenseInstallments, isMobile, selectedMonth }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedCardId, setSelectedCardId] =
     useState<string>(UNSELECTED_VALUE);
 
@@ -173,6 +179,46 @@ export const MobileCreditCardExpenses: React.FC<
     const selStr = format(selectedMonth, "yyyy-MM");
     return monthlyCardBalances.findIndex(item => item.monthStr === selStr);
   }, [monthlyCardBalances, selectedMonth]);
+
+  if (cartoes.length === 0) {
+    return (
+      <Card
+        className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
+        style={{
+          borderRadius: "16px",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+          backdropFilter: "blur(18px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+          border: "1px solid rgba(255,255,255,.75)",
+          backgroundClip: "padding-box",
+          outline: "none",
+          boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+        }}
+      >
+        <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0">
+          <div className="flex items-center gap-1.5 mb-1.5">
+             <span className="text-base leading-none">💳</span>
+             <h3 className="text-[15px] font-extrabold text-slate-800 tracking-tight leading-none pt-[1px]" style={{ color: "#1e3a8a" }}>Nenhum cartão cadastrado</h3>
+          </div>
+          <p className="text-[12.5px] font-medium text-slate-500 mb-3 leading-tight">
+            Cadastre seu primeiro cartão.
+          </p>
+          <AddCardDialog 
+            user={user} 
+            onCardAdded={() => queryClient.invalidateQueries({ queryKey: ["cartoes"] })} 
+            customTrigger={
+              <Button
+                className="h-8 px-4 rounded-[10px] font-bold text-[13px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
+                style={{ background: "linear-gradient(135deg, #2563eb, #1d4ed8)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(0,0,0,0.12)" }}
+              >
+                Cadastrar cartão
+              </Button>
+            }
+          />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card
