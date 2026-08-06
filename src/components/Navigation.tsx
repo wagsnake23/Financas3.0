@@ -48,16 +48,16 @@ export const Navigation = () => {
 
   const getSubscriptionDisplay = () => {
     if (!sub || !sub.subscription_type) {
-      return { icon: "🧪", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+      return { icon: "🧪", title: "Período de Avaliação", color: "text-[#34D399]", bg: "bg-transparent" };
     }
     if (sub.subscription_status === 'expired') {
-      return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-red-400/10" };
+      return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-transparent" };
     }
     switch (sub.subscription_type) {
-      case 'lifetime': return { icon: "👑", title: "Vitalício", color: "text-amber-400", bg: "bg-amber-400/10" };
-      case 'premium': return { icon: "💎", title: "Premium", color: "text-blue-400", bg: "bg-blue-400/10" };
+      case 'lifetime': return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };
+      case 'premium': return { icon: "💎", title: "Membro Premium", color: "text-[#60A5FA]", bg: "bg-transparent" };
       case 'trial':
-      default: return { icon: "🧪", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+      default: return { icon: "🧪", title: "Período de Avaliação", color: "text-[#34D399]", bg: "bg-transparent" };
     }
   };
 
@@ -345,14 +345,14 @@ export const Navigation = () => {
                             {displayName}
                           </span>
                           <span className={cn(
-                            "inline-flex items-center justify-between gap-2 mt-0.5 px-2 py-0.5 -ml-1 rounded-md self-start max-w-[140px]",
+                            "inline-flex items-center gap-1 mt-0.5 self-start max-w-full",
                             subDisplay.color,
                             subDisplay.bg
                           )}>
-                            <span className="text-[12.5px] font-medium tracking-[0.015em] leading-tight truncate">
+                            <span className="text-[12px] font-semibold tracking-[0.015em] leading-none truncate">
                               {subDisplay.title}
                             </span>
-                            <span className="text-xs leading-none shrink-0">{subDisplay.icon}</span>
+                            <span className="text-[12px] leading-none shrink-0">{subDisplay.icon}</span>
                           </span>
                         </div>
                       </SheetHeader>
