@@ -65,7 +65,7 @@ export default function Profile() {
           badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
           icon: "💎",
           title: "Premium Expirado",
-          subtitle: `Premium expirado em ${expiresAt}`
+          subtitle: `Expirou em ${expiresAt}`
         };
       }
       return {

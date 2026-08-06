@@ -66,8 +66,17 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="w-full mt-3 rounded-[16px] bg-gradient-to-b from-[#3B82F6] to-[#2563EB] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(37,99,235,0.3)] h-12 transition-all hover:translate-y-[-1px]">
-          <CreditCard className="w-4 h-4 mr-2 text-white/90" />
-          Gerenciar Assinatura
+          {actualPlanId === 'premium' && subscriptionStatus === 'expired' ? (
+            <>
+              <span className="mr-2 text-lg leading-none">🔄</span>
+              Renovar Assinatura
+            </>
+          ) : (
+            <>
+              <CreditCard className="w-4 h-4 mr-2 text-white/90" />
+              Gerenciar Assinatura
+            </>
+          )}
         </Button>
       </DialogTrigger>
       
@@ -157,15 +166,17 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                   ) : (
                     <Button 
                       onClick={() => handleSelectPlan(plan.id)}
-                      disabled={isCurrent || isInferior || isBlocked}
+                      disabled={(isCurrent && !isExpired) || isInferior || isBlocked}
                       className={cn(
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
-                        isCurrent || isInferior || isBlocked
+                        (isCurrent && !isExpired) || isInferior || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
                           : "bg-slate-800 text-white hover:bg-slate-700 active:scale-95 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
                       )}
                     >
-                      {isCurrent ? "Em uso" : plan.buttonLabel}
+                      {isCurrent 
+                        ? (isExpired && plan.id === 'premium' ? "Renovar Premium" : "Em uso") 
+                        : plan.buttonLabel}
                     </Button>
                   )}
                 </div>
