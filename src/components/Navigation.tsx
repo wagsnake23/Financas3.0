@@ -48,7 +48,7 @@ export const Navigation = () => {
 
   const getSubscriptionDisplay = () => {
     if (!sub || !sub.subscription_type) {
-      return { icon: "🟢", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+      return { icon: "🧪", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
     }
     if (sub.subscription_status === 'expired') {
       return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-red-400/10" };
@@ -57,7 +57,7 @@ export const Navigation = () => {
       case 'lifetime': return { icon: "⭐", title: "Vitalício", color: "text-amber-400", bg: "bg-amber-400/10" };
       case 'premium': return { icon: "💎", title: "Premium", color: "text-blue-400", bg: "bg-blue-400/10" };
       case 'trial':
-      default: return { icon: "🟢", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
+      default: return { icon: "🧪", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };
     }
   };
 
@@ -324,7 +324,7 @@ export const Navigation = () => {
                     </SheetTrigger>
                     <SheetContent
                       side="right"
-                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-white flex flex-col [&>button]:top-[10px] [&>button]:right-[10px] [&>button]:text-white/70 hover:[&>button]:text-white"
+                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-white flex flex-col [&>button]:top-[10px] [&>button]:right-[10px] [&>button]:text-white [&>button]:opacity-100 hover:[&>button]:opacity-90"
                     >
                       <SheetHeader 
                         className="relative text-left pt-10 pb-5 px-5 border-none shadow-sm flex flex-row items-center gap-[12px]"
@@ -345,7 +345,7 @@ export const Navigation = () => {
                             {displayName}
                           </span>
                           <span className={cn(
-                            "inline-flex items-center justify-between gap-2 mt-0.5 px-1.5 py-0.5 -ml-1.5 rounded-md self-start max-w-[140px]",
+                            "inline-flex items-center justify-between gap-2 mt-0.5 px-2 py-0.5 -ml-1 rounded-md self-start max-w-[140px]",
                             subDisplay.color,
                             subDisplay.bg
                           )}>

@@ -35,7 +35,7 @@ export default function Profile() {
       return {
         bg: "bg-emerald-50/50 border-emerald-100/50",
         badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
-        icon: "🟢",
+        icon: "🧪",
         title: "Trial",
         subtitle: "30 dias de avaliação"
       };
@@ -158,8 +158,8 @@ export default function Profile() {
             <div className="w-full flex flex-col gap-4 mb-10">
               <div className={`flex items-center justify-between px-4 py-3.5 rounded-[20px] border ${subDisplay.bg}`}>
                 <span className="text-sm font-semibold text-slate-500">{subDisplay.subtitle}</span>
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${subDisplay.badgeBg}`}>
-                  <span className="text-sm leading-none">{subDisplay.icon}</span>
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold ${subDisplay.badgeBg}`}>
+                  <span className="text-base leading-none">{subDisplay.icon}</span>
                   {subDisplay.title}
                 </span>
               </div>
