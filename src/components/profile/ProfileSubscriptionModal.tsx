@@ -5,68 +5,145 @@ import { CreditCard, Check } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/contexts/ToastContext";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const PLANS = [
+export interface SubscriptionPlan {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  price: number;
+  billing_type?: string | null;
+  duration_days?: number | null;
+  is_lifetime?: boolean | null;
+  badge_text?: string | null;
+  badge_color?: string | null;
+  is_active?: boolean;
+  is_visible?: boolean;
+  display_order?: number;
+}
+
+const DEFAULT_PLANS: SubscriptionPlan[] = [
   {
-    id: "trial",
-    title: "Trial",
-    badgeIcon: "🧪",
+    id: "plan-trial",
+    code: "trial",
+    name: "Trial",
     description: "30 dias gratuitos.",
-    price: "0,00",
-    buttonLabel: "Continuar Trial",
-    bg: "bg-emerald-50/50",
-    border: "border-emerald-200/60",
-    text: "text-emerald-700",
-    level: 1
+    price: 0.00,
+    duration_days: 30,
+    is_lifetime: false,
+    badge_text: "🧪",
+    display_order: 1
   },
   {
-    id: "premium",
-    title: "Premium",
-    badgeIcon: "💎",
-    description: "Acesso completo durante 1 ano.",
-    price: "99,90",
-    buttonLabel: "Assinar Premium",
-    bg: "bg-blue-50/50",
-    border: "border-blue-200/60",
-    text: "text-blue-700",
-    level: 2
+    id: "plan-premium-monthly",
+    code: "premium_monthly",
+    name: "Premium Mensal",
+    description: "Acesso completo por 1 mês.",
+    price: 14.90,
+    billing_type: "monthly",
+    duration_days: 30,
+    is_lifetime: false,
+    badge_text: "💎",
+    display_order: 2
   },
   {
-    id: "lifetime",
-    title: "Vitalício",
-    badgeIcon: "👑",
+    id: "plan-premium-yearly",
+    code: "premium_yearly",
+    name: "Premium Anual",
+    description: "Acesso completo por 1 ano.",
+    price: 99.90,
+    billing_type: "yearly",
+    duration_days: 365,
+    is_lifetime: false,
+    badge_text: "💎",
+    display_order: 3
+  },
+  {
+    id: "plan-lifetime",
+    code: "lifetime",
+    name: "Vitalício",
     description: "Pagamento único com acesso permanente.",
-    price: "299,90",
-    buttonLabel: "Comprar Vitalício",
-    bg: "bg-amber-50/50",
-    border: "border-amber-200/60",
-    text: "text-amber-700",
-    level: 3
+    price: 299.90,
+    is_lifetime: true,
+    badge_text: "👑",
+    display_order: 4
   }
 ];
 
 interface ProfileSubscriptionModalProps {
   currentPlanId?: string;
   subscriptionStatus?: string;
+  onSelectPlan?: (plan: SubscriptionPlan) => void;
 }
 
-export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: ProfileSubscriptionModalProps) {
+export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, onSelectPlan }: ProfileSubscriptionModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [premiumPeriod, setPremiumPeriod] = useState<"monthly" | "yearly">("yearly");
   const isMobile = useIsMobile();
   const { showSuccessToast } = useToast();
 
-  const handleSelectPlan = (planId: string) => {
-    showSuccessToast("Em breve você poderá contratar este plano diretamente pelo aplicativo.");
+  const { data: fetchedPlans } = useQuery({
+    queryKey: ["subscription_plans"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("subscription_plans" as any)
+        .select("*")
+        .eq("is_active", true)
+        .eq("is_visible", true)
+        .order("display_order", { ascending: true });
+      
+      if (error) {
+        console.warn("Using fallback plans (subscription_plans error or empty):", error);
+        return DEFAULT_PLANS;
+      }
+      return (data && data.length > 0) ? (data as unknown as SubscriptionPlan[]) : DEFAULT_PLANS;
+    },
+    enabled: isOpen,
+  });
+
+  const plans = (fetchedPlans && fetchedPlans.length > 0) ? fetchedPlans : DEFAULT_PLANS;
+
+  const trialPlan = plans.find(p => p.code === "trial") || DEFAULT_PLANS[0];
+  const premiumMonthlyPlan = plans.find(p => p.code === "premium_monthly") || DEFAULT_PLANS[1];
+  const premiumYearlyPlan = plans.find(p => p.code === "premium_yearly") || DEFAULT_PLANS[2];
+  const lifetimePlan = plans.find(p => p.code === "lifetime") || DEFAULT_PLANS[3];
+
+  const selectedPremiumPlan = premiumPeriod === "yearly" ? premiumYearlyPlan : premiumMonthlyPlan;
+
+  // Dynamic annual savings calculation
+  const monthlyPrice = premiumMonthlyPlan.price > 0 ? premiumMonthlyPlan.price : 14.90;
+  const yearlyPrice = premiumYearlyPlan.price > 0 ? premiumYearlyPlan.price : 99.90;
+  const savingsValue = Math.max(0, (monthlyPrice * 12) - yearlyPrice);
+
+  const handleSelectPlan = (plan: SubscriptionPlan) => {
+    if (onSelectPlan) {
+      onSelectPlan(plan);
+    }
+    showSuccessToast(`Plano ${plan.name} (${plan.code}) selecionado!`);
   };
 
   const actualPlanId = currentPlanId || "trial";
-  const currentLevel = PLANS.find(p => p.id === actualPlanId)?.level || 1;
+  const isPremiumUser = actualPlanId.startsWith("premium") || actualPlanId === "premium";
+  const isLifetimeUser = actualPlanId === "lifetime";
+  const isTrialUser = actualPlanId === "trial" || (!isPremiumUser && !isLifetimeUser);
+
+  const isBlocked = subscriptionStatus === "blocked";
+
+  const formatPrice = (val: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(val);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="w-full mt-3 rounded-[16px] bg-gradient-to-b from-[#3B82F6] to-[#2563EB] hover:opacity-90 text-white font-bold text-[17px] shadow-[0_4px_14px_rgba(37,99,235,0.3)] h-12 transition-all hover:translate-y-[-1px]">
-          {actualPlanId === 'premium' && subscriptionStatus === 'expired' ? (
+          {isPremiumUser && subscriptionStatus === 'expired' ? (
             <>
               <span className="mr-2 text-lg leading-none">🔄</span>
               Renovar Assinatura
@@ -80,13 +157,13 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
         </Button>
       </DialogTrigger>
       
-      <DialogContent className={cn("rounded-3xl p-5 md:p-6", isMobile ? "w-[95vw] max-w-[95vw] overflow-y-auto max-h-[90vh]" : "sm:max-w-[425px]")}>
+      <DialogContent className={cn("rounded-3xl p-5 md:p-6 overflow-x-hidden overflow-y-auto max-h-[90vh]", isMobile ? "w-[95vw] max-w-[95vw]" : "w-full sm:max-w-[425px]")}>
         <DialogHeader className="mb-3">
           <div className="flex items-center gap-1.5 mb-1">
             <span className="text-xl leading-none">💳</span>
             <DialogTitle className="text-[17px] font-extrabold text-[#1E3A8B] tracking-tight">Gerenciar Assinatura</DialogTitle>
           </div>
-          {subscriptionStatus === 'blocked' ? (
+          {isBlocked ? (
             <DialogDescription className="text-red-500 font-bold text-left text-[13px] leading-snug">
               Sua conta está bloqueada. Não é possível realizar upgrades no momento.
             </DialogDescription>
@@ -98,38 +175,28 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
         </DialogHeader>
 
         <div className="flex flex-col gap-2.5 pb-1">
-          {PLANS.map((plan) => {
-            const isCurrent = actualPlanId === plan.id;
-            const isBlocked = subscriptionStatus === "blocked";
+          {/* 1. CARD TRIAL */}
+          {(() => {
+            const plan = trialPlan;
+            const isCurrent = isTrialUser;
             const isExpired = subscriptionStatus === "expired" && isCurrent;
-            const isInferior = plan.level < currentLevel;
-            const isHighlighted = isCurrent && !isExpired && (plan.id === "lifetime" || plan.id === "premium");
 
             return (
-              <div key={plan.id} className={cn(
+              <div key={plan.code} className={cn(
                 "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
-                isInferior || (isBlocked && !isCurrent)
-                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
-                  : isExpired && plan.id === 'trial'
-                    ? "bg-red-50/30 border-[#F2AAAA] shadow-none"
-                  : isExpired
-                    ? "bg-red-50/50 border-red-200/60 shadow-[0_2px_10px_rgba(239,68,68,0.05)]"
-                    : isHighlighted
-                      ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
-                      : isCurrent 
-                        ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
-                        : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+                isExpired
+                  ? "bg-red-50/30 border-[#F2AAAA] shadow-none"
+                  : isCurrent 
+                    ? "bg-blue-50/40 border-blue-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)]" 
+                    : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
               )}>
-                {/* Identificador de Plano Atual discreto */}
                 {isCurrent && (
                   <div className="absolute top-3 right-3">
                     <span className={cn(
                       "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border",
                       isExpired
                         ? "bg-red-100 text-red-700 border-red-200"
-                        : isHighlighted 
-                          ? "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
-                          : cn("bg-white", plan.border, plan.text)
+                        : "bg-white border-emerald-200 text-emerald-700"
                     )}>
                       {isExpired ? "Plano Expirado" : "Plano Atual"}
                     </span>
@@ -137,55 +204,159 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                 )}
 
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-lg">{plan.badgeIcon}</span>
-                  <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : isExpired ? "text-red-700" : "text-slate-800")}>
-                    {plan.title} {isExpired ? "Expirado" : ""}
+                  <span className="text-lg">🧪</span>
+                  <h3 className={cn("text-[15px] font-bold", isExpired ? "text-red-700" : "text-slate-800")}>
+                    Trial {isExpired ? "Expirado" : ""}
                   </h3>
-                  {plan.id === "lifetime" && !isCurrent && !isInferior && !isBlocked && (
-                    <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 shadow-[0_1px_2px_rgba(245,158,11,0.05)]">
-                      ⭐ Recomendado
-                    </span>
-                  )}
                 </div>
                 
-                <p className={cn("mb-1.5 pr-16", 
-                  plan.id === 'lifetime' ? "text-[11px] font-normal leading-snug" : "text-[12px] font-medium leading-tight",
-                  isHighlighted ? "text-white/80" : 
-                  (isExpired && plan.id === 'trial') ? "text-slate-400" : 
-                  "text-slate-500"
+                <p className={cn("mb-1.5 pr-16 text-[12px] font-medium leading-tight", 
+                  isExpired ? "text-slate-400" : "text-slate-500"
                 )}>
-                  {plan.description}
+                  {plan.description || "30 dias gratuitos."}
                 </p>
                 
                 <div className="flex items-center justify-between mt-auto">
                   <span className={cn("font-extrabold flex items-baseline gap-0.5", 
-                    isHighlighted ? "text-white" : 
-                    (isExpired && plan.id === 'trial') ? "text-slate-400" :
-                    (isCurrent && !isExpired && plan.id === 'trial') ? "text-[#1E3A8B] text-[24px]" :
-                    "text-slate-800"
+                    isExpired ? "text-slate-400" :
+                    isCurrent ? "text-[#1E3A8B] text-[24px]" : "text-slate-800"
                   )}>
                     <span className="text-[14px] opacity-80">R$</span>
-                    <span className={cn("tracking-tight", (isCurrent && !isExpired && plan.id === 'trial') ? "text-[26px]" : "text-[21px]")}>
-                      {plan.price}
+                    <span className={cn("tracking-tight", isCurrent && !isExpired ? "text-[26px]" : "text-[21px]")}>
+                      {formatPrice(plan.price)}
                     </span>
                   </span>
+                  
+                  {isCurrent && isExpired && (
+                    <span className="text-[12.5px] font-medium text-[#5B6475] text-right max-w-[120px] leading-tight flex-shrink-0">
+                      Seu período gratuito terminou.
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* 2. CARD PREMIUM */}
+          {(() => {
+            const plan = selectedPremiumPlan;
+            const isCurrent = isPremiumUser;
+            const isExpired = subscriptionStatus === "expired" && isCurrent;
+            const isInferior = isLifetimeUser;
+            const isHighlighted = isCurrent && !isExpired;
+
+            return (
+              <div key="card-premium" className={cn(
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
+                isInferior || (isBlocked && !isCurrent)
+                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  : isExpired
+                    ? "bg-red-50/50 border-red-200/60 shadow-[0_2px_10px_rgba(239,68,68,0.05)]"
+                    : isHighlighted
+                      ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
+                      : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+              )}>
+                {isCurrent && (
+                  <div className="absolute top-3 right-3">
+                    <span className={cn(
+                      "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border",
+                      isExpired
+                        ? "bg-red-100 text-red-700 border-red-200"
+                        : "bg-amber-400 text-amber-900 border-amber-300 shadow-sm"
+                    )}>
+                      {isExpired ? "Plano Expirado" : "Plano Atual"}
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between mb-1 pr-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">💎</span>
+                    <h3 className={cn("text-[15px] font-bold", isHighlighted ? "text-white" : isExpired ? "text-red-700" : "text-slate-800")}>
+                      Premium {isExpired ? "Expirado" : ""}
+                    </h3>
+                  </div>
+
+                  {/* TOGGLE MENSAL / ANUAL */}
+                  <ToggleGroup
+                    type="single"
+                    value={premiumPeriod}
+                    onValueChange={(v) => v && setPremiumPeriod(v as "monthly" | "yearly")}
+                    className={cn(
+                      "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[115px] border shadow-none cursor-default",
+                      isHighlighted ? "bg-white/10 border-white/20" : "bg-slate-100/90 border-slate-200/80"
+                    )}
+                    style={{
+                      "--cor-topo": isHighlighted ? "rgba(255,255,255,0.15)" : "#E6F0FF",
+                      "--cor-base": isHighlighted ? "rgba(255,255,255,0.05)" : "#DCEBFF",
+                      boxShadow: isHighlighted ? "inset 0px 1px 2px rgba(255, 255, 255, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.2)" : "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                    } as any}
+                  >
+                    <ToggleGroupItem
+                      value="monthly"
+                      className={cn(
+                        "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
+                        isHighlighted
+                          ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
+                          : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                      )}
+                    >
+                      MÊS
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="yearly"
+                      className={cn(
+                        "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
+                        isHighlighted
+                          ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
+                          : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                      )}
+                    >
+                      ANO
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+                
+                <p className={cn("text-[12px] font-medium mb-1 pr-4 leading-tight", 
+                  isHighlighted ? "text-white/80" : "text-slate-500"
+                )}>
+                  {plan.description || (premiumPeriod === "yearly" ? "Acesso completo por 1 ano." : "Acesso completo por 1 mês.")}
+                </p>
+
+                <div className="h-[22px] mb-1.5 flex items-center">
+                  {premiumPeriod === "yearly" && savingsValue > 0 && (
+                    <span className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1",
+                      isHighlighted
+                        ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
+                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    )}>
+                      💚 Economize R$ {formatPrice(savingsValue)}
+                    </span>
+                  )}
+                </div>
+                
+                <div className="flex items-center justify-between mt-auto">
+                  <div className="flex flex-col">
+                    <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
+                      <span className="text-[14px] opacity-80">R$</span>
+                      <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
+                      <span className="text-[11px] font-normal opacity-75 ml-0.5">
+                        /{premiumPeriod === "yearly" ? "ano" : "mês"}
+                      </span>
+                    </span>
+                  </div>
                   
                   {isHighlighted ? (
                     <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
                       <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
                       <span className="leading-none mt-[1px] whitespace-nowrap">
-                        Acesso {plan.id === "lifetime" ? "vitalício" : "Premium"} ativo
+                        Acesso Premium ativo
                       </span>
                     </div>
-                  ) : plan.id === "trial" && isCurrent ? (
-                    isExpired ? (
-                      <span className="text-[12.5px] font-medium text-[#5B6475] text-right max-w-[120px] leading-tight flex-shrink-0">
-                        Seu período gratuito terminou.
-                      </span>
-                    ) : null
                   ) : (
                     <Button 
-                      onClick={() => handleSelectPlan(plan.id)}
+                      onClick={() => handleSelectPlan(plan)}
                       disabled={(isCurrent && !isExpired) || isInferior || isBlocked}
                       className={cn(
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
@@ -195,14 +366,88 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
                       )}
                     >
                       {isCurrent 
-                        ? (isExpired && plan.id === 'premium' ? "Renovar Premium" : "Em uso") 
-                        : plan.buttonLabel}
+                        ? (isExpired ? "Renovar Premium" : "Em uso") 
+                        : "Assinar Premium"}
                     </Button>
                   )}
                 </div>
               </div>
             );
-          })}
+          })()}
+
+          {/* 3. CARD VITALÍCIO */}
+          {(() => {
+            const plan = lifetimePlan;
+            const isCurrent = isLifetimeUser;
+            const isExpired = subscriptionStatus === "expired" && isCurrent;
+            const isHighlighted = isCurrent && !isExpired;
+
+            return (
+              <div key={plan.code} className={cn(
+                "relative flex flex-col px-4 py-3 rounded-[16px] border transition-all min-h-[124px]",
+                isBlocked && !isCurrent
+                  ? "opacity-60 cursor-default bg-white border-slate-100 shadow-none" 
+                  : isHighlighted
+                    ? "bg-[#1E3A8B] border-blue-400/30 shadow-md"
+                    : "bg-white border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md"
+              )}>
+                {isCurrent && (
+                  <div className="absolute top-3 right-3">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border bg-amber-400 text-amber-900 border-amber-300 shadow-sm">
+                      Plano Atual
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-lg flex items-center">👑</span>
+                  <h3 className={cn("text-[15px] font-bold flex items-center", isHighlighted ? "text-white" : "text-slate-800")}>
+                    Vitalício
+                  </h3>
+                  {!isCurrent && !isBlocked && (
+                    <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200 shadow-[0_1px_2px_rgba(245,158,11,0.05)] leading-none h-[22px]">
+                      ⭐ Recomendado
+                    </span>
+                  )}
+                </div>
+                
+                <p className={cn("mb-1.5 pr-16 text-[11px] font-normal leading-snug", 
+                  isHighlighted ? "text-white/80" : "text-slate-500"
+                )}>
+                  {plan.description || "Pagamento único com acesso permanente."}
+                </p>
+                
+                <div className="flex items-center justify-between mt-auto">
+                  <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
+                    <span className="text-[14px] opacity-80">R$</span>
+                    <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
+                  </span>
+                  
+                  {isHighlighted ? (
+                    <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
+                      <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
+                      <span className="leading-none mt-[1px] whitespace-nowrap">
+                        Acesso vitalício ativo
+                      </span>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={() => handleSelectPlan(plan)}
+                      disabled={isCurrent || isBlocked}
+                      className={cn(
+                        "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
+                        isCurrent || isBlocked
+                          ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
+                          : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
+                      )}
+                    >
+                      {isCurrent ? "Em uso" : "Comprar Vitalício"}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
         </div>
         
         <div className="mt-0 pt-2 border-t border-slate-100/80 flex flex-col items-center pb-0">
@@ -222,3 +467,4 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus }: 
     </Dialog>
   );
 }
+
