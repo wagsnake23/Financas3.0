@@ -54,7 +54,7 @@ export const Navigation = () => {
       return { icon: "🔴", title: "Expirada", color: "text-red-400", bg: "bg-red-400/10" };
     }
     switch (sub.subscription_type) {
-      case 'lifetime': return { icon: "⭐", title: "Vitalício", color: "text-amber-400", bg: "bg-amber-400/10" };
+      case 'lifetime': return { icon: "👑", title: "Vitalício", color: "text-amber-400", bg: "bg-amber-400/10" };
       case 'premium': return { icon: "💎", title: "Premium", color: "text-blue-400", bg: "bg-blue-400/10" };
       case 'trial':
       default: return { icon: "🧪", title: "Trial", color: "text-emerald-400", bg: "bg-emerald-400/10" };

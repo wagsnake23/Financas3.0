@@ -3,6 +3,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
 import { ProfileAccountForm } from "@/components/profile/ProfileAccountForm";
 import { ProfilePasswordModal } from "@/components/profile/ProfilePasswordModal";
+import { ProfileSubscriptionModal } from "@/components/profile/ProfileSubscriptionModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +59,7 @@ export default function Profile() {
         return {
           bg: "bg-amber-50/50 border-amber-100/50",
           badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
-          icon: "⭐",
+          icon: "👑",
           title: "Vitalício",
           subtitle: "Acesso permanente"
         };
@@ -75,7 +76,7 @@ export default function Profile() {
         return {
           bg: "bg-emerald-50/50 border-emerald-100/50",
           badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
-          icon: "🟢",
+          icon: "🧪",
           title: "Trial",
           subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação"
         };
@@ -172,8 +173,9 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="w-full mt-auto">
+            <div className="w-full mt-auto flex flex-col">
               <ProfilePasswordModal />
+              <ProfileSubscriptionModal currentPlanId={sub?.subscription_type} />
             </div>
           </div>
 
