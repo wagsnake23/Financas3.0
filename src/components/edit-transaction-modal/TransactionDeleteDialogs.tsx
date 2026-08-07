@@ -143,11 +143,11 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="thisMonth"
                   id="delete-this-month"
-                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#E54D4D] data-[state=checked]:border-[#E54D4D] data-[state=checked]:after:bg-[#E54D4D] data-[state=checked]:ring-[#E54D4D] data-[state=checked]:text-[#E54D4D]"
                 />
                 <label
                   htmlFor="delete-this-month"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
                 >
                   Apenas este mês
                 </label>
@@ -156,11 +156,11 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="thisMonthForward"
                   id="delete-this-month-forward"
-                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#E54D4D] data-[state=checked]:border-[#E54D4D] data-[state=checked]:after:bg-[#E54D4D] data-[state=checked]:ring-[#E54D4D] data-[state=checked]:text-[#E54D4D]"
                 />
                 <label
                   htmlFor="delete-this-month-forward"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
                 >
                   Deste mês em diante
                 </label>
@@ -169,11 +169,11 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                 <RadioGroupItem
                   value="all"
                   id="delete-all"
-                  className="peer bg-white border-[#1A56AD] data-[state=checked]:border-primary data-[state=checked]:after:bg-primary data-[state=checked]:ring-primary"
+                  className="peer bg-white border-[#E54D4D] data-[state=checked]:border-[#E54D4D] data-[state=checked]:after:bg-[#E54D4D] data-[state=checked]:ring-[#E54D4D] data-[state=checked]:text-[#E54D4D]"
                 />
                 <label
                   htmlFor="delete-all"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
                 >
                   Todo o período
                 </label>

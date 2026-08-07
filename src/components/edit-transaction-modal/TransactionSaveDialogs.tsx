@@ -77,7 +77,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               />
               <label
                 htmlFor="save-this-month"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
               >
                 Apenas este mês
               </label>
@@ -90,7 +90,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               />
               <label
                 htmlFor="save-this-month-forward"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
               >
                 Deste mês em diante
               </label>
@@ -103,7 +103,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
               />
               <label
                 htmlFor="save-all"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
               >
                 Todo o período
               </label>
