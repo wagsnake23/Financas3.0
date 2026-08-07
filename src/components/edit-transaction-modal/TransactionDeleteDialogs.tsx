@@ -63,7 +63,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex justify-center items-center gap-2 text-center font-bold">
+            <AlertDialogTitle className="flex justify-center items-center gap-2 text-center font-black text-[#1E40AF]">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
@@ -81,14 +81,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
-                isMobile && "h-11"
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
               )}
-              style={{ 
-                "--cor-topo": "#E2E8F0", 
-                "--cor-base": "#CBD5E1",
-                boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
-              } as any}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setShowSimpleDeleteDialog(false)}
             >
               Cancelar
@@ -126,7 +122,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-bold">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-black text-[#1E40AF]">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Excluir Lançamento
             </AlertDialogTitle>
@@ -193,14 +189,10 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
             <AlertDialogCancel
               disabled={loading || isFetchingOptions}
               className={cn(
-                "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
-                isMobile && "h-11"
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
               )}
-              style={{ 
-                "--cor-topo": "#E2E8F0", 
-                "--cor-base": "#CBD5E1",
-                boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
-              } as any}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setShowDeleteOptionsDialog(false)}
             >
               Cancelar

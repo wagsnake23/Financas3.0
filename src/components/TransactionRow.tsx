@@ -415,15 +415,15 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             </AlertDialogTrigger>
             <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-4" : "!pb-4")}>
               <AlertDialogHeader>
-                <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+                <AlertDialogTitle className="font-black text-[#1E40AF]">Confirmar Exclusão</AlertDialogTitle>
                 <AlertDialogDescription>
                   Tem certeza que deseja excluir esta {transaction.type === 'income' ? 'receita' : 'despesa'}? Esta ação não pode ser desfeita.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
                 <AlertDialogCancel className={cn(
-                  "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-                  isMobile && "h-12 text-lg"
+                  "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
+                  isMobile && "h-11 text-lg"
                 )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={(e) => {
