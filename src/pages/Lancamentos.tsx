@@ -195,12 +195,11 @@ const Lancamentos = () => {
             "shadow-none border-none"
           )}
           style={{
-            background: "linear-gradient(180deg, #f7fafc 0%, #f1f5fa 40%, #eaf0f7 100%)",
+            background: "linear-gradient(180deg, #FBFCFE 0%, #F6F8FB 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            border: "2px solid rgba(37, 99, 235, 0.15)",
-            outline: "1px solid rgba(37, 99, 235, 0.06)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 20px rgba(0,0,0,0.015), inset 0 0 18px rgba(37, 99, 235, 0.06)"
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
           <DialogHeader
@@ -215,8 +214,8 @@ const Lancamentos = () => {
               <DialogTitle className="text-xl font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
             </div>
             {editingTransaction?.created_at && (
-              <p className={cn("text-[12px] font-medium text-gray-800 opacity-90 relative", !isMobile ? "top-[0px]" : "ml-[42px] top-[-6px]")}>
-                Registrado em: {format(new Date(editingTransaction.created_at), "dd MMM yyyy 'as' HH:mm", { locale: ptBR })}
+              <p className={cn("text-[11px] font-normal text-slate-500 mt-1 relative", !isMobile ? "top-[0px]" : "ml-[42px] top-[-6px]")}>
+                Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
               </p>
             )}
           </DialogHeader>
