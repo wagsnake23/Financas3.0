@@ -63,7 +63,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex justify-center items-center gap-2 text-center font-black text-[#1E40AF]">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
@@ -122,7 +122,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-black text-[#1E40AF]">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
               <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Excluir Lançamento
             </AlertDialogTitle>

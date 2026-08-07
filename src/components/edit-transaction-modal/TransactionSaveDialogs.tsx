@@ -54,7 +54,7 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
         }}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center justify-center gap-2 text-center font-black text-[#1E40AF]">
+          <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
             <span className="text-2xl select-none">📝</span>
             Atualizar Lançamento
           </AlertDialogTitle>
