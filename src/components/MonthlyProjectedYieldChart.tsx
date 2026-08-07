@@ -87,7 +87,7 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                     dataKey="month"
-                    height={12}
+                    height={24}
                     axisLine={false}
                     tickLine={false}
                     interval={0}
@@ -95,25 +95,24 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                         const entry = chartData[payload.index];
                         // Purple for current month, muted for others
                         const color = entry.isCurrentMonth
-                            ? "#7C3AED" // Violet 600
-                            : "hsl(var(--muted-foreground))";
+                            ? "#7C3AED" 
+                            : "#4B5563";
                         return (
                             <text
                                 x={x}
                                 y={y}
-                                dy={7}
+                                dy={10}
                                 textAnchor="middle"
                                 fill={color}
                                 style={{ 
-                                    fontSize: isMobile ? "11px" : "13px", 
-                                    fontWeight: "bold", 
+                                    fontSize: isMobile ? "10px" : "11px", 
+                                    fontWeight: 700, 
                                     cursor: "pointer", 
-                                    fontFamily: "Roboto",
-                                    filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.08))"
+                                    fontFamily: "Inter, sans-serif"
                                 }}
                                 onClick={() => onMonthClick(entry.fullDate)}
                             >
-                                {payload.value.substring(0, 3)}
+                                {payload.value.charAt(0).toUpperCase() + payload.value.substring(1, 3).toLowerCase()}
                             </text>
                         );
                     }}

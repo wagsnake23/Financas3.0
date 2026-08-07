@@ -73,7 +73,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const isCurrentMonth = entry.isCurrentMonth;
-            const color = isCurrentMonth ? "#b91c1c" : "#5F6B7A";
+            const color = isCurrentMonth ? "#b91c1c" : "#4B5563";
             
             return (
               <g>
@@ -84,16 +84,14 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                   textAnchor="middle"
                   fill={color}
                   style={{ 
-                    fontSize: isMobile ? "9px" : "10px", 
-                    fontWeight: isCurrentMonth ? "800" : "600", 
+                    fontSize: isMobile ? "10px" : "11px", 
+                    fontWeight: 700, 
                     cursor: "pointer", 
-                    fontFamily: "Inter, sans-serif",
-                    letterSpacing: "0.5px",
-                    textShadow: "0px 1px 0px rgba(255,255,255,1)"
+                    fontFamily: "Inter, sans-serif"
                   }}
                   onClick={() => onMonthClick(entry.fullDate)}
                 >
-                  {payload.value.substring(0, 3).toUpperCase()}
+                  {payload.value.charAt(0).toUpperCase() + payload.value.substring(1, 3).toLowerCase()}
                 </text>
                 {isCurrentMonth && (
                   <circle cx={x} cy={y + 18} r={2.5} fill="#dc2626" />

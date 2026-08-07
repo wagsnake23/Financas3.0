@@ -26,37 +26,39 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                background: "linear-gradient(180deg, rgba(147,51,234,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)",
+                background: "linear-gradient(180deg, rgba(168,85,247,0.16) 0%, rgba(168,85,247,0.02) 28%, #FCFDFE 38%, #FCFDFE 72%, #F2F5F8 82%, #F2F5F8 100%)",
                 backgroundBlendMode: "soft-light",
                 backdropFilter: "blur(6px)",
                 border: "none",
                 outline: "1px solid rgba(255, 255, 255, 0.65)",
-                boxShadow: "0 10px 30px rgba(30,41,59,0.08)",
+                boxShadow: "0 12px 32px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02)",
             }}
             className={cn(
                 "rounded-[24px] card-3d flex flex-col relative transition-all duration-300 animate-fade-in overflow-hidden",
                 isMobile ? "p-4 min-h-[140px]" : "p-7 h-full min-h-[200px]"
             )}>
-            <div className="flex items-start justify-between mb-1 w-full">
+            <div className="flex justify-between items-start mb-1 -mt-[2px] w-full">
                 <div className="flex items-center gap-3">
-                    {/* Ícone esquerda */}
-                    <div className={cn(
-                      "items-center justify-center rounded-[12px] hidden md:flex",
-                      "w-10 h-10 bg-purple-100/80 text-purple-600"
-                    )}>
-                        <DynamicIcon name="LineChart" className="w-5 h-5 opacity-90" />
-                    </div>
-
-                    {/* Título + Valor */}
                     <div className="flex flex-col gap-0">
-                        <h2 className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[14px]" : "text-[16px]")} 
-                            style={{ 
-                                color: "hsl(var(--yield-darker))",
-                                textShadow: "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)"
-                            }}
-                        >
-                            Projeção Mensal
-                        </h2>
+                        <div className="flex items-center gap-1.5 -translate-y-[2px]">
+                            <div className="flex items-center justify-center">
+                                <DynamicIcon 
+                                    name="LineChart" 
+                                    className={cn(isMobile ? "w-[16px] h-[16px]" : "w-[18px] h-[18px]")} 
+                                    style={{ color: "hsl(var(--yield-darker))" }} 
+                                    strokeWidth={isMobile ? 2.5 : 2.5}
+                                />
+                            </div>
+                            <h2 
+                                className={cn("font-semibold tracking-wide", isMobile ? "text-[15px]" : "text-[17px]")} 
+                                style={{ 
+                                    color: "hsl(var(--yield-darker))",
+                                    textShadow: "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)"
+                                }}
+                            >
+                                Projeção Mensal
+                            </h2>
+                        </div>
                         <p className={cn(
                             "font-extrabold text-slate-800 font-roboto leading-none tracking-tight -mt-1.5",
                             isMobile ? "text-[18px]" : "text-[22px]"
