@@ -46,6 +46,8 @@ export default function Profile() {
         icon: "🔴",
         title: "Conta Bloqueada",
         subtitle: "Nenhum recurso disponível",
+        subIcon: "❌",
+        subColor: "text-rose-600",
         decorType: "alert"
       };
     }
@@ -61,8 +63,10 @@ export default function Profile() {
           ringClassName: "ring-4 ring-amber-400/70 shadow-[0_0_20px_rgba(245,158,11,0.35)]",
           buttonBg: "bg-gradient-to-b from-amber-400 to-amber-600 shadow-[0_4px_12px_rgba(245,158,11,0.4)]",
           icon: "👑",
-          title: "Membro vitalício",
-          subtitle: "",
+          title: "Membro Vitalício",
+          subtitle: "Acesso Permanente",
+          subIcon: "⏳",
+          subColor: "text-amber-600",
           decorType: "vitalicio"
         };
       }
@@ -78,6 +82,8 @@ export default function Profile() {
           icon: "💎",
           title: "Premium",
           subtitle: expiresAt ? `Expira em ${expiresAt}` : "Assinatura ativa",
+          subIcon: "📅",
+          subColor: "text-sky-600",
           decorType: "premium_temp"
         };
       }
@@ -93,6 +99,8 @@ export default function Profile() {
           icon: "💎",
           title: "Premium",
           subtitle: expiresAt ? `Válido até ${expiresAt}` : "Assinatura ativa",
+          subIcon: "📅",
+          subColor: "text-blue-600",
           decorType: "premium"
         };
       }
@@ -111,6 +119,8 @@ export default function Profile() {
           icon: "💎",
           title: "Assinatura Expirada",
           subtitle: expiresAt ? `Expirou em ${expiresAt}` : "Assinatura encerrada",
+          subIcon: "❌",
+          subColor: "text-rose-600",
           decorType: "alert"
         };
       }
@@ -127,6 +137,8 @@ export default function Profile() {
         icon: "🧪",
         title: "Trial Expirado",
         subtitle: expiresAt ? `Expirou em ${expiresAt}` : "Avaliação encerrada",
+        subIcon: "❌",
+        subColor: "text-rose-600",
         decorType: "alert"
       };
     }
@@ -142,6 +154,8 @@ export default function Profile() {
       icon: "🧪",
       title: "Trial",
       subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação",
+      subIcon: "📅",
+      subColor: "text-emerald-600",
       decorType: "trial"
     };
   };
@@ -249,13 +263,17 @@ export default function Profile() {
             <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8 relative z-10">{user?.email}</p>
 
             <div className="w-full flex flex-col gap-4 mb-4 relative z-10">
-              <div className={cn("flex items-center px-4 py-3.5 rounded-[20px] border backdrop-blur-sm transition-all", subDisplay.subtitle ? "justify-between" : "justify-center", subDisplay.bg)}>
-                <span className={cn("inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-bold transition-all", subDisplay.badgeBg)}>
-                  <span className="text-base leading-none">{subDisplay.icon}</span>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <span className={cn("inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[14px] font-bold transition-all", subDisplay.badgeBg)}>
+                  <span className="text-[17px] leading-none">{subDisplay.icon}</span>
                   {subDisplay.title}
                 </span>
+                
                 {subDisplay.subtitle && (
-                  <span className="text-sm font-semibold text-slate-600">{subDisplay.subtitle}</span>
+                  <div className={cn("flex items-center gap-1.5", subDisplay.subColor)}>
+                    <span className="text-[14px] leading-none">{subDisplay.subIcon}</span>
+                    <span className="text-[12px] font-medium tracking-wide">{subDisplay.subtitle}</span>
+                  </div>
                 )}
               </div>
               
