@@ -60,7 +60,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={isMobile ? 120 : 140}>
       <BarChart data={chartData} margin={{ top: 25, right: 0, left: 0, bottom: 0 }} barCategoryGap="15%">
-        <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 3" />
+        <CartesianGrid vertical={false} stroke="#cbd5e1" strokeDasharray="3 3" opacity={0.6} />
         <XAxis
           dataKey="month"
           height={24}
@@ -70,7 +70,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
           tick={({ x, y, payload }) => {
             const entry = chartData[payload.index];
             const isCurrentMonth = entry.isCurrentMonth;
-            const color = isCurrentMonth ? "#15803d" : "#94a3b8";
+            const color = isCurrentMonth ? "#15803d" : "#5F6B7A";
             
             return (
               <g>
@@ -85,7 +85,8 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                     fontWeight: isCurrentMonth ? "800" : "600", 
                     cursor: "pointer", 
                     fontFamily: "Inter, sans-serif",
-                    letterSpacing: "0.5px"
+                    letterSpacing: "0.5px",
+                    textShadow: "0px 1px 0px rgba(255,255,255,1)"
                   }}
                   onClick={() => onMonthClick(entry.fullDate)}
                 >
