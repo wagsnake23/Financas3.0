@@ -654,7 +654,7 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className={cn("flex flex-col bg-background", isMobile ? "bg-slate-50" : "pt-[72px]")}>
+    <div className={cn("flex flex-col global-bg", isMobile ? "bg-slate-50" : "pt-[72px]")}>
 
       {/* Main Content */}
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}

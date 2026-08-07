@@ -544,9 +544,17 @@ body {
 }
 
 /* Global Background */
-.global-bg {
-  background: linear-gradient(180deg, #F7F9FC 0%, #EEF3FA 100%) !important;
-  min-height: 100dvh !important;
+@media (max-width: 767px) {
+  .global-bg {
+    background: linear-gradient(180deg, #F7F9FC 0%, #EEF3FA 100%) !important;
+    min-height: 100dvh !important;
+  }
+}
+@media (min-width: 768px) {
+  .global-bg {
+    background: hsl(var(--lancamentos-mobile-bg)) !important;
+    min-height: 100dvh !important;
+  }
 }
 
 /* Base Cloud Style */

@@ -102,13 +102,13 @@ export default function Profile() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen bg-background md:pt-[72px]",
+        "flex flex-col min-h-screen global-bg md:pt-[72px]",
         isMobile && "bg-[#F9FAFB]"
       )}
     >
       {/* HEADER PREMIUM — FINTECH STYLE (DESKTOP) */}
       {!isMobile && (
-        <div className="relative h-[220px] w-full overflow-hidden bg-background">
+        <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
           <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
