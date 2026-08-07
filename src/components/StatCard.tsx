@@ -144,26 +144,30 @@ export const StatCard = ({
       )}
     >
       {/* Top Section: Trend, Title/Value and Month Navigator */}
-      <div className="flex justify-between items-start mb-1">
+      <div className="flex justify-between items-start mb-1 -mt-[2px]">
         <div className="flex items-center gap-3">
-          {icon && !hideMainIcon && (
-            <div className={cn(
-              "items-center justify-center rounded-[12px] hidden md:flex",
-              dashboardPremiumStyle ? cn("w-10 h-10", iconStyles[variant]) : "w-8 h-8 text-slate-700"
-            )}>
-              <DynamicIcon name={icon} className={cn("w-5 h-5", dashboardPremiumStyle ? "opacity-90" : "")} />
-            </div>
-          )}
           <div className="flex flex-col gap-0">
-            <h2 
-              className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[14px]" : "text-[16px]")} 
-              style={{ 
-                color: currentStyle.titleColor, 
-                textShadow: dashboardPremiumStyle ? "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)" : "none" 
-              }}
-            >
-              {mainStatTitle}
-            </h2>
+            <div className="flex items-center gap-1.5 -translate-y-[2px]">
+              {icon && !hideMainIcon && (
+                <div className="flex items-center justify-center">
+                  <DynamicIcon 
+                    name={icon} 
+                    className={cn(isMobile ? "w-[16px] h-[16px]" : "w-[18px] h-[18px]")} 
+                    style={{ color: currentStyle.titleColor }} 
+                    strokeWidth={isMobile ? 2.5 : 2.5}
+                  />
+                </div>
+              )}
+              <h2 
+                className={cn("font-semibold tracking-wide", isMobile ? "text-[15px]" : "text-[17px]")} 
+                style={{ 
+                  color: currentStyle.titleColor, 
+                  textShadow: dashboardPremiumStyle ? "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)" : "none" 
+                }}
+              >
+                {mainStatTitle}
+              </h2>
+            </div>
             <p 
               className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight -mt-1.5", isMobile ? "text-[18px]" : "text-[22px]")}
             >

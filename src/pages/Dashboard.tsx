@@ -743,7 +743,7 @@ export default function Dashboard() {
             {(!filter || filter === "expenses") && (
               <StatCard dashboardPremiumStyle={true}
                 id="stat-expenses"
-                mainStatTitle="Total de despesas"
+                mainStatTitle="Despesas totais"
                 mainStatValue={stats.totalExpenses}
 
                 topRightContent={
@@ -785,7 +785,7 @@ export default function Dashboard() {
             {(!filter || filter === "revenues") && (
               <StatCard dashboardPremiumStyle={true}
                 id="stat-revenues"
-                mainStatTitle="Total de receitas"
+                mainStatTitle="Receitas totais"
                 mainStatValue={stats.totalIncome}
 
                 topRightContent={
@@ -945,7 +945,7 @@ export default function Dashboard() {
             <div className={cn("grid gap-4 mb-4", "grid-cols-1 md:grid-cols-2")}>
               {(!filter || filter === "expenses") && (
                 <StatCard dashboardPremiumStyle={true}
-                  mainStatTitle="Total de despesas"
+                  mainStatTitle="Despesas totais"
                   mainStatValue={stats.totalExpenses}
                   icon="TrendingDown"
                   variant="expense"
@@ -982,7 +982,7 @@ export default function Dashboard() {
               {(!filter || filter === "revenues") && (
                 <StatCard dashboardPremiumStyle={true}
                   id="stat-revenues"
-                  mainStatTitle="Total de receitas"
+                  mainStatTitle="Receitas totais"
                   mainStatValue={stats.totalIncome}
                   icon="TrendingUp"
                   variant="income"
