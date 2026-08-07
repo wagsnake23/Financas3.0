@@ -264,15 +264,15 @@ export default function Profile() {
 
             <div className="w-full flex flex-col gap-4 mb-4 relative z-10">
               <div className="w-full flex flex-col items-center justify-center gap-2">
-                <span className={cn("flex items-center justify-center gap-1.5 w-full h-12 rounded-[16px] text-[15px] font-bold transition-all", subDisplay.badgeBg)}>
-                  <span className="text-[18px] leading-none">{subDisplay.icon}</span>
+                <span className={cn("flex items-center justify-center gap-2 w-full h-12 rounded-[16px] text-[16px] font-bold transition-all", subDisplay.badgeBg)}>
+                  <span className="text-[20px] leading-none">{subDisplay.icon}</span>
                   {subDisplay.title}
                 </span>
                 
                 {subDisplay.subtitle && (
-                  <div className={cn("flex items-center gap-1.5", subDisplay.subColor)}>
-                    <span className="text-[14px] leading-none">{subDisplay.subIcon}</span>
-                    <span className="text-[12px] font-medium tracking-wide">{subDisplay.subtitle}</span>
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <span className="text-[15px] leading-none">{subDisplay.subIcon}</span>
+                    <span className="text-[13px] font-semibold tracking-wide">{subDisplay.subtitle}</span>
                   </div>
                 )}
               </div>
