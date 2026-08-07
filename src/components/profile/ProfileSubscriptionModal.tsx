@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Check } from "lucide-react";
+import { CreditCard, Check, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/contexts/ToastContext";
 import { cn } from "@/lib/utils";
@@ -76,16 +76,20 @@ const DEFAULT_PLANS: SubscriptionPlan[] = [
 interface ProfileSubscriptionModalProps {
   currentPlanId?: string;
   subscriptionStatus?: string;
+  paymentStatus?: string;
+  hasActiveSubscription?: boolean;
+  isExpired?: boolean;
   expiresAt?: string | null;
   hideTrigger?: boolean;
   onSelectPlan?: (plan: SubscriptionPlan) => void;
 }
 
-export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, expiresAt, hideTrigger, onSelectPlan }: ProfileSubscriptionModalProps) {
+export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, paymentStatus, hasActiveSubscription, isExpired: globalIsExpired, expiresAt, hideTrigger, onSelectPlan }: ProfileSubscriptionModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [premiumPeriod, setPremiumPeriod] = useState<"monthly" | "yearly">("yearly");
   const isMobile = useIsMobile();
-  const { showSuccessToast } = useToast();
+  const { showSuccessToast, showErrorToast } = useToast();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   useEffect(() => {
     const handleOpenModal = () => setIsOpen(true);
@@ -126,20 +130,42 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
   const yearlyPrice = premiumYearlyPlan.price > 0 ? premiumYearlyPlan.price : 99.90;
   const savingsValue = Math.max(0, (monthlyPrice * 12) - yearlyPrice);
 
-  const handleSelectPlan = (plan: SubscriptionPlan) => {
+  const handleSelectPlan = async (plan: SubscriptionPlan) => {
     if (onSelectPlan) {
       onSelectPlan(plan);
     }
-    showSuccessToast(`Plano ${plan.name} (${plan.code}) selecionado!`);
+    
+    try {
+      setLoadingPlan(plan.code);
+      
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan_code: plan.code }
+      });
+      
+      if (error) throw error;
+      
+      if (data?.success && data?.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        throw new Error(data?.error || "Erro desconhecido ao gerar checkout");
+      }
+    } catch (error: any) {
+      console.error("Error creating checkout:", error);
+      showErrorToast("Não foi possível iniciar o pagamento. Tente novamente em alguns instantes.");
+    } finally {
+      setLoadingPlan(null);
+    }
   };
 
-  const actualPlanId = currentPlanId || "trial";
-  const isPremiumUser = actualPlanId.startsWith("premium") || actualPlanId === "premium";
-  const isLifetimeUser = actualPlanId === "lifetime";
-  const isTrialUser = actualPlanId === "trial" || (!isPremiumUser && !isLifetimeUser);
+  const isSubscriptionActive = subscriptionStatus === "active" && paymentStatus === "approved";
+  const effectivePlanId = isSubscriptionActive ? (currentPlanId || "trial") : "trial";
+
+  const isPremiumUser = effectivePlanId.startsWith("premium") || effectivePlanId === "premium";
+  const isLifetimeUser = effectivePlanId === "lifetime";
+  const isTrialUser = effectivePlanId === "trial";
 
   const isBlocked = subscriptionStatus === "blocked";
-  const hasActivePremiumOrLifetime = (isPremiumUser || isLifetimeUser) && subscriptionStatus !== "expired" && subscriptionStatus !== "blocked";
+  const hasActivePremiumOrLifetime = (isPremiumUser || isLifetimeUser) && !globalIsExpired;
 
   const formatPrice = (val: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -257,7 +283,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
             const isInferior = isLifetimeUser;
             const isHighlighted = isCurrent && !isExpired;
 
-            const activePremiumPlan = plans.find(p => p.code === actualPlanId) || selectedPremiumPlan;
+            const activePremiumPlan = plans.find(p => p.code === effectivePlanId) || selectedPremiumPlan;
             const plan = isHighlighted ? activePremiumPlan : selectedPremiumPlan;
             const displayedPeriod = isHighlighted 
               ? (plan.code === "premium_yearly" ? "yearly" : "monthly") 
@@ -382,7 +408,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
                   ) : (
                     <Button 
                       onClick={() => handleSelectPlan(plan)}
-                      disabled={(isCurrent && !isExpired) || isInferior || isBlocked}
+                      disabled={(isCurrent && !isExpired) || isInferior || isBlocked || loadingPlan === plan.code}
                       className={cn(
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
                         (isCurrent && !isExpired) || isInferior || isBlocked
@@ -390,7 +416,12 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
                           : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
                       )}
                     >
-                      {isCurrent 
+                      {loadingPlan === plan.code ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          Preparando...
+                        </>
+                      ) : isCurrent 
                         ? (isExpired ? "Renovar Premium" : "Em uso") 
                         : "Assinar Premium"}
                     </Button>
@@ -461,7 +492,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
                   ) : (
                     <Button 
                       onClick={() => handleSelectPlan(plan)}
-                      disabled={isCurrent || isBlocked}
+                      disabled={isCurrent || isBlocked || loadingPlan === plan.code}
                       className={cn(
                         "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
                         isCurrent || isBlocked
@@ -469,7 +500,12 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, ex
                           : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
                       )}
                     >
-                      {isCurrent ? "Em uso" : "Comprar Vitalício"}
+                      {loadingPlan === plan.code ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          Preparando...
+                        </>
+                      ) : isCurrent ? "Em uso" : "Comprar Vitalício"}
                     </Button>
                   )}
                 </div>

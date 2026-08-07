@@ -43,34 +43,39 @@ export default function Profile() {
     }
 
     const expiresAt = sub?.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
+    const hasActiveSub = profile?.hasActiveSubscription;
 
-    if (type === 'lifetime') {
-      return {
-        bg: "bg-amber-50/50 border-amber-100/50",
-        badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
-        icon: "👑",
-        title: "Vitalício",
-        subtitle: "Acesso permanente"
-      };
+    if (hasActiveSub) {
+      if (type.includes('lifetime')) {
+        return {
+          bg: "bg-amber-50/50 border-amber-100/50",
+          badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
+          icon: "👑",
+          title: "Vitalício",
+          subtitle: "Acesso permanente"
+        };
+      }
+      if (type.includes('premium')) {
+        return {
+          bg: "bg-blue-50/50 border-blue-100/50",
+          badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
+          icon: "💎",
+          title: "Premium",
+          subtitle: `Válido até ${expiresAt}`
+        };
+      }
     }
 
-    if (type === 'premium') {
+    if (type.includes('premium') || type.includes('lifetime')) {
       if (isExpired) {
         return {
           bg: "bg-red-50/50 border-red-100/50",
           badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
           icon: "💎",
-          title: "Premium Expirado",
+          title: "Assinatura Expirada",
           subtitle: `Expirou em ${expiresAt}`
         };
       }
-      return {
-        bg: "bg-blue-50/50 border-blue-100/50",
-        badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
-        icon: "💎",
-        title: "Premium",
-        subtitle: `Válido até ${expiresAt}`
-      };
     }
 
     if (isExpired) {

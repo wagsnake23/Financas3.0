@@ -27,7 +27,10 @@ export const AppLayout = () => {
       {/* Modal Global de Assinatura */}
       <ProfileSubscriptionModal 
         currentPlanId={sub?.subscription_type} 
-        subscriptionStatus={sub?.subscription_status === 'blocked' ? 'blocked' : (profile?.isExpired ? 'expired' : sub?.subscription_status)}
+        subscriptionStatus={sub?.subscription_status}
+        paymentStatus={sub?.payment_status}
+        hasActiveSubscription={profile?.hasActiveSubscription}
+        isExpired={profile?.isExpired}
         expiresAt={sub?.expires_at}
         hideTrigger={true}
       />

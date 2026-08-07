@@ -51,16 +51,21 @@ export const Navigation = () => {
 
     const type = sub?.subscription_type || 'trial';
     const isExpired = profile?.isExpired;
+    const hasActiveSub = profile?.hasActiveSubscription;
 
-    if (type === 'lifetime') {
-      return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };
+    if (hasActiveSub) {
+      if (type.includes('lifetime')) {
+        return { icon: "👑", title: "Membro Vitalício", color: "text-[#EAB308]", bg: "bg-transparent" };
+      }
+      if (type.includes('premium')) {
+        return { icon: "💎", title: "Membro Premium", color: "text-[#60A5FA]", bg: "bg-transparent" };
+      }
     }
 
-    if (type === 'premium') {
+    if (type.includes('premium') || type.includes('lifetime')) {
       if (isExpired) {
-        return { icon: "💎", title: "Premium Expirado", color: "text-red-400", bg: "bg-transparent" };
+        return { icon: "💎", title: "Assinatura Expirada", color: "text-red-400", bg: "bg-transparent" };
       }
-      return { icon: "💎", title: "Membro Premium", color: "text-[#60A5FA]", bg: "bg-transparent" };
     }
 
     if (isExpired) {
