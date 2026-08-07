@@ -765,7 +765,7 @@ export default function Investments() { // Alterado para export default function
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
               }}
             >
-              <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
+              <h2 className={cn("text-xl text-[#0556C3] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-[6px]">
                   <Label htmlFor="investment-category" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome do Investimento</Label>
@@ -778,7 +778,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl bg-white transition-all duration-200",
+                      "rounded-xl input-3d-premium font-bold transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
@@ -825,7 +825,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl bg-white transition-all duration-200", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -839,7 +839,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl bg-white transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -869,7 +869,7 @@ export default function Investments() { // Alterado para export default function
                         fixedDecimalScale={false}
                         maxLength={7}
                         className={cn(
-                          "rounded-xl bg-white transition-all duration-200",
+                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                         )}
@@ -886,7 +886,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl bg-white text-sm",
+                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
@@ -903,7 +903,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl bg-white transition-all duration-200",
+                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
@@ -972,8 +972,8 @@ export default function Investments() { // Alterado para export default function
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "bg-white transition-all duration-200",
+                          "w-full justify-start text-left font-bold h-10 rounded-xl",
+                          "input-3d-premium px-3 transition-all duration-200",
                           !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
@@ -1732,43 +1732,40 @@ export default function Investments() { // Alterado para export default function
       </Dialog>
 
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent 
+        <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-6" : "sm:max-w-[425px] !rounded-[22px] !pb-6",
-            "!border border-slate-200 shadow-none"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
           )}
           style={{
-            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            outline: "1px solid rgba(220, 38, 38, 0.08)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(220, 38, 38, 0.12)"
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <AlertDialogHeader className="pt-2">
-            <AlertDialogTitle className="flex items-center justify-center gap-2 text-center text-xl font-bold text-slate-800">
-              <DynamicIcon name="Trash2" className="h-6 w-6 text-red-500" />
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
               Confirmar Exclusão
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-slate-600 font-medium pt-2">
+            <AlertDialogDescription className="text-center">
               Tem certeza que deseja excluir este investimento? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className={cn(
-            "flex flex-row gap-2 mt-4",
-            isMobile && "items-center justify-between"
-          )}>
+          <AlertDialogFooter
+            className={cn(
+              "flex flex-col sm:flex-row justify-center gap-2",
+              isMobile && "flex-row items-center justify-between"
+            )}
+          >
             <AlertDialogCancel
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "flex-1 rounded-[14px] btn-3d font-black !text-slate-700 border border-slate-300 transition-all active:scale-95 text-lg h-11 mt-0",
-                isMobile && "h-11"
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
               )}
-              style={{ 
-                "--cor-topo": "#E2E8F0", 
-                "--cor-base": "#CBD5E1",
-                boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0,0,0,0.05)"
-              } as any}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
               onClick={() => setIsConfirmDeleteOpen(false)}
             >
               Cancelar
@@ -1777,8 +1774,8 @@ export default function Investments() { // Alterado para export default function
               onClick={handleConfirmDelete}
               disabled={deleteInvestmentMutation.isPending}
               className={cn(
-                "flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                isMobile && "h-11"
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
               )}
               style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
