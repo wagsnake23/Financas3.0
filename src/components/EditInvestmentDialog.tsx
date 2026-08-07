@@ -261,7 +261,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     <form onSubmit={handleSubmit} className={cn(isMobile ? "space-y-2.5" : "space-y-4", isMobile && "w-full mx-auto")}>
       <DialogDescription className="sr-only">Formulário para editar os detalhes do investimento.</DialogDescription>
       <div className={cn("space-y-0.5", isMobile ? "-mt-16" : "-mt-6")}>
-        <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+        <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Nome do Investimento</Label>
         <Select
           value={selectedInvestmentCategoryId}
           onValueChange={(value) => {
@@ -270,7 +270,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           }}
           disabled={loading}
         >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-bold", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" }))}>
+          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-bold", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" }))}>
             <SelectValue placeholder="Selecione o investimento" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -288,7 +288,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       </div>
       <div className={cn("grid grid-cols-2 gap-x-4 gap-y-4")}>
         <div className="space-y-1">
-          <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
+          <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Rentabilidade</Label>
           <Select
             value={tipoRentabilidade}
             onValueChange={(v: "fixo" | "indexado") => {
@@ -297,7 +297,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               else setProfitability(undefined);
             }}
           >
-            <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] transition-all duration-200 font-bold", isMobile && "h-10 text-sm")}>
+            <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] transition-all duration-200 font-bold", isMobile ? "h-9 text-sm" : "h-10")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -309,9 +309,9 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
         {tipoRentabilidade === "indexado" ? (
           <div className="space-y-1 animate-in fade-in slide-in-from-left-2 duration-300">
-            <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
+            <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Indexador</Label>
             <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-              <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] transition-all duration-200 font-bold", isMobile && "h-10 text-sm")}>
+              <SelectTrigger className={cn("rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] transition-all duration-200 font-bold", isMobile ? "h-9 text-sm" : "h-10")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -325,7 +325,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         )}
 
         <div className="space-y-0.5">
-          <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+          <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Valor Investido (R$)</Label>
           <CurrencyBR
             value={amount}
             onChange={(v) => {
@@ -333,13 +333,13 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
             disabled={loading}
-            className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-bold", isMobile && "h-10 text-sm", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" }))}
+            className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] font-bold px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" }))}
           />
         </div>
 
         {tipoRentabilidade === "fixo" ? (
           <div className="space-y-0.5">
-            <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+            <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Rentabilidade % a.a</Label>
             <NumericInput
               id="edit-profitability"
               value={profitability}
@@ -353,26 +353,26 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
               fixedDecimalScale={false}
               maxLength={7}
               placeholder="0,0000"
-              className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-bold placeholder:text-slate-300 placeholder:font-normal", isMobile && "h-10 text-sm", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" }))}
+              className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-bold placeholder:text-slate-300 placeholder:font-normal px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" }))}
             />
           </div>
         ) : (
           <div className="space-y-0.5">
-            <Label className={cn(isMobile && "text-xs")}>% do {indexador || "Indexador"}</Label>
+            <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>% do {indexador || "Indexador"}</Label>
             <NumericInput
               value={percentualIndexador}
               onValueChange={(v) => setPercentualIndexador(v.floatValue)}
               placeholder="0,00"
-              className={cn("h-10 rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-bold placeholder:text-slate-300 placeholder:font-normal", getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" }))}
+              className={cn("rounded-xl w-full bg-white border-[rgba(115,145,130,0.35)] border-[1px] text-sm font-bold placeholder:text-slate-300 placeholder:font-normal px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" }))}
             />
           </div>
         )}
 
         <div className="space-y-0.5 col-span-2">
-          <Label htmlFor="edit-date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+          <Label htmlFor="edit-date" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Data do Investimento</Label>
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>
-              <Button variant={"outline"} className={cn("w-full justify-start text-left font-bold h-10 rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px]", !date && "text-muted-foreground", isMobile && "h-9 text-sm", getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" }))} disabled={loading}>
+              <Button variant={"outline"} className={cn("w-full justify-start text-left font-bold rounded-xl bg-white border-[rgba(115,145,130,0.35)] border-[1px] px-3", !date && "text-muted-foreground", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" }))} disabled={loading}>
                 <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
                 {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
               </Button>
