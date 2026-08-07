@@ -778,7 +778,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl input-3d-premium !bg-white font-bold transition-all duration-200",
+                      "rounded-xl input-3d-premium input-white font-bold transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
@@ -825,7 +825,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl input-3d-premium !bg-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl input-3d-premium input-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -839,7 +839,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium !bg-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium input-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -869,7 +869,7 @@ export default function Investments() { // Alterado para export default function
                         fixedDecimalScale={false}
                         maxLength={7}
                         className={cn(
-                          "rounded-xl input-3d-premium !bg-white font-bold px-3 transition-all duration-200",
+                          "rounded-xl input-3d-premium input-white font-bold px-3 transition-all duration-200",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                         )}
@@ -886,7 +886,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl input-3d-premium !bg-white font-bold px-3 text-sm",
+                          "h-9 rounded-xl input-3d-premium input-white font-bold px-3 text-sm",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
@@ -903,7 +903,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl input-3d-premium !bg-white font-bold px-3 transition-all duration-200",
+                        "rounded-xl input-3d-premium input-white font-bold px-3 transition-all duration-200",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
@@ -973,7 +973,7 @@ export default function Investments() { // Alterado para export default function
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-bold h-10 rounded-xl",
-                          "input-3d-premium !bg-white px-3 transition-all duration-200",
+                          "input-3d-premium input-white px-3 transition-all duration-200",
                           !date && "text-gray-400",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
