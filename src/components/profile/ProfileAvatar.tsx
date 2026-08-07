@@ -73,7 +73,7 @@ export function ProfileAvatar({ userId, currentAvatarEmoji, ringClassName, butto
             )}
             onClick={() => setIsEmojiPickerOpen(true)}
           >
-            <div className="text-5xl md:text-6xl select-none">
+            <div className="text-6xl md:text-7xl select-none">
               {displayEmoji}
             </div>
             
@@ -88,12 +88,12 @@ export function ProfileAvatar({ userId, currentAvatarEmoji, ringClassName, butto
         <button 
           onClick={() => setIsEmojiPickerOpen(true)}
           className={cn(
-            "absolute bottom-1 right-1 w-11 h-11 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 z-20",
+            "absolute bottom-0 right-0 w-8 h-8 md:w-9 md:h-9 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 z-20",
             buttonBg || "bg-gradient-to-b from-[#4A72BA] to-[#3B5B96] shadow-[0_4px_12px_rgba(59,91,150,0.4)]"
           )}
           disabled={isUploading}
         >
-          <SmilePlus className="w-[22px] h-[22px]" />
+          <SmilePlus className="w-4 h-4 md:w-5 md:h-5" />
         </button>
       </div>
 
