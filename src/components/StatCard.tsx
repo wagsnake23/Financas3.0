@@ -74,25 +74,25 @@ export const StatCard = ({
 }: StatCardProps) => {
   const premiumStyles = {
     income: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(34,197,94,0.10) 0%, rgba(255,255,255,0) 40%, #F8FAFC 100%)" : "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(34,197,94,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)" : "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
       outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(34, 197, 94, 0.05)",
       shadow: dashboardPremiumStyle ? "0 10px 30px rgba(30,41,59,0.08)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
       titleColor: "#16a34a"
     },
     expense: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(255,72,72,0.10) 0%, rgba(255,255,255,0) 40%, #F8FAFC 100%)" : "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(255,72,72,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)" : "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
       outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(239, 68, 68, 0.05)",
       shadow: dashboardPremiumStyle ? "0 10px 30px rgba(30,41,59,0.08)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
       titleColor: "#dc2626"
     },
     balance: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(59,130,246,0.10) 0%, rgba(255,255,255,0) 40%, #F8FAFC 100%)" : "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(59,130,246,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)" : "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
       outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(59, 130, 246, 0.05)",
       shadow: dashboardPremiumStyle ? "0 10px 30px rgba(30,41,59,0.08)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
       titleColor: "#2563eb"
     },
     yield: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(147,51,234,0.10) 0%, rgba(255,255,255,0) 40%, #F8FAFC 100%)" : "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
+      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(147,51,234,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)" : "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
       outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(147, 51, 234, 0.05)",
       shadow: dashboardPremiumStyle ? "0 10px 30px rgba(30,41,59,0.08)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
       titleColor: "hsl(var(--yield-darker))",
@@ -155,16 +155,16 @@ export const StatCard = ({
           )}
           <div className="flex flex-col gap-0">
             <h2 
-              className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[13px]" : "text-[15px]")} 
+              className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[14px]" : "text-[16px]")} 
               style={{ 
                 color: currentStyle.titleColor, 
-                textShadow: dashboardPremiumStyle ? "0px 1px 1px rgba(255,255,255,1), 0px 2px 2px rgba(0,0,0,0.03)" : "none" 
+                textShadow: dashboardPremiumStyle ? "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)" : "none" 
               }}
             >
               {mainStatTitle}
             </h2>
             <p 
-              className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0", isMobile ? "text-[20px]" : "text-[24px]")}
+              className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight -mt-1.5", isMobile ? "text-[18px]" : "text-[22px]")}
             >
               {isPercentage ? `${mainStatValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : formatCurrency(mainStatValue)}
             </p>
@@ -204,12 +204,12 @@ export const StatCard = ({
           {secondaryStatValue !== undefined && (
             <div className="flex flex-col items-start gap-0.5">
               <p 
-                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]")}
+                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
                 style={{ color: currentStyle.titleColor }}
               >
                 {secondaryStatTitle}
               </p>
-              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")}>
+              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
                 {formatCurrency(secondaryStatValue)}
               </p>
             </div>
@@ -250,17 +250,17 @@ export const StatCard = ({
               {dashboardPremiumStyle ? (
                 <div className="flex items-center gap-1.5" style={{ color: currentStyle.titleColor }}>
                   <DynamicIcon name="Wallet" className="hidden md:block h-3 w-3 opacity-75" />
-                  <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]")}>{annualTotalLabel || "Total anual"}</p>
+                  <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}>{annualTotalLabel || "Total anual"}</p>
                 </div>
               ) : (
                 <p 
-                  className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]")}
+                  className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
                   style={{ color: currentStyle.titleColor }}
                 >
                   {annualTotalLabel || "Total anual"}
                 </p>
               )}
-              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[13px]" : "text-[14px]")}>
+              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>
@@ -277,4 +277,3 @@ export const StatCard = ({
     </Card>
   );
 };
-

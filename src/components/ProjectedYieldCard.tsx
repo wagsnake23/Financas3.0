@@ -26,7 +26,7 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                background: "linear-gradient(180deg, rgba(147,51,234,0.10) 0%, rgba(255,255,255,0) 40%, #F8FAFC 100%)",
+                background: "linear-gradient(180deg, rgba(147,51,234,0.07) 0%, #F7F8FA 38%, #F7F8FA 100%)",
                 backgroundBlendMode: "soft-light",
                 backdropFilter: "blur(6px)",
                 border: "none",
@@ -49,17 +49,17 @@ export const ProjectedYieldCard = ({
 
                     {/* Título + Valor */}
                     <div className="flex flex-col gap-0">
-                        <h2 className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[13px]" : "text-[15px]")} 
+                        <h2 className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[14px]" : "text-[16px]")} 
                             style={{ 
                                 color: "hsl(var(--yield-darker))",
-                                textShadow: "0px 1px 1px rgba(255,255,255,1), 0px 2px 2px rgba(0,0,0,0.03)"
+                                textShadow: "0px 1px 1px rgba(255,255,255,1), 0px 1px 2px rgba(0,0,0,0.02)"
                             }}
                         >
                             Projeção Mensal
                         </h2>
                         <p className={cn(
-                            "font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0",
-                            isMobile ? "text-[20px]" : "text-[24px]"
+                            "font-extrabold text-slate-800 font-roboto leading-none tracking-tight -mt-1.5",
+                            isMobile ? "text-[18px]" : "text-[22px]"
                         )}>
                             {formatCurrency(mainStatValue)}
                         </p>
@@ -75,7 +75,7 @@ export const ProjectedYieldCard = ({
             </div>
 
             {chartContent && (
-                <div className={cn("mt-4 flex-grow", isMobile && "mt-1")}>
+                <div className={cn("mt-2.5 flex-grow", isMobile && "mt-1.5")}>
                     {chartContent}
                 </div>
             )}
@@ -87,12 +87,12 @@ export const ProjectedYieldCard = ({
                     {annualTotalValue !== undefined && (
                         <div className="flex flex-col items-start gap-0.5">
                             <p 
-                                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]")}
+                                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
                                 style={{ color: "hsl(var(--yield-darker))" }}
                             >
                                 {annualTotalLabel || "Projeção Anual"}
                             </p>
-                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[13px]" : "text-[14px]")}>
+                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
                                 {formatCurrency(annualTotalValue)}
                             </p>
                         </div>
@@ -105,11 +105,11 @@ export const ProjectedYieldCard = ({
                         <div className="flex flex-col items-end gap-0.5 translate-y-[2px]">
                             <div className="flex items-center gap-1.5" style={{ color: "hsl(var(--yield-darker))" }}>
                                 <DynamicIcon name="Wallet" className="hidden md:block h-3 w-3 opacity-75" />
-                                <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[11px]" : "text-[12px]")}>
+                                <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}>
                                     {projectedPatrimonyLabel || "Patrimônio Projetado"}
                                 </p>
                             </div>
-                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[13px]" : "text-[14px]")}>
+                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
                                 {formatCurrency(projectedPatrimonyValue)}
                             </p>
                         </div>
