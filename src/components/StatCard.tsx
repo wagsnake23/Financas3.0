@@ -202,14 +202,14 @@ export const StatCard = ({
         {/* Left Side: Secondary Stats & Children (Horizontal alignment for metrics) */}
         <div className="flex items-end gap-4">
           {secondaryStatValue !== undefined && (
-            <div className="flex flex-col items-start gap-0.5">
+            <div className="flex flex-col items-start gap-0 md:gap-0.5">
               <p 
-                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
+                className={cn("font-medium leading-none font-roboto opacity-90", isMobile ? "text-[12px]" : "text-[13px]")}
                 style={{ color: currentStyle.titleColor }}
               >
                 {secondaryStatTitle}
               </p>
-              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
+              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[14px]" : "text-[15px]")}>
                 {formatCurrency(secondaryStatValue)}
               </p>
             </div>
@@ -218,15 +218,17 @@ export const StatCard = ({
           {/* Tendência integrada ao Bottom */}
           {trend && trend.includes('%') && (
             <div className={cn(
-              "flex flex-col items-center justify-center text-[9px] font-black leading-none gap-0 self-end mb-0.5",
-              dashboardPremiumStyle ? "text-slate-700 flex-row gap-1" : headerBadgeStyles[variant]
+              "flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none gap-1 self-end mb-0.5 shadow-sm",
+              dashboardPremiumStyle 
+                ? ((variant === 'expense' ? !trendIsPositive : trendIsPositive) ? "bg-emerald-100/70 text-emerald-700" : "bg-rose-100/70 text-rose-700")
+                : headerBadgeStyles[variant]
             )}>
               <DynamicIcon 
                 name={trendIsPositive ? "TrendingUp" : "TrendingDown"} 
-                className={cn("h-2.5 w-2.5 hidden md:block", dashboardPremiumStyle && (trendIsPositive ? "text-emerald-500" : "text-rose-500"))} 
-                strokeWidth={4} 
+                className="h-3 w-3" 
+                strokeWidth={3} 
               />
-              <span className={cn(dashboardPremiumStyle ? "mt-0" : "mt-0.5")}>{trend.split(' ')[0].replace(/[+-]/g, '')}</span>
+              <span>{trend.split(' ')[0].replace(/[+-]/g, '')}</span>
             </div>
           )}
 
@@ -244,23 +246,23 @@ export const StatCard = ({
         <div className="flex items-end">
           {annualTotalValue !== undefined && (
             <div className={cn(
-              "flex flex-col items-end gap-0.5",
+              "flex flex-col items-end gap-0 md:gap-0.5",
               dashboardPremiumStyle ? "items-end translate-y-[2px]" : "items-end"
             )}>
               {dashboardPremiumStyle ? (
                 <div className="flex items-center gap-1.5" style={{ color: currentStyle.titleColor }}>
                   <DynamicIcon name="Wallet" className="hidden md:block h-3 w-3 opacity-75" />
-                  <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}>{annualTotalLabel || "Total anual"}</p>
+                  <p className={cn("font-medium leading-none font-roboto opacity-90", isMobile ? "text-[12px]" : "text-[13px]")}>{annualTotalLabel || "Total anual"}</p>
                 </div>
               ) : (
                 <p 
-                  className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
+                  className={cn("font-medium leading-none font-roboto opacity-90", isMobile ? "text-[12px]" : "text-[13px]")}
                   style={{ color: currentStyle.titleColor }}
                 >
                   {annualTotalLabel || "Total anual"}
                 </p>
               )}
-              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
+              <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "mt-0 text-[14px]" : "mt-0.5 text-[15px]")}>
                 {formatCurrency(annualTotalValue)}
               </p>
             </div>

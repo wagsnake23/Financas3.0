@@ -122,28 +122,50 @@ export const MonthlyProjectedYieldChart: React.FC<MonthlyProjectedYieldChartProp
                     hide={true}
                     domain={[0, 'dataMax']}
                 />
-                <Bar dataKey="absValue" radius={[4, 4, 4, 4]} barSize={isMobile ? 18 : 24} activeBar={false}>
-                    {chartData.map((entry, index) => {
-                        const fill = entry.isCurrentMonth
-                            ? "#7C3AED" // Violet 600 (Current Month)
-                            : "#C4B5FD"; // Violet 300 (Other Months)
+                <Bar 
+                    dataKey="absValue" 
+                    barSize={isMobile ? 18 : 24} 
+                    activeBar={false}
+                    shape={(props: any) => {
+                        const { x, y, width, height, payload } = props;
+                        if (height === 0 || Number.isNaN(height)) return null;
+
+                        const isCurrentMonth = payload.isCurrentMonth;
+                        const newHeight = height;
+                        const newY = y;
+                        
+                        const r = Math.min(4, newHeight / 2); // Reverted radius
+                        const path = `M${x},${newY + r} A${r},${r} 0 0,1 ${x + r},${newY} L${x + width - r},${newY} A${r},${r} 0 0,1 ${x + width},${newY + r} L${x + width},${newY + newHeight - r} A${r},${r} 0 0,1 ${x + width - r},${newY + newHeight} L${x + r},${newY + newHeight} A${r},${r} 0 0,1 ${x},${newY + newHeight - r} Z`;
+
+                        let gradientColors = { start: "#d8b4fe", end: "#a855f7" }; // Inactive (purple 300 to 500)
+                        if (isCurrentMonth) {
+                           gradientColors = { start: "#9333ea", end: "#7e22ce" }; // Active (purple 600 to 700)
+                        }
+
+                        const gradientId = `barGrad-yield-${isCurrentMonth ? 'act' : 'inact'}`;
+                        const strokeGradId = `strokeGrad-yield-${isCurrentMonth ? 'act' : 'inact'}`;
 
                         return (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={fill}
-                                fillOpacity={entry.isCurrentMonth ? 1 : 0.8}
-                                style={{
-                                    filter: entry.isCurrentMonth 
-                                        ? "drop-shadow(2px 2px 0px rgba(0,0,0,0.12)) drop-shadow(4px 4px 8px rgba(0,0,0,0.15))" 
-                                        : "drop-shadow(1px 1px 0px rgba(0,0,0,0.08)) drop-shadow(3px 3px 6px rgba(0,0,0,0.1))",
-                                    stroke: "rgba(255,255,255,0.25)",
-                                    strokeWidth: 1
-                                }}
-                            />
+                            <g>
+                                <defs>
+                                    <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : 0.85} />
+                                        <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : 0.65} />
+                                    </linearGradient>
+                                    <linearGradient id={strokeGradId} x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.6 : 0.3} />
+                                        <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.05 : 0.02} />
+                                    </linearGradient>
+                                </defs>
+                                {isCurrentMonth && (
+                                    <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="6" opacity="0.12" filter="blur(3px)" />
+                                )}
+                                <path d={path} fill={`url(#${gradientId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" />
+                                <rect x={x + 3} y={newY + 2} width={Math.max(0, width - 6)} height={4} rx={2} fill="#ffffff" opacity={isCurrentMonth ? 0.6 : 0.25} />
+                            </g>
                         );
-                    })}
-                </Bar>
+                    }}
+                />
             </BarChart>
         </ResponsiveContainer>
     );

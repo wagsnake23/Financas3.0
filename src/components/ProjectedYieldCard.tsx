@@ -85,14 +85,14 @@ export const ProjectedYieldCard = ({
                 {/* Left side: Annual Total */}
                 <div className="flex items-end">
                     {annualTotalValue !== undefined && (
-                        <div className="flex flex-col items-start gap-0.5">
+                        <div className="flex flex-col items-start gap-0 md:gap-0.5">
                             <p 
-                                className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}
+                                className={cn("font-medium leading-none font-roboto opacity-90", isMobile ? "text-[12px]" : "text-[13px]")}
                                 style={{ color: "hsl(var(--yield-darker))" }}
                             >
                                 {annualTotalLabel || "Projeção Anual"}
                             </p>
-                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
+                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "text-[14px]" : "text-[15px]")}>
                                 {formatCurrency(annualTotalValue)}
                             </p>
                         </div>
@@ -105,11 +105,11 @@ export const ProjectedYieldCard = ({
                         <div className="flex flex-col items-end gap-0.5 translate-y-[2px]">
                             <div className="flex items-center gap-1.5" style={{ color: "hsl(var(--yield-darker))" }}>
                                 <DynamicIcon name="Wallet" className="hidden md:block h-3 w-3 opacity-75" />
-                                <p className={cn("font-semibold leading-none font-roboto opacity-85", isMobile ? "text-[10px]" : "text-[11px]")}>
+                                <p className={cn("font-medium leading-none font-roboto opacity-90", isMobile ? "text-[12px]" : "text-[13px]")}>
                                     {projectedPatrimonyLabel || "Patrimônio Projetado"}
                                 </p>
                             </div>
-                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
+                            <p className={cn("font-extrabold text-slate-800 font-roboto leading-none tracking-tight", isMobile ? "mt-0 text-[14px]" : "mt-0.5 text-[15px]")}>
                                 {formatCurrency(projectedPatrimonyValue)}
                             </p>
                         </div>
