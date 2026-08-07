@@ -49,7 +49,7 @@ export const ProjectedYieldCard = ({
 
                     {/* Título + Valor */}
                     <div className="flex flex-col gap-0">
-                        <h2 className={cn("font-semibold tracking-wide", isMobile ? "text-[13px]" : "text-[15px]")} 
+                        <h2 className={cn("font-semibold tracking-wide -translate-y-[2px]", isMobile ? "text-[13px]" : "text-[15px]")} 
                             style={{ 
                                 color: "hsl(var(--yield-darker))",
                                 textShadow: "0px 1px 1px rgba(255,255,255,1), 0px 2px 2px rgba(0,0,0,0.03)"
@@ -58,7 +58,7 @@ export const ProjectedYieldCard = ({
                             Projeção Mensal
                         </h2>
                         <p className={cn(
-                            "font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0.5",
+                            "font-extrabold text-slate-800 font-roboto leading-none tracking-tight mt-0",
                             isMobile ? "text-[20px]" : "text-[24px]"
                         )}>
                             {formatCurrency(mainStatValue)}
