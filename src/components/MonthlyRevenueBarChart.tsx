@@ -112,7 +112,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
             const newHeight = height;
             const newY = y;
             
-            const r = Math.min(4, newHeight / 2);
+            const r = Math.min(4, newHeight / 2); // Reverted radius
             const path = `M${x},${newY + r} A${r},${r} 0 0,1 ${x + r},${newY} L${x + width - r},${newY} A${r},${r} 0 0,1 ${x + width},${newY + r} L${x + width},${newY + newHeight - r} A${r},${r} 0 0,1 ${x + width - r},${newY + newHeight} L${x + r},${newY + newHeight} A${r},${r} 0 0,1 ${x},${newY + newHeight - r} Z`;
 
             let gradientColors = { start: "#bbf7d0", end: "#22c55e" };
@@ -131,15 +131,15 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
                     <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : 0.65} />
                   </linearGradient>
                   <linearGradient id={strokeGradId} x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.4 : 0.2} />
-                    <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.1 : 0.05} />
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.6 : 0.3} />
+                    <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.05 : 0.02} />
                   </linearGradient>
                 </defs>
                 {isCurrentMonth && (
-                  <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="4" opacity="0.10" filter="blur(2px)" />
+                  <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="6" opacity="0.12" filter="blur(3px)" />
                 )}
                 <path d={path} fill={`url(#${gradientId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" />
-                <rect x={x + 2} y={newY + 1.5} width={width - 4} height={3} rx={1.5} fill="#ffffff" opacity={isCurrentMonth ? 0.4 : 0.2} />
+                <rect x={x + 3} y={newY + 2} width={Math.max(0, width - 6)} height={4} rx={2} fill="#ffffff" opacity={isCurrentMonth ? 0.6 : 0.25} />
               </g>
             );
           }}

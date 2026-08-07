@@ -503,11 +503,11 @@ export default function Dashboard() {
       <main
         className={cn(
           "container-app flex-grow",
-          isMobile ? "pt-[2px] pb-2" : "py-8"
+          isMobile ? "pt-[2px] pb-2" : "pt-4 pb-8"
         )}
       >
         {!isMobile && !filter && (
-          <h1 className="text-3xl font-bold mb-6">Dashboard Financeiro</h1>
+          <h1 className="text-2xl font-bold mb-4 text-slate-800 tracking-tight">Dashboard Financeiro</h1>
         )}
 
         {filter === "investments" ? (
