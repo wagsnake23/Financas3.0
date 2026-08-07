@@ -204,20 +204,22 @@ const Lancamentos = () => {
         >
           <DialogHeader
             className={cn(
-              "flex flex-col items-start justify-start gap-0 space-y-0 mb-[-6px]",
+              "flex flex-col items-start justify-start mb-[-6px]",
               isMobile && "absolute top-3.5 left-4 right-12 text-left",
               !isMobile && "-mt-4"
             )}
           >
-            <div className="flex flex-row items-center gap-1.5 transition-all">
-              <span className="text-2xl select-none mr-0.5">📝</span>
-              <DialogTitle className="text-xl font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+            <div className="flex flex-row items-start gap-[11px] transition-all">
+              <span className="text-[26px] select-none leading-none mt-0">📝</span>
+              <div className="flex flex-col gap-[5px]">
+                <DialogTitle className="text-xl font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left text-[#1e3a8a]" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+                {editingTransaction?.created_at && (
+                  <p className="text-[11px] font-normal text-slate-500 leading-none">
+                    Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
+                  </p>
+                )}
+              </div>
             </div>
-            {editingTransaction?.created_at && (
-              <p className={cn("text-[11px] font-normal text-slate-500 mt-1 relative", !isMobile ? "top-[0px]" : "ml-[42px] top-[-6px]")}>
-                Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
-              </p>
-            )}
           </DialogHeader>
 
           {!loadingEditData && editingTransaction && (
