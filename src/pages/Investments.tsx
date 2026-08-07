@@ -1697,14 +1697,14 @@ export default function Investments() { // Alterado para export default function
         <DialogContent 
           className={cn(
             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
-            "!border border-slate-200 shadow-none"
+            "shadow-none border-none"
           )}
           style={{
-            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            background: "linear-gradient(180deg, #FBFCFE 0%, #F6F8FB 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            outline: "1px solid rgba(34, 197, 94, 0.08)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(34, 197, 94, 0.12)"
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
           <DialogHeader className={cn(
