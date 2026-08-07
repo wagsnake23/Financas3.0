@@ -263,9 +263,9 @@ export default function Profile() {
             <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8 relative z-10">{user?.email}</p>
 
             <div className="w-full flex flex-col gap-4 mb-4 relative z-10">
-              <div className="flex flex-col items-center justify-center gap-2">
-                <span className={cn("inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[14px] font-bold transition-all", subDisplay.badgeBg)}>
-                  <span className="text-[17px] leading-none">{subDisplay.icon}</span>
+              <div className="w-full flex flex-col items-center justify-center gap-2">
+                <span className={cn("flex items-center justify-center gap-1.5 w-full h-12 rounded-[16px] text-[15px] font-bold transition-all", subDisplay.badgeBg)}>
+                  <span className="text-[18px] leading-none">{subDisplay.icon}</span>
                   {subDisplay.title}
                 </span>
                 
