@@ -213,18 +213,20 @@ export default function Profile() {
         )}
       >
         {isMobile && (
-          <div className="mb-6 md:mb-8">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-2 flex items-center gap-2">
-              <span className="text-[26px] leading-none">{profile.avatar || "😎"}</span>
-              Meu Perfil
-            </h1>
-            <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações e configurações da conta</p>
+          <div className="mb-6 md:mb-8 flex gap-2 items-start">
+            <span className="text-[26px] leading-none pt-1">{profile.avatar || "😎"}</span>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-[2px] md:mb-[5px]">
+                Meu Perfil
+              </h1>
+              <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações da conta.</p>
+            </div>
           </div>
         )}
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
           {/* Card Esquerdo - Avatar e Infos Rápidas */}
-          <div className="w-full md:w-[40%] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] border border-slate-100/80 p-5 md:p-8 flex flex-col items-center relative overflow-hidden">
+          <div className="w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] border border-slate-100/80 p-5 md:p-8 flex flex-col items-center relative overflow-hidden">
             {/* 1. Faixa Superior Temática */}
             <div className={cn("absolute top-0 left-0 right-0 h-28 bg-gradient-to-b pointer-events-none z-0", subDisplay.topGradient)} />
 
