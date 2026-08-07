@@ -54,7 +54,7 @@ export const MonthNavigatorCompact: React.FC<MonthNavigatorCompactProps> = ({
   return (
     <div
       className={cn(
-        "btn-3d flex items-center justify-between px-1 rounded-full transition-all h-8 w-[122px] border cursor-default",
+        "btn-3d flex items-center justify-between px-1 rounded-full transition-all h-[34px] w-[122px] border cursor-default",
         premiumMode ? "bg-white/80 backdrop-blur-md border-white/60 shadow-[0_2px_10px_rgba(0,0,0,0.04)]" : cn("shadow-none", currentStyle.border)
       )}
       style={premiumMode ? {} : {
