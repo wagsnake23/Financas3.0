@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { SmilePlus } from "lucide-react";
+import { SmilePlus, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/contexts/ToastContext";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogDescription } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface ProfileAvatarProps {
   userId: string;
   currentAvatarEmoji?: string | null;
+  ringClassName?: string;
+  buttonBg?: string;
+  decorType?: string;
 }
 
-export function ProfileAvatar({ userId, currentAvatarEmoji }: ProfileAvatarProps) {
+export function ProfileAvatar({ userId, currentAvatarEmoji, ringClassName, buttonBg, decorType }: ProfileAvatarProps) {
   const queryClient = useQueryClient();
   const { showSuccessToast, showErrorToast } = useToast();
   
@@ -52,24 +56,41 @@ export function ProfileAvatar({ userId, currentAvatarEmoji }: ProfileAvatarProps
 
   return (
     <>
-      <div className="relative group mb-2">
-        <div 
-          className={`w-36 h-36 md:w-40 md:h-40 rounded-[32px] border-[6px] border-white shadow-[0_12px_35px_rgba(0,0,0,0.12)] overflow-hidden bg-slate-50 flex items-center justify-center cursor-pointer relative transition-all duration-300 group-hover:scale-[1.02] ${isUploading ? 'opacity-50' : ''}`}
-          onClick={() => setIsEmojiPickerOpen(true)}
-        >
-          <div className="text-6xl md:text-7xl">
-            {displayEmoji}
+      <div className="relative group mt-6 mb-2 z-10">
+        {/* Crown para o tema Vitalício */}
+        {decorType === "vitalicio" && (
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex items-center justify-center text-amber-500 z-20">
+            <Crown className="w-7 h-7 drop-shadow-[0_2px_8px_rgba(245,158,11,0.5)] fill-amber-400/30" />
           </div>
-          
-          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <SmilePlus className="w-8 h-8 text-white mb-1" />
-            <span className="text-white text-xs font-bold">Alterar</span>
+        )}
+
+        {/* Outer Ring */}
+        <div className={cn("rounded-full p-1 transition-all duration-300", ringClassName || "ring-4 ring-slate-200")}>
+          <div 
+            className={cn(
+              "w-28 h-28 md:w-32 md:h-32 rounded-full border-[5px] border-white shadow-[0_8px_25px_rgba(0,0,0,0.08)] overflow-hidden bg-slate-50 flex items-center justify-center cursor-pointer relative transition-all duration-300 group-hover:scale-[1.02]",
+              isUploading ? 'opacity-50' : ''
+            )}
+            onClick={() => setIsEmojiPickerOpen(true)}
+          >
+            <div className="text-5xl md:text-6xl select-none">
+              {displayEmoji}
+            </div>
+            
+            <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full">
+              <SmilePlus className="w-8 h-8 text-white mb-1" />
+              <span className="text-white text-xs font-bold">Alterar</span>
+            </div>
           </div>
         </div>
 
+        {/* Floating Button */}
         <button 
           onClick={() => setIsEmojiPickerOpen(true)}
-          className="absolute bottom-1 right-1 w-11 h-11 bg-gradient-to-b from-[#4A72BA] to-[#3B5B96] hover:opacity-90 text-white rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(59,91,150,0.4)] transition-all hover:-translate-y-0.5 active:scale-95"
+          className={cn(
+            "absolute bottom-1 right-1 w-11 h-11 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 z-20",
+            buttonBg || "bg-gradient-to-b from-[#4A72BA] to-[#3B5B96] shadow-[0_4px_12px_rgba(59,91,150,0.4)]"
+          )}
           disabled={isUploading}
         >
           <SmilePlus className="w-[22px] h-[22px]" />
@@ -100,3 +121,4 @@ export function ProfileAvatar({ userId, currentAvatarEmoji }: ProfileAvatarProps
     </>
   );
 }
+

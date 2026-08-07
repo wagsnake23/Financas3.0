@@ -5,7 +5,7 @@ import { ProfileAccountForm } from "@/components/profile/ProfileAccountForm";
 import { ProfilePasswordModal } from "@/components/profile/ProfilePasswordModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Sparkles, Gem, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -30,70 +30,119 @@ export default function Profile() {
   const sub = profile?.subscriptions;
   const type = sub?.subscription_type || 'trial';
   const isExpired = profile?.isExpired;
+  const hasActiveSub = profile?.hasActiveSubscription;
+  const expiresAt = sub?.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
 
   const getSubscriptionDisplay = () => {
+    // 1. Conta Bloqueada
     if (sub?.subscription_status === 'blocked') {
       return {
-        bg: "bg-red-50/50 border-red-100/50",
-        badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+        key: 'blocked',
+        topGradient: "from-rose-400/25 via-rose-100/10 to-transparent",
+        bg: "bg-rose-50/40 border-rose-100/70",
+        badgeBg: "bg-rose-500/15 border border-rose-500/25 text-rose-700 backdrop-blur-md shadow-sm",
+        ringClassName: "ring-4 ring-rose-400/60 shadow-[0_0_16px_rgba(244,63,94,0.25)]",
+        buttonBg: "bg-gradient-to-b from-rose-500 to-rose-600 shadow-[0_4px_12px_rgba(244,63,94,0.4)]",
         icon: "🔴",
         title: "Conta Bloqueada",
-        subtitle: "Nenhum recurso pago disponível"
+        subtitle: "Nenhum recurso disponível",
+        decorType: "alert"
       };
     }
 
-    const expiresAt = sub?.expires_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(sub.expires_at)) : "";
-    const hasActiveSub = profile?.hasActiveSubscription;
-
+    // 2. Assinaturas Ativas
     if (hasActiveSub) {
       if (type.includes('lifetime')) {
         return {
-          bg: "bg-amber-50/50 border-amber-100/50",
-          badgeBg: "bg-amber-100/60 text-amber-700 shadow-[0_2px_10px_rgba(245,158,11,0.1)]",
+          key: 'lifetime',
+          topGradient: "from-amber-400/25 via-amber-100/15 to-transparent",
+          bg: "bg-amber-50/40 border-amber-100/70",
+          badgeBg: "bg-gradient-to-r from-amber-500/15 via-yellow-400/15 to-amber-500/15 border border-amber-500/35 text-amber-800 backdrop-blur-md shadow-sm font-black",
+          ringClassName: "ring-4 ring-amber-400/70 shadow-[0_0_20px_rgba(245,158,11,0.35)]",
+          buttonBg: "bg-gradient-to-b from-amber-400 to-amber-600 shadow-[0_4px_12px_rgba(245,158,11,0.4)]",
           icon: "👑",
-          title: "Vitalício",
-          subtitle: "Acesso permanente"
+          title: "Membro vitalício",
+          subtitle: "",
+          decorType: "vitalicio"
         };
       }
-      if (type.includes('premium')) {
+
+      if (type.includes('temp') || type.includes('por_tempo') || sub?.is_temporary) {
         return {
-          bg: "bg-blue-50/50 border-blue-100/50",
-          badgeBg: "bg-blue-100/60 text-blue-700 shadow-[0_2px_10px_rgba(59,130,246,0.1)]",
+          key: 'premium_temp',
+          topGradient: "from-sky-400/25 via-sky-100/15 to-transparent",
+          bg: "bg-sky-50/40 border-sky-100/70",
+          badgeBg: "bg-sky-500/15 border border-sky-500/25 text-sky-700 backdrop-blur-md shadow-sm",
+          ringClassName: "ring-4 ring-sky-400/60 shadow-[0_0_16px_rgba(56,189,248,0.3)]",
+          buttonBg: "bg-gradient-to-b from-sky-400 to-sky-500 shadow-[0_4px_12px_rgba(56,189,248,0.4)]",
           icon: "💎",
           title: "Premium",
-          subtitle: `Válido até ${expiresAt}`
+          subtitle: expiresAt ? `Expira em ${expiresAt}` : "Assinatura ativa",
+          decorType: "premium_temp"
+        };
+      }
+
+      if (type.includes('premium')) {
+        return {
+          key: 'premium',
+          topGradient: "from-blue-500/20 via-blue-100/15 to-transparent",
+          bg: "bg-blue-50/40 border-blue-100/70",
+          badgeBg: "bg-blue-500/15 border border-blue-500/25 text-blue-700 backdrop-blur-md shadow-sm",
+          ringClassName: "ring-4 ring-blue-500/60 shadow-[0_0_16px_rgba(59,130,246,0.3)]",
+          buttonBg: "bg-gradient-to-b from-blue-500 to-blue-600 shadow-[0_4px_12px_rgba(37,99,235,0.4)]",
+          icon: "💎",
+          title: "Premium",
+          subtitle: expiresAt ? `Válido até ${expiresAt}` : "Assinatura ativa",
+          decorType: "premium"
         };
       }
     }
 
+    // 3. Expirado
     if (type.includes('premium') || type.includes('lifetime')) {
       if (isExpired) {
         return {
-          bg: "bg-red-50/50 border-red-100/50",
-          badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+          key: 'premium_expired',
+          topGradient: "from-rose-400/20 via-rose-100/15 to-transparent",
+          bg: "bg-rose-50/40 border-rose-100/70",
+          badgeBg: "bg-rose-500/15 border border-rose-500/25 text-rose-700 backdrop-blur-md shadow-sm",
+          ringClassName: "ring-4 ring-rose-400/60 shadow-[0_0_16px_rgba(244,63,94,0.3)]",
+          buttonBg: "bg-gradient-to-b from-rose-500 to-rose-600 shadow-[0_4px_12px_rgba(244,63,94,0.4)]",
           icon: "💎",
           title: "Assinatura Expirada",
-          subtitle: `Expirou em ${expiresAt}`
+          subtitle: expiresAt ? `Expirou em ${expiresAt}` : "Assinatura encerrada",
+          decorType: "alert"
         };
       }
     }
 
     if (isExpired) {
       return {
-        bg: "bg-red-50/50 border-red-100/50",
-        badgeBg: "bg-red-100/60 text-red-700 shadow-[0_2px_10px_rgba(239,68,68,0.1)]",
+        key: 'trial_expired',
+        topGradient: "from-rose-400/20 via-rose-100/15 to-transparent",
+        bg: "bg-rose-50/40 border-rose-100/70",
+        badgeBg: "bg-rose-500/15 border border-rose-500/25 text-rose-700 backdrop-blur-md shadow-sm",
+        ringClassName: "ring-4 ring-rose-400/60 shadow-[0_0_16px_rgba(244,63,94,0.3)]",
+        buttonBg: "bg-gradient-to-b from-rose-500 to-rose-600 shadow-[0_4px_12px_rgba(244,63,94,0.4)]",
         icon: "🧪",
         title: "Trial Expirado",
-        subtitle: `Expirou em ${expiresAt}`
+        subtitle: expiresAt ? `Expirou em ${expiresAt}` : "Avaliação encerrada",
+        decorType: "alert"
       };
     }
 
+    // 4. Default: Trial (Menta)
     return {
-      bg: "bg-emerald-50/50 border-emerald-100/50",
-      badgeBg: "bg-emerald-100/60 text-emerald-700 shadow-[0_2px_10px_rgba(16,185,129,0.1)]",
+      key: 'trial',
+      topGradient: "from-emerald-300/35 via-emerald-100/15 to-transparent",
+      bg: "bg-emerald-50/40 border-emerald-100/70",
+      badgeBg: "bg-emerald-500/15 border border-emerald-500/25 text-emerald-700 backdrop-blur-md shadow-sm",
+      ringClassName: "ring-4 ring-emerald-400/60 shadow-[0_0_16px_rgba(52,211,153,0.3)]",
+      buttonBg: "bg-gradient-to-b from-emerald-500 to-emerald-600 shadow-[0_4px_12px_rgba(16,185,129,0.4)]",
       icon: "🧪",
       title: "Trial",
-      subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação"
+      subtitle: expiresAt ? `Expira em ${expiresAt}` : "30 dias de avaliação",
+      decorType: "trial"
     };
   };
 
@@ -161,22 +210,53 @@ export default function Profile() {
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
           {/* Card Esquerdo - Avatar e Infos Rápidas */}
-          <div className="w-full md:w-[40%] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.5)] border border-slate-100 p-5 md:p-8 flex flex-col items-center relative overflow-hidden">
+          <div className="w-full md:w-[40%] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] border border-slate-100/80 p-5 md:p-8 flex flex-col items-center relative overflow-hidden">
+            {/* 1. Faixa Superior Temática */}
+            <div className={cn("absolute top-0 left-0 right-0 h-28 bg-gradient-to-b pointer-events-none z-0", subDisplay.topGradient)} />
+
+            {/* 6. Elementos Decorativos */}
+            {subDisplay.decorType === "trial" && (
+              <>
+                <Sparkles className="w-5 h-5 text-emerald-400/40 absolute top-4 right-5 pointer-events-none z-0" />
+                <Sparkles className="w-4 h-4 text-emerald-400/30 absolute top-7 left-6 pointer-events-none z-0" />
+              </>
+            )}
+            {subDisplay.decorType === "premium" && (
+              <Gem className="w-7 h-7 text-blue-400/35 absolute top-4 right-5 pointer-events-none z-0" />
+            )}
+            {subDisplay.decorType === "premium_temp" && (
+              <Gem className="w-7 h-7 text-sky-400/25 absolute top-4 right-5 pointer-events-none z-0" />
+            )}
+            {subDisplay.decorType === "vitalicio" && (
+              <>
+                <Sparkles className="w-5 h-5 text-amber-400/50 absolute top-4 right-5 pointer-events-none z-0" />
+                <Sparkles className="w-4 h-4 text-amber-400/40 absolute top-6 left-6 pointer-events-none z-0" />
+              </>
+            )}
+            {subDisplay.decorType === "alert" && (
+              <AlertCircle className="w-6 h-6 text-rose-400/40 absolute top-4 right-5 pointer-events-none z-0" />
+            )}
+
             <ProfileAvatar 
               userId={user!.id} 
               currentAvatarEmoji={profile.avatar} 
+              ringClassName={subDisplay.ringClassName}
+              buttonBg={subDisplay.buttonBg}
+              decorType={subDisplay.decorType}
             />
 
-            <h2 className="mt-5 text-2xl font-extrabold text-slate-800 tracking-tight text-center">{profile.nome || "Usuário"}</h2>
-            <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8">{user?.email}</p>
+            <h2 className="mt-4 text-2xl font-extrabold text-slate-800 tracking-tight text-center relative z-10">{profile.nome || "Usuário"}</h2>
+            <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8 relative z-10">{user?.email}</p>
 
-            <div className="w-full flex flex-col gap-4 mb-4">
-              <div className={`flex items-center justify-between px-4 py-3.5 rounded-[20px] border ${subDisplay.bg}`}>
-                <span className="text-sm font-semibold text-slate-500">{subDisplay.subtitle}</span>
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold ${subDisplay.badgeBg}`}>
+            <div className="w-full flex flex-col gap-4 mb-4 relative z-10">
+              <div className={cn("flex items-center px-4 py-3.5 rounded-[20px] border backdrop-blur-sm transition-all", subDisplay.subtitle ? "justify-between" : "justify-center", subDisplay.bg)}>
+                <span className={cn("inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-bold transition-all", subDisplay.badgeBg)}>
                   <span className="text-base leading-none">{subDisplay.icon}</span>
                   {subDisplay.title}
                 </span>
+                {subDisplay.subtitle && (
+                  <span className="text-sm font-semibold text-slate-600">{subDisplay.subtitle}</span>
+                )}
               </div>
               
               <Button 
@@ -197,7 +277,7 @@ export default function Profile() {
               </Button>
             </div>
 
-            <div className="w-full flex flex-col">
+            <div className="w-full flex flex-col relative z-10">
               <ProfilePasswordModal />
             </div>
           </div>
@@ -213,3 +293,4 @@ export default function Profile() {
     </div>
   );
 }
+
