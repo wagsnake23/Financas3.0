@@ -26,7 +26,7 @@ export const YearNavigatorCompact: React.FC<YearNavigatorCompactProps> = ({
     return (
         <div
             className={cn(
-                "btn-3d flex items-center justify-between px-1 rounded-2xl transition-all h-9 w-[135px] border shadow-none cursor-default",
+                "btn-3d flex items-center justify-between px-1 rounded-full transition-all h-[34px] w-[122px] border shadow-none cursor-default",
                 currentStyle.border
             )}
             style={{
@@ -36,17 +36,17 @@ export const YearNavigatorCompact: React.FC<YearNavigatorCompactProps> = ({
         >
             <button
                 onClick={(e) => { e.stopPropagation(); onPreviousYear(); }}
-                className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+                className="text-white hover:opacity-90 rounded-full p-0 h-[22px] w-[22px] flex items-center justify-center transition-all shadow-sm shrink-0"
                 style={{
                     background: currentStyle.buttonGradient,
                     boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
                 }}
             >
-                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={4} />
+                <DynamicIcon name="ChevronLeft" className="h-3 w-3" strokeWidth={4} />
             </button>
 
             <span className={cn(
-                "text-[12px] font-black px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap",
+                "text-[11px] font-black px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap",
                 currentStyle.text
             )}>
                 {year}
@@ -54,13 +54,13 @@ export const YearNavigatorCompact: React.FC<YearNavigatorCompactProps> = ({
 
             <button
                 onClick={(e) => { e.stopPropagation(); onNextYear(); }}
-                className="text-white hover:opacity-90 rounded-full p-0 h-6 w-6 flex items-center justify-center transition-all shadow-sm shrink-0"
+                className="text-white hover:opacity-90 rounded-full p-0 h-[22px] w-[22px] flex items-center justify-center transition-all shadow-sm shrink-0"
                 style={{
                     background: currentStyle.buttonGradient,
                     boxShadow: "inset 0px 1px 1px rgba(255, 255, 255, 0.4), inset 0px -1px 1px rgba(0, 0, 0, 0.1)"
                 }}
             >
-                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                <DynamicIcon name="ChevronRight" className="h-3 w-3" strokeWidth={4} />
             </button>
         </div>
     );
