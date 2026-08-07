@@ -283,7 +283,16 @@ export const Navigation = () => {
                           </div>
                           <div className="flex flex-col truncate">
                             <span className="font-bold text-slate-800 truncate">{displayName}</span>
-                            <span className="text-xs text-slate-500">Membro desde {memberSince} 👑</span>
+                            <span className={cn(
+                              "inline-flex items-center gap-1 mt-0.5 self-start max-w-full",
+                              subDisplay.color,
+                              subDisplay.bg
+                            )}>
+                              <span className="text-[12px] font-semibold tracking-[0.015em] leading-none truncate">
+                                {subDisplay.title}
+                              </span>
+                              <span className="text-[12px] leading-none shrink-0">{subDisplay.icon}</span>
+                            </span>
                           </div>
                         </div>
                       </DropdownMenuLabel>
