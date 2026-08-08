@@ -294,9 +294,9 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 cards.map((card) => (
                   <Card
                     key={card.id}
-                    className="flex items-center justify-between p-3 border rounded-xl bg-card shadow-sm relative"
+                    className="flex flex-col p-3 border rounded-xl bg-card shadow-sm relative pr-12 min-h-[96px] justify-center"
                   >
-                    <div className="flex-1">
+                    <div>
                       <p className="font-medium">{card.nome}</p>
                       <p className="text-sm text-muted-foreground">
                         {card.banco} (**** {card.ultimos_digitos})
@@ -313,24 +313,31 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                         {(optimisticPrincipalId ? card.id === optimisticPrincipalId : card.is_principal) ? "⭐ Cartão Principal" : "☆ Tornar Principal"}
                       </p>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="icon"
-                        onClick={() => handleEditClick(card)}
-                        className="btn-3d w-8 h-8 p-0 rounded-xl border-none shadow-sm transition-all active:scale-95"
-                        style={{ "--cor-topo": "#F0F9FF", "--cor-base": "#E0F2FE" } as any}
-                      >
-                        <DynamicIcon name="SquarePen" className="h-4 w-4 text-sky-600" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        onClick={() => handleDeleteConfirm(card.id)}
-                        className="btn-3d w-8 h-8 p-0 rounded-xl border-none shadow-sm transition-all active:scale-95"
-                        style={{ "--cor-topo": "#F0F9FF", "--cor-base": "#E0F2FE" } as any}
-                      >
-                        <DynamicIcon name="Trash2" className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
+
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => handleEditClick(card)}
+                      className={cn(
+                        "absolute top-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                        "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50",
+                        isMobile ? "h-8 w-8 text-sm" : "h-9 w-9 text-base"
+                      )}
+                    >
+                      <span className="text-base">✏️</span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => handleDeleteConfirm(card.id)}
+                      className={cn(
+                        "absolute bottom-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                        "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50",
+                        isMobile ? "h-8 w-8 text-sm" : "h-9 w-9 text-base"
+                      )}
+                    >
+                      <span className="text-base">🗑️</span>
+                    </Button>
                   </Card>
                 ))
               )}
