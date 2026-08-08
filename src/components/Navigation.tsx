@@ -425,14 +425,14 @@ export const Navigation = () => {
                       </div>
                       
                       {/* Rodapé Elegante */}
-                      <div className="bg-[#F1F5F9] px-5 py-2.5 flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
+                      <div className="bg-[#F1F5F9] px-5 py-[13px] flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
                         <div className="flex items-center gap-3">
-                          <img src="/icons/logo.png" alt="Logo" className="w-7 h-7" />
+                          <img src="/icons/logo.png" alt="Logo" className="w-[34px] h-[34px]" />
                           <div className="flex flex-col">
-                            <span className="text-[13px] font-extrabold text-[#1E3A8B] tracking-tight">
+                            <span className="text-[15px] font-extrabold text-[#1E3A8B] tracking-tight leading-none mb-0.5">
                               Minhas Finança<span className="text-[#22c55e]">$</span>
                             </span>
-                            <span className="text-[9px] font-medium text-slate-400">Versão 2.0.1</span>
+                            <span className="text-[11px] font-medium text-slate-400 leading-none mt-0.5">Versão 3.0.0</span>
                           </div>
                         </div>
                       </div>
