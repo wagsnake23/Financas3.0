@@ -88,7 +88,7 @@ export default function Metas() {
   });
 
   const parentCategories = useMemo(() => {
-    return allCategories.filter(c => c.parent_id === null);
+    return allCategories.filter(c => c.parent_id === null && !["receitas", "investimentos", "receitas e investimentos"].includes(c.nome.toLowerCase()));
   }, [allCategories]);
 
   // Fetch metas
@@ -746,11 +746,11 @@ export default function Metas() {
             {calculatedMetas.length > 0 && (
               <div className="mt-2 p-6 shadow-sm rounded-[24px] border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
                 <h3 className="text-sm font-black text-[#C2410C] uppercase tracking-widest mb-4">📊 Resumo das Metas</h3>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-7">
-                  {renderSummaryItem("Target", "Metas Ativas", stats.ativas.toString(), false)}
-                  {renderSummaryItem("Trophy", "Concluídas", stats.concluidas.toString(), true)}
-                  {renderSummaryItem("DollarSign", "Total Objetivos", formatCurrency(stats.totalObjetivo), false)}
-                  {renderSummaryItem("TrendingUp", "Total Realizado", formatCurrency(stats.totalRealizado), true)}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+                  {renderSummaryItem("Target", "Metas Ativas", stats.ativas.toString())}
+                  {renderSummaryItem("Trophy", "Concluídas", stats.concluidas.toString())}
+                  {renderSummaryItem("DollarSign", "Total Objetivos", formatCurrency(stats.totalObjetivo))}
+                  {renderSummaryItem("TrendingUp", "Total Realizado", formatCurrency(stats.totalRealizado))}
                 </div>
                 {/* Progress bar */}
                 <div className="mt-6">
@@ -1103,16 +1103,14 @@ export default function Metas() {
     );
   }
 
-  function renderSummaryItem(icon: string, label: string, value: string, alignRight: boolean) {
+  function renderSummaryItem(icon: string, label: string, value: string) {
     return (
-      <div className={cn("flex flex-col", alignRight && "items-end text-right")}>
-        <div className={cn("flex items-center gap-2 mb-2", alignRight && "flex-row-reverse")}>
-          <div className="p-2 rounded-xl flex items-center justify-center" style={{ background: accentColorLight, borderBottom: `0.5px solid ${accentColor}30` }}>
-            <DynamicIcon name={icon} className="h-3.5 w-3.5" style={{ color: accentColor }} strokeWidth={3} />
-          </div>
-          <h4 className="text-[10px] font-black uppercase tracking-widest leading-none" style={{ color: accentColor }}>{label}</h4>
+      <div className="flex flex-col items-start">
+        <div className="mb-2 p-2 rounded-xl flex items-center justify-center" style={{ background: accentColorLight, borderBottom: `0.5px solid ${accentColor}30` }}>
+          <DynamicIcon name={icon} className="h-4 w-4" style={{ color: accentColor }} strokeWidth={3} />
         </div>
-        <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{value}</p>
+        <h4 className="text-[10px] font-black uppercase tracking-widest leading-tight mb-1" style={{ color: accentColor }}>{label}</h4>
+        <p className="text-base font-bold text-slate-700 tracking-tight leading-none">{value}</p>
       </div>
     );
   }
