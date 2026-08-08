@@ -86,6 +86,7 @@ export const Navigation = () => {
     { to: "/receitas", label: "Receitas", icon: "💰", color: "hsl(150, 65%, 50%)" },
     { to: "/lancamentos", label: "Lançamentos", icon: "📝", color: "hsl(45, 90%, 55%)" },
     { to: "/categorias", label: "Categorias", icon: "🗂️", color: "hsl(285, 70%, 55%)" },
+    { to: "/metas", label: "Metas", icon: "🎯", color: "hsl(25, 95%, 55%)" },
     { to: "/investimentos", label: "Investimentos", icon: "📈", color: "hsl(180, 70%, 50%)" },
     { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒", color: "hsl(270, 70%, 58%)" },
   ];

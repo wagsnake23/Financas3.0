@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Home = lazy(() => import("./pages/Home"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ShoppingList = lazy(() => import("./pages/ShoppingList"));
+const Metas = lazy(() => import("./pages/Metas"));
 const Profile = lazy(() => import("./pages/Profile"));
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/categorias" element={<Categories />} />
                 <Route path="/investimentos" element={<Investments />} />
+                <Route path="/metas" element={<Metas />} />
                 <Route path="/receitas" element={<Receitas />} />
                 <Route path="/despesas" element={<Despesas />} />
                 <Route path="/lancamentos" element={<Lancamentos />} />

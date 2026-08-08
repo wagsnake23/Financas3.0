@@ -543,6 +543,47 @@ export type Database = {
         }
         Relationships: []
       }
+      metas: {
+        Row: {
+          id: string
+          user_id: string
+          categoria_id: string
+          valor_objetivo: number
+          valor_mensal: number
+          data_limite: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          categoria_id: string
+          valor_objetivo: number
+          valor_mensal: number
+          data_limite?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          categoria_id?: string
+          valor_objetivo?: number
+          valor_mensal?: number
+          data_limite?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

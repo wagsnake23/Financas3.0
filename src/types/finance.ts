@@ -61,3 +61,15 @@ export interface ShoppingItem {
   created_at?: string;
   updated_at?: string;
 }
+
+// NOVO: Interface para Metas Financeiras
+export interface Meta {
+  id: string;
+  user_id: string;
+  categoria_id: string;
+  valor_objetivo: number;
+  valor_mensal: number;
+  data_limite?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
