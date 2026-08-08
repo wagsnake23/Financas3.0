@@ -268,10 +268,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             <span className="text-base">✏️</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className={cn(
-          isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] shadow-none",
-          "border-none"
-        )}
+        <DialogContent 
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className={cn(
+            isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] shadow-none",
+            "border-none"
+          )}
         style={{
           background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
           backgroundBlendMode: "soft-light",
@@ -338,7 +340,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                           : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                       )}
                     >
-                      <span className={cn(isMobile ? "text-base" : "text-sm")}>🗑️</span>
+                      <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
                     </Button>
                   </Card>
                 ))
