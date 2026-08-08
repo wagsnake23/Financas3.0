@@ -268,8 +268,15 @@ export const Navigation = () => {
                           <span className="max-w-[120px] truncate font-semibold text-[13px] leading-[1.1]">
                             {displayName}
                           </span>
-                          <span className="max-w-[130px] truncate text-[11px] font-normal text-white/75 leading-[1.2] mt-0.5">
-                            {user?.email || ""}
+                          <span className={cn(
+                            "inline-flex items-center gap-1 mt-0.5 self-start max-w-[130px]",
+                            subDisplay.color,
+                            subDisplay.bg
+                          )}>
+                            <span className="text-[11px] font-medium tracking-[0.015em] leading-[1.2] truncate">
+                              {subDisplay.title}
+                            </span>
+                            <span className="text-[11px] leading-none shrink-0">{subDisplay.icon}</span>
                           </span>
                         </div>
                         <ChevronDown className="h-4 w-4 opacity-70 ml-0.5" />
@@ -283,15 +290,8 @@ export const Navigation = () => {
                           </div>
                           <div className="flex flex-col truncate">
                             <span className="font-bold text-slate-800 truncate">{displayName}</span>
-                            <span className={cn(
-                              "inline-flex items-center gap-1 mt-0.5 self-start max-w-full",
-                              subDisplay.color,
-                              subDisplay.bg
-                            )}>
-                              <span className="text-[12px] font-semibold tracking-[0.015em] leading-none truncate">
-                                {subDisplay.title}
-                              </span>
-                              <span className="text-[12px] leading-none shrink-0">{subDisplay.icon}</span>
+                            <span className="max-w-[180px] truncate text-[12px] font-normal text-slate-500 leading-tight mt-0.5">
+                              {user?.email || ""}
                             </span>
                           </div>
                         </div>
