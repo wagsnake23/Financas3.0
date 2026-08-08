@@ -118,7 +118,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
 
   const getBorderColor = (errorKey: string) => {
-    return validationErrors[errorKey] ? "!border-destructive border" : "!border-[#CBD5E1] border";
+    return validationErrors[errorKey] ? "!border-destructive border" : "!border-slate-400/60 border";
   };
 
   const handleEditClick = (card: Cartao) => {
@@ -286,7 +286,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               <span>Gerenciar Cartões</span>
             </DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-[300px] pr-4">
+          <ScrollArea className="h-[300px]">
             <div className="space-y-4">
               {cards.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Nenhum cartão cadastrado.</p>
@@ -382,10 +382,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   setValidationErrors(prev => ({ ...prev, nomeCartao: false }));
                 }}
                 className={cn(
-                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium input-white",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderColor("nomeCartao"),
-                  getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false })
+                  getBorderClass({ isInvalid: validationErrors.nomeCartao, isValid: validationErrors.nomeCartao === false, variant: "green" })
                 )}
               />
             </div>
@@ -398,10 +398,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                   setValidationErrors(prev => ({ ...prev, banco: false }));
                 }}
                 className={cn(
-                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium input-white",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderColor("banco"),
-                  getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false })
+                  getBorderClass({ isInvalid: validationErrors.banco, isValid: validationErrors.banco === false, variant: "green" })
                 )}
               />
             </div>
@@ -415,10 +415,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 }}
                 maxLength={4}
                 className={cn(
-                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                  "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium input-white",
                   isMobile ? "h-9 text-sm" : "h-10",
                   getBorderColor("ultimosDigitos"),
-                  getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false })
+                  getBorderClass({ isInvalid: validationErrors.ultimosDigitos, isValid: validationErrors.ultimosDigitos === false, variant: "green" })
                 )}
               />
             </div>
@@ -435,10 +435,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setValidationErrors(prev => ({ ...prev, diaFechamento: false }));
                   }}
                   className={cn(
-                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium input-white",
                     isMobile ? "h-9 text-sm" : "h-10",
                     getBorderColor("diaFechamento"),
-                    getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false })
+                    getBorderClass({ isInvalid: validationErrors.diaFechamento, isValid: validationErrors.diaFechamento === false, variant: "green" })
                   )}
                 />
               </div>
@@ -454,10 +454,10 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                     setValidationErrors(prev => ({ ...prev, diaVencimento: false }));
                   }}
                   className={cn(
-                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium",
+                    "rounded-xl text-gray-800 font-medium transition-all duration-200 input-3d-premium input-white",
                     isMobile ? "h-9 text-sm" : "h-10",
                     getBorderColor("diaVencimento"),
-                    getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false })
+                    getBorderClass({ isInvalid: validationErrors.diaVencimento, isValid: validationErrors.diaVencimento === false, variant: "green" })
                   )}
                 />
               </div>
