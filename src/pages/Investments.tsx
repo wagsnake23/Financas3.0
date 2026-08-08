@@ -1085,7 +1085,8 @@ export default function Investments() { // Alterado para export default function
                       return (
                         <div
                           key={investment.id}
-                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm"
+                          onClick={() => { if (isMobile) handleEditClick(investment); }}
+                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
                           style={{
                             backgroundColor: "#FFFFFF"
                           }}
@@ -1106,7 +1107,7 @@ export default function Investments() { // Alterado para export default function
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => handleEditClick(investment)}
+                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
                                className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                              >
                                <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
@@ -1127,7 +1128,7 @@ export default function Investments() { // Alterado para export default function
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleDelete(investment.id)}
+                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
                                   className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                                 >
                                   <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
@@ -1591,9 +1592,10 @@ export default function Investments() { // Alterado para export default function
                         return (
                           <div
                             key={investment.id}
+                            onClick={() => { if (isMobile) handleEditClick(investment); }}
                             className={cn(
                               "relative group overflow-hidden transition-all duration-300 py-[18px] px-5 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
-                              isMobile && "py-[14px] px-4"
+                              isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-[18px] px-5"
                             )}
                             style={{
                               backgroundColor: "#FFFFFF",
@@ -1617,7 +1619,7 @@ export default function Investments() { // Alterado para export default function
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleEditClick(investment)}
+                                  onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
                                 className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                               >
                                 <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
@@ -1625,7 +1627,7 @@ export default function Investments() { // Alterado para export default function
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleDelete(investment.id)}
+                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
                                   className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
                                 >
                                   <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />

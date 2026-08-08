@@ -183,7 +183,7 @@ export const MobileCreditCardExpenses: React.FC<
   if (cartoes.length === 0) {
     return (
       <Card
-        className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
+        className={cn("pl-3 pr-[16px] pt-[8px] pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-[calc(100%-5px)] w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "16px",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -222,7 +222,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-3 pr-[16px] pt-[8px] pb-[12px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("pl-3 pr-[16px] pt-[8px] pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-[calc(100%-5px)] w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
