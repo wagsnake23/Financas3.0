@@ -891,7 +891,7 @@ export default function Metas() {
           }}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
-          <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-6")}>
+          <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-4")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
               <span>🎯</span>
               <span>Editar Meta</span>
