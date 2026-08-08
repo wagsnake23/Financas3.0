@@ -807,15 +807,15 @@ export default function Metas() {
               </div>
             )}
 
-            <div className={cn("grid gap-8 lg:mb-[40px]", "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
+            <div className={cn("grid gap-8 lg:mb-8", "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
               {/* Form */}
-              <div>
+              <div className="self-start">
                 <Card
-                  className="p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full"
+                  className="p-6 lg:p-8 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-fit"
                   style={cardStyle}
                 >
-                  <h2 className="text-2xl font-bold mb-6" style={{ color: accentColor }}>🎯 Nova Meta</h2>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <h2 className="text-2xl font-bold mb-6 lg:mb-8" style={{ color: accentColor }}>🎯 Nova Meta</h2>
+                  <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
                     {renderFormFields(
                       selectedParentId, setSelectedParentId,
                       nomeMeta, setNomeMeta,
@@ -846,15 +846,15 @@ export default function Metas() {
               </div>
 
               {/* Metas List */}
-              <div>
+              <div className="self-start">
                 <Card
-                  className="p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground"
+                  className="p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground h-fit"
                   style={cardStyle}
                 >
                   <h2 className="text-2xl font-bold text-[#C2410C] mb-6">🎯 Minhas Metas</h2>
-                  <div className="space-y-5 max-h-[600px] overflow-y-auto no-scrollbar">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-start lg:max-h-[480px] lg:overflow-y-auto lg:pr-2 custom-scrollbar">
                     {calculatedMetas.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
+                      <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200 lg:col-span-2">
                         Nenhuma meta cadastrada ainda.
                       </p>
                     ) : (
@@ -862,16 +862,16 @@ export default function Metas() {
                     )}
                   </div>
                 </Card>
-
-                {/* Bottom row: Próxima Conquista + Chart */}
-                {calculatedMetas.length > 0 && (
-                  <div className="grid grid-cols-2 gap-8 mt-8">
-                    {proximaConquista && renderProximaConquista()}
-                    {renderChart()}
-                  </div>
-                )}
               </div>
             </div>
+
+            {/* Bottom row: Próxima Conquista + Chart */}
+            {calculatedMetas.length > 0 && (
+              <div className={cn("grid gap-8 lg:mb-[40px]", proximaConquista ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1")}>
+                {proximaConquista && renderProximaConquista()}
+                {renderChart()}
+              </div>
+            )}
           </>
         )}
       </main>
@@ -997,7 +997,7 @@ export default function Metas() {
       <div
         key={meta.id}
         onClick={() => { if (isMobile) handleEditClick(meta); }}
-        className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
+        className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98] h-fit"
         style={{ backgroundColor: "#FFFFFF" }}
       >
         {/* Top: Icon, Name, Category + Edit button */}

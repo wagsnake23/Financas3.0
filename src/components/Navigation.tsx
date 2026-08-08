@@ -240,7 +240,7 @@ export const Navigation = () => {
               {/* Navegação Desktop */}
               {!isMobile && (
                 <div className="hidden md:flex items-center gap-1">
-                  {navItems.map((item) => (
+                  {navItems.filter(item => item.label !== "Lista de Compras").map((item) => (
                     <RouterNavLink
                       key={item.to}
                       to={item.to}
@@ -298,6 +298,17 @@ export const Navigation = () => {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                      <DropdownMenuItem asChild className="rounded-xl cursor-pointer p-3 hover:bg-slate-50">
+                        <RouterNavLink to="/lista-de-compras" className="flex items-center w-full">
+                          <span className="text-lg mr-3">🛒</span>
+                          <span className="font-semibold text-slate-700">Compras</span>
+                          {pendingCount > 0 && (
+                            <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-destructive px-1.5 text-[11px] font-bold text-white">
+                              {pendingCount}
+                            </span>
+                          )}
+                        </RouterNavLink>
+                      </DropdownMenuItem>
                       <DropdownMenuItem asChild className="rounded-xl cursor-pointer p-3 hover:bg-slate-50">
                         <RouterNavLink to="/perfil" className="flex items-center w-full">
                           <span className="text-lg mr-3">👤</span>
