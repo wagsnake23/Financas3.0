@@ -320,11 +320,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                       onClick={() => handleEditClick(card)}
                       className={cn(
                         "absolute top-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                        "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50",
-                        isMobile ? "h-8 w-8 text-sm" : "h-9 w-9 text-base"
+                        isMobile 
+                          ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                          : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                       )}
                     >
-                      <span className="text-base">✏️</span>
+                      <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
                     </Button>
                     <Button
                       type="button"
@@ -332,11 +333,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                       onClick={() => handleDeleteConfirm(card.id)}
                       className={cn(
                         "absolute bottom-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                        "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50",
-                        isMobile ? "h-8 w-8 text-sm" : "h-9 w-9 text-base"
+                        isMobile 
+                          ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                          : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                       )}
                     >
-                      <span className="text-base">🗑️</span>
+                      <span className={cn(isMobile ? "text-base" : "text-sm")}>🗑️</span>
                     </Button>
                   </Card>
                 ))
