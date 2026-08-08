@@ -13,6 +13,26 @@
         }
       })();
     </script>
+    <!-- Script para otimização do PWA Mobile Loading -->
+    <script>
+      (() => {
+        const isAndroid = /android/i.test(navigator.userAgent);
+        const isMobile = /mobile/i.test(navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        // Aplicar a otimização de loading apenas no Mobile, Android e PWA (standalone)
+        if (isAndroid && isMobile && isStandalone) {
+          // Pré-carrega a imagem para exibir o mais rápido possível
+          const preload = document.createElement('link');
+          preload.rel = 'preload';
+          preload.href = '/sky.webp';
+          preload.as = 'image';
+          preload.type = 'image/webp';
+          document.head.appendChild(preload);
+          // Adiciona a classe temporária para o background inicial
+          document.documentElement.classList.add('pwa-mobile-loading');
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Controle Financeiro Pessoal</title>

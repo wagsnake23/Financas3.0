@@ -7,8 +7,13 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth");
+    if (!loading) {
+      // Remove a classe temporária do PWA quando o React assumir
+      document.documentElement.classList.remove('pwa-mobile-loading');
+      
+      if (!user) {
+        navigate("/auth");
+      }
     }
   }, [user, loading, navigate]);
 
