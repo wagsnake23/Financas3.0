@@ -577,18 +577,28 @@ export default function Metas() {
 
       {/* Emoji Picker Modal */}
       <Dialog open={emojiOpen} onOpenChange={setEmojiOpenFn}>
-        <DialogContent className={cn(
-          isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-2 !pb-4" : "sm:max-w-[400px] !rounded-[22px]"
-        )}>
-          <DialogHeader>
-            <DialogTitle className="text-center font-black">Escolha um Ícone</DialogTitle>
-          </DialogHeader>
-          <div className="flex justify-center">
+        <DialogContent
+          className={cn(
+            "p-0 overflow-hidden flex flex-col gap-0 !rounded-[28px] !border-2 !border-white shadow-2xl",
+            isMobile ? "w-[98vw] max-w-full" : "sm:max-w-[850px]"
+          )}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <div className="h-14 flex items-center justify-center border-b bg-gray-50/50">
+            <DialogTitle className="font-black text-center text-lg">
+              Escolha um Ícone
+            </DialogTitle>
+          </div>
+          <div className="p-2 bg-white flex justify-center">
             <EmojiPicker
               onEmojiClick={(emojiData: EmojiClickData) => { setIconeFn(emojiData.emoji); setEmojiOpenFn(false); }}
               width="100%"
-              height={350}
-              searchPlaceholder="Buscar emoji..."
+              height={isMobile ? 440 : 480}
+              autoFocusSearch={false}
+              searchDisabled={false}
+              previewConfig={{ showPreview: false }}
+              skinTonesDisabled={true}
+              searchPlaceholder="Buscar..."
             />
           </div>
         </DialogContent>

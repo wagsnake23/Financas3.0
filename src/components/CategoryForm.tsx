@@ -274,9 +274,9 @@ export const CategoryForm = ({
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
-                <div className="h-14 flex items-center px-6 border-b bg-gray-50/50">
-                  <DialogTitle className="font-bold text-sm">
-                    Escolha um ícone
+                <div className="h-14 flex items-center justify-center border-b bg-gray-50/50">
+                  <DialogTitle className="font-black text-center text-lg">
+                    Escolha um Ícone
                   </DialogTitle>
                 </div>
 
