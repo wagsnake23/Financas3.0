@@ -97,7 +97,8 @@ export function ProfilePasswordModal() {
                       <Input 
                         type={showPassword ? "text" : "password"} 
                         placeholder="" 
-                        className="h-12 rounded-[16px] bg-[#F8FAFC] border border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)] focus-visible:ring-[#3B5B96] pr-10" 
+                        className="h-12 rounded-[16px] input-3d-premium input-white transition-all duration-200 focus-visible:ring-[#3B5B96] pr-10" 
+                        style={{ height: '3rem', minHeight: '3rem', maxHeight: '3rem', borderRadius: '16px' }}
                         {...field} 
                       />
                     </FormControl>
@@ -125,7 +126,8 @@ export function ProfilePasswordModal() {
                       <Input 
                         type={showConfirmPassword ? "text" : "password"} 
                         placeholder="" 
-                        className="h-12 rounded-[16px] bg-[#F8FAFC] border border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)] focus-visible:ring-[#3B5B96] pr-10" 
+                        className="h-12 rounded-[16px] input-3d-premium input-white transition-all duration-200 focus-visible:ring-[#3B5B96] pr-10" 
+                        style={{ height: '3rem', minHeight: '3rem', maxHeight: '3rem', borderRadius: '16px' }}
                         {...field} 
                       />
                     </FormControl>

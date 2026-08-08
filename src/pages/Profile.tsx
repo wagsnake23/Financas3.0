@@ -59,13 +59,13 @@ export default function Profile() {
           key: 'lifetime',
           topGradient: "from-amber-400/25 via-amber-100/15 to-transparent",
           bg: "bg-amber-50/40 border-amber-100/70",
-          badgeBg: "bg-gradient-to-r from-amber-500/15 via-yellow-400/15 to-amber-500/15 border border-amber-500/35 text-amber-800 backdrop-blur-md shadow-sm font-black",
-          ringClassName: "ring-4 ring-amber-400/70 shadow-[0_0_20px_rgba(245,158,11,0.35)]",
-          buttonBg: "bg-gradient-to-b from-amber-400 to-amber-600 shadow-[0_4px_12px_rgba(245,158,11,0.4)]",
+          badgeBg: "bg-gradient-to-r from-amber-500/15 via-yellow-400/15 to-amber-500/15 border border-amber-500/35 text-amber-800 backdrop-blur-md shadow-sm font-bold",
+          ringClassName: "ring-[2px] ring-amber-400/70 shadow-[0_0_20px_rgba(245,158,11,0.25)]",
+          buttonBg: "bg-gradient-to-b from-amber-400 to-amber-600 shadow-[0_2px_8px_rgba(245,158,11,0.3)]",
           icon: "👑",
           title: "Membro Vitalício",
           subtitle: "Acesso Permanente",
-          subIcon: "⏳",
+          subIcon: "✨",
           subColor: "text-amber-600",
           decorType: "vitalicio"
         };
@@ -226,9 +226,16 @@ export default function Profile() {
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
           {/* Card Esquerdo - Avatar e Infos Rápidas */}
-          <div className="w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] border border-slate-100/80 p-5 md:p-8 flex flex-col items-center relative overflow-hidden">
+          <div className={cn(
+            "w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] p-5 md:p-8 flex flex-col items-center relative overflow-hidden",
+            subDisplay.decorType === "vitalicio" ? "border-[1px] border-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.1),_0_8px_30px_rgb(0,0,0,0.05)]" : "border border-slate-100/80"
+          )}>
             {/* 1. Faixa Superior Temática */}
-            <div className={cn("absolute top-0 left-0 right-0 h-28 bg-gradient-to-b pointer-events-none z-0", subDisplay.topGradient)} />
+            <div className={cn("absolute top-0 left-0 right-0 h-32 bg-gradient-to-b pointer-events-none z-0 rounded-t-[32px]", subDisplay.topGradient)}>
+              {subDisplay.decorType === "vitalicio" && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_top,_rgba(245,158,11,0.15)_0%,_transparent_60%)]" />
+              )}
+            </div>
 
             {/* 6. Elementos Decorativos */}
             {subDisplay.decorType === "trial" && (
@@ -245,8 +252,10 @@ export default function Profile() {
             )}
             {subDisplay.decorType === "vitalicio" && (
               <>
-                <Sparkles className="w-5 h-5 text-amber-400/50 absolute top-4 right-5 pointer-events-none z-0" />
-                <Sparkles className="w-4 h-4 text-amber-400/40 absolute top-6 left-6 pointer-events-none z-0" />
+                <Sparkles className="w-4 h-4 text-amber-400/70 absolute top-5 right-6 pointer-events-none z-0" />
+                <Sparkles className="w-3 h-3 text-amber-400/60 absolute top-8 left-8 pointer-events-none z-0" />
+                <div className="absolute top-10 left-12 w-1 h-1 rounded-full bg-amber-400/50 pointer-events-none" />
+                <div className="absolute top-7 right-12 w-1.5 h-1.5 rounded-full bg-amber-400/40 pointer-events-none" />
               </>
             )}
             {subDisplay.decorType === "alert" && (
@@ -261,8 +270,14 @@ export default function Profile() {
               decorType={subDisplay.decorType}
             />
 
-            <h2 className="mt-4 text-2xl font-extrabold text-slate-800 tracking-tight text-center relative z-10">{profile.nome || "Usuário"}</h2>
-            <p className="text-slate-500/80 font-medium text-[15px] text-center mb-8 relative z-10">{user?.email}</p>
+            <h2 className={cn(
+              "text-slate-800 tracking-tight text-center relative z-10",
+              subDisplay.decorType === "vitalicio" ? "mt-3 text-xl md:text-2xl font-bold" : "mt-4 text-2xl font-extrabold"
+            )}>{profile.nome || "Usuário"}</h2>
+            <p className={cn(
+              "text-slate-500/80 text-center relative z-10",
+              subDisplay.decorType === "vitalicio" ? "font-medium text-[13px] md:text-[14px] mb-6" : "font-medium text-[15px] mb-8"
+            )}>{user?.email}</p>
 
             <div className="w-full flex flex-col gap-4 mb-4 relative z-10">
               <div className="w-full flex flex-col items-center justify-center gap-2">
