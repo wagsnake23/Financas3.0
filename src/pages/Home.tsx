@@ -473,9 +473,9 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-stretch w-full relative z-20">
                                         <div className="flex flex-col justify-between py-0.5">
-                                            <div>
-                                                <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                                <p className="text-[21px] font-[800] leading-none" style={{ marginTop: "-2px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <div className="flex flex-col md:mt-3">
+                                                <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[1px] md:-mt-[1px] md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                                <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                     <FormatCurrencyStyled value={dStats.currentBalance} prefixColor={isCurrentMonth ? "#0556C3" : undefined} />
                                                 </p>
                                             </div>
@@ -580,7 +580,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[1px] md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
+                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[3px] md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
                                             </p>
@@ -650,7 +650,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[1px] md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
+                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[3px] md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
                                             <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                             </p>
