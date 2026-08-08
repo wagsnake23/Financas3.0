@@ -354,10 +354,12 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
 
       {/* Dialog for Editing Card */}
       <Dialog open={isEditCardOpen} onOpenChange={setIsEditCardOpen}>
-        <DialogContent className={cn(
-          isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
-          "border-none"
-        )}
+        <DialogContent 
+          onOpenAutoFocus={(e) => e.preventDefault()} 
+          className={cn(
+            isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
+            "border-none"
+          )}
         style={{
           background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
           backgroundBlendMode: "soft-light",
