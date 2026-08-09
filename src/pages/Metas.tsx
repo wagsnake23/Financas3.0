@@ -1158,7 +1158,7 @@ export default function Metas() {
       <Card className="p-5 rounded-[24px] shadow-sm border border-amber-200/40 mt-4 lg:mt-0" style={{ background: "linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)" }}>
         <h3 className="text-sm font-black text-amber-700 uppercase tracking-widest mb-3">🏆 Próxima Conquista</h3>
         <div className="flex items-center gap-3 mb-3">
-          <DynamicIcon name={catIcon} className="h-8 w-8" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+          <DynamicIcon name={catIcon} className="h-10 w-10 text-[34px] leading-none" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
           <div>
             <p className="font-bold text-gray-800">{catName}</p>
             <p className="text-sm font-bold text-amber-700">{proximaConquista.percentual.toFixed(1)}% concluído</p>
