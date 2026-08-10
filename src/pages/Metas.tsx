@@ -768,10 +768,14 @@ export default function Metas() {
                     <span className="text-[12px] font-medium text-[#C2410C] capitalize tracking-wide opacity-90">Progresso Geral</span>
                     <span className={cn("font-black text-slate-700", isMobile ? "text-[13px]" : "text-sm")}>{stats.progressoGeral.toFixed(1)}%</span>
                   </div>
-                  <div className="w-full h-3 bg-orange-100 rounded-full overflow-hidden">
+                  <div className="w-full h-3.5 bg-[#FFF0E5] rounded-full overflow-hidden border border-[#EA580C]/30 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]">
                     <div
                       className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${stats.progressoGeral}%`, background: "linear-gradient(90deg, #FB923C, #EA580C)" }}
+                      style={{ 
+                        width: `${stats.progressoGeral}%`, 
+                        background: "linear-gradient(180deg, #FB923C 0%, #EA580C 100%)",
+                        boxShadow: "inset 0 1px 1px rgba(255,255,255,0.3), inset 0 -1px 1px rgba(0,0,0,0.15)"
+                      }}
                     />
                   </div>
                 </div>
