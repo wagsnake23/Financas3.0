@@ -32,7 +32,7 @@ import {
   formatInTimeZone,
   TARGET_TIMEZONE,
 } from "@/lib/utils";
-import { Plus, ChevronDown } from "lucide-react";
+import { Plus, ChevronDown, Target } from "lucide-react";
 import { AddSubcategoryModal } from "./AddSubcategoryModal";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br";
@@ -532,7 +532,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                         <div
                           key={cat.id}
                           className={cn(
-                            "relative flex w-full select-none items-center rounded-xl px-2.5 py-1.5 text-sm outline-none cursor-pointer transition-colors mb-0.5 last:mb-0",
+                            "relative flex w-full select-none items-center rounded-xl px-2.5 py-1 text-sm outline-none cursor-pointer transition-colors mb-0.5 last:mb-0",
                             isMeta ? "bg-[#FFF6ED] hover:bg-[#FFEAD5] border border-[#FFEDD5]/50" : "hover:bg-slate-100/80 active:bg-slate-200/60"
                           )}
                           onClick={() => {
@@ -547,6 +547,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                           <span className="flex items-center gap-2.5 w-full">
                             <span className="text-base">{cat.icone}</span>
                             <span className="text-slate-700 font-medium truncate">{cat.nome}</span>
+                            {isMeta && <Target className="h-4 w-4 text-orange-500 ml-auto shrink-0 opacity-80" strokeWidth={2.5} />}
                           </span>
                         </div>
                       );
