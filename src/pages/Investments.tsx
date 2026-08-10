@@ -1076,7 +1076,7 @@ export default function Investments() { // Alterado para export default function
                         <div
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
-                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
+                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
                           style={{
                             backgroundColor: "#FFFFFF"
                           }}
@@ -1594,7 +1594,7 @@ export default function Investments() { // Alterado para export default function
                             key={investment.id}
                             onClick={() => { if (isMobile) handleEditClick(investment); }}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300 py-[18px] px-5 rounded-[24px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
+                              "relative group overflow-hidden transition-all duration-300 py-[18px] px-5 rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
                               isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-[18px] px-5"
                             )}
                             style={{

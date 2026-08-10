@@ -1039,7 +1039,7 @@ export default function Metas() {
       <div
         key={meta.id}
         onClick={() => { if (isMobile) handleEditClick(meta); }}
-        className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[24px] border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98] h-fit"
+        className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[16px] border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98] h-fit"
         style={{ backgroundColor: "#FFFFFF" }}
       >
         {/* Top: Icon, Name, Category + Edit button */}
