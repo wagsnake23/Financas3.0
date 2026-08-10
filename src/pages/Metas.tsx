@@ -377,7 +377,6 @@ export default function Metas() {
   // Handlers
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoadingForm(true);
 
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
@@ -389,14 +388,30 @@ export default function Metas() {
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
-      setLoadingForm(false);
+      setTimeout(() => {
+        if (newErrors.selectedParentId) {
+          document.getElementById("selectedParentId")?.focus();
+        } else if (newErrors.nomeMeta) {
+          document.getElementById("nomeMeta")?.focus();
+        } else if (newErrors.valorObjetivo) {
+          document.getElementById("valorObjetivo")?.focus();
+        } else if (newErrors.valorMensal) {
+          document.getElementById("valorMensal")?.focus();
+        }
+      }, 50);
       return;
+    }
+
+    setLoadingForm(true);
+
+    let finalNome = nomeMeta.trim();
+    if (finalNome.length > 0) {
+      finalNome = finalNome.charAt(0).toUpperCase() + finalNome.slice(1);
     }
 
     addMetaMutation.mutate({
       parentId: selectedParentId,
-      nome: nomeMeta,
+      nome: finalNome,
       icone,
       valorObjetivo: valorObjetivo!,
       valorMensal: valorMensal!,
@@ -426,21 +441,36 @@ export default function Metas() {
     const newErrors: Record<string, boolean> = {};
     let hasError = false;
 
-    if (!editSelectedParentId || editSelectedParentId === UNSELECTED_VALUE) { newErrors.editSelectedParentId = true; hasError = true; }
-    if (!editNomeMeta.trim()) { newErrors.editNomeMeta = true; hasError = true; }
-    if (editValorObjetivo === undefined || editValorObjetivo <= 0) { newErrors.editValorObjetivo = true; hasError = true; }
-    if (editValorMensal === undefined || editValorMensal <= 0) { newErrors.editValorMensal = true; hasError = true; }
+    if (!editSelectedParentId || editSelectedParentId === UNSELECTED_VALUE) { newErrors.editselectedParentId = true; hasError = true; }
+    if (!editNomeMeta.trim()) { newErrors.editnomeMeta = true; hasError = true; }
+    if (editValorObjetivo === undefined || editValorObjetivo <= 0) { newErrors.editvalorObjetivo = true; hasError = true; }
+    if (editValorMensal === undefined || editValorMensal <= 0) { newErrors.editvalorMensal = true; hasError = true; }
 
     setEditValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
+      setTimeout(() => {
+        if (newErrors.editselectedParentId) {
+          document.getElementById("editselectedParentId")?.focus();
+        } else if (newErrors.editnomeMeta) {
+          document.getElementById("editnomeMeta")?.focus();
+        } else if (newErrors.editvalorObjetivo) {
+          document.getElementById("editvalorObjetivo")?.focus();
+        } else if (newErrors.editvalorMensal) {
+          document.getElementById("editvalorMensal")?.focus();
+        }
+      }, 50);
       return;
+    }
+
+    let finalNome = editNomeMeta.trim();
+    if (finalNome.length > 0) {
+      finalNome = finalNome.charAt(0).toUpperCase() + finalNome.slice(1);
     }
 
     updateMetaMutation.mutate({
       metaId: editingMeta.id,
       categoriaId: editingMeta.categoria_id,
-      nome: editNomeMeta,
+      nome: finalNome,
       icone: editIcone,
       parentId: editSelectedParentId,
       valorObjetivo: editValorObjetivo!,
@@ -517,12 +547,12 @@ export default function Metas() {
     <>
       {/* Categoria */}
       <div className="space-y-[6px]">
-        <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Categoria</Label>
+        <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Categoria <span className="text-red-500 font-bold">*</span></Label>
         <Select
           value={parentId}
           onValueChange={(v) => { setParentIdFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}selectedParentId`]: false }); }}
         >
-          <SelectTrigger className={cn(
+          <SelectTrigger id={`${fieldPrefix}selectedParentId`} className={cn(
             "rounded-xl input-3d-premium input-white font-bold transition-all duration-200",
             parentId === UNSELECTED_VALUE && "text-gray-400",
             isMobile && "h-9 text-sm",
@@ -547,10 +577,19 @@ export default function Metas() {
       {/* Nome da Meta + Ícone */}
       <div className="grid grid-cols-[1fr_auto] gap-2">
         <div className="space-y-[6px]">
-          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome da Meta</Label>
+          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome da Meta <span className="text-red-500 font-bold">*</span></Label>
           <Input
+            id={`${fieldPrefix}nomeMeta`}
             value={nome}
-            onChange={(e) => { setNomeFn(e.target.value); setErrorsFn({ ...errors, [`${fieldPrefix}nomeMeta`]: false }); }}
+            onChange={(e) => { 
+              let val = e.target.value;
+              val = val.trimStart();
+              if (val.length > 0) {
+                val = val.charAt(0).toUpperCase() + val.slice(1);
+              }
+              setNomeFn(val); 
+              setErrorsFn({ ...errors, [`${fieldPrefix}nomeMeta`]: false }); 
+            }}
             placeholder="Ex: Trocar de carro"
             className={cn(
               "rounded-xl input-3d-premium input-white font-bold transition-all duration-200",
@@ -607,8 +646,9 @@ export default function Metas() {
       {/* Valores */}
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-[6px]">
-          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Valor da Meta (R$)</Label>
+          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Valor da Meta (R$) <span className="text-red-500 font-bold">*</span></Label>
           <CurrencyBR
+            id={`${fieldPrefix}valorObjetivo`}
             value={vObj}
             onChange={(v) => { setVObjFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorObjetivo`]: false }); }}
             className={cn(
@@ -619,8 +659,9 @@ export default function Metas() {
           />
         </div>
         <div className="space-y-[6px]">
-          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Valor Mensal (R$)</Label>
+          <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Valor Mensal (R$) <span className="text-red-500 font-bold">*</span></Label>
           <CurrencyBR
+            id={`${fieldPrefix}valorMensal`}
             value={vMen}
             onChange={(v) => { setVMenFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorMensal`]: false }); }}
             className={cn(

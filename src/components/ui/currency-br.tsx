@@ -8,6 +8,7 @@ interface CurrencyBRProps {
   className?: string;
   placeholder?: string;
   disabled?: boolean; // Adicionado disabled para compatibilidade
+  id?: string;
 }
 
 export default function CurrencyBR({
@@ -15,7 +16,8 @@ export default function CurrencyBR({
   onChange,
   className,
   placeholder = "R$ 0,00",
-  disabled // Adicionado disabled para compatibilidade
+  disabled, // Adicionado disabled para compatibilidade
+  id
 }: CurrencyBRProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let raw = e.target.value.replace(/\D/g, ""); // mantém só números
@@ -37,6 +39,7 @@ export default function CurrencyBR({
 
   return (
     <Input
+      id={id}
       value={formatted}
       onChange={handleChange}
       className={cn("rounded-xl", className)}
