@@ -1159,8 +1159,17 @@ export default function Metas() {
     const catName = proximaConquista.subcategoria?.nome || "Meta";
     const catIcon = proximaConquista.subcategoria?.icone || "🎯";
     return (
-      <Card className="p-5 rounded-[24px] shadow-sm border border-amber-200/40 mt-4 lg:mt-0" style={{ background: "linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)" }}>
-        <h3 className="text-sm font-black text-amber-700 uppercase tracking-widest mb-3">🏆 Próxima Conquista</h3>
+      <Card 
+        className="p-5 rounded-[24px] shadow-sm border-none mt-4 lg:mt-0" 
+        style={{ 
+          background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 100%)",
+          backgroundBlendMode: "soft-light",
+          backdropFilter: "blur(6px)",
+          outline: "1px solid rgba(234, 88, 12, 0.12)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(234, 88, 12, 0.12)"
+        }}
+      >
+        <h3 className="text-sm font-black text-[#C2410C] uppercase tracking-widest mb-3">🏆 Próxima Conquista</h3>
         <div className="flex items-center gap-3 mb-3">
           <DynamicIcon name={catIcon} className="h-9 w-9 text-[30px] leading-none" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
           <div>
