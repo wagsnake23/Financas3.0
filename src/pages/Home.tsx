@@ -593,7 +593,8 @@ export default function Home() {
                                                 borderBottom: "2px solid rgba(0,0,0,0.12)", 
                                                 color: isMobile ? "#ef4444" : "#b91c1c",
                                                 filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                             }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -625,7 +626,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -663,7 +664,8 @@ export default function Home() {
                                                 borderBottom: "2px solid rgba(0,0,0,0.12)", 
                                                 color: "#15803d",
                                                 filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                             }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
@@ -695,7 +697,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -869,7 +871,8 @@ export default function Home() {
                                         borderBottom: "2px solid rgba(0,0,0,0.12)", 
                                         color: "#15803d",
                                         filter: "saturate(0.95)", 
-                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                        textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                     }}
                                     onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -898,7 +901,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
-                                    style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                    style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                     onClick={() => navigate("/receitas")}
                                 >
                                     <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -936,7 +939,8 @@ export default function Home() {
                                         borderBottom: "2px solid rgba(0,0,0,0.12)", 
                                         color: "#b91c1c",
                                         filter: "saturate(0.95)", 
-                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
+                                        boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                        textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                     }}
                                     onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                 >
@@ -965,7 +969,7 @@ export default function Home() {
                                 </div>
                                 <Button
                                     className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px] -mr-2 md:text-[15px]"
-                                    style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                                    style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                     onClick={() => navigate("/despesas")}
                                 >
                                     <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />

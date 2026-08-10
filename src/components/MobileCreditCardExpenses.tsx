@@ -274,7 +274,8 @@ export const MobileCreditCardExpenses: React.FC<
                 background: "linear-gradient(135deg, #7330de, #6025bd)", 
                 borderBottom: "1px solid rgba(0,0,0,0.4)", 
                 filter: "saturate(0.95)", 
-                boxShadow: "0 6px 14px rgba(0,0,0,0.12)" 
+                boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
+                textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)"
               }}
               onClick={handlePayMonthlyBill}
               disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
