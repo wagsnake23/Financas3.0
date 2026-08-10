@@ -48,54 +48,54 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
 
       {/* DESKTOP */}
       {!forceMobileStyle && (
-        <div className="hidden md:flex bg-[#0F172A] border-t border-gray-800 shadow-2xl py-8 w-full">
-        <div className="max-w-[1600px] mx-auto px-8 w-full flex justify-between items-center">
-          
-          {/* LADO ESQUERDO */}
-          <div className="flex items-center gap-4">
-            <img src="/favicon.ico" alt="Logo" className="w-10 h-10 object-contain" />
-            <div className="flex flex-col">
-              <span 
-                className="font-extrabold text-lg tracking-[0.5px] leading-none text-white"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
-                }}
-              >
-                Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
-              </span>
-              <span className="text-gray-300 text-sm max-w-[400px] mt-1">
-                Controle financeiro inteligente para gestão de receitas, despesas e investimentos
-              </span>
+        <div className="hidden md:flex bg-[#0F172A] border-t border-slate-800/60 shadow-2xl py-6 w-full">
+          <div className="container-app flex justify-between items-center h-full">
+            
+            {/* LADO ESQUERDO */}
+            <div className="flex items-center gap-3.5">
+              <img src="/favicon.ico" alt="Logo" className="w-[38px] h-[38px] object-contain" />
+              <div className="flex flex-col justify-center">
+                <span 
+                  className="font-extrabold text-[17px] tracking-[0.5px] leading-none text-white"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
+                  }}
+                >
+                  Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
+                </span>
+                <span className="text-blue-100/50 text-[12.5px] max-w-[400px] mt-1 leading-tight font-medium">
+                  Controle financeiro inteligente para gestão de receitas, despesas e investimentos
+                </span>
+              </div>
             </div>
-          </div>
 
-          {/* LADO DIREITO */}
-          <div className="flex flex-col items-end gap-1">
-            <span className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} — MINHAS FINANÇAS
-            </span>
-            <a
-              href={linkWhatsApp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90 transition-opacity duration-200"
-              style={{ color: "#20C05A" }}
-            >
-              Suporte por Vagner
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 32 32"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
+            {/* LADO DIREITO */}
+            <div className="flex flex-col items-end justify-center gap-0.5">
+              <span className="text-slate-400/70 text-[12.5px] font-medium tracking-wide">
+                © {new Date().getFullYear()} — Minhas Finança$
+              </span>
+              <a
+                href={linkWhatsApp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-white transition-colors duration-200 text-slate-400/70 text-[12.5px] font-medium mt-[2px]"
               >
-                <path d="M16.003 3.2c-7.063 0-12.8 5.736-12.8 12.8 0 2.26.591 4.459 1.712 6.4L3.2 28.8l6.666-1.697c1.878.97 3.988 1.486 6.138 1.486h.003c7.062 0 12.8-5.736 12.8-12.8s-5.738-12.8-12.804-12.8zm7.518 18.205c-.313.879-1.563 1.693-2.156 1.801-.553.102-1.273.146-2.056-.129-.471-.156-1.073-.346-1.848-.676-3.245-1.406-5.36-4.689-5.528-4.903-.162-.213-1.323-1.76-1.323-3.359 0-1.598.836-2.388 1.13-2.71.294-.322.646-.403.861-.403.215 0 .431.002.62.011.2.009.47-.076.737.563.283.68.962 2.348 1.045 2.52.083.173.138.376.027.59-.109.214-.164.347-.324.542-.163.194-.343.433-.49.583-.162.163-.331.339-.143.666.19.326.844 1.389 1.81 2.245 1.244 1.11 2.289 1.457 2.615 1.603.327.146.516.121.707-.073.194-.194.816-.95 1.036-1.275.22-.326.45-.272.757-.162.307.11 1.949.925 2.283 1.094.337.17.56.255.642.4.083.145.083.843-.23 1.721z" />
-              </svg>
-            </a>
-          </div>
+                Suporte por Vagner
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 32 32"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ color: "#22c55e" }}
+                >
+                  <path d="M16.003 3.2c-7.063 0-12.8 5.736-12.8 12.8 0 2.26.591 4.459 1.712 6.4L3.2 28.8l6.666-1.697c1.878.97 3.988 1.486 6.138 1.486h.003c7.062 0 12.8-5.736 12.8-12.8s-5.738-12.8-12.804-12.8zm7.518 18.205c-.313.879-1.563 1.693-2.156 1.801-.553.102-1.273.146-2.056-.129-.471-.156-1.073-.346-1.848-.676-3.245-1.406-5.36-4.689-5.528-4.903-.162-.213-1.323-1.76-1.323-3.359 0-1.598.836-2.388 1.13-2.71.294-.322.646-.403.861-.403.215 0 .431.002.62.011.2.009.47-.076.737.563.283.68.962 2.348 1.045 2.52.083.173.138.376.027.59-.109.214-.164.347-.324.542-.163.194-.343.433-.49.583-.162.163-.331.339-.143.666.19.326.844 1.389 1.81 2.245 1.244 1.11 2.289 1.457 2.615 1.603.327.146.516.121.707-.073.194-.194.816-.95 1.036-1.275.22-.326.45-.272.757-.162.307.11 1.949.925 2.283 1.094.337.17.56.255.642.4.083.145.083.843-.23 1.721z" />
+                </svg>
+              </a>
+            </div>
 
-        </div>
+          </div>
         </div>
       )}
     </footer>
