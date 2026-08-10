@@ -32,9 +32,9 @@ import {
   formatInTimeZone,
   TARGET_TIMEZONE,
 } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { AddSubcategoryModal } from "./AddSubcategoryModal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
 import { useProfile } from "@/hooks/useProfile";
@@ -119,6 +119,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [isPaid, setIsPaid] = useState(false);
 
   const [isAddSubcategoryModalOpen, setIsAddSubcategoryModalOpen] = useState(false);
+  const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
@@ -157,11 +159,35 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     },
   });
 
+  const { data: metasData = [] } = useQuery({
+    queryKey: ["metas", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("metas")
+        .select("categoria_id")
+        .eq("user_id", user.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+  const metaCategoryIds = React.useMemo(() => metasData.map(m => m.categoria_id), [metasData]);
+
   const expenseSubcategories = React.useMemo(() => {
     return allSubcategories
       .filter((cat) => cat.parent_id !== null && cat.parent_id !== "receitas_e_investimentos")
       .sort((a, b) => a.nome.localeCompare(b.nome));
   }, [allSubcategories]);
+
+  const filteredSubcategories = React.useMemo(() => {
+    if (!searchQuery) return expenseSubcategories;
+    const normalizedQuery = searchQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return expenseSubcategories.filter(cat => {
+      const normalizedName = cat.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      return normalizedName.includes(normalizedQuery);
+    });
+  }, [searchQuery, expenseSubcategories]);
 
   // Efeito para aplicar os dados iniciais da NFC-e
   useEffect(() => {
@@ -444,48 +470,92 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           Subcategoria
         </Label>
         <div className="flex gap-2">
-          <Select
-            value={selectedSubcategoryId}
-            onValueChange={(value) => {
-              setSelectedSubcategoryId(value);
-              setValidationErrors((prev) => ({
-                ...prev,
-                selectedSubcategoryId: false,
-              }));
-            }}
-          >
-            <SelectTrigger
-              className={cn(
-                "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-10 !bg-white",
-                getBorderClass({
-                  isInvalid: validationErrors.selectedSubcategoryId,
-                  isValid: validationErrors.selectedSubcategoryId === false,
-                })
-              )}
+          <Popover open={isSubcategoryOpen} onOpenChange={(open) => {
+            setIsSubcategoryOpen(open);
+            if (open) setSearchQuery("");
+          }}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={isSubcategoryOpen}
+                className={cn(
+                  "flex-1 justify-between font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium rounded-xl text-left border-slate-200 border",
+                  isMobile ? "h-9 text-sm px-3" : "h-10 px-3",
+                  getBorderClass({
+                    isInvalid: validationErrors.selectedSubcategoryId,
+                    isValid: validationErrors.selectedSubcategoryId === false,
+                  }),
+                  selectedSubcategoryId === UNSELECTED_VALUE ? "text-slate-500 font-normal" : "text-gray-800"
+                )}
+                style={{ fontWeight: selectedSubcategoryId === UNSELECTED_VALUE ? "normal" : 500 }}
+              >
+                {selectedSubcategoryId !== UNSELECTED_VALUE
+                  ? (() => {
+                      const sel = expenseSubcategories.find((cat) => cat.id === selectedSubcategoryId);
+                      return sel ? (
+                        <span className="flex items-center gap-2 truncate">
+                          <span>{sel.icone}</span>
+                          <span className="truncate">{sel.nome}</span>
+                        </span>
+                      ) : (
+                        "Selecione a subcategoria"
+                      );
+                    })()
+                  : "Selecione a subcategoria"}
+                <ChevronDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent 
+               className="p-0 rounded-2xl shadow-xl w-[--radix-popover-trigger-width] bg-white border border-slate-100 !backdrop-blur-none" 
+               align="start"
             >
-              <SelectValue placeholder="Selecione a subcategoria" />
-            </SelectTrigger>
-            <SelectContent className="max-h-[280px] w-[--radix-select-trigger-width] rounded-2xl border-none shadow-xl">
-              <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
-                Selecione a subcategoria
-              </SelectItem>
-              {expenseSubcategories.length === 0 ? (
-                <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>
-                  Nenhuma subcategoria encontrada
-                </SelectItem>
-              ) : (
-                expenseSubcategories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                    <span className="flex items-center gap-2">
-                      <span>{cat.icone}</span>
-                      <span>{cat.nome}</span>
-                    </span>
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
+              <div className="flex flex-col max-h-[320px]">
+                <div className="flex items-center border-b border-slate-100 px-3 shrink-0">
+                   <span className="text-sm mr-2 opacity-70">🔎</span>
+                   <input 
+                     className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50" 
+                     placeholder="Buscar subcategoria..." 
+                     value={searchQuery}
+                     onChange={(e) => setSearchQuery(e.target.value)}
+                   />
+                </div>
+                <div className="overflow-y-auto p-1.5 scroll-smooth no-scrollbar">
+                  {filteredSubcategories.length === 0 ? (
+                    <div className="py-6 text-center text-sm text-slate-500">
+                      Nenhuma subcategoria encontrada.
+                    </div>
+                  ) : (
+                    filteredSubcategories.map((cat) => {
+                      const isMeta = metaCategoryIds.includes(cat.id);
+                      return (
+                        <div
+                          key={cat.id}
+                          className={cn(
+                            "relative flex w-full select-none items-center rounded-xl px-2.5 py-1.5 text-sm outline-none cursor-pointer transition-colors mb-0.5 last:mb-0",
+                            isMeta ? "bg-[#FFF6ED] hover:bg-[#FFEAD5] border border-[#FFEDD5]/50" : "hover:bg-slate-100/80 active:bg-slate-200/60"
+                          )}
+                          onClick={() => {
+                            setSelectedSubcategoryId(cat.id);
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              selectedSubcategoryId: false,
+                            }));
+                            setIsSubcategoryOpen(false);
+                          }}
+                        >
+                          <span className="flex items-center gap-2.5 w-full">
+                            <span className="text-base">{cat.icone}</span>
+                            <span className="text-slate-700 font-medium truncate">{cat.nome}</span>
+                          </span>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button
             type="button"
             size="icon"
