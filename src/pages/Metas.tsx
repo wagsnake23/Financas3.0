@@ -754,13 +754,13 @@ export default function Metas() {
 
             {/* Summary Card (Mobile) */}
             {calculatedMetas.length > 0 && (
-              <div className="mt-2 p-6 shadow-sm rounded-[24px] border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
+              <div className="mt-2 py-6 px-[18px] shadow-sm rounded-[24px] border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
                 <h3 className="text-sm font-black text-[#C2410C] uppercase tracking-widest mb-4">📊 Resumo das Metas</h3>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-6">
-                  {renderSummaryItem("Target", "Metas Ativas", stats.ativas.toString())}
-                  {renderSummaryItem("Trophy", "Concluídas", stats.concluidas.toString(), true)}
-                  {renderSummaryItem("DollarSign", "Total Objetivos", formatCurrency(stats.totalObjetivo))}
-                  {renderSummaryItem("TrendingUp", "Total Realizado", formatCurrency(stats.totalRealizado), true)}
+                <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-6">
+                  {renderSummaryItem("🎯", "Metas Ativas", stats.ativas.toString())}
+                  {renderSummaryItem("🏆", "Concluídas", stats.concluidas.toString(), true)}
+                  {renderSummaryItem("💰", "Total Objetivos", formatCurrency(stats.totalObjetivo))}
+                  {renderSummaryItem("📈", "Total Realizado", formatCurrency(stats.totalRealizado), true)}
                 </div>
                 {/* Progress bar */}
                 <div className="mt-6">
@@ -791,9 +791,9 @@ export default function Metas() {
             {calculatedMetas.length > 0 && (
               <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
                 <div className="grid grid-cols-4 items-center gap-x-6 w-full">
-                  {renderDesktopSummaryItem("Target", "Metas Ativas", stats.ativas.toString())}
-                  {renderDesktopSummaryItem("DollarSign", "Total Objetivos", formatCurrency(stats.totalObjetivo), true)}
-                  {renderDesktopSummaryItem("TrendingUp", "Total Realizado", formatCurrency(stats.totalRealizado), true)}
+                  {renderDesktopSummaryItem("🎯", "Metas Ativas", stats.ativas.toString())}
+                  {renderDesktopSummaryItem("💰", "Total Objetivos", formatCurrency(stats.totalObjetivo), true)}
+                  {renderDesktopSummaryItem("📈", "Total Realizado", formatCurrency(stats.totalRealizado), true)}
                   <div className="flex items-center justify-start gap-4 border-l border-slate-200 h-10 pl-6">
                     <DynamicIcon name="Percent" className="h-5 w-5" style={{ color: accentColor }} strokeWidth={3} />
                     <div className="flex flex-col">
@@ -1111,28 +1111,28 @@ export default function Metas() {
     );
   }
 
-  function renderSummaryItem(icon: string, label: string, value: string, isRightColumn = false) {
+  function renderSummaryItem(icon: string, label: string, value: string, _isRightColumn = false) {
     const isCurrency = value.startsWith("R$ ");
-    const currencyPrefix = isCurrency ? "R$" : "";
+    const currencyPrefix = isCurrency ? (isMobile ? "" : "R$") : "";
     const currencyValue = isCurrency ? value.substring(3) : value;
 
     return (
-      <div className={cn("flex flex-col", isRightColumn ? "items-end" : "items-start")}>
-        <div className="flex flex-col items-start">
-          <div className="flex items-center gap-1 mb-1">
-            <DynamicIcon name={icon} className="h-4 w-4" style={{ color: accentColor }} strokeWidth={3} />
-            <h4 className="text-[12px] font-medium capitalize tracking-wide leading-tight opacity-90 whitespace-nowrap" style={{ color: accentColor }}>{label}</h4>
+      <div className="flex justify-start">
+        <div className="flex items-start gap-2 text-left">
+          <DynamicIcon name={icon} className="h-6 w-6 text-[24px] leading-none mt-0.5" style={{ color: accentColor }} strokeWidth={3} />
+          <div className="flex flex-col items-start">
+            <h4 className="text-[12px] font-medium capitalize tracking-wide leading-tight opacity-90 whitespace-nowrap mb-0.5" style={{ color: accentColor }}>{label}</h4>
+            <p className="text-base font-bold text-slate-700 tracking-tight leading-none flex items-baseline gap-1">
+              {isCurrency ? (
+                <>
+                  {currencyPrefix && <span className="text-[14px] font-medium" style={{ color: accentColor }}>{currencyPrefix}</span>}
+                  <span className={cn(isMobile && "text-[17px]")}>{currencyValue}</span>
+                </>
+              ) : (
+                <span className={cn(isMobile && "text-[17px]")}>{value}</span>
+              )}
+            </p>
           </div>
-          <p className="text-base font-bold text-slate-700 tracking-tight leading-none flex items-baseline gap-1">
-            {isCurrency ? (
-              <>
-                <span className="text-[14px] font-medium" style={{ color: accentColor }}>{currencyPrefix}</span>
-                <span>{currencyValue}</span>
-              </>
-            ) : (
-              <span>{value}</span>
-            )}
-          </p>
         </div>
       </div>
     );
@@ -1141,7 +1141,7 @@ export default function Metas() {
   function renderDesktopSummaryItem(icon: string, label: string, value: string, hasBorder = false) {
     return (
       <div className={cn("flex items-center justify-start gap-4", hasBorder && "border-l border-slate-200 h-10 pl-6")}>
-        <DynamicIcon name={icon} className="h-5 w-5" style={{ color: accentColor }} strokeWidth={3} />
+        <DynamicIcon name={icon} className="h-6 w-6 text-[24px] leading-none" style={{ color: accentColor }} strokeWidth={3} />
         <div className="flex flex-col">
           <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 leading-none opacity-90" style={{ color: accentColor }}>{label}</h4>
           <p className="text-xl font-bold text-slate-700 tracking-tight leading-none">{value}</p>
