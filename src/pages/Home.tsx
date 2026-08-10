@@ -451,15 +451,16 @@ export default function Home() {
                             className="!fixed top-[96px] left-0 right-0 bottom-[28px] overflow-hidden z-30 container-app pt-[14px] !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
-                                className="h-full grid grid-cols-1 gap-3 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
+                                className="h-full grid grid-cols-1 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
                                 style={{
                                     background: 'transparent',
-                                    gridTemplateRows: 'repeat(4, 1fr)'
+                                    gridTemplateRows: 'repeat(4, minmax(0, 1fr))',
+                                    gap: 'var(--home-grid-gap, 12px)'
                                 }}
                             >
                                 {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="pl-3 pr-[16px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
+                                    className="home-mobile-card rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "16px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -474,8 +475,8 @@ export default function Home() {
                                     <div className="flex justify-between items-stretch w-full relative z-20">
                                         <div className="flex flex-col justify-between py-0.5">
                                             <div className="flex flex-col md:mt-3">
-                                                <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[1px] md:-mt-[1px] md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
-                                                <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentBalance < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                                <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Mensal</h2>
+                                                <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentBalance < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                     <FormatCurrencyStyled value={dStats.currentBalance} prefixColor={dStats.currentBalance < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#0556C3" : undefined)} />
                                                 </p>
                                             </div>
@@ -566,7 +567,7 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[16px]"
+                                    className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[16px]"
                                     style={{
                                         borderRadius: "16px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -580,8 +581,8 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[3px] md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
-                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
+                                            <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
                                             </p>
                                         </div>
@@ -606,8 +607,8 @@ export default function Home() {
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
-                                                className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(239,68,68,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(239,68,68,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -625,8 +626,8 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            style={{ height: "var(--home-btn-h, 36px)", fontSize: "var(--home-btn-text, 14px)", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -637,7 +638,7 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[16px]"
+                                    className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[16px]"
                                     style={{
                                         borderRadius: "16px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -651,8 +652,8 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="text-[15px] font-extrabold leading-none tracking-tight mb-2 mt-[3px] md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
-                                            <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-5px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
+                                            <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                             </p>
                                         </div>
@@ -677,8 +678,8 @@ export default function Home() {
                                         <div className="flex items-start gap-2">
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
-                                                className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(34,197,94,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(34,197,94,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -696,8 +697,8 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="h-9 px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
-                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-2"
+                                            style={{ height: "var(--home-btn-h, 36px)", fontSize: "var(--home-btn-text, 14px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />

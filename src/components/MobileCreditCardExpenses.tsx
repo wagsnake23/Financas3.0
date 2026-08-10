@@ -183,7 +183,7 @@ export const MobileCreditCardExpenses: React.FC<
   if (cartoes.length === 0) {
     return (
       <Card
-        className={cn("pl-3 pr-[16px] pt-[8px] pb-[9px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-[calc(100%-5px)] w-full flex flex-col justify-center items-center")}
+        className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "16px",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -222,7 +222,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("pl-3 pr-[16px] pt-[8px] pb-[9px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-[calc(100%-5px)] w-full flex flex-col justify-center")}
+      className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -235,9 +235,9 @@ export const MobileCreditCardExpenses: React.FC<
       }}
     >
 
-      <div className="flex flex-col mt-[2px] w-full">
+      <div className="flex flex-col w-full h-full justify-between" style={{ paddingTop: "var(--home-title-mt, 3px)" }}>
         {/* Top Header Row */}
-        <div className="flex justify-between items-center w-full mb-1.5 gap-2">
+        <div className="flex justify-between items-start w-full">
           {/* Left side: Selector (iOS Style: no border, no bg, no shadow, occupies remaining space) */}
           <div className="flex-1 min-w-0">
             <Select value={selectedCardId} onValueChange={setSelectedCardId}>
@@ -269,7 +269,7 @@ export const MobileCreditCardExpenses: React.FC<
           {/* Right side: Purple Button (Responsive 135px/150px width) */}
           <div className="shrink-0">
             <Button
-              className="mt-[2px] md:mt-0 w-[135px] md:w-[150px] h-9 px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 md:-mr-2 md:text-[15px]"
+              className="md:mt-0 w-[135px] md:w-[150px] h-[var(--home-btn-h,36px)] px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1.5 md:-mr-2 md:text-[15px]"
               style={{ 
                 background: "linear-gradient(135deg, #7330de, #6025bd)", 
                 borderBottom: "1px solid rgba(0,0,0,0.4)", 
@@ -288,10 +288,10 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="flex justify-between items-end w-full mt-0.5 relative z-20">
+          <div className="flex justify-between items-end w-full relative z-20">
             {/* Lado esquerdo: Gráfico de tendência roxo */}
-            <div className="flex-1 min-w-0 flex flex-col items-start justify-end -ml-1 -mt-[12px]">
-              <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
+            <div className="flex-1 min-w-0 flex flex-col items-start justify-end -ml-1">
+              <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[var(--home-chart-h,64px)] overflow-visible">
                 <defs>
                   <linearGradient id="card-sparkline-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.25" />
@@ -343,24 +343,24 @@ export const MobileCreditCardExpenses: React.FC<
                   );
                 })}
               </svg>
-              <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] mb-[2px] md:mb-0 tracking-tight pl-[10px] leading-none">
+              <span className="text-[10px] font-semibold text-[#6b7280] mt-[4px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none">
                 Últimos 10 meses
               </span>
             </div>
 
             {/* Lado direito: Título e Valor principal (Exact 135px width to align with button) */}
-            <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right pb-[1px] pt-3">
+            <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right">
               {/* Período da fatura */}
               <span 
-                className="text-[11px] font-extrabold tracking-wide uppercase mb-0.5" 
+                className="text-[11px] font-extrabold tracking-wide uppercase mb-[1px]" 
                 style={{ color: "#1F2937", fontFamily: "'Inter', sans-serif" }}
               >
                 {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
               </span>
-              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-1.5" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
+              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-[3px]" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
-              <p className="text-[21px] font-[800] leading-none" style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+              <p className="font-[800] leading-none" style={{ fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                 <FormatCurrencyStyled value={totalPending > 0 ? totalPending : totalPaid} prefixColor={totalPending > 0 ? "#EF6C6C" : "#15803D"} />
               </p>
             </div>

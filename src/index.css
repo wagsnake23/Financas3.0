@@ -797,3 +797,73 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ==========================================================================
+   Responsividade Home Mobile (Baseada em Altura) - MODO COMPACTO
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  .home-mobile-card {
+    padding-left: var(--home-card-px, 16px) !important;
+    padding-right: var(--home-card-px, 16px) !important;
+    padding-top: var(--home-card-pt, 12px) !important;
+    padding-bottom: var(--home-card-pb, 12px) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --home-card-px: 16px;
+    --home-card-pt: 12px;
+    --home-card-pb: 12px;
+    --home-grid-gap: 12px;
+    --home-chart-h: 64px;
+    --home-btn-h: 36px;
+    --home-title-mt: 3px;
+    --home-val-mt: -5px;
+    --home-chart-mt: 8px;
+  }
+}
+
+/* Modo Compacto Leve (ex: iPhone 13/14 menores, Androids medios) */
+@media (max-width: 767px) and (max-height: 720px) {
+  :root {
+    --home-card-px: 16px;
+    --home-card-pt: 10px;
+    --home-card-pb: 10px;
+    --home-grid-gap: 8px;
+    --home-chart-h: 52px;
+    --home-btn-h: 34px;
+    --home-title-mt: 0px;
+    --home-val-mt: -3px;
+    --home-chart-mt: 6px;
+  }
+}
+
+/* Modo Compacto Agressivo (ex: iPhone SE, Androids curtos) */
+@media (max-width: 767px) and (max-height: 640px) {
+  :root {
+    --home-card-px: 16px;
+    --home-card-pt: 8px;
+    --home-card-pb: 8px;
+    --home-grid-gap: 6px;
+    --home-chart-h: 42px;
+    --home-btn-h: 32px;
+    --home-title-mt: -2px;
+    --home-val-mt: -2px;
+    --home-chart-mt: 4px;
+  }
+}
+
+/* Modo Desktop - Preservar tamanhos originais md: */
+@media (min-width: 768px) {
+  :root {
+    --home-title-text: 16px;
+    --home-val-text: 25px;
+    --home-btn-h: 36px;
+    --home-title-mt: -1px;
+    --home-val-mt: -5px;
+    --home-chart-h: 64px;
+    --home-chart-mt: 12px;
+  }
+}
