@@ -222,7 +222,7 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -269,7 +269,7 @@ export const MobileCreditCardExpenses: React.FC<
           {/* Right side: Purple Button (Responsive 135px/150px width) */}
           <div className="shrink-0">
             <Button
-              className="md:mt-0 w-[135px] md:w-[150px] h-[var(--home-btn-h,36px)] px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1.5 md:-mr-2 md:text-[15px]"
+              className="md:mt-0 w-[135px] md:w-[150px] h-[var(--home-btn-h,36px)] px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 md:mr-0 md:text-[15px]"
               style={{ 
                 background: "linear-gradient(135deg, #7330de, #6025bd)", 
                 borderBottom: "1px solid rgba(0,0,0,0.4)", 
