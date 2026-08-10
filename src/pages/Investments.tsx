@@ -419,7 +419,7 @@ export default function Investments() { // Alterado para export default function
       return;
     }
 
-    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE) {
+    if (!selectedInvestmentCategoryId || selectedInvestmentCategoryId === UNSELECTED_VALUE || selectedInvestmentCategoryId.trim() === "") {
       newErrors.selectedInvestmentCategoryId = true;
       hasError = true;
     }
@@ -444,6 +444,11 @@ export default function Investments() { // Alterado para export default function
 
     setValidationErrors(newErrors);
     if (hasError) {
+      if (newErrors.selectedInvestmentCategoryId) {
+        setTimeout(() => {
+          document.getElementById("investment-category")?.focus();
+        }, 10);
+      }
       showErrorToast("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
@@ -758,7 +763,7 @@ export default function Investments() { // Alterado para export default function
               <h2 className={cn("text-xl text-[#0556C3] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-[6px]">
-                  <Label htmlFor="investment-category" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome do Investimento</Label>
+                  <Label htmlFor="investment-category" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
                   <Select
                     value={selectedInvestmentCategoryId}
                     onValueChange={(value) => {
@@ -1254,7 +1259,7 @@ export default function Investments() { // Alterado para export default function
                   <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento</Label>
+                      <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
                       <Select
                         value={selectedInvestmentCategoryId}
                         onValueChange={(value) => {
