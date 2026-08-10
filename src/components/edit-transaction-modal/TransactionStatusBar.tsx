@@ -54,32 +54,32 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
             isPaid
                 ? "bg-gradient-to-br from-[#F1FBF9] to-[#E8F8EE] border-[#D1FAE5]"
                 : "bg-gradient-to-br from-[#FFFDF2] to-[#FFF9E5] border-[#FEF3C7]",
-            isMobile ? "mx-2 mb-1 py-1.5" : "mb-2 py-2"
+            isMobile ? "mx-2 mb-1 py-1 px-2.5 min-h-[36px]" : "mb-2 py-1.5 min-h-[40px]"
         )}>
             {/* Left side: Status and Info */}
-            <div className="flex flex-col items-start gap-0">
-                <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+                <div className="flex items-center gap-1.5 shrink-0">
                     <div className={cn(
-                        "relative flex items-center justify-center transition-all",
-                        "w-[18px] h-[18px] rounded-full border",
+                        "relative flex items-center justify-center transition-all shrink-0",
+                        "w-[16px] h-[16px] rounded-full border",
                         isPaid
                             ? "bg-[#25D366] border-[#25D366]"
                             : "bg-[#FEF3C7] border-[#FEF3C7]"
                     )}>
                         {isPaid ? (
                             <Check
-                                className="absolute text-white w-[14px] h-[14px]"
+                                className="absolute text-white w-[12px] h-[12px]"
                                 strokeWidth={4}
                             />
                         ) : (
                             <Clock
-                                className="absolute text-[#D97706] w-[14px] h-[14px]"
+                                className="absolute text-[#D97706] w-[12px] h-[12px]"
                                 strokeWidth={4}
                             />
                         )}
                     </div>
                     <span className={cn(
-                        "text-sm font-extrabold",
+                        "text-[13.5px] font-extrabold leading-none",
                         isPaid ? "text-[#1DA554]" : "text-[#D97706]"
                     )}>
                         {statusLabel}
@@ -87,14 +87,17 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                 </div>
 
                 {isPaid && paidAtTimestamp && (
-                    <span className="text-[12.5px] text-slate-600 font-bold ml-0.5 mt-1">
-                        {formattedDate}
-                    </span>
+                    <div className="flex items-center gap-1.5 overflow-hidden opacity-95">
+                        <span className="text-slate-300 text-[10px] shrink-0 font-bold">•</span>
+                        <span className="text-[11.5px] text-slate-500 font-semibold truncate leading-none pt-[1px]">
+                            {formattedDate}
+                        </span>
+                    </div>
                 )}
             </div>
 
             {/* Right side: Action (Button or Popover) */}
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
                 {!isPaid ? (
                     <Button
                         type="button"
