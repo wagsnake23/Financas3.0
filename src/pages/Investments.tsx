@@ -1105,13 +1105,18 @@ export default function Investments() { // Alterado para export default function
 
                             <div className="flex items-center">
                               <Button
-                                variant="ghost"
+                                type="button"
                                 size="icon"
                                 onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                               className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
-                             >
-                               <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
-                             </Button>
+                                className={cn(
+                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                  isMobile 
+                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                )}
+                              >
+                                <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                              </Button>
                             </div>
                           </div>
 
@@ -1126,12 +1131,17 @@ export default function Investments() { // Alterado para export default function
                                   </span>
                                 </div>
                                 <Button
-                                  variant="ghost"
+                                  type="button"
                                   size="icon"
                                   onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                  className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
+                                  className={cn(
+                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                    isMobile 
+                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                  )}
                                 >
-                                  <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
+                                  <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
                                 </Button>
                               </div>
 
@@ -1617,20 +1627,30 @@ export default function Investments() { // Alterado para export default function
 
                               <div className="flex gap-2">
                                 <Button
-                                  variant="ghost"
+                                  type="button"
                                   size="icon"
                                   onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(240,245,255,0.9)_100%)] border border-blue-200/50 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
-                              >
-                                <DynamicIcon name="SquarePen" className="h-4 w-4 text-[#3b82f6]" />
-                              </Button>
+                                  className={cn(
+                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                    isMobile 
+                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                  )}
+                                >
+                                  <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                                </Button>
                                 <Button
-                                  variant="ghost"
+                                  type="button"
                                   size="icon"
                                   onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                  className="h-9 w-9 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,240,240,0.9)_100%)] border border-red-100 shadow-[0_2px_4px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1),0_1px_0_rgba(0,0,0,0.08)] active:scale-95 active:shadow-inner transition-all duration-200"
+                                  className={cn(
+                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                    isMobile 
+                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                  )}
                                 >
-                                  <DynamicIcon name="Trash2" className="h-4 w-4 text-[#ef4444]" />
+                                  <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
                                 </Button>
                               </div>
                             </div>
