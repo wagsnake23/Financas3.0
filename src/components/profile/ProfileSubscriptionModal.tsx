@@ -194,7 +194,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
         </DialogTrigger>
       )}
       
-      <DialogContent className={cn("rounded-3xl p-5 md:p-6 overflow-x-hidden overflow-y-auto max-h-[90vh]", isMobile ? "w-[95vw] max-w-[95vw]" : "w-full sm:max-w-[425px]")}>
+      <DialogContent className={cn("rounded-3xl p-5 md:p-6 overflow-x-hidden overflow-y-auto max-h-[90vh]", isMobile ? "w-[calc(95vw+2px)] max-w-[calc(95vw+2px)]" : "w-full sm:max-w-[425px]")}>
         <DialogHeader className="mb-3">
           <div className="flex items-center gap-1.5 mb-1">
             <span className="text-xl leading-none">💳</span>
