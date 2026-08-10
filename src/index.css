@@ -816,7 +816,7 @@ body {
     --home-card-px: 16px;
     --home-card-pt: 12px;
     --home-card-pb: 12px;
-    --home-grid-gap: 12px;
+    --home-grid-gap: 14px;
     --home-chart-h: 64px;
     --home-btn-h: 36px;
     --home-title-mt: 3px;
@@ -831,7 +831,7 @@ body {
     --home-card-px: 16px;
     --home-card-pt: 10px;
     --home-card-pb: 10px;
-    --home-grid-gap: 8px;
+    --home-grid-gap: 10px;
     --home-chart-h: 52px;
     --home-btn-h: 34px;
     --home-title-mt: 0px;
@@ -846,7 +846,7 @@ body {
     --home-card-px: 16px;
     --home-card-pt: 8px;
     --home-card-pb: 8px;
-    --home-grid-gap: 6px;
+    --home-grid-gap: 10px;
     --home-chart-h: 42px;
     --home-btn-h: 32px;
     --home-title-mt: -2px;
