@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -30,9 +30,7 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
-const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
+// Removido toast styles isolados, utilizando ToastContext global
 
 export default function Metas() {
   const { user } = useAuth();
@@ -40,6 +38,7 @@ export default function Metas() {
   const queryClient = useQueryClient();
   const { data: profile } = useProfile(user?.id);
   const isExpired = profile?.isExpired;
+  const { showSuccessToast, showErrorToast } = useToast();
 
   // Form states
   const [selectedParentId, setSelectedParentId] = useState(UNSELECTED_VALUE);
@@ -277,7 +276,7 @@ export default function Metas() {
       queryClient.invalidateQueries({ queryKey: ["metas", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["metas-realizado", user?.id] });
-      toast.success("Meta criada com sucesso!", { style: toastSuccessStyle, duration: toastDuration });
+      showSuccessToast("Meta criada com sucesso!");
       // Reset form
       setSelectedParentId(UNSELECTED_VALUE);
       setNomeMeta("");
@@ -288,7 +287,7 @@ export default function Metas() {
       setValidationErrors({});
     },
     onError: (error) => {
-      toast.error("Erro ao criar meta", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao criar meta", error.message);
     },
     onSettled: () => setLoadingForm(false),
   });
@@ -329,12 +328,12 @@ export default function Metas() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["metas", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
-      toast.success("Meta atualizada!", { style: toastSuccessStyle, duration: toastDuration });
+      showSuccessToast("Meta atualizada!");
       setIsEditModalOpen(false);
       setEditingMeta(null);
     },
     onError: (error) => {
-      toast.error("Erro ao atualizar meta", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao atualizar meta", error.message);
     },
   });
 
@@ -364,12 +363,12 @@ export default function Metas() {
       queryClient.invalidateQueries({ queryKey: ["metas", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["categories", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["metas-realizado", user?.id] });
-      toast.success("Meta excluída!", { style: toastSuccessStyle, duration: toastDuration });
+      showSuccessToast("Meta excluída!");
       setIsConfirmDeleteOpen(false);
       setMetaToDelete(null);
     },
     onError: (error) => {
-      toast.error("Erro ao excluir meta", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao excluir meta", error.message);
       setIsConfirmDeleteOpen(false);
     },
   });
@@ -421,7 +420,7 @@ export default function Metas() {
 
   const handleBlockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    showErrorToast("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.");
   };
 
   const handleEditClick = (meta: typeof calculatedMetas[0]) => {

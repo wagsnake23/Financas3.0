@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -49,15 +49,14 @@ import {
 import { useProfile } from "@/hooks/useProfile";
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
-const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
-const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
+// Removido toast styles isolados
 
 export default function Investments() { // Alterado para export default function
   const { user } = useAuth(); // Obter authLoading
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { showSuccessToast, showErrorToast } = useToast();
 
 
 
@@ -148,7 +147,7 @@ export default function Investments() { // Alterado para export default function
 
   const handleBlockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    showErrorToast("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.");
     setTimeout(() => {
       window.dispatchEvent(new Event("open-subscription-modal"));
     }, 2000);
@@ -362,10 +361,7 @@ export default function Investments() { // Alterado para export default function
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
-      toast.success("Investimento adicionado!", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Investimento adicionado!");
       // Reset form
       setSelectedInvestmentCategoryId(UNSELECTED_VALUE); // Reset
       setAmount(undefined); // Reset para undefined
@@ -377,7 +373,7 @@ export default function Investments() { // Alterado para export default function
       setValidationErrors({}); // Clear errors on success
     },
     onError: (error) => {
-      toast.error("Erro ao adicionar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao adicionar investimento", error.message);
       console.error("Supabase error adding investment:", error);
     },
     onSettled: () => {
@@ -398,15 +394,12 @@ export default function Investments() { // Alterado para export default function
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
-      toast.success("Investimento removido!", {
-        style: toastSuccessStyle,
-        duration: toastDuration
-      });
+      showSuccessToast("Investimento removido!");
       setIsConfirmDeleteOpen(false); // Fechar o diálogo após sucesso
       setInvestmentToDeleteId(null); // Limpar o ID
     },
     onError: (error) => {
-      toast.error("Erro ao remover investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao remover investimento", error.message);
       console.error("Supabase error deleting investment:", error);
       setIsConfirmDeleteOpen(false); // Fechar o diálogo mesmo em caso de erro
       setInvestmentToDeleteId(null); // Limpar o ID
@@ -421,7 +414,7 @@ export default function Investments() { // Alterado para export default function
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Usuário não autenticado.");
       setLoadingForm(false);
       return;
     }
@@ -451,7 +444,7 @@ export default function Investments() { // Alterado para export default function
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Preencha todos os campos obrigatórios");
       setLoadingForm(false);
       return;
     }
@@ -502,10 +495,7 @@ export default function Investments() { // Alterado para export default function
   const handleUpdateSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["indexadores"] }); // Also refresh indexers if needed
-    toast.success("Investimento atualizado!", {
-      style: toastSuccessStyle,
-      duration: toastDuration
-    });
+    showSuccessToast("Investimento atualizado!");
     handleCancelEdit();
   };
 

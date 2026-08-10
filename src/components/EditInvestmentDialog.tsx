@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useProfile } from "@/hooks/useProfile";
 import CurrencyBR from "@/components/ui/currency-br";
 import { NumericInput } from "@/components/ui/numeric-input";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -35,9 +35,7 @@ interface EditInvestmentDialogProps {
 }
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000;
-const toastSuccessStyle = { backgroundColor: '#FFFFFF', color: '#006000', border: '1px solid #E5FFE5' };
-const toastErrorStyle = { backgroundColor: '#FFFFFF', color: '#FF2929', border: '1px solid #FFE5E5' };
+// Removido toast styles isolados
 
 export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   investmentToEdit,
@@ -53,10 +51,11 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 }) => {
   const { data: profile } = useProfile(user?.id);
   const isExpired = profile?.isExpired;
+  const { showErrorToast } = useToast();
 
   const handleBlockedClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    toast.error("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.", { duration: 2000, style: toastErrorStyle });
+    showErrorToast("🔒 Sua assinatura expirou. Renove para voltar a editar seus dados.");
     setTimeout(() => {
       window.dispatchEvent(new Event("open-subscription-modal"));
     }, 2000);
@@ -190,7 +189,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
       onUpdateSuccess();
     },
     onError: (error) => {
-      toast.error("Erro ao atualizar investimento", { description: error.message, duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Erro ao atualizar investimento", error.message);
     },
     onSettled: () => {
       setLoading(false);
@@ -205,7 +204,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
     let hasError = false;
 
     if (!user) {
-      toast.error("Usuário não autenticado.", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Usuário não autenticado.");
       setLoading(false);
       return;
     }
@@ -235,7 +234,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
 
     setValidationErrors(newErrors);
     if (hasError) {
-      toast.error("Preencha todos os campos obrigatórios", { duration: toastDuration, style: toastErrorStyle });
+      showErrorToast("Preencha todos os campos obrigatórios");
       setLoading(false);
       return;
     }
