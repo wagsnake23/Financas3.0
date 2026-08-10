@@ -766,7 +766,7 @@ export default function Metas() {
                 <div className="mt-6">
                   <div className="flex justify-between mb-1">
                     <span className="text-[12px] font-medium text-[#C2410C] capitalize tracking-wide opacity-90">Progresso Geral</span>
-                    <span className="text-sm font-black text-slate-700">{stats.progressoGeral.toFixed(1)}%</span>
+                    <span className={cn("font-black text-slate-700", isMobile ? "text-[13px]" : "text-sm")}>{stats.progressoGeral.toFixed(1)}%</span>
                   </div>
                   <div className="w-full h-3 bg-orange-100 rounded-full overflow-hidden">
                     <div
@@ -1112,9 +1112,9 @@ export default function Metas() {
   }
 
   function renderSummaryItem(icon: string, label: string, value: string, _isRightColumn = false) {
-    const isCurrency = value.startsWith("R$ ");
+    const isCurrency = value.includes("R$");
     const currencyPrefix = isCurrency ? (isMobile ? "" : "R$") : "";
-    const currencyValue = isCurrency ? value.substring(3) : value;
+    const currencyValue = isCurrency ? value.replace("R$", "").trim() : value;
 
     return (
       <div className="flex justify-start">
@@ -1126,10 +1126,10 @@ export default function Metas() {
               {isCurrency ? (
                 <>
                   {currencyPrefix && <span className="text-[14px] font-medium" style={{ color: accentColor }}>{currencyPrefix}</span>}
-                  <span className={cn(isMobile && "text-[17px]")}>{currencyValue}</span>
+                  <span className={cn(isMobile && "text-[16px]")}>{currencyValue}</span>
                 </>
               ) : (
-                <span className={cn(isMobile && "text-[17px]")}>{value}</span>
+                <span className={cn(isMobile && "text-[16px]")}>{value}</span>
               )}
             </p>
           </div>
