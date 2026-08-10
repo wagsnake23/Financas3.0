@@ -740,7 +740,7 @@ export default function Metas() {
                 style={cardStyle}
               >
                 <h2 className={cn("text-xl font-bold text-[#C2410C] mb-4")}>🎯 Minhas Metas</h2>
-                <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
+                <div className="space-y-5 max-h-[560px] overflow-y-auto no-scrollbar">
                   {calculatedMetas.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhuma meta cadastrada ainda.
@@ -889,7 +889,7 @@ export default function Metas() {
           }}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
-          <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-4")}>
+          <DialogHeader className={cn(isMobile ? "mt-[5px]" : "-mt-4")}>
             <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
               <span>🎯</span>
               <span>Editar Meta</span>
