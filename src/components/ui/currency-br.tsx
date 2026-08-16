@@ -3,8 +3,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface CurrencyBRProps {
-  value: number | undefined;
-  onChange: (val: number) => void;
+  value: number | undefined | null;
+  onChange: (val: number | undefined) => void;
   className?: string;
   placeholder?: string;
   disabled?: boolean; // Adicionado disabled para compatibilidade
@@ -20,10 +20,11 @@ export default function CurrencyBR({
   id
 }: CurrencyBRProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let raw = e.target.value.replace(/\D/g, ""); // mantém só números
+    const raw = e.target.value.replace(/\D/g, ""); // mantém só números
 
     if (raw === "") {
-      onChange(0);
+      // Campo vazio → valor interno volta a undefined (sem valor informado)
+      onChange(undefined);
       return;
     }
 
@@ -31,11 +32,15 @@ export default function CurrencyBR({
     onChange(num);
   };
 
-  // Formata em BRL
-  const formatted = (value ?? 0).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+  // Quando value é undefined ou null → campo visualmente vazio (placeholder aparece)
+  // Quando value é 0 (zero real) ou qualquer número → formata normalmente
+  const formatted =
+    value === undefined || value === null
+      ? ""
+      : value.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
 
   return (
     <Input
