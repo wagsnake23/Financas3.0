@@ -1016,17 +1016,33 @@ export default function Home() {
 
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>
                 <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-md">
-                    <DialogHeader className="p-6 pb-2 text-left">
-                        <DialogTitle className="text-xl font-bold tracking-tight" style={{ color: "#0B213F", fontFamily: "'Inter', sans-serif" }}>
-                            {activeTrendModal === 'saldo' && "Evolução do Saldo Mensal"}
-                            {activeTrendModal === 'despesas' && "Evolução das Despesas"}
-                            {activeTrendModal === 'receitas' && "Evolução das Receitas"}
-                        </DialogTitle>
-                        <DialogDescription className="text-slate-500 font-medium">
-                            {activeTrendModal === 'saldo' && "Acompanhe a evolução do saldo acumulado ao longo dos últimos meses."}
-                            {activeTrendModal === 'despesas' && "Visualização das despesas totais por período."}
-                            {activeTrendModal === 'receitas' && "Visualização das receitas totais por período."}
-                        </DialogDescription>
+                    <DialogHeader className="p-6 pb-2 text-left relative flex flex-row items-center w-full">
+                        <div className="flex items-center gap-3">
+                            <div
+                              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-white/20 shadow-sm"
+                              style={{ 
+                                background: activeTrendModal === 'saldo' ? "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)" : 
+                                           activeTrendModal === 'receitas' ? "linear-gradient(135deg, #14532d 0%, #22c55e 100%)" :
+                                           "linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%)" 
+                              }}
+                            >
+                              <span className="text-[22px] select-none leading-none">
+                                {activeTrendModal === 'saldo' ? "📊" : activeTrendModal === 'receitas' ? "📈" : "📉"}
+                              </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <DialogTitle className="text-lg md:text-xl font-extrabold tracking-[0.5px] -mt-0.5" style={{ color: activeTrendModal === 'saldo' ? "#1e3a8a" : activeTrendModal === 'receitas' ? "#14532d" : "#7f1d1d", fontFamily: "'Inter', sans-serif" }}>
+                                    {activeTrendModal === 'saldo' && "Evolução do Saldo Mensal"}
+                                    {activeTrendModal === 'despesas' && "Evolução das Despesas"}
+                                    {activeTrendModal === 'receitas' && "Evolução das Receitas"}
+                                </DialogTitle>
+                                <DialogDescription className="text-xs md:text-sm font-bold text-slate-500 tracking-wider opacity-80 mt-[-3px]">
+                                    {activeTrendModal === 'saldo' && "Acompanhe a evolução do saldo acumulado."}
+                                    {activeTrendModal === 'despesas' && "Acompanhe a evolução das despesas."}
+                                    {activeTrendModal === 'receitas' && "Acompanhe a evolução das receitas."}
+                                </DialogDescription>
+                            </div>
+                        </div>
                     </DialogHeader>
                     <div className="p-6 pt-2 pb-8 h-auto flex flex-col justify-center min-h-[350px]">
                         {activeTrendModal === 'saldo' && (() => {
@@ -1090,6 +1106,22 @@ export default function Home() {
                                             <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
                                         </p>
                                     </div>
+                                    <div className="shrink-0 flex items-start">
+                                        <div
+                                            className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                                            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                                        >
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                            <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                            </span>
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="h-[280px] w-full mb-6">
                                     <MonthlyExpenseBarChart expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
@@ -1120,6 +1152,22 @@ export default function Home() {
                                         <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                             <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                         </p>
+                                    </div>
+                                    <div className="shrink-0 flex items-start">
+                                        <div
+                                            className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                                            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                                        >
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                            <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                            </span>
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="h-[280px] w-full mb-6">
