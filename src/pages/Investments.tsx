@@ -415,7 +415,7 @@ export default function Investments() { // Alterado para export default function
       if (!user?.id) throw new Error("Usuário não autenticado.");
       const { error } = await supabase
         .from("investimentos")
-        .update({ status: "resgatado", data_resgate: new Date().toISOString() })
+        .delete()
         .eq("id", id)
         .eq("user_id", user.id);
       if (error) throw error;
@@ -1717,12 +1717,12 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroup>
                   </div>
                   <div className={cn("space-y-5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[560px]")}>
-                    {calculatedInvestments.length === 0 ? (
+                    {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
                       </p>
                     ) : (
-                      calculatedInvestments.map((investment) => {
+                      calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
                         const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
                         const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
                         let investmentNameDisplay = investmentCategory?.nome || investment.nome;
@@ -1906,10 +1906,10 @@ export default function Investments() { // Alterado para export default function
         >
           <DialogHeader className={cn(
             "flex flex-row items-center justify-start gap-1 pb-0 mb-0 !space-y-0 transform translate-y-[5px]",
-            isMobile ? "-mt-2 -mb-2" : "-mt-4 pl-1"
+            isMobile ? "-mt-[2px] -mb-2" : "-mt-[10px] pl-1"
           )}>
             <span className="text-xl select-none">📋</span>
-            <DialogTitle className="text-lg font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Detalhes do Investimento</DialogTitle>
+            <DialogTitle className="text-[19px] font-semibold tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Detalhes do Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog

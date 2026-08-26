@@ -328,21 +328,21 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           {/* Resumo Financeiro (Sem Container/Fundo Verde) */}
           <div className="px-4 pb-4 pt-3 flex justify-between w-full items-center select-none text-[10px] leading-tight opacity-95">
             {/* Coluna Esquerda */}
-            <div className="flex flex-col gap-1.5 justify-center h-full text-left">
+            <div className="flex flex-col gap-2.5 justify-center h-full text-left">
               <div className="flex flex-col">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rentabilidade Líquida</span>
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Rentabilidade Líquida</span>
                 <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
               </div>
-              <div className="flex flex-col pt-1 border-t border-slate-100">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rendimento Líquido</span>
+              <div className="flex flex-col pt-2 border-t border-slate-100">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Rendimento Líquido</span>
                 <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
               </div>
             </div>
 
             {/* Coluna Direita */}
-            <div className="flex flex-col gap-1.5 items-end h-full justify-center text-right">
+            <div className="flex flex-col gap-2.5 items-end h-full justify-center text-right">
               <div className="flex flex-col items-end">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Imposto de Renda</span>
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Imposto de Renda</span>
                 {metrics.tipoTributacao === "isento" ? (
                   <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
                 ) : (
@@ -351,8 +351,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
                   </span>
                 )}
               </div>
-              <div className="flex flex-col items-end pt-1 border-t border-slate-100">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Saldo Líquido Total</span>
+              <div className="flex flex-col items-end pt-2 border-t border-slate-100">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Saldo Líquido Total</span>
                 <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
               </div>
             </div>
