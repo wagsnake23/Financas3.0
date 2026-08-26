@@ -255,14 +255,14 @@ export const Navigation = () => {
                       to={item.to}
                       end={item.to === "/"}
                       className={({ isActive }) => cn(
-                        "px-3 py-2 rounded-xl text-sm transition-all flex items-center gap-2",
+                        "relative px-3 py-2 text-sm transition-colors duration-300 flex items-center gap-2",
                         isActive
-                          ? "bg-[#FEF9C3] text-[#0B213F] font-semibold shadow-sm"
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                          ? "text-white font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-100 after:transition-all after:duration-300"
+                          : "text-blue-100/70 font-medium hover:text-white/95 hover:bg-transparent after:absolute after:bottom-0 after:left-1/2 after:right-1/2 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-0 after:transition-all after:duration-300"
                       )}
                     >
                       <DynamicIcon name={item.icon} className="h-4 w-4" />
-                      <span className="font-medium">
+                      <span className="tracking-wide">
                         {item.label === "Lista de Compras" ? "Compras" : item.label}
                       </span>
                     </RouterNavLink>
