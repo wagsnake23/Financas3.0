@@ -339,7 +339,7 @@ const Categories = () => {
                   <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
                     Categorias
                   </h1>
-                  <p className="text-sm font-bold -mt-0.5 leading-none text-slate-500">
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
                     Gerencie suas categorias e subcategorias
                   </p>
                 </div>

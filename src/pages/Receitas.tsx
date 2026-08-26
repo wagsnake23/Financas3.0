@@ -652,7 +652,7 @@ export default function Receitas() {
                   <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-2xl text-[#1AA361]" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Nova Receita
                   </h1>
-                  <p className="font-bold -mt-0.5 leading-none text-sm text-slate-500">
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
                     Registre seus ganhos
                   </p>
                 </div>
