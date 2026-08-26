@@ -649,32 +649,47 @@ export default function Investments() { // Alterado para export default function
   }
 
   return (
-    <div className={cn("flex flex-col global-bg", isMobile ? "bg-slate-50" : "pt-[72px]")}>
+    <div className={cn("flex flex-col min-h-screen relative global-bg", isMobile ? "bg-slate-50 pt-0" : "pt-[72px]")}>
+
+      {/* HEADER PREMIUM — FINTECH STYLE (INVESTMENTS THEME) */}
+      {!isMobile && (
+        <div className="relative h-[160px] w-full overflow-hidden bg-transparent">
+          <div className="container-app relative z-10 pt-[28px] md:pt-[52px] flex justify-between items-start">
+            <div>
+              <div className="flex items-start gap-3">
+                <div
+                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-default h-auto w-auto mt-1"
+                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                >
+                  <span className="text-2xl select-none">📈</span>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Meus Investimentos
+                  </h1>
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 uppercase tracking-wider opacity-80">
+                    Carteira e Rendimentos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => navigate(-1)}
+              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1e3a8a] bg-white hover:bg-white/90"
+              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+            >
+              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1e3a8a]" strokeWidth={3} />
+              Voltar
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
-      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}> {/* Adicionado flex-grow e ajustado py-4 para mobile */}
+      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
         {!isMobile && (
           <>
-            <div className="flex items-center gap-4 mb-8">
-              <div
-                className="btn-3d p-2.5 rounded-xl flex items-center justify-center shadow-sm border-none transition-all h-auto w-auto"
-                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-              >
-                <DynamicIcon
-                  name="📈"
-                  className="h-6 w-6"
-                />
-              </div>
-              <h1 
-                className="text-3xl font-extrabold tracking-[0.5px] transition-all duration-300 text-slate-800"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
-                }}
-              >
-                Meus Investimento<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
-              </h1>
-            </div>
             
             {/* 🔹 NOVO: Card de resumo unificado (DESKTOP) */}
             <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[#15803d]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #ecfdf5 50%, rgba(209, 250, 229, 0.9) 100%)" }}>

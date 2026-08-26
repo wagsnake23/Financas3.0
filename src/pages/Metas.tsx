@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,7 @@ export default function Metas() {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { data: profile } = useProfile(user?.id);
   const isExpired = profile?.isExpired;
   const { showSuccessToast, showErrorToast } = useToast();
@@ -713,27 +715,45 @@ export default function Metas() {
   );
 
   return (
-    <div className={cn("flex flex-col global-bg", isMobile ? "bg-slate-50" : "pt-[72px]")}>
-      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "py-8")}>
-        
-        {/* Desktop Header */}
-        {!isMobile && (
-          <div className="flex items-center gap-4 mb-8">
-            <div
-              className="btn-3d p-2.5 rounded-xl flex items-center justify-center shadow-sm border-none transition-all h-auto w-auto"
+    <div className={cn("flex flex-col min-h-screen relative global-bg", isMobile ? "bg-slate-50 pt-0" : "pt-[72px]")}>
+      
+      {/* HEADER PREMIUM — FINTECH STYLE (METAS THEME) */}
+      {!isMobile && (
+        <div className="relative h-[160px] w-full overflow-hidden bg-transparent">
+          <div className="container-app relative z-10 pt-[28px] md:pt-[52px] flex justify-between items-start">
+            <div>
+              <div className="flex items-start gap-3">
+                <div
+                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-default h-auto w-auto mt-1"
+                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+                >
+                  <span className="text-2xl select-none">🎯</span>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Minhas Metas
+                  </h1>
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 uppercase tracking-wider opacity-80">
+                    Acompanhamento de Objetivos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => navigate(-1)}
+              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1e3a8a] bg-white hover:bg-white/90"
               style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
             >
-              <DynamicIcon name="🎯" className="h-6 w-6" />
-            </div>
-            <h1
-              className="text-3xl font-extrabold tracking-[0.5px] transition-all duration-300 text-slate-800"
-              style={{ fontFamily: "'Inter', sans-serif", filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))" }}
-            >
-              Minhas Meta<span style={{ color: accentColor, fontWeight: 500, textShadow: "0 0 10px rgba(194, 65, 12, 0.4)" }}>s</span>
-            </h1>
+              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1e3a8a]" strokeWidth={3} />
+              Voltar
+            </Button>
           </div>
-        )}
+        </div>
+      )}
 
+      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
+        
         {isMobile ? (
           /* ==================== MOBILE LAYOUT ==================== */
           <div className="grid grid-cols-1 gap-4">

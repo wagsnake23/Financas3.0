@@ -35,7 +35,7 @@ export const formatCurrency = (value?: number | null, showSymbol: boolean = true
 interface GetBorderClassProps {
   isValid?: boolean;
   isInvalid?: boolean;
-  variant?: "blue" | "green";
+  variant?: "blue" | "green" | "yellow";
 }
 
 export const getBorderClass = ({
@@ -48,13 +48,13 @@ export const getBorderClass = ({
   if (isInvalid) {
     borderClass = "border-destructive focus:border-destructive focus:ring-destructive/10";
   } else if (isValid) {
-    borderClass = variant === "green"
-      ? "border-[#22C55E] focus:border-[#22C55E] focus:ring-[#22C55E]/10"
-      : "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
+    if (variant === "green") borderClass = "border-[#22C55E] focus:border-[#22C55E] focus:ring-[#22C55E]/10";
+    else if (variant === "yellow") borderClass = "border-[#F59E0B] focus:border-[#F59E0B] focus:ring-[#F59E0B]/10";
+    else borderClass = "border-[#A8C5FF] focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   } else {
-    borderClass = variant === "green"
-      ? "focus:border-[#22C55E] focus:ring-[#22C55E]/10"
-      : "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
+    if (variant === "green") borderClass = "focus:border-[#22C55E] focus:ring-[#22C55E]/10";
+    else if (variant === "yellow") borderClass = "focus:border-[#F59E0B] focus:ring-[#F59E0B]/10";
+    else borderClass = "focus:border-[#A8C5FF] focus:ring-[#A8C5FF]/10";
   }
 
   return cn(

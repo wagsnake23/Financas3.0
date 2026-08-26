@@ -199,8 +199,8 @@ export const CategoryForm = ({
               className={cn(
                 "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium",
                 isMobile ? "h-9 text-sm" : "h-[42px]",
-                getBorderClass({}),
-                "!bg-white"
+                getBorderClass({ variant: "yellow" }),
+                "input-white"
               )}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
@@ -242,9 +242,9 @@ export const CategoryForm = ({
             placeholder="Ex: Academia, Pet, etc."
             required
             className={cn(
-              "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium !bg-white",
+              "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium input-white",
               isMobile ? "h-9 text-sm" : "h-[42px]",
-              getBorderClass({})
+              getBorderClass({ variant: "yellow" })
             )}
             disabled={editingCategory?.user_id === null}
           />
@@ -257,9 +257,9 @@ export const CategoryForm = ({
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className={cn(
-                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium !bg-white",
+                "w-full rounded-xl flex items-center justify-center text-4xl transition-all duration-200 input-3d-premium input-white",
                 isMobile ? "p-2 text-3xl h-16" : "p-4 h-20",
-                getBorderClass({})
+                getBorderClass({ variant: "yellow" })
               )}
               disabled={editingCategory?.user_id === null}
             >

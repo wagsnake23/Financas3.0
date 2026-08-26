@@ -633,7 +633,7 @@ export default function Receitas() {
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
-          <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
+          <div className="container-app relative z-10 pt-[28px] md:pt-[52px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <Button
