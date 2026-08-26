@@ -165,6 +165,9 @@ export default function Investments() { // Alterado para export default function
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
+  const [origemInvestimento, setOrigemInvestimento] = useState<"saldo_atual" | "caixa_externo">("saldo_atual");
+  const [isConfirmRescueOpen, setIsConfirmRescueOpen] = useState(false);
+  const [investmentToRescue, setInvestmentToRescue] = useState<any>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
   const [simulationPeriod, setSimulationPeriod] = useState<"diário" | "mensal" | "anual">("diário");
 
@@ -406,6 +409,31 @@ export default function Investments() { // Alterado para export default function
     }
   });
 
+  // Mutation for rescuing an investment
+  const rescueInvestmentMutation = useMutation({
+    mutationFn: async (id: string) => {
+      if (!user?.id) throw new Error("Usuário não autenticado.");
+      const { error } = await supabase
+        .from("investimentos")
+        .update({ status: "resgatado", data_resgate: new Date().toISOString() })
+        .eq("id", id)
+        .eq("user_id", user.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["investments", user?.id] });
+      showSuccessToast("Investimento resgatado!");
+      setIsConfirmRescueOpen(false);
+      setInvestmentToRescue(null);
+    },
+    onError: (error) => {
+      showErrorToast("Erro ao resgatar investimento", error.message);
+      console.error("Supabase error rescuing investment:", error);
+      setIsConfirmRescueOpen(false);
+      setInvestmentToRescue(null);
+    }
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingForm(true);
@@ -469,6 +497,7 @@ export default function Investments() { // Alterado para export default function
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
+      origem_investimento: origemInvestimento,
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -484,6 +513,17 @@ export default function Investments() { // Alterado para export default function
   const handleConfirmDelete = () => {
     if (investmentToDeleteId) {
       deleteInvestmentMutation.mutate(investmentToDeleteId);
+    }
+  };
+
+  const handleRescue = (investment: any) => {
+    setInvestmentToRescue(investment);
+    setIsConfirmRescueOpen(true);
+  };
+
+  const handleConfirmRescue = () => {
+    if (investmentToRescue) {
+      rescueInvestmentMutation.mutate(investmentToRescue.id);
     }
   };
 
@@ -539,6 +579,7 @@ export default function Investments() { // Alterado para export default function
       } = calcularRendimentoComCDI({
         valorInicial: inv.valor,
         dataInicio: inv.data,
+        dataFim: inv.data_resgate || null,
         indexadorMap: idxMap || new Map<string, number>(),
         indexador: inv.indexador ?? "CDI",
         percentualIndexador: pIndexador,
@@ -975,6 +1016,47 @@ export default function Investments() { // Alterado para export default function
                   </div>
                 )}
 
+                <div className="space-y-3 pt-[2px]">
+                  <Label className={cn("block text-[#283c5a]", isMobile && "text-xs")}>Origem do Investimento</Label>
+                  <div className="flex gap-4 items-center h-9 w-full" style={{ paddingLeft: "1px" }}>
+                    <div 
+                      className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
+                      onClick={() => setOrigemInvestimento("saldo_atual")}
+                    >
+                      <div className={cn(
+                        "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
+                        origemInvestimento === "saldo_atual" ? "border-[#0556C3]" : "border-slate-300"
+                      )}>
+                        {origemInvestimento === "saldo_atual" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
+                      </div>
+                      <span className={cn(
+                        "text-sm font-semibold select-none",
+                        origemInvestimento === "saldo_atual" ? "text-slate-700" : "text-slate-500"
+                      )}>
+                        Saldo Atual
+                      </span>
+                    </div>
+
+                    <div 
+                      className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
+                      onClick={() => setOrigemInvestimento("caixa_externo")}
+                    >
+                      <div className={cn(
+                        "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
+                        origemInvestimento === "caixa_externo" ? "border-[#0556C3]" : "border-slate-300"
+                      )}>
+                        {origemInvestimento === "caixa_externo" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
+                      </div>
+                      <span className={cn(
+                        "text-sm font-semibold select-none",
+                        origemInvestimento === "caixa_externo" ? "text-slate-700" : "text-slate-500"
+                      )}>
+                        Caixa Externo
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-[6px]">
                   <Label htmlFor="date" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data do Investimento</Label>
                   <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -1096,12 +1178,60 @@ export default function Investments() { // Alterado para export default function
                         <div
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
-                          className="relative group overflow-hidden transition-all duration-300 py-[14px] px-4 rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
+                          className="relative group overflow-hidden transition-all duration-300 py-[14px] pl-4 pr-[52px] rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
                           style={{
                             backgroundColor: "#FFFFFF"
                           }}
                         >
-                          {/* 1. Top: Icon, Name, Type and Actions */}
+                          {/* Coluna Vertical de Ações (Direita) */}
+                          <div className="absolute right-3 top-0 bottom-0 flex flex-col justify-center gap-3">
+                            <Button
+                              type="button"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
+                              className={cn(
+                                "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                isMobile 
+                                  ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                  : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                              )}
+                            >
+                              <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                            </Button>
+
+                            <Button
+                              type="button"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
+                              className={cn(
+                                "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                isMobile 
+                                  ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                  : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                              )}
+                            >
+                              <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
+                            </Button>
+
+                            {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                              <Button
+                                type="button"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
+                                className={cn(
+                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                  isMobile 
+                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                )}
+                                title="Resgatar Investimento"
+                              >
+                                <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
+                              </Button>
+                            )}
+                          </div>
+
+                          {/* 1. Top: Icon, Name, Type */}
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-[5px] -ml-1.5">
                               <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
@@ -1109,24 +1239,15 @@ export default function Investments() { // Alterado para export default function
                                 <h3 className="font-bold text-gray-800 leading-tight text-base">
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
+                                <p className="text-xs text-gray-600 font-bold flex items-center gap-2">
+                                  {typeLabel}
+                                  {investment.status === 'resgatado' && (
+                                    <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md border border-slate-200">
+                                      Resgatado {investment.data_resgate && `em ${format(new Date(investment.data_resgate), "dd/MM/yyyy")}`}
+                                    </span>
+                                  )}
+                                </p>
                               </div>
-                            </div>
-
-                            <div className="flex items-center">
-                              <Button
-                                type="button"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                className={cn(
-                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                  isMobile 
-                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                )}
-                              >
-                                <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-                              </Button>
                             </div>
                           </div>
 
@@ -1140,19 +1261,6 @@ export default function Investments() { // Alterado para export default function
                                     {formatCurrency(investment.valorLiquido)}
                                   </span>
                                 </div>
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                  className={cn(
-                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                    isMobile 
-                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                  )}
-                                >
-                                  <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-                                </Button>
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
@@ -1470,6 +1578,47 @@ export default function Investments() { // Alterado para export default function
                       </div>
                     )}
 
+                    <div className="space-y-3 pt-2">
+                      <Label className={cn("block", isMobile && "text-xs")}>Origem do Investimento</Label>
+                      <div className="flex gap-4 items-center h-10 w-full" style={{ paddingLeft: "1px" }}>
+                        <div 
+                          className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
+                          onClick={() => setOrigemInvestimento("saldo_atual")}
+                        >
+                          <div className={cn(
+                            "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
+                            origemInvestimento === "saldo_atual" ? "border-[#0556C3]" : "border-slate-300"
+                          )}>
+                            {origemInvestimento === "saldo_atual" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
+                          </div>
+                          <span className={cn(
+                            "text-sm font-semibold select-none",
+                            origemInvestimento === "saldo_atual" ? "text-slate-700" : "text-slate-500"
+                          )}>
+                            Saldo Atual
+                          </span>
+                        </div>
+
+                        <div 
+                          className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
+                          onClick={() => setOrigemInvestimento("caixa_externo")}
+                        >
+                          <div className={cn(
+                            "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
+                            origemInvestimento === "caixa_externo" ? "border-[#0556C3]" : "border-slate-300"
+                          )}>
+                            {origemInvestimento === "caixa_externo" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
+                          </div>
+                          <span className={cn(
+                            "text-sm font-semibold select-none",
+                            origemInvestimento === "caixa_externo" ? "text-slate-700" : "text-slate-500"
+                          )}>
+                            Caixa Externo
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
                       <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -1649,6 +1798,22 @@ export default function Investments() { // Alterado para export default function
                                 >
                                   <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
                                 </Button>
+                                {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                                  <Button
+                                    type="button"
+                                    size="icon"
+                                    onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
+                                    className={cn(
+                                      "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                      isMobile 
+                                        ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                        : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                    )}
+                                    title="Resgatar Investimento"
+                                  >
+                                    <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
+                                  </Button>
+                                )}
                                 <Button
                                   type="button"
                                   size="icon"
@@ -1743,8 +1908,8 @@ export default function Investments() { // Alterado para export default function
             "flex flex-row items-center justify-start gap-1 pb-0 mb-0 !space-y-0 transform translate-y-[5px]",
             isMobile ? "-mt-2 -mb-2" : "-mt-4 pl-1"
           )}>
-            <span className="text-2xl select-none">📝</span>
-            <DialogTitle className="text-xl font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Investimento</DialogTitle>
+            <span className="text-xl select-none">📋</span>
+            <DialogTitle className="text-lg font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Detalhes do Investimento</DialogTitle>
           </DialogHeader>
           {editingInvestment && (
             <EditInvestmentDialog
@@ -1758,6 +1923,10 @@ export default function Investments() { // Alterado para export default function
               incomeInvestmentSubcategories={incomeInvestmentSubcategories}
               indexadorMapCDI={indexadorMapCDI}
               indexadorMapIPCA={indexadorMapIPCA}
+              onRescueClick={() => {
+                handleCancelEdit();
+                handleRescue(editingInvestment);
+              }}
             />
           )}
         </DialogContent>
@@ -1812,6 +1981,81 @@ export default function Investments() { // Alterado para export default function
               style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
               {deleteInvestmentMutation.isPending ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isConfirmRescueOpen} onOpenChange={setIsConfirmRescueOpen}>
+        <AlertDialogContent
+          className={cn(
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-[#0556C3]">
+              💰 Resgatar Investimento
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center flex flex-col gap-2">
+              <span>Deseja resgatar este investimento?</span>
+              <span>O valor líquido será devolvido ao Caixa Atual.</span>
+              
+              {investmentToRescue && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mt-2 flex flex-col gap-1.5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-500 font-semibold">Valor Investido:</span>
+                    <span className="text-slate-700 font-black">{formatCurrency(investmentToRescue.valor)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-500 font-semibold">Rendimento Líquido:</span>
+                    <span className="text-green-600 font-black">+{formatCurrency(investmentToRescue.rendimentoLiquido)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-1.5 mb-0.5">
+                    <span className="text-slate-500 font-semibold">Imposto de Renda:</span>
+                    <span className="text-red-500 font-black">-{formatCurrency(investmentToRescue.imposto)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-slate-600 font-bold">Saldo Líquido Total:</span>
+                    <span className="text-[#0556C3] font-black text-lg leading-none">{formatCurrency(investmentToRescue.valorLiquido)}</span>
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter
+            className={cn(
+              "flex flex-col sm:flex-row justify-center gap-2 mt-4",
+              isMobile && "flex-row items-center justify-between mt-2"
+            )}
+          >
+            <AlertDialogCancel
+              disabled={rescueInvestmentMutation.isPending}
+              className={cn(
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
+              )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+              onClick={() => setIsConfirmRescueOpen(false)}
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmRescue}
+              disabled={rescueInvestmentMutation.isPending}
+              className={cn(
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
+              )}
+              style={{ "--cor-topo": "#3B82F6", "--cor-base": "#2563EB" } as any}
+            >
+              {rescueInvestmentMutation.isPending ? "Aguarde..." : "Resgatar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

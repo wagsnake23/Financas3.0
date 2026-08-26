@@ -32,6 +32,7 @@ interface EditInvestmentDialogProps {
   incomeInvestmentSubcategories: AppCategory[];
   indexadorMapCDI: Map<string, number>;
   indexadorMapIPCA: Map<string, number>;
+  onRescueClick?: () => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -48,6 +49,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   incomeInvestmentSubcategories,
   indexadorMapCDI,
   indexadorMapIPCA,
+  onRescueClick,
 }) => {
   const { data: profile } = useProfile(user?.id);
   const isExpired = profile?.isExpired;
@@ -257,202 +259,127 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn(isMobile ? "space-y-2.5" : "space-y-4", isMobile && "w-full mx-auto")}>
-      <DialogDescription className="sr-only">Formulário para editar os detalhes do investimento.</DialogDescription>
-      <div className={cn("space-y-0.5", isMobile ? "-mt-16" : "-mt-6")}>
-        <Label htmlFor="edit-investment-category" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Nome do Investimento</Label>
-        <Select
-          value={selectedInvestmentCategoryId}
-          onValueChange={(value) => {
-            setSelectedInvestmentCategoryId(value);
-            setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
-          }}
-          disabled={loading}
-        >
-          <SelectTrigger id="edit-investment-category" className={cn("rounded-xl w-full input-3d-premium font-bold", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" }))}>
-            <SelectValue placeholder="Selecione o investimento" />
-          </SelectTrigger>
-          <SelectContent className="rounded-2xl border-none shadow-xl">
-            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
-            {incomeInvestmentSubcategories.map(cat => (
-              <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                <span className="flex items-center gap-2">
-                  <span>{cat.icone}</span>
-                  <span>{cat.nome}</span>
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className={cn("grid grid-cols-2 gap-x-4 gap-y-4")}>
-        <div className="space-y-1">
-          <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Rentabilidade</Label>
-          <Select
-            value={tipoRentabilidade}
-            onValueChange={(v: "fixo" | "indexado") => {
-              setTipoRentabilidade(v);
-              if (v === "fixo") setPercentualIndexador(undefined);
-              else setProfitability(undefined);
-            }}
-          >
-            <SelectTrigger className={cn("rounded-xl input-3d-premium transition-all duration-200 font-bold", isMobile ? "h-9 text-sm" : "h-10")}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
-              <SelectItem value="fixo" className="text-sm">Fixa</SelectItem>
-              <SelectItem value="indexado" className="text-sm">Indexada</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {tipoRentabilidade === "indexado" ? (
-          <div className="space-y-1 animate-in fade-in slide-in-from-left-2 duration-300">
-            <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Indexador</Label>
-            <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-              <SelectTrigger className={cn("rounded-xl input-3d-premium transition-all duration-200 font-bold", isMobile ? "h-9 text-sm" : "h-10")}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="rounded-2xl border-none shadow-xl">
-                <SelectItem value="CDI" className="text-sm">CDI</SelectItem>
-                <SelectItem value="IPCA" className="text-sm">IPCA</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className={cn(isMobile ? "space-y-4" : "space-y-5", isMobile && "w-full mx-auto")}>
+      <DialogDescription className="sr-only">Resumo e detalhes do investimento.</DialogDescription>
+      <div className={cn("space-y-3", isMobile ? "-mt-16" : "-mt-6")}>
+        <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-[16px] shadow-sm flex flex-col overflow-hidden">
+          
+          {/* Header */}
+          <div className="flex items-center gap-3 px-4 py-3 bg-slate-50/50 border-b border-slate-100">
+            <div className="bg-white p-2 rounded-xl border border-[rgba(0,0,0,0.06)] shadow-sm">
+               <DynamicIcon name={allSubcategories.find(c => c.id === investmentToEdit.nome)?.icone || "MoreHorizontal"} className="h-6 w-6 text-[#0556C3]" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-base font-black text-slate-800 leading-tight">
+                {allSubcategories.find(c => c.id === investmentToEdit.nome)?.nome || investmentToEdit.nome}
+              </span>
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                {investmentTypes.find(t => t.value === type)?.label || type}
+              </span>
+            </div>
           </div>
-        ) : (
-          <div className="hidden sm:block" />
-        )}
 
-        <div className="space-y-0.5">
-          <Label htmlFor="edit-amount" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Valor Investido (R$)</Label>
-          <CurrencyBR
-            value={amount}
-            onChange={(v) => {
-              setAmount(v);
-              setValidationErrors(prev => ({ ...prev, amount: false }));
-            }}
-            disabled={loading}
-            className={cn("rounded-xl w-full input-3d-premium font-bold px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" }))}
-          />
-        </div>
-
-        {tipoRentabilidade === "fixo" ? (
-          <div className="space-y-0.5">
-            <Label htmlFor="edit-profitability" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Rentabilidade % a.a</Label>
-            <NumericInput
-              id="edit-profitability"
-              value={profitability}
-              onValueChange={(values) => {
-                setProfitability(values.floatValue);
-                setValidationErrors(prev => ({ ...prev, profitability: false }));
-              }}
-              required
-              disabled={loading}
-              decimalScale={4}
-              fixedDecimalScale={false}
-              maxLength={7}
-              placeholder="0,0000"
-              className={cn("rounded-xl w-full input-3d-premium text-sm font-bold placeholder:text-slate-300 placeholder:font-normal px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" }))}
-            />
-          </div>
-        ) : (
-          <div className="space-y-0.5">
-            <Label className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>% do {indexador || "Indexador"}</Label>
-            <NumericInput
-              value={percentualIndexador}
-              onValueChange={(v) => setPercentualIndexador(v.floatValue)}
-              placeholder="0,00"
-              className={cn("rounded-xl w-full input-3d-premium text-sm font-bold placeholder:text-slate-300 placeholder:font-normal px-3", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" }))}
-            />
-          </div>
-        )}
-
-        <div className="space-y-0.5 col-span-2">
-          <Label htmlFor="edit-date" className={cn(isMobile && "text-xs", "font-semibold text-slate-600")}>Data do Investimento</Label>
-          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-            <PopoverTrigger asChild>
-              <Button variant={"outline"} className={cn("w-full justify-start text-left font-bold rounded-xl input-3d-premium px-3", !date && "text-muted-foreground", isMobile ? "h-9 text-sm" : "h-10", getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" }))} disabled={loading}>
-                <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-              <Calendar mode="single" selected={date} onSelect={(sd) => { setDate(sd); setIsCalendarOpen(false); setValidationErrors(p => ({ ...p, date: false })); }} initialFocus locale={ptBR} showOutsideDays={false} className={cn(isMobile && "text-sm")} />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-0.5 col-span-2">
-          <div 
-            className="rounded-xl w-full h-[84px] px-3 flex items-center font-bold select-none text-[10px] opacity-95 leading-tight relative z-0"
-            style={{
-              background: "linear-gradient(135deg, #f4f8f6 0%, #edf4f0 60%, rgba(34, 197, 94, 0.10) 100%)",
-              backgroundBlendMode: "soft-light",
-              backdropFilter: "blur(6px)",
-              border: "1px solid rgba(0,0,0,0.06)",
-              outline: "1px solid rgba(34, 197, 94, 0.08)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -4px 10px rgba(0,0,0,0.03), inset 0 0 12px rgba(34, 197, 94, 0.12)"
-            }}
-          >
-            <div className="flex justify-between w-full items-center">
-              {/* Coluna Esquerda */}
-              <div className="flex flex-col gap-1.5 justify-center h-full text-left">
-                <div className="flex flex-col">
-                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rentabilidade Líquida</span>
-                  <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
-                </div>
-                <div className="flex flex-col pt-1 border-t border-blue-200/30">
-                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rendimento Líquido</span>
-                  <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
-                </div>
+          {/* List Items */}
+          <div className="flex flex-col p-4 gap-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                 <DynamicIcon name="DollarSign" className="h-[18px] w-[18px] text-slate-500" />
+                <span className="text-[13px] font-semibold text-slate-500">Valor Aplicado</span>
               </div>
+              <span className="text-sm font-black text-slate-800">{formatCurrency(amount || 0)}</span>
+            </div>
 
-              {/* Coluna Direita */}
-              <div className="flex flex-col gap-1.5 items-end h-full justify-center text-right">
-                <div className="flex flex-col items-end">
-                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Imposto de Renda</span>
-                  {metrics.tipoTributacao === "isento" ? (
-                    <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
-                  ) : (
-                    <span className="text-red-500 text-sm uppercase font-bold tracking-wider">
-                      {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-col items-end pt-1 border-t border-blue-200/30">
-                  <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Saldo Líquido Total</span>
-                  <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
-                </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                 <DynamicIcon name="TrendingUp" className="h-[18px] w-[18px] text-slate-500" />
+                <span className="text-[13px] font-semibold text-slate-500">Rentabilidade</span>
+              </div>
+              <span className="text-sm font-bold text-slate-700">{tipoRentabilidade === "fixo" ? "Fixa" : "Indexada"}</span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                 <DynamicIcon name="BarChart3" className="h-[18px] w-[18px] text-slate-500" />
+                <span className="text-[13px] font-semibold text-slate-500">Indexador</span>
+              </div>
+              <span className="text-sm font-bold text-slate-700">
+                {tipoRentabilidade === "fixo" 
+                  ? `${Number(profitability || 0).toFixed(2)}% a.a.` 
+                  : percentualIndexador 
+                    ? (indexador === "IPCA" ? `${indexador} + ${percentualIndexador}%` : `${percentualIndexador}% ${indexador}`)
+                    : (indexador || "")}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                 <DynamicIcon name="Calendar" className="h-[18px] w-[18px] text-slate-500" />
+                <span className="text-[13px] font-semibold text-slate-500">Data da Aplicação</span>
+              </div>
+              <span className="text-sm font-bold text-slate-700">
+                {date ? format(date, "dd/MM/yyyy", { locale: ptBR }) : ""}
+              </span>
+            </div>
+          </div>
+
+          {/* Divisor Visual */}
+          <div className="h-[1px] bg-slate-100 mx-4" />
+
+          {/* Resumo Financeiro (Sem Container/Fundo Verde) */}
+          <div className="px-4 pb-4 pt-3 flex justify-between w-full items-center select-none text-[10px] leading-tight opacity-95">
+            {/* Coluna Esquerda */}
+            <div className="flex flex-col gap-1.5 justify-center h-full text-left">
+              <div className="flex flex-col">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rentabilidade Líquida</span>
+                <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
+              </div>
+              <div className="flex flex-col pt-1 border-t border-slate-100">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Rendimento Líquido</span>
+                <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
+              </div>
+            </div>
+
+            {/* Coluna Direita */}
+            <div className="flex flex-col gap-1.5 items-end h-full justify-center text-right">
+              <div className="flex flex-col items-end">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Imposto de Renda</span>
+                {metrics.tipoTributacao === "isento" ? (
+                  <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
+                ) : (
+                  <span className="text-red-500 text-sm uppercase font-bold tracking-wider">
+                    {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-col items-end pt-1 border-t border-slate-100">
+                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-0.5 font-black">Saldo Líquido Total</span>
+                <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-      <div className={cn("grid grid-cols-2 gap-2 w-full pt-2")}>
+      <div className="flex flex-row items-center w-full pt-2 gap-2 mt-2">
+        {investmentToEdit.origem_investimento === 'saldo_atual' && investmentToEdit.status !== 'resgatado' && onRescueClick && (
+          <Button 
+            type="button" 
+            onClick={onRescueClick} 
+            className="flex-1 rounded-[14px] btn-3d font-black !text-[#9A3412] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[15px] sm:text-lg h-11 flex items-center justify-center gap-1.5 px-1"
+            style={{ "--cor-topo": "#FFEDD5", "--cor-base": "#FED7AA" } as any}
+          >
+            <span>💰</span> <span className="truncate">Resgatar</span>
+          </Button>
+        )}
         <Button 
           type="button" 
           onClick={onCancelEdit} 
-          className={cn(
-            "flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center",
-            isMobile && "h-11"
-          )}
+          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-base sm:text-lg h-11 flex items-center justify-center"
           style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
-          disabled={loading}
         >
-          Cancelar
-        </Button>
-        <Button
-          type={isExpired ? "button" : "submit"}
-          onClick={isExpired ? handleBlockedClick : undefined}
-          className={cn("flex-1 rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center", isMobile && "h-11", isExpired && "opacity-80")}
-          style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
-          disabled={!isExpired && loading}
-        >
-          {loading && !isExpired ? "Salvando..." : "Salvar"}
-          {isExpired && <span className="ml-1.5 text-base">🔒</span>}
+          Fechar
         </Button>
       </div>
-    </form>
+    </div>
   );
 };

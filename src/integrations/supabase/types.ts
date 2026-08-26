@@ -318,6 +318,9 @@ export type Database = {
           indexador: string | null
           percentual_indexador: number | null
           taxa_adicional: number | null
+          origem_investimento: "saldo_atual" | "caixa_externo" | null
+          status: "ativo" | "resgatado" | null
+          data_resgate: string | null
         }
         Insert: {
           created_at?: string
@@ -332,6 +335,9 @@ export type Database = {
           indexador?: string | null
           percentual_indexador?: number | null
           taxa_adicional?: number | null
+          origem_investimento?: "saldo_atual" | "caixa_externo" | null
+          status?: "ativo" | "resgatado" | null
+          data_resgate?: string | null
         }
         Update: {
           created_at?: string
@@ -346,6 +352,9 @@ export type Database = {
           indexador?: string | null
           percentual_indexador?: number | null
           taxa_adicional?: number | null
+          origem_investimento?: "saldo_atual" | "caixa_externo" | null
+          status?: "ativo" | "resgatado" | null
+          data_resgate?: string | null
         }
         Relationships: []
       }

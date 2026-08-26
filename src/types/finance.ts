@@ -48,6 +48,9 @@ export interface Investment {
   taxa_fixa?: number | null;
   indexador?: "CDI" | "IPCA" | null;
   percentual_indexador?: number | null;
+  origem_investimento?: "saldo_atual" | "caixa_externo" | null;
+  status?: "ativo" | "resgatado" | null;
+  data_resgate?: string | null;
   created_at?: string | null;
 }
 

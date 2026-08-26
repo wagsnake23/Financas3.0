@@ -165,6 +165,22 @@ export default function Home() {
         enabled: !!user,
     });
 
+    // Fetch investimentos to subtract from Caixa Atual
+    const { data: investimentos = [], isLoading: isLoadingInvestments } = useQuery<Tables<"investimentos">[]>({
+        queryKey: ["investments", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return [];
+            const { data, error } = await supabase
+                .from("investimentos")
+                .select("*")
+                .eq("user_id", user.id);
+            if (error) throw error;
+            return data;
+        },
+        enabled: !!user,
+    });
+
+
     // Fetch categories
     const { data: allSubcategories = [] } = useQuery({
         queryKey: ["categories", user?.id],
@@ -216,7 +232,12 @@ export default function Home() {
         const currentExpenses = calculateExpenses(currentMonthStr);
         const currentPaidExpenses = calculatePaidExpenses(currentMonthStr);
         
-        const currentCaixaAtual = currentReceivedIncome - currentPaidExpenses;
+        // Subtract Active Investments (originated from saldo_atual)
+        const currentActiveInvestments = investimentos
+            .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+            .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+
+        const currentCaixaAtual = currentReceivedIncome - currentPaidExpenses - currentActiveInvestments;
         
         const currentBalance = currentIncome - currentExpenses;
 
@@ -240,7 +261,7 @@ export default function Home() {
             expenseVar: calculateVar(currentExpenses, previousExpenses),
             balanceVar: calculateVar(currentBalance, previousBalance),
         };
-    }, [allRevenues, allExpenseInstallments, selectedMonth]);
+    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos]);
 
     // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
     const lastStableData = React.useRef({
