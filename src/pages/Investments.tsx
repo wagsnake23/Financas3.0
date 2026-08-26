@@ -165,7 +165,6 @@ export default function Investments() { // Alterado para export default function
   const [tipoRentabilidade, setTipoRentabilidade] = useState<"fixo" | "indexado">("indexado");
   const [indexador, setIndexador] = useState<"CDI" | "IPCA">("CDI");
   const [percentualIndexador, setPercentualIndexador] = useState<number | undefined>();
-  const [origemInvestimento, setOrigemInvestimento] = useState<"saldo_atual" | "caixa_externo">("saldo_atual");
   const [isConfirmRescueOpen, setIsConfirmRescueOpen] = useState(false);
   const [investmentToRescue, setInvestmentToRescue] = useState<any>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({}); // NOVO ESTADO
@@ -497,7 +496,7 @@ export default function Investments() { // Alterado para export default function
       taxa_fixa: tipoRentabilidade === "fixo" ? profitability : null,
       indexador: tipoRentabilidade === "indexado" ? indexador : null,
       percentual_indexador: tipoRentabilidade === "indexado" ? percentualIndexador : null,
-      origem_investimento: origemInvestimento,
+      origem_investimento: "saldo_atual",
     };
 
     addInvestmentMutation.mutate(newInvestmentData);
@@ -1016,46 +1015,6 @@ export default function Investments() { // Alterado para export default function
                   </div>
                 )}
 
-                <div className="space-y-3 pt-[2px]">
-                  <Label className={cn("block text-[#283c5a]", isMobile && "text-xs")}>Origem do Investimento</Label>
-                  <div className="flex gap-4 items-center h-9 w-full" style={{ paddingLeft: "1px" }}>
-                    <div 
-                      className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
-                      onClick={() => setOrigemInvestimento("saldo_atual")}
-                    >
-                      <div className={cn(
-                        "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
-                        origemInvestimento === "saldo_atual" ? "border-[#0556C3]" : "border-slate-300"
-                      )}>
-                        {origemInvestimento === "saldo_atual" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
-                      </div>
-                      <span className={cn(
-                        "text-sm font-semibold select-none",
-                        origemInvestimento === "saldo_atual" ? "text-slate-700" : "text-slate-500"
-                      )}>
-                        Saldo Atual
-                      </span>
-                    </div>
-
-                    <div 
-                      className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
-                      onClick={() => setOrigemInvestimento("caixa_externo")}
-                    >
-                      <div className={cn(
-                        "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
-                        origemInvestimento === "caixa_externo" ? "border-[#0556C3]" : "border-slate-300"
-                      )}>
-                        {origemInvestimento === "caixa_externo" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
-                      </div>
-                      <span className={cn(
-                        "text-sm font-semibold select-none",
-                        origemInvestimento === "caixa_externo" ? "text-slate-700" : "text-slate-500"
-                      )}>
-                        Caixa Externo
-                      </span>
-                    </div>
-                  </div>
-                </div>
 
                 <div className="space-y-[6px]">
                   <Label htmlFor="date" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data do Investimento</Label>
@@ -1526,9 +1485,9 @@ export default function Investments() { // Alterado para export default function
 
                     {/* Card de Simulação Desktop Compacto e Unificado */}
                     {(!isMobile || (amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined))) && (
-                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                      <div className="p-2 md:p-3 -my-1.5 md:my-0 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
                         {/* Linha 1: Header */}
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center justify-between mb-1 md:mb-2">
                           <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
                           
                           <Select 
@@ -1578,49 +1537,12 @@ export default function Investments() { // Alterado para export default function
                       </div>
                     )}
 
-                    <div className="space-y-3 pt-2">
-                      <Label className={cn("block", isMobile && "text-xs")}>Origem do Investimento</Label>
-                      <div className="flex gap-4 items-center h-10 w-full" style={{ paddingLeft: "1px" }}>
-                        <div 
-                          className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
-                          onClick={() => setOrigemInvestimento("saldo_atual")}
-                        >
-                          <div className={cn(
-                            "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
-                            origemInvestimento === "saldo_atual" ? "border-[#0556C3]" : "border-slate-300"
-                          )}>
-                            {origemInvestimento === "saldo_atual" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
-                          </div>
-                          <span className={cn(
-                            "text-sm font-semibold select-none",
-                            origemInvestimento === "saldo_atual" ? "text-slate-700" : "text-slate-500"
-                          )}>
-                            Saldo Atual
-                          </span>
-                        </div>
+                    {/* Grupo Compacto: Origem e Data */}
+                    <div className="flex flex-col w-full gap-0 md:gap-3">
 
-                        <div 
-                          className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80 flex-1"
-                          onClick={() => setOrigemInvestimento("caixa_externo")}
-                        >
-                          <div className={cn(
-                            "w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all",
-                            origemInvestimento === "caixa_externo" ? "border-[#0556C3]" : "border-slate-300"
-                          )}>
-                            {origemInvestimento === "caixa_externo" && <div className="w-[10px] h-[10px] rounded-full bg-[#0556C3]" />}
-                          </div>
-                          <span className={cn(
-                            "text-sm font-semibold select-none",
-                            origemInvestimento === "caixa_externo" ? "text-slate-700" : "text-slate-500"
-                          )}>
-                            Caixa Externo
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data do Investimento</Label>
+                      {/* Data do Investimento */}
+                      <div className="space-y-0.5 md:space-y-2 md:-mt-1">
+                        <Label htmlFor="date" className="block text-xs md:text-sm leading-none md:leading-normal">Data do Investimento</Label>
                       <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                         <PopoverTrigger asChild>
                           <Button
@@ -1655,6 +1577,7 @@ export default function Investments() { // Alterado para export default function
                         </PopoverContent>
                       </Popover>
                     </div>
+                  </div>
 
                     <Button
                       type={isExpired ? "button" : "submit"}
