@@ -1015,7 +1015,7 @@ export default function Home() {
             </main>
 
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>
-                <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-md">
+                <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-[2px] border-[#3b82f6]/15 shadow-2xl rounded-[21px] bg-white/95 backdrop-blur-md">
                     <DialogHeader className="p-6 pb-2 text-left relative flex flex-row items-center w-full">
                         <div className="flex items-center gap-3">
                             <div
@@ -1044,14 +1044,14 @@ export default function Home() {
                             </div>
                         </div>
                     </DialogHeader>
-                    <div className="p-6 pt-2 pb-8 h-auto flex flex-col justify-center min-h-[350px]">
+                    <div className="p-6 pt-2 pb-6 h-auto flex flex-col w-full">
                         {activeTrendModal === 'saldo' && (() => {
                             const year = format(selectedMonth, "yyyy");
                             const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
                             const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
                             const annualBal = annualRev - annualExp;
                             return (
-                            <div className="flex flex-col h-full w-full justify-between">
+                            <div className="flex flex-col w-full">
                                 <div className="flex justify-between items-start w-full mb-6">
                                     <div className="flex flex-col">
                                         <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
@@ -1076,7 +1076,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="h-[280px] w-full mb-6">
+                                <div className="h-[250px] w-full mb-6">
                                     <MonthlyBalanceBarChart revenues={allRevenues} expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
@@ -1098,7 +1098,7 @@ export default function Home() {
                             const year = format(selectedMonth, "yyyy");
                             const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
                             return (
-                            <div className="flex flex-col h-full w-full justify-between">
+                            <div className="flex flex-col w-full">
                                 <div className="flex justify-between items-start w-full mb-6">
                                     <div className="flex flex-col">
                                         <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
@@ -1123,7 +1123,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="h-[280px] w-full mb-6">
+                                <div className="h-[250px] w-full mb-6">
                                     <MonthlyExpenseBarChart expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
@@ -1145,7 +1145,7 @@ export default function Home() {
                             const year = format(selectedMonth, "yyyy");
                             const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
                             return (
-                            <div className="flex flex-col h-full w-full justify-between">
+                            <div className="flex flex-col w-full">
                                 <div className="flex justify-between items-start w-full mb-6">
                                     <div className="flex flex-col">
                                         <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
@@ -1170,7 +1170,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="h-[280px] w-full mb-6">
+                                <div className="h-[250px] w-full mb-6">
                                     <MonthlyRevenueBarChart revenues={allRevenues} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
