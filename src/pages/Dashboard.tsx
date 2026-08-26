@@ -516,7 +516,7 @@ export default function Dashboard() {
                   <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Dashboard Financeiro
                   </h1>
-                  <p className="text-sm font-bold text-slate-500 -mt-0.5 uppercase tracking-wider opacity-80">
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
                     Visão Geral das Finanças
                   </p>
                 </div>
