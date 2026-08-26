@@ -209,7 +209,7 @@ export const Navigation = () => {
           <div className="flex items-center justify-between h-full">
             {/* Logo / Título */}
             <div
-              className="flex items-center gap-2 md:gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 md:gap-2.5 cursor-pointer group shrink-0"
               onClick={() => navigate("/")}
             >
               <img
@@ -217,7 +217,7 @@ export const Navigation = () => {
                 alt="Logo"
                 className="h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:scale-110"
               />
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center whitespace-nowrap">
                 <span className={cn(
                   "tracking-[0.5px] font-bold",
                   isMobile ? "text-[18px] leading-none" : "text-base leading-tight",
@@ -255,9 +255,9 @@ export const Navigation = () => {
                       to={item.to}
                       end={item.to === "/"}
                       className={({ isActive }) => cn(
-                        "relative px-3 py-2 text-sm transition-colors duration-300 flex items-center gap-2",
+                        "relative px-2.5 py-2 text-sm transition-colors duration-300 flex items-center gap-1.5",
                         isActive
-                          ? "text-white font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-100 after:transition-all after:duration-300"
+                          ? "text-white font-semibold after:absolute after:bottom-0 after:left-2.5 after:right-2.5 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-100 after:transition-all after:duration-300"
                           : "text-blue-100/70 font-medium hover:text-white/95 hover:bg-transparent after:absolute after:bottom-0 after:left-1/2 after:right-1/2 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-0 after:transition-all after:duration-300"
                       )}
                     >
