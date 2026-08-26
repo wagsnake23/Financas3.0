@@ -219,8 +219,8 @@ export const Navigation = () => {
               />
               <div className="flex flex-col justify-center">
                 <span className={cn(
-                  "tracking-[0.5px]",
-                  isMobile ? "text-[20px] font-extrabold" : "text-base font-bold leading-tight",
+                  "tracking-[0.5px] font-bold",
+                  isMobile ? "text-[18px] leading-none" : "text-base leading-tight",
                   !isMobile && "transition-all duration-300",
                   isMobile ? mobileTextColor : "text-white/95",
                   isModalOpen && "shadow-none drop-shadow-none filter-none"
@@ -234,11 +234,13 @@ export const Navigation = () => {
                 }}>
                   Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
                 </span>
-                {!isMobile && (
-                  <span className="text-[11px] font-medium text-blue-100/70 leading-none mt-[1px] tracking-wide" style={{ fontFamily: "'Inter', sans-serif" }}>
-                    Controle Financeiro
-                  </span>
-                )}
+                <span className={cn(
+                  "leading-none",
+                  isMobile ? "text-[12px] font-normal opacity-[0.65] -mt-[2px]" : "text-[11px] mt-[1px] font-medium text-blue-100/70 tracking-wide",
+                  isMobile && mobileTextColor
+                )} style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Controle Financeiro
+                </span>
               </div>
             </div>
 
