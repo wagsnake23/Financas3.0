@@ -379,8 +379,8 @@ export default function Home() {
                             <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-slate-600")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#374151]")}>{userName}</span> {profile?.avatar || "😎"}
                         </h1>
                         <p 
-                            className={cn("font-medium leading-none", isMobile ? "text-[13px] -mt-[3px]" : "text-sm text-slate-500 mt-1")}
-                            style={{ color: isMobile ? "#D9E3F5" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
+                            className={cn("font-medium leading-none", isMobile ? "text-[12px] font-normal opacity-[0.85] -mt-[4px]" : "text-sm font-medium text-slate-500 mt-[1px] tracking-wide")}
+                            style={{ color: isMobile ? "#D9E3F5" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none", fontFamily: "'Inter', sans-serif" }}
                         >
                             {todayStr}
                         </p>
