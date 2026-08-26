@@ -209,30 +209,37 @@ export const Navigation = () => {
           <div className="flex items-center justify-between h-full">
             {/* Logo / Título */}
             <div
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 md:gap-2.5 cursor-pointer group"
               onClick={() => navigate("/")}
             >
               <img
                 src="/icons/logo.png"
                 alt="Logo"
-                className="h-8 w-8 transition-transform group-hover:scale-110"
+                className="h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:scale-110"
               />
-              <span className={cn(
-                "font-extrabold tracking-[0.5px]",
-                isMobile ? "text-[20px]" : "text-lg",
-                !isMobile && "transition-all duration-300",
-                isMobile ? mobileTextColor : "text-white",
-                isModalOpen && "shadow-none drop-shadow-none filter-none"
-              )}
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
-                textShadow: isMobile && isDarkPage
-                  ? "0 1px 1px rgba(0,0,0,0.12)"
-                  : undefined
-              }}>
-                Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
-              </span>
+              <div className="flex flex-col justify-center">
+                <span className={cn(
+                  "tracking-[0.5px]",
+                  isMobile ? "text-[20px] font-extrabold" : "text-base font-bold leading-tight",
+                  !isMobile && "transition-all duration-300",
+                  isMobile ? mobileTextColor : "text-white/95",
+                  isModalOpen && "shadow-none drop-shadow-none filter-none"
+                )}
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
+                  textShadow: isMobile && isDarkPage
+                    ? "0 1px 1px rgba(0,0,0,0.12)"
+                    : undefined
+                }}>
+                  Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
+                </span>
+                {!isMobile && (
+                  <span className="text-[11px] font-medium text-blue-100/70 leading-none mt-[1px] tracking-wide" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Controle Financeiro
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Área da direita */}
