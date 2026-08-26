@@ -505,6 +505,22 @@ body {
   /* luz interna suave */
 }
 
+/* Title icon badge variant — no external shadow, no dark bottom relief */
+.btn-3d-icon {
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow:
+    inset 0px 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+.btn-3d-icon:hover {
+  box-shadow:
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25) !important;
+}
+.btn-3d-icon:active {
+  box-shadow:
+    inset 0px 4px 8px rgba(0, 0, 0, 0.30),
+    inset 0px -2px 4px rgba(255, 255, 255, 0.15) !important;
+}
+
 /* 3D Input Style */
 .input-3d-premium {
   background: #F1F5F9 !important;

@@ -329,7 +329,7 @@ const Categories = () => {
               <div className="flex items-start gap-3">
                 <Button
                   variant="ghost"
-                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-1"
+                  className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-1"
                   style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                   onClick={() => navigate(-1)}
                 >

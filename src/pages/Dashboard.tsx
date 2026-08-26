@@ -507,10 +507,10 @@ export default function Dashboard() {
             <div>
               <div className="flex items-start gap-3">
                 <div
-                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-default h-auto w-auto mt-1"
+                  className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-1"
                   style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
                 >
-                  <span className="text-2xl select-none">📊</span>
+                  <span className="text-xl select-none">📊</span>
                 </div>
                 <div className="flex flex-col">
                   <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
