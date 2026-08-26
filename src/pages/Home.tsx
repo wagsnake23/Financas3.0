@@ -24,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import Loading from "@/components/Loading";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
+import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
+import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 
 const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
     const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
@@ -80,6 +84,7 @@ export default function Home() {
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
+    const [activeTrendModal, setActiveTrendModal] = useState<"saldo" | "despesas" | "receitas" | null>(null);
 
     // Fetch all revenues for memory-based filtering (needed for variations and 10-month graph)
     const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
@@ -766,7 +771,7 @@ export default function Home() {
                                 <div className="flex justify-between items-end w-full mt-4">
                                     <div className="flex items-center gap-2">
                                         <Button
-                                            onClick={() => navigate("/dashboard?filter=investments")}
+                                            onClick={() => setActiveTrendModal("saldo")}
                                             className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
                                             style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                         >
@@ -889,7 +894,7 @@ export default function Home() {
                                 <div className="flex items-end justify-between w-full mt-4">
                                     <div className="flex items-center gap-2">
                                         <Button
-                                            onClick={() => navigate("/dashboard?filter=revenues")}
+                                            onClick={() => setActiveTrendModal("receitas")}
                                             className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
                                             style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                         >
@@ -965,7 +970,7 @@ export default function Home() {
                                 <div className="flex items-end justify-between w-full mt-4">
                                     <div className="flex items-center gap-2">
                                         <Button
-                                            onClick={() => navigate("/dashboard?filter=expenses")}
+                                            onClick={() => setActiveTrendModal("despesas")}
                                             className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
                                             style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                                         >
@@ -1008,6 +1013,137 @@ export default function Home() {
                     </div>
                 )}
             </main>
+
+            <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>
+                <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-md">
+                    <DialogHeader className="p-6 pb-2 text-left">
+                        <DialogTitle className="text-xl font-bold tracking-tight" style={{ color: "#0B213F", fontFamily: "'Inter', sans-serif" }}>
+                            {activeTrendModal === 'saldo' && "Evolução do Saldo Mensal"}
+                            {activeTrendModal === 'despesas' && "Evolução das Despesas"}
+                            {activeTrendModal === 'receitas' && "Evolução das Receitas"}
+                        </DialogTitle>
+                        <DialogDescription className="text-slate-500 font-medium">
+                            {activeTrendModal === 'saldo' && "Acompanhe a evolução do saldo acumulado ao longo dos últimos meses."}
+                            {activeTrendModal === 'despesas' && "Visualização das despesas totais por período."}
+                            {activeTrendModal === 'receitas' && "Visualização das receitas totais por período."}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="p-6 pt-2 pb-8 h-auto flex flex-col justify-center min-h-[350px]">
+                        {activeTrendModal === 'saldo' && (() => {
+                            const year = format(selectedMonth, "yyyy");
+                            const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
+                            const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
+                            const annualBal = annualRev - annualExp;
+                            return (
+                            <div className="flex flex-col h-full w-full justify-between">
+                                <div className="flex justify-between items-start w-full mb-6">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Mensal</h2>
+                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentBalance < 0 ? "#b91c1c" : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <FormatCurrencyStyled value={dStats.currentBalance} prefixColor={dStats.currentBalance < 0 ? "#b91c1c" : (isCurrentMonth ? "#0556C3" : undefined)} />
+                                        </p>
+                                    </div>
+                                    <div className="shrink-0 flex items-start">
+                                        <div
+                                            className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                                            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                                        >
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                            <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                                {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
+                                            </span>
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="h-[280px] w-full mb-6">
+                                    <MonthlyBalanceBarChart revenues={allRevenues} expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                </div>
+                                <div className="flex justify-between items-end w-full">
+                                    <div className="flex flex-col items-start gap-0.5">
+                                        <div className={cn("flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none", dStats.balanceVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]")}>
+                                            {dStats.balanceVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.balanceVar).toFixed(1)}%
+                                        </div>
+                                        <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Saldo Anual</span>
+                                        <span className="text-sm font-bold text-slate-700">{formatCurrency(annualBal)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            );
+                        })()}
+                        {activeTrendModal === 'despesas' && (() => {
+                            const year = format(selectedMonth, "yyyy");
+                            const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
+                            return (
+                            <div className="flex flex-col h-full w-full justify-between">
+                                <div className="flex justify-between items-start w-full mb-6">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
+                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="h-[280px] w-full mb-6">
+                                    <MonthlyExpenseBarChart expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                </div>
+                                <div className="flex justify-between items-end w-full">
+                                    <div className="flex flex-col items-start gap-0.5">
+                                        <div className={cn("flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none", dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]")}>
+                                            {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                        </div>
+                                        <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Anual</span>
+                                        <span className="text-sm font-bold text-slate-700">{formatCurrency(annualExp)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            );
+                        })()}
+                        {activeTrendModal === 'receitas' && (() => {
+                            const year = format(selectedMonth, "yyyy");
+                            const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
+                            return (
+                            <div className="flex flex-col h-full w-full justify-between">
+                                <div className="flex justify-between items-start w-full mb-6">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
+                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="h-[280px] w-full mb-6">
+                                    <MonthlyRevenueBarChart revenues={allRevenues} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                </div>
+                                <div className="flex justify-between items-end w-full">
+                                    <div className="flex flex-col items-start gap-0.5">
+                                        <div className={cn("flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none", dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]")}>
+                                            {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                        </div>
+                                        <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Anual</span>
+                                        <span className="text-sm font-bold text-slate-700">{formatCurrency(annualRev)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            );
+                        })()}
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             <Footer
                 isMobile={isMobile}
                 className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 z-50 m-0 !bg-transparent" : "mt-8")}
