@@ -150,6 +150,7 @@ export const Navigation = () => {
   const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isDarkPage;
   const mobileTextColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]");
   const mobileIconColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]");
+  const mobileSubtitleColor = isDarkPage ? "text-white/65" : ((isModalOpen && !forceDarkText) ? "text-white/65" : "text-[#171717]");
 
   useEffect(() => {
     if (!isMobile) return;
@@ -236,8 +237,8 @@ export const Navigation = () => {
                 </span>
                 <span className={cn(
                   "leading-none",
-                  isMobile ? "text-[12px] font-normal opacity-[0.65] -mt-[2px]" : "text-[11px] mt-[1px] font-medium text-blue-100/70 tracking-wide",
-                  isMobile && mobileTextColor
+                  isMobile ? "text-[12px] font-normal -mt-[2px]" : "text-[11px] mt-[1px] font-medium text-blue-100/70 tracking-wide",
+                  isMobile && mobileSubtitleColor
                 )} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Controle Financeiro
                 </span>
