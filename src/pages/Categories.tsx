@@ -324,7 +324,7 @@ const Categories = () => {
       {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
-          <div className="container-app relative z-10 pt-[28px] md:pt-[52px] flex justify-between items-start">
+          <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
                 <Button

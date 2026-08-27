@@ -399,7 +399,7 @@ export default function Home() {
 
     return (
         <div
-            className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden global-bg")}
+            className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden global-bg", !isMobile && "pt-[72px]")}
         >
             {isMobile && (
                 <div
@@ -416,17 +416,17 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[6px] bg-transparent justify-between" : "pt-[72px] md:pt-24 flex justify-between items-start"
+                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[6px] bg-transparent justify-between" : "pt-[72px] md:pt-[42px] flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-bold leading-none text-white", isMobile ? "text-[17px] tracking-tight" : "text-2xl tracking-[0.5px]")}
+                            className={cn("font-bold leading-none text-white", isMobile ? "text-[17px] tracking-tight" : "text-2xl font-extrabold tracking-[0.5px] -mt-0.5")}
                             style={{ fontFamily: "'Inter', sans-serif", textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
                         >
-                            <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-slate-600")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#374151]")}>{userName}</span> {profile?.avatar || "😎"}
+                            <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-[#1e3a8a]")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#1e3a8a]")}>{userName}</span> {profile?.avatar || "👍"}
                         </h1>
                         <p 
-                            className={cn("font-medium leading-none", isMobile ? "text-[12px] font-normal opacity-[0.85] -mt-[4px]" : "text-sm font-medium text-slate-500 mt-[1px] tracking-wide")}
+                            className={cn("font-medium leading-none", isMobile ? "text-[12px] font-normal opacity-[0.85] -mt-[4px]" : "text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80")}
                             style={{ color: isMobile ? "#D9E3F5" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none", fontFamily: "'Inter', sans-serif" }}
                         >
                             {todayStr}
@@ -489,7 +489,7 @@ export default function Home() {
 
             <main className={cn(
                 "container-app relative z-20 flex-grow !bg-transparent !bg-none !backdrop-blur-none !shadow-none",
-                isMobile ? "-mt-32 pb-10" : "-mt-24 md:mt-2"
+                isMobile ? "-mt-32 pb-10" : "-mt-24 md:-mt-[84px] md:pb-8"
             )} style={{ background: 'transparent' }}>
 
                 {isMobile ? (
