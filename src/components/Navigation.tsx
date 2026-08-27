@@ -237,7 +237,7 @@ export const Navigation = () => {
                 </span>
                 <span className={cn(
                   "leading-none",
-                  isMobile ? "text-[12px] font-normal -mt-[2px]" : "text-[12px] -mt-[1px] font-medium text-blue-100/70 tracking-wide",
+                  isMobile ? "text-[12px] font-normal -mt-[2px]" : "text-[12px] -mt-[3px] font-medium text-blue-100/70 tracking-wide",
                   isMobile && mobileSubtitleColor
                 )} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Controle Financeiro
