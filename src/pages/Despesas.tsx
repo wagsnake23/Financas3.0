@@ -331,7 +331,7 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm card-despesas"
-                style={{ backgroundColor: "transparent" }}
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 {formContent}
               </Card>
