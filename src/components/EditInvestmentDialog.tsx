@@ -374,8 +374,8 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button 
           type="button" 
           onClick={onCancelEdit} 
-          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-base sm:text-lg h-11 flex items-center justify-center"
-          style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] transition-all active:scale-95 text-base sm:text-lg h-11 flex items-center justify-center !border-[1px] !border-[#A5B4FC]/40 shadow-[inset_0_2px_2px_rgba(255,255,255,0.8),inset_1.5px_0_1.5px_rgba(255,255,255,0.4),inset_-1.5px_0_1.5px_rgba(255,255,255,0.4),0_2px_4px_rgba(0,0,0,0.05)]"
+          style={{ "--cor-topo": "#C7D2FE", "--cor-base": "#A5B4FC" } as any}
         >
           Fechar
         </Button>

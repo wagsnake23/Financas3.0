@@ -1621,7 +1621,7 @@ export default function Investments() { // Alterado para export default function
                   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
                 }}
               >
-                <div className="flex items-center justify-between mb-6">
+                <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
                   <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
                   <ToggleGroup
                     type="single"
@@ -1651,7 +1651,7 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                <div className={cn("space-y-3.5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[480px]")}>
+                <div className={cn("overflow-y-auto no-scrollbar", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5 max-h-[480px]")}>
                   {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
@@ -1698,8 +1698,8 @@ export default function Investments() { // Alterado para export default function
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
                           className={cn(
-                            "relative group overflow-hidden transition-all duration-300 py-4 px-5 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
-                            isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
+                            "relative group overflow-hidden transition-all duration-300 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
+                            isMobile ? "pt-[12px] pb-[13px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
                           )}
                           style={{
                             backgroundColor: "#FFFFFF",
