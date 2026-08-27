@@ -81,7 +81,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
     <div className={cn(
       "card-cloud p-6 flex flex-col border border-slate-200",
       isMobile ? "px-3 py-5" : "h-full justify-between"
-    )} style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F9FCFA 100%)" }}>
+    )} style={{ background: !isMobile ? "#FFFFFF" : "linear-gradient(180deg, #FFFFFF 0%, #F9FCFA 100%)" }}>
       <div>
         <div className="flex items-center gap-2 mb-6">
           <div className="h-8 w-2 bg-[#1AA361] rounded-full" />

@@ -107,7 +107,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
 
       <Card 
         className={cn("p-6 lg:pb-4 animate-fade-in rounded-[24px] shadow-sm card-despesas flex flex-col", !isMobile && "h-full")}
-        style={{ backgroundColor: "transparent" }}
+        style={{ backgroundColor: !isMobile ? "#FFFFFF" : "transparent" }}
       >
         <div className="flex items-center gap-2 mb-6 shrink-0">
           <div className="h-8 w-1.5 bg-indigo-500 rounded-full" />
