@@ -207,18 +207,9 @@ export default function Profile() {
                   <span className="text-xl">👤</span>
                 </Button>
                 <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
-                      Meu Perfil
-                    </h1>
-                    <button
-                      onClick={handleUpdateApp}
-                      className="text-slate-400 hover:text-blue-500 transition-colors p-1 rounded-full hover:bg-slate-100 mt-[-2px]"
-                      title="Atualizar Aplicação"
-                    >
-                      <DynamicIcon name="RefreshCw" className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
+                    Meu Perfil
+                  </h1>
                   <p className="text-sm font-bold -mt-0.5 leading-none text-slate-500">
                     Gerencie suas informações e configurações da conta
                   </p>
@@ -226,13 +217,14 @@ export default function Profile() {
               </div>
             </div>
 
+
             <Button
-              onClick={() => navigate(-1)}
-              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90"
+              onClick={handleUpdateApp}
+              className="btn-3d h-9 w-9 p-0 rounded-xl flex items-center justify-center shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90"
               style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              title="Atualizar Aplicação"
             >
-              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1E6BCE]" strokeWidth={3} />
-              Voltar
+              <DynamicIcon name="RefreshCw" className="w-4 h-4 !text-[#1E6BCE]" strokeWidth={2.5} />
             </Button>
           </div>
         </div>
@@ -245,34 +237,34 @@ export default function Profile() {
         )}
       >
         {isMobile && (
-          <div className="mb-6 md:mb-8 flex gap-2 items-start">
-            <span className="text-[26px] leading-none pt-1">{profile.avatar || "😎"}</span>
-            <div>
-              <div className="flex items-center gap-2 mb-[2px] md:mb-[5px]">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight">
+          <div className="mb-6 md:mb-8 flex justify-between items-start w-full">
+            <div className="flex gap-2 items-start">
+              <span className="text-[26px] leading-none pt-1">{profile.avatar || "👽"}</span>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-[2px] md:mb-[5px]">
                   Meu Perfil
                 </h1>
-                <button
-                  onClick={handleUpdateApp}
-                  className="text-slate-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-slate-100"
-                  title="Atualizar Aplicação"
-                >
-                  <DynamicIcon name="RefreshCw" className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
+                <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações da conta.</p>
               </div>
-              <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações da conta.</p>
             </div>
+            <button
+              onClick={handleUpdateApp}
+              className="text-slate-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-slate-100 mt-1"
+              title="Atualizar Aplicação"
+            >
+              <DynamicIcon name="RefreshCw" className="w-5 h-5" />
+            </button>
           </div>
         )}
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
           {/* Card Esquerdo - Avatar e Infos Rápidas */}
           <div className={cn(
-            "w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] p-5 md:p-8 flex flex-col items-center relative overflow-hidden",
+            "w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] p-5 md:p-8 flex flex-col items-center relative overflow-hidden",
             subDisplay.decorType === "vitalicio" ? "border-[1px] border-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.1),_0_8px_30px_rgb(0,0,0,0.05)]" : "border border-slate-100/80"
           )}>
             {/* 1. Faixa Superior Temática */}
-            <div className={cn("absolute top-0 left-0 right-0 h-32 bg-gradient-to-b pointer-events-none z-0 rounded-t-[32px]", subDisplay.topGradient)}>
+            <div className={cn("absolute top-0 left-0 right-0 h-32 bg-gradient-to-b pointer-events-none z-0 rounded-t-[25px]", subDisplay.topGradient)}>
               {subDisplay.decorType === "vitalicio" && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_top,_rgba(245,158,11,0.15)_0%,_transparent_60%)]" />
               )}
@@ -359,7 +351,7 @@ export default function Profile() {
           </div>
 
           {/* Card Direito - Formulário */}
-          <div className="w-full md:w-[60%] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.5)] border border-slate-100 p-5 md:p-10">
+          <div className="w-full md:w-[60%] bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.5)] border border-slate-100 p-5 md:p-10">
             <ProfileAccountForm profile={profile} user={user!} />
           </div>
         </div>
