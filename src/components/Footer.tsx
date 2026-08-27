@@ -53,7 +53,7 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
             
             {/* LADO ESQUERDO */}
             <div className="flex items-center gap-2.5">
-              <img src="/icons/logo.png" alt="Logo" className="w-[42px] h-[42px] object-contain" />
+              <img src="/icons/logo.png" alt="Logo" className="w-[42px] h-[42px] object-contain transform -translate-y-[5px]" />
               <div className="flex flex-col justify-center">
                 <span 
                   className="font-bold text-[19px] tracking-[0.5px] leading-tight text-white/95"
@@ -64,7 +64,7 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
                 >
                   Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
                 </span>
-                <span className="text-blue-100/50 text-[12.5px] max-w-[400px] mt-1 leading-tight font-medium">
+                <span className="text-blue-100/50 text-[12.5px] max-w-[400px] mt-0 leading-tight font-normal">
                   Controle financeiro inteligente para gestão de receitas, despesas e investimentos
                 </span>
               </div>
