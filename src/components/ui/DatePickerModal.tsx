@@ -47,10 +47,14 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
             // Dias da semana (th)
             "[&_th:not(:first-child):not(:last-child)]:!text-slate-500 [&_th:not(:first-child):not(:last-child)]:!font-semibold",
             "[&_th:first-child]:!text-red-400/90 [&_th:last-child]:!text-red-400/90",
-            "[&_th]:border [&_th]:border-slate-200/50 [&_th]:rounded-[6px] [&_th]:bg-slate-100/70 [&_th]:h-9 [&_th]:w-[42px] [&_th]:flex [&_th]:items-center [&_th]:justify-center",
+            isMobile 
+              ? "[&_th]:border [&_th]:border-slate-200/50 [&_th]:rounded-[6px] [&_th]:bg-slate-100/70 [&_th]:h-9 [&_th]:w-[38px] [&_th]:flex [&_th]:items-center [&_th]:justify-center"
+              : "[&_th]:border [&_th]:border-slate-200/50 [&_th]:rounded-[6px] [&_th]:bg-slate-100/70 [&_th]:h-9 [&_th]:w-[42px] [&_th]:flex [&_th]:items-center [&_th]:justify-center",
             
             // Dias do mês (td > button) - Aplicando borda discreta em TODOS os dias
-            "[&_td]:w-[42px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/60 [&_td>button]:rounded-[8px] [&_td>button]:w-[42px]",
+            isMobile
+              ? "[&_td]:w-[38px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/60 [&_td>button]:rounded-[8px] [&_td>button]:w-[38px]"
+              : "[&_td]:w-[42px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/60 [&_td>button]:rounded-[8px] [&_td>button]:w-[42px]",
             
             // Data selecionada (alta prioridade)
             "[&_td>button[aria-selected='true']]:shadow-sm [&_td>button[aria-selected='true']]:!bg-[#1e3a8a] [&_td>button[aria-selected='true']]:font-bold [&_td>button[aria-selected='true']]:!border-[#1e3a8a] [&_td>button[aria-selected='true']]:!text-white",
