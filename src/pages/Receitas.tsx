@@ -370,13 +370,13 @@ export default function Receitas() {
               value="avulsa"
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
-                !isRecurring ? "!text-white font-bold" : "!text-[#1AA361]/80 font-medium",
-                isMobile && "h-9 py-0.5 text-sm"
-              )}
-              style={!isRecurring
-                ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
-                : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
-              }
+                  !isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
+                  isMobile && "h-9 py-0.5 text-sm"
+                )}
+                style={!isRecurring
+                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                  : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+                }
             >
               <DynamicIcon
                 name="Zap"
@@ -391,13 +391,13 @@ export default function Receitas() {
               value="recorrente"
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
-                isRecurring ? "!text-white font-bold" : "!text-[#1AA361]/80 font-medium",
-                isMobile && "h-9 py-0.5 text-sm"
-              )}
-              style={isRecurring
-                ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
-                : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
-              }
+                  isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
+                  isMobile && "h-9 py-0.5 text-sm"
+                )}
+                style={isRecurring
+                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                  : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
+                }
             >
               <DynamicIcon
                 name="Repeat"
@@ -426,7 +426,7 @@ export default function Receitas() {
               <SelectTrigger
                 className={cn(
                   "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
-                  isMobile ? "h-9 text-sm" : "h-10",
+                  isMobile ? "h-[38px] text-sm" : "h-10",
                   getBorderClass({
                     isInvalid: validationErrors.tipoReceitaId,
                     isValid: validationErrors.tipoReceitaId === false,
@@ -474,7 +474,7 @@ export default function Receitas() {
               onClick={() => setIsAddSubcategoryModalOpen(true)}
               className={cn(
                 "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-                isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
+                isMobile ? "h-[38px] w-[34px] text-sm" : "h-10 w-9 text-base"
               )}
               style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1 } as any}
             >
@@ -494,7 +494,7 @@ export default function Receitas() {
               setValidationErrors((prev) => ({ ...prev, valor: false }));
             }}
             className={cn(
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-[38px] text-sm" : "h-10",
               "w-full text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl",
               getBorderClass({
                 isInvalid: validationErrors.valor,
@@ -514,7 +514,7 @@ export default function Receitas() {
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
               "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
-              isMobile ? "h-9 text-sm" : "h-10",
+              isMobile ? "h-[38px] text-sm" : "h-10",
               !data && "text-muted-foreground",
               getBorderClass({
                 isInvalid: validationErrors.data,
@@ -548,8 +548,8 @@ export default function Receitas() {
             rows={2}
             maxLength={45}
             className={cn(
-              "input-3d-premium resize-none min-h-[56px] h-[56px] py-1.5 px-3",
-              isMobile && "text-sm",
+              "input-3d-premium resize-none py-1.5 px-3",
+              isMobile ? "min-h-[66px] h-[66px] text-sm" : "min-h-[56px] h-[56px]",
               getBorderClass({})
             )}
           />
@@ -669,7 +669,7 @@ export default function Receitas() {
                     <Button
                       variant="ghost"
                       className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                      style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                      style={{ background: "#1AA361", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                       onClick={() => navigate("/lancamentos?type=income")}
                     >
                       <DynamicIcon
@@ -679,7 +679,7 @@ export default function Receitas() {
                       />
                     </Button>
                     <div className="flex flex-col">
-                      <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#22c55e]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                      <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#1AA361]" style={{ fontFamily: "'Inter', sans-serif" }}>
                         Nova Receita
                       </h1>
                       <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
@@ -699,6 +699,9 @@ export default function Receitas() {
                 </div>
 
                 {oneOffFormContent}
+              </div>
+              <div style={{ marginTop: "-4px", marginBottom: "0px" }}>
+                <Footer isMobile={isMobile} user={user} />
               </div>
             </div>
           </div>
