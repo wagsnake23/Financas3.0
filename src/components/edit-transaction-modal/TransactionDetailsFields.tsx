@@ -276,17 +276,30 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         <DialogContent
           className={cn(
             "p-0 border-none shadow-2xl gap-0 overflow-hidden !rounded-[24px]",
-            isMobile ? "w-[95%] max-w-[340px]" : "max-w-[380px]"
+            isMobile ? "w-[95%] max-w-[340px]" : "w-[95%] max-w-[360px]"
           )}
           style={{ background: "#FFFFFF" }}
         >
-          <div className="flex items-center justify-between p-4 border-b border-slate-100">
+          <div className="flex items-center justify-between p-4 border-b border-slate-100 relative">
             <DialogTitle className="text-[#1e3a8a] text-lg font-black tracking-tight flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
               <DynamicIcon name="📅" className="h-[22px] w-[22px]" />
               Escolher Data
             </DialogTitle>
           </div>
-          <div className="p-2 flex justify-center bg-slate-50/50">
+
+          <div className={cn(
+            "flex justify-center bg-white p-2",
+            !isMobile && [
+              "[&_.rdp-caption_dropdowns_button]:font-bold [&_.rdp-caption_dropdowns_button]:text-[#1e3a8a]",
+              "[&_.rdp-nav_button]:w-9 [&_.rdp-nav_button]:h-9 [&_.rdp-nav_button]:shadow-sm [&_.rdp-nav_button]:hover:shadow-md [&_.rdp-nav_button_previous]:left-2 [&_.rdp-nav_button_next]:right-2",
+              "[&_th:not(:first-child):not(:last-child)]:!text-slate-400 [&_th:not(:first-child):not(:last-child)]:!font-semibold",
+              "[&_th:first-child]:!text-red-400/90 [&_th:last-child]:!text-red-400/90",
+              "[&_.rdp-day_selected]:shadow-sm [&_.rdp-day_selected]:!bg-[#1e3a8a] [&_.rdp-day_selected]:font-bold",
+              "[&_.rdp-day_sunday]:!text-red-400/90 [&_.rdp-day_sunday]:!bg-transparent",
+              "[&_.rdp-day_saturday]:!text-red-400/90 [&_.rdp-day_saturday]:!bg-transparent",
+              "[&_.rdp-day_selected]:!text-white"
+            ]
+          )}>
             <Calendar
               mode="single"
               selected={date}
