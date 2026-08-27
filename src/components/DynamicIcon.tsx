@@ -11,7 +11,8 @@ import {
   Book, Ticket, PartyPopper, Clapperboard, FerrisWheel, Tv, Palette, Shirt,
   Sparkles, Landmark, AlertTriangle, Banknote, LineChart, Bomb, Handshake,
   Users, Puzzle, Baby, Coins, Bitcoin, PiggyBank,
-  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen, Target, Trophy, BarChart3
+  Building2, Sandwich, Zap, Repeat, Clock, History, SquarePen, Target, Trophy, BarChart3,
+  RefreshCw
 } from 'lucide-react';
 import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
 
@@ -23,6 +24,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   Menu, Home, ScrollText, Eye, EyeOff, Plane, Coffee, Gift, Smartphone, HelpCircle,
   ChevronLeft, ChevronRight,
   CheckCircle, Circle, XCircle, CalendarOff,
+  RefreshCw,
   Building, House, Droplet, Lightbulb, Flame, Globe, Wrench, Sofa, Receipt, Fuel,
   Shield, ParkingSquare, Bus, Route, ShoppingCart, Croissant, Utensils,
   Package, Stethoscope, Pill, TestTube, Dumbbell, Brain, School, Laptop,

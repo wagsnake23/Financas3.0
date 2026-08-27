@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/Footer";
+import { toast } from "sonner";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -18,6 +19,28 @@ export default function Profile() {
   const navigate = useNavigate();
 
   const { data: profile, isLoading } = useProfile(user?.id);
+
+  const handleUpdateApp = async () => {
+    toast.loading("Atualizando aplicação...", { id: "update-app" });
+    try {
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(key => caches.delete(key)));
+      }
+      toast.success("Aplicação atualizada com sucesso", { id: "update-app" });
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      toast.error("Erro ao atualizar a aplicação", { id: "update-app" });
+    }
+  };
 
   if (isLoading || !profile) {
     return (
@@ -184,9 +207,18 @@ export default function Profile() {
                   <span className="text-xl">👤</span>
                 </Button>
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
-                    Meu Perfil
-                  </h1>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
+                      Meu Perfil
+                    </h1>
+                    <button
+                      onClick={handleUpdateApp}
+                      className="text-slate-400 hover:text-blue-500 transition-colors p-1 rounded-full hover:bg-slate-100 mt-[-2px]"
+                      title="Atualizar Aplicação"
+                    >
+                      <DynamicIcon name="RefreshCw" className="w-4 h-4" />
+                    </button>
+                  </div>
                   <p className="text-sm font-bold -mt-0.5 leading-none text-slate-500">
                     Gerencie suas informações e configurações da conta
                   </p>
@@ -216,9 +248,18 @@ export default function Profile() {
           <div className="mb-6 md:mb-8 flex gap-2 items-start">
             <span className="text-[26px] leading-none pt-1">{profile.avatar || "😎"}</span>
             <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-[2px] md:mb-[5px]">
-                Meu Perfil
-              </h1>
+              <div className="flex items-center gap-2 mb-[2px] md:mb-[5px]">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight">
+                  Meu Perfil
+                </h1>
+                <button
+                  onClick={handleUpdateApp}
+                  className="text-slate-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-slate-100"
+                  title="Atualizar Aplicação"
+                >
+                  <DynamicIcon name="RefreshCw" className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
+              </div>
               <p className="text-slate-500 font-medium text-sm md:text-base">Gerencie suas informações da conta.</p>
             </div>
           </div>

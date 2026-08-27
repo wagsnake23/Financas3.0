@@ -736,11 +736,6 @@ body {
 /* Scoped Mobile PWA Performance Optimization to prevent repaints and lag */
 @media (max-width: 767px) {
   html,
-  body {
-    overscroll-behavior-y: none;
-  }
-  
-  html,
   body,
   header,
   nav,
