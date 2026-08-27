@@ -1063,11 +1063,11 @@ export default function Investments() { // Alterado para export default function
                   type={isExpired ? "button" : "submit"}
                   onClick={isExpired ? handleBlockedClick : undefined}
                   className={cn(
-                    "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                    "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
                     isMobile ? "h-11 text-lg" : "h-11 text-lg",
                     isExpired && "opacity-80"
                   )}
-                  style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
+                  style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E", fontFamily: "'Inter', sans-serif" } as any}
                   disabled={!isExpired && loadingForm}
                 >
                   {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
@@ -1595,11 +1595,11 @@ export default function Investments() { // Alterado para export default function
                     type={isExpired ? "button" : "submit"}
                     onClick={isExpired ? handleBlockedClick : undefined}
                     className={cn(
-                      "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                      "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
                       isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]",
                       isExpired && "opacity-80"
                     )}
-                    style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
+                    style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E", fontFamily: "'Inter', sans-serif" } as any}
                     disabled={!isExpired && loadingForm}
                   >
                     {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
