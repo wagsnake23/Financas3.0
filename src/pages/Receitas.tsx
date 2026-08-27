@@ -39,6 +39,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { DatePickerModal } from "@/components/ui/DatePickerModal";
 import { Footer } from "@/components/Footer";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Plus } from "lucide-react";
@@ -507,50 +508,32 @@ export default function Receitas() {
           <Label htmlFor="data" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
             Data
           </Label>
-          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
-                  isMobile ? "h-9 text-sm" : "h-10",
-                  !data && "text-muted-foreground",
-                  getBorderClass({
-                    isInvalid: validationErrors.data,
-                    isValid: validationErrors.data === false,
-                  })
-                )}
-              >
-                <DynamicIcon
-                  name="📅"
-                  className={cn(
-                    "mr-2 h-4 w-4 text-gray-500",
-                    isMobile && "h-4 w-4"
-                  )}
-                />
-                {data ? (
-                  format(data, "PPP", { locale: ptBR })
-                ) : (
-                  <span>Selecione uma data</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-              <Calendar
-                mode="single"
-                selected={data}
-                onSelect={(date) => {
-                  setData(date);
-                  setIsCalendarOpen(false);
-                  setValidationErrors((prev) => ({ ...prev, data: false }));
-                }}
-                initialFocus
-                locale={ptBR}
-                showOutsideDays={false}
-                className={cn(isMobile && "text-sm")}
-              />
-            </PopoverContent>
-          </Popover>
+          <Button
+            type="button"
+            variant={"outline"}
+            onClick={() => setIsCalendarOpen(true)}
+            className={cn(
+              "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+              isMobile ? "h-9 text-sm" : "h-10",
+              !data && "text-muted-foreground",
+              getBorderClass({
+                isInvalid: validationErrors.data,
+                isValid: validationErrors.data === false,
+              })
+            )}
+          >
+            <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70" />
+            {data ? format(data, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+          </Button>
+          <DatePickerModal 
+            isOpen={isCalendarOpen}
+            setIsOpen={setIsCalendarOpen}
+            date={data}
+            onSelect={(date) => {
+              setData(date);
+              setValidationErrors((prev) => ({ ...prev, data: false }));
+            }}
+          />
         </div>
 
         <div>

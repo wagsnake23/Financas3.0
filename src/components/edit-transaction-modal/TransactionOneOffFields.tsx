@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, zonedTimeToUtcFallback } from "@/lib/utils"; // Importar zonedTimeToUtcFallback de utils
+import { DatePickerModal } from "@/components/ui/DatePickerModal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
@@ -218,36 +219,27 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("space-y-2", isMobile && "space-y-1")}>
         <Label htmlFor="date" className={cn(isMobile && "text-xs")}>Data</Label>
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal h-10 rounded-xl",
-                !date && "text-muted-foreground",
-                isMobile && "h-9 text-sm",
-                getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-              )}
-            >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
-              {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(selectedDate) => {
-                setDate(selectedDate);
-                setIsCalendarOpen(false);
-              }}
-              initialFocus
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-            />
-          </PopoverContent>
-        </Popover>
+          <Button
+            type="button"
+            variant={"outline"}
+            onClick={() => setIsCalendarOpen(true)}
+            className={cn(
+              "w-full justify-start text-left font-normal h-10 rounded-xl",
+              !date && "text-muted-foreground",
+              isMobile && "h-9 text-sm",
+              getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+            )}
+          >
+            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} /> {/* Ícone de emoji colorido */}
+            {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+          </Button>
+
+          <DatePickerModal 
+            isOpen={isCalendarOpen}
+            setIsOpen={setIsCalendarOpen}
+            date={date}
+            onSelect={setDate}
+          />
       </div>
 
       <div className={cn("space-y-2", isMobile && "space-y-1")}>

@@ -6,12 +6,8 @@ import { Calendar } from "@/components/ui/calendar";
 import DynamicIcon from "@/components/DynamicIcon"; // Importar DynamicIcon
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn, getBorderClass } from "@/lib/utils"; // Importar getBorderClass
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { cn, getBorderClass } from "@/lib/utils";
+import { DatePickerModal } from "@/components/ui/DatePickerModal";
 
 interface DateAndInstallmentFieldsProps {
   dataVencimento: Date | undefined;
@@ -47,38 +43,29 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
           </Label>
           
           <div className="relative w-full">
-            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
-                    !dataVencimento && "text-muted-foreground",
-                    "h-9 text-sm",
-                    getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
-                  )}
-                >
-                  <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
-                  {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-1">
-                <Calendar
-                  mode="single"
-                  selected={dataVencimento}
-                  onSelect={(date) => {
-                    setDataVencimento(date);
-                    setIsCalendarOpen(false);
-                    setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
-                  }}
-                  initialFocus
-                  locale={ptBR}
-                  showOutsideDays={false}
-                  className="text-sm"
-                />
-              </PopoverContent>
-            </Popover>
+            <Button
+              type="button"
+              variant={"outline"}
+              onClick={() => setIsCalendarOpen(true)}
+              className={cn(
+                "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
+                !dataVencimento && "text-muted-foreground",
+                "h-9 text-sm",
+                getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+              )}
+            >
+              <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
+              {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+            </Button>
+            <DatePickerModal 
+              isOpen={isCalendarOpen}
+              setIsOpen={setIsCalendarOpen}
+              date={dataVencimento}
+              onSelect={(date) => {
+                setDataVencimento(date);
+                setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
+              }}
+            />
           </div>
         </div>
       </div>
@@ -93,44 +80,28 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
         </Label>
         
         <div className="relative w-full">
-          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium h-10 !bg-white",
-                  !dataVencimento && "text-muted-foreground",
-                  getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
-                )}
-              >
-                <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
-                {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-              </Button>
-            </PopoverTrigger>
-            
-            <PopoverContent 
-              className={cn(
-                "w-auto p-0 rounded-[24px] border border-blue-100/50 bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] z-[100]"
-              )} 
-              align="center"
-              sideOffset={4}
-            >
-              <Calendar
-                mode="single"
-                selected={dataVencimento}
-                onSelect={(date) => {
-                  setDataVencimento(date);
-                  setIsCalendarOpen(false);
-                  setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
-                }}
-                initialFocus
-                locale={ptBR}
-                showOutsideDays={true}
-                className="p-3"
-              />
-            </PopoverContent>
-          </Popover>
+          <Button
+            type="button"
+            variant={"outline"}
+            onClick={() => setIsCalendarOpen(true)}
+            className={cn(
+              "w-full justify-start text-left font-normal h-11 rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
+              !dataVencimento && "text-muted-foreground",
+              getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
+            )}
+          >
+            <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-gray-500" />
+            {dataVencimento ? format(dataVencimento, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+          </Button>
+          <DatePickerModal 
+            isOpen={isCalendarOpen}
+            setIsOpen={setIsCalendarOpen}
+            date={dataVencimento}
+            onSelect={(date) => {
+              setDataVencimento(date);
+              setValidationErrors(prev => ({ ...prev, dataVencimento: false }));
+            }}
+          />
         </div>
       </div>
     </div>

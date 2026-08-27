@@ -19,6 +19,7 @@ import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DatePickerModal } from "@/components/ui/DatePickerModal";
 import CurrencyBR from "@/components/ui/currency-br";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -677,34 +678,26 @@ export default function Metas() {
       {/* Data Limite (Opcional) */}
       <div className="space-y-[6px]">
         <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data Limite (opcional)</Label>
-        <Popover open={calOpen} onOpenChange={setCalOpenFn}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              type="button"
-              className={cn(
-                "w-full justify-start text-left font-bold h-10 rounded-xl",
-                "input-3d-premium input-white px-3 transition-all duration-200",
-                !dLim && "text-gray-400",
-                isMobile && "h-9 text-sm"
-              )}
-            >
-              <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-              {dLim ? format(dLim, "PPP", { locale: ptBR }) : <span>Sem data limite</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-            <Calendar
-              mode="single"
-              selected={dLim}
-              onSelect={(d) => { setDLimFn(d); setCalOpenFn(false); }}
-              locale={ptBR}
-              showOutsideDays={false}
-              className={cn(isMobile && "text-sm")}
-              disabled={(date) => date < new Date()}
-            />
-          </PopoverContent>
-        </Popover>
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => setCalOpenFn(true)}
+          className={cn(
+            "w-full justify-start text-left font-bold h-10 rounded-xl",
+            "input-3d-premium input-white px-3 transition-all duration-200",
+            !dLim && "text-gray-400",
+            isMobile && "h-9 text-sm"
+          )}
+        >
+          <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70" />
+          {dLim ? format(dLim, "PPP", { locale: ptBR }) : <span>Sem data limite</span>}
+        </Button>
+        <DatePickerModal 
+          isOpen={calOpen}
+          setIsOpen={setCalOpenFn}
+          date={dLim}
+          onSelect={(d) => { setDLimFn(d); }}
+        />
         {dLim && (
           <Button type="button" variant="ghost" size="sm" className="text-xs text-destructive h-6 px-2" onClick={() => setDLimFn(undefined)}>
             Remover data limite

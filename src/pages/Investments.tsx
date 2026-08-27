@@ -24,6 +24,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"; // Importar Popover components
+import { DatePickerModal } from "@/components/ui/DatePickerModal";
 import CurrencyBR from "@/components/ui/currency-br"; // Importar CurrencyBR
 import { NumericInput } from "@/components/ui/numeric-input"; // Importar NumericInput
 import {
@@ -1024,39 +1025,31 @@ export default function Investments() { // Alterado para export default function
 
                 <div className="space-y-[6px]">
                   <Label htmlFor="date" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Data do Investimento</Label>
-                  <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-bold h-10 rounded-xl",
-                          "input-3d-premium input-white px-3 transition-all duration-200",
-                          !date && "text-gray-400",
-                          isMobile && "h-9 text-sm",
-                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
-                        )}
-                        disabled={loadingForm}
-                      >
-                        <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                        {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(selectedDate) => {
-                          setDate(selectedDate);
-                          setIsCalendarOpen(false);
-                          setValidationErrors(prev => ({ ...prev, date: false }));
-                        }}
-                        initialFocus
-                        locale={ptBR}
-                        showOutsideDays={false}
-                        className={cn(isMobile && "text-sm")}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Button
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => setIsCalendarOpen(true)}
+                    className={cn(
+                      "w-full justify-start text-left font-bold h-10 rounded-xl",
+                      "input-3d-premium input-white px-3 transition-all duration-200",
+                      !date && "text-gray-400",
+                      isMobile && "h-9 text-sm",
+                      getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
+                    )}
+                    disabled={loadingForm}
+                  >
+                    <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
+                    {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                  </Button>
+                  <DatePickerModal 
+                    isOpen={isCalendarOpen}
+                    setIsOpen={setIsCalendarOpen}
+                    date={date}
+                    onSelect={(selectedDate) => {
+                      setDate(selectedDate);
+                      setValidationErrors(prev => ({ ...prev, date: false }));
+                    }}
+                  />
                 </div>
 
                 <Button
@@ -1555,39 +1548,31 @@ export default function Investments() { // Alterado para export default function
                     {/* Data do Investimento */}
                     <div className="space-y-0.5 md:space-y-2 md:-mt-1">
                       <Label htmlFor="date" className="block text-xs md:text-sm leading-none md:leading-normal">Data do Investimento</Label>
-                      <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full justify-start text-left font-medium h-10 rounded-xl",
-                              "bg-white border-[#A5C2F9]/50 transition-all duration-200",
-                              !date && "text-muted-foreground",
-                              isMobile && "h-9 text-sm",
-                              getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
-                            )}
-                            disabled={loadingForm}
-                          >
-                            <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-primary", isMobile && "h-3.5 w-3.5")} />
-                            {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className={cn("w-auto p-0", isMobile && "p-1")}>
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={(selectedDate) => {
-                              setDate(selectedDate);
-                              setIsCalendarOpen(false);
-                              setValidationErrors(prev => ({ ...prev, date: false }));
-                            }}
-                            initialFocus
-                            locale={ptBR}
-                            showOutsideDays={false}
-                            className={cn(isMobile && "text-sm")}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        onClick={() => setIsCalendarOpen(true)}
+                        className={cn(
+                          "w-full justify-start text-left font-medium h-10 rounded-xl",
+                          "bg-white border-[#A5C2F9]/50 transition-all duration-200",
+                          !date && "text-muted-foreground",
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
+                        )}
+                        disabled={loadingForm}
+                      >
+                        <DynamicIcon name="📅" className={cn("mr-2 h-4 w-4 text-[#1e3a8a]/70", isMobile && "h-3.5 w-3.5")} />
+                        {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
+                      </Button>
+                      <DatePickerModal 
+                        isOpen={isCalendarOpen}
+                        setIsOpen={setIsCalendarOpen}
+                        date={date}
+                        onSelect={(selectedDate) => {
+                          setDate(selectedDate);
+                          setValidationErrors(prev => ({ ...prev, date: false }));
+                        }}
+                      />
                     </div>
                   </div>
 
