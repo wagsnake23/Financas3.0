@@ -32,7 +32,7 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
         }}
       >
         <div className="flex items-center justify-between p-4 border-b border-slate-100 relative">
-          <DialogTitle className="text-xl font-black tracking-[0.2px] m-0 leading-none text-left flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <DialogTitle className="text-xl font-extrabold tracking-[0.2px] m-0 leading-none text-left flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
             <DynamicIcon name="📅" className="h-[22px] w-[22px]" />
             Escolher Data
           </DialogTitle>
@@ -72,7 +72,7 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
               nav_button: "flex items-center justify-center h-9 w-9 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95 text-slate-600",
               nav_button_previous: "absolute left-0",
               nav_button_next: "absolute right-0",
-              caption_dropdowns: "flex justify-center gap-1 z-10 [&>button]:font-black [&>button]:text-xl [&>button]:tracking-[0.2px] [&>button]:text-slate-800",
+              caption_dropdowns: "flex justify-center gap-1 z-10 [&>button]:font-bold [&>button]:text-xl [&>button]:tracking-[0.2px] [&>button]:text-[#343A40]",
             }}
             modifiersClassNames={{
               sunday: "!text-red-400/90 !bg-transparent",
