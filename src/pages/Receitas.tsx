@@ -608,8 +608,8 @@ export default function Receitas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen global-bg md:pt-[72px]",
-        isMobile && "bg-slate-50"
+        "flex flex-col min-h-screen md:pt-[72px]",
+        isMobile ? "bg-white" : "global-bg"
       )}
     >
 

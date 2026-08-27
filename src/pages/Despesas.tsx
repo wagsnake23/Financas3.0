@@ -209,7 +209,8 @@ export default function Despesas() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen md:pt-[72px] global-bg"
+        "flex flex-col min-h-screen md:pt-[72px]",
+        isMobile ? "bg-white" : "global-bg"
       )}
     >
 
