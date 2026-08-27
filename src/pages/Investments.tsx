@@ -79,14 +79,14 @@ export default function Investments() { // Alterado para export default function
         .not("parent_id", "is", null) // Only subcategories
         .order("nome");
       if (error) throw error;
-      
+
       // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
       let cryptoAdded = false;
       let poupancaAdded = false;
       const normalizedData = (data as AppCategory[])
         .filter(cat => {
           const lowerNome = cat.nome.toLowerCase();
-          
+
           // Filtro de Aportes
           if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
 
@@ -115,9 +115,9 @@ export default function Investments() { // Alterado para export default function
             "aluguel de imóveis",
             "criptomoedas"
           ];
-          
+
           if (filterOut.some(term => lowerNome.includes(term))) return false;
-          
+
           return true;
         })
         .map(cat => {
@@ -236,7 +236,7 @@ export default function Investments() { // Alterado para export default function
   const metricsNewForm = useMemo(() => {
     const categoria = allSubcategories.find(c => c.id === selectedInvestmentCategoryId);
     const tipoTributacao = categoria?.tipo_tributacao ?? "regressivo";
-    
+
     // Calcular data fim baseada no período da simulação para projetar IR
     let endDate = new Date();
     if (simulationPeriod === "mensal") {
@@ -246,10 +246,10 @@ export default function Investments() { // Alterado para export default function
     }
 
     const aliquota = getAliquotaIR(date || new Date(), endDate, tipoTributacao);
-    
+
     // Usar IPCA anual real se o período for anual, caso contrário usar IPCA projetado (global)
     const ipcaUtilizado = simulationPeriod === "anual" ? ipcaAnualReal : ipca;
-    
+
     // Taxa Estimada Bruta (sem arredondamento)
     let taxaBrutaSimulacao = 0;
     if (tipoRentabilidade === "fixo") {
@@ -266,11 +266,11 @@ export default function Investments() { // Alterado para export default function
     // Taxa Diária Exata (Conforme solicitado para CDI ou Juros Compostos para os demais)
     let taxaDiaria = 0;
     if (indexador === "CDI" && tipoRentabilidade === "indexado") {
-      taxaDiaria = (cdiDiario || (Math.pow(1 + cdi/100, 1/252) - 1)) * (percentualIndexador || 100) / 100;
+      taxaDiaria = (cdiDiario || (Math.pow(1 + cdi / 100, 1 / 252) - 1)) * (percentualIndexador || 100) / 100;
     } else {
       taxaDiaria = Math.pow(1 + taxaBrutaSimulacao, 1 / 252) - 1;
     }
-    
+
     let rendimentoBrutoPeriodo = 0;
     if (simulationPeriod === "diário") {
       rendimentoBrutoPeriodo = (amount || 0) * taxaDiaria;
@@ -288,7 +288,7 @@ export default function Investments() { // Alterado para export default function
     // Indicadores dinâmicos para exibição no card
     let cdiLabel = "";
     let ipcaLabel = "";
-    
+
     if (simulationPeriod === "diário") {
       const cdiDia = (Math.pow(1 + (cdi / 100), 1 / 252) - 1) * 100;
       const ipcaDia = (Math.pow(1 + (ipcaUtilizado / 100), 1 / 365) - 1) * 100;
@@ -304,13 +304,13 @@ export default function Investments() { // Alterado para export default function
       ipcaLabel = `IPCA: ${ipcaAnualReal.toFixed(2).replace('.', ',')}% a.a.`;
     }
 
-    return { 
-      tipoTributacao, 
-      aliquota, 
-      rendimentoBrutoPeriodo, 
-      rendimentoLiquidoPeriodo, 
-      valorIR, 
-      taxaLiquida, 
+    return {
+      tipoTributacao,
+      aliquota,
+      rendimentoBrutoPeriodo,
+      rendimentoLiquidoPeriodo,
+      valorIR,
+      taxaLiquida,
       taxaBruta: taxaEstimada,
       cdiLabel,
       ipcaLabel
@@ -561,7 +561,7 @@ export default function Investments() { // Alterado para export default function
       });
 
       const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
-      
+
       console.log(`Debug Investimento ${inv.id}:`, {
         rawPercentual: inv.percentual_indexador,
         finalPercentual: pIndexador,
@@ -570,8 +570,8 @@ export default function Investments() { // Alterado para export default function
       });
 
       // Cálculo de rendimento usando dados históricos (Engine Real - Provisão Diária)
-      const { 
-        valorAtual: valorLiquido, 
+      const {
+        valorAtual: valorLiquido,
         ultimaTaxaAplicada: taxaDiaria,
         rendimentoBrutoAcumulado: rendimentoBruto,
         irProvisionado: valorIR
@@ -585,19 +585,19 @@ export default function Investments() { // Alterado para export default function
         taxaFixaAnual: inv.tipo_rentabilidade === "fixo" ? (inv.taxa_fixa || 0) : null,
         tipoTributacao
       });
-      
+
       const rendimentoLiquido = valorLiquido - inv.valor;
       const investDate = typeof inv.data === 'string' ? new Date(`${inv.data}T12:00:00`) : new Date(inv.data);
       const aliquotaIR = getAliquotaIR(investDate, new Date(), tipoTributacao);
-      
-      const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado" 
-          ? (inv.indexador === "CDI" 
-              ? (cdi * (inv.percentual_indexador || 100) / 100)
-              : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
-          : (inv.taxa_fixa || 0);
+
+      const rentabilidadeBruta = inv.tipo_rentabilidade === "indexado"
+        ? (inv.indexador === "CDI"
+          ? (cdi * (inv.percentual_indexador || 100) / 100)
+          : (((1 + (ipca / 100)) * (1 + ((inv.percentual_indexador || 0) / 100)) - 1) * 100))
+        : (inv.taxa_fixa || 0);
 
       const rentabilidadeLiquida = rentabilidadeBruta * (1 - aliquotaIR / 100);
-      
+
       const rendimentoBrutoDia = valorLiquido * taxaDiaria;
       const rendimentoHojeLiquido = rendimentoBrutoDia * (1 - aliquotaIR / 100);
 
@@ -730,15 +730,15 @@ export default function Investments() { // Alterado para export default function
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
         {!isMobile && (
           <>
-            
+
             {/* 🔹 NOVO: Card de resumo unificado (DESKTOP) */}
-            <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[rgba(0,0,0,0.06)]" style={{ 
-                background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                backgroundBlendMode: "soft-light",
-                backdropFilter: "blur(6px)",
-                outline: "1px solid rgba(0, 102, 255, 0.08)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-             }}>
+            <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[rgba(0,0,0,0.06)]" style={{
+              background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+              backgroundBlendMode: "soft-light",
+              backdropFilter: "blur(6px)",
+              outline: "1px solid rgba(0, 102, 255, 0.08)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+            }}>
               <div className="grid grid-cols-4 items-center gap-x-6 w-full">
                 {/* Total Investido */}
                 <div className="flex items-center justify-start gap-4">
@@ -973,9 +973,9 @@ export default function Investments() { // Alterado para export default function
                     {/* Linha 1: Header */}
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
-                      
-                      <Select 
-                        value={simulationPeriod} 
+
+                      <Select
+                        value={simulationPeriod}
                         onValueChange={(v: any) => setSimulationPeriod(v)}
                       >
                         <SelectTrigger className="w-auto h-7 bg-slate-200 border border-slate-300 border-b-2 rounded-xl px-2 text-[10px] text-slate-700 font-bold hover:bg-slate-300 transition-all active:translate-y-[1px] active:border-b-0 shadow-sm gap-1 focus:ring-0 focus:ring-offset-0">
@@ -1080,7 +1080,7 @@ export default function Investments() { // Alterado para export default function
             <div className="mt-2">
               <Card
                 className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                style={{ 
+                style={{
                   background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                   backgroundBlendMode: "soft-light",
                   backdropFilter: "blur(6px)",
@@ -1104,18 +1104,18 @@ export default function Investments() { // Alterado para export default function
                       boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
                     } as any}
                   >
-                      <ToggleGroupItem
-                        value="daily"
-                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                      >
-                        DIA
-                      </ToggleGroupItem>
-                      <ToggleGroupItem
-                        value="monthly"
-                        className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                      >
-                        MÊS
-                      </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="daily"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                    >
+                      DIA
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="monthly"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                    >
+                      MÊS
+                    </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
                 <div className="space-y-5 max-h-[480px] overflow-y-auto no-scrollbar">
@@ -1156,7 +1156,7 @@ export default function Investments() { // Alterado para export default function
                               onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
                               className={cn(
                                 "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                isMobile 
+                                isMobile
                                   ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
                                   : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                               )}
@@ -1170,7 +1170,7 @@ export default function Investments() { // Alterado para export default function
                               onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
                               className={cn(
                                 "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                isMobile 
+                                isMobile
                                   ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
                                   : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                               )}
@@ -1185,7 +1185,7 @@ export default function Investments() { // Alterado para export default function
                                 onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
                                 className={cn(
                                   "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                  isMobile 
+                                  isMobile
                                     ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
                                     : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
                                 )}
@@ -1237,21 +1237,21 @@ export default function Investments() { // Alterado para export default function
 
                             <div className="flex items-end justify-between">
                               {/* Profitability Badge */}
-                                  <div
-                                    className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                                  >
-                                    <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                                    <div className="flex flex-col items-start leading-[1.1]">
-                                      <span className="text-[13px] font-black">
-                                        {investment.rentabilidadeLiquida.toFixed(2)}%
-                                      </span>
-                                      <span className="text-[10px] opacity-70 font-bold">
-                                        {investment.tipo_rentabilidade === "indexado"
-                                          ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                          : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
-                                      </span>
-                                    </div>
-                                  </div>
+                              <div
+                                className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                              >
+                                <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                <div className="flex flex-col items-start leading-[1.1]">
+                                  <span className="text-[13px] font-black">
+                                    {investment.rentabilidadeLiquida.toFixed(2)}%
+                                  </span>
+                                  <span className="text-[10px] opacity-70 font-bold">
+                                    {investment.tipo_rentabilidade === "indexado"
+                                      ? `${investment.percentual_indexador}% ${investment.indexador}`
+                                      : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
+                                  </span>
+                                </div>
+                              </div>
 
                               {/* Data Bottom Right */}
                               <div className="text-[12px] text-slate-500 font-black uppercase tracking-widest">
@@ -1267,13 +1267,13 @@ export default function Investments() { // Alterado para export default function
               </Card>
 
               {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
-              <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{ 
-                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                  backgroundBlendMode: "soft-light",
-                  backdropFilter: "blur(6px)",
-                  outline: "1px solid rgba(0, 102, 255, 0.08)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-               }}>
+              <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{
+                background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+                backgroundBlendMode: "soft-light",
+                backdropFilter: "blur(6px)",
+                outline: "1px solid rgba(0, 102, 255, 0.08)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+              }}>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
@@ -1335,226 +1335,226 @@ export default function Investments() { // Alterado para export default function
           </div>
         ) : (
           <div className={cn("grid gap-8 lg:mb-[40px] lg:items-start", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
-              {/* Form */}
-              <div>
-                <Card
-                  className={cn(
-                    "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
-                    isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
-                  )}
-                  style={{
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                    backgroundBlendMode: "soft-light",
-                    backdropFilter: "blur(6px)",
-                    outline: "1px solid rgba(0, 102, 255, 0.08)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                  }}
-                >
-                  <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Form */}
+            <div>
+              <Card
+                className={cn(
+                  "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
+                  isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
+                )}
+                style={{
+                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+                  backgroundBlendMode: "soft-light",
+                  backdropFilter: "blur(6px)",
+                  outline: "1px solid rgba(0, 102, 255, 0.08)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                }}
+              >
+                <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
+                    <Select
+                      value={selectedInvestmentCategoryId}
+                      onValueChange={(value) => {
+                        setSelectedInvestmentCategoryId(value);
+                        setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+                      }}
+                      disabled={loadingForm}
+                    >
+                      <SelectTrigger id="investment-category" className={cn(
+                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                        isMobile && "h-9 text-sm",
+                        getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
+                      )}>
+                        <SelectValue placeholder="Selecione o investimento" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
+                        <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
+                        {incomeInvestmentSubcategories.length === 0 && (
+                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
+                        )}
+                        {incomeInvestmentSubcategories.length > 0 && (
+                          <>
+                            {incomeInvestmentSubcategories.map(cat => (
+                              <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
+                                <span className="flex items-center gap-2">
+                                  <DynamicIcon name={cat.icone} className="h-4 w-4" />
+                                  <span>{cat.nome}</span>
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+
+
+                  <div className={cn(
+                    "grid gap-4",
+                    tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
+                  )}>
                     <div className="space-y-2">
-                      <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
+                      <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
                       <Select
-                        value={selectedInvestmentCategoryId}
-                        onValueChange={(value) => {
-                          setSelectedInvestmentCategoryId(value);
-                          setValidationErrors(prev => ({ ...prev, selectedInvestmentCategoryId: false }));
+                        value={tipoRentabilidade}
+                        onValueChange={(v: "fixo" | "indexado") => {
+                          setTipoRentabilidade(v);
+                          if (v === "fixo") {
+                            setPercentualIndexador(undefined);
+                          } else {
+                            setProfitability(undefined);
+                          }
                         }}
-                        disabled={loadingForm}
                       >
-                        <SelectTrigger id="investment-category" className={cn(
-                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                          isMobile && "h-9 text-sm",
-                          getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
-                        )}>
-                          <SelectValue placeholder="Selecione o investimento" />
+                        <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                          <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-xl w-[var(--radix-select-trigger-width)]">
-                          <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Selecione o investimento</SelectItem>
-                          {incomeInvestmentSubcategories.length === 0 && (
-                            <SelectItem value={UNSELECTED_VALUE} disabled className={cn(isMobile && "text-sm")}>Nenhum investimento disponível</SelectItem>
-                          )}
-                          {incomeInvestmentSubcategories.length > 0 && (
-                            <>
-                              {incomeInvestmentSubcategories.map(cat => (
-                                <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
-                                  <span className="flex items-center gap-2">
-                                    <DynamicIcon name={cat.icone} className="h-4 w-4" />
-                                    <span>{cat.nome}</span>
-                                  </span>
-                                </SelectItem>
-                              ))}
-                            </>
-                          )}
+                        <SelectContent className="rounded-2xl border-none shadow-xl">
+                          <SelectItem value="fixo" className="text-sm">Fixa</SelectItem>
+                          <SelectItem value="indexado" className="text-sm">Indexada</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
-
-
-                    <div className={cn(
-                      "grid gap-4",
-                      tipoRentabilidade === "indexado" ? "grid-cols-2" : "grid-cols-1"
-                    )}>
-                      <div className="space-y-2">
-                        <Label className={cn(isMobile && "text-xs")}>Rentabilidade</Label>
-                        <Select
-                          value={tipoRentabilidade}
-                          onValueChange={(v: "fixo" | "indexado") => {
-                            setTipoRentabilidade(v);
-                            if (v === "fixo") {
-                              setPercentualIndexador(undefined);
-                            } else {
-                              setProfitability(undefined);
-                            }
-                          }}
-                        >
-                          <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                    {tipoRentabilidade === "indexado" && (
+                      <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
+                        <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
+                        <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
+                          <SelectTrigger className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="rounded-2xl border-none shadow-xl">
-                            <SelectItem value="fixo" className="text-sm">Fixa</SelectItem>
-                            <SelectItem value="indexado" className="text-sm">Indexada</SelectItem>
+                            <SelectItem value="CDI">CDI</SelectItem>
+                            <SelectItem value="IPCA">IPCA</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {tipoRentabilidade === "fixo" ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
+                        <NumericInput
+                          id="profitability"
+                          value={profitability === undefined ? "" : profitability}
+                          onValueChange={(values) => {
+                            setProfitability(values.floatValue);
+                            setValidationErrors(prev => ({ ...prev, profitability: false }));
+                          }}
+                          placeholder="0,0000"
+                          required
+                          disabled={loadingForm}
+                          decimalScale={4}
+                          fixedDecimalScale={false}
+                          maxLength={7}
+                          className={cn(
+                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
+                            isMobile && "h-9 text-sm",
+                            getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
+                          )}
+                        />
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
+                        <NumericInput
+                          value={percentualIndexador === undefined ? "" : percentualIndexador}
+                          onValueChange={(v) => {
+                            setPercentualIndexador(v.floatValue);
+                            setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
+                          }}
+                          placeholder="0,00"
+                          className={cn(
+                            "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                            getBorderClass({ isInvalid: validationErrors.percentualIndexador })
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
+                      <CurrencyBR
+                        value={amount}
+                        onChange={(v) => {
+                          setAmount(v);
+                          setValidationErrors(prev => ({ ...prev, amount: false }));
+                        }}
+                        disabled={loadingForm}
+                        className={cn(
+                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                          isMobile && "h-9 text-sm",
+                          getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Card de Simulação Desktop Compacto e Unificado */}
+                  {(!isMobile || (amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined))) && (
+                    <div className="p-2 md:p-3 -my-1.5 md:my-0 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
+                      {/* Linha 1: Header */}
+                      <div className="flex items-center justify-between mb-1 md:mb-2">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
+
+                        <Select
+                          value={simulationPeriod}
+                          onValueChange={(v: any) => setSimulationPeriod(v)}
+                        >
+                          <SelectTrigger className="w-auto h-7 bg-slate-200 border border-slate-300 border-b-2 rounded-xl px-2 text-[10px] text-slate-700 font-bold hover:bg-slate-300 transition-all active:translate-y-[1px] active:border-b-0 shadow-sm gap-1 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
+                            <SelectItem value="diário" className="text-xs">Diário</SelectItem>
+                            <SelectItem value="mensal" className="text-xs">Mensal</SelectItem>
+                            <SelectItem value="anual" className="text-xs">Anual</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
-                      {tipoRentabilidade === "indexado" && (
-                        <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
-                          <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
-                          <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                            <SelectTrigger className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="rounded-2xl border-none shadow-xl">
-                              <SelectItem value="CDI">CDI</SelectItem>
-                              <SelectItem value="IPCA">IPCA</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      {tipoRentabilidade === "fixo" ? (
-                        <div className="space-y-2">
-                          <Label htmlFor="profitability" className={cn(isMobile && "text-xs")}>Rentabilidade % a.a</Label>
-                          <NumericInput
-                            id="profitability"
-                            value={profitability === undefined ? "" : profitability}
-                            onValueChange={(values) => {
-                              setProfitability(values.floatValue);
-                              setValidationErrors(prev => ({ ...prev, profitability: false }));
-                            }}
-                            placeholder="0,0000"
-                            required
-                            disabled={loadingForm}
-                            decimalScale={4}
-                            fixedDecimalScale={false}
-                            maxLength={7}
-                            className={cn(
-                              "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
-                              isMobile && "h-9 text-sm",
-                              getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
-                            )}
-                          />
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <Label className={cn(isMobile && "text-xs")}>{indexador === "IPCA" ? "IPCA + %" : `% do ${indexador || "Indexador"}`}</Label>
-                          <NumericInput
-                            value={percentualIndexador === undefined ? "" : percentualIndexador}
-                            onValueChange={(v) => {
-                              setPercentualIndexador(v.floatValue);
-                              setValidationErrors(prev => ({ ...prev, percentualIndexador: false }));
-                            }}
-                            placeholder="0,00"
-                            className={cn(
-                              "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
-                              getBorderClass({ isInvalid: validationErrors.percentualIndexador })
-                            )}
-                          />
-                        </div>
-                      )}
-
-                      <div className="space-y-2">
-                        <Label htmlFor="amount" className={cn(isMobile && "text-xs")}>Valor Investido (R$)</Label>
-                        <CurrencyBR
-                          value={amount}
-                          onChange={(v) => {
-                            setAmount(v);
-                            setValidationErrors(prev => ({ ...prev, amount: false }));
-                          }}
-                          disabled={loadingForm}
-                          className={cn(
-                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
-                            isMobile && "h-9 text-sm",
-                            getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
-                          )}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Card de Simulação Desktop Compacto e Unificado */}
-                    {(!isMobile || (amount !== undefined && (tipoRentabilidade === "fixo" ? profitability !== undefined : percentualIndexador !== undefined))) && (
-                      <div className="p-2 md:p-3 -my-1.5 md:my-0 rounded-xl bg-slate-50 border border-slate-200 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-sm">
-                        {/* Linha 1: Header */}
-                        <div className="flex items-center justify-between mb-1 md:mb-2">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#0556C3]">SIMULAÇÃO</span>
-                          
-                          <Select 
-                            value={simulationPeriod} 
-                            onValueChange={(v: any) => setSimulationPeriod(v)}
-                          >
-                            <SelectTrigger className="w-auto h-7 bg-slate-200 border border-slate-300 border-b-2 rounded-xl px-2 text-[10px] text-slate-700 font-bold hover:bg-slate-300 transition-all active:translate-y-[1px] active:border-b-0 shadow-sm gap-1 focus:ring-0 focus:ring-offset-0">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="rounded-xl border-slate-200 shadow-lg min-w-[100px]">
-                              <SelectItem value="diário" className="text-xs">Diário</SelectItem>
-                              <SelectItem value="mensal" className="text-xs">Mensal</SelectItem>
-                              <SelectItem value="anual" className="text-xs">Anual</SelectItem>
-                            </SelectContent>
-                          </Select>
+                      <div className="grid grid-cols-2">
+                        {/* Coluna Esquerda: IR */}
+                        <div className="flex flex-col gap-y-0.5 opacity-90">
+                          <span className="text-[11px] text-slate-500 uppercase font-medium">IR (IMPOSTO)</span>
+                          <span className="text-sm font-semibold text-red-400 leading-tight">
+                            - {formatCurrency(metricsNewForm.valorIR)}
+                          </span>
+                          <span className="text-[11px] font-medium text-red-400/90 leading-tight">
+                            {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                            {metricsNewForm.ipcaLabel}
+                          </span>
                         </div>
 
-                        <div className="grid grid-cols-2">
-                          {/* Coluna Esquerda: IR */}
-                          <div className="flex flex-col gap-y-0.5 opacity-90">
-                            <span className="text-[11px] text-slate-500 uppercase font-medium">IR (IMPOSTO)</span>
-                            <span className="text-sm font-semibold text-red-400 leading-tight">
-                              - {formatCurrency(metricsNewForm.valorIR)}
-                            </span>
-                            <span className="text-[11px] font-medium text-red-400/90 leading-tight">
-                              {metricsNewForm.tipoTributacao === "isento" ? "0%" : `${metricsNewForm.aliquota.toString().replace('.', ',')}%`}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-medium mt-0.5">
-                              {metricsNewForm.ipcaLabel}
-                            </span>
-                          </div>
-
-                          {/* Coluna Direita: Rentabilidade */}
-                          <div className="flex flex-col gap-y-0.5 items-end text-right border-l border-slate-200/50 pl-4">
-                            <span className="text-[11px] text-slate-500 uppercase font-medium whitespace-nowrap">RENT. LÍQUIDA</span>
-                            <span className="text-sm font-semibold text-green-600 leading-tight">
-                              {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
-                            </span>
-                            <span className="text-[11px] font-medium text-green-500/80 leading-tight">
-                              {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-medium mt-0.5">
-                              {metricsNewForm.cdiLabel}
-                            </span>
-                          </div>
+                        {/* Coluna Direita: Rentabilidade */}
+                        <div className="flex flex-col gap-y-0.5 items-end text-right border-l border-slate-200/50 pl-4">
+                          <span className="text-[11px] text-slate-500 uppercase font-medium whitespace-nowrap">RENT. LÍQUIDA</span>
+                          <span className="text-sm font-semibold text-green-600 leading-tight">
+                            {formatCurrency(metricsNewForm.rendimentoLiquidoPeriodo)}
+                          </span>
+                          <span className="text-[11px] font-medium text-green-500/80 leading-tight">
+                            {metricsNewForm.taxaLiquida.toFixed(2).replace('.', ',')}% a.a.
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                            {metricsNewForm.cdiLabel}
+                          </span>
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    {/* Grupo Compacto: Origem e Data */}
-                    <div className="flex flex-col w-full gap-0 md:gap-3">
+                  {/* Grupo Compacto: Origem e Data */}
+                  <div className="flex flex-col w-full gap-0 md:gap-3">
 
-                      {/* Data do Investimento */}
-                      <div className="space-y-0.5 md:space-y-2 md:-mt-1">
-                        <Label htmlFor="date" className="block text-xs md:text-sm leading-none md:leading-normal">Data do Investimento</Label>
+                    {/* Data do Investimento */}
+                    <div className="space-y-0.5 md:space-y-2 md:-mt-1">
+                      <Label htmlFor="date" className="block text-xs md:text-sm leading-none md:leading-normal">Data do Investimento</Label>
                       <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                         <PopoverTrigger asChild>
                           <Button
@@ -1591,234 +1591,234 @@ export default function Investments() { // Alterado para export default function
                     </div>
                   </div>
 
-                    <Button
-                      type={isExpired ? "button" : "submit"}
-                      onClick={isExpired ? handleBlockedClick : undefined}
-                      className={cn(
-                        "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
-                        isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]",
-                        isExpired && "opacity-80"
-                      )}
-                      style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
-                      disabled={!isExpired && loadingForm}
+                  <Button
+                    type={isExpired ? "button" : "submit"}
+                    onClick={isExpired ? handleBlockedClick : undefined}
+                    className={cn(
+                      "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                      isMobile ? "h-11 text-lg" : "h-[46px] text-lg mt-[14px]",
+                      isExpired && "opacity-80"
+                    )}
+                    style={{ "--cor-topo": "#0556C3", "--cor-base": "#04469E" } as any}
+                    disabled={!isExpired && loadingForm}
+                  >
+                    {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
+                    {isExpired && <span className="ml-1.5 text-base">🔒</span>}
+                  </Button>
+                </form>
+              </Card>
+            </div>
+
+            {/* Investments List */}
+            <div>
+              <Card
+                className={cn("p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
+                style={{
+                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
+                  backgroundBlendMode: "soft-light",
+                  backdropFilter: "blur(6px)",
+                  outline: "1px solid rgba(0, 102, 255, 0.08)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
+                }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
+                  <ToggleGroup
+                    type="single"
+                    value={yieldViewMode}
+                    onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
+                    className={cn(
+                      "btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default",
+                      isMobile && "-mt-1"
+                    )}
+                    style={{
+                      "--cor-topo": "#E6F0FF",
+                      "--cor-base": "#DCEBFF",
+                      boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
+                    } as any}
+                  >
+                    <ToggleGroupItem
+                      value="daily"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                     >
-                      {loadingForm && !isExpired ? "Adicionando..." : "Adicionar Investimento"}
-                      {isExpired && <span className="ml-1.5 text-base">🔒</span>}
-                    </Button>
-                  </form>
-                </Card>
-              </div>
-
-              {/* Investments List */}
-              <div>
-                <Card
-                  className={cn("p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                  style={{ 
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                    backgroundBlendMode: "soft-light",
-                    backdropFilter: "blur(6px)",
-                    outline: "1px solid rgba(0, 102, 255, 0.08)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
-                    <ToggleGroup
-                      type="single"
-                      value={yieldViewMode}
-                      onValueChange={(v) => v && setYieldViewMode(v as "daily" | "monthly")}
-                      className={cn(
-                        "btn-3d flex items-center justify-between p-1 rounded-2xl transition-all h-9 w-[135px] border border-blue-200 shadow-none cursor-default",
-                        isMobile && "-mt-1"
-                      )}
-                      style={{
-                        "--cor-topo": "#E6F0FF",
-                        "--cor-base": "#DCEBFF",
-                        boxShadow: "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
-                      } as any}
+                      DIA
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="monthly"
+                      className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
                     >
-                        <ToggleGroupItem
-                          value="daily"
-                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                      MÊS
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+                <div className={cn("space-y-3.5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[480px]")}>
+                  {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
+                    <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
+                      Nenhum investimento cadastrado ainda.
+                    </p>
+                  ) : (
+                    calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
+                      const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
+                      const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
+                      let investmentNameDisplay = investmentCategory?.nome || investment.nome;
+                      const lowerDisplay = investmentNameDisplay.toLowerCase();
+
+                      // Consolidação visual para Criptomoedas na lista
+                      if (lowerDisplay.includes("criptomoedas") ||
+                        lowerDisplay.includes("crypto") ||
+                        lowerDisplay.includes("bitcoin")) {
+                        investmentNameDisplay = "Criptomoedas";
+                      }
+
+                      // Consolidação visual para Ações na lista
+                      if (lowerDisplay.includes("ações") || lowerDisplay.includes("acoes")) {
+                        if (lowerDisplay.includes("dividendos") || lowerDisplay.includes("venda")) {
+                          investmentNameDisplay = "Ações";
+                        }
+                      }
+
+                      // Consolidação visual para Poupança na lista
+                      if (lowerDisplay.includes("poupança") || lowerDisplay.includes("poupanca")) {
+                        investmentNameDisplay = "Poupança";
+                      }
+
+                      const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
+
+                      // Yield calculation based on virtual current balance
+                      const dailyYield = investment.rendimentoHojeVirtual;
+                      const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
+                      const monthlyYield = investment.valorAtualVirtual * monthlyRate;
+
+                      const [year, month, day] = investment.data.split('-').map(Number);
+                      const dateObj = new Date(year, month - 1, day);
+                      const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
+
+                      return (
+                        <div
+                          key={investment.id}
+                          onClick={() => { if (isMobile) handleEditClick(investment); }}
+                          className={cn(
+                            "relative group overflow-hidden transition-all duration-300 py-4 px-5 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
+                            isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
+                          )}
+                          style={{
+                            backgroundColor: "#FFFFFF",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)"
+                          }}
                         >
-                          DIA
-                        </ToggleGroupItem>
-                        <ToggleGroupItem
-                          value="monthly"
-                          className="rounded-xl flex-1 text-[12px] font-black h-7 transition-all data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
-                        >
-                          MÊS
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                  </div>
-                  <div className={cn("space-y-3.5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[480px]")}>
-                    {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
-                      <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
-                        Nenhum investimento cadastrado ainda.
-                      </p>
-                    ) : (
-                      calculatedInvestments.filter(i => i.status !== 'resgatado').map((investment) => {
-                        const typeLabel = investmentTypes.find(t => t.value === investment.tipo)?.label || investment.tipo;
-                        const investmentCategory = allSubcategories.find(cat => cat.id === investment.nome);
-                        let investmentNameDisplay = investmentCategory?.nome || investment.nome;
-                        const lowerDisplay = investmentNameDisplay.toLowerCase();
-                        
-                        // Consolidação visual para Criptomoedas na lista
-                        if (lowerDisplay.includes("criptomoedas") || 
-                            lowerDisplay.includes("crypto") || 
-                            lowerDisplay.includes("bitcoin")) {
-                          investmentNameDisplay = "Criptomoedas";
-                        }
-                        
-                        // Consolidação visual para Ações na lista
-                        if (lowerDisplay.includes("ações") || lowerDisplay.includes("acoes")) {
-                          if (lowerDisplay.includes("dividendos") || lowerDisplay.includes("venda")) {
-                            investmentNameDisplay = "Ações";
-                          }
-                        }
-                        
-                        // Consolidação visual para Poupança na lista
-                        if (lowerDisplay.includes("poupança") || lowerDisplay.includes("poupanca")) {
-                          investmentNameDisplay = "Poupança";
-                        }
-                        
-                        const investmentIcon = investmentCategory?.icone || "MoreHorizontal";
-
-                        // Yield calculation based on virtual current balance
-                        const dailyYield = investment.rendimentoHojeVirtual;
-                        const monthlyRate = Math.pow(1 + investment.taxaDiaria, 21) - 1;
-                        const monthlyYield = investment.valorAtualVirtual * monthlyRate;
-
-                        const [year, month, day] = investment.data.split('-').map(Number);
-                        const dateObj = new Date(year, month - 1, day);
-                        const formattedDate = format(dateObj, "dd MMM yyyy", { locale: ptBR });
-
-                        return (
-                          <div
-                            key={investment.id}
-                            onClick={() => { if (isMobile) handleEditClick(investment); }}
-                            className={cn(
-                              "relative group overflow-hidden transition-all duration-300 py-4 px-5 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
-                              isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
-                            )}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              border: "1px solid rgba(0,0,0,0.08)",
-                              boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)"
-                            }}
-                          >
-                            {/* 1. Top: Icon, Name, Type and Actions */}
-                            <div className={cn("flex items-start justify-between mb-3.5", isMobile && "mb-3")}>
-                              <div className="flex items-start gap-1.5 -ml-1">
-                                <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80 mt-1" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
-                                <div className="flex flex-col">
-                                  <h3 className={cn("font-bold text-gray-800 leading-none mb-1.5", isMobile ? "text-base" : "text-[1.05rem]")}>
-                                    {investmentNameDisplay}
-                                  </h3>
-                                  <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
-                                </div>
-                              </div>
-
-                              <div className="flex gap-1.5">
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                  className={cn(
-                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                    isMobile 
-                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                  )}
-                                >
-                                  <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-                                </Button>
-                                {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
-                                  <Button
-                                    type="button"
-                                    size="icon"
-                                    onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
-                                    className={cn(
-                                      "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                      isMobile 
-                                        ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                        : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                    )}
-                                    title="Resgatar Investimento"
-                                  >
-                                    <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
-                                  </Button>
-                                )}
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                  className={cn(
-                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                    isMobile 
-                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                  )}
-                                >
-                                  <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-                                </Button>
+                          {/* 1. Top: Icon, Name, Type and Actions */}
+                          <div className={cn("flex items-start justify-between mb-3.5", isMobile && "mb-3")}>
+                            <div className="flex items-start gap-1.5 -ml-1">
+                              <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80 mt-1" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className="flex flex-col">
+                                <h3 className={cn("font-bold text-gray-800 leading-none mb-1.5", isMobile ? "text-base" : "text-[1.05rem]")}>
+                                  {investmentNameDisplay}
+                                </h3>
+                                <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
                               </div>
                             </div>
 
-                            {/* 2. Main Value and Yield */}
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                              <div className="space-y-[7px]">
-                                <div className="flex flex-col">
-                                  <span className="text-[9px] text-slate-500 font-black uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
-                                  <span className={cn(
-                                    "font-bold tracking-tight text-[#0556C3]",
-                                    isMobile ? "text-[1.4rem]" : "text-[1.4rem]"
-                                  )}>
-                                    {formatCurrency(investment.valorLiquido)}
-                                  </span>
-                                </div>
+                            <div className="flex gap-1.5">
+                              <Button
+                                type="button"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
+                                className={cn(
+                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                  isMobile
+                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                )}
+                              >
+                                <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                              </Button>
+                              {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
+                                  className={cn(
+                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                    isMobile
+                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                  )}
+                                  title="Resgatar Investimento"
+                                >
+                                  <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
+                                </Button>
+                              )}
+                              <Button
+                                type="button"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
+                                className={cn(
+                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                                  isMobile
+                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                )}
+                              >
+                                <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
+                              </Button>
+                            </div>
+                          </div>
 
-                                {/* Rendimento Diário / Mensal */}
-                                <div className="flex items-center gap-1 text-[12px] font-bold text-success/90 w-fit ml-0.5">
-                                  <span className="text-[13px]">🔥</span>
-                                  <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
+                          {/* 2. Main Value and Yield */}
+                          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div className="space-y-[7px]">
+                              <div className="flex flex-col">
+                                <span className="text-[9px] text-slate-500 font-black uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
+                                <span className={cn(
+                                  "font-bold tracking-tight text-[#0556C3]",
+                                  isMobile ? "text-[1.4rem]" : "text-[1.4rem]"
+                                )}>
+                                  {formatCurrency(investment.valorLiquido)}
+                                </span>
+                              </div>
+
+                              {/* Rendimento Diário / Mensal */}
+                              <div className="flex items-center gap-1 text-[12px] font-bold text-success/90 w-fit ml-0.5">
+                                <span className="text-[13px]">🔥</span>
+                                <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col items-end gap-1.5">
+                              {/* Profitability Badge */}
+                              <div
+                                className="inline-flex items-center gap-1 text-[#1E40AF] px-3 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                              >
+                                <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                <div className="flex flex-col items-start leading-none">
+                                  <span className="text-[12px] font-black">
+                                    {investment.rentabilidadeLiquida.toFixed(2)}%
+                                  </span>
+                                  <span className="text-[9px] opacity-70 font-bold mt-0.5">
+                                    {investment.tipo_rentabilidade === "indexado"
+                                      ? `${investment.percentual_indexador}% ${investment.indexador}`
+                                      : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
+                                  </span>
                                 </div>
                               </div>
 
-                              <div className="flex flex-col items-end gap-1.5">
-                                {/* Profitability Badge */}
-                                  <div
-                                    className="inline-flex items-center gap-1 text-[#1E40AF] px-3 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                                  >
-                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                    <div className="flex flex-col items-start leading-none">
-                                      <span className="text-[12px] font-black">
-                                        {investment.rentabilidadeLiquida.toFixed(2)}%
-                                      </span>
-                                      <span className="text-[9px] opacity-70 font-bold mt-0.5">
-                                        {investment.tipo_rentabilidade === "indexado"
-                                          ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                          : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                {/* Data Bottom Right */}
-                                <div className="text-[11px] sm:text-[12px] text-slate-400 font-black uppercase tracking-widest mt-1">
-                                  {formattedDate}
-                                </div>
+                              {/* Data Bottom Right */}
+                              <div className="text-[11px] sm:text-[12px] text-slate-400 font-black uppercase tracking-widest mt-1">
+                                {formattedDate}
                               </div>
                             </div>
                           </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </Card>
-
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
-              </div>
-          )
+              </Card>
+
+            </div>
+          </div>
+        )
         }
       </main>
 
@@ -1826,7 +1826,7 @@ export default function Investments() { // Alterado para export default function
 
       {/* Edit Investment Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent 
+        <DialogContent
           className={cn(
             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[22px]",
             "shadow-none border-none"
@@ -1941,7 +1941,7 @@ export default function Investments() { // Alterado para export default function
             <AlertDialogDescription className="text-center flex flex-col gap-2">
               <span>Deseja resgatar este investimento?</span>
               <span>O valor líquido será devolvido ao Caixa Atual.</span>
-              
+
               {investmentToRescue && (
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left mt-2 flex flex-col gap-1.5 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
                   <div className="flex justify-between items-center text-xs">

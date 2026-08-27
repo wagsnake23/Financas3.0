@@ -780,11 +780,11 @@ export default function Metas() {
                   type={isExpired ? "button" : "submit"}
                   onClick={isExpired ? handleBlockedClick : undefined}
                   className={cn(
-                    "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                    "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
                     "h-11 text-lg",
                     isExpired && "opacity-80"
                   )}
-                  style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C" } as any}
+                  style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
                   disabled={!isExpired && loadingForm}
                 >
                   {loadingForm && !isExpired ? "Criando..." : "Criar Meta"}
@@ -894,10 +894,10 @@ export default function Metas() {
                       type={isExpired ? "button" : "submit"}
                       onClick={isExpired ? handleBlockedClick : undefined}
                       className={cn(
-                        "w-full rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center h-11",
+                        "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center h-11",
                         isExpired && "opacity-80"
                       )}
-                      style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C" } as any}
+                      style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
                       disabled={!isExpired && loadingForm}
                     >
                       {loadingForm && !isExpired ? "Criando..." : "Criar Meta"}
