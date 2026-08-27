@@ -1322,12 +1322,12 @@ export default function Investments() { // Alterado para export default function
             </div>
           </div>
         ) : (
-          <div className={cn("grid gap-8 lg:mb-[40px]", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
+          <div className={cn("grid gap-8 lg:mb-[40px] lg:items-start", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
               {/* Form */}
               <div>
                 <Card
                   className={cn(
-                    "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full",
+                    "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
                     isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                   )}
                   style={{
@@ -1600,7 +1600,7 @@ export default function Investments() { // Alterado para export default function
               {/* Investments List */}
               <div>
                 <Card
-                  className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
+                  className={cn("p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
                   style={{ 
                     background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                     backgroundBlendMode: "soft-light",
@@ -1639,7 +1639,7 @@ export default function Investments() { // Alterado para export default function
                         </ToggleGroupItem>
                     </ToggleGroup>
                   </div>
-                  <div className={cn("space-y-5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[560px]")}>
+                  <div className={cn("space-y-3.5 overflow-y-auto no-scrollbar", isMobile ? "max-h-[480px]" : "max-h-[480px]")}>
                     {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                         Nenhum investimento cadastrado ainda.
@@ -1686,8 +1686,8 @@ export default function Investments() { // Alterado para export default function
                             key={investment.id}
                             onClick={() => { if (isMobile) handleEditClick(investment); }}
                             className={cn(
-                              "relative group overflow-hidden transition-all duration-300 py-[18px] px-5 rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.06)] shadow-sm",
-                              isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-[18px] px-5"
+                              "relative group overflow-hidden transition-all duration-300 py-4 px-5 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
+                              isMobile ? "py-[14px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
                             )}
                             style={{
                               backgroundColor: "#FFFFFF",
@@ -1696,18 +1696,18 @@ export default function Investments() { // Alterado para export default function
                             }}
                           >
                             {/* 1. Top: Icon, Name, Type and Actions */}
-                            <div className={cn("flex items-start justify-between mb-4", isMobile && "mb-3")}>
-                              <div className="flex items-start gap-[5px] -ml-1.5">
-                                <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                            <div className={cn("flex items-start justify-between mb-3.5", isMobile && "mb-3")}>
+                              <div className="flex items-start gap-1.5 -ml-1">
+                                <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80 mt-1" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                                 <div className="flex flex-col">
-                                  <h3 className={cn("font-bold text-gray-800 leading-tight", isMobile ? "text-base" : "text-[1.1rem]")}>
+                                  <h3 className={cn("font-bold text-gray-800 leading-none mb-1.5", isMobile ? "text-base" : "text-[1.05rem]")}>
                                     {investmentNameDisplay}
                                   </h3>
-                                  <p className="text-xs text-gray-600 font-bold">{typeLabel}</p>
+                                  <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
                                 </div>
                               </div>
 
-                              <div className="flex gap-2">
+                              <div className="flex gap-1.5">
                                 <Button
                                   type="button"
                                   size="icon"
@@ -1755,35 +1755,35 @@ export default function Investments() { // Alterado para export default function
 
                             {/* 2. Main Value and Yield */}
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                              <div className="space-y-1">
+                              <div className="space-y-[7px]">
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
+                                  <span className="text-[9px] text-slate-500 font-black uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
                                   <span className={cn(
                                     "font-bold tracking-tight text-[#0556C3]",
-                                    isMobile ? "text-[1.4rem]" : "text-[1.5rem]"
+                                    isMobile ? "text-[1.4rem]" : "text-[1.4rem]"
                                   )}>
                                     {formatCurrency(investment.valorLiquido)}
                                   </span>
                                 </div>
 
                                 {/* Rendimento Diário / Mensal */}
-                                <div className="flex items-center gap-1.5 text-[13px] font-bold text-success/90 w-fit ml-0.5">
-                                  <span className="text-sm">🔥</span>
+                                <div className="flex items-center gap-1 text-[12px] font-bold text-success/90 w-fit ml-0.5">
+                                  <span className="text-[13px]">🔥</span>
                                   <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                                 </div>
                               </div>
 
-                              <div className="flex flex-col items-end gap-2">
+                              <div className="flex flex-col items-end gap-1.5">
                                 {/* Profitability Badge */}
                                   <div
-                                    className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                                    className="inline-flex items-center gap-1 text-[#1E40AF] px-3 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                                   >
-                                    <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                                    <div className="flex flex-col items-start leading-[1.1]">
-                                      <span className="text-[13px] font-black">
+                                    <DynamicIcon name="TrendingUp" className="h-3 w-3" />
+                                    <div className="flex flex-col items-start leading-none">
+                                      <span className="text-[12px] font-black">
                                         {investment.rentabilidadeLiquida.toFixed(2)}%
                                       </span>
-                                      <span className="text-[10px] opacity-70 font-bold">
+                                      <span className="text-[9px] opacity-70 font-bold mt-0.5">
                                         {investment.tipo_rentabilidade === "indexado"
                                           ? `${investment.percentual_indexador}% ${investment.indexador}`
                                           : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
@@ -1792,7 +1792,7 @@ export default function Investments() { // Alterado para export default function
                                   </div>
 
                                 {/* Data Bottom Right */}
-                                <div className="text-[12px] sm:text-[13px] text-slate-500 font-black uppercase tracking-widest mt-1">
+                                <div className="text-[11px] sm:text-[12px] text-slate-400 font-black uppercase tracking-widest mt-1">
                                   {formattedDate}
                                 </div>
                               </div>
