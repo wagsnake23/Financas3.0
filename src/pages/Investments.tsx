@@ -808,7 +808,7 @@ export default function Investments() { // Alterado para export default function
                 "p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                 isMobile && "p-4"
               )}
-              style={{ backgroundColor: "#FFFFFF" }}
+              style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
             >
               <h2 className={cn("text-xl text-[#0556C3] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -1311,7 +1311,7 @@ export default function Investments() { // Alterado para export default function
                   "p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                   isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                 )}
-                style={{ backgroundColor: "#FFFFFF" }}
+                style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
               >
                 <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -1947,4 +1947,5 @@ export default function Investments() { // Alterado para export default function
     </div>
   );
 }
+
 

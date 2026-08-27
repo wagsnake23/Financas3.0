@@ -40,8 +40,9 @@ function Calendar({
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse",
-        head_row: "flex justify-center gap-0.5 mb-1.5",
-        row: "flex w-full justify-center gap-0.5 mt-0.5",
+        head_row: "flex w-full justify-center gap-[6px] mb-1.5",
+        head_cell: "text-muted-foreground font-medium text-[0.8rem] w-9",
+        row: "flex w-full justify-center gap-[6px] mt-0.5",
         cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
