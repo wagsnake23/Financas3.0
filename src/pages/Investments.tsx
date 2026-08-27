@@ -733,13 +733,7 @@ export default function Investments() { // Alterado para export default function
           <>
 
             {/* 🔹 NOVO: Card de resumo unificado (DESKTOP) */}
-            <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[rgba(0,0,0,0.06)]" style={{
-              background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-              backgroundBlendMode: "soft-light",
-              backdropFilter: "blur(6px)",
-              outline: "1px solid rgba(0, 102, 255, 0.08)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-            }}>
+            <div className="rounded-[18px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[rgba(15,23,42,0.10)]" style={{ backgroundColor: "#FFFFFF" }}>
               <div className="grid grid-cols-4 items-center gap-x-6 w-full">
                 {/* Total Investido */}
                 <div className="flex items-center justify-start gap-4">
@@ -811,16 +805,10 @@ export default function Investments() { // Alterado para export default function
 
             <Card
               className={cn(
-                "p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
+                "p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                 isMobile && "p-4"
               )}
-              style={{
-                background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                backgroundBlendMode: "soft-light",
-                backdropFilter: "blur(6px)",
-                outline: "1px solid rgba(0, 102, 255, 0.08)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-              }}
+              style={{ backgroundColor: "#FFFFFF" }}
             >
               <h2 className={cn("text-xl text-[#0556C3] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -835,7 +823,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl input-3d-premium input-white font-bold transition-all duration-200",
+                      "rounded-xl input-3d-premium font-bold transition-all duration-200",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
@@ -882,7 +870,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl input-3d-premium input-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -896,7 +884,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium input-white font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -926,7 +914,7 @@ export default function Investments() { // Alterado para export default function
                         fixedDecimalScale={false}
                         maxLength={7}
                         className={cn(
-                          "rounded-xl input-3d-premium input-white font-bold px-3 transition-all duration-200",
+                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                         )}
@@ -943,7 +931,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl input-3d-premium input-white font-bold px-3 text-sm",
+                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
@@ -960,7 +948,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl input-3d-premium input-white font-bold px-3 transition-all duration-200",
+                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
@@ -1031,7 +1019,7 @@ export default function Investments() { // Alterado para export default function
                     onClick={() => setIsCalendarOpen(true)}
                     className={cn(
                       "w-full justify-start text-left font-bold h-10 rounded-xl",
-                      "input-3d-premium input-white px-3 transition-all duration-200",
+                      "input-3d-premium px-3 transition-all duration-200",
                       !date && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false, variant: "green" })
@@ -1072,14 +1060,8 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div className="mt-2">
               <Card
-                className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                style={{
-                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                  backgroundBlendMode: "soft-light",
-                  backdropFilter: "blur(6px)",
-                  outline: "1px solid rgba(0, 102, 255, 0.08)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                }}
+                className={cn("p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
@@ -1260,13 +1242,7 @@ export default function Investments() { // Alterado para export default function
               </Card>
 
               {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
-              <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{
-                background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                backgroundBlendMode: "soft-light",
-                backdropFilter: "blur(6px)",
-                outline: "1px solid rgba(0, 102, 255, 0.08)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-              }}>
+              <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[18px] border border-[rgba(15,23,42,0.10)]" style={{ backgroundColor: "#FFFFFF" }}>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
@@ -1332,16 +1308,10 @@ export default function Investments() { // Alterado para export default function
             <div>
               <Card
                 className={cn(
-                  "p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo",
+                  "p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                   isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                 )}
-                style={{
-                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                  backgroundBlendMode: "soft-light",
-                  backdropFilter: "blur(6px)",
-                  outline: "1px solid rgba(0, 102, 255, 0.08)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                }}
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -1356,7 +1326,7 @@ export default function Investments() { // Alterado para export default function
                       disabled={loadingForm}
                     >
                       <SelectTrigger id="investment-category" className={cn(
-                        "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                        "rounded-xl input-3d-premium font-medium transition-all duration-200",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                       )}>
@@ -1402,7 +1372,7 @@ export default function Investments() { // Alterado para export default function
                           }
                         }}
                       >
-                        <SelectTrigger className={cn("rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1416,7 +1386,7 @@ export default function Investments() { // Alterado para export default function
                       <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
                         <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
                         <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                          <SelectTrigger className="h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold">
+                          <SelectTrigger className="h-10 rounded-xl input-3d-premium text-sm font-bold">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1446,7 +1416,7 @@ export default function Investments() { // Alterado para export default function
                           fixedDecimalScale={false}
                           maxLength={7}
                           className={cn(
-                            "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
+                            "rounded-xl input-3d-premium font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
                             isMobile && "h-9 text-sm",
                             getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                           )}
@@ -1463,7 +1433,7 @@ export default function Investments() { // Alterado para export default function
                           }}
                           placeholder="0,00"
                           className={cn(
-                            "h-10 rounded-xl bg-white border-[#A5C2F9]/50 text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                            "h-10 rounded-xl input-3d-premium text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
                             getBorderClass({ isInvalid: validationErrors.percentualIndexador })
                           )}
                         />
@@ -1480,7 +1450,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         disabled={loadingForm}
                         className={cn(
-                          "rounded-xl bg-white border-[#A5C2F9]/50 font-medium transition-all duration-200",
+                          "rounded-xl input-3d-premium font-medium transition-all duration-200",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                         )}
@@ -1554,7 +1524,7 @@ export default function Investments() { // Alterado para export default function
                         onClick={() => setIsCalendarOpen(true)}
                         className={cn(
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
-                          "bg-white border-[#A5C2F9]/50 transition-all duration-200",
+                          "input-3d-premium transition-all duration-200",
                           !date && "text-muted-foreground",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -1597,14 +1567,8 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div>
               <Card
-                className={cn("p-6 lg:pb-4 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                style={{
-                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                  backgroundBlendMode: "soft-light",
-                  backdropFilter: "blur(6px)",
-                  outline: "1px solid rgba(0, 102, 255, 0.08)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                }}
+                className={cn("p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
                   <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
@@ -1683,7 +1647,7 @@ export default function Investments() { // Alterado para export default function
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
                           className={cn(
-                            "relative group overflow-hidden transition-all duration-300 rounded-[16px] border border-[rgba(0,0,0,0.06)] shadow-sm",
+                            "relative group overflow-hidden transition-all duration-300 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm",
                             isMobile ? "pt-[12px] pb-[13px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
                           )}
                           style={{
@@ -1983,3 +1947,4 @@ export default function Investments() { // Alterado para export default function
     </div>
   );
 }
+
