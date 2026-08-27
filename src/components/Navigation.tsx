@@ -216,12 +216,12 @@ export const Navigation = () => {
               <img
                 src="/icons/logo.png"
                 alt="Logo"
-                className="h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:scale-110"
+                className="h-8 w-8 md:h-[42px] md:w-[42px] transition-transform group-hover:scale-110"
               />
               <div className="flex flex-col justify-center whitespace-nowrap">
                 <span className={cn(
                   "tracking-[0.5px] font-bold",
-                  isMobile ? "text-[18px] leading-none" : "text-base leading-tight",
+                  isMobile ? "text-[18px] leading-none" : "text-[19px] leading-tight",
                   !isMobile && "transition-all duration-300",
                   isMobile ? mobileTextColor : "text-white/95",
                   isModalOpen && "shadow-none drop-shadow-none filter-none"
@@ -237,7 +237,7 @@ export const Navigation = () => {
                 </span>
                 <span className={cn(
                   "leading-none",
-                  isMobile ? "text-[12px] font-normal -mt-[2px]" : "text-[11px] mt-[1px] font-medium text-blue-100/70 tracking-wide",
+                  isMobile ? "text-[12px] font-normal -mt-[2px]" : "text-[12px] -mt-[1px] font-medium text-blue-100/70 tracking-wide",
                   isMobile && mobileSubtitleColor
                 )} style={{ fontFamily: "'Inter', sans-serif" }}>
                   Controle Financeiro
@@ -256,13 +256,13 @@ export const Navigation = () => {
                       to={item.to}
                       end={item.to === "/"}
                       className={({ isActive }) => cn(
-                        "relative px-2.5 py-2 text-sm transition-colors duration-300 flex items-center gap-1.5",
+                        "relative px-2.5 py-2 text-[14px] transition-colors duration-300 flex items-center gap-1.5",
                         isActive
                           ? "text-white font-semibold after:absolute after:bottom-0 after:left-2.5 after:right-2.5 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-100 after:transition-all after:duration-300"
                           : "text-blue-100/70 font-medium hover:text-white/95 hover:bg-transparent after:absolute after:bottom-0 after:left-1/2 after:right-1/2 after:h-[2.5px] after:bg-[#FACC15] after:rounded-full after:opacity-0 after:transition-all after:duration-300"
                       )}
                     >
-                      <DynamicIcon name={item.icon} className="h-4 w-4" />
+                      <DynamicIcon name={item.icon} className="h-[16px] w-[16px]" />
                       <span className="tracking-wide">
                         {item.label === "Lista de Compras" ? "Compras" : item.label}
                       </span>
