@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { cn, getBorderClass, formatInTimeZone, TARGET_TIMEZONE, isValidUuid } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -271,28 +272,37 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             {date ? format(date, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
           </Button>
 
-          {isCalendarOpen && (
-            <div
-              className={cn(
-                "absolute top-full left-0 z-[100] mt-1 w-full min-w-full max-w-full overflow-hidden",
-                "rounded-[24px] border border-blue-100/50 !bg-white shadow-[0_15px_45px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200",
-                isMobile ? "h-[340px]" : "h-[460px]"
-              )}
-            >
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  setIsCalendarOpen(false);
-                }}
-                initialFocus
-                locale={ptBR}
-                showOutsideDays={true}
-                className="w-full h-full p-2"
-              />
-            </div>
+      <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+        <DialogContent
+          className={cn(
+            "p-0 border-none shadow-2xl gap-0 overflow-hidden !rounded-[24px]",
+            isMobile ? "w-[95%] max-w-[340px]" : "max-w-[380px]"
           )}
+          style={{ background: "#FFFFFF" }}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-slate-100">
+            <DialogTitle className="text-[#1e3a8a] text-lg font-black tracking-tight flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <DynamicIcon name="📅" className="h-[22px] w-[22px]" />
+              Escolher Data
+            </DialogTitle>
+          </div>
+          <div className="p-2 flex justify-center bg-slate-50/50">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
+                setIsCalendarOpen(false);
+              }}
+              initialFocus
+              locale={ptBR}
+              showOutsideDays={true}
+              fixedWeeks={true}
+              className="w-full p-2"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
         </div>
       </div>
 
