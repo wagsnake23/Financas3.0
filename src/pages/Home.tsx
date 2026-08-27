@@ -416,7 +416,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[46px] left-0 right-0 h-[52px] z-40 flex items-center pt-[6px] bg-transparent justify-between" : "pt-[72px] md:pt-[42px] flex justify-between items-start"
+                    isMobile ? "fixed top-[56px] left-0 right-0 h-[42px] z-40 flex items-center pt-0 bg-transparent justify-between" : "pt-[72px] md:pt-[42px] flex justify-between items-start"
                 )}>
                     <div>
                         <h1 
@@ -495,7 +495,7 @@ export default function Home() {
                 {isMobile ? (
                     <div className="relative !bg-transparent !bg-none !backdrop-blur-none">
                         <div
-                            className="!fixed top-[96px] left-0 right-0 bottom-[28px] overflow-hidden z-30 container-app pt-[14px] !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
+                            className="!fixed top-[98px] left-0 right-0 bottom-[28px] overflow-hidden z-30 container-app pt-[12px] !bg-transparent !bg-none !backdrop-blur-none" style={{ background: 'transparent' }}
                         >
                             <div
                                 className="h-full grid grid-cols-1 pb-6 !bg-transparent !bg-none !backdrop-blur-none"
