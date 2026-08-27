@@ -158,7 +158,9 @@ export const Navigation = () => {
     let color = "#F7F9FC";
     if (isDarkPage) {
       color = "#010856";
-    } else if (isDespesas || isLancamentos) {
+    } else if (isDespesas) {
+      color = "#FFFFFF";
+    } else if (isLancamentos) {
       color = "#F7F9FC";
     } else if (isReceitas || isInvestimentos) {
       color = "#F8FAFC"; // equivalente a slate-50
@@ -188,7 +190,7 @@ export const Navigation = () => {
             isDarkPage
                 ? "bg-transparent"
                 : isDespesas
-                    ? "bg-[#F7F9FC]"
+                    ? "bg-white border-none"
                     : isLancamentos
                     ? "bg-[#F7F9FC]"
                 : (isReceitas || isInvestimentos)

@@ -263,30 +263,15 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[46px] left-0 right-0 pt-2 pb-0 bottom-0 overflow-hidden z-30 container-app"
+              className="!fixed top-[46px] left-0 right-0 pt-2 pb-0 bottom-0 overflow-hidden z-30 container-app bg-white"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-[6px]">
-                <div
-                  className="flex flex-col gap-6"
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid rgba(15,23,42,0.10)",
-                    borderRadius: "20px",
-                    padding: "15px 20px 15px 20px",
-                    boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
-                  }}
-                >
-                  <div 
-                    className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 pt-4 pb-[13px] rounded-t-[20px]"
-                    style={{ 
-                      background: "linear-gradient(90deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02))",
-                      borderBottom: "1px solid rgba(15,23,42,0.05)"
-                    }}
-                  >
+                <div className="flex flex-col gap-6 pb-6">
+                  <div className="flex justify-between items-start pt-2">
                     <div className="flex items-start gap-3">
                       <Button
                         variant="ghost"
-                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0 -ml-1"
+                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
                         style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
                         onClick={() => navigate("/lancamentos?type=expense")}
                       >
@@ -308,7 +293,7 @@ export default function Despesas() {
 
                     <Button
                       onClick={() => navigate(-1)}
-                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90 -mr-1"
+                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#E54D4D] bg-white hover:bg-white/90"
                       style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", border: "1px solid rgba(15,23,42,0.10)", boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" } as any}
                     >
                       <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
