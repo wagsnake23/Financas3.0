@@ -1267,7 +1267,7 @@ export default function Investments() { // Alterado para export default function
               </Card>
 
               {/* 🔹 NOVO: Card de resumo unificado (MOBILE) */}
-              <div className="mt-6 p-6 shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{ 
+              <div className="mt-6 py-6 px-[22px] shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{ 
                   background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
                   backgroundBlendMode: "soft-light",
                   backdropFilter: "blur(6px)",
@@ -1278,12 +1278,12 @@ export default function Investments() { // Alterado para export default function
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <div
-                        className="p-2 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-                        style={{ border: "1px solid rgba(0,0,0,0.04)" }}
+                        className="p-2 rounded-xl flex items-center justify-center shadow-[0_2px_8px_rgba(5,86,195,0.3)]"
+                        style={{ background: "#0556C3" }}
                       >
-                        <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-[#0556C3]" strokeWidth={3} />
+                        <DynamicIcon name="DollarSign" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-widest leading-none">Saldo Líquido Total</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Saldo líquido total</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalCurrentBalance)}</p>
                   </div>
@@ -1291,12 +1291,12 @@ export default function Investments() { // Alterado para export default function
                   <div className="flex flex-col items-end text-right">
                     <div className="flex flex-row-reverse items-center gap-2 mb-2">
                       <div
-                        className="p-2 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-                        style={{ border: "1px solid rgba(0,0,0,0.04)" }}
+                        className="p-2 rounded-xl flex items-center justify-center shadow-[0_2px_8px_rgba(5,86,195,0.3)]"
+                        style={{ background: "#0556C3" }}
                       >
-                        <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-[#0556C3]" strokeWidth={3} />
+                        <DynamicIcon name="Percent" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-widest leading-none">Média</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Média</h4>
                     </div>
                     <div className="flex items-baseline gap-0.5">
                       <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{stats.avgProfitability.toFixed(2)}%</p>
@@ -1307,12 +1307,12 @@ export default function Investments() { // Alterado para export default function
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <div
-                        className="p-2 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-                        style={{ border: "1px solid rgba(0,0,0,0.04)" }}
+                        className="p-2 rounded-xl flex items-center justify-center shadow-[0_2px_8px_rgba(5,86,195,0.3)]"
+                        style={{ background: "#0556C3" }}
                       >
-                        <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-[#0556C3]" strokeWidth={3} />
+                        <DynamicIcon name="Calendar" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-widest leading-none">Mensal</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Mensal</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalMonthlyYieldRS)}</p>
                   </div>
@@ -1320,12 +1320,12 @@ export default function Investments() { // Alterado para export default function
                   <div className="flex flex-col items-end text-right">
                     <div className="flex flex-row-reverse items-center gap-2 mb-2">
                       <div
-                        className="p-2 rounded-xl flex items-center justify-center bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-                        style={{ border: "1px solid rgba(0,0,0,0.04)" }}
+                        className="p-2 rounded-xl flex items-center justify-center shadow-[0_2px_8px_rgba(5,86,195,0.3)]"
+                        style={{ background: "#0556C3" }}
                       >
-                        <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-[#0556C3]" strokeWidth={3} />
+                        <DynamicIcon name="Clock" className="h-3.5 w-3.5 text-white" strokeWidth={3} />
                       </div>
-                      <h4 className="text-[10px] font-black text-[#0556C3] uppercase tracking-widest leading-none">Diário</h4>
+                      <h4 className="text-[11px] font-bold text-[#0556C3] tracking-widest leading-none">Diário</h4>
                     </div>
                     <p className="text-lg font-bold text-slate-700 tracking-tight leading-none">{formatCurrency(stats.totalDailyYieldRS)}</p>
                   </div>
