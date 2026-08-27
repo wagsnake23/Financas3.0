@@ -359,7 +359,7 @@ export default function Receitas() {
         onSubmit={handleSubmitOneOff}
         className={cn(isMobile ? "space-y-3 w-full" : "space-y-6 w-full")}
       >
-        <div className="pt-2" style={isMobile ? { marginTop: "-12px" } : undefined}>
+        <div className="pt-2">
           <ToggleGroup
             type="single"
             value={isRecurring ? "recorrente" : "avulsa"}
@@ -566,7 +566,7 @@ export default function Receitas() {
         )}
 
         {/* Submit Button Logic */}
-        <div style={isMobile ? { marginTop: "24px" } : undefined}>
+        <div>
           <Button
             type={isExpired ? "button" : "submit"}
             form={isExpired ? undefined : "income-form"}
@@ -661,70 +661,46 @@ export default function Receitas() {
         )}
       >
         {isMobile ? (
-          <div className="relative">
-            <div
-              className="!fixed top-[46px] left-0 right-0 pt-2 pb-0 bottom-0 overflow-hidden z-30 container-app"
-            >
-              <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 px-0 pt-[6px]">
-                <div
-                  className="flex flex-col gap-6"
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid rgba(15,23,42,0.10)",
-                    borderRadius: "20px",
-                    padding: "15px 20px 24px 20px",
-                    boxShadow: "0 6px 18px rgba(15,23,42,0.05)",
-                  }}
-                >
-                  <div 
-                    className="flex justify-between items-start -mt-[15px] -mx-[20px] px-5 pt-4 pb-[13px] rounded-t-[20px]"
-                    style={{ 
-                      background: "linear-gradient(90deg, rgba(34,197,94,0.06), rgba(34,197,94,0.02))",
-                      borderBottom: "1px solid rgba(15,23,42,0.05)"
-                    }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <Button
-                        variant="ghost"
-                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0 -ml-1"
-                        style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
-                        onClick={() => navigate("/lancamentos?type=income")}
-                      >
-                        <DynamicIcon
-                          name="TrendingUp"
-                          className="h-[18px] w-[18px] !text-white"
-                          strokeWidth={3}
-                        />
-                      </Button>
-                      <div className="flex flex-col">
-                        <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#1AA361]" style={{ fontFamily: "'Inter', sans-serif" }}>
-                          Nova Receita
-                        </h1>
-                        <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
-                          Registre seus ganhos
-                        </p>
-                      </div>
-                    </div>
-
+          <div className="!fixed top-[46px] left-0 right-0 pt-2 pb-0 bottom-0 overflow-hidden z-30 container-app bg-white">
+            <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-[6px]">
+              <div className="flex flex-col gap-6 pb-6 px-[2px]">
+                <div className="flex justify-between items-start pt-2">
+                  <div className="flex items-start gap-3">
                     <Button
-                      onClick={() => navigate(-1)}
-                      className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90 -mr-1"
-                      style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", border: "1px solid rgba(15,23,42,0.10)", boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" } as any}
+                      variant="ghost"
+                      className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
+                      style={{ background: "#22c55e", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                      onClick={() => navigate("/lancamentos?type=income")}
                     >
-                      <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
-                      Voltar
+                      <DynamicIcon
+                        name="TrendingUp"
+                        className="h-[18px] w-[18px] !text-white"
+                        strokeWidth={3}
+                      />
                     </Button>
+                    <div className="flex flex-col">
+                      <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#22c55e]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                        Nova Receita
+                      </h1>
+                      <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
+                        Registre seus ganhos
+                      </p>
+                    </div>
                   </div>
 
-                  {oneOffFormContent}
+                  <Button
+                    onClick={() => navigate(-1)}
+                    className="h-8 px-2 rounded-xl font-black text-xs border transition-all active:scale-95 !text-[#1AA361] bg-white hover:bg-white/90"
+                    style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", border: "1px solid rgba(15,23,42,0.10)", boxShadow: "inset 0 -1px 0 rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" } as any}
+                  >
+                    <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1AA361]" strokeWidth={3} />
+                    Voltar
+                  </Button>
                 </div>
 
-                <div style={{ marginTop: "9px", marginBottom: "0px" }}>
-                  <Footer isMobile={isMobile} user={user} />
-                </div>
+                {oneOffFormContent}
               </div>
             </div>
-
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">

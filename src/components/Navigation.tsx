@@ -158,11 +158,11 @@ export const Navigation = () => {
     let color = "#F7F9FC";
     if (isDarkPage) {
       color = "#010856";
-    } else if (isDespesas) {
+    } else if (isDespesas || isReceitas) {
       color = "#FFFFFF";
     } else if (isLancamentos) {
       color = "#F7F9FC";
-    } else if (isReceitas || isInvestimentos) {
+    } else if (isInvestimentos) {
       color = "#F8FAFC"; // equivalente a slate-50
     } else if (isCategorias) {
       color = "#F9FAFB";
@@ -189,11 +189,11 @@ export const Navigation = () => {
             "h-14 shadow-none",
             isDarkPage
                 ? "bg-transparent"
-                : isDespesas
+                : (isDespesas || isReceitas)
                     ? "bg-white border-none"
                     : isLancamentos
                     ? "bg-[#F7F9FC]"
-                : (isReceitas || isInvestimentos)
+                : isInvestimentos
                     ? "bg-slate-50"
                     : isCategorias
                     ? "bg-[#F9FAFB]"
