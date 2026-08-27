@@ -52,11 +52,11 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
           <div className="container-app flex justify-between items-center h-full">
             
             {/* LADO ESQUERDO */}
-            <div className="flex items-center gap-3.5">
-              <img src="/favicon.ico" alt="Logo" className="w-[38px] h-[38px] object-contain" />
+            <div className="flex items-center gap-2.5">
+              <img src="/icons/logo.png" alt="Logo" className="w-[42px] h-[42px] object-contain" />
               <div className="flex flex-col justify-center">
                 <span 
-                  className="font-extrabold text-[17px] tracking-[0.5px] leading-none text-white"
+                  className="font-bold text-[19px] tracking-[0.5px] leading-tight text-white/95"
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     filter: "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"
