@@ -215,4 +215,4 @@ export const MonthlyExpenseCalendar: React.FC<MonthlyExpenseCalendarProps> = ({
       {content}
     </Card>
   );
-};
+};

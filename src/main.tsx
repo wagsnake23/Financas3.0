@@ -6,4 +6,4 @@ import { registerSW } from "virtual:pwa-register";
 createRoot(document.getElementById("root")!).render(<App />);
 
 // Registra o Service Worker (gerado pelo vite-plugin-pwa)
-registerSW({ immediate: true });
+registerSW({ immediate: true });

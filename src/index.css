@@ -560,9 +560,9 @@ body {
 
 @media (max-width: 767px) {
   .input-3d-premium:not(textarea) {
-    height: 2.25rem !important;
-    min-height: 2.25rem !important;
-    max-height: 2.25rem !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
   }
 }
 
@@ -819,7 +819,8 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
   outline: none !important;
 }
-}.input-3d-premium.input-white { background: #FFFFFF !important; background-color: #FFFFFF !important; }
+}
+.input-3d-premium.input-white { background: #FFFFFF !important; background-color: #FFFFFF !important; }
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
