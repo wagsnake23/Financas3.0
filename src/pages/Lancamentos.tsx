@@ -191,27 +191,28 @@ const Lancamentos = () => {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px]",
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
             "shadow-none border-none"
           )}
           style={{
             background: "linear-gradient(180deg, #FBFCFE 0%, #F6F8FB 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
-            border: "2px solid #FFFFFF",
+            border: isMobile ? "2px solid #FFFFFF" : "none",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
           <DialogHeader
             className={cn(
-              "flex flex-col items-start justify-start mb-[-6px]",
+              "flex flex-col items-start justify-start",
+              isMobile ? "mb-[-6px]" : "mb-[2px]",
               isMobile && "absolute top-3.5 left-4 right-12 text-left",
-              !isMobile && "-mt-4"
+              !isMobile && "-mt-2"
             )}
           >
             <div className="flex flex-row items-start gap-[11px] transition-all">
-              <span className="text-[26px] select-none leading-none mt-0">📝</span>
-              <div className="flex flex-col gap-[5px]">
+              <span className="text-[26px] select-none leading-none mt-0 md:mt-1">📝</span>
+              <div className="flex flex-col gap-[5px] md:gap-[1px]">
                 <DialogTitle className="text-xl md:text-2xl font-bold tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
                 {editingTransaction?.created_at && (
                   <p className="text-[11px] font-normal text-slate-500 leading-none">

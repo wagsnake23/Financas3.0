@@ -48,7 +48,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center gap-2"
+          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg md:text-xl h-11 md:h-12 flex items-center justify-center gap-2"
         )}
         style={{ "--cor-topo": "#EF5A5A", "--cor-base": "#E54D4D" } as any}
         disabled={isLoading}
@@ -59,7 +59,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center gap-2",
+          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg md:text-xl h-11 md:h-12 flex items-center justify-center gap-2",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
