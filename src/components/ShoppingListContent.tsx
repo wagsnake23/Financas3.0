@@ -465,11 +465,11 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => setSortType('default')}
             className={cn(
-              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-[12px] border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
               "bg-gray-100/70 border-gray-200 text-gray-600 font-medium hover:bg-gray-100"
             )}
           >
-            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
+            <span className="text-[12px] xs:text-[13px] sm:text-[15px] flex items-center gap-1 whitespace-nowrap">
               {totalItems} Itens
             </span>
           </button>
@@ -479,14 +479,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('pending')}
             className={cn(
-              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-[12px] border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
               sortType === 'pending'
                 ? "bg-red-100 border-red-300 text-red-700 font-bold shadow-inner"
                 : "bg-red-50/40 border-red-100/60 text-red-500/70 font-medium hover:bg-red-50"
             )}
           >
-            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
-              <Circle className="w-3 h-3 sm:w-[15px] sm:h-[15px]" strokeWidth={2.5} />
+            <span className="text-[12px] xs:text-[13px] sm:text-[15px] flex items-center justify-center gap-1 whitespace-nowrap">
               {pendingItems} Pendentes
             </span>
           </button>
@@ -496,19 +495,13 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
             type="button"
             onClick={() => handleToggleSort('bought')}
             className={cn(
-              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
+              "flex flex-1 items-center justify-center gap-1 px-2 sm:px-4 py-2 rounded-[12px] border transition-all duration-200 active:scale-95 shadow-sm min-w-0",
               sortType === 'bought'
                 ? "bg-emerald-100 border-emerald-300 text-emerald-700 font-bold shadow-inner"
                 : "bg-emerald-50/40 border-emerald-100/60 text-emerald-500/70 font-medium hover:bg-emerald-50"
             )}
           >
-            <span className="text-[11px] xs:text-xs sm:text-sm flex items-center gap-1 whitespace-nowrap">
-              <div className={cn(
-                "rounded-full w-3 h-3 sm:w-[15px] sm:h-[15px] flex items-center justify-center transition-colors",
-                sortType === 'bought' ? "bg-emerald-600 text-white" : "bg-emerald-200/50 text-emerald-600/70"
-              )}>
-                <Check size={10} strokeWidth={4} />
-              </div>
+            <span className="text-[12px] xs:text-[13px] sm:text-[15px] flex items-center justify-center gap-1 whitespace-nowrap">
               {boughtItems} Comprados
             </span>
           </button>
@@ -584,15 +577,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   key={item.id}
                   className={cn(
                     "bg-white rounded-[10px] py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
-                    item.status ? "border-l-4 border-l-success" : "border-l-4 border-l-[#FF8888]"
+                    item.status ? "border-l-4 border-l-[#25D366]" : "border-l-4 border-l-[#FF8888]"
                   )}
                 >
                   <div className="flex flex-col w-full gap-1">
-                    {/* 📌 PRIMEIRA LINHA: Nº e Produto */}
-                    <div className="flex items-center justify-between w-full">
+                    {/* 🟢 PRIMEIRA LINHA: Nº e Produto */}
+                    <div className="flex items-center justify-between w-full mt-[2px]">
                       <div className="flex items-center gap-3 min-w-0">
                         {/* Nº */}
-                        <span className="text-[0.80rem] text-[#356DD8] font-black whitespace-nowrap min-w-[28px] text-center leading-none">
+                        <span className="text-[0.80rem] text-[#356DD8] font-extrabold whitespace-nowrap min-w-[28px] text-center leading-none">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {/* Produto */}
@@ -605,15 +598,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       </div>
                       {/* Status Label */}
                       <span className={cn(
-                        "text-[0.75rem] tracking-tight shrink-0 ml-3 leading-none",
+                        "text-[10px] tracking-tight shrink-0 ml-3 leading-none",
                         item.status ? "text-[#10B955] font-extrabold" : "text-[#FF8888] font-medium"
                       )}>
                         {item.status ? "COMPRADO" : "Pendente"}
                       </span>
                     </div>
 
-                    {/* 📌 SEGUNDA LINHA: Data e Ações */}
-                    <div className="flex items-center justify-between w-full">
+                    {/* 🟢 SEGUNDA LINHA: Data e Ações */}
+                    <div className="flex items-center justify-between w-full mt-[2px]">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         {/* Ícone alinhado com o Nº */}
                         <div className="min-w-[28px] flex justify-center shrink-0">
@@ -650,7 +643,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                         </div>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <button className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-colors">
+                            <button className="h-7 w-7 text-red-400 bg-red-50 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors">
                               <DynamicIcon name="Trash2" className="h-4 w-4" />
                             </button>
                           </AlertDialogTrigger>
