@@ -365,7 +365,7 @@ const Categories = () => {
         )}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
-          <div className={cn("flex flex-col gap-4", !isMobile && "max-w-[420px]")}>
+          <div className={cn("flex flex-col", isMobile ? "gap-4" : "gap-[21px] max-w-[420px]")}>
             {!isMobile && (
               <Card
                 className="p-[14px] rounded-[24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative overflow-hidden"

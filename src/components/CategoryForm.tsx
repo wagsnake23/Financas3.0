@@ -172,7 +172,7 @@ export const CategoryForm = ({
       <form
         id="category-form"
         onSubmit={handleSubmit}
-        className={cn(isMobile ? "space-y-2" : "space-y-[14px]")}
+        className={cn(isMobile ? "space-y-2" : "space-y-[20px]")}
       >
         <div className="space-y-1">
           <Label className={cn("text-gray-800 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>
@@ -298,7 +298,7 @@ export const CategoryForm = ({
         </div>
 
         {isMobile && <div className="h-4" />}
-        <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "!mt-8")}>
+        <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "!mt-[38px]")}>
           {editingCategory && ( // Botão Cancelar à esquerda quando editando
             <Button
               type="button"
