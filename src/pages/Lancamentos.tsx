@@ -129,7 +129,7 @@ const Lancamentos = () => {
           isMobile ? "pt-0 pb-0 flex flex-col min-h-0 bg-[#FFFFFF]" : "pt-0 pb-8 -mt-6"
         )}
       >
-        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "mt-3 mb-6 h-10")}>
+        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "-mt-[20px] mb-6 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
