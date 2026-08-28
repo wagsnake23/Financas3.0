@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger, PopoverClose } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
@@ -783,7 +783,7 @@ export const TransactionList = ({
                         <div className="flex items-center gap-1">
                           <span>{activeFilterNames.join(" • ")}</span>
                           <span 
-                            className="text-[10px] ml-0.5 px-0.5 opacity-60 hover:opacity-100 cursor-pointer"
+                            className="text-[10px] ml-0.5 p-1.5 -mr-1.5 text-[#E55B5B] opacity-90 hover:opacity-100 font-bold cursor-pointer transition-colors"
                             onPointerDown={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -801,11 +801,14 @@ export const TransactionList = ({
                     </button>
                   </PopoverTrigger>
                   <PopoverContent 
-                    className="w-[280px] rounded-[16px] border border-slate-100 shadow-xl p-4 bg-white mb-2" 
+                    className="w-[304px] rounded-[16px] border border-slate-100 shadow-xl p-4 bg-white mb-2 relative" 
                     align="end"
                     sideOffset={8}
                   >
-                    <div className="flex flex-col gap-4">
+                    <PopoverClose className="absolute right-[11px] top-[7px] p-1.5 rounded-full bg-[#E55B5B]/10 text-[#E55B5B] hover:bg-[#E55B5B]/20 transition-colors focus:outline-none">
+                      <X className="h-3.5 w-3.5" strokeWidth={3} />
+                    </PopoverClose>
+                    <div className="flex flex-col gap-4 mt-[10px]">
                       {/* Status */}
                       <div className="flex flex-col gap-1.5">
                         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
