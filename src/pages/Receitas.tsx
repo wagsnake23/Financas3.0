@@ -370,7 +370,7 @@ export default function Receitas() {
               value="avulsa"
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
-                  !isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
+                  !isRecurring ? "!text-white font-bold" : "!text-slate-400 font-medium",
                   isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={!isRecurring
@@ -382,7 +382,7 @@ export default function Receitas() {
                 name="Zap"
                 className={cn(
                   "mr-2 h-4 w-4 transition-colors",
-                  !isRecurring ? "!text-white" : "!text-[#1AA361]/80"
+                  !isRecurring ? "!text-white" : "!text-slate-400"
                 )}
               />{" "}
               Avulsa
@@ -391,7 +391,7 @@ export default function Receitas() {
               value="recorrente"
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
-                  isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
+                  isRecurring ? "!text-white font-bold" : "!text-slate-400 font-medium",
                   isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={isRecurring
@@ -403,7 +403,7 @@ export default function Receitas() {
                 name="Repeat"
                 className={cn(
                   "mr-2 h-4 w-4 transition-colors",
-                  isRecurring ? "!text-white" : "!text-[#1AA361]/80"
+                  isRecurring ? "!text-white" : "!text-slate-400"
                 )}
               />{" "}
               Recorrente
@@ -573,7 +573,7 @@ export default function Receitas() {
             onClick={isExpired ? handleBlockedClick : undefined}
             className={cn(
               "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-              isMobile ? "h-11 text-lg" : "h-11 text-lg",
+              isMobile ? "h-11 text-lg" : "h-12 text-lg",
               isExpired && "opacity-80"
             )}
             style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", fontFamily: "'Inter', sans-serif" } as any}

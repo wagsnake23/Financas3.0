@@ -672,7 +672,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           onClick={isExpired ? handleBlockedClick : undefined}
           className={cn(
             "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center gap-2",
-            isMobile ? "h-11 text-lg" : "h-11 text-lg",
+            isMobile ? "h-11 text-lg" : "h-12 text-lg",
             isExpired && "opacity-80"
           )}
           style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
