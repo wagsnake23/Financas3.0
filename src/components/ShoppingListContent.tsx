@@ -448,11 +448,15 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       <div className={cn("flex flex-col items-center gap-1 w-full text-center", isMobile ? "mb-2" : "mb-4")}>
         <h2
           className={cn(
-            "text-2xl font-bold text-[#356DD8] w-full -mt-[4px] mb-[3px]",
+            "flex items-center justify-center gap-2 text-2xl font-bold text-[#356DD8] w-full -mt-[4px] mb-[3px]",
             isMobile && "text-xl"
           )}
         >
-          🛒 Lista de Compras
+          <DynamicIcon 
+            name="ShoppingCart" 
+            className={cn("shrink-0 fill-current", isMobile ? "h-[22px] w-[22px]" : "h-[26px] w-[26px]")} 
+          />
+          <span>Lista de Compras</span>
         </h2>
 
         <div className="flex items-center justify-between gap-2 mt-1 w-full px-1">
