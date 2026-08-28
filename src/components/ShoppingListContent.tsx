@@ -448,7 +448,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
       <div className={cn("flex flex-col items-center gap-1 w-full text-center", isMobile ? "mb-2" : "mb-4")}>
         <h2
           className={cn(
-            "text-2xl font-bold text-primary w-full -mt-[4px] mb-[3px]",
+            "text-2xl font-bold text-[#356DD8] w-full -mt-[4px] mb-[3px]",
             isMobile && "text-xl"
           )}
         >
@@ -579,7 +579,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-white rounded-2xl py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
+                    "bg-white rounded-[10px] py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
                     item.status ? "border-l-4 border-l-success" : "border-l-4 border-l-[#FF8888]"
                   )}
                 >
@@ -588,7 +588,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3 min-w-0">
                         {/* Nº */}
-                        <span className="text-[0.80rem] text-primary font-black whitespace-nowrap min-w-[28px] text-center leading-none">
+                        <span className="text-[0.80rem] text-[#356DD8] font-black whitespace-nowrap min-w-[28px] text-center leading-none">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {/* Produto */}
@@ -697,7 +697,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   )}
                 >
                   {/* Nº */}
-                  <div className={cn("col-span-2 text-center font-bold text-primary text-base", item.status && "opacity-60")}>
+                  <div className={cn("col-span-2 text-center font-bold text-[#356DD8] text-base", item.status && "opacity-60")}>
                     {index + 1}
                   </div>
 
