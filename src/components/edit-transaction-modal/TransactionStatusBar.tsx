@@ -50,12 +50,11 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
 
     return (
         <div className={cn(
-            "flex items-center justify-between px-3 rounded-2xl backdrop-blur-md shadow-sm border transition-all duration-300",
-            isPaid
-                ? "bg-gradient-to-br from-[#F1FBF9] to-[#E8F8EE] border-[#D1FAE5]"
-                : "bg-gradient-to-br from-[#FFFDF2] to-[#FFF9E5] border-[#FEF3C7]",
-            isMobile ? "mx-2 mb-1 py-1 px-2.5 min-h-[36px]" : "mb-2 py-1.5 min-h-[40px]"
-        )}>
+            "flex items-center justify-between px-3 rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium text-gray-800 border border-[rgba(0,0,0,0.06)]",
+            "h-[39px]",
+            isPaid && "input-white",
+            isMobile ? "mx-2 mb-4" : "mb-5"
+        )} style={{ background: isPaid ? "transparent" : "rgba(245, 158, 11, 0.03)" }}>
             {/* Left side: Status and Info */}
             <div className={cn("flex items-center overflow-hidden whitespace-nowrap", isMobile ? "gap-1" : "gap-2")}>
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -79,7 +78,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         )}
                     </div>
                     <span className={cn(
-                        "text-[13.5px] font-extrabold leading-none",
+                        "text-[13.5px] font-semibold leading-none",
                         isPaid ? "text-[#1DA554]" : "text-[#D97706]"
                     )}>
                         {statusLabel}
@@ -107,7 +106,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleStatusChange(true)}
-                        className="text-primary text-xs font-bold hover:bg-primary/5 h-8 px-3 rounded-xl"
+                        className="text-primary text-xs font-semibold hover:bg-primary/5 h-8 px-2 rounded-xl"
                     >
                         Marcar como pago
                     </Button>
@@ -118,7 +117,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                className="text-primary text-xs font-bold hover:bg-primary/5 h-8 px-3 rounded-xl flex items-center gap-1"
+                                className="text-primary text-xs font-semibold hover:bg-primary/5 h-8 px-2 rounded-xl flex items-center gap-1"
                             >
                                 Alterar
                                 <ChevronDown className="w-3.5 h-3.5" />
