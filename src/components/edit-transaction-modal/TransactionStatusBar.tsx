@@ -53,7 +53,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
             "flex items-center justify-between px-3 rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium text-gray-800 border border-[rgba(0,0,0,0.06)]",
             "h-[39px]",
             !isPaid && "input-white",
-            isMobile ? "mx-2 mb-3" : "mb-4"
+            isMobile ? "mx-2 mb-3" : "mx-3 mb-4"
         )} style={{ background: !isPaid ? "transparent" : "rgba(245, 158, 11, 0.03)" }}>
             {/* Left side: Status and Info */}
             <div className={cn("flex items-center overflow-hidden whitespace-nowrap", isMobile ? "gap-1" : "gap-2")}>
