@@ -177,7 +177,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "pt-[8.5px] pb-[9.5px] px-[14px] flex flex-col justify-center mb-[6px] animate-fade-in active:scale-[0.99] transition-all bg-[#FCFCFD] rounded-[11px] border border-[#E2E8F0] shadow-[inset_0_3px_6px_rgba(0,0,0,0.05),_inset_0_-3px_6px_rgba(255,255,255,0.8),_0_2px_4px_rgba(0,0,0,0.03)]",
+          "pt-[8.5px] pb-[9.5px] px-[14px] flex flex-col justify-center mb-[6px] animate-fade-in active:scale-[0.99] transition-all bg-[#FCFDFE] rounded-[11px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(15,23,42,0.03)]",
           transaction.status === "Recebida" 
             ? "border-l-[3px] border-l-[#10B981]/70" 
             : "border-l-[3px] border-l-[#F43F5E]/70"
