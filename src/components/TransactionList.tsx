@@ -96,7 +96,7 @@ export const TransactionList = ({
     else if (filterPaymentOptionId === "pix") names.push("Pix");
     else if (filterPaymentOptionId !== "all") {
       const card = cartoes.find(c => c.id === filterPaymentOptionId);
-      if (card) names.push(card.nome);
+      if (card) names.push("Cartão");
     }
     return names;
   }, [footerStatusFilter, filterType, filterPaymentOptionId, cartoes]);
@@ -775,92 +775,102 @@ export const TransactionList = ({
                   {footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount} {(footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                 </span>
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="h-[26px] py-0 px-3 text-xs font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 focus:outline-none w-auto transition-all">
-                      <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
-                      {activeFilterNames.length > 0 ? (
-                        <div className="flex items-center gap-1">
-                          <span>{activeFilterNames.join(" • ")}</span>
-                          <span 
-                            className="text-[10px] ml-0.5 p-1.5 -mr-1.5 text-[#E55B5B] opacity-90 hover:opacity-100 font-bold cursor-pointer transition-colors"
-                            onPointerDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setFooterStatusFilter("all");
-                              setFilterType("all");
-                              setFilterPaymentOptionId("all");
-                            }}
+                <div className="flex items-center rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] h-[29px] max-w-[55vw] transition-all">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className={cn(
+                        "h-full py-0 text-xs font-bold hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 focus:outline-none min-w-0 transition-all",
+                        activeFilterNames.length > 0 ? "pl-3 pr-2 rounded-l-full border-r border-black/[0.04]" : "px-3 rounded-full"
+                      )}>
+                        <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
+                        {activeFilterNames.length > 0 ? (
+                          <span className="truncate">{activeFilterNames.join(" • ")}</span>
+                        ) : (
+                          "Todos"
+                        )}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent 
+                      className="w-[304px] rounded-[16px] border border-slate-100 shadow-xl p-4 bg-white mb-2 relative" 
+                      align="end"
+                      sideOffset={8}
+                    >
+                      <PopoverClose className="absolute right-[11px] top-[7px] p-1.5 rounded-full bg-[#E55B5B]/10 text-[#E55B5B] hover:bg-[#E55B5B]/20 transition-colors focus:outline-none">
+                        <X className="h-3.5 w-3.5" strokeWidth={3} />
+                      </PopoverClose>
+                      <div className="flex flex-col gap-4 mt-[10px]">
+                        {/* Status */}
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
+                          <Select 
+                            value={footerStatusFilter} 
+                            onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
                           >
-                            ✕
-                          </span>
+                            <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-[14px]">
+                              <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
+                              <SelectItem value="paid" className="text-[13px] font-medium py-2">Pagos</SelectItem>
+                              <SelectItem value="pending" className="text-[13px] font-medium py-2">Pendentes</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                      ) : (
-                        "Todos"
-                      )}
+
+                        {/* Tipo */}
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tipo</span>
+                          <Select value={filterType} onValueChange={setFilterType}>
+                            <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-[14px]">
+                              <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
+                              <SelectItem value="income" className="text-[13px] font-medium py-2">Receitas</SelectItem>
+                              <SelectItem value="expense" className="text-[13px] font-medium py-2">Despesas</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Forma de Pagamento */}
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Forma de Pagamento</span>
+                          <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
+                            <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-[14px]">
+                              {paymentFilterOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value} className="text-[13px] font-medium py-2">
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  {activeFilterNames.length > 0 && (
+                    <button 
+                      className="h-full px-2.5 flex items-center justify-center text-[10px] text-[#E55B5B] opacity-90 hover:opacity-100 font-bold hover:bg-slate-50 cursor-pointer shrink-0 rounded-r-full transition-colors"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFooterStatusFilter("all");
+                        setFilterType("all");
+                        setFilterPaymentOptionId("all");
+                      }}
+                      onPointerDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      ✕
                     </button>
-                  </PopoverTrigger>
-                  <PopoverContent 
-                    className="w-[304px] rounded-[16px] border border-slate-100 shadow-xl p-4 bg-white mb-2 relative" 
-                    align="end"
-                    sideOffset={8}
-                  >
-                    <PopoverClose className="absolute right-[11px] top-[7px] p-1.5 rounded-full bg-[#E55B5B]/10 text-[#E55B5B] hover:bg-[#E55B5B]/20 transition-colors focus:outline-none">
-                      <X className="h-3.5 w-3.5" strokeWidth={3} />
-                    </PopoverClose>
-                    <div className="flex flex-col gap-4 mt-[10px]">
-                      {/* Status */}
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
-                        <Select 
-                          value={footerStatusFilter} 
-                          onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
-                        >
-                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-[14px]">
-                            <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
-                            <SelectItem value="paid" className="text-[13px] font-medium py-2">Pagos</SelectItem>
-                            <SelectItem value="pending" className="text-[13px] font-medium py-2">Pendentes</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Tipo */}
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tipo</span>
-                        <Select value={filterType} onValueChange={setFilterType}>
-                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-[14px]">
-                            <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
-                            <SelectItem value="income" className="text-[13px] font-medium py-2">Receitas</SelectItem>
-                            <SelectItem value="expense" className="text-[13px] font-medium py-2">Despesas</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {/* Forma de Pagamento */}
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Forma de Pagamento</span>
-                        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
-                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-[14px]">
-                            {paymentFilterOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value} className="text-[13px] font-medium py-2">
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                  )}
+                </div>
               </div>
 
               {/* LINHAS 2 E 3: INDICADORES */}
