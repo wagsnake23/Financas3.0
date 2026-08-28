@@ -775,14 +775,27 @@ export const TransactionList = ({
                   {footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount} {(footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                 </span>
 
-                <div className="flex items-center rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] h-[29px] max-w-[55vw] transition-all">
+                <div className={cn(
+                  "flex items-center rounded-full border shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] h-[29px] max-w-[55vw] transition-all",
+                  activeFilterNames.length > 0
+                    ? "bg-[#EFF6FF] border-[#BFDBFE]"
+                    : "border-black/[0.08] bg-white/60"
+                )}>
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className={cn(
-                        "h-full py-0 text-xs font-bold hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 focus:outline-none min-w-0 transition-all",
-                        activeFilterNames.length > 0 ? "pl-3 pr-2 rounded-l-full border-r border-black/[0.04]" : "px-3 rounded-full"
+                        "h-full py-0 text-xs font-bold flex items-center gap-1.5 focus:outline-none min-w-0 transition-all",
+                        activeFilterNames.length > 0 
+                          ? "pl-3 pr-2 rounded-l-full border-r border-[#BFDBFE] hover:bg-blue-100/50 text-[#1D4ED8]" 
+                          : "px-3 rounded-full hover:bg-slate-50 text-slate-700"
                       )}>
-                        <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
+                        <Filter 
+                          className={cn(
+                            "h-3 w-3 shrink-0", 
+                            activeFilterNames.length > 0 ? "text-[#1D4ED8]" : "text-slate-400"
+                          )} 
+                          strokeWidth={2.5} 
+                        />
                         {activeFilterNames.length > 0 ? (
                           <span className="truncate">{activeFilterNames.join(" • ")}</span>
                         ) : (
@@ -854,7 +867,7 @@ export const TransactionList = ({
 
                   {activeFilterNames.length > 0 && (
                     <button 
-                      className="h-full px-2.5 flex items-center justify-center text-[10px] text-[#E55B5B] opacity-90 hover:opacity-100 font-bold hover:bg-slate-50 cursor-pointer shrink-0 rounded-r-full transition-colors"
+                      className="h-full px-2.5 flex items-center justify-center text-[10px] text-[#E55B5B] opacity-90 hover:opacity-100 font-bold hover:bg-[#E55B5B]/10 cursor-pointer shrink-0 rounded-r-full transition-colors"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
