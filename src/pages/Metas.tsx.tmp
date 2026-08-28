@@ -521,21 +521,13 @@ export default function Metas() {
     );
   }
 
-  // Card styles reusable
-  const novaMetaCardStyle = {
-    background: "linear-gradient(135deg, #f8fbff 0%, #f4f7fc 100%)",
+  // Card style reusable
+  const cardStyle = {
+    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(234, 88, 12, 0.12) 100%)",
     backgroundBlendMode: "soft-light" as const,
     backdropFilter: "blur(6px)",
-    outline: "1px solid rgba(234, 88, 12, 0.07)",
-    boxShadow: "0 4px 12px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)"
-  };
-
-  const minhasMetasCardStyle = {
-    background: "linear-gradient(135deg, #f9fbff 0%, #f5f7fb 100%)",
-    backgroundBlendMode: "soft-light" as const,
-    backdropFilter: "blur(6px)",
-    outline: "1px solid rgba(234, 88, 12, 0.07)",
-    boxShadow: "0 4px 12px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)"
+    outline: "1px solid rgba(234, 88, 12, 0.08)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(234, 88, 12, 0.10)"
   };
 
   const accentColor = "#C2410C"; // Orange-700 for Metas
@@ -761,7 +753,7 @@ export default function Metas() {
             {/* Form Card */}
             <Card
               className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo", isMobile && "p-4")}
-              style={novaMetaCardStyle}
+              style={cardStyle}
             >
               <h2 className={cn("text-xl text-[#C2410C] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>🎯 Nova Meta</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -798,7 +790,7 @@ export default function Metas() {
             <div className="mt-2">
               <Card
                 className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                style={minhasMetasCardStyle}
+                style={cardStyle}
               >
                 <h2 className={cn("text-xl font-bold text-[#C2410C] mb-4")}>🎯 Minhas Metas</h2>
                 <div className="space-y-5 max-h-[560px] overflow-y-auto no-scrollbar">
@@ -815,7 +807,7 @@ export default function Metas() {
 
             {/* Summary Card (Mobile) */}
             {calculatedMetas.length > 0 && (
-              <div className="mt-2 py-6 px-[18px] shadow-sm rounded-[24px] border border-transparent" style={{ background: "linear-gradient(135deg, #fffaf5 0%, #fdf7ef 100%)", borderColor: "rgba(234, 88, 12, 0.08)", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)" }}>
+              <div className="mt-2 py-6 px-[18px] shadow-sm rounded-[24px] border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
                 <h3 className="text-sm font-black text-[#C2410C] uppercase tracking-widest mb-4">📊 Resumo das Metas</h3>
                 <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-6">
                   {renderSummaryItem("🎯", "Metas Ativas", stats.ativas.toString())}
@@ -854,7 +846,7 @@ export default function Metas() {
           <>
             {/* Desktop Summary Bar */}
             {calculatedMetas.length > 0 && (
-              <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-transparent" style={{ background: "linear-gradient(135deg, #fffaf5 0%, #fdf7ef 100%)", borderColor: "rgba(234, 88, 12, 0.08)", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)" }}>
+              <div className="rounded-[24px] p-6 shadow-sm mb-8 hidden lg:flex items-center border border-[#C2410C]/20" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 50%, rgba(255, 237, 213, 0.9) 100%)" }}>
                 <div className="grid grid-cols-4 items-center gap-x-6 w-full">
                   {renderDesktopSummaryItem("🎯", "Metas Ativas", stats.ativas.toString())}
                   {renderDesktopSummaryItem("💰", "Total Objetivos", formatCurrency(stats.totalObjetivo), true)}
@@ -872,10 +864,10 @@ export default function Metas() {
 
             <div className={cn("grid gap-8 lg:mb-8", "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
               {/* Form */}
-              <div className="h-full">
+              <div className="self-start">
                 <Card
-                  className="p-6 lg:p-8 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full"
-                  style={novaMetaCardStyle}
+                  className="p-6 lg:p-8 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-fit"
+                  style={cardStyle}
                 >
                   <h2 className="text-2xl font-bold mb-6 lg:mb-8" style={{ color: accentColor }}>🎯 Nova Meta</h2>
                   <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
@@ -895,7 +887,7 @@ export default function Metas() {
                       type={isExpired ? "button" : "submit"}
                       onClick={isExpired ? handleBlockedClick : undefined}
                       className={cn(
-                        "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center h-11 lg:h-12",
+                        "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center h-11",
                         isExpired && "opacity-80"
                       )}
                       style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
@@ -909,10 +901,10 @@ export default function Metas() {
               </div>
 
               {/* Metas List */}
-              <div className="h-full">
+              <div className="self-start">
                 <Card
-                  className="p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground h-full"
-                  style={minhasMetasCardStyle}
+                  className="p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground h-fit"
+                  style={cardStyle}
                 >
                   <h2 className="text-2xl font-bold text-[#C2410C] mb-6">🎯 Minhas Metas</h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-start lg:max-h-[480px] lg:overflow-y-auto lg:pr-2 custom-scrollbar">
@@ -1309,3 +1301,4 @@ export default function Metas() {
     );
   }
 }
+
