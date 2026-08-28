@@ -549,7 +549,7 @@ export default function Receitas() {
             maxLength={45}
             className={cn(
               "input-3d-premium resize-none py-1.5 px-3",
-              isMobile ? "min-h-[66px] h-[66px] text-sm" : "min-h-[56px] h-[56px]",
+              isMobile ? "min-h-[61px] h-[61px] text-sm" : "min-h-[51px] h-[51px]",
               getBorderClass({})
             )}
           />

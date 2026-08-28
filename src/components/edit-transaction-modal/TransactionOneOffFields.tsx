@@ -144,7 +144,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
               readOnly
               disabled
-              className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl bg-muted/50 text-muted-foreground", isMobile && "!h-[39px] !min-h-[39px] !max-h-[39px] text-sm")}
             />
           </div>
         )}

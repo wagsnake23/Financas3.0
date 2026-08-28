@@ -189,7 +189,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
               disabled
-              className={cn("rounded-xl font-medium transition-all duration-200 !bg-white shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !text-blue-500 !border-blue-300/50 !border-[1px] !bg-transparent", isMobile && "h-9 text-sm")}
+              className={cn("rounded-xl font-medium transition-all duration-200 !bg-white shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !text-blue-500 !border-blue-300/50 !border-[1px] !bg-transparent", isMobile && "!h-[39px] !min-h-[39px] !max-h-[39px] text-sm")}
             />
           </div>
         )}
@@ -293,7 +293,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           rows={2}
           maxLength={45}
           className={cn(
-            "rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800 resize-none min-h-[56px] h-[56px] py-1.5 px-3",
+            "rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800 resize-none min-h-[51px] h-[51px] py-1.5 px-3",
             isMobile && "text-sm",
             getBorderColor("description")
           )}

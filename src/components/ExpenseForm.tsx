@@ -642,7 +642,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           rows={2}
           maxLength={45}
           className={cn(
-            "input-3d-premium resize-none py-1.5 px-3", isMobile ? "min-h-[66px] h-[66px]" : "min-h-[56px] h-[56px]",
+            "input-3d-premium resize-none py-1.5 px-3", isMobile ? "min-h-[61px] h-[61px]" : "min-h-[51px] h-[51px]",
             "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
             isMobile ? "text-sm" : "!bg-white",
             getBorderClass({ isValid: false })
