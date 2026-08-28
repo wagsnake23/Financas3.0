@@ -969,10 +969,10 @@ export default function Metas() {
               type="button"
               onClick={handleEditSubmit}
               className={cn(
-                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
+                "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-lg flex items-center justify-center",
+                isMobile ? "h-11 !shadow-none mt-2" : "h-11 shadow-[0_2px_4px_rgba(0,0,0,0.05)] mt-2"
               )}
-              style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C" } as any}
+              style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
               disabled={updateMetaMutation.isPending}
             >
               {updateMetaMutation.isPending ? "Atualizando..." : "Atualizar Meta"}
