@@ -24,7 +24,7 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
           isMobile ? "w-[95%] max-w-[348px]" : "w-[95%] max-w-[384px]"
         )}
         style={{
-          background: "linear-gradient(180deg, #FBFCFE 0%, #F6F8FB 100%)",
+          background: "#FFFFFF",
           backgroundBlendMode: "soft-light",
           backdropFilter: "blur(6px)",
           border: isMobile ? "2px solid #FFFFFF" : "none",
