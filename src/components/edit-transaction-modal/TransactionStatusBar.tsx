@@ -57,7 +57,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
             isMobile ? "mx-2 mb-1 py-1 px-2.5 min-h-[36px]" : "mb-2 py-1.5 min-h-[40px]"
         )}>
             {/* Left side: Status and Info */}
-            <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+            <div className={cn("flex items-center overflow-hidden whitespace-nowrap", isMobile ? "gap-1" : "gap-2")}>
                 <div className="flex items-center gap-1.5 shrink-0">
                     <div className={cn(
                         "relative flex items-center justify-center transition-all shrink-0",
@@ -87,9 +87,12 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                 </div>
 
                 {isPaid && paidAtTimestamp && (
-                    <div className="flex items-center gap-1.5 overflow-hidden opacity-95">
+                    <div className={cn("flex items-center overflow-hidden opacity-95", isMobile ? "gap-1" : "gap-1.5")}>
                         <span className="text-slate-300 text-[10px] shrink-0 font-bold">•</span>
-                        <span className="text-[11.5px] text-slate-500 font-semibold truncate leading-none pt-[1px]">
+                        <span className={cn(
+                            "text-slate-500 truncate leading-none pt-[1px]",
+                            isMobile ? "text-[11px] font-medium whitespace-nowrap" : "text-[11.5px] font-semibold"
+                        )}>
                             {formattedDate}
                         </span>
                     </div>

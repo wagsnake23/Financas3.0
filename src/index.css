@@ -560,9 +560,9 @@ body {
 
 @media (max-width: 767px) {
   .input-3d-premium:not(textarea) {
-    height: 42px !important;
-    min-height: 42px !important;
-    max-height: 42px !important;
+    height: 39px !important;
+    min-height: 39px !important;
+    max-height: 39px !important;
   }
 }
 

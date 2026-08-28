@@ -36,7 +36,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "btn-3d flex-1 rounded-xl flex items-center justify-center border-none shadow-[0_2px_4px_rgba(0,0,0,0.05)] !opacity-100",
             !isRecurring ? "!text-white font-bold" : "!text-[#E54D4D] font-extrabold",
-            isMobile && "!h-[42px] py-0.5 text-sm"
+            isMobile && "!h-[39px] py-0.5 text-sm"
           )}
           style={!isRecurring
             ? { "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any
@@ -57,7 +57,7 @@ export const TransactionTypeToggle: React.FC<TransactionTypeToggleProps> = ({
           className={cn(
             "btn-3d flex-1 rounded-xl flex items-center justify-center border-none shadow-[0_2px_4px_rgba(0,0,0,0.05)] !opacity-100",
             isRecurring ? "!text-white font-bold" : "!text-[#E54D4D] font-extrabold",
-            isMobile && "!h-[42px] py-0.5 text-sm"
+            isMobile && "!h-[39px] py-0.5 text-sm"
           )}
           style={isRecurring
             ? { "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", opacity: 1 } as any

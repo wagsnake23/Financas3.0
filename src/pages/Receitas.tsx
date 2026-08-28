@@ -371,7 +371,7 @@ export default function Receitas() {
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
                   !isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
-                  isMobile && "!h-[42px] py-0.5 text-sm"
+                  isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={!isRecurring
                   ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
@@ -392,7 +392,7 @@ export default function Receitas() {
               className={cn(
                 "btn-3d flex-1 rounded-xl flex items-center justify-center border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)]",
                   isRecurring ? "!text-white font-bold" : "!text-slate-500 font-medium",
-                  isMobile && "!h-[42px] py-0.5 text-sm"
+                  isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={isRecurring
                   ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
@@ -426,7 +426,7 @@ export default function Receitas() {
               <SelectTrigger
                 className={cn(
                   "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-                  isMobile ? "!h-[42px] text-sm" : "h-10",
+                  isMobile ? "!h-[39px] text-sm" : "h-10",
                   getBorderClass({
                     isInvalid: validationErrors.tipoReceitaId,
                     isValid: validationErrors.tipoReceitaId === false,
@@ -474,7 +474,7 @@ export default function Receitas() {
               onClick={() => setIsAddSubcategoryModalOpen(true)}
               className={cn(
                 "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-                isMobile ? "!h-[42px] w-[34px] text-sm" : "h-10 w-9 text-base"
+                isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
               )}
               style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1 } as any}
             >
@@ -494,7 +494,7 @@ export default function Receitas() {
               setValidationErrors((prev) => ({ ...prev, valor: false }));
             }}
             className={cn(
-              isMobile ? "!h-[42px] text-sm" : "h-10",
+              isMobile ? "!h-[39px] text-sm" : "h-10",
               "w-full text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] rounded-xl input-3d-premium",
               getBorderClass({
                 isInvalid: validationErrors.valor,
@@ -514,7 +514,7 @@ export default function Receitas() {
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
               "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
-              isMobile ? "!h-[42px] text-sm" : "h-10",
+              isMobile ? "!h-[39px] text-sm" : "h-10",
               !data && "text-muted-foreground",
               getBorderClass({
                 isInvalid: validationErrors.data,

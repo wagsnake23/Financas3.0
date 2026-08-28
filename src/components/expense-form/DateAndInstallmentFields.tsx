@@ -50,7 +50,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
               className={cn(
                 "w-full justify-start text-left font-normal transition-all duration-200 input-3d-premium",
                 !dataVencimento && "text-muted-foreground",
-                "!h-[42px] text-sm",
+                "!h-[39px] text-sm",
                 getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
               )}
             >

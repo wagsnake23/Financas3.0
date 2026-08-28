@@ -481,7 +481,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 aria-expanded={isSubcategoryOpen}
                 className={cn(
                   "flex-1 justify-between font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium rounded-xl text-left border-slate-200 border",
-                  isMobile ? "!h-[42px] text-sm px-3" : "h-10 px-3",
+                  isMobile ? "!h-[39px] text-sm px-3" : "h-10 px-3",
                   getBorderClass({
                     isInvalid: validationErrors.selectedSubcategoryId,
                     isValid: validationErrors.selectedSubcategoryId === false,
@@ -564,7 +564,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             onClick={() => setIsAddSubcategoryModalOpen(true)}
             className={cn(
               "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-              isMobile ? "!h-[42px] w-[34px] text-sm" : "h-10 w-9 text-base"
+              isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
             )}
             style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", opacity: 1 } as any}
           >
