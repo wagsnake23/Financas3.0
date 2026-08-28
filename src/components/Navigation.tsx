@@ -163,7 +163,7 @@ export const Navigation = () => {
     } else if (isLancamentos) {
       color = "#FFFFFF";
     } else if (isInvestimentos) {
-      color = "#F8FAFC"; // equivalente a slate-50
+      color = "#F8FBFF";
     } else if (isCategorias) {
       color = "#F9FAFB";
     } else {
@@ -194,7 +194,7 @@ export const Navigation = () => {
                     : isLancamentos
                     ? "bg-[#FFFFFF]"
                 : isInvestimentos
-                    ? "bg-slate-50"
+                    ? "bg-[#F8FBFF]"
                     : isCategorias
                     ? "bg-[#F9FAFB]"
                     : !scrolled
