@@ -50,6 +50,7 @@ interface TransactionDetailsFieldsProps {
   cartoes: Tables<'cartoes'>[];
   refetchCartoes: () => void;
   tipoPagamento?: "avista" | "parcelado" | "fixo";
+  isRecurringTransaction?: boolean;
 }
 
 export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> = ({
@@ -81,14 +82,14 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
   cartoes,
   refetchCartoes,
   tipoPagamento,
+  isRecurringTransaction,
 }) => {
   const getBorderColor = (errorKey: string) => {
     return validationErrors[errorKey] ? "!border-destructive !border-[1px]" : "!border-slate-300/70 !border-[1px]";
   };
 
   const isExpenseInstallment = (transactionType === "expense" && totalInstallments && totalInstallments > 1);
-  const isRecurringIncome = (transactionType === "income" && totalInstallments && totalInstallments > 1);
-  const showInstallmentField = isExpenseInstallment || isRecurringIncome;
+  const showInstallmentField = isExpenseInstallment || (transactionType === "expense" && tipoPagamento === "fixo");
   const dummyUser: User = { id: "dummy-user-id", email: "dummy@example.com", app_metadata: {}, user_metadata: {}, aud: "", created_at: "" };
 
   const paymentOptions = useMemo(() => {
@@ -181,12 +182,25 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
           />
         </div>
 
-        {/* Parcela (condicional) */}
-        {showInstallmentField && (
+        {/* Parcela (condicional para Despesas) */}
+        {transactionType === "expense" && showInstallmentField && (
           <div className={cn(isMobile && "space-y-1")}>
             <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
+              readOnly
+              disabled
+              className={cn("rounded-xl font-medium transition-all duration-200 !bg-white shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !text-blue-500 !border-blue-300/50 !border-[1px] !bg-transparent", isMobile && "!h-[39px] !min-h-[39px] !max-h-[39px] text-sm")}
+            />
+          </div>
+        )}
+
+        {/* Tipo (para Receitas) */}
+        {transactionType === "income" && (
+          <div className={cn(isMobile && "space-y-1")}>
+            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Tipo</Label>
+            <Input
+              value={isRecurringTransaction ? "Recorrente" : "Avulsa"}
               readOnly
               disabled
               className={cn("rounded-xl font-medium transition-all duration-200 !bg-white shadow-[inset_0_2px_4px_rgba(59,130,246,0.15)] !text-blue-500 !border-blue-300/50 !border-[1px] !bg-transparent", isMobile && "!h-[39px] !min-h-[39px] !max-h-[39px] text-sm")}

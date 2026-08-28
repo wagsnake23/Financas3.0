@@ -186,6 +186,7 @@ export const TransactionEditForm: React.FC<TransactionEditFormProps> = ({
             setCartaoId={setCartaoId}
             cartoes={cartoes}
             refetchCartoes={refetchCartoes}
+            isRecurringTransaction={isRecurringTransaction}
           />
         </div>
 
