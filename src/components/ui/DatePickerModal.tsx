@@ -21,6 +21,7 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
       <DialogContent
         className={cn(
           "p-0 border-none gap-0 overflow-hidden !rounded-[19px]",
+          "[&>button]:!top-[12px] [&>button]:!right-[14px]",
           isMobile ? "w-[95%] max-w-[348px]" : "w-[95%] max-w-[384px]"
         )}
         style={{
