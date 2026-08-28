@@ -576,8 +576,8 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-white rounded-[10px] py-2 px-4 shadow-sm border border-gray-100 flex items-center justify-between mb-2 animate-fade-in active:bg-gray-50 transition-all",
-                    item.status ? "border-l-4 border-l-[#25D366]" : "border-l-4 border-l-[#FF8888]"
+                    "bg-[#FCFDFE] rounded-[7px] py-2 px-4 border border-[#E2E8F0]/60 shadow-[0_1px_2px_rgba(15,23,42,0.03)] flex items-center justify-between mb-2 animate-fade-in active:scale-[0.99] transition-all",
+                    item.status ? "border-l-[3px] border-l-[#25D366]" : "border-l-[3px] border-l-[#FF8888]"
                   )}
                 >
                   <div className="flex flex-col w-full gap-1">
