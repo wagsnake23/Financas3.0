@@ -776,7 +776,7 @@ export const TransactionList = ({
                 </span>
 
                 <div className={cn(
-                  "flex items-center rounded-full border shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] h-[29px] max-w-[55vw] transition-all",
+                  "flex items-center rounded-full border shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] h-[29px] max-w-[55vw] transition-all mt-[3px]",
                   activeFilterNames.length > 0
                     ? "bg-[#EFF6FF] border-[#BFDBFE]"
                     : "border-black/[0.08] bg-white/60"
