@@ -420,18 +420,17 @@ export const TransactionList = ({
 
   const hideTypeFilter = isMobile && filterPaymentOptionId !== "all";
 
-  const mobileStatusFilteredTransactions = useMemo(() => {
-    if (!isMobile) return sortedTransactions;
+  const statusFilteredTransactions = useMemo(() => {
     return sortedTransactions.filter(t => {
       if (footerStatusFilter === "all") return true;
       if (footerStatusFilter === "paid") return t.status === "Recebida";
       if (footerStatusFilter === "pending") return t.status !== "Recebida";
       return true;
     });
-  }, [sortedTransactions, footerStatusFilter, isMobile]);
+  }, [sortedTransactions, footerStatusFilter]);
 
-  // Removido o slice para que todas as transações filtradas sejam exibidas e a rolagem funcione
-  const transactionsToDisplay = isMobile ? mobileStatusFilteredTransactions : sortedTransactions;
+  // Usa statusFilteredTransactions tanto no mobile quanto no desktop
+  const transactionsToDisplay = statusFilteredTransactions;
 
   // Remove auto-scroll
   const getTodayMarkerText = () => {
@@ -574,31 +573,23 @@ export const TransactionList = ({
               </SelectContent>
             </Select>
 
-            {/* Chip: Subcategoria */}
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
+            {/* Chip: Status */}
+            <Select value={footerStatusFilter} onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}>
               <SelectTrigger
                 className={cn(
                   "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                  filterCategory !== "all"
-                    ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
+                  footerStatusFilter !== "all"
+                    ? (footerStatusFilter === "paid" ? "bg-[#26A765] hover:bg-[#26A765]/90" : "bg-[#E55B5B] hover:bg-[#E55B5B]/90") + " text-white border-transparent font-bold"
                     : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
                   "flex-1 h-9"
                 )}
               >
-                <SelectValue placeholder="Subcategoria" />
+                <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-none shadow-xl">
-                <SelectItem value="all">Subcategoria</SelectItem>
-                {selectableCategories
-                  .filter(cat => cat.id !== "")
-                  .map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      <div className="flex items-center gap-2">
-                        <span>{cat.icone}</span>
-                        <span>{getCategoryDisplayName(cat.id)}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                <SelectItem value="all">Todos os status</SelectItem>
+                <SelectItem value="paid">✅ Pagos / Recebidos</SelectItem>
+                <SelectItem value="pending">⏳ Pendentes</SelectItem>
               </SelectContent>
             </Select>
 
@@ -652,8 +643,7 @@ export const TransactionList = ({
       )}
 
         <div className={cn(
-          !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-          isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : ""
+          isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : "mt-4"
         )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
@@ -702,55 +692,28 @@ export const TransactionList = ({
             )}
           </div>
         ) : (
-          <div className="lancamentos-scroll-container pb-8">
-            <Table className="lancamentos-table table-fixed border-separate border-spacing-0">
-              <TableHeader className="lancamentos-table-header bg-gradient-to-b from-blue-50 to-white">
-                <TableRow>
-                  <TableHead className="w-[12%] py-4">
-                    Data
-                  </TableHead>
-                  <TableHead className="text-center w-[12%] py-4">
-                    Tipo
-                  </TableHead>
-                  <TableHead className="w-[18%] py-4">
-                    Subcategoria
-                  </TableHead>
-                  <TableHead className="text-left w-[20%] py-4">
-                    Descrição
-                  </TableHead>
-                  <TableHead className="text-right w-[15%] py-4">
-                    Valor
-                  </TableHead>
-                  <TableHead className="text-center w-[10%] py-4">Status</TableHead>
-                  <TableHead className="text-center w-[13%] py-4">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="lancamentos-table-body">
-                {transactionsToDisplay.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-12 text-muted-foreground font-medium">
-                      Nenhum lançamento encontrado
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  transactionsToDisplay.map((transaction) => (
-                    <TransactionRow
-                      key={transaction.id}
-                      transaction={transaction}
-                      onDeleteTransaction={onDeleteTransaction}
-                      onEditTransaction={onEditTransaction}
-                      allCategories={allCategories}
-                      cartoes={cartoes}
-                      isMobile={isMobile}
-                      queryClient={queryClient}
-                      user={user}
-                      onToggleStatus={onToggleTransactionStatus}
-                    />
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <div className="flex flex-col gap-[6px] pb-8">
+              {transactionsToDisplay.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground font-medium">
+                  Nenhum lançamento encontrado
+                </div>
+              ) : (
+                transactionsToDisplay.map((transaction) => (
+                  <TransactionRow
+                    key={transaction.id}
+                    transaction={transaction}
+                    onDeleteTransaction={onDeleteTransaction}
+                    onEditTransaction={onEditTransaction}
+                    allCategories={allCategories}
+                    cartoes={cartoes}
+                    isMobile={isMobile}
+                    queryClient={queryClient}
+                    user={user}
+                    onToggleStatus={onToggleTransactionStatus}
+                  />
+                ))
+              )}
+            </div>
         )}
       </div>
 

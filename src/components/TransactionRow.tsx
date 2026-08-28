@@ -309,141 +309,201 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     );
   }
 
+  // --- Desktop: Minicard horizontal ---
+    const dFormattedDate = (() => {
+      try {
+        const day = format(transactionDate, "dd", { locale: ptBR });
+        const mmmRaw = format(transactionDate, "MMM", { locale: ptBR });
+        const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
+        const yyyy = format(transactionDate, "yyyy");
+        return `${day} ${mmm} ${yyyy}`;
+      } catch { return ""; }
+    })();
+
+    const dWeekday = (() => {
+      try {
+        const wd = format(transactionDate, "EEEE", { locale: ptBR });
+        return wd.charAt(0).toUpperCase() + wd.slice(1);
+      } catch { return ""; }
+    })();
+
+    const dPaymentDetails = (() => {
+      const fp = transaction.forma_pagamento;
+      if (fp === "cartao") {
+        const cartao = cartoes.find(c => c.id === transaction.cartao_id);
+        return { icon: "💳", name: cartao ? cartao.nome : "Cartão" };
+      } else if (fp === "pix") return { icon: "🪙", name: "Pix" };
+      else if (fp === "dinheiro" || fp === "cash") return { icon: "💵", name: "Dinheiro" };
+      else if (fp === "boleto") return { icon: "🧾", name: "Boleto" };
+      else if (fp === "debit") return { icon: "💳", name: "Débito" };
+      else if (fp === "credit") return { icon: "💳", name: "Crédito" };
+      else if (fp) {
+        const name = fp.charAt(0).toUpperCase() + fp.slice(1);
+        let icon = "💳";
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes("pix")) icon = "🪙";
+        else if (lowerName.includes("dinheiro") || lowerName.includes("cash")) icon = "💵";
+        else if (lowerName.includes("boleto")) icon = "🧾";
+        else if (lowerName.includes("transferencia") || lowerName.includes("transferência")) icon = "🏦";
+        return { icon, name };
+      }
+      return { icon: "", name: "" };
+    })();
+
+    const dIsFixo = transaction.type === "expense" && transaction.tipo_pagamento === "fixo";
+    const dIsParcelado = !dIsFixo && !!(transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1);
+    const dPaymentType = (() => {
+      if (dIsFixo) return "Fixo";
+      if (dIsParcelado) {
+        const current = String(transaction.installmentNumber).padStart(2, '0');
+        const total = String(transaction.totalInstallments).padStart(2, '0');
+        return `${current}/${total}`;
+      }
+      return "Avulsa";
+    })();
+
+    const categoryColor = category?.cor || "#6B7280";
+
   return (
-    <TableRow
-      className={cn(
-        "group cursor-pointer transition-colors border-b border-gray-50",
-        transaction.status === "Recebida" ? "bg-success/[0.02] hover:bg-success/[0.05]" : "hover:bg-gray-50/80"
-      )}
+    <div
       onClick={() => onEditTransaction(transaction)}
+      className={cn(
+        "group cursor-pointer bg-white rounded-[12px] border border-[#E7EDF5] shadow-[0_2px_10px_rgba(15,23,42,0.04)] mb-[6px] transition-all hover:shadow-[0_4px_16px_rgba(15,23,42,0.07)] hover:border-[#D5DDE8] active:scale-[0.995]",
+        transaction.type === "income"
+          ? "border-l-[3px] border-l-[#10B981]/60"
+          : "border-l-[3px] border-l-[#F43F5E]/60"
+      )}
     >
-      {/* 📌 DATA */}
-      <TableCell className="py-4 px-4 text-left font-medium text-gray-600 font-roboto">
-        {format(transactionDate, "dd/MM/yyyy", { locale: ptBR })}
-      </TableCell>
+      <div className="flex items-center w-full px-6 py-[13px] gap-4">
 
-      {/* 📌 TIPO (Receita/Despesa) */}
-      <TableCell className="py-4 px-4 text-center">
-        <div className={cn(
-          "inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border",
-          transaction.type === "income"
-            ? "bg-success/10 text-success border-success/20"
-            : "bg-destructive/10 text-destructive border-destructive/20"
-        )}>
-          {transaction.type === "income" ? "Receita" : "Despesa"}
+        {/* COL 1 — Data (14%) */}
+        <div className="flex flex-col w-[13%] shrink-0">
+          <span className="text-[13px] font-semibold text-slate-700 leading-tight">{dFormattedDate}</span>
+          <span className="text-[11px] text-slate-400 font-normal mt-[3px] leading-none">{dWeekday}</span>
         </div>
-      </TableCell>
 
-      {/* 📌 CATEGORIA */}
-      <TableCell className="py-4 px-4 text-left">
-        <div className="flex items-center gap-2 font-semibold text-gray-700 font-roboto">
-          <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-white transition-colors shadow-inner">
-            {categoryIcon ? (
-              <DynamicIcon name={categoryIcon} className="h-4 w-4" />
-            ) : (
-              <div className="h-2 w-2 rounded-full bg-gray-300" />
+        {/* COL 2 — Tipo badge (10%) — logo após a data */}
+        <div className="flex items-center justify-start w-[10%] shrink-0">
+          <div className={cn(
+            "inline-flex items-center justify-center px-[10px] py-[4px] rounded-full text-[10px] font-bold uppercase tracking-wider border",
+            transaction.type === "income"
+              ? "bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]"
+              : "bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]"
+          )}>
+            {transaction.type === "income" ? "Receita" : "Despesa"}
+          </div>
+        </div>
+
+        {/* COL 3 — Categoria/Subcategoria (17%) */}
+        <div className="flex items-center gap-2.5 w-[17%] shrink-0">
+          <div
+            className={cn(
+              "h-[34px] w-[34px] rounded-[9px] flex items-center justify-center shrink-0 border border-slate-100 shadow-[0_2px_6px_-2px_rgba(15,23,42,0.06)] bg-gradient-to-br",
+              dIsFixo ? "from-red-50/80 to-red-100/40" :
+              dIsParcelado ? "from-purple-50/80 to-purple-100/40" :
+              transaction.type === "income" ? "from-green-50/80 to-green-100/40" :
+              "from-blue-50/80 to-blue-100/40"
+            )}
+          >
+            <DynamicIcon
+              name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
+              className="h-[17px] w-[17px] opacity-90"
+              style={{ color: categoryColor }}
+            />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[13px] font-bold text-slate-800 leading-tight truncate">{categoryName}</span>
+            {dPaymentType && (
+              <span className={cn(
+                "text-[11px] font-medium mt-[2px] leading-none",
+                dIsFixo ? "text-[#FF8888]/90" :
+                dIsParcelado ? "text-purple-500/90" :
+                "text-slate-400"
+              )}>
+                {dPaymentType}
+              </span>
             )}
           </div>
-          {categoryName}
         </div>
-      </TableCell>
 
-      {/* 📌 DESCRIÇÃO */}
-      <TableCell className="py-4 px-4 text-left text-gray-500 max-w-[200px] truncate font-roboto">
-        {transaction.description || "-"}
-      </TableCell>
-
-      {/* 📌 VALOR */}
-      <TableCell
-        className={cn(
-          "py-4 px-4 text-right font-bold text-base tracking-tight font-roboto",
-          transaction.type === "income" ? "text-success" : "text-destructive"
-        )}
-      >
-        {formatCurrency(transaction.amount, true)}
-      </TableCell>
-
-      {/* 📌 STATUS */}
-      <TableCell className="py-4 px-4 text-center font-roboto">
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleStatus(transaction.id, transaction.type, newStatus);
-          }}
-          className={cn(
-            "mx-auto flex items-center justify-center rounded-full cursor-pointer select-none transition-all border shadow-sm relative",
-            transaction.status === "Recebida"
-              ? "bg-[#25D366] border-[#25D366] h-[18px] w-[18px]"
-              : "bg-[#FEF3C7] border-[#FEF3C7] h-[18px] w-[18px]"
-          )}
-        >
-          {transaction.status === "Recebida" ? (
-            <Check className="absolute text-white w-[14px] h-[14px]" strokeWidth={4} />
-          ) : (
-            <Clock className="absolute text-[#D97706] w-[14px] h-[14px]" strokeWidth={4} />
+        {/* COL 4 — Descrição (dominante, flex-1 ~24%) */}
+        <div className="flex flex-col flex-1 min-w-0 px-2">
+          <span className="text-[13px] font-semibold text-slate-700 leading-tight truncate">
+            {transaction.description || categoryName}
+          </span>
+          {transaction.description && (
+            <span className="text-[11px] text-slate-400 font-normal truncate mt-[3px] leading-none">
+              {categoryName}
+            </span>
           )}
         </div>
-      </TableCell>
 
-      {/* 📌 AÇÕES */}
-      <TableCell className="py-4 px-4 text-center font-roboto">
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="flex items-center justify-center gap-2"
-        >
+        {/* COL 5 — Valor + Status (13%) */}
+        <div className="flex flex-col items-end w-[13%] shrink-0">
+          <span className={cn(
+            "text-[15px] font-bold tracking-tight leading-tight",
+            transaction.type === 'income' ? "text-[#059669]" : "text-[#DC2626]"
+          )}>
+            {formatCurrency(transaction.amount, true)}
+          </span>
+          <div className="flex items-center gap-1.5 mt-[5px]">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleStatus(transaction.id, transaction.type, newStatus);
+              }}
+              className={cn(
+                "flex items-center justify-center rounded-full cursor-pointer select-none transition-all border shadow-sm relative h-[16px] w-[16px] shrink-0",
+                transaction.status === "Recebida"
+                  ? "bg-[#25D366] border-[#25D366]"
+                  : "bg-[#FEF3C7] border-[#FEF3C7]"
+              )}
+            >
+              {transaction.status === "Recebida" ? (
+                <Check className="absolute text-white w-[11px] h-[11px]" strokeWidth={4} />
+              ) : (
+                <Clock className="absolute text-[#D97706] w-[11px] h-[11px]" strokeWidth={4} />
+              )}
+            </div>
+            <span className={cn(
+              "text-[11px] font-medium leading-none whitespace-nowrap",
+              transaction.status === "Recebida" ? "text-[#10B955]" : "text-[#EF4444]/80"
+            )}>
+              {transaction.status === "Recebida"
+                ? (transaction.type === "income" ? "Recebido" : "Pago")
+                : "Pendente"}
+            </span>
+          </div>
+        </div>
+
+        {/* COL 6 — Forma de Pagamento (11%) */}
+        <div className="flex flex-col items-center w-[11%] shrink-0">
+          {dPaymentDetails.icon && (
+            <span className="text-[15px] leading-none mb-[3px]">{dPaymentDetails.icon}</span>
+          )}
+          <span className="text-[11px] text-slate-500 font-medium leading-none truncate max-w-full text-center">
+            {dPaymentDetails.name || "-"}
+          </span>
+        </div>
+
+        {/* COL 7 — Ações (12%) */}
+        <div className="flex items-center justify-center w-[12%] shrink-0 pl-2" onClick={(e) => e.stopPropagation()}>
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             onClick={(e) => {
               e.stopPropagation();
               onEditTransaction(transaction);
             }}
-            className="h-9 w-9 text-primary hover:bg-primary/10 rounded-xl"
+            className="h-[34px] px-4 text-slate-500 hover:text-[#1E3A8B] hover:bg-blue-50/80 rounded-lg text-[12px] font-semibold gap-1.5 transition-colors border border-transparent hover:border-blue-100"
           >
-            <SquarePen className="h-4 w-4" />
+            <SquarePen className="h-3.5 w-3.5" />
+            Editar
           </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={(e) => e.stopPropagation()}
-                className="hidden h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className={cn(isMobile ? "dialog-mobile !pb-4" : "!pb-4")}>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="font-black text-[#1E40AF]">Confirmar Exclusão</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Tem certeza que deseja excluir esta {transaction.type === 'income' ? 'receita' : 'despesa'}? Esta ação não pode ser desfeita.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between")}>
-                <AlertDialogCancel className={cn(
-                  "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-                  isMobile && "h-11 text-lg"
-                )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteTransaction(transaction.id, transaction.type, "oneOff");
-                  }}
-                  className={cn(
-                    "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                    isMobile && "h-12 text-lg"
-                  )}
-                  style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
-                >
-                  Excluir
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
-      </TableCell>
-    </TableRow>
+
+      </div>
+    </div>
   );
 };
 

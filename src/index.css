@@ -293,20 +293,14 @@ body {
 /* Apenas para Desktop */
 @media (min-width: 1024px) {
 
-  .lancamentos-wrapper {
-    position: relative;
-  }
-
-  /* Ãrea rolÃ¡vel apenas no corpo da tabela */
+  /* Cards list container — sem scroll interno, fundo transparente */
   .lancamentos-scroll-container {
-    max-height: calc(100vh - 360px);
-    overflow-y: auto;
-    overflow-x: auto;
-    /* Permitir scroll horizontal se necessÃ¡rio */
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  /* Desabilitar o overflow do wrapper interno do Shadcn para nÃ£o quebrar o sticky */
+  /* Desabilitar o overflow do wrapper interno do Shadcn para não quebrar o sticky */
   .lancamentos-scroll-container>div {
     overflow: visible !important;
   }
