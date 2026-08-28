@@ -85,7 +85,7 @@ const Lancamentos = () => {
     <div
       className={cn(
         "flex flex-col min-h-screen relative",
-        isMobile ? "pt-14 bg-[#F7F9FC] text-black h-screen overflow-hidden" : "pt-[72px] global-bg"
+        isMobile ? "pt-14 bg-[#FFFFFF] text-black h-screen overflow-hidden" : "pt-[72px] global-bg"
       )}>
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
@@ -126,7 +126,7 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container-app flex-grow",
-          isMobile ? "pt-0 pb-0 flex flex-col min-h-0 bg-[#F7F9FC]" : "pt-0 pb-8 -mt-6"
+          isMobile ? "pt-0 pb-0 flex flex-col min-h-0 bg-[#FFFFFF]" : "pt-0 pb-8 -mt-6"
         )}
       >
         <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "mt-3 mb-6 h-10")}>

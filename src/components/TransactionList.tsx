@@ -516,12 +516,12 @@ export const TransactionList = ({
 
 
   return (
-    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#F7F9FC]" : "pb-6")}>
+    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#FFFFFF]" : "pb-6")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col gap-2 mb-1",
-        !isMobile && "flex-row items-center gap-3 mb-6"
+        isMobile ? "-mt-[3px]" : "flex-row items-center gap-3 mb-6"
       )}>
         {/* Campo de Pesquisa */}
         <div className={cn("relative group w-full", !isMobile && "flex-1")}>
@@ -651,10 +651,10 @@ export const TransactionList = ({
         </div>
       )}
 
-      <div className={cn(
-        !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
-        isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#F7F9FC]" : ""
-      )}>
+        <div className={cn(
+          !isMobile && "rounded-xl border shadow-sm bg-white lancamentos-wrapper mt-4",
+          isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : ""
+        )}>
         {isMobile ? (
           <div className="flex flex-col gap-1 pb-4">
             {finalDisplayTransactions.length === 0 ? (
@@ -762,7 +762,7 @@ export const TransactionList = ({
         {isMobile ? (
           /* Mobile premium bottom bar */
           <div 
-            className="bg-[#F7F9FC] rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
+            className="bg-[#FFFFFF] rounded-t-[10px] overflow-hidden border-t border-[#E9EDF2] px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
             style={{ 
               marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))", 
               marginRight: "calc(-1 * clamp(18px, 4vw, 32px))" 
@@ -770,7 +770,7 @@ export const TransactionList = ({
           >
             <div className="flex flex-col w-full">
               {/* LINHA 1: CONTEXTO E FILTRO */}
-              <div className="flex items-center justify-between w-full pb-2 border-b border-black/[0.04]">
+              <div className="flex items-center justify-between w-full pb-2">
                 <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
                   {footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount} {(footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                 </span>
@@ -890,21 +890,21 @@ export const TransactionList = ({
               <div className="grid grid-cols-3 w-full pt-1 text-center">
                 {/* Coluna 1 */}
                 <div className="flex flex-col items-center">
-                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
                     {filterType === 'expense' ? 'Pago' : 'Receitas'}
                   </span>
-                  <span className="text-sm xs:text-[15px] font-black text-[#22C55E] mt-0.5 whitespace-nowrap">
+                  <span className="text-sm xs:text-[15px] font-bold text-[#22C55E] mt-0.5 whitespace-nowrap">
                     {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, true)}
                   </span>
                 </div>
 
                 {/* Coluna 2 */}
-                <div className="flex flex-col items-center border-l border-black/[0.04]">
-                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                <div className="flex flex-col items-center">
+                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
                     {filterType === 'income' ? 'Pendente' : 'Despesas'}
                   </span>
                   <span className={cn(
-                    "text-sm xs:text-[15px] font-black mt-0.5 whitespace-nowrap",
+                    "text-sm xs:text-[15px] font-bold mt-0.5 whitespace-nowrap",
                     filterType === 'income' ? "text-[#FF8888]" : "text-destructive"
                   )}>
                     {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, true)}
@@ -912,11 +912,11 @@ export const TransactionList = ({
                 </div>
 
                 {/* Coluna 3 */}
-                <div className="flex flex-col items-center border-l border-black/[0.04]">
-                  <span className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">
+                <div className="flex flex-col items-center">
+                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
                     Saldo
                   </span>
-                  <span className="text-sm xs:text-[15px] font-black text-primary mt-0.5 whitespace-nowrap">
+                  <span className="text-sm xs:text-[15px] font-bold text-primary mt-0.5 whitespace-nowrap">
                     {formatCurrency(accumulatedValue, true)}
                   </span>
                 </div>
