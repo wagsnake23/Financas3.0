@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
-import { Lock } from "lucide-react";
+import { Lock, Save, Trash } from "lucide-react";
 
 interface TransactionEditActionsProps {
   onTriggerDeleteConfirmation: () => void;
@@ -48,23 +48,25 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         type="button"
         onClick={onTriggerDeleteConfirmation} // Chama a nova prop
         className={cn(
-          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11"
+          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center gap-2"
         )}
         style={{ "--cor-topo": "#EF5A5A", "--cor-base": "#E54D4D" } as any}
         disabled={isLoading}
       >
+        <Trash className="h-5 w-5" strokeWidth={2.5} />
         Excluir
       </Button>
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "w-full rounded-[14px] btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+          "w-full rounded-[14px] btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 flex items-center justify-center gap-2",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
         disabled={!isExpired && isLoading}
         onClick={isExpired ? handleBlockedClick : onSave}
       >
+        <Save className="h-5 w-5" strokeWidth={2.5} />
         {isLoading && !isExpired ? "Salvando..." : "Salvar"}
         {isExpired && <span className="ml-1.5 text-base">🔒</span>}
       </Button>
