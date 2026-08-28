@@ -86,13 +86,20 @@ export const TransactionList = ({
   const [localSearch, setLocalSearch] = useState(searchTerm);
   const [footerStatusFilter, setFooterStatusFilter] = useState<"all" | "paid" | "pending">("all");
 
-  const activeFiltersCount = useMemo(() => {
-    let count = 0;
-    if (footerStatusFilter !== "all") count++;
-    if (filterType !== "all") count++;
-    if (filterPaymentOptionId !== "all") count++;
-    return count;
-  }, [footerStatusFilter, filterType, filterPaymentOptionId]);
+  const activeFilterNames = useMemo(() => {
+    const names: string[] = [];
+    if (footerStatusFilter === "paid") names.push("Pagos");
+    if (footerStatusFilter === "pending") names.push("Pendentes");
+    if (filterType === "income") names.push("Receitas");
+    if (filterType === "expense") names.push("Despesas");
+    if (filterPaymentOptionId === "dinheiro") names.push("Dinheiro");
+    else if (filterPaymentOptionId === "pix") names.push("Pix");
+    else if (filterPaymentOptionId !== "all") {
+      const card = cartoes.find(c => c.id === filterPaymentOptionId);
+      if (card) names.push(card.nome);
+    }
+    return names;
+  }, [footerStatusFilter, filterType, filterPaymentOptionId, cartoes]);
 
   // Sync local search with global search term (e.g. when filters are cleared)
   useEffect(() => {
@@ -764,25 +771,33 @@ export const TransactionList = ({
             <div className="flex flex-col w-full">
               {/* LINHA 1: CONTEXTO E FILTRO */}
               <div className="flex items-center justify-between w-full pb-2 border-b border-black/[0.04]">
-                {footerStatusFilter === "all" ? (
-                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
-                    📄 {totalCount} {totalCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
-                  </span>
-                ) : footerStatusFilter === "paid" ? (
-                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
-                    📄 {paidCount} {paidCount === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
-                  </span>
-                ) : (
-                  <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
-                    📄 {pendingCount} {pendingCount === 1 ? "item" : "itens"} • <span className="text-[#FF8888] font-bold">{pendingPercentage}% pendentes</span>
-                  </span>
-                )}
+                <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
+                  {footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount} {(footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
+                </span>
 
                 <Popover>
                   <PopoverTrigger asChild>
                     <button className="h-[26px] py-0 px-3 text-xs font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 focus:outline-none w-auto transition-all">
                       <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
-                      {activeFiltersCount > 0 ? `Filtros (${activeFiltersCount})` : "Filtros ▼"}
+                      {activeFilterNames.length > 0 ? (
+                        <div className="flex items-center gap-1">
+                          <span>{activeFilterNames.join(" • ")}</span>
+                          <span 
+                            className="text-[10px] ml-0.5 px-0.5 opacity-60 hover:opacity-100 cursor-pointer"
+                            onPointerDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setFooterStatusFilter("all");
+                              setFilterType("all");
+                              setFilterPaymentOptionId("all");
+                            }}
+                          >
+                            ✕
+                          </span>
+                        </div>
+                      ) : (
+                        "Todos"
+                      )}
                     </button>
                   </PopoverTrigger>
                   <PopoverContent 
