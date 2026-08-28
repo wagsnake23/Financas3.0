@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, AppCategory, TransactionType } from "@/types/finance";
 import DynamicIcon from "./DynamicIcon";
@@ -84,6 +85,14 @@ export const TransactionList = ({
 
   const [localSearch, setLocalSearch] = useState(searchTerm);
   const [footerStatusFilter, setFooterStatusFilter] = useState<"all" | "paid" | "pending">("all");
+
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (footerStatusFilter !== "all") count++;
+    if (filterType !== "all") count++;
+    if (filterPaymentOptionId !== "all") count++;
+    return count;
+  }, [footerStatusFilter, filterType, filterPaymentOptionId]);
 
   // Sync local search with global search term (e.g. when filters are cleared)
   useEffect(() => {
@@ -532,100 +541,88 @@ export const TransactionList = ({
         </div>
 
         {/* Container de Filtros */}
-        <div className={cn(
-          "flex gap-2 overflow-x-auto no-scrollbar py-0.5 shrink-0",
-          (isMobile && filterType === "income") && "w-full",
-          (isMobile && isValidUuid(filterPaymentOptionId)) ? "flex-wrap items-start" : "items-center flex-nowrap",
-          !isMobile && "flex-[3] overflow-visible items-center"
-        )}>
-          {/* Chip: Tipo */}
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger
-              className={cn(
-                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                (isMobile && filterType === "income")
-                  ? "bg-gradient-to-r from-[#1EA35E] to-[#10B981] hover:opacity-90 text-white border-transparent font-bold shadow-sm"
-                  : filterType !== "all"
+        {!isMobile && (
+          <div className={cn(
+            "flex gap-2 overflow-x-auto no-scrollbar py-0.5 shrink-0 items-center flex-[3] overflow-visible"
+          )}>
+            {/* Chip: Tipo */}
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger
+                className={cn(
+                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  filterType !== "all"
                     ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                     : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                hideTypeFilter && "hidden",
-                (isMobile && filterType === "income") && "flex-1 w-full justify-between",
-                !isMobile && "flex-1 h-9"
-              )}
-            >
-              <div className="flex items-center gap-1.5">
-                <SelectValue placeholder="Todos os tipos" />
-              </div>
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
-              <SelectItem value="all">Todos os tipos</SelectItem>
-              <SelectItem value="income">Receitas</SelectItem>
-              <SelectItem value="expense">Despesas</SelectItem>
-            </SelectContent>
-          </Select>
+                  "flex-1 h-9"
+                )}
+              >
+                <div className="flex items-center gap-1.5">
+                  <SelectValue placeholder="Todos os tipos" />
+                </div>
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl border-none shadow-xl">
+                <SelectItem value="all">Todos os tipos</SelectItem>
+                <SelectItem value="income">Receitas</SelectItem>
+                <SelectItem value="expense">Despesas</SelectItem>
+              </SelectContent>
+            </Select>
 
-          {/* Chip: Subcategoria */}
-          <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger
-              className={cn(
-                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                (isMobile && filterType === "income" && filterCategory !== "all")
-                  ? "bg-gradient-to-r from-[#1EA35E] to-[#10B981] hover:opacity-90 text-white border-transparent font-bold shadow-sm"
-                  : filterCategory !== "all"
+            {/* Chip: Subcategoria */}
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger
+                className={cn(
+                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  filterCategory !== "all"
                     ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
                     : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                (isMobile && isValidUuid(filterPaymentOptionId)) && "hidden",
-                (isMobile && filterType === "income") && "flex-1 w-full justify-between",
-                !isMobile && "flex-1 h-9"
-              )}
-            >
-              <SelectValue placeholder="Subcategoria" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
-              <SelectItem value="all">Subcategoria</SelectItem>
-              {selectableCategories
-                .filter(cat => cat.id !== "")
-                .map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    <div className="flex items-center gap-2">
-                      <span>{cat.icone}</span>
-                      <span>{getCategoryDisplayName(cat.id)}</span>
-                    </div>
+                  "flex-1 h-9"
+                )}
+              >
+                <SelectValue placeholder="Subcategoria" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl border-none shadow-xl">
+                <SelectItem value="all">Subcategoria</SelectItem>
+                {selectableCategories
+                  .filter(cat => cat.id !== "")
+                  .map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      <div className="flex items-center gap-2">
+                        <span>{cat.icone}</span>
+                        <span>{getCategoryDisplayName(cat.id)}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+
+            {/* Chip: Forma de Pagamento */}
+            <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
+              <SelectTrigger
+                className={cn(
+                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  filterPaymentOptionId !== "all"
+                    ? (isValidUuid(filterPaymentOptionId)
+                      ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold"
+                      : (filterType === "expense" 
+                          ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
+                          : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
+                    )
+                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
+                  "flex-1 h-9"
+                )}
+              >
+                <SelectValue placeholder="Forma de Pagamento" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl border-none shadow-xl">
+                {paymentFilterOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
                   </SelectItem>
                 ))}
-            </SelectContent>
-          </Select>
-
-          {/* Chip: Forma de Pagamento */}
-          <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
-            <SelectTrigger
-              className={cn(
-                "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
-                filterPaymentOptionId !== "all"
-                  ? (isValidUuid(filterPaymentOptionId)
-                    ? (isMobile 
-                        ? "bg-white border-[#2B75D6] border-[1.5px] text-[#2B75D6] hover:bg-blue-50/50 [&>svg]:text-[#2B75D6] [&>svg]:opacity-100 font-semibold w-full justify-between" 
-                        : "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold")
-                    : (filterType === "expense" 
-                        ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
-                        : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
-                  )
-                  : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                (isMobile && filterType === "income") && "hidden",
-                !isMobile && "flex-1 h-9"
-              )}
-            >
-              <SelectValue placeholder="Forma de Pagamento" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-none shadow-xl">
-              {paymentFilterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
@@ -781,22 +778,71 @@ export const TransactionList = ({
                   </span>
                 )}
 
-                <Select 
-                  value={footerStatusFilter} 
-                  onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
-                >
-                  <SelectTrigger className="h-[26px] py-0 px-3 text-xs font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 gap-1.5 focus:ring-0 focus:ring-offset-0 w-auto transition-all">
-                    <div className="flex items-center gap-1 max-w-[85px]">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="h-[26px] py-0 px-3 text-xs font-bold rounded-full border border-black/[0.08] bg-white/60 shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)] hover:bg-slate-50 text-slate-700 flex items-center gap-1.5 focus:outline-none w-auto transition-all">
                       <Filter className="h-3 w-3 text-slate-400 shrink-0" strokeWidth={2.5} />
-                      <SelectValue />
+                      {activeFiltersCount > 0 ? `Filtros (${activeFiltersCount})` : "Filtros ▼"}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent 
+                    className="w-[280px] rounded-[16px] border border-slate-100 shadow-xl p-4 bg-white mb-2" 
+                    align="end"
+                    sideOffset={8}
+                  >
+                    <div className="flex flex-col gap-4">
+                      {/* Status */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
+                        <Select 
+                          value={footerStatusFilter} 
+                          onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
+                        >
+                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-[14px]">
+                            <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
+                            <SelectItem value="paid" className="text-[13px] font-medium py-2">Pagos</SelectItem>
+                            <SelectItem value="pending" className="text-[13px] font-medium py-2">Pendentes</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Tipo */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tipo</span>
+                        <Select value={filterType} onValueChange={setFilterType}>
+                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-[14px]">
+                            <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
+                            <SelectItem value="income" className="text-[13px] font-medium py-2">Receitas</SelectItem>
+                            <SelectItem value="expense" className="text-[13px] font-medium py-2">Despesas</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Forma de Pagamento */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Forma de Pagamento</span>
+                        <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
+                          <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-[14px]">
+                            {paymentFilterOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value} className="text-[13px] font-medium py-2">
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                  </SelectTrigger>
-                  <SelectContent className="rounded-[14px] border border-slate-100 shadow-xl overflow-hidden">
-                    <SelectItem value="all" className="text-[13px] font-medium py-2">Todos</SelectItem>
-                    <SelectItem value="paid" className="text-[13px] font-medium py-2">Pagos</SelectItem>
-                    <SelectItem value="pending" className="text-[13px] font-medium py-2">Pendentes</SelectItem>
-                  </SelectContent>
-                </Select>
+                  </PopoverContent>
+                </Popover>
               </div>
 
               {/* LINHAS 2 E 3: INDICADORES */}
