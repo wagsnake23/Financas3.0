@@ -943,7 +943,7 @@ export default function Metas() {
       <Dialog open={isEditModalOpen} onOpenChange={(open) => { if (!open) { setIsEditModalOpen(false); setEditingMeta(null); } }}>
         <DialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-6" : "sm:max-w-[500px] !rounded-[22px] !pb-6"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !px-4 !pb-3" : "sm:max-w-[425px] !rounded-[22px] !pb-4"
           )}
           style={{
             background: "linear-gradient(135deg, #f8fafc 0%, #fff7ed 100%)",
