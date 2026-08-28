@@ -826,8 +826,8 @@ export default function Metas() {
                 {/* Progress bar */}
                 <div className="mt-6">
                   <div className="flex justify-between mb-1">
-                    <span className="text-[12px] font-medium text-[#C2410C] capitalize tracking-wide opacity-90">Progresso Geral</span>
-                    <span className={cn("font-black text-slate-700", isMobile ? "text-[13px]" : "text-sm")}>{stats.progressoGeral.toFixed(1)}%</span>
+                    <span className="text-[11px] font-semibold text-[#C2410C] capitalize tracking-wide opacity-90">Progresso Geral</span>
+                    <span className={cn("font-black text-slate-700", isMobile ? "text-[12px]" : "text-sm")}>{stats.progressoGeral.toFixed(1)}%</span>
                   </div>
                   <div className="w-full h-3.5 bg-[#FFF0E5] rounded-full overflow-hidden border border-[#EA580C]/30 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]">
                     <div
@@ -1194,17 +1194,17 @@ export default function Metas() {
     return (
       <div className="flex justify-start">
         <div className="flex items-start gap-2 text-left">
-          <DynamicIcon name={icon} className="h-6 w-6 text-[24px] leading-none mt-0.5" style={{ color: accentColor }} strokeWidth={3} />
+          <DynamicIcon name={icon} className={cn("leading-none mt-0.5", isMobile ? "text-[22px] h-[22px] w-[22px]" : "h-6 w-6 text-[24px]")} style={{ color: accentColor }} strokeWidth={3} />
           <div className="flex flex-col items-start">
-            <h4 className="text-[12px] font-medium capitalize tracking-wide leading-tight opacity-90 whitespace-nowrap mb-0.5" style={{ color: accentColor }}>{label}</h4>
+            <h4 className={cn("font-semibold capitalize tracking-wide leading-tight opacity-90 whitespace-nowrap mb-0.5", isMobile ? "text-[11px]" : "text-[12px]")} style={{ color: accentColor }}>{label}</h4>
             <p className="text-base font-bold text-slate-700 tracking-tight leading-none flex items-baseline gap-1">
               {isCurrency ? (
                 <>
                   {currencyPrefix && <span className="text-[14px] font-medium" style={{ color: accentColor }}>{currencyPrefix}</span>}
-                  <span className={cn(isMobile && "text-[16px]")}>{currencyValue}</span>
+                  <span className={cn(isMobile && "text-[15px]")}>{currencyValue}</span>
                 </>
               ) : (
-                <span className={cn(isMobile && "text-[16px]")}>{value}</span>
+                <span className={cn(isMobile && "text-[15px]")}>{value}</span>
               )}
             </p>
           </div>
