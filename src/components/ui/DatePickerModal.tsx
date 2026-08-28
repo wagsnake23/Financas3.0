@@ -53,8 +53,8 @@ export function DatePickerModal({ isOpen, setIsOpen, date, onSelect }: DatePicke
             
             // Dias do mês (td > button) - Aplicando borda discreta em TODOS os dias
             isMobile
-              ? "[&_td]:w-[38px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/60 [&_td>button]:rounded-[8px] [&_td>button]:w-[38px]"
-              : "[&_td]:w-[42px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/60 [&_td>button]:rounded-[8px] [&_td>button]:w-[42px]",
+              ? "[&_td]:w-[38px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/80 [&_td>button]:rounded-[8px] [&_td>button]:w-[38px] [&_td>button]:font-medium"
+              : "[&_td]:w-[42px] [&_td]:flex [&_td]:justify-center [&_td>button]:border [&_td>button]:border-slate-200/80 [&_td>button]:rounded-[8px] [&_td>button]:w-[42px] [&_td>button]:font-medium",
             
             // Data selecionada (alta prioridade)
             "[&_td>button[aria-selected='true']]:shadow-sm [&_td>button[aria-selected='true']]:!bg-[#1e3a8a] [&_td>button[aria-selected='true']]:font-bold [&_td>button[aria-selected='true']]:!border-[#1e3a8a] [&_td>button[aria-selected='true']]:!text-white",
