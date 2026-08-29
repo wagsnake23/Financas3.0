@@ -298,6 +298,40 @@ All colors MUST be HSL.
   }
 }
 
+/* ==========================================================================
+   Formulário Nova Receita — Padronização de Espaçamento Vertical (Mobile Only)
+   Mesmo padrão visual do formulário Nova Despesa.
+   REGRA: nenhuma alteração em alturas, tipografia, cores ou layout desktop.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* 1. Padronizar margem inferior de todos os labels dentro do #income-form
+        para o mesmo valor da referência "Descrição" (mb-0.5 = 2px). */
+  #income-form label.inline-block {
+    margin-bottom: 2px !important;
+  }
+
+  /* 2. O primeiro filho do #income-form é um <div class="pt-2"> que envolve
+        o toggle Avulsa/Recorrente. O pt-2 (8px) cria espaço excessivo abaixo
+        do cabeçalho. Reduzimos para mover o bloco ~3px para cima. */
+  #income-form > div:first-child {
+    padding-top: 5px !important;
+  }
+
+  /* 3. Reduzir altura do textarea Descrição em 4px (61px → 57px),
+        mantendo o mesmo padrão do formulário Nova Despesa. */
+  #income-form textarea#descricao {
+    height: 57px !important;
+    min-height: 57px !important;
+    max-height: 57px !important;
+  }
+
+  /* 4. Normaliza o espaço antes do RevenueStatusToggle para o ritmo
+        do formulário (space-y-3 = 12px) + 2px extras de respiro. */
+  #income-form .mt-2 {
+    margin-top: 14px !important;
+  }
+}
+
 html {
   overflow-y: scroll;
 }
