@@ -44,6 +44,16 @@ export default function Auth() {
     }
   }, [searchParams]);
 
+  // Remover splash screen quando Auth monta (acesso direto a /auth)
+  useEffect(() => {
+    const splash = document.getElementById("splash-screen");
+    if (splash) {
+      splash.style.opacity = "0";
+      splash.style.pointerEvents = "none";
+      setTimeout(() => splash.remove(), 400);
+    }
+  }, []);
+
   // Effect to re-validate confirm password when password changes
   useEffect(() => {
     if (confirmPassword !== "") {

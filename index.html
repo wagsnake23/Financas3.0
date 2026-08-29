@@ -13,26 +13,6 @@
         }
       })();
     </script>
-    <!-- Script para otimização do PWA Mobile Loading -->
-    <script>
-      (() => {
-        const isAndroid = /android/i.test(navigator.userAgent);
-        const isMobile = /mobile/i.test(navigator.userAgent);
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-        // Aplicar a otimização de loading apenas no Mobile, Android e PWA (standalone)
-        if (isAndroid && isMobile && isStandalone) {
-          // Pré-carrega a imagem para exibir o mais rápido possível
-          const preload = document.createElement('link');
-          preload.rel = 'preload';
-          preload.href = '/sky.webp';
-          preload.as = 'image';
-          preload.type = 'image/webp';
-          document.head.appendChild(preload);
-          // Adiciona a classe temporária para o background inicial
-          document.documentElement.classList.add('pwa-mobile-loading');
-        }
-      })();
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Controle Financeiro Pessoal</title>
@@ -84,6 +64,18 @@
   </head>
 
   <body>
+    <!-- Splash Screen institucional — HTML/CSS puro para exibição instantânea antes do React -->
+    <div id="splash-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s ease-out;will-change:opacity;">
+      <img src="/icons/logo.png" alt="" width="80" height="80" style="margin-bottom:18px;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
+      <div style="font-family:'Inter',system-ui,-apple-system,sans-serif;font-weight:800;font-size:22px;color:#0F172A;letter-spacing:0.3px;line-height:1;">Minhas Finanças</div>
+      <div style="font-family:'Inter',system-ui,-apple-system,sans-serif;font-weight:400;font-size:13px;color:#64748B;margin-top:6px;">Controle Financeiro</div>
+      <div class="splash-spinner" style="margin-top:36px;"></div>
+      <style>
+        .splash-spinner{width:26px;height:26px;border:3px solid #E2E8F0;border-top-color:#0556C3;border-radius:50%;animation:splash-spin .8s linear infinite}
+        @keyframes splash-spin{to{transform:rotate(360deg)}}
+      </style>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
