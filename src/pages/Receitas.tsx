@@ -556,7 +556,7 @@ export default function Receitas() {
         </div>
 
         {!isRecurring && (
-          <div className={cn(isMobile && "mt-3 mb-1")}>
+          <div style={isMobile ? { paddingTop: "7px", paddingBottom: "7px" } : {}}>
             <RevenueStatusToggle
               status={status}
               setStatus={(val) => setStatus(val as ReceitaStatus)}
