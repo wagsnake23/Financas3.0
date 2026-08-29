@@ -252,14 +252,41 @@ All colors MUST be HSL.
 
   .dialog-mobile .form-body {
     margin-top: 2.8rem !important;
-    /* EspaÃ§amento superior para descolar do header */
+    /* Espaçamento superior para descolar do header */
   }
 
 
 
-  /* Ocultar o cabeÃ§alho da tabela em mobile */
+  /* Ocultar o cabeçalho da tabela em mobile */
   .lancamentos-table-header {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Formulário Nova Despesa — Padronização de Espaçamento Vertical (Mobile Only)
+   Referência visual: campo "Descrição" (label com mb-0.5 = 2px)
+   REGRA: nenhuma alteração em alturas, tipografia, cores ou layout desktop.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* 1. Padronizar margem inferior de todos os labels dentro do #expense-form
+        para o mesmo valor da referência "Descrição" (mb-0.5 = 2px).
+        Aplica apenas labels que precedem campos (inline-block). */
+  #expense-form label.inline-block {
+    margin-bottom: 2px !important;
+  }
+
+  /* 2. Padronizar o espaçamento entre grupos de campos dentro do #expense-form.
+        O form usa space-y-3 (12px), mas PaymentDetails usa space-y-4 (16px)
+        internamente, criando inconsistência. Unificamos tudo em 12px. */
+  #expense-form .space-y-4 > * + * {
+    margin-top: 12px !important;
+  }
+
+  /* 3. Mover o primeiro grupo (Subcategoria) ~5px para cima para reduzir
+        o espaço vazio logo abaixo do cabeçalho do modal. */
+  #expense-form > div:first-child {
+    margin-top: -5px !important;
   }
 }
 
