@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { format } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,6 @@ interface SaldoAjusteDialogProps {
   onOpenChange: (open: boolean) => void;
   saldoCalculadoSistema: number;
   saldoAtualComAjuste: number;
-  ultimoAjusteValor?: number;
-  ultimoAjusteData?: string;
   userId: string;
   onAjusteSalvo: () => void;
   isMobile: boolean;
@@ -26,8 +23,6 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
   onOpenChange,
   saldoCalculadoSistema,
   saldoAtualComAjuste,
-  ultimoAjusteValor,
-  ultimoAjusteData,
   userId,
   onAjusteSalvo,
   isMobile,
@@ -110,6 +105,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
         }
       `}</style>
       <DialogContent 
+        onOpenAutoFocus={(e) => e.preventDefault()}
         className={cn(
           "flex flex-col overflow-hidden w-full bg-[#FAFAFA] saldo-ajuste-modal", 
           isMobile ? "max-w-[94vw] mx-auto rounded-[16px] max-h-[95dvh] !p-0" : "sm:max-w-[425px] rounded-[16px] !p-0 max-h-[90dvh]"
@@ -125,7 +121,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSave} className="flex flex-col overflow-hidden">
-          <div className={cn("overflow-y-auto px-5 pt-5 pb-4 space-y-5", isMobile ? "bg-[#FAFAFA]" : "")}>
+          <div className={cn("overflow-y-auto px-5 pt-2 pb-4 space-y-5", isMobile ? "bg-[#FAFAFA]" : "")}>
             
             <div className="flex flex-col border-b border-slate-200 pb-4">
               <div className="flex items-center justify-between">
@@ -137,13 +133,6 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
                   <span className="text-[13px] font-bold text-slate-600 mb-0.5">Saldo Atual</span>
                   <span className="text-[16px] font-extrabold text-slate-800 tracking-tight">{formatCurrency(saldoAtualComAjuste)}</span>
                 </div>
-              </div>
-              <div className="flex justify-start mt-3">
-                <span className="text-[11px] font-medium text-slate-400">
-                  {ultimoAjusteValor !== undefined && ultimoAjusteValor !== null && ultimoAjusteData
-                    ? `Último ajuste: ${ultimoAjusteValor < 0 ? "-" : (ultimoAjusteValor > 0 ? "+" : "")}${formatCurrency(Math.abs(ultimoAjusteValor))} • ${format(new Date(ultimoAjusteData), "dd/MM/yyyy 'às' HH:mm")}`
-                    : "Nenhum ajuste manual realizado"}
-                </span>
               </div>
             </div>
 
@@ -159,7 +148,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
                   onChange={handleMoneyChange}
                   placeholder="0,00"
                   className={cn(
-                    "pl-10 h-[48px] text-[16px] font-bold transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800",
+                    "pl-10 h-[50px] text-[16px] font-bold transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800",
                     error ? "border-red-500 focus-visible:ring-red-200" : "border-slate-200 focus-visible:ring-slate-100 focus-visible:border-slate-300"
                   )}
                   inputMode="numeric"
@@ -168,17 +157,15 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
               {error && <span className="text-[11px] font-bold text-red-500 leading-none">Campo obrigatório.</span>}
             </div>
 
-            {!isPristine && (
-              <div className="flex items-center justify-between bg-slate-100/70 px-3 py-2 rounded-[12px] border border-slate-200/50">
-                <span className="text-[13px] font-bold text-slate-600">Ajuste que será aplicado</span>
-                <span className={cn(
-                  "text-[15px] font-extrabold tracking-tight",
-                  diferenca > 0 ? "text-emerald-600" : diferenca < 0 ? "text-rose-600" : "text-slate-600"
-                )}>
-                  {diferenca > 0 ? "+ " : ""}{formatCurrency(diferenca)}
-                </span>
-              </div>
-            )}
+            <div className="flex items-center justify-between bg-slate-100/70 px-3 py-2.5 rounded-[12px] border border-slate-200/50">
+              <span className="text-[13px] font-bold text-slate-600">Ajuste aplicado:</span>
+              <span className={cn(
+                "text-[15px] font-extrabold tracking-tight",
+                isPristine ? "text-slate-500 font-bold" : (diferenca > 0 ? "text-emerald-600" : diferenca < 0 ? "text-rose-600" : "text-slate-600")
+              )}>
+                {!isPristine && diferenca > 0 ? "+ " : ""}{formatCurrency(isPristine ? 0 : diferenca)}
+              </span>
+            </div>
 
             <div className="space-y-2.5">
               <Label htmlFor="descricao" className="text-[13px] font-bold text-slate-700 tracking-wide">
