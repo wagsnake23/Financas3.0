@@ -1111,6 +1111,9 @@ export default function Home() {
                     isOpen={isAjusteModalOpen}
                     onOpenChange={setIsAjusteModalOpen}
                     saldoCalculadoSistema={dStats.saldoCalculadoSistema}
+                    saldoAtualComAjuste={dStats.currentCaixaAtual}
+                    ultimoAjusteValor={profile?.saldo_ajuste}
+                    ultimoAjusteData={profile?.saldo_ajuste_updated_at}
                     userId={user.id}
                     onAjusteSalvo={refetchProfile}
                     isMobile={!!isMobile}
