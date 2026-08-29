@@ -473,7 +473,7 @@ export default function Receitas() {
               variant="ghost"
               onClick={() => setIsAddSubcategoryModalOpen(true)}
               className={cn(
-                "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
+                "btn-3d p-0 flex items-center justify-center rounded-xl shadow-none border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
                 isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
               )}
               style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1 } as any}
@@ -669,7 +669,7 @@ export default function Receitas() {
                     <Button
                       variant="ghost"
                       className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                      style={{ background: "#1AA361", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                      style={{ background: "#1AA361", filter: "saturate(0.95)" }}
                       onClick={() => navigate("/lancamentos?type=income")}
                     >
                       <DynamicIcon

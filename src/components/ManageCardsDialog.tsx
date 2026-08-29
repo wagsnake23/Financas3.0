@@ -316,32 +316,37 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                       </p>
                     </div>
 
-                    <Button
-                      type="button"
-                      size="icon"
-                      onClick={() => handleEditClick(card)}
-                      className={cn(
-                        "absolute top-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                        isMobile 
-                          ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                          : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                      )}
-                    >
-                      <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      size="icon"
-                      onClick={() => handleDeleteConfirm(card.id)}
-                      className={cn(
-                        "absolute bottom-2 right-2 p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                        isMobile 
-                          ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                          : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                      )}
-                    >
-                      <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-                    </Button>
+                    <div className={cn(
+                      "absolute right-2 flex flex-col",
+                      isMobile ? "top-1/2 -translate-y-1/2 gap-1.5 justify-center" : "top-2 bottom-2 justify-between"
+                    )}>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => handleEditClick(card)}
+                        className={cn(
+                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                          isMobile 
+                            ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                            : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                        )}
+                      >
+                        <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => handleDeleteConfirm(card.id)}
+                        className={cn(
+                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
+                          isMobile 
+                            ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                            : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                        )}
+                      >
+                        <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
+                      </Button>
+                    </div>
                   </Card>
                 ))
               )}

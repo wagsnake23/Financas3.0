@@ -272,8 +272,8 @@ export default function Despesas() {
                     <div className="flex items-start gap-3">
                       <Button
                         variant="ghost"
-                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                        style={{ background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)" }}
+                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none shadow-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
+                        style={{ background: "#ef4444", filter: "saturate(0.95)" }}
                         onClick={() => navigate("/lancamentos?type=expense")}
                       >
                         <DynamicIcon
