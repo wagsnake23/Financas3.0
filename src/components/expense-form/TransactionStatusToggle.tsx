@@ -90,7 +90,7 @@ export const TransactionStatusToggle: React.FC<
         {/* === PENDENTE === */}
         <label
           htmlFor="status-pending"
-          className="flex items-center gap-2 cursor-pointer select-none"
+          className={cn("flex items-center cursor-pointer select-none", isMobile ? "gap-1.5" : "gap-2")}
         >
           <RadioGroupItem
             value="pending"
