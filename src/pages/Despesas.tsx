@@ -305,7 +305,7 @@ export default function Despesas() {
                   {formContent}
                 </div>
 
-                <div style={{ marginTop: "-4px", marginBottom: "0px" }}>
+                <div style={{ marginTop: "-12px", marginBottom: "0px" }}>
                   <Footer isMobile={isMobile} user={user} />
                 </div>
               </div>

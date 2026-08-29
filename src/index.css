@@ -283,10 +283,18 @@ All colors MUST be HSL.
     margin-top: 12px !important;
   }
 
-  /* 3. Mover o primeiro grupo (Subcategoria) ~5px para cima para reduzir
-        o espaço vazio logo abaixo do cabeçalho do modal. */
+  /* 3. Mover o primeiro grupo (Subcategoria) ~8px para cima (acumulado)
+        para reduzir o espaço vazio logo abaixo do cabeçalho do modal. */
   #expense-form > div:first-child {
-    margin-top: -5px !important;
+    margin-top: -8px !important;
+  }
+
+  /* 4. Reduzir altura do textarea Descrição em 4px (61px → 57px).
+        Mantém padding, estilo visual e comportamento existentes. */
+  #expense-form textarea#descricao {
+    height: 57px !important;
+    min-height: 57px !important;
+    max-height: 57px !important;
   }
 }
 
