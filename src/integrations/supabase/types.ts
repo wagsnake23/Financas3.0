@@ -394,6 +394,8 @@ export type Database = {
           avatar_url: string | null
           avatar: string | null
           apelido: string | null
+          saldo_ajuste: number
+          saldo_ajuste_updated_at: string | null
         }
         Insert: {
           created_at?: string | null
@@ -403,6 +405,8 @@ export type Database = {
           avatar_url?: string | null
           avatar?: string | null
           apelido?: string | null
+          saldo_ajuste?: number
+          saldo_ajuste_updated_at?: string | null
         }
         Update: {
           created_at?: string | null
@@ -412,6 +416,8 @@ export type Database = {
           avatar_url?: string | null
           avatar?: string | null
           apelido?: string | null
+          saldo_ajuste?: number
+          saldo_ajuste_updated_at?: string | null
         }
         Relationships: []
       }

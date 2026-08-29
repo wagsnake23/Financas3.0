@@ -28,6 +28,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
+import { SaldoAjusteDialog } from "@/components/SaldoAjusteDialog";
+
 
 const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
     const maxVal = Math.max(Math.abs(expenses), Math.abs(revenues), Math.abs(balance), 1);
@@ -85,6 +87,8 @@ export default function Home() {
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
     const [activeTrendModal, setActiveTrendModal] = useState<"saldo" | "despesas" | "receitas" | null>(null);
+    const [isAjusteModalOpen, setIsAjusteModalOpen] = useState(false);
+
 
     // Fetch all revenues for memory-based filtering (needed for variations and 10-month graph)
     const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
@@ -227,7 +231,8 @@ export default function Home() {
         enabled: !!user,
     });
 
-    const { data: profile } = useProfile(user?.id);
+    const { data: profile, refetch: refetchProfile } = useProfile(user?.id);
+
 
     const stats = useMemo(() => {
         const currentMonthStr = format(selectedMonth, "yyyy-MM");
@@ -267,8 +272,11 @@ export default function Home() {
             .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
             .reduce((sum, inv) => sum + (inv.valor || 0), 0);
 
-        // Caixa Atual represents the GLOBAL actual balance
-        const currentCaixaAtual = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
+        // Raw calculated system balance WITHOUT manual adjustment
+        const saldoCalculadoSistema = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
+
+        // Caixa Atual represents the GLOBAL actual balance PLUS manual adjustment
+        const currentCaixaAtual = saldoCalculadoSistema + (profile?.saldo_ajuste || 0);
         
         const currentBalance = currentIncome - currentExpenses;
 
@@ -286,13 +294,14 @@ export default function Home() {
             currentReceivedIncome,
             currentPaidExpenses,
             currentCaixaAtual,
+            saldoCalculadoSistema,
             currentExpenses,
             currentBalance,
             incomeVar: calculateVar(currentIncome, previousIncome),
             expenseVar: calculateVar(currentExpenses, previousExpenses),
             balanceVar: calculateVar(currentBalance, previousBalance),
         };
-    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos, globalReceivedIncome, globalPaidExpenses]);
+    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos, globalReceivedIncome, globalPaidExpenses, profile?.saldo_ajuste]);
 
     // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
     const lastStableData = React.useRef({
@@ -552,9 +561,21 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-stretch w-full relative z-20">
                                         <div className="flex flex-col justify-between py-0.5">
-                                            <div className="flex flex-col md:mt-3">
-                                                <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
-                                                <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <div 
+                                                className="flex flex-col md:mt-3 cursor-pointer group transition-all active:opacity-70"
+                                                onClick={() => setIsAjusteModalOpen(true)}
+                                            >
+                                                <div className="flex items-center gap-2 mb-2 md:-mt-[1px]">
+                                                    <h2 className="font-extrabold leading-none tracking-tight md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
+                                                    <button 
+                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md"
+                                                        aria-label="Ajustar saldo"
+                                                        type="button"
+                                                    >
+                                                        <DynamicIcon name="Wallet" className="h-3.5 w-3.5 md:h-4 md:w-4 text-[#0556C3]" />
+                                                    </button>
+                                                </div>
+                                                <p className="font-[800] leading-none md:text-[25px] transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 21px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                     <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#0556C3" : undefined)} />
                                                 </p>
                                             </div>
@@ -808,9 +829,21 @@ export default function Home() {
                             <div className="flex flex-col h-full w-full justify-between relative z-20">
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
-                                    <div className="flex flex-col">
-                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Atual</h2>
-                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                    <div 
+                                        className="flex flex-col cursor-pointer group transition-all active:opacity-70"
+                                        onClick={() => setIsAjusteModalOpen(true)}
+                                    >
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Atual</h2>
+                                            <button 
+                                                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md"
+                                                aria-label="Ajustar saldo"
+                                                type="button"
+                                            >
+                                                <DynamicIcon name="Wallet" className="h-3.5 w-3.5 md:h-4 md:w-4 text-[#0556C3]" />
+                                            </button>
+                                        </div>
+                                        <p className="text-[21px] font-[800] leading-none md:text-[25px] transition-all" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                             <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#0556C3" : undefined)} />
                                         </p>
                                     </div>
@@ -1073,7 +1106,16 @@ export default function Home() {
                     </div>
                 )}
             </main>
-
+            {user && (
+                <SaldoAjusteDialog
+                    isOpen={isAjusteModalOpen}
+                    onOpenChange={setIsAjusteModalOpen}
+                    saldoCalculadoSistema={dStats.saldoCalculadoSistema}
+                    userId={user.id}
+                    onAjusteSalvo={refetchProfile}
+                    isMobile={!!isMobile}
+                />
+            )}
             <Dialog open={activeTrendModal !== null} onOpenChange={(open) => !open && setActiveTrendModal(null)}>
                 <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-[2px] border-[#3b82f6]/15 shadow-2xl rounded-[21px] bg-white/95 backdrop-blur-md">
                     <DialogHeader className="p-6 pb-2 text-left relative flex flex-row items-center w-full">
