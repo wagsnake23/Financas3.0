@@ -180,6 +180,36 @@ export default function Home() {
         enabled: !!user,
     });
 
+    // Global Balance Queries for "Saldo Atual"
+    const { data: globalReceivedIncome = 0 } = useQuery({
+        queryKey: ["globalReceivedIncome", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return 0;
+            const { data, error } = await supabase
+                .from("receitas")
+                .select("valor")
+                .eq("user_id", user.id)
+                .eq("status", "Recebida");
+            if (error) throw error;
+            return data.reduce((sum, r) => sum + r.valor, 0);
+        },
+        enabled: !!user,
+    });
+
+    const { data: globalPaidExpenses = 0 } = useQuery({
+        queryKey: ["globalPaidExpenses", user?.id],
+        queryFn: async () => {
+            if (!user?.id) return 0;
+            const { data, error } = await supabase
+                .from("despesas_parcelas")
+                .select("valor_parcela, despesas!inner(user_id)")
+                .eq("despesas.user_id", user.id)
+                .eq("pago", true);
+            if (error) throw error;
+            return data.reduce((sum, p) => sum + p.valor_parcela, 0);
+        },
+        enabled: !!user,
+    });
 
     // Fetch categories
     const { data: allSubcategories = [] } = useQuery({
@@ -237,7 +267,8 @@ export default function Home() {
             .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
             .reduce((sum, inv) => sum + (inv.valor || 0), 0);
 
-        const currentCaixaAtual = currentReceivedIncome - currentPaidExpenses - currentActiveInvestments;
+        // Caixa Atual represents the GLOBAL actual balance
+        const currentCaixaAtual = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
         
         const currentBalance = currentIncome - currentExpenses;
 
@@ -261,7 +292,7 @@ export default function Home() {
             expenseVar: calculateVar(currentExpenses, previousExpenses),
             balanceVar: calculateVar(currentBalance, previousBalance),
         };
-    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos]);
+    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos, globalReceivedIncome, globalPaidExpenses]);
 
     // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
     const lastStableData = React.useRef({
