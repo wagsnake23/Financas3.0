@@ -115,7 +115,7 @@ export const useLancamentosLogic = (
     async (transaction: Transaction) => {
       setEditingTransaction(transaction);
       setLoadingEditData(true);
-      setIsEditModalOpen(true);
+      // Removido: setIsEditModalOpen(true) daqui
 
       if (!user) {
         toast.error("Usuário não autenticado. Por favor, faça login novamente.");
@@ -127,12 +127,14 @@ export const useLancamentosLogic = (
         // For recurring income, we need to fetch the master if this is an occurrence
         const masterId = transaction.is_recurring_master ? transaction.id : transaction.recurrence_id;
         if (masterId) {
+          toast.loading("Preparando edição...", { id: "edit-loader" }); // Feedback discreto
           const { data: masterRevenue, error } = await supabase
             .from("receitas")
             .select("*, status, is_recurring_master, recurrence_id, recurrence_day")
             .eq("id", masterId)
             .eq("user_id", user.id)
             .single();
+          toast.dismiss("edit-loader"); // Remove feedback
           if (error) {
             console.error("Error fetching master revenue for editing:", error);
             toast.error("Erro ao carregar receita recorrente.");
@@ -151,12 +153,14 @@ export const useLancamentosLogic = (
         // We need to fetch the 'despesas' master record for editing.
         const despesaId = transaction.despesa_id;
         if (despesaId) {
+          toast.loading("Preparando edição...", { id: "edit-loader" }); // Feedback discreto
           const { data: masterExpense, error } = await supabase
             .from("despesas")
             .select("*, is_recurring_master") // Include is_recurring_master
             .eq("id", despesaId)
             .eq("user_id", user.id)
             .single();
+          toast.dismiss("edit-loader"); // Remove feedback
           if (error) {
             console.error("Error fetching master expense for editing:", error);
             toast.error("Erro ao carregar despesa recorrente.");
@@ -170,6 +174,7 @@ export const useLancamentosLogic = (
         setFullEditingRevenue(null);
       }
       setLoadingEditData(false);
+      setIsEditModalOpen(true); // O modal agora abre de uma vez, já com o conteúdo completo!
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     [user, queryClient, setLoadingEditData, setIsEditModalOpen, setFullEditingRevenue, setFullEditingExpense]
