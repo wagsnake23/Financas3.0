@@ -119,6 +119,8 @@ export const Navigation = () => {
   const isInvestimentos = location.pathname.startsWith("/investimentos");
   const isCategorias = location.pathname.startsWith("/categorias");
   const isLancamentos = location.pathname.startsWith("/lancamentos");
+  const isMetas = location.pathname.startsWith("/metas");
+  const isPerfil = location.pathname.startsWith("/perfil");
   const isDarkPage = location.pathname === "/";
 
   const [scrolled, setScrolled] = useState(false);
@@ -147,7 +149,7 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isDarkPage;
+  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isMetas || isPerfil || isDarkPage;
   const mobileTextColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]");
   const mobileIconColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]");
   const mobileSubtitleColor = isDarkPage ? "text-white/65" : ((isModalOpen && !forceDarkText) ? "text-white/65" : "text-[#171717]");
@@ -161,10 +163,13 @@ export const Navigation = () => {
     if (isDarkPage) {
       themeColor = "#010856";
       bodyColor = "#D9DEE5";
-    } else if (isDespesas || isReceitas || isLancamentos) {
+    } else if (isDespesas || isReceitas) {
       themeColor = "#F5F5F5";
       bodyColor = "#F5F5F5";
-    } else if (isInvestimentos) {
+    } else if (isLancamentos) {
+      themeColor = "#FFFFFF";
+      bodyColor = "#FFFFFF";
+    } else if (isInvestimentos || isPerfil) {
       themeColor = "#F8FBFF";
       bodyColor = "#F8FBFF";
     } else if (isCategorias) {
@@ -194,15 +199,19 @@ export const Navigation = () => {
             "h-14 shadow-none",
             isDarkPage
                 ? "bg-transparent"
-                : (isDespesas || isReceitas || isLancamentos)
+                : (isDespesas || isReceitas)
                     ? "bg-[#F5F5F5] border-none"
-                : isInvestimentos
+                : isLancamentos
+                    ? "bg-[#FFFFFF] border-none"
+                : (isInvestimentos || isPerfil)
                     ? "bg-[#F8FBFF]"
-                    : isCategorias
+                : isCategorias
                     ? "bg-[#F9FAFB]"
-                    : !scrolled
-                        ? "bg-transparent border-transparent"
-                        : "bg-white"
+                : isMetas
+                    ? "bg-[#F7F9FC]"
+                : !scrolled
+                    ? "bg-transparent border-transparent"
+                    : "bg-white"
           )
           : "h-[72px] text-white"
       )}
