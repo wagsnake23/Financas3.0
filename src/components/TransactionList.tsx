@@ -520,18 +520,23 @@ export const TransactionList = ({
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col gap-2 mb-1",
-        isMobile ? "-mt-[3px]" : "flex-row items-center gap-3 mb-6"
+        isMobile ? "-mt-[3px]" : "flex-row items-center gap-2 mb-6 mt-4 bg-white border border-[#E2E8F0] rounded-[16px] p-[6px] shadow-[0_2px_12px_-4px_rgba(15,23,42,0.06)]"
       )}>
         {/* Campo de Pesquisa */}
-        <div className={cn("relative group w-full", !isMobile && "flex-1")}>
+        <div className={cn("relative group w-full", !isMobile && "flex-[1.5]")}>
           <Input
             placeholder="Digite para buscar..."
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="pl-10 pr-10 h-9 md:h-10 rounded-xl border-gray-200 bg-white/80 backdrop-blur-sm focus-visible:ring-primary/20 focus-visible:border-primary transition-all shadow-sm group-hover:bg-white placeholder:text-gray-400 placeholder:font-normal text-sm"
+            className={cn(
+              "pl-10 pr-10 rounded-xl transition-all shadow-sm placeholder:font-normal",
+              isMobile
+                ? "h-9 border-gray-200 bg-white/80 backdrop-blur-sm focus-visible:ring-primary/20 focus-visible:border-primary group-hover:bg-white placeholder:text-gray-400 text-sm"
+                : "h-[42px] border-[#E2E8F0] bg-white focus-visible:ring-0 text-[15px] placeholder:text-slate-500"
+            )}
           />
           <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none z-10">
-            <span className="text-sm select-none leading-none">🔍</span>
+            <span className={cn("select-none leading-none", isMobile ? "text-sm text-gray-500" : "text-[16px] text-slate-500 font-medium")}>🔍</span>
           </div>
           {localSearch && (
             <button
@@ -555,11 +560,10 @@ export const TransactionList = ({
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger
                 className={cn(
-                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
                   filterType !== "all"
                     ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                  "flex-1 h-9"
+                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
                 )}
               >
                 <div className="flex items-center gap-1.5">
@@ -577,11 +581,10 @@ export const TransactionList = ({
             <Select value={footerStatusFilter} onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}>
               <SelectTrigger
                 className={cn(
-                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
                   footerStatusFilter !== "all"
                     ? (footerStatusFilter === "paid" ? "bg-[#26A765] hover:bg-[#26A765]/90" : "bg-[#E55B5B] hover:bg-[#E55B5B]/90") + " text-white border-transparent font-bold"
-                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                  "flex-1 h-9"
+                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
                 )}
               >
                 <SelectValue placeholder="Status" />
@@ -597,7 +600,7 @@ export const TransactionList = ({
             <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
               <SelectTrigger
                 className={cn(
-                  "h-8 px-3.5 text-xs font-semibold whitespace-nowrap transition-all shadow-none border rounded-[10px]",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
                   filterPaymentOptionId !== "all"
                     ? (isValidUuid(filterPaymentOptionId)
                       ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold"
@@ -605,8 +608,7 @@ export const TransactionList = ({
                           ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
                           : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
                     )
-                    : "bg-slate-50/80 text-slate-500 hover:bg-slate-100 border-slate-200/60 font-medium",
-                  "flex-1 h-9"
+                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
                 )}
               >
                 <SelectValue placeholder="Forma de Pagamento" />
