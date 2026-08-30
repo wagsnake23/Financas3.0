@@ -18,7 +18,7 @@ export const AppLayout = () => {
   return (
     <>
       <Navigation />
-      <main>
+      <main className="outline outline-2 outline-blue-500">
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>
