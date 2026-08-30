@@ -50,12 +50,12 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
 
     return (
         <div className={cn(
-            "flex items-center justify-between transition-all duration-200 text-gray-800",
-            "border-b border-slate-200 pb-2",
-            isMobile ? "-mt-1 mb-3" : "-mt-2 mb-4"
+            "flex items-center justify-between transition-all duration-200 text-gray-800 border-b border-slate-200",
+            "h-[35px]",
+            isMobile ? "-mt-[4px] mb-[10px]" : "-mt-[8px] mb-[14px]"
         )}>
             {/* Left side: Status and Info */}
-            <div className={cn("flex items-center overflow-hidden whitespace-nowrap", isMobile ? "gap-1" : "gap-2")}>
+            <div className={cn("flex items-center whitespace-nowrap", isMobile ? "gap-1" : "gap-2")}>
                 <div className="flex items-center gap-1.5 shrink-0">
                     <div className={cn(
                         "relative flex items-center justify-center transition-all shrink-0",
@@ -85,11 +85,11 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                 </div>
 
                 {isPaid && paidAtTimestamp && (
-                    <div className={cn("flex items-center overflow-hidden opacity-95", isMobile ? "gap-1" : "gap-1.5")}>
+                    <div className={cn("flex items-center opacity-95", isMobile ? "gap-1" : "gap-1.5")}>
                         <span className="text-slate-300 text-[10px] shrink-0 font-bold">•</span>
                         <span className={cn(
                             "text-slate-500 truncate leading-none pt-[1px]",
-                            isMobile ? "text-[11px] font-medium whitespace-nowrap" : "text-[11.5px] font-semibold"
+                            isMobile ? "text-[10px] font-medium whitespace-nowrap" : "text-[11.5px] font-semibold"
                         )}>
                             {formattedDate}
                         </span>
@@ -105,7 +105,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleStatusChange(true)}
-                        className="text-primary text-xs font-semibold hover:bg-primary/5 h-8 px-2 rounded-xl"
+                        className="text-primary text-xs font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl"
                     >
                         Marcar como pago
                     </Button>
@@ -116,7 +116,7 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                className="text-primary text-xs font-semibold hover:bg-primary/5 h-8 px-2 rounded-xl flex items-center gap-1"
+                                className="text-primary text-xs font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl flex items-center gap-1"
                             >
                                 Alterar
                                 <ChevronDown className="w-3.5 h-3.5" />
@@ -128,13 +128,27 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                                 onValueChange={(value) => handleStatusChange(value === "paid")}
                                 className="space-y-1"
                             >
-                                <label className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
-                                    <RadioGroupItem value="paid" className="w-4 h-4" />
-                                    <span className="text-sm font-medium text-gray-700">{transactionType === "income" ? "Recebido" : "Pago"}</span>
+                                <label className={cn(
+                                    "flex items-center gap-2 p-2 rounded-xl transition-colors",
+                                    isPaid ? "cursor-default bg-gray-50/80 opacity-90" : "cursor-pointer hover:bg-gray-50"
+                                )}>
+                                    <RadioGroupItem value="paid" className="w-4 h-4 shrink-0 rounded-full aspect-square" disabled={isPaid} />
+                                    <span className={cn(
+                                        "text-sm font-medium flex-1",
+                                        isPaid ? "text-gray-900" : "text-gray-600"
+                                    )}>{transactionType === "income" ? "Recebido" : "Pago"}</span>
+                                    {isPaid && <Check className="w-[15px] h-[15px] text-[#1DA554] shrink-0" strokeWidth={3} />}
                                 </label>
-                                <label className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-xl cursor-pointer transition-colors">
-                                    <RadioGroupItem value="pending" className="w-4 h-4" />
-                                    <span className="text-sm font-medium text-gray-700">Pendente</span>
+                                <label className={cn(
+                                    "flex items-center gap-2 p-2 rounded-xl transition-colors",
+                                    !isPaid ? "cursor-default bg-gray-50/80 opacity-90" : "cursor-pointer hover:bg-gray-50"
+                                )}>
+                                    <RadioGroupItem value="pending" className="w-4 h-4 shrink-0 rounded-full aspect-square" disabled={!isPaid} />
+                                    <span className={cn(
+                                        "text-sm font-medium flex-1",
+                                        !isPaid ? "text-gray-900" : "text-gray-600"
+                                    )}>Pendente</span>
+                                    {!isPaid && <Check className="w-[15px] h-[15px] text-[#1DA554] shrink-0" strokeWidth={3} />}
                                 </label>
                             </RadioGroup>
                         </PopoverContent>
