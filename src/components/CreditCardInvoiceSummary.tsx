@@ -135,20 +135,20 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
               </span>
             </div>
           ) : (
-            <div className="flex justify-center mt-0 mb-0">
+            <div className="flex justify-center w-full mt-[3px] mb-[5px]">
               <Button
-                className="h-[34px] transition-all flex items-center justify-center px-0 font-bold w-[95%] rounded-[12px] text-[#0D47D9] border-none hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.15)]"
+                className="h-[36px] transition-all flex items-center justify-center px-0 font-extrabold w-[95%] rounded-[12px] text-[#1D4ED8] border-none hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-sm"
                 style={{
-                  background: "linear-gradient(135deg, #fdfbfb 0%, #f3f4f6 100%)",
-                  borderBottom: "1px solid rgba(0,0,0,0.1)",
-                  boxShadow: "0 6px 14px rgba(0,0,0,0.08)"
+                  background: "#ffffff",
+                  borderBottom: "2px solid rgba(0,0,0,0.06)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1)"
                 }}
                 onClick={onPayInvoice}
                 disabled={loadingPayInvoice || disablePayInvoiceButton}
               >
-                <div className="flex items-center justify-center gap-1.5">
-                  <span className="text-[16px] leading-none mb-[1px]">💳</span>
-                  <span className="font-bold text-[13px] tracking-tight">{loadingPayInvoice ? "Processando..." : "Pagar Fatura"}</span>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-[18px] leading-none mb-[2px]">💳</span>
+                  <span className="font-extrabold text-[13.5px] tracking-tight">{loadingPayInvoice ? "Processando..." : "Pagar Fatura"}</span>
                 </div>
               </Button>
             </div>
