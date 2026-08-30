@@ -418,7 +418,7 @@ export const Navigation = () => {
                               to={item.to}
                               onClick={() => setIsOpen(false)}
                               className={({ isActive }) => cn(
-                                "flex items-center gap-3 px-4 py-2 transition-all mx-1 rounded-xl",
+                                "flex items-center gap-3 px-4 py-[6px] transition-all mx-1 rounded-xl",
                                 isActive
                                   ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                   : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
@@ -433,7 +433,7 @@ export const Navigation = () => {
                             to="/perfil"
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-3 px-4 py-2 transition-all mx-1 rounded-xl",
+                              "flex items-center gap-3 px-4 py-[6px] transition-all mx-1 rounded-xl",
                               isActive
                                 ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                 : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
