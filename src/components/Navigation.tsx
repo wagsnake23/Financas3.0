@@ -167,12 +167,9 @@ export const Navigation = () => {
     } else if (isDespesas || isReceitas || isLancamentos) {
       themeColor = "#FFFFFF";
       bodyColor = "#FFFFFF";
-    } else if (isInvestimentos || isPerfil || isMetas || isDashboard) {
+    } else if (isInvestimentos || isPerfil || isMetas || isDashboard || isCategorias) {
       themeColor = "#F8FBFF";
       bodyColor = "#F8FBFF";
-    } else if (isCategorias) {
-      themeColor = "#F9FAFB";
-      bodyColor = "#F9FAFB";
     } else {
       themeColor = "#F7F9FC";
       bodyColor = "#F7F9FC";
@@ -199,10 +196,8 @@ export const Navigation = () => {
                 ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
                     ? "bg-[#FFFFFF] border-none"
-                : (isInvestimentos || isPerfil || isMetas || isDashboard)
+                : (isInvestimentos || isPerfil || isMetas || isDashboard || isCategorias)
                     ? "bg-[#F8FBFF]"
-                : isCategorias
-                    ? "bg-[#F9FAFB]"
                 : !scrolled
                     ? "bg-transparent border-transparent"
                     : "bg-white"
