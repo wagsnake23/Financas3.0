@@ -763,7 +763,7 @@ export default function Metas() {
               className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo", isMobile && "p-4")}
               style={novaMetaCardStyle}
             >
-              <h2 className={cn("text-xl text-[#B95521] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>🎯 Nova Meta</h2>
+              <h2 className={cn("text-xl text-[#B95521] font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>🎯 Nova Meta</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 {renderFormFields(
                   selectedParentId, setSelectedParentId,
@@ -800,7 +800,7 @@ export default function Metas() {
                 className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
                 style={minhasMetasCardStyle}
               >
-                <h2 className={cn("text-xl font-bold text-[#B95521] mb-4")}>🎯 Minhas Metas</h2>
+                <h2 className={cn("text-xl font-extrabold text-[#B95521] mb-4")}>🎯 Minhas Metas</h2>
                 <div className="space-y-5 max-h-[560px] overflow-y-auto no-scrollbar">
                   {calculatedMetas.length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
@@ -877,7 +877,7 @@ export default function Metas() {
                   className="p-6 lg:p-8 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo h-full"
                   style={novaMetaCardStyle}
                 >
-                  <h2 className="text-2xl font-bold mb-6 lg:mb-8 text-[#B95521]">🎯 Nova Meta</h2>
+                  <h2 className="text-2xl font-extrabold mb-6 lg:mb-8 text-[#B95521]">🎯 Nova Meta</h2>
                   <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
                     {renderFormFields(
                       selectedParentId, setSelectedParentId,
@@ -914,7 +914,7 @@ export default function Metas() {
                   className="p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground h-full"
                   style={minhasMetasCardStyle}
                 >
-                  <h2 className="text-2xl font-bold text-[#B95521] mb-6">🎯 Minhas Metas</h2>
+                  <h2 className="text-2xl font-extrabold text-[#B95521] mb-6">🎯 Minhas Metas</h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-start lg:max-h-[480px] lg:overflow-y-auto lg:pr-2 custom-scrollbar">
                     {calculatedMetas.length === 0 ? (
                       <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200 lg:col-span-2">
