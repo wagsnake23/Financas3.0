@@ -111,7 +111,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
           isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] mx-auto rounded-[16px] max-h-[95dvh] !p-0" : "sm:max-w-[425px] sm:rounded-[14px] !p-0 max-h-[90dvh]"
         )}
       >
-        <DialogHeader className={cn("shrink-0 bg-white border-b px-5 py-4", isMobile ? "border-b-[#E5E7EB]" : "")}>
+        <DialogHeader className={cn("shrink-0 border-b px-5 py-4 bg-transparent", isMobile ? "border-b-[#E5E7EB]" : "")}>
           <DialogTitle className="text-[20px] font-extrabold text-slate-800 tracking-tight leading-none text-left flex items-center gap-2">
             💰 Ajustar Saldo Atual
           </DialogTitle>
