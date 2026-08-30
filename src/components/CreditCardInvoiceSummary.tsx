@@ -69,15 +69,15 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
       <Card
         className={cn(
           "relative overflow-hidden w-full flex flex-col justify-center text-white",
-          isMobile ? "px-3 pt-2 pb-3 mb-0.5" : "px-5 py-4 mb-6"
+          isMobile ? "px-3 pt-1.5 pb-[9px] mb-0.5" : "px-5 py-4 mb-6"
         )}
         style={{
-          borderRadius: "18px",
+          borderRadius: isMobile ? "11px" : "12px",
           background: isPaid 
             ? "linear-gradient(135deg, #10B981 0%, #059669 100%)" 
             : "linear-gradient(135deg, #0D47D9 0%, #2563EB 55%, #5B9DFF 100%)",
           boxShadow: isPaid 
-            ? "inset 0 1px 1px rgba(255,255,255,0.25), 0 4px 16px -4px rgba(16, 185, 129, 0.4)" 
+            ? "inset 0 1px 1px rgba(255,255,255,0.25), 0 2px 6px -2px rgba(16, 185, 129, 0.15)" 
             : "0 4px 16px -4px rgba(37, 99, 235, 0.4)",
           border: isPaid ? "1px solid rgba(255,255,255,0.15)" : "none",
           minHeight: "auto"
