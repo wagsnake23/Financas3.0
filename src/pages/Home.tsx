@@ -439,7 +439,7 @@ export default function Home() {
 
     return (
         <div
-            className={cn("flex flex-col min-h-[100dvh] relative overflow-hidden global-bg", !isMobile && "pt-[72px]")}
+            className={cn("flex flex-col min-h-screen relative overflow-hidden global-bg", !isMobile && "pt-[72px]")}
         >
             {isMobile && (
                 <div
