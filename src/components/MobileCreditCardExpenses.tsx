@@ -192,7 +192,7 @@ export const MobileCreditCardExpenses: React.FC<
           border: "1px solid rgba(255,255,255,.75)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0">
@@ -231,7 +231,7 @@ export const MobileCreditCardExpenses: React.FC<
         border: "1px solid rgba(255,255,255,.75)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+        boxShadow: "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
 
