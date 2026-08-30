@@ -143,7 +143,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
     <div className={cn("space-y-3", isMobile && "w-full space-y-1.5")}>
       {/* Subcategoria */}
       <div className={cn(isMobile && "space-y-1")}>
-        <Label htmlFor="category" className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
+        <Label htmlFor="category" className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800", isMobile ? "h-9 text-sm" : "h-10", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
@@ -171,7 +171,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div className={cn(isMobile && "space-y-1")}>
-          <Label htmlFor="amount" className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
+          <Label htmlFor="amount" className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Valor (R$)</Label>
           <CurrencyBR
             value={amount}
             onChange={(v) => {
@@ -185,7 +185,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         {/* Parcela (condicional para Despesas) */}
         {transactionType === "expense" && showInstallmentField && (
           <div className={cn(isMobile && "space-y-1")}>
-            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
+            <Label className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
             <Input
               value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
               readOnly
@@ -198,7 +198,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
         {/* Tipo (para Receitas) */}
         {transactionType === "income" && (
           <div className={cn(isMobile && "space-y-1")}>
-            <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Tipo</Label>
+            <Label className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Tipo</Label>
             <Input
               value={isRecurringTransaction ? "Recorrente" : "Avulsa"}
               readOnly
@@ -212,7 +212,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Forma de Pagamento */}
       {transactionType === "expense" && (
         <div className={cn(isMobile && "space-y-1")}>
-          <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
+          <Label className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Forma de Pagamento</Label>
           <Select
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
@@ -239,7 +239,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       {/* Seleção de Cartão de Crédito (condicional - APENAS DESKTOP) */}
       {transactionType === "expense" && formaPagamento === "cartao" && !isMobile && (
         <div className={cn(isMobile && "space-y-1")}>
-          <Label className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
+          <Label className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}
@@ -268,7 +268,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Data (abaixo de Valor e Parcela) */}
       <div className={cn("relative", isMobile && "space-y-1")}>
-        <Label htmlFor="date" className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Data</Label>
+        <Label htmlFor="date" className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Data</Label>
 
         <div className="relative w-full">
           <Button
@@ -298,7 +298,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
 
       {/* Campo de Descrição re-adicionado e verificado para editabilidade e exibição */}
       <div className={cn(isMobile && "space-y-1")}>
-        <Label htmlFor="description" className={cn("text-[#1e3a8a] font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Descrição</Label>
+        <Label htmlFor="description" className={cn("text-slate-700 font-medium mb-0.5 inline-block", isMobile && "text-xs")}>Descrição</Label>
         <Textarea
           id="description"
           value={description}

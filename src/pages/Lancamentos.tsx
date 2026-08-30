@@ -201,12 +201,9 @@ const Lancamentos = () => {
         <DialogContent
           className={cn(
             isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
-            "shadow-none border-none"
+            "shadow-none border-none bg-[#FAFAFA]"
           )}
           style={{
-            background: "linear-gradient(180deg, #FBFCFE 0%, #F6F8FB 100%)",
-            backgroundBlendMode: "soft-light",
-            backdropFilter: "blur(6px)",
             border: isMobile ? "2px solid #FFFFFF" : "none",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
