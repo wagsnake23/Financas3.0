@@ -182,7 +182,7 @@ export const Navigation = () => {
     if (metaThemeColor) {
       metaThemeColor.setAttribute("content", themeColor);
     }
-    document.documentElement.style.backgroundColor = bodyColor;
+    // document.documentElement.style.backgroundColor = bodyColor;
     document.body.style.backgroundColor = bodyColor;
   }, [isMobile, isDarkPage, isDespesas, isLancamentos, isReceitas, isInvestimentos, isCategorias, scrolled]);
 
@@ -196,7 +196,7 @@ export const Navigation = () => {
           ? cn(
             "h-14 shadow-none",
             isDarkPage
-                ? "bg-transparent border-transparent"
+                ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
                     ? "bg-[#FFFFFF] border-none"
                 : (isInvestimentos || isPerfil || isMetas || isDashboard)
