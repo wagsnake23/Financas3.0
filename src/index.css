@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -18,7 +18,7 @@ All colors MUST be HSL.
     --popover-foreground: 215 25% 15%;
 
     --primary: 215 96% 39%;
-    /* Novo azul para o botÃ£o Entrar: #0556C3 */
+    /* Novo azul para o botÃƒÂ£o Entrar: #0556C3 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 70% 50%;
@@ -52,7 +52,7 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     --app-title: 215 96% 32%;
-    /* Cor para o tÃ­tulo 'Minhas FinanÃ§as' - #04469E */
+    /* Cor para o tÃƒÂ­tulo 'Minhas FinanÃƒÂ§as' - #04469E */
 
     --border: 215 20% 88%;
     --input: 215 20% 88%;
@@ -78,7 +78,7 @@ All colors MUST be HSL.
     --soft-red: 0 70% 90%;
     /* Nova cor vermelho suave */
     --app-purple: 270 70% 58%;
-    /* NOVO: Roxo mais forte para botões */
+    /* NOVO: Roxo mais forte para botÃµes */
 
     --lancamentos-mobile-bg: 210 100% 98.5%;
     /* Azul muito claro suave para mobile */
@@ -157,7 +157,7 @@ All colors MUST be HSL.
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
     --app-title: 215 96% 32%;
-    /* Cor para o tÃ­tulo 'Minhas FinanÃ§as' - #04469E em dark mode */
+    /* Cor para o tÃƒÂ­tulo 'Minhas FinanÃƒÂ§as' - #04469E em dark mode */
 
     --soft-yellow: 45 60% 20%;
     /* Darker soft yellow for dark mode */
@@ -170,7 +170,7 @@ All colors MUST be HSL.
     --soft-purple: 280 60% 20%;
     /* Darker soft purple for dark mode */
     --app-purple: 270 70% 60%;
-    /* NOVO: Roxo mais forte para botÃµes em dark mode */
+    /* NOVO: Roxo mais forte para botÃƒÂµes em dark mode */
 
     --lancamentos-mobile-bg: 210 60% 97%;
     /* #F1F9FD - Keep it light as requested */
@@ -216,7 +216,7 @@ All colors MUST be HSL.
 /* Fix para o problema de clique do RadioGroupItem em TransactionEditForm */
 .radio-fix-click [role="radio"] {
   pointer-events: auto;
-  /* Garante que o botÃ£o de rÃ¡dio seja clicÃ¡vel */
+  /* Garante que o botÃƒÂ£o de rÃƒÂ¡dio seja clicÃƒÂ¡vel */
 }
 
 .radio-fix-click [role="radio"]::after {
@@ -230,53 +230,53 @@ All colors MUST be HSL.
 @media (max-width: 767px) {
   .dialog-mobile {
     padding-top: 0.8rem !important;
-    /* Aumentado para descer o título */
-    /* padding-bottom: 0 !important; REMOVIDO para permitir espaçamento customizado */
+    /* Aumentado para descer o tÃ­tulo */
+    /* padding-bottom: 0 !important; REMOVIDO para permitir espaÃ§amento customizado */
     top: 53% !important;
     /* Centered the modal on the screen */
   }
 
   .dialog-mobile .form-body {
     margin-top: 2.8rem !important;
-    /* Espaçamento superior para descolar do header */
+    /* EspaÃ§amento superior para descolar do header */
   }
 
 
 
-  /* Ocultar o cabeçalho da tabela em mobile */
+  /* Ocultar o cabeÃ§alho da tabela em mobile */
   .lancamentos-table-header {
     display: none !important;
   }
 }
 
 /* ==========================================================================
-   Formulário Nova Despesa — Padronização de Espaçamento Vertical (Mobile Only)
-   Referência visual: campo "Descrição" (label com mb-0.5 = 2px)
-   REGRA: nenhuma alteração em alturas, tipografia, cores ou layout desktop.
+   FormulÃ¡rio Nova Despesa â€” PadronizaÃ§Ã£o de EspaÃ§amento Vertical (Mobile Only)
+   ReferÃªncia visual: campo "DescriÃ§Ã£o" (label com mb-0.5 = 2px)
+   REGRA: nenhuma alteraÃ§Ã£o em alturas, tipografia, cores ou layout desktop.
    ========================================================================== */
 @media (max-width: 767px) {
   /* 1. Padronizar margem inferior de todos os labels dentro do #expense-form
-        para o mesmo valor da referência "Descrição" (mb-0.5 = 2px).
+        para o mesmo valor da referÃªncia "DescriÃ§Ã£o" (mb-0.5 = 2px).
         Aplica apenas labels que precedem campos (inline-block). */
   #expense-form label.inline-block {
     margin-bottom: 2px !important;
   }
 
-  /* 2. Padronizar o espaçamento entre grupos de campos dentro do #expense-form.
+  /* 2. Padronizar o espaÃ§amento entre grupos de campos dentro do #expense-form.
         O form usa space-y-3 (12px), mas PaymentDetails usa space-y-4 (16px)
-        internamente, criando inconsistência. Unificamos tudo em 12px. */
+        internamente, criando inconsistÃªncia. Unificamos tudo em 12px. */
   #expense-form .space-y-4 > * + * {
     margin-top: 12px !important;
   }
 
   /* 3. Mover o primeiro grupo (Subcategoria) ~8px para cima (acumulado)
-        para reduzir o espaço vazio logo abaixo do cabeçalho do modal. */
+        para reduzir o espaÃ§o vazio logo abaixo do cabeÃ§alho do modal. */
   #expense-form > div:first-child {
     margin-top: -8px !important;
   }
 
-  /* 4. Reduzir altura do textarea Descrição em 4px (61px → 57px).
-        Mantém padding, estilo visual e comportamento existentes. */
+  /* 4. Reduzir altura do textarea DescriÃ§Ã£o em 4px (61px â†’ 57px).
+        MantÃ©m padding, estilo visual e comportamento existentes. */
   #expense-form textarea#descricao {
     height: 57px !important;
     min-height: 57px !important;
@@ -285,34 +285,34 @@ All colors MUST be HSL.
 }
 
 /* ==========================================================================
-   Formulário Nova Receita — Padronização de Espaçamento Vertical (Mobile Only)
-   Mesmo padrão visual do formulário Nova Despesa.
-   REGRA: nenhuma alteração em alturas, tipografia, cores ou layout desktop.
+   FormulÃ¡rio Nova Receita â€” PadronizaÃ§Ã£o de EspaÃ§amento Vertical (Mobile Only)
+   Mesmo padrÃ£o visual do formulÃ¡rio Nova Despesa.
+   REGRA: nenhuma alteraÃ§Ã£o em alturas, tipografia, cores ou layout desktop.
    ========================================================================== */
 @media (max-width: 767px) {
   /* 1. Padronizar margem inferior de todos os labels dentro do #income-form
-        para o mesmo valor da referência "Descrição" (mb-0.5 = 2px). */
+        para o mesmo valor da referÃªncia "DescriÃ§Ã£o" (mb-0.5 = 2px). */
   #income-form label.inline-block {
     margin-bottom: 2px !important;
   }
 
-  /* 2. O primeiro filho do #income-form é um <div class="pt-2"> que envolve
-        o toggle Avulsa/Recorrente. O pt-2 (8px) cria espaço excessivo abaixo
-        do cabeçalho. Reduzimos para mover o bloco ~3px para cima. */
+  /* 2. O primeiro filho do #income-form Ã© um <div class="pt-2"> que envolve
+        o toggle Avulsa/Recorrente. O pt-2 (8px) cria espaÃ§o excessivo abaixo
+        do cabeÃ§alho. Reduzimos para mover o bloco ~3px para cima. */
   #income-form > div:first-child {
     padding-top: 5px !important;
   }
 
-  /* 3. Reduzir altura do textarea Descrição em 4px (61px → 57px),
-        mantendo o mesmo padrão do formulário Nova Despesa. */
+  /* 3. Reduzir altura do textarea DescriÃ§Ã£o em 4px (61px â†’ 57px),
+        mantendo o mesmo padrÃ£o do formulÃ¡rio Nova Despesa. */
   #income-form textarea#descricao {
     height: 57px !important;
     min-height: 57px !important;
     max-height: 57px !important;
   }
 
-  /* 4. Normaliza o espaço antes do RevenueStatusToggle para o ritmo
-        do formulário (space-y-3 = 12px) + 2px extras de respiro. */
+  /* 4. Normaliza o espaÃ§o antes do RevenueStatusToggle para o ritmo
+        do formulÃ¡rio (space-y-3 = 12px) + 2px extras de respiro. */
   #income-form .mt-2 {
     margin-top: 14px !important;
   }
@@ -342,20 +342,20 @@ html {
 body {
   width: 100%;
   height: 100%;
-  /* Removido overflow: hidden para permitir pull-to-refresh e scroll da página de fundo */
+  /* Removido overflow: hidden para permitir pull-to-refresh e scroll da pÃ¡gina de fundo */
 }
 
 /* Apenas para Desktop */
 @media (min-width: 1024px) {
 
-  /* Cards list container — sem scroll interno, fundo transparente */
+  /* Cards list container â€” sem scroll interno, fundo transparente */
   .lancamentos-scroll-container {
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
 
-  /* Desabilitar o overflow do wrapper interno do Shadcn para não quebrar o sticky */
+  /* Desabilitar o overflow do wrapper interno do Shadcn para nÃ£o quebrar o sticky */
   .lancamentos-scroll-container>div {
     overflow: visible !important;
   }
@@ -369,7 +369,7 @@ body {
     margin: 0 auto;
   }
 
-  /* CabeÃ§alho fixo (sticky) */
+  /* CabeÃƒÂ§alho fixo (sticky) */
   .lancamentos-table-header th {
     position: sticky;
     top: 0;
@@ -433,7 +433,7 @@ body {
     cursor: pointer;
   }
 
-  /* Ãcones de seta com animaÃ§Ã£o suave */
+  /* ÃƒÂcones de seta com animaÃƒÂ§ÃƒÂ£o suave */
   .arrow-icon {
     /* margin-left: 4px; */
     /* Removed as it's now absolutely positioned */
@@ -466,31 +466,31 @@ body {
   div[role="dialog"]>div:last-child form {
     /* Targets the form within DialogContent */
     padding-top: 0.25rem !important;
-    /* Reduzido o padding superior do formulÃ¡rio */
+    /* Reduzido o padding superior do formulÃƒÂ¡rio */
     padding-bottom: 0.25rem !important;
-    /* Reduzido o padding inferior do formulÃ¡rio */
+    /* Reduzido o padding inferior do formulÃƒÂ¡rio */
   }
 
   div[role="dialog"]>div:last-child form>div {
-    /* Reduz o espaÃ§amento vertical entre os grupos de campos */
+    /* Reduz o espaÃƒÂ§amento vertical entre os grupos de campos */
     margin-bottom: 0.5rem !important;
     /* Reduzido para 0.5rem */
   }
 
   div[role="dialog"]>div:last-child .dialog-header {
-    /* Reduz o padding inferior do cabeÃ§alho do diÃ¡logo */
+    /* Reduz o padding inferior do cabeÃƒÂ§alho do diÃƒÂ¡logo */
     padding-bottom: 0.25rem !important;
     /* Reduzido para 0.25rem */
   }
 
   div[role="dialog"]>div:last-child .dialog-footer {
-    /* Reduz o padding superior do rodapÃ© do diÃ¡logo */
+    /* Reduz o padding superior do rodapÃƒÂ© do diÃƒÂ¡logo */
     padding-top: 0.5rem !important;
     /* Reduzido para 0.5rem */
   }
 
   div[role="dialog"]>div:last-child input,
-  /* Ajusta a altura de inputs, selects e botÃµes */
+  /* Ajusta a altura de inputs, selects e botÃƒÂµes */
   div[role="dialog"]>div:last-child select,
   div[role="dialog"]>div:last-child button {
     height: 2rem !important;
@@ -504,7 +504,7 @@ body {
   }
 
   div[role="dialog"]>div:last-child textarea {
-    /* Ajusta a altura mÃ­nima de textareas */
+    /* Ajusta a altura mÃƒÂ­nima de textareas */
     min-height: 3.5rem !important;
     /* Reduzido para 3.5rem */
   }
@@ -571,7 +571,7 @@ body {
   /* luz interna suave */
 }
 
-/* Title icon badge variant — no external shadow, no dark bottom relief */
+/* Title icon badge variant â€” no external shadow, no dark bottom relief */
 .btn-3d-icon {
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow:
@@ -747,7 +747,7 @@ body {
   box-shadow: inset 0 3px 6px rgba(0,0,0,0.05) !important;
 }
 
-/* Unifica a cor de borda suave de todos os campos nos formulários para igualar à descrição */
+/* Unifica a cor de borda suave de todos os campos nos formulÃ¡rios para igualar Ã  descriÃ§Ã£o */
 #expense-form input,
 #expense-form select,
 #expense-form textarea,
@@ -852,7 +852,7 @@ body {
     font-weight: 700 !important; /* bold */
 }
 
-/* AddCardDialog — inputs with visible border above modal background + inset shadow */
+/* AddCardDialog â€” inputs with visible border above modal background + inset shadow */
 [data-dialog-card-form] input.input-3d-premium,
 [data-dialog-card-form] .input-3d-premium {
   background: #FFFFFF !important;
@@ -979,3 +979,5 @@ body {
   border-top: 1px solid #cbd5e1 !important;
   box-shadow: inset 0 3px 6px rgba(0,0,0,0.05) !important;
 }
+#root { outline: 2px solid blue; outline-offset: -2px; }
+body { outline: 2px solid green; outline-offset: -4px; }
