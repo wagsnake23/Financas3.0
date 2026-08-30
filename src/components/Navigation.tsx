@@ -418,7 +418,7 @@ export const Navigation = () => {
                               to={item.to}
                               onClick={() => setIsOpen(false)}
                               className={({ isActive }) => cn(
-                                "flex items-center gap-3 px-4 py-[6px] transition-all mx-1 rounded-xl",
+                                "flex items-center gap-3 px-4 py-1 transition-all mx-1 rounded-xl",
                                 isActive
                                   ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                   : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
@@ -433,7 +433,7 @@ export const Navigation = () => {
                             to="/perfil"
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) => cn(
-                              "flex items-center gap-3 px-4 py-[6px] transition-all mx-1 rounded-xl",
+                              "flex items-center gap-3 px-4 py-1 transition-all mx-1 rounded-xl",
                               isActive
                                 ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
                                 : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
@@ -446,9 +446,9 @@ export const Navigation = () => {
                           <Button
                             variant="ghost"
                             onClick={signOut}
-                            className="w-full justify-start px-4 h-9 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
+                            className="w-full justify-start px-4 h-8 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
                           >
-                            <LogOut className="h-5 w-5 mr-3" strokeWidth={2.5} />
+                            <LogOut className="h-4 w-4 mr-3" strokeWidth={2.5} />
                             <span className="text-[15px]">Sair da Conta</span>
                           </Button>
                         </div>
