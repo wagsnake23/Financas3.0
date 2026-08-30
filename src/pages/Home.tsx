@@ -565,10 +565,10 @@ export default function Home() {
                                                 className="flex flex-col md:mt-3 cursor-pointer group transition-all active:opacity-70"
                                                 onClick={() => setIsAjusteModalOpen(true)}
                                             >
-                                                <div className="flex items-center gap-2 mb-2 md:-mt-[1px]">
+                                                <div className="flex items-center gap-2 mb-0 md:mb-2 md:-mt-[1px]">
                                                     <h2 className="font-extrabold leading-none tracking-tight md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
                                                     <button 
-                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md"
+                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md -translate-y-1"
                                                         aria-label="Ajustar saldo"
                                                         type="button"
                                                     >
@@ -833,10 +833,10 @@ export default function Home() {
                                         className="flex flex-col cursor-pointer group transition-all active:opacity-70"
                                         onClick={() => setIsAjusteModalOpen(true)}
                                     >
-                                        <div className="flex items-center gap-2 mb-1">
+                                        <div className="flex items-center gap-2 mb-0 md:mb-1">
                                             <h2 className="text-[15px] font-extrabold tracking-[0.5px] md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Atual</h2>
                                             <button 
-                                                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md"
+                                                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md -translate-y-1"
                                                 aria-label="Ajustar saldo"
                                                 type="button"
                                             >
