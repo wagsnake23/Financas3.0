@@ -121,6 +121,7 @@ export const Navigation = () => {
   const isLancamentos = location.pathname.startsWith("/lancamentos");
   const isMetas = location.pathname.startsWith("/metas");
   const isPerfil = location.pathname.startsWith("/perfil");
+  const isDashboard = location.pathname.startsWith("/dashboard");
   const isDarkPage = location.pathname === "/";
 
   const [scrolled, setScrolled] = useState(false);
@@ -149,7 +150,7 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isMetas || isPerfil || isDarkPage;
+  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isMetas || isPerfil || isDashboard || isDarkPage;
   const mobileTextColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]");
   const mobileIconColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]");
   const mobileSubtitleColor = isDarkPage ? "text-white/65" : ((isModalOpen && !forceDarkText) ? "text-white/65" : "text-[#171717]");
@@ -166,7 +167,7 @@ export const Navigation = () => {
     } else if (isDespesas || isReceitas || isLancamentos) {
       themeColor = "#FFFFFF";
       bodyColor = "#FFFFFF";
-    } else if (isInvestimentos || isPerfil || isMetas) {
+    } else if (isInvestimentos || isPerfil || isMetas || isDashboard) {
       themeColor = "#F8FBFF";
       bodyColor = "#F8FBFF";
     } else if (isCategorias) {
@@ -198,7 +199,7 @@ export const Navigation = () => {
                 ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
                     ? "bg-[#FFFFFF] border-none"
-                : (isInvestimentos || isPerfil || isMetas)
+                : (isInvestimentos || isPerfil || isMetas || isDashboard)
                     ? "bg-[#F8FBFF]"
                 : isCategorias
                     ? "bg-[#F9FAFB]"
