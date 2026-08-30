@@ -163,13 +163,10 @@ export const Navigation = () => {
     if (isDarkPage) {
       themeColor = "#010856";
       bodyColor = "#D9DEE5";
-    } else if (isDespesas || isReceitas) {
-      themeColor = "#F5F5F5";
-      bodyColor = "#F5F5F5";
-    } else if (isLancamentos) {
+    } else if (isDespesas || isReceitas || isLancamentos) {
       themeColor = "#FFFFFF";
       bodyColor = "#FFFFFF";
-    } else if (isInvestimentos || isPerfil) {
+    } else if (isInvestimentos || isPerfil || isMetas) {
       themeColor = "#F8FBFF";
       bodyColor = "#F8FBFF";
     } else if (isCategorias) {
@@ -199,16 +196,12 @@ export const Navigation = () => {
             "h-14 shadow-none",
             isDarkPage
                 ? "bg-transparent"
-                : (isDespesas || isReceitas)
-                    ? "bg-[#F5F5F5] border-none"
-                : isLancamentos
+                : (isDespesas || isReceitas || isLancamentos)
                     ? "bg-[#FFFFFF] border-none"
-                : (isInvestimentos || isPerfil)
+                : (isInvestimentos || isPerfil || isMetas)
                     ? "bg-[#F8FBFF]"
                 : isCategorias
                     ? "bg-[#F9FAFB]"
-                : isMetas
-                    ? "bg-[#F7F9FC]"
                 : !scrolled
                     ? "bg-transparent border-transparent"
                     : "bg-white"
