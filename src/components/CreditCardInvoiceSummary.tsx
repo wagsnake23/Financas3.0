@@ -74,20 +74,20 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
         style={{
           borderRadius: "18px",
           background: isPaid 
-            ? "linear-gradient(135deg, rgba(22, 163, 74, 0.9) 0%, rgba(30, 181, 90, 0.9) 50%, rgba(34, 197, 94, 0.9) 100%)" 
+            ? "linear-gradient(135deg, #10B981 0%, #059669 100%)" 
             : "linear-gradient(135deg, #0D47D9 0%, #2563EB 55%, #5B9DFF 100%)",
           boxShadow: isPaid 
-            ? "0 4px 16px -4px rgba(22, 163, 74, 0.4)" 
+            ? "inset 0 1px 1px rgba(255,255,255,0.25), 0 4px 16px -4px rgba(16, 185, 129, 0.4)" 
             : "0 4px 16px -4px rgba(37, 99, 235, 0.4)",
-          border: "none",
+          border: isPaid ? "1px solid rgba(255,255,255,0.15)" : "none",
           minHeight: "auto"
         }}
       >
-        <div className="flex flex-col gap-2">
+        <div className={cn("flex flex-col", isPaid ? "gap-1" : "gap-2")}>
           <div className="flex items-center w-full justify-between mt-0.5 px-1">
             {/* Esquerda - Fatura Atual */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-90 mb-[2px] whitespace-nowrap">
                 Fatura atual
               </span>
               <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
@@ -100,7 +100,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
             {/* Centro - Vencimento */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-90 mb-[2px] whitespace-nowrap">
                 Vence em
               </span>
               <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap">
@@ -113,7 +113,7 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
 
             {/* Direita - Mês/Ano */}
             <div className="flex flex-col items-center justify-center flex-1 overflow-hidden">
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 mb-[2px] whitespace-nowrap">
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-90 mb-[2px] whitespace-nowrap">
                 {formattedBadgeMonth}
               </span>
               <div className="text-[14px] font-semibold tracking-tight leading-none whitespace-nowrap">
@@ -122,44 +122,37 @@ export const CreditCardInvoiceSummary: React.FC<CreditCardInvoiceSummaryProps> =
             </div>
           </div>
 
-          <div className="flex justify-center mt-0 mb-0">
-            <Button
-              className={cn(
-                "h-[34px] transition-all flex items-center justify-center px-0 font-bold",
-                isPaid 
-                  ? "w-[95%] rounded-[12px] pointer-events-none" 
-                  : "w-[95%] rounded-[12px] text-[#0D47D9] border-none hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.15)]"
-              )}
-              style={isPaid ? {
-                background: "#F0FDF4",
-                border: "1px solid rgba(22, 163, 74, 0.2)",
-                color: "#16A34A",
-              } : {
-                background: "linear-gradient(135deg, #fdfbfb 0%, #f3f4f6 100%)",
-                borderBottom: "1px solid rgba(0,0,0,0.1)",
-                boxShadow: "0 6px 14px rgba(0,0,0,0.08)"
-              }}
-              onClick={isPaid ? undefined : onPayInvoice}
-              disabled={isPaid ? false : (loadingPayInvoice || disablePayInvoiceButton)}
-            >
-              {isPaid ? (
-                <div className="flex items-center justify-center gap-2.5 w-full">
-                  <div className="flex items-center justify-center w-[22px] h-[22px] rounded-full border border-[#16A34A] bg-[#16A34A]/10 shrink-0">
-                    <Check className="h-3.5 w-3.5 text-[#16A34A]" strokeWidth={3} />
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-[2px]">
-                    <span className="font-[600] text-[13.5px] tracking-tight text-[#16A34A] leading-none">Fatura paga</span>
-                    <span className="text-[9.5px] font-medium text-[#16A34A]/80 leading-none">Pagamento realizado em {getFormattedPaymentDate()}</span>
-                  </div>
+          {isPaid ? (
+            <div className="flex flex-col items-center justify-center w-full mt-1.5 mb-0 gap-1">
+              <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center w-[18px] h-[18px] rounded-full bg-white/20 shrink-0">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
                 </div>
-              ) : (
+                <span className="font-semibold text-[15px] tracking-tight text-white leading-none">Fatura paga</span>
+              </div>
+              <span className="text-[11px] font-medium text-white/60 leading-none">
+                Pagamento realizado em {getFormattedPaymentDate()}
+              </span>
+            </div>
+          ) : (
+            <div className="flex justify-center mt-0 mb-0">
+              <Button
+                className="h-[34px] transition-all flex items-center justify-center px-0 font-bold w-[95%] rounded-[12px] text-[#0D47D9] border-none hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.15)]"
+                style={{
+                  background: "linear-gradient(135deg, #fdfbfb 0%, #f3f4f6 100%)",
+                  borderBottom: "1px solid rgba(0,0,0,0.1)",
+                  boxShadow: "0 6px 14px rgba(0,0,0,0.08)"
+                }}
+                onClick={onPayInvoice}
+                disabled={loadingPayInvoice || disablePayInvoiceButton}
+              >
                 <div className="flex items-center justify-center gap-1.5">
                   <span className="text-[16px] leading-none mb-[1px]">💳</span>
                   <span className="font-bold text-[13px] tracking-tight">{loadingPayInvoice ? "Processando..." : "Pagar Fatura"}</span>
                 </div>
-              )}
-            </Button>
-          </div>
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
     </div>
