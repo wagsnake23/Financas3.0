@@ -249,7 +249,7 @@ export default function Profile() {
             </div>
             <button
               onClick={handleUpdateApp}
-              className="text-slate-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-slate-100 mt-1"
+              className="text-slate-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-slate-100 mt-1 -translate-y-[10px]"
               title="Atualizar Aplicação"
             >
               <DynamicIcon name="RefreshCw" className="w-5 h-5" />
