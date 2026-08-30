@@ -563,7 +563,7 @@ export default function Metas() {
           onValueChange={(v) => { setParentIdFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}selectedParentId`]: false }); }}
         >
           <SelectTrigger id={`${fieldPrefix}selectedParentId`} className={cn(
-            "rounded-xl input-3d-premium font-bold transition-all duration-200",
+            "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200",
             parentId === UNSELECTED_VALUE && "text-gray-400",
             isMobile && "h-9 text-sm",
             getBorderClass({ isInvalid: errors[`${fieldPrefix}selectedParentId`], isValid: errors[`${fieldPrefix}selectedParentId`] === false, variant: "green" })
@@ -602,7 +602,7 @@ export default function Metas() {
             }}
             placeholder="Ex: Trocar de carro"
             className={cn(
-              "rounded-xl input-3d-premium font-bold transition-all duration-200",
+              "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200",
               isMobile && "h-9 text-sm",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}nomeMeta`], isValid: errors[`${fieldPrefix}nomeMeta`] === false, variant: "green" })
             )}
@@ -615,7 +615,7 @@ export default function Metas() {
             variant="outline"
             onClick={() => setEmojiOpenFn(true)}
             className={cn(
-              "rounded-xl input-3d-premium font-bold transition-all duration-200 text-2xl px-3",
+              "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200 text-2xl px-3",
               isMobile ? "h-9 w-12" : "h-10 w-14"
             )}
           >
@@ -662,7 +662,7 @@ export default function Metas() {
             value={vObj}
             onChange={(v) => { setVObjFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorObjetivo`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
+              "rounded-xl input-3d-premium bg-white font-bold px-3 transition-all duration-200",
               isMobile && "h-9 text-sm",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorObjetivo`], isValid: errors[`${fieldPrefix}valorObjetivo`] === false, variant: "green" })
             )}
@@ -675,7 +675,7 @@ export default function Metas() {
             value={vMen}
             onChange={(v) => { setVMenFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorMensal`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
+              "rounded-xl input-3d-premium bg-white font-bold px-3 transition-all duration-200",
               isMobile && "h-9 text-sm",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorMensal`], isValid: errors[`${fieldPrefix}valorMensal`] === false, variant: "green" })
             )}
@@ -692,7 +692,7 @@ export default function Metas() {
           onClick={() => setCalOpenFn(true)}
           className={cn(
             "w-full justify-start text-left font-bold h-10 rounded-xl",
-            "input-3d-premium px-3 transition-all duration-200",
+            "input-3d-premium bg-white px-3 transition-all duration-200",
             !dLim && "text-gray-400",
             isMobile && "h-9 text-sm"
           )}

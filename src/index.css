@@ -599,6 +599,10 @@ body {
   transition: all 0.2s ease;
 }
 
+.input-3d-premium.bg-white {
+  background: #FFFFFF !important;
+}
+
 /* Normalization for non-textarea inputs to ensure exact height */
 .input-3d-premium:not(textarea) {
   display: flex !important;

@@ -148,7 +148,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
                   onChange={handleMoneyChange}
                   placeholder="0,00"
                   className={cn(
-                    "pl-10 h-[50px] text-[16px] font-bold transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800",
+                    "pl-10 h-[50px] text-[16px] font-bold transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white bg-white text-gray-800",
                     error ? "border-red-500 focus-visible:ring-red-200" : "border-slate-200 focus-visible:ring-slate-100 focus-visible:border-slate-300"
                   )}
                   inputMode="numeric"
@@ -176,7 +176,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Ex.: Correção de saldo, dinheiro em espécie, ajuste manual..."
-                className="resize-none min-h-[70px] max-h-[70px] text-[14px] font-medium transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800 py-2 px-3 placeholder:text-slate-400 placeholder:opacity-60"
+                className="resize-none min-h-[70px] max-h-[70px] text-[14px] font-medium transition-all duration-200 rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white bg-white text-gray-800 py-2 px-3 placeholder:text-slate-400 placeholder:opacity-60"
                 maxLength={200}
               />
             </div>
