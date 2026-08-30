@@ -198,10 +198,15 @@ const Lancamentos = () => {
           }
         }}
       >
+        <style>{`
+          .edit-lancamento-modal > button {
+            transform: translate(3px, -3px) !important;
+          }
+        `}</style>
         <DialogContent
           className={cn(
             isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
-            "shadow-none border-none bg-[#FAFAFA]"
+            "shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal"
           )}
           style={{
             border: isMobile ? "2px solid #FFFFFF" : "none",
