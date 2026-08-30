@@ -551,8 +551,8 @@ export default function Home() {
                                     style={{
                                         borderRadius: "16px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                        // backdropFilter: "blur(18px) saturate(1.4)",
-                                        // WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
