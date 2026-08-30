@@ -105,7 +105,10 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleStatusChange(true)}
-                        className="text-primary text-xs font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl"
+                        className={cn(
+                            "text-primary font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl",
+                            isMobile ? "text-xs" : "text-[13px]"
+                        )}
                     >
                         Marcar como pago
                     </Button>
@@ -116,41 +119,47 @@ export const TransactionStatusBar: React.FC<TransactionStatusBarProps> = ({
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                className="text-primary text-xs font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl flex items-center gap-1"
+                                className={cn(
+                                    "text-primary font-semibold hover:bg-primary/5 h-7 px-2 rounded-xl flex items-center gap-1",
+                                    isMobile ? "text-xs" : "text-[13px]"
+                                )}
                             >
                                 Alterar
                                 <ChevronDown className="w-3.5 h-3.5" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-40 p-2 rounded-2xl border-none shadow-xl bg-white/95 backdrop-blur-sm" align="end">
-                            <RadioGroup
-                                value={isPaid ? "paid" : "pending"}
-                                onValueChange={(value) => handleStatusChange(value === "paid")}
-                                className="space-y-1"
-                            >
-                                <label className={cn(
-                                    "flex items-center gap-2 p-2 rounded-xl transition-colors",
-                                    isPaid ? "cursor-default bg-gray-50/80 opacity-90" : "cursor-pointer hover:bg-gray-50"
-                                )}>
-                                    <RadioGroupItem value="paid" className="w-4 h-4 shrink-0 rounded-full aspect-square" disabled={isPaid} />
+                        <PopoverContent className={cn(
+                            "p-2 rounded-2xl border-none shadow-xl bg-white/95 backdrop-blur-sm",
+                            isMobile ? "w-40" : "w-[185px]"
+                        )} align="end">
+                            <div className="space-y-1">
+                                <div 
+                                    onClick={() => !isPaid && handleStatusChange(true)}
+                                    className={cn(
+                                        "flex items-center justify-between p-2 rounded-xl transition-colors",
+                                        isPaid ? "cursor-default bg-slate-100/80" : "cursor-pointer hover:bg-gray-50"
+                                    )}
+                                >
                                     <span className={cn(
-                                        "text-sm font-medium flex-1",
-                                        isPaid ? "text-gray-900" : "text-gray-600"
+                                        "text-sm font-medium",
+                                        isPaid ? "text-slate-500" : "text-gray-900"
                                     )}>{transactionType === "income" ? "Recebido" : "Pago"}</span>
                                     {isPaid && <Check className="w-[15px] h-[15px] text-[#1DA554] shrink-0" strokeWidth={3} />}
-                                </label>
-                                <label className={cn(
-                                    "flex items-center gap-2 p-2 rounded-xl transition-colors",
-                                    !isPaid ? "cursor-default bg-gray-50/80 opacity-90" : "cursor-pointer hover:bg-gray-50"
-                                )}>
-                                    <RadioGroupItem value="pending" className="w-4 h-4 shrink-0 rounded-full aspect-square" disabled={!isPaid} />
+                                </div>
+                                <div 
+                                    onClick={() => isPaid && handleStatusChange(false)}
+                                    className={cn(
+                                        "flex items-center justify-between p-2 rounded-xl transition-colors",
+                                        !isPaid ? "cursor-default bg-slate-100/80" : "cursor-pointer hover:bg-gray-50"
+                                    )}
+                                >
                                     <span className={cn(
-                                        "text-sm font-medium flex-1",
-                                        !isPaid ? "text-gray-900" : "text-gray-600"
+                                        "text-sm font-medium",
+                                        !isPaid ? "text-slate-500" : "text-gray-900"
                                     )}>Pendente</span>
                                     {!isPaid && <Check className="w-[15px] h-[15px] text-[#1DA554] shrink-0" strokeWidth={3} />}
-                                </label>
-                            </RadioGroup>
+                                </div>
+                            </div>
                         </PopoverContent>
                     </Popover>
                 )}
