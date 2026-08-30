@@ -196,7 +196,7 @@ export const Navigation = () => {
           ? cn(
             "h-14 shadow-none",
             isDarkPage
-                ? "bg-transparent"
+                ? "bg-transparent border-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
                     ? "bg-[#FFFFFF] border-none"
                 : (isInvestimentos || isPerfil || isMetas || isDashboard)
