@@ -810,7 +810,7 @@ export default function Investments() { // Alterado para export default function
               )}
               style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
             >
-              <h2 className={cn("text-xl text-[#0556C3] font-black tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
+              <h2 className={cn("text-xl text-[#0556C3] font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-[6px]">
                   <Label htmlFor="investment-category" className={cn("text-[#283c5a]", isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
@@ -1064,7 +1064,7 @@ export default function Investments() { // Alterado para export default function
                 style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className={cn("text-2xl font-bold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
+                  <h2 className={cn("text-2xl font-extrabold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
                   <ToggleGroup
                     type="single"
                     value={yieldViewMode}
@@ -1313,7 +1313,7 @@ export default function Investments() { // Alterado para export default function
                 )}
                 style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
               >
-                <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
+                <h2 className={cn("text-2xl font-extrabold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="investment-category" className={cn(isMobile && "text-xs")}>Nome do Investimento <span className="text-red-500 font-bold">*</span></Label>
@@ -1571,7 +1571,7 @@ export default function Investments() { // Alterado para export default function
                 style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
-                  <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
+                  <h2 className={cn("text-2xl font-extrabold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
                   <ToggleGroup
                     type="single"
                     value={yieldViewMode}
