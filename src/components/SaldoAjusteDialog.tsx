@@ -108,7 +108,7 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
         onOpenAutoFocus={(e) => e.preventDefault()}
         className={cn(
           "flex flex-col overflow-hidden w-full bg-[#FAFAFA] saldo-ajuste-modal", 
-          isMobile ? "max-w-[94vw] mx-auto rounded-[16px] max-h-[95dvh] !p-0" : "sm:max-w-[425px] rounded-[16px] !p-0 max-h-[90dvh]"
+          isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] mx-auto rounded-[16px] max-h-[95dvh] !p-0" : "sm:max-w-[425px] sm:rounded-[14px] !p-0 max-h-[90dvh]"
         )}
       >
         <DialogHeader className={cn("shrink-0 bg-white border-b px-5 py-4", isMobile ? "border-b-[#E5E7EB]" : "")}>
