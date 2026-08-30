@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -979,5 +979,3 @@ body {
   border-top: 1px solid #cbd5e1 !important;
   box-shadow: inset 0 3px 6px rgba(0,0,0,0.05) !important;
 }
-#root { outline: 2px solid blue; outline-offset: -2px; }
-body { outline: 2px solid green; outline-offset: -4px; }

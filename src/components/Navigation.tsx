@@ -194,7 +194,7 @@ export const Navigation = () => {
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 shadow-none",
+            "h-14 shadow-none border-0",
             isDarkPage
                 ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
