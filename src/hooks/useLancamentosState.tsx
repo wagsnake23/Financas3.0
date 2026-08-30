@@ -65,10 +65,12 @@ export const useLancamentosState = () => {
   }, []);
 
   const handleCancelEdit = useCallback(() => {
-    setEditingTransaction(null);
-    setFullEditingRevenue(null);
-    setFullEditingExpense(null);
     setIsEditModalOpen(false);
+    setTimeout(() => {
+      setEditingTransaction(null);
+      setFullEditingRevenue(null);
+      setFullEditingExpense(null);
+    }, 300);
   }, []);
 
   return {

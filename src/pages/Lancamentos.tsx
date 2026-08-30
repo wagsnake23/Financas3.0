@@ -188,7 +188,16 @@ const Lancamentos = () => {
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       )}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+      <Dialog 
+        open={isEditModalOpen} 
+        onOpenChange={(open) => {
+          if (!open) {
+            handleCancelEdit();
+          } else {
+            setIsEditModalOpen(true);
+          }
+        }}
+      >
         <DialogContent
           className={cn(
             isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
@@ -223,7 +232,7 @@ const Lancamentos = () => {
             </div>
           </DialogHeader>
 
-          {!loadingEditData && editingTransaction && (
+          {editingTransaction && (
             <div className={cn("form-body pb-0", isMobile && "pt-[18px]")}>
               <TransactionEditForm
                 editingTransaction={editingTransaction}

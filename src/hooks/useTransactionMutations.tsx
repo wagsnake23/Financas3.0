@@ -213,13 +213,15 @@ export const useTransactionMutations = ({
           style: toastSuccessStyle,
           duration: toastDuration
         });
-        setEditingTransaction(null);
         setIsEditModalOpen(false);
-        invalidateAllTransactionQueries();
+        setTimeout(() => {
+          setEditingTransaction(null);
+          invalidateAllTransactionQueries();
+          setLoadingEditData(false);
+        }, 300);
       } catch (err: any) {
         toast.error("Erro ao excluir lançamento", { description: err.message, duration: toastDuration, style: toastErrorStyle });
         console.error("handleDeleteTransaction: Deletion error:", err);
-      } finally {
         setLoadingEditData(false);
       }
     },
@@ -533,13 +535,15 @@ export const useTransactionMutations = ({
           style: toastSuccessStyle,
           duration: toastDuration
         });
-        invalidateAllTransactionQueries();
+        setIsEditModalOpen(false);
+        setTimeout(() => {
+          setEditingTransaction(null);
+          invalidateAllTransactionQueries();
+          setLoadingEditData(false);
+        }, 300);
       } catch (err: any) {
         console.error("handleUpdateTransaction: Erro ao atualizar lançamento:", err);
         toast.error("Erro ao atualizar lançamento.", { description: err.message, duration: toastDuration, style: toastErrorStyle });
-      } finally {
-        setEditingTransaction(null);
-        setIsEditModalOpen(false);
         setLoadingEditData(false);
       }
     },
