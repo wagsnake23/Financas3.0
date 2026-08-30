@@ -155,27 +155,32 @@ export const Navigation = () => {
   useEffect(() => {
     if (!isMobile) return;
     
-    let color = "#F7F9FC";
+    let themeColor = "#F7F9FC";
+    let bodyColor = "#F7F9FC";
+
     if (isDarkPage) {
-      color = "#010856";
-    } else if (isDespesas || isReceitas) {
-      color = "#FFFFFF";
-    } else if (isLancamentos) {
-      color = "#FFFFFF";
+      themeColor = "#010856";
+      bodyColor = "#D9DEE5";
+    } else if (isDespesas || isReceitas || isLancamentos) {
+      themeColor = "#F5F5F5";
+      bodyColor = "#F5F5F5";
     } else if (isInvestimentos) {
-      color = "#F8FBFF";
+      themeColor = "#F8FBFF";
+      bodyColor = "#F8FBFF";
     } else if (isCategorias) {
-      color = "#F9FAFB";
+      themeColor = "#F9FAFB";
+      bodyColor = "#F9FAFB";
     } else {
-      color = "#F7F9FC";
+      themeColor = "#F7F9FC";
+      bodyColor = "#F7F9FC";
     }
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute("content", color);
+      metaThemeColor.setAttribute("content", themeColor);
     }
-    document.documentElement.style.backgroundColor = color;
-    document.body.style.backgroundColor = color;
+    document.documentElement.style.backgroundColor = bodyColor;
+    document.body.style.backgroundColor = bodyColor;
   }, [isMobile, isDarkPage, isDespesas, isLancamentos, isReceitas, isInvestimentos, isCategorias, scrolled]);
 
   return (
@@ -189,10 +194,8 @@ export const Navigation = () => {
             "h-14 shadow-none",
             isDarkPage
                 ? "bg-transparent"
-                : (isDespesas || isReceitas)
-                    ? "bg-white border-none"
-                    : isLancamentos
-                    ? "bg-[#FFFFFF]"
+                : (isDespesas || isReceitas || isLancamentos)
+                    ? "bg-[#F5F5F5] border-none"
                 : isInvestimentos
                     ? "bg-[#F8FBFF]"
                     : isCategorias
