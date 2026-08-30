@@ -163,7 +163,7 @@ export const Navigation = () => {
 
     if (isDarkPage) {
       themeColor = "#010856";
-      bodyColor = "#D9DEE5";
+      bodyColor = "#F7F9FC";
     } else if (isDespesas || isReceitas || isLancamentos) {
       themeColor = "#FFFFFF";
       bodyColor = "#FFFFFF";
