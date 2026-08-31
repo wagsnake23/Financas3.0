@@ -515,13 +515,14 @@ export const TransactionList = ({
 
 
   return (
-    <div className={cn("pt-0", isMobile ? "p-0 flex-1 flex flex-col min-h-0 h-full bg-[#FFFFFF]" : "pb-6")}>
+    <div className={cn("flex flex-col", isMobile ? "p-0 bg-[#FFFFFF]" : "pb-0")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
-        "flex flex-col gap-2 mb-1",
-        isMobile ? "-mt-[3px]" : "flex-row items-center gap-2 mb-6 mt-4 bg-white border border-[#E2E8F0] rounded-[16px] p-[6px] shadow-[0_2px_12px_-4px_rgba(15,23,42,0.06)]"
+        "flex flex-col",
+        isMobile ? "gap-2 mb-1 -mt-[3px]" : "mb-3 mt-1 bg-white border border-[#E2E8F0] rounded-[16px] p-2 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.06)]"
       )}>
+        <div className={cn("flex w-full", isMobile ? "flex-col" : "flex-row gap-2")}>
         {/* Campo de Pesquisa */}
         <div className={cn("relative group w-full", !isMobile && "flex-[1.5]")}>
           <Input
@@ -623,6 +624,60 @@ export const TransactionList = ({
             </Select>
           </div>
         )}
+        </div> {/* Fecha a linha flex w-full criada na linha 525 */}
+
+        {/* Resumo Integrado (Apenas Desktop) */}
+        {!isMobile && (
+          <div className="flex flex-row w-full pt-2.5 pb-1 px-4 mt-2 border-t border-slate-100 justify-between items-center gap-4">
+            {/* Lançamentos */}
+            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+              <span className="text-[13px] text-slate-500 font-medium">Lançamentos:</span>
+              <span className="text-[14px] font-bold text-slate-700">{summary.count} itens</span>
+            </div>
+
+            <div className="w-[1px] h-4 bg-slate-200"></div>
+
+            {/* Receitas / Valor Pago */}
+            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+              <span className="text-[13px] text-slate-500 font-medium">
+                {filterType === 'expense' ? 'Valor Pago:' : 'Receitas:'}
+              </span>
+              <span className="text-[14px] font-bold text-[#22C55E]">
+                {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, true)}
+              </span>
+            </div>
+
+            <div className="w-[1px] h-4 bg-slate-200"></div>
+
+            {/* Despesas / Pendente */}
+            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+              <span className="text-[13px] text-slate-500 font-medium">
+                {filterType === 'income' ? 'Pendente:' : 'Despesas:'}
+              </span>
+              <span className={cn(
+                "text-[14px] font-bold",
+                filterType === 'income' ? "text-[#FF8888]" : "text-[#E55B5B]"
+              )}>
+                {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, true)}
+              </span>
+            </div>
+
+            <div className="w-[1px] h-4 bg-slate-200"></div>
+
+            {/* Saldo / Recebidas */}
+            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+              <span className="text-[13px] text-slate-500 font-medium">
+                {filterType === 'income' ? 'Recebidas:' : 'Saldo:'}
+              </span>
+              <span className={cn(
+                "text-[14px] font-bold",
+                filterType === 'income' ? "text-primary" : "text-[#3B82F6]"
+              )}>
+                {formatCurrency(filterType === 'income' ? summary.receivedIncome : accumulatedValue, true)}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {isValidUuid(filterPaymentOptionId) && (
@@ -646,7 +701,8 @@ export const TransactionList = ({
 
         <div 
           className={cn(
-            isMobile ? "flex-1 overflow-y-auto mt-1 no-scrollbar bg-[#FFFFFF]" : "mt-4 w-full"
+            "mt-1",
+            isMobile ? "bg-[#FFFFFF]" : "w-full"
           )}
           style={isMobile ? {
             marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))",
@@ -749,9 +805,9 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto relative z-20",
-        isMobile ? "w-full" : "mt-8 w-full px-0 mb-4"
+        isMobile ? "w-full" : "hidden"
       )}>
-        {isMobile ? (
+        {isMobile && (
           /* Mobile premium bottom bar */
           <div 
             className="bg-[#FFFFFF] rounded-none overflow-hidden border-t border-slate-300 px-4 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))]"
@@ -913,53 +969,6 @@ export const TransactionList = ({
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-        ) : (
-          /* Desktop version (UNCHANGED) */
-          <div className="bg-slate-50 flex items-center justify-between w-full gap-2 px-4 border-t border-gray-300 pt-3 pb-3 shadow-sm w-full bg-background border border-gray-200 rounded-2xl">
-            {/* 1: Lançamentos */}
-            <div className="flex flex-col items-center justify-center flex-1">
-              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Lançamentos</span>
-              <span className="text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">{summary.count} itens</span>
-            </div>
-
-            {/* 2: Receitas / Valor Pago */}
-            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
-                {filterType === 'expense' ? 'Valor Pago' : 'Receitas'}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-success whitespace-nowrap">
-                {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, !isMobile)}
-              </span>
-            </div>
-
-            {/* 3: Despesas / Pendente */}
-            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">
-                {filterType === 'income' ? 'Pendente' : 'Despesas'}
-              </span>
-              <span className={cn(
-                "text-xs sm:text-sm font-bold whitespace-nowrap",
-                filterType === 'income' ? "text-orange-500" : "text-destructive"
-              )}>
-                {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, !isMobile)}
-              </span>
-            </div>
-
-            {/* 4: Saldo / Recebidas */}
-            <div className="flex flex-col items-center justify-center flex-1 border-l border-gray-300">
-              <span className="text-[12px] sm:text-[14px] text-gray-700 font-bold whitespace-nowrap">Saldo</span>
-              <span className={cn(
-                "text-xs sm:text-sm font-black tracking-tight whitespace-nowrap",
-                filterType === 'expense'
-                  ? (accumulatedValue > 0 ? "text-destructive" : "text-primary")
-                  : filterType === 'income'
-                    ? "text-primary"
-                    : (accumulatedValue >= 0 ? "text-primary" : "text-destructive")
-              )}>
-                {formatCurrency(accumulatedValue, !isMobile)}
-              </span>
             </div>
           </div>
         )}

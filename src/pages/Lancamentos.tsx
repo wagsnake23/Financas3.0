@@ -84,13 +84,13 @@ const Lancamentos = () => {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen relative",
-        isMobile ? "pt-14 bg-[#FFFFFF] text-black h-screen overflow-hidden" : "pt-[72px] global-bg"
+        "flex flex-col relative min-h-screen",
+        isMobile ? "pt-14 bg-[#FFFFFF] text-black" : "pt-[72px] global-bg"
       )}>
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
       {!isMobile && (
-        <div className="relative h-[160px] w-full overflow-hidden bg-transparent">
+        <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
           <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
@@ -111,14 +111,13 @@ const Lancamentos = () => {
               </div>
             </div>
 
-            <Button
+            <button
               onClick={() => navigate(-1)}
-              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1e3a8a] bg-white hover:bg-white/90"
-              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-slate-800 transition-colors bg-transparent border-none outline-none focus:outline-none shadow-none mt-2 pr-4"
             >
-              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1e3a8a]" strokeWidth={3} />
+              <DynamicIcon name="ArrowLeft" className="h-[18px] w-[18px]" strokeWidth={2.5} />
               Voltar
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -126,10 +125,10 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container-app flex-grow",
-          isMobile ? "pt-0 pb-0 flex flex-col min-h-0 bg-[#FFFFFF]" : "pt-0 pb-8 -mt-6"
+          isMobile ? "pt-0 pb-0 bg-[#FFFFFF]" : "-mt-[86px] pb-8 space-y-6"
         )}
       >
-        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "-mt-[35px] mb-6 h-10")}>
+        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "-mt-[63px] mb-4 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
