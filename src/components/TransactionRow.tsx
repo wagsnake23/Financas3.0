@@ -189,7 +189,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       >
         <div className="flex flex-col w-full gap-1">
           {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
-          <div className="flex items-baseline justify-between w-full mb-[1px]">
+          <div className="flex items-baseline justify-between w-full mb-0">
             <div className="flex items-baseline gap-[5px] min-w-0 flex-1 mr-2">
               {/* Data */}
               <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap shrink-0">
@@ -263,7 +263,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   {categoryName}
                 </span>
                 {transaction.description && (
-                  <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[4px] leading-none">
+                  <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[5px] leading-none">
                     {transaction.description}
                   </span>
                 )}
