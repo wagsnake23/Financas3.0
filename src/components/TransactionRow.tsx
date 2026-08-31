@@ -236,7 +236,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
             )}>
               <span className="text-[10.5px] font-medium opacity-[0.65]">{currencySymbol}</span>
-              <span className="text-[14px]">{valueStr}</span>
+              <span className={cn(
+                "text-[14px]",
+                transaction.type !== 'income' && transaction.status === "Recebida" && "text-slate-700"
+              )}>{valueStr}</span>
             </span>
           </div>
 
@@ -245,17 +248,11 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             <div className="flex items-center gap-3 min-w-0 flex-1">
               {/* Quadrado arredondado com fundo suave do ícone da subcategoria */}
               <div
-                className={cn(
-                  "h-[38px] w-[38px] rounded-[10px] flex items-center justify-center shrink-0 border border-slate-100 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] bg-gradient-to-br",
-                  isFixo ? "from-red-50/80 to-red-100/40" :
-                  isParcelado ? "from-purple-50/80 to-purple-100/40" :
-                  transaction.type === "income" ? "from-green-50/80 to-green-100/40" :
-                  "from-blue-50/80 to-blue-100/40"
-                )}
+                className="h-[38px] w-[38px] rounded-[10px] flex items-center justify-center shrink-0 border border-black/[0.015] bg-slate-100"
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="h-5 w-5 opacity-90 drop-shadow-sm"
+                  className="w-[22px] h-[22px] opacity-90 drop-shadow-sm"
                   style={{ color: categoryColor }}
                 />
               </div>
