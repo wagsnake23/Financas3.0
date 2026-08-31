@@ -236,24 +236,25 @@ export const MobileCreditCardExpenses: React.FC<
       }}
     >
 
-      <div className="flex flex-col w-full h-full justify-between pointer-events-auto" style={{ paddingTop: "var(--home-title-mt, 3px)" }}>
+      <div className="flex flex-col w-full h-full justify-between pointer-events-auto" style={{ paddingTop: "0px" }}>
         {/* Top Header Row */}
-        <div className="flex justify-between items-start w-full">
-          {/* Left side: Selector with subtle border and increased width */}
-          <div className="inline-block" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-start w-full mb-[8px]">
+          {/* Header Row: Full width selector */}
+          <div className="w-full" onClick={(e) => e.stopPropagation()}>
             <Select value={selectedCardId} onValueChange={setSelectedCardId}>
               <SelectTrigger 
-                className="h-[32px] text-[13.5px] font-bold tracking-tight px-[18.5px] rounded-[9px] border border-[#D6DEEC] hover:border-[#C5D1E8] focus:border-[#AFC0E8] shadow-none focus:ring-0 [&>svg]:hidden transition-colors" 
+                className="w-full h-[32px] text-[13.5px] font-bold tracking-tight px-3.5 rounded-[9px] border border-[#D6DEEC] hover:border-[#C5D1E8] focus:border-[#AFC0E8] shadow-none focus:ring-0 [&>svg]:hidden transition-colors flex items-center justify-between" 
                 style={{ 
-                  background: "rgba(255,255,255,0.5)", 
+                  background: "#FFFFFF", 
                   color: "#1e293b",
                   boxShadow: "none"
                 }}
               >
-                <div className="flex items-center gap-1 min-w-0 truncate">
+                <div className="flex items-center gap-2 min-w-0 truncate">
+                  <span className="shrink-0 leading-none" style={{ fontSize: "16px" }}>💳</span>
                   <SelectValue placeholder="Cartão" />
-                  <span className="text-[#1F2937] font-bold text-[14px] ml-0.5 leading-none select-none">▼</span>
                 </div>
+                <span className="text-[#1F2937] font-bold text-[14px] ml-2 shrink-0 leading-none select-none">▼</span>
               </SelectTrigger>
               <SelectContent className="rounded-xl">
                 {cartoes.map((card) => (
@@ -268,7 +269,7 @@ export const MobileCreditCardExpenses: React.FC<
 
         {/* 📌 Indicadores */}
         {selectedCardId !== UNSELECTED_VALUE && (
-          <div className="flex justify-between items-end w-full relative z-20">
+          <div className="flex justify-between items-end w-full relative z-20 -translate-y-[2px]">
             {/* Lado esquerdo: Gráfico de tendência roxo */}
             <div className="flex-1 min-w-0 flex flex-col items-start justify-end -ml-1">
               <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[var(--home-chart-h,64px)] overflow-visible">
@@ -323,7 +324,7 @@ export const MobileCreditCardExpenses: React.FC<
                   );
                 })}
               </svg>
-              <span className="text-[10px] font-semibold text-[#6b7280] mt-[4px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none">
+              <span className="text-[10px] font-semibold text-[#6b7280] mt-[3px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none">
                 Últimos 10 meses
               </span>
             </div>
@@ -332,12 +333,12 @@ export const MobileCreditCardExpenses: React.FC<
             <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right">
               {/* Período da fatura */}
               <span 
-                className="text-[11px] font-extrabold tracking-wide uppercase mb-[1px]" 
+                className="text-[11px] font-extrabold tracking-wide uppercase mb-0" 
                 style={{ color: "#1F2937", fontFamily: "'Inter', sans-serif" }}
               >
                 {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
               </span>
-              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-[3px]" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
+              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-0" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
               <p className="font-[800] leading-none" style={{ fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
