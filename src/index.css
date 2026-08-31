@@ -571,12 +571,38 @@ body {
   /* luz interna suave */
 }
 
-/* Title icon badge variant â€” no external shadow, no dark bottom relief */
+/* Title icon badge variant — no external shadow, no dark bottom relief */
 .btn-3d-icon {
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow:
     inset 0px 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
+
+/* Modal variant: reduces outer shadow spread to avoid overlapping dark bands in small grid gaps */
+.btn-3d-modal {
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(180deg, var(--cor-topo) 0%, var(--cor-base) 100%);
+  box-shadow:
+    0px 2px 4px rgba(0, 0, 0, 0.04),
+    inset 0px 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0px -2px 0px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+.btn-3d-modal:hover {
+  box-shadow:
+    0px 3px 6px rgba(0, 0, 0, 0.06),
+    inset 0px 1px 2px rgba(255, 255, 255, 0.25),
+    inset 0px -2px 3px rgba(0, 0, 0, 0.15);
+}
+.btn-3d-modal:active {
+  transform: none;
+  box-shadow:
+    inset 0px 4px 8px rgba(0, 0, 0, 0.30),
+    inset 0px -2px 4px rgba(255, 255, 255, 0.15);
+}
+
 .btn-3d-icon:hover {
   box-shadow:
     inset 0px 1px 2px rgba(255, 255, 255, 0.25) !important;
