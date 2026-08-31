@@ -644,13 +644,25 @@ export const TransactionList = ({
         </div>
       )}
 
-        <div className={cn(
-          isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : "mt-4"
-        )}>
+        <div 
+          className={cn(
+            isMobile ? "flex-1 overflow-y-auto mt-1 no-scrollbar bg-[#FFFFFF]" : "mt-4 w-full"
+          )}
+          style={isMobile ? {
+            marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))",
+            marginRight: "calc(-1 * clamp(18px, 4vw, 32px))",
+          } : undefined}
+        >
         {isMobile ? (
           <div className="flex flex-col gap-0 pb-4">
             {finalDisplayTransactions.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
+              <div 
+                className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200"
+                style={{
+                  marginLeft: "clamp(18px, 4vw, 32px)",
+                  marginRight: "clamp(18px, 4vw, 32px)"
+                }}
+              >
                 <p className="text-muted-foreground font-medium">Nenhum lançamento encontrado</p>
               </div>
             ) : (
@@ -658,7 +670,14 @@ export const TransactionList = ({
                 {finalDisplayTransactions.map((transaction, index) => (
                   <React.Fragment key={transaction.id}>
                     {todayMarkerIndex === index && (
-                      <div ref={todayMarkerRef} className="flex items-center justify-center w-full my-1 h-[20px]">
+                      <div 
+                        ref={todayMarkerRef} 
+                        className="flex items-center justify-center w-full my-1 h-[20px]"
+                        style={{
+                          paddingLeft: "clamp(18px, 4vw, 32px)",
+                          paddingRight: "clamp(18px, 4vw, 32px)"
+                        }}
+                      >
                         <div className="h-[1px] bg-slate-200/80 flex-1"></div>
                         <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
                           <span className="text-[12px] leading-none">📍</span>
@@ -682,7 +701,14 @@ export const TransactionList = ({
                   </React.Fragment>
                 ))}
                 {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
-                  <div ref={todayMarkerRef} className="flex items-center justify-center w-full my-1 h-[20px]">
+                  <div 
+                    ref={todayMarkerRef} 
+                    className="flex items-center justify-center w-full my-1 h-[20px]"
+                    style={{
+                      paddingLeft: "clamp(18px, 4vw, 32px)",
+                      paddingRight: "clamp(18px, 4vw, 32px)"
+                    }}
+                  >
                     <div className="h-[1px] bg-slate-200/80 flex-1"></div>
                     <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
                       <span className="text-[12px] leading-none">📍</span>

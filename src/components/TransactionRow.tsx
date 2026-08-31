@@ -179,9 +179,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "py-[13px] px-[14px] flex flex-col justify-center animate-fade-in active:bg-gray-50 transition-colors bg-white",
+          "py-[13px] flex flex-col justify-center animate-fade-in active:bg-gray-50 transition-colors bg-white",
           !isLastItem && "border-b border-slate-300"
         )}
+        style={{
+          paddingLeft: "clamp(18px, 4vw, 32px)",
+          paddingRight: "clamp(18px, 4vw, 32px)",
+        }}
       >
         <div className="flex flex-col w-full gap-1">
           {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
@@ -287,17 +291,17 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                   onToggleStatus(transaction.id, transaction.type, newStatus);
                 }}
                 className={cn(
-                  "w-[38px] h-[20px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
+                  "w-[38px] h-[18px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
                   transaction.status === "Recebida"
                     ? "bg-[#22C55E]/90 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
-                    : "bg-[#E85454]/80 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(232,84,84,0.35)]"
+                    : "bg-rose-400 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.15),_0_1px_2px_rgba(251,113,133,0.3)]"
                 )}
               >
                 <div
                   className={cn(
-                    "w-[16px] h-[16px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
+                    "w-[14px] h-[14px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
                     transaction.status === "Recebida"
-                      ? "translate-x-[16px]"
+                      ? "translate-x-[20px]"
                       : "translate-x-0"
                   )}
                 />
