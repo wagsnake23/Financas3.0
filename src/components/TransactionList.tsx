@@ -520,7 +520,7 @@ export const TransactionList = ({
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col",
-        isMobile ? "gap-2 mb-1 -mt-[3px]" : "mb-3 mt-1 bg-white border border-[#E2E8F0] rounded-[16px] p-2 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.06)]"
+        isMobile ? "gap-2 mb-1 -mt-[3px]" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
       )}>
         <div className={cn("flex w-full", isMobile ? "flex-col" : "flex-row gap-2")}>
         {/* Campo de Pesquisa */}
@@ -564,7 +564,7 @@ export const TransactionList = ({
                   "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
                   filterType !== "all"
                     ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
                 )}
               >
                 <div className="flex items-center gap-1.5">
@@ -585,7 +585,7 @@ export const TransactionList = ({
                   "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
                   footerStatusFilter !== "all"
                     ? (footerStatusFilter === "paid" ? "bg-[#26A765] hover:bg-[#26A765]/90" : "bg-[#E55B5B] hover:bg-[#E55B5B]/90") + " text-white border-transparent font-bold"
-                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
                 )}
               >
                 <SelectValue placeholder="Status" />
@@ -609,7 +609,7 @@ export const TransactionList = ({
                           ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
                           : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
                     )
-                    : "bg-[#F8FAFF] text-slate-600 hover:bg-[#F1F5F9] border-[#E2E8F0] font-medium"
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
                 )}
               >
                 <SelectValue placeholder="Forma de Pagamento" />
@@ -628,9 +628,9 @@ export const TransactionList = ({
 
         {/* Resumo Integrado (Apenas Desktop) */}
         {!isMobile && (
-          <div className="flex flex-row w-full pt-2.5 pb-1 px-4 mt-2 border-t border-slate-100 justify-between items-center gap-4">
+          <div className="flex flex-row w-full pt-3 pb-0 px-0 justify-between items-center gap-4">
             {/* Lançamentos */}
-            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+            <div className="flex flex-row items-baseline justify-start flex-1 gap-1.5">
               <span className="text-[13px] text-slate-500 font-medium">Lançamentos:</span>
               <span className="text-[14px] font-bold text-slate-700">{summary.count} itens</span>
             </div>
@@ -665,7 +665,7 @@ export const TransactionList = ({
             <div className="w-[1px] h-4 bg-slate-200"></div>
 
             {/* Saldo / Recebidas */}
-            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
+            <div className="flex flex-row items-baseline justify-end flex-1 gap-1.5">
               <span className="text-[13px] text-slate-500 font-medium">
                 {filterType === 'income' ? 'Recebidas:' : 'Saldo:'}
               </span>
