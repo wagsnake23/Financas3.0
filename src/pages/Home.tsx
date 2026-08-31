@@ -675,19 +675,11 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-1 mt-1"
-                                            style={{ 
-                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
-                                                border: "1px solid rgba(0,0,0,0.08)",
-                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
-                                                color: isMobile ? "#ef4444" : "#b91c1c",
-                                                filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
-                                            }}
+                                            className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.06)", borderBottom: "1px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
-                                            Ver Gastos <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
+                                            Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
                                         </Button>
                                     </div>
 
@@ -714,11 +706,11 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1"
+                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
                                             style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
+                                            <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
                                             Nova Despesa
                                         </Button>
                                     </div>
@@ -746,19 +738,11 @@ export default function Home() {
                                             </p>
                                         </div>
                                         <Button
-                                            className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] whitespace-nowrap w-[135px] transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] -mr-1 mt-1"
-                                            style={{ 
-                                                background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
-                                                border: "1px solid rgba(0,0,0,0.08)",
-                                                borderBottom: "2px solid rgba(0,0,0,0.12)", 
-                                                color: "#15803d",
-                                                filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                                                textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
-                                            }}
+                                            className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: "#15803d", border: "1px solid rgba(0,0,0,0.06)", borderBottom: "1px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
-                                            Ver Receitas <DynamicIcon name="ChevronRight" className="ml-1.5 h-3 w-3" strokeWidth={4} />
+                                            Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
                                         </Button>
                                     </div>
 
@@ -785,11 +769,11 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <Button
-                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1"
+                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
                                             style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
-                                            <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
+                                            <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
                                             Nova Receita
                                         </Button>
                                     </div>
