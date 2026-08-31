@@ -563,7 +563,7 @@ export default function Home() {
                                                 onClick={() => setIsAjusteModalOpen(true)}
                                             >
                                                 <div className="flex items-center gap-2 mb-0 md:mb-2 md:-mt-[1px]">
-                                                    <h2 className="font-extrabold leading-none tracking-tight md:text-[16px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
+                                                    <h2 className="font-extrabold leading-none tracking-tight md:text-[16px]" style={{ color: "#0556C3", filter: "saturate(0.88)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
                                                     <button 
                                                         className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md -translate-y-1"
                                                         aria-label="Ajustar saldo"
@@ -581,7 +581,7 @@ export default function Home() {
                                                 <Button
                                                     onClick={() => navigate("/dashboard?filter=investments")}
                                                     className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                    style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                    style={{ background: "#2563eb", filter: "saturate(0.88)", boxShadow: "0 4px 10px rgba(37,99,235,0.14), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                                 >
                                                     <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                 </Button>
@@ -669,7 +669,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
+                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", filter: "saturate(0.88)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
                                             <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
                                             </p>
@@ -688,7 +688,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=expenses")}
                                                 className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#ef4444", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(239,68,68,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#ef4444", filter: "saturate(0.88)", boxShadow: "0 4px 10px rgba(239,68,68,0.14), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -707,7 +707,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.88)", boxShadow: "0 6px 14px rgba(0,0,0,0.08)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
@@ -732,7 +732,7 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
+                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", filter: "saturate(0.88)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
                                             <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                             </p>
@@ -751,7 +751,7 @@ export default function Home() {
                                             <Button
                                                 onClick={() => navigate("/dashboard?filter=revenues")}
                                                 className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(34,197,94,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.88)", boxShadow: "0 4px 10px rgba(34,197,94,0.14), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                             >
                                                 <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
@@ -770,7 +770,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.88)", boxShadow: "0 6px 14px rgba(0,0,0,0.08)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
