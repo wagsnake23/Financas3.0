@@ -515,7 +515,7 @@ export const TransactionList = ({
 
 
   return (
-    <div className={cn("flex flex-col h-full", isMobile ? "p-0 bg-[#FFFFFF] flex-1 overflow-hidden" : "pb-0")}>
+    <div className={cn("flex flex-col h-full", isMobile ? "p-0 bg-[#FFFFFF] flex-1 min-h-0" : "pb-0")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
