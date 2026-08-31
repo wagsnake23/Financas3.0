@@ -702,7 +702,7 @@ export const TransactionList = ({
         <div 
           className={cn(
             "mt-1",
-            isMobile ? "bg-[#FFFFFF]" : "w-full"
+            isMobile ? "bg-[#FFFFFF]" : "w-full max-h-[68vh] overflow-y-auto no-scrollbar"
           )}
           style={isMobile ? {
             marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))",

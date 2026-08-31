@@ -124,7 +124,7 @@ const Lancamentos = () => {
 
       <main
         className={cn(
-          "container-app flex-grow",
+          "container-app relative z-20 flex-grow",
           isMobile ? "pt-0 pb-0 bg-[#FFFFFF]" : "-mt-[86px] pb-8 space-y-6"
         )}
       >
