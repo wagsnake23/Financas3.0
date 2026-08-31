@@ -561,10 +561,10 @@ export const TransactionList = ({
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger
                 className={cn(
-                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100",
                   filterType !== "all"
-                    ? (filterType === "expense" ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90" : "bg-[#26A765] hover:bg-[#26A765]/90") + " text-white border-transparent font-bold"
-                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
+                    ? "bg-white hover:bg-slate-50 border-[#E2E8F0] font-bold [&>svg]:text-current " + (filterType === "expense" ? "text-[#E55B5B]" : "text-[#26A765]")
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium [&>svg]:text-slate-400"
                 )}
               >
                 <div className="flex items-center gap-1.5">
@@ -582,10 +582,10 @@ export const TransactionList = ({
             <Select value={footerStatusFilter} onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}>
               <SelectTrigger
                 className={cn(
-                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100",
                   footerStatusFilter !== "all"
-                    ? (footerStatusFilter === "paid" ? "bg-[#26A765] hover:bg-[#26A765]/90" : "bg-[#E55B5B] hover:bg-[#E55B5B]/90") + " text-white border-transparent font-bold"
-                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
+                    ? "bg-white hover:bg-slate-50 border-[#E2E8F0] font-bold [&>svg]:text-current " + (footerStatusFilter === "paid" ? "text-[#26A765]" : "text-[#E55B5B]")
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium [&>svg]:text-slate-400"
                 )}
               >
                 <SelectValue placeholder="Status" />
@@ -601,15 +601,10 @@ export const TransactionList = ({
             <Select value={filterPaymentOptionId} onValueChange={setFilterPaymentOptionId}>
               <SelectTrigger
                 className={cn(
-                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100 [&>svg]:text-slate-400",
+                  "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100",
                   filterPaymentOptionId !== "all"
-                    ? (isValidUuid(filterPaymentOptionId)
-                      ? "bg-[#2B75D6] hover:bg-[#2B75D6]/90 text-white border-transparent font-bold"
-                      : (filterType === "expense" 
-                          ? "bg-[#E55B5B] hover:bg-[#E55B5B]/90 text-white border-transparent font-bold" 
-                          : "bg-[#26A765] hover:bg-[#26A765]/90 text-white border-transparent font-bold")
-                    )
-                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium"
+                    ? "bg-white hover:bg-slate-50 border-[#E2E8F0] font-bold [&>svg]:text-current " + (isValidUuid(filterPaymentOptionId) ? "text-[#2B75D6]" : (filterType === "expense" ? "text-[#E55B5B]" : "text-[#26A765]"))
+                    : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium [&>svg]:text-slate-400"
                 )}
               >
                 <SelectValue placeholder="Forma de Pagamento" />
@@ -624,57 +619,57 @@ export const TransactionList = ({
             </Select>
           </div>
         )}
-        </div> {/* Fecha a linha flex w-full criada na linha 525 */}
+        </div>
 
         {/* Resumo Integrado (Apenas Desktop) */}
         {!isMobile && (
-          <div className="flex flex-row w-full pt-3 pb-0 px-0 justify-between items-center gap-4">
-            {/* Lançamentos */}
-            <div className="flex flex-row items-baseline justify-start flex-1 gap-1.5">
+          <div className="flex flex-row w-full pt-3 pb-0 px-0 gap-2 items-center">
+            {/* Bloco 1: Alinha com o campo de Busca */}
+            <div className="flex-[1.5] flex flex-row items-baseline justify-start gap-1.5 relative">
               <span className="text-[13px] text-slate-500 font-medium">Lançamentos:</span>
               <span className="text-[14px] font-bold text-slate-700">{summary.count} itens</span>
+              <div className="absolute -right-[5px] w-[1px] h-4 bg-slate-200" style={{ marginRight: '-0.5px' }}></div>
             </div>
 
-            <div className="w-[1px] h-4 bg-slate-200"></div>
+            {/* Bloco 2: Alinha com os 3 Selects */}
+            <div className="flex-[3] flex flex-row gap-2 items-center">
+              {/* Alinha com Tipo */}
+              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative">
+                <span className="text-[13px] text-slate-500 font-medium">
+                  {filterType === 'expense' ? 'Valor Pago:' : 'Receitas:'}
+                </span>
+                <span className="text-[14px] font-bold text-[#22C55E]">
+                  {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, true)}
+                </span>
+                <div className="absolute -right-[5px] w-[1px] h-4 bg-slate-200" style={{ marginRight: '-0.5px' }}></div>
+              </div>
 
-            {/* Receitas / Valor Pago */}
-            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
-              <span className="text-[13px] text-slate-500 font-medium">
-                {filterType === 'expense' ? 'Valor Pago:' : 'Receitas:'}
-              </span>
-              <span className="text-[14px] font-bold text-[#22C55E]">
-                {formatCurrency(filterType === 'expense' ? summary.paidExpense : summary.income, true)}
-              </span>
-            </div>
+              {/* Alinha com Status */}
+              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative">
+                <span className="text-[13px] text-slate-500 font-medium">
+                  {filterType === 'income' ? 'Pendente:' : 'Despesas:'}
+                </span>
+                <span className={cn(
+                  "text-[14px] font-bold",
+                  filterType === 'income' ? "text-[#FF8888]" : "text-[#E55B5B]"
+                )}>
+                  {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, true)}
+                </span>
+                <div className="absolute -right-[5px] w-[1px] h-4 bg-slate-200" style={{ marginRight: '-0.5px' }}></div>
+              </div>
 
-            <div className="w-[1px] h-4 bg-slate-200"></div>
-
-            {/* Despesas / Pendente */}
-            <div className="flex flex-row items-baseline justify-center flex-1 gap-1.5">
-              <span className="text-[13px] text-slate-500 font-medium">
-                {filterType === 'income' ? 'Pendente:' : 'Despesas:'}
-              </span>
-              <span className={cn(
-                "text-[14px] font-bold",
-                filterType === 'income' ? "text-[#FF8888]" : "text-[#E55B5B]"
-              )}>
-                {formatCurrency(filterType === 'income' ? summary.pendingIncome : summary.expense, true)}
-              </span>
-            </div>
-
-            <div className="w-[1px] h-4 bg-slate-200"></div>
-
-            {/* Saldo / Recebidas */}
-            <div className="flex flex-row items-baseline justify-end flex-1 gap-1.5">
-              <span className="text-[13px] text-slate-500 font-medium">
-                {filterType === 'income' ? 'Recebidas:' : 'Saldo:'}
-              </span>
-              <span className={cn(
-                "text-[14px] font-bold",
-                filterType === 'income' ? "text-primary" : "text-[#3B82F6]"
-              )}>
-                {formatCurrency(filterType === 'income' ? summary.receivedIncome : accumulatedValue, true)}
-              </span>
+              {/* Alinha com Forma de Pagamento */}
+              <div className="flex-1 flex flex-row items-baseline justify-end gap-1.5 relative">
+                <span className="text-[13px] text-slate-500 font-medium">
+                  {filterType === 'income' ? 'Recebidas:' : 'Saldo:'}
+                </span>
+                <span className={cn(
+                  "text-[14px] font-bold",
+                  filterType === 'income' ? "text-primary" : "text-[#3B82F6]"
+                )}>
+                  {formatCurrency(filterType === 'income' ? summary.receivedIncome : accumulatedValue, true)}
+                </span>
+              </div>
             </div>
           </div>
         )}
