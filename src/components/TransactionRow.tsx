@@ -187,7 +187,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           paddingRight: "clamp(18px, 4vw, 32px)",
         }}
       >
-        <div className="grid grid-cols-[auto_1fr_auto] gap-x-[5px] gap-y-[7px] w-full items-center">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-[5px] gap-y-[2px] w-full items-center">
           
           {/* --- LINHA 1 --- */}
           {/* Data e Separador */}
@@ -246,7 +246,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               {categoryName}
             </span>
             {transaction.description && (
-              <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[4px] leading-none">
+              <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[5px] leading-none">
                 {transaction.description}
               </span>
             )}
