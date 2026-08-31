@@ -387,7 +387,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-[13px] font-bold text-slate-800 leading-tight truncate">{categoryName}</span>
+            <span className="text-[13px] font-semibold text-slate-800 leading-tight truncate">{categoryName}</span>
             {dPaymentType && (
               <span className={cn(
                 "text-[11px] font-medium mt-[2px] leading-none",
@@ -403,7 +403,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
         {/* COL 4 — Descrição (dominante, flex-1 ~24%) */}
         <div className="flex flex-col flex-1 min-w-0 px-2">
-          <span className="text-[13px] font-semibold text-slate-700 leading-tight truncate">
+          <span className="text-[13px] font-medium text-slate-700 leading-tight truncate">
             {transaction.description || categoryName}
           </span>
           {transaction.description && (
