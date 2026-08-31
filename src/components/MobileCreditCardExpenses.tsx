@@ -333,12 +333,12 @@ export const MobileCreditCardExpenses: React.FC<
             <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right">
               {/* Período da fatura */}
               <span 
-                className="text-[11px] font-extrabold tracking-wide uppercase mb-0" 
+                className="text-[12px] font-extrabold tracking-wide uppercase mb-[2px]" 
                 style={{ color: "#1F2937", fontFamily: "'Inter', sans-serif" }}
               >
                 {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
               </span>
-              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-0" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
+              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-[2px]" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
               <p className="font-[800] leading-none" style={{ fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
