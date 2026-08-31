@@ -397,18 +397,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
         {/* COL 3 — Categoria/Subcategoria (17%) */}
         <div className="flex items-center gap-2.5 w-[17%] shrink-0">
+          {/* Área invisível do ícone da subcategoria para manter alinhamento */}
           <div
-            className={cn(
-              "h-[34px] w-[34px] rounded-[9px] flex items-center justify-center shrink-0 border border-slate-100 shadow-[0_2px_6px_-2px_rgba(15,23,42,0.06)] bg-gradient-to-br",
-              dIsFixo ? "from-red-50/80 to-red-100/40" :
-              dIsParcelado ? "from-purple-50/80 to-purple-100/40" :
-              transaction.type === "income" ? "from-green-50/80 to-green-100/40" :
-              "from-blue-50/80 to-blue-100/40"
-            )}
+            className="h-[34px] w-[34px] flex items-center justify-center shrink-0"
           >
             <DynamicIcon
               name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-              className="h-[17px] w-[17px] opacity-90"
+              className="w-6 h-6 text-[22px] opacity-90"
               style={{ color: categoryColor }}
             />
           </div>
