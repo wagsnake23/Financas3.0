@@ -634,7 +634,7 @@ export const TransactionList = ({
             {/* Bloco 2: Alinha com os 3 Selects */}
             <div className="flex-[3] flex flex-row gap-2 items-center">
               {/* Alinha com Tipo */}
-              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative">
+              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative pl-3.5">
                 <span className="text-[13px] text-slate-500 font-medium">
                   {filterType === 'expense' ? 'Valor Pago:' : 'Receitas:'}
                 </span>
@@ -645,7 +645,7 @@ export const TransactionList = ({
               </div>
 
               {/* Alinha com Status */}
-              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative">
+              <div className="flex-1 flex flex-row items-baseline justify-start gap-1.5 relative pl-3.5">
                 <span className="text-[13px] text-slate-500 font-medium">
                   {filterType === 'income' ? 'Pendente:' : 'Despesas:'}
                 </span>
