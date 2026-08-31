@@ -244,7 +244,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
           {/* Título e Subtítulo */}
           <div className="col-start-2 row-start-2 flex flex-col min-w-0 justify-center -mt-[2px]">
-            <span className="font-semibold text-slate-700 text-[14px] tracking-tight leading-[16px] truncate">
+            <span className="font-medium text-slate-700 text-[14px] tracking-tight leading-[16px] truncate">
               {categoryName}
             </span>
             {transaction.description && (
