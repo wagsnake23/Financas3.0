@@ -445,10 +445,7 @@ export default function Home() {
                 <div
                     className="fixed top-0 left-0 right-0 bottom-0 z-20 pointer-events-none"
                     style={{
-                        backgroundImage: "url('/sky.webp')",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center top",
-                        backgroundRepeat: "no-repeat"
+                        background: "linear-gradient(180deg, #010856 0%, #0C2074 30%, #94A8DB 60%, #D8E1F1 80%, #F4F6FA 100%)"
                     }}
                 />
             )}
