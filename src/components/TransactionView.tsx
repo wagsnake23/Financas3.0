@@ -28,6 +28,8 @@ interface TransactionViewProps {
   onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
   filterType: string;
   setFilterType: (type: string) => void;
+  filterStatus: "all" | "paid" | "pending";
+  setFilterStatus: (status: "all" | "paid" | "pending") => void;
   filterCategory: string;
   setFilterCategory: (category: string) => void;
   searchTerm: string;
@@ -53,6 +55,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   onToggleTransactionStatus, // NOVA PROP
   filterType,
   setFilterType,
+  filterStatus,
+  setFilterStatus,
   filterCategory,
   setFilterCategory,
   searchTerm,
@@ -79,6 +83,8 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       onToggleTransactionStatus={onToggleTransactionStatus}
       filterType={filterType}
       setFilterType={setFilterType}
+      filterStatus={filterStatus}
+      setFilterStatus={setFilterStatus}
       filterCategory={filterCategory}
       setFilterCategory={setFilterCategory}
       searchTerm={searchTerm}

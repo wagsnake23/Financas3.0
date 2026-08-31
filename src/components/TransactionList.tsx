@@ -49,6 +49,8 @@ interface TransactionListProps {
   onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
   filterType: string;
   setFilterType: (type: string) => void;
+  filterStatus: "all" | "paid" | "pending";
+  setFilterStatus: (status: "all" | "paid" | "pending") => void;
   filterCategory: string;
   setFilterCategory: (category: string) => void;
   searchTerm: string;
@@ -75,6 +77,8 @@ export const TransactionList = ({
   onToggleTransactionStatus,
   filterType,
   setFilterType,
+  filterStatus,
+  setFilterStatus,
   filterCategory,
   setFilterCategory,
   searchTerm,
@@ -84,12 +88,11 @@ export const TransactionList = ({
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const [localSearch, setLocalSearch] = useState(searchTerm);
-  const [footerStatusFilter, setFooterStatusFilter] = useState<"all" | "paid" | "pending">("all");
 
   const activeFilterNames = useMemo(() => {
     const names: string[] = [];
-    if (footerStatusFilter === "paid") names.push("Pagos");
-    if (footerStatusFilter === "pending") names.push("Pendentes");
+    if (filterStatus === "paid") names.push("Pagos");
+    if (filterStatus === "pending") names.push("Pendentes");
     if (filterType === "income") names.push("Receitas");
     if (filterType === "expense") names.push("Despesas");
     if (filterPaymentOptionId === "dinheiro") names.push("Dinheiro");
@@ -99,7 +102,7 @@ export const TransactionList = ({
       if (card) names.push("Cartão");
     }
     return names;
-  }, [footerStatusFilter, filterType, filterPaymentOptionId, cartoes]);
+  }, [filterStatus, filterType, filterPaymentOptionId, cartoes]);
 
   // Sync local search with global search term (e.g. when filters are cleared)
   useEffect(() => {
@@ -422,12 +425,12 @@ export const TransactionList = ({
 
   const statusFilteredTransactions = useMemo(() => {
     return sortedTransactions.filter(t => {
-      if (footerStatusFilter === "all") return true;
-      if (footerStatusFilter === "paid") return t.status === "Recebida";
-      if (footerStatusFilter === "pending") return t.status !== "Recebida";
+      if (filterStatus === "all") return true;
+      if (filterStatus === "paid") return t.status === "Recebida";
+      if (filterStatus === "pending") return t.status !== "Recebida";
       return true;
     });
-  }, [sortedTransactions, footerStatusFilter]);
+  }, [sortedTransactions, filterStatus]);
 
   // Usa statusFilteredTransactions tanto no mobile quanto no desktop
   const transactionsToDisplay = statusFilteredTransactions;
@@ -579,12 +582,12 @@ export const TransactionList = ({
             </Select>
 
             {/* Chip: Status */}
-            <Select value={footerStatusFilter} onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}>
+            <Select value={filterStatus} onValueChange={(val: "all" | "paid" | "pending") => setFilterStatus(val)}>
               <SelectTrigger
                 className={cn(
                   "flex-1 h-[40px] px-3.5 text-[13px] whitespace-nowrap transition-all shadow-none border rounded-[12px] [&>svg]:opacity-100",
-                  footerStatusFilter !== "all"
-                    ? "bg-white hover:bg-slate-50 border-[#E2E8F0] font-bold [&>svg]:text-current " + (footerStatusFilter === "paid" ? "text-[#26A765]" : "text-[#E55B5B]")
+                  filterStatus !== "all"
+                    ? "bg-white hover:bg-slate-50 border-[#E2E8F0] font-bold [&>svg]:text-current " + (filterStatus === "paid" ? "text-[#26A765]" : "text-[#E55B5B]")
                     : "bg-white text-slate-600 hover:bg-slate-50 border-[#E2E8F0] font-medium [&>svg]:text-slate-400"
                 )}
               >
@@ -815,7 +818,7 @@ export const TransactionList = ({
               {/* LINHA 1: CONTEXTO E FILTRO */}
               <div className="flex items-center justify-between w-full pb-2">
                 <span className="text-xs xs:text-[13px] text-slate-500 font-medium">
-                  {footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount} {(footerStatusFilter === "pending" ? pendingCount : footerStatusFilter === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
+                  {filterStatus === "pending" ? pendingCount : filterStatus === "paid" ? paidCount : totalCount} {(filterStatus === "pending" ? pendingCount : filterStatus === "paid" ? paidCount : totalCount) === 1 ? "item" : "itens"} • <span className="text-[#22C55E] font-bold">{paidPercentage}% pagos</span>
                 </span>
 
                 <div className={cn(
@@ -859,8 +862,8 @@ export const TransactionList = ({
                         <div className="flex flex-col gap-1.5">
                           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</span>
                           <Select 
-                            value={footerStatusFilter} 
-                            onValueChange={(val: "all" | "paid" | "pending") => setFooterStatusFilter(val)}
+                            value={filterStatus} 
+                            onValueChange={(val: "all" | "paid" | "pending") => setFilterStatus(val)}
                           >
                             <SelectTrigger className="h-9 rounded-[10px] text-[13px] font-semibold bg-slate-50/80 border-slate-200/60 focus:ring-0 focus:ring-offset-0">
                               <SelectValue />
@@ -914,7 +917,7 @@ export const TransactionList = ({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setFooterStatusFilter("all");
+                        setFilterStatus("all");
                         setFilterType("all");
                         setFilterPaymentOptionId("all");
                       }}

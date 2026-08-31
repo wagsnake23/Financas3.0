@@ -53,6 +53,7 @@ export const useLancamentosState = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [filterPaymentOptionId, setFilterPaymentOptionId] = useState<string>(initialFilterPaymentOption);
   const [filterType, setFilterType] = useState<string>(initialFilterType);
+  const [filterStatus, setFilterStatus] = useState<"all" | "paid" | "pending">("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -94,6 +95,8 @@ export const useLancamentosState = () => {
     setFilterPaymentOptionId,
     filterType,
     setFilterType,
+    filterStatus,
+    setFilterStatus,
     filterCategory,
     setFilterCategory,
     searchTerm,

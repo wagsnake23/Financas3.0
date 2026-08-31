@@ -37,6 +37,8 @@ interface LancamentosContentProps {
   onToggleTransactionStatus: (id: string, type: TransactionType, newStatus: ReceitaStatus) => void;
   filterType: string;
   setFilterType: (type: string) => void;
+  filterStatus: "all" | "paid" | "pending";
+  setFilterStatus: (status: "all" | "paid" | "pending") => void;
   filterCategory: string;
   setFilterCategory: (category: string) => void;
   searchTerm: string;
@@ -66,6 +68,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   onToggleTransactionStatus, // NOVA PROP
   filterType,
   setFilterType,
+  filterStatus,
+  setFilterStatus,
   filterCategory,
   setFilterCategory,
   searchTerm,
@@ -96,6 +100,8 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
         onToggleTransactionStatus={onToggleTransactionStatus}
         filterType={filterType}
         setFilterType={setFilterType}
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
         filterCategory={filterCategory}
         setFilterCategory={setFilterCategory}
         searchTerm={searchTerm}

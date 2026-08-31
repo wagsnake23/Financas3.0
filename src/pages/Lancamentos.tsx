@@ -67,6 +67,8 @@ const Lancamentos = () => {
     setFilterPaymentOptionId,
     filterType,
     setFilterType,
+    filterStatus,
+    setFilterStatus,
     filterCategory,
     setFilterCategory,
     searchTerm,
@@ -143,9 +145,10 @@ const Lancamentos = () => {
             isMobile={isMobile}
             onBack={isMobile ? () => navigate(-1) : undefined}
             backButtonColor="#E54D4D"
-            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || searchTerm !== ""}
+            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || filterStatus !== "all" || searchTerm !== ""}
             onClearFilters={() => {
               setFilterType("all");
+              setFilterStatus("all");
               setFilterCategory("all");
               setFilterPaymentOptionId("all");
               setSearchTerm("");
@@ -176,6 +179,8 @@ const Lancamentos = () => {
           onToggleTransactionStatus={handleOptimisticToggleStatus}
           filterType={filterType}
           setFilterType={setFilterType}
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
           filterCategory={filterCategory}
           setFilterCategory={setFilterCategory}
           searchTerm={searchTerm}
