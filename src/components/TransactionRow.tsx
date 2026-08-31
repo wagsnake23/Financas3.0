@@ -187,122 +187,99 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           paddingRight: "clamp(18px, 4vw, 32px)",
         }}
       >
-        <div className="flex flex-col w-full gap-1">
-          {/* 📌 LINHA 1 (TOPO): Data, Forma Pagamento, Parcela/Tipo e Valor */}
-          <div className="flex items-baseline justify-between w-full mb-0">
-            <div className="flex items-baseline gap-[5px] min-w-0 flex-1 mr-2">
-              {/* Data */}
-              <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap shrink-0">
-                {formattedDate}
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-[5px] gap-y-[7px] w-full items-center">
+          
+          {/* --- LINHA 1 --- */}
+          {/* Data e Separador */}
+          <div className="col-start-1 row-start-1 flex items-baseline gap-[5px] shrink-0">
+            <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap">
+              {formattedDate}
+            </span>
+            <span className="text-[12px] text-slate-300 font-light">|</span>
+          </div>
+          
+          {/* Pagamento e Parcela */}
+          <div className="col-start-2 row-start-1 flex items-baseline gap-[5px] min-w-0">
+            {paymentDetails.name && (
+              <span className="text-[13px] text-slate-700 font-medium truncate">
+                {paymentDetails.name}
               </span>
-              
-              {/* Forma de Pagamento */}
-              {paymentDetails.name && (
-                <>
-                  <span className="text-[12px] text-slate-300 shrink-0 font-light">|</span>
-                  <span className="text-[12px] text-slate-400 font-normal truncate flex items-baseline gap-[3px]">
-                    {paymentDetails.icon && (
-                      <span className="emoji text-[11px] opacity-80">{paymentDetails.icon}</span>
-                    )}
-                    <span>{paymentDetails.name}</span>
-                  </span>
-                </>
-              )}
+            )}
+            {cardOrPaymentType && (
+              <>
+                <span className="text-[13px] text-slate-700 font-medium shrink-0">•</span>
+                <span className="text-[13px] text-slate-700 font-medium shrink-0">
+                  {cardOrPaymentType}
+                </span>
+              </>
+            )}
+          </div>
 
-              {/* Parcela ou Tipo */}
-              {cardOrPaymentType && (
-                <>
-                  <span className="text-[12px] text-slate-300 shrink-0 font-light">•</span>
-                  <span className={cn(
-                    "text-[12px] shrink-0 font-medium",
-                    isFixo ? "text-[#FF8888]/90" :
-                    isParcelado ? "text-purple-500/90" : 
-                    transaction.type === "income" ? "text-success/90" : 
-                    "text-[#6699EE]/90"
-                  )}>
-                    {cardOrPaymentType}
-                  </span>
-                </>
-              )}
-            </div>
-
-            {/* Valor */}
+          {/* Valor */}
+          <div className="col-start-3 row-start-1 flex items-baseline justify-end shrink-0">
             <span className={cn(
-              "font-semibold tracking-tight whitespace-nowrap leading-none shrink-0 flex items-baseline gap-[3px]",
-              transaction.type === 'income'
-                ? "text-[#059669]"
-                : transaction.status === "Recebida"
-                  ? "text-slate-500"
-                  : "text-[#E15A5A]" // Vermelho ligeiramente desaturado
+              "font-semibold tracking-tight whitespace-nowrap leading-none flex items-baseline gap-[3px]",
+              transaction.type === 'income' ? "text-[#059669]" :
+              transaction.status === "Recebida" ? "text-slate-500" : "text-[#E15A5A]"
             )}>
               <span className="text-[10.5px] font-medium opacity-[0.65]">{currencySymbol}</span>
-              <span className={cn(
-                "text-[14px]",
-                transaction.type !== 'income' && transaction.status === "Recebida" && "text-slate-700"
-              )}>{valueStr}</span>
+              <span className={cn("text-[14px]", transaction.type !== 'income' && transaction.status === "Recebida" && "text-slate-700")}>
+                {valueStr}
+              </span>
             </span>
           </div>
 
-          {/* 📌 LINHA 2 & 3: Ícone Subcategoria, Nome do Item, Descrição e Status */}
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              {/* Área invisível do ícone da subcategoria para manter alinhamento */}
-              <div
-                className="h-[38px] w-[38px] flex items-center justify-center shrink-0"
-              >
-                <DynamicIcon
-                  name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="w-7 h-7 text-[24px] opacity-90 drop-shadow-sm"
-                  style={{ color: categoryColor }}
-                />
-              </div>
+          {/* --- LINHA 2 --- */}
+          
+          {/* Ícone da Categoria */}
+          <div className="col-start-1 row-start-2 flex items-center justify-center h-[38px] w-full shrink-0">
+            <DynamicIcon
+              name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
+              className="w-7 h-7 text-[24px] opacity-90 drop-shadow-sm"
+              style={{ color: categoryColor }}
+            />
+          </div>
 
-              {/* Nome e Descrição */}
-              <div className="flex flex-col min-w-0 justify-center">
-                <span className="font-semibold text-slate-800 text-[14px] tracking-tight leading-none truncate">
-                  {categoryName}
-                </span>
-                {transaction.description && (
-                  <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[5px] leading-none">
-                    {transaction.description}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Status (Pago ou Pendente) */}
-            <div className="flex flex-col items-end shrink-0 ml-3 justify-center">
-              <span className={cn(
-                "text-[11px] tracking-wide leading-none mb-1.5 font-medium",
-                transaction.status === "Recebida"
-                  ? "text-[#10B955]/70"
-                  : "text-[#EF4444]/60"
-              )}>
-                {transaction.status === "Recebida"
-                  ? (transaction.type === "income" ? "Recebido" : "Pago")
-                  : "Pendente"}
+          {/* Título e Subtítulo */}
+          <div className="col-start-2 row-start-2 flex flex-col min-w-0 justify-center">
+            <span className="font-semibold text-slate-800 text-[14px] tracking-tight leading-none truncate">
+              {categoryName}
+            </span>
+            {transaction.description && (
+              <span className="text-[12px] text-slate-400 font-normal line-clamp-1 truncate mt-[4px] leading-none">
+                {transaction.description}
               </span>
+            )}
+          </div>
+
+          {/* Status Toggle */}
+          <div className="col-start-3 row-start-2 flex flex-col items-end shrink-0 ml-3 justify-center">
+            <span className={cn(
+              "text-[11px] tracking-wide leading-none mb-[5px] font-medium",
+              transaction.status === "Recebida" ? "text-[#10B955]/70" : "text-[#EF4444]/60"
+            )}>
+              {transaction.status === "Recebida" ? (transaction.type === "income" ? "Recebido" : "Pago") : "Pendente"}
+            </span>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleStatus(transaction.id, transaction.type, newStatus);
+              }}
+              className={cn(
+                "w-[38px] h-[19px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
+                transaction.status === "Recebida"
+                  ? "bg-[#22C55E]/90 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
+                  : "bg-rose-400/75 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.1),_0_1px_2px_rgba(251,113,133,0.2)]"
+              )}
+            >
               <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleStatus(transaction.id, transaction.type, newStatus);
-                }}
                 className={cn(
-                  "w-[38px] h-[19px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
+                  "w-[14px] h-[14px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
                   transaction.status === "Recebida"
-                    ? "bg-[#22C55E]/90 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
-                    : "bg-rose-400/75 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.1),_0_1px_2px_rgba(251,113,133,0.2)]"
+                    ? "translate-x-[18px]"
+                    : "translate-x-0"
                 )}
-              >
-                <div
-                  className={cn(
-                    "w-[14px] h-[14px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
-                    transaction.status === "Recebida"
-                      ? "translate-x-[18px]"
-                      : "translate-x-0"
-                  )}
-                />
-              </div>
+              />
             </div>
           </div>
         </div>
