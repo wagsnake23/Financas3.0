@@ -920,7 +920,7 @@ body {
 
 @media (max-width: 767px) {
   .home-mobile-card {
-    padding-left: var(--home-card-px, 16px) !important;
+    padding-left: 14px !important;
     padding-right: var(--home-card-px, 16px) !important;
     padding-top: var(--home-card-pt, 12px) !important;
     padding-bottom: var(--home-card-pb, 12px) !important;

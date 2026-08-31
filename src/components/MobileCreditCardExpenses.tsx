@@ -222,7 +222,8 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+      className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center cursor-pointer transition-transform active:scale-[0.99]")}
+      onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "16px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
@@ -235,20 +236,18 @@ export const MobileCreditCardExpenses: React.FC<
       }}
     >
 
-      <div className="flex flex-col w-full h-full justify-between" style={{ paddingTop: "var(--home-title-mt, 3px)" }}>
+      <div className="flex flex-col w-full h-full justify-between pointer-events-auto" style={{ paddingTop: "var(--home-title-mt, 3px)" }}>
         {/* Top Header Row */}
         <div className="flex justify-between items-start w-full">
-          {/* Left side: Selector (iOS Style: no border, no bg, no shadow, occupies remaining space) */}
-          <div className="flex-1 min-w-0">
+          {/* Left side: Selector with subtle border and increased width */}
+          <div className="inline-block" onClick={(e) => e.stopPropagation()}>
             <Select value={selectedCardId} onValueChange={setSelectedCardId}>
               <SelectTrigger 
-                className="w-full h-[33px] text-[13.5px] border-none font-bold tracking-tight p-0 shadow-none focus:ring-0 [&>svg]:hidden" 
+                className="h-[32px] text-[13.5px] font-bold tracking-tight px-[18.5px] rounded-[9px] border border-[#D6DEEC] hover:border-[#C5D1E8] focus:border-[#AFC0E8] shadow-none focus:ring-0 [&>svg]:hidden transition-colors" 
                 style={{ 
-                  background: "none", 
-                  border: "none", 
+                  background: "rgba(255,255,255,0.5)", 
                   color: "#1e293b",
-                  boxShadow: "none",
-                  outline: "none"
+                  boxShadow: "none"
                 }}
               >
                 <div className="flex items-center gap-1 min-w-0 truncate">
@@ -264,25 +263,6 @@ export const MobileCreditCardExpenses: React.FC<
                 ))}
               </SelectContent>
             </Select>
-          </div>
-
-          {/* Right side: Purple Button (Responsive 135px/150px width) */}
-          <div className="shrink-0">
-            <Button
-              className="mt-[2px] md:mt-0 w-[135px] md:w-[150px] h-[var(--home-btn-h,36px)] md:h-[40px] px-3 md:px-4 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1.5 whitespace-nowrap -mr-1 md:mr-0 md:text-[15px]"
-              style={{ 
-                background: "linear-gradient(135deg, #7330de, #6025bd)", 
-                borderBottom: "1px solid rgba(0,0,0,0.4)", 
-                filter: "saturate(0.95)", 
-                boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
-                textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)"
-              }}
-              onClick={handlePayMonthlyBill}
-              disabled={!selectedCardId || selectedCardId === UNSELECTED_VALUE}
-            >
-              <DynamicIcon name="Eye" className="h-3.5 w-3.5" />
-              <span>Ver Fatura</span>
-            </Button>
           </div>
         </div>
 
