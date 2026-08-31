@@ -258,7 +258,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           <div className="col-start-3 row-start-2 flex flex-col items-end shrink-0 ml-3 justify-center">
             <span className={cn(
               "text-[11px] tracking-wide leading-none mb-[5px] font-medium",
-              transaction.status === "Recebida" ? "text-[#10B955]/70" : "text-[#EF4444]/60"
+              transaction.status === "Recebida" ? "text-[#10B955]/70" : "text-slate-400"
             )}>
               {transaction.status === "Recebida" ? (transaction.type === "income" ? "Recebido" : "Pago") : "Pendente"}
             </span>
@@ -268,17 +268,17 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 onToggleStatus(transaction.id, transaction.type, newStatus);
               }}
               className={cn(
-                "w-[38px] h-[19px] rounded-full p-[2px] transition-all duration-300 border cursor-pointer flex items-center",
+                "w-[38px] h-[19px] rounded-full p-[2px] transition-all duration-300 cursor-pointer flex items-center",
                 transaction.status === "Recebida"
-                  ? "bg-[#22C55E]/90 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),_0_1px_2px_rgba(34,197,94,0.4)]"
-                  : "bg-rose-400/75 border-transparent shadow-[inset_0_1px_3px_rgba(0,0,0,0.1),_0_1px_2px_rgba(251,113,133,0.2)]"
+                  ? "bg-[#22C55E]/90"
+                  : "bg-[#D6DCE5]"
               )}
             >
               <div
                 className={cn(
-                  "w-[14px] h-[14px] rounded-full transition-transform duration-300 bg-gradient-to-b from-white to-[#F9FAFB] shadow-[0_2px_3px_rgba(0,0,0,0.16),_0_1px_1px_rgba(0,0,0,0.08),_inset_0_1px_0_rgba(255,255,255,0.9)]",
+                  "w-[15px] h-[15px] rounded-full transition-transform duration-300 bg-white",
                   transaction.status === "Recebida"
-                    ? "translate-x-[18px]"
+                    ? "translate-x-[19px]"
                     : "translate-x-0"
                 )}
               />
