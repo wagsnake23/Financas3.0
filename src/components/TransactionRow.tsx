@@ -207,7 +207,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
             )}
             {cardOrPaymentType && (
               <>
-                <span className="text-[13px] text-slate-700 font-medium shrink-0">•</span>
+                {paymentDetails.name && (
+                  <span className="text-[13px] text-slate-700 font-medium shrink-0">•</span>
+                )}
                 <span className="text-[13px] text-slate-700 font-medium shrink-0">
                   {cardOrPaymentType}
                 </span>
