@@ -676,7 +676,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.06)", borderBottom: "1px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "none" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.95)", boxShadow: "none", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -739,7 +739,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: "#15803d", border: "1px solid rgba(0,0,0,0.06)", borderBottom: "1px solid rgba(0,0,0,0.15)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "none" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#FFFFFF", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.95)", boxShadow: "none", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
