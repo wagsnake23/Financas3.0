@@ -252,7 +252,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
-                  className="w-[22px] h-[22px] opacity-90 drop-shadow-sm"
+                  className="w-7 h-7 text-[24px] opacity-90 drop-shadow-sm"
                   style={{ color: categoryColor }}
                 />
               </div>
