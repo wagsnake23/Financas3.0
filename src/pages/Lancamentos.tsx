@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -28,6 +29,12 @@ import { ptBR } from "date-fns/locale";
 const Lancamentos = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isMobile) {
+      window.scrollTo(0, 0);
+    }
+  }, [isMobile]);
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -84,8 +91,8 @@ const Lancamentos = () => {
   return (
     <div
       className={cn(
-        "flex flex-col relative min-h-screen",
-        isMobile ? "pt-14 bg-[#FFFFFF] text-black" : "pt-[72px] global-bg"
+        "flex flex-col relative",
+        isMobile ? "pt-14 bg-[#FFFFFF] text-black h-[100dvh] overflow-hidden" : "pt-[72px] global-bg min-h-screen"
       )}>
 
       {/* HEADER PREMIUM — FINTECH STYLE (LANCAMENTOS THEME) */}
@@ -125,10 +132,10 @@ const Lancamentos = () => {
       <main
         className={cn(
           "container-app relative z-20 flex-grow",
-          isMobile ? "pt-0 pb-0 bg-[#FFFFFF]" : "-mt-[86px] pb-8 space-y-6"
+          isMobile ? "pt-0 pb-0 bg-[#FFFFFF] flex flex-col flex-1 overflow-hidden" : "-mt-[86px] pb-8 space-y-6"
         )}
       >
-        <div className={cn("relative flex items-center justify-center w-full", isMobile ? "mt-0 mb-4 h-8" : "-mt-[63px] mb-4 h-10")}>
+        <div className={cn("relative flex items-center justify-center w-full shrink-0", isMobile ? "mt-0 mb-4 h-8" : "-mt-[63px] mb-4 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}

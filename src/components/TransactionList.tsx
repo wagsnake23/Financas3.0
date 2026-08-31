@@ -515,12 +515,12 @@ export const TransactionList = ({
 
 
   return (
-    <div className={cn("flex flex-col", isMobile ? "p-0 bg-[#FFFFFF]" : "pb-0")}>
+    <div className={cn("flex flex-col h-full", isMobile ? "p-0 bg-[#FFFFFF] flex-1 overflow-hidden" : "pb-0")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col",
-        isMobile ? "gap-2 mb-1 -mt-[3px]" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
+        isMobile ? "shrink-0 gap-2 mb-1 mt-[1px]" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
       )}>
         <div className={cn("flex w-full", isMobile ? "flex-col" : "flex-row gap-2")}>
         {/* Campo de Pesquisa */}
@@ -530,10 +530,10 @@ export const TransactionList = ({
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
             className={cn(
-              "pl-10 pr-10 rounded-xl transition-all shadow-sm placeholder:font-normal",
+              "pl-10 pr-10 rounded-xl transition-all placeholder:font-normal",
               isMobile
-                ? "h-9 border-gray-200 bg-white/80 backdrop-blur-sm focus-visible:ring-primary/20 focus-visible:border-primary group-hover:bg-white placeholder:text-gray-400 text-sm"
-                : "h-[42px] border-[#E2E8F0] bg-white focus-visible:ring-0 text-[15px] placeholder:text-slate-500"
+                ? "h-9 border border-solid border-[#B8BEC8] shadow-none outline-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#B8BEC8] focus-within:ring-0 bg-white/80 backdrop-blur-sm group-hover:bg-white placeholder:text-gray-400 text-sm"
+                : "h-[42px] border-[#E2E8F0] shadow-sm bg-white focus-visible:ring-0 text-[15px] placeholder:text-slate-500"
             )}
           />
           <div className="absolute left-4 inset-y-0 flex items-center pointer-events-none z-10">
@@ -697,7 +697,7 @@ export const TransactionList = ({
         <div 
           className={cn(
             "mt-1",
-            isMobile ? "bg-[#FFFFFF]" : "w-full max-h-[68vh] overflow-y-auto no-scrollbar"
+            isMobile ? "bg-[#FFFFFF] flex-1 overflow-y-auto no-scrollbar" : "w-full max-h-[68vh] overflow-y-auto no-scrollbar"
           )}
           style={isMobile ? {
             marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))",
@@ -800,7 +800,7 @@ export const TransactionList = ({
       {/* Barra de Resumo Estilo Card Cinza - Ajustada para Visibilidade Mobile */}
       <div className={cn(
         "mt-auto relative z-20",
-        isMobile ? "w-full" : "hidden"
+        isMobile ? "w-full shrink-0" : "hidden"
       )}>
         {isMobile && (
           /* Mobile premium bottom bar */

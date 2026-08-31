@@ -76,7 +76,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   // Removido: const disableFilters = !!editingTransaction;
 
   return (
-    <div className="flex flex-col bg-transparent">
+    <div className={cn("flex flex-col bg-transparent", isMobile ? "flex-1 overflow-hidden h-full" : "")}>
       <TransactionView
         transactions={monthlyFilteredTransactions}
         onDeleteTransaction={onDeleteTransaction}
