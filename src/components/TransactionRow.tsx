@@ -39,6 +39,7 @@ interface TransactionRowProps {
     type: TransactionType,
     newStatus: ReceitaStatus
   ) => void;
+  isLastItem?: boolean;
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({
@@ -49,6 +50,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   cartoes,
   isMobile,
   onToggleStatus,
+  isLastItem,
 }) => {
   const category = allCategories.find((cat) => cat.id === transaction.category);
   const categoryName = category?.nome || transaction.category;
@@ -177,10 +179,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <div
         onClick={() => onEditTransaction(transaction)}
         className={cn(
-          "pt-[8.5px] pb-[9.5px] px-[14px] flex flex-col justify-center mb-[6px] animate-fade-in active:scale-[0.99] transition-all bg-[#FDFDFE] rounded-[11px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(15,23,42,0.03)]",
-          transaction.status === "Recebida" 
-            ? "border-l-[3px] border-l-[#10B981]/70" 
-            : "border-l-[3px] border-l-[#F43F5E]/70"
+          "py-[13px] px-[14px] flex flex-col justify-center animate-fade-in active:bg-gray-50 transition-colors bg-white",
+          !isLastItem && "border-b border-slate-300"
         )}
       >
         <div className="flex flex-col w-full gap-1">
@@ -188,7 +188,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           <div className="flex items-baseline justify-between w-full mb-[5px]">
             <div className="flex items-baseline gap-[5px] min-w-0 flex-1 mr-2">
               {/* Data */}
-              <span className="text-[13px] text-slate-500 font-medium whitespace-nowrap shrink-0">
+              <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap shrink-0">
                 {formattedDate}
               </span>
               

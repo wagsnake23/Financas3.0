@@ -648,7 +648,7 @@ export const TransactionList = ({
           isMobile ? "flex-1 overflow-y-auto w-full mt-1 no-scrollbar bg-[#FFFFFF]" : "mt-4"
         )}>
         {isMobile ? (
-          <div className="flex flex-col gap-1 pb-4">
+          <div className="flex flex-col gap-0 pb-4">
             {finalDisplayTransactions.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
                 <p className="text-muted-foreground font-medium">Nenhum lançamento encontrado</p>
@@ -677,6 +677,7 @@ export const TransactionList = ({
                       queryClient={queryClient}
                       user={user}
                       onToggleStatus={onToggleTransactionStatus}
+                      isLastItem={index === finalDisplayTransactions.length - 1}
                     />
                   </React.Fragment>
                 ))}
