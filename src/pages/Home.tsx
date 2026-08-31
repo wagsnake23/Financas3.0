@@ -445,7 +445,7 @@ export default function Home() {
                 <div
                     className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #010856 0%, #0C2074 30%, #94A8DB 60%, #D8E1F1 80%, #F4F6FA 100%)"
+                        background: "linear-gradient(180deg, #0A148F 0%, #172EB3 20%, #4D6BDF 45%, #9FB4ED 70%, #F7F9FC 100%)"
                     }}
                 />
             )}
