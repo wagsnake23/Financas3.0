@@ -191,7 +191,7 @@ export const Navigation = () => {
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 shadow-none border-0",
+            "h-14 shadow-none border-0 before:absolute before:inset-x-0 before:-top-[1px] before:h-[2px] before:bg-inherit before:z-[-1] before:pointer-events-none",
             isDarkPage
                 ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
