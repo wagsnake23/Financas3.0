@@ -246,9 +246,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           {/* 📌 LINHA 2 & 3: Ícone Subcategoria, Nome do Item, Descrição e Status */}
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              {/* Quadrado arredondado com fundo suave do ícone da subcategoria */}
+              {/* Área invisível do ícone da subcategoria para manter alinhamento */}
               <div
-                className="h-[38px] w-[38px] rounded-[10px] flex items-center justify-center shrink-0 bg-gray-100"
+                className="h-[38px] w-[38px] flex items-center justify-center shrink-0"
               >
                 <DynamicIcon
                   name={categoryIcon || (transaction.type === 'income' ? 'TrendingUp' : 'TrendingDown')}
