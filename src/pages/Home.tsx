@@ -443,9 +443,9 @@ export default function Home() {
         >
             {isMobile && (
                 <div
-                    className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
+                    className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none border-t border-[#08107A]"
                     style={{
-                        background: "linear-gradient(180deg, #0A148F 0%, #172EB3 20%, #4D6BDF 45%, #9FB4ED 70%, #F7F9FC 100%)"
+                        background: "linear-gradient(180deg, #08107A 0%, #11269B 20%, #4F78D8 45%, #B9C9F3 70%, #F7F9FC 100%)"
                     }}
                 />
             )}

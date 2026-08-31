@@ -162,7 +162,7 @@ export const Navigation = () => {
     let bodyColor = "#F7F9FC";
 
     if (isDarkPage) {
-      themeColor = "#010856";
+      themeColor = "#08107A";
       bodyColor = "#F7F9FC";
     } else if (isDespesas || isReceitas || isLancamentos) {
       themeColor = "#FFFFFF";
@@ -191,7 +191,7 @@ export const Navigation = () => {
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
           ? cn(
-            "h-14 shadow-none border-0 before:absolute before:inset-x-0 before:-top-[1px] before:h-[2px] before:bg-inherit before:z-[-1] before:pointer-events-none",
+            "h-14 shadow-none border-0 before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-inherit before:z-10 before:pointer-events-none",
             isDarkPage
                 ? "bg-transparent"
                 : (isDespesas || isReceitas || isLancamentos)
