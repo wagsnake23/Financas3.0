@@ -49,11 +49,11 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         variant="ghost"
         onClick={onTriggerDeleteConfirmation}
         className={cn(
-          "group flex-1 h-[51px] rounded-xl bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-bold transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
+          "group flex-1 h-[51px] rounded-xl bg-white text-red-500 hover:text-red-600 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-bold transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
         )}
         disabled={isLoading}
       >
-        <Trash className="h-[18px] w-[18px] text-red-500 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
+        <Trash className="h-[18px] w-[18px] text-red-500 group-hover:text-red-600 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
         Excluir
       </Button>
 
