@@ -49,7 +49,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         variant="ghost"
         onClick={onTriggerDeleteConfirmation}
         className={cn(
-          "group flex-1 h-[51px] rounded-xl bg-gradient-to-b from-white to-[#F8FAFC] hover:from-white hover:to-[#F1F5F9] active:to-[#E2E8F0] text-slate-800 border border-slate-300 shadow-[inset_0_-1px_0_rgba(255,255,255,0.7),0_1px_1px_rgba(15,23,42,0.04),0_3px_8px_rgba(15,23,42,0.05)] hover:shadow-[inset_0_-1px_0_rgba(255,255,255,0.8),0_2px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.06)] hover:-translate-y-[1px] font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.02)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
+          "group flex-1 h-[51px] rounded-xl bg-white text-slate-800 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-bold transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
         )}
         disabled={isLoading}
       >
@@ -59,15 +59,15 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
 
       <Button
         type={isExpired ? "button" : "submit"}
-        variant="ghost"
         className={cn(
-          "group flex-1 h-[51px] rounded-xl bg-gradient-to-b from-slate-100 to-[#E2E8F0]/40 hover:from-slate-100 hover:to-[#E2E8F0]/70 active:to-[#CBD5E1]/60 text-slate-900 border border-slate-300 shadow-[inset_0_-1px_0_rgba(255,255,255,0.5),0_1px_1px_rgba(15,23,42,0.04),0_3px_8px_rgba(15,23,42,0.05)] hover:shadow-[inset_0_-1px_0_rgba(255,255,255,0.6),0_2px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.06)] hover:-translate-y-[1px] font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.02)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer",
+          "group flex-1 h-[49px] rounded-xl font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 btn-3d cursor-pointer !shadow-[inset_0_1px_2px_rgba(255,255,255,0.15),0_1px_3px_rgba(15,23,42,0.04)] hover:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.25),0_2px_4px_rgba(15,23,42,0.05)] active:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]",
           isExpired && "opacity-80"
         )}
+        style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
         disabled={!isExpired && isLoading}
         onClick={isExpired ? handleBlockedClick : onSave}
       >
-        <Save className="h-[18px] w-[18px] text-green-500 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
+        <Save className="h-[18px] w-[18px] text-white opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
         {isLoading && !isExpired ? "Salvando..." : "Salvar"}
         {isExpired && <span className="ml-1 text-[16px]">🔒</span>}
       </Button>
