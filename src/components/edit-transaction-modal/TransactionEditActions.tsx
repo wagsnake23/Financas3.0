@@ -50,7 +50,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
           variant="ghost"
           onClick={onTriggerDeleteConfirmation}
           className={cn(
-            "group flex-1 h-full rounded-none bg-transparent hover:bg-[rgba(239,68,68,0.04)] active:bg-[rgba(239,68,68,0.08)] text-slate-800 hover:text-slate-900 border-none shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
+            "group flex-1 h-full rounded-none bg-[rgba(239,68,68,0.06)] hover:bg-[rgba(239,68,68,0.10)] active:bg-[rgba(239,68,68,0.14)] text-slate-800 hover:text-slate-900 border-none shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
           )}
           disabled={isLoading}
         >
@@ -64,7 +64,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
           type={isExpired ? "button" : "submit"}
           variant="ghost"
           className={cn(
-            "group flex-1 h-full rounded-none bg-[rgba(34,197,94,0.04)] hover:bg-[rgba(34,197,94,0.06)] active:bg-[rgba(34,197,94,0.10)] text-slate-900 hover:text-black shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer border-none",
+            "group flex-1 h-full rounded-none bg-[rgba(34,197,94,0.07)] hover:bg-[rgba(34,197,94,0.12)] active:bg-[rgba(34,197,94,0.16)] text-slate-900 hover:text-black shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer border-none",
             isExpired && "opacity-80"
           )}
           disabled={!isExpired && isLoading}
