@@ -43,38 +43,34 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   const isLoading = isSaving || isDeleting;
 
   return (
-    <div className={cn("w-full", className)}>
-      <div className="w-full flex flex-row items-center justify-between border border-slate-300/60 bg-[#F8FAFC] shadow-[0_2px_8px_rgba(0,0,0,0.05)] rounded-xl overflow-hidden h-[51px] relative">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onTriggerDeleteConfirmation}
-          className={cn(
-            "group flex-1 h-full rounded-none bg-[rgba(239,68,68,0.06)] hover:bg-[rgba(239,68,68,0.10)] active:bg-[rgba(239,68,68,0.14)] text-slate-800 hover:text-slate-900 border-none shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
-          )}
-          disabled={isLoading}
-        >
-          <Trash className="h-[18px] w-[18px] text-red-500 opacity-90 transition-transform duration-[180ms] ease-in-out group-hover:scale-105" strokeWidth={2.5} />
-          Excluir
-        </Button>
+    <div className={cn("w-full flex flex-row items-center justify-between gap-3 relative", className)}>
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={onTriggerDeleteConfirmation}
+        className={cn(
+          "group flex-1 h-[51px] rounded-xl bg-gradient-to-b from-white to-[#F8FAFC] hover:from-white hover:to-[#F1F5F9] active:to-[#E2E8F0] text-slate-800 border border-slate-300 shadow-[inset_0_-1px_0_rgba(255,255,255,0.7),0_1px_1px_rgba(15,23,42,0.04),0_3px_8px_rgba(15,23,42,0.05)] hover:shadow-[inset_0_-1px_0_rgba(255,255,255,0.8),0_2px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.06)] hover:-translate-y-[1px] font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.02)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
+        )}
+        disabled={isLoading}
+      >
+        <Trash className="h-[18px] w-[18px] text-red-500 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
+        Excluir
+      </Button>
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[60%] bg-slate-200 z-10 pointer-events-none" />
-
-        <Button
-          type={isExpired ? "button" : "submit"}
-          variant="ghost"
-          className={cn(
-            "group flex-1 h-full rounded-none bg-[rgba(34,197,94,0.07)] hover:bg-[rgba(34,197,94,0.12)] active:bg-[rgba(34,197,94,0.16)] text-slate-900 hover:text-black shadow-none font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.05)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-in-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer border-none",
-            isExpired && "opacity-80"
-          )}
-          disabled={!isExpired && isLoading}
-          onClick={isExpired ? handleBlockedClick : onSave}
-        >
-          <Save className="h-[18px] w-[18px] text-green-500 opacity-90 transition-transform duration-[180ms] ease-in-out group-hover:scale-105" strokeWidth={2.5} />
-          {isLoading && !isExpired ? "Salvando..." : "Salvar"}
-          {isExpired && <span className="ml-1 text-[16px]">🔒</span>}
-        </Button>
-      </div>
+      <Button
+        type={isExpired ? "button" : "submit"}
+        variant="ghost"
+        className={cn(
+          "group flex-1 h-[51px] rounded-xl bg-gradient-to-b from-slate-100 to-[#E2E8F0]/40 hover:from-slate-100 hover:to-[#E2E8F0]/70 active:to-[#CBD5E1]/60 text-slate-900 border border-slate-300 shadow-[inset_0_-1px_0_rgba(255,255,255,0.5),0_1px_1px_rgba(15,23,42,0.04),0_3px_8px_rgba(15,23,42,0.05)] hover:shadow-[inset_0_-1px_0_rgba(255,255,255,0.6),0_2px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.06)] hover:-translate-y-[1px] font-bold text-[16px] [text-shadow:0_1px_0_rgba(255,255,255,0.95),_0_-1px_0_rgba(15,23,42,0.02)] flex items-center justify-center gap-1.5 transition-all duration-[180ms] ease-out focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer",
+          isExpired && "opacity-80"
+        )}
+        disabled={!isExpired && isLoading}
+        onClick={isExpired ? handleBlockedClick : onSave}
+      >
+        <Save className="h-[18px] w-[18px] text-green-500 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
+        {isLoading && !isExpired ? "Salvando..." : "Salvar"}
+        {isExpired && <span className="ml-1 text-[16px]">🔒</span>}
+      </Button>
     </div>
   );
 };
