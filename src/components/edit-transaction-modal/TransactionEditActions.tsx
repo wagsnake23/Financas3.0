@@ -49,7 +49,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
         variant="ghost"
         onClick={onTriggerDeleteConfirmation}
         className={cn(
-          "group flex-1 h-[51px] rounded-xl bg-white text-red-500 hover:text-red-600 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-bold transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
+          "group flex-1 h-11 rounded-2xl bg-white text-red-500 hover:text-red-600 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-black transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
         )}
         disabled={isLoading}
       >
@@ -60,7 +60,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "group flex-1 h-[49px] rounded-xl font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 btn-3d cursor-pointer !shadow-[inset_0_1px_2px_rgba(255,255,255,0.15),0_1px_3px_rgba(15,23,42,0.04)] hover:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.25),0_2px_4px_rgba(15,23,42,0.05)] active:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]",
+          "group flex-1 h-11 rounded-2xl font-black tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[16px] flex items-center justify-center gap-1.5 btn-3d cursor-pointer !shadow-[inset_0_1px_2px_rgba(255,255,255,0.15),0_1px_3px_rgba(15,23,42,0.04)] hover:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.25),0_2px_4px_rgba(15,23,42,0.05)] active:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
