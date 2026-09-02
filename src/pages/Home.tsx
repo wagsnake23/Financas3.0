@@ -443,7 +443,7 @@ export default function Home() {
                 <div
                     className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F5F7FA 88%, #EEF3F9 100%)"
+                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F7F9FC 88%, #FAFAFA 100%)"
                     }}
                 />
             )}
@@ -549,7 +549,7 @@ export default function Home() {
                                         border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-stretch w-full relative z-20">
@@ -660,7 +660,7 @@ export default function Home() {
                                         border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -723,7 +723,7 @@ export default function Home() {
                                         border: "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
