@@ -412,9 +412,7 @@ export default function Home() {
     // SÃ³ mostra o Loading se for o carregamento inicial (sem dados de receitas ou despesas ainda)
     const isInitialLoad = (isLoadingRevenues && allRevenues.length === 0) || (isLoadingExpenses && allExpenseInstallments.length === 0);
 
-    if (isInitialLoad && !allRevenues.length && !allExpenseInstallments.length) {
-        return <Loading />;
-    }
+
 
     const handlePrevMonth = () => setSelectedMonth((m) => subMonths(m, 1));
     const handleNextMonth = () => setSelectedMonth((m) => addMonths(m, 1));
@@ -443,7 +441,7 @@ export default function Home() {
         >
             {isMobile && (
                 <div
-                    className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none border-t border-[#010856]"
+                    className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
                     style={{
                         background: "linear-gradient(180deg, #010856 0%, #11269B 20%, #4F78D8 45%, #B9C9F3 70%, #F7F9FC 100%)"
                     }}

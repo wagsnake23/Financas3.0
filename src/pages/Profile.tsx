@@ -42,13 +42,7 @@ export default function Profile() {
     }
   };
 
-  if (isLoading || !profile) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Carregando Perfil...</div>
-      </div>
-    );
-  }
+
 
   const sub = profile?.subscriptions;
   const type = sub?.subscription_type || 'trial';

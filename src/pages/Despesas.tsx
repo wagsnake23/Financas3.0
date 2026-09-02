@@ -178,15 +178,7 @@ export default function Despesas() {
   // Removed:   toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
   // Removed: };
 
-  if (isLoadingExpenseData || isLoadingCategories) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">
-          Carregando Despesas...
-        </div>
-      </div>
-    );
-  }
+
 
   const formContent = (
     <ExpenseForm

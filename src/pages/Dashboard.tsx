@@ -478,15 +478,7 @@ export default function Dashboard() {
     setSelectedMonth(date);
   };
 
-  if (isInitialLoad) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">
-          Carregando Dashboard...
-        </div>
-      </div>
-    );
-  }
+
 
   const handleCalendarClick = () => {
     const formattedMonth = format(selectedMonth, "yyyy-MM-dd");

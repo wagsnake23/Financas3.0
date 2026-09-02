@@ -149,23 +149,13 @@ export const Navigation = () => {
     };
   }, [isMobile]);
 
-  // Gradiente da Home (mesma definição da página)
-  const HOME_GRADIENT = "linear-gradient(180deg, #010856 0%, #11269B 20%, #4F78D8 45%, #B9C9F3 70%, #F7F9FC 100%)";
+  // Cor única fixa para o topo de todas as páginas no mobile (limitação do WebAPK)
+  const pageTopColor = "#010856";
 
-  // Cor do topo da página (usada no theme-color e no body background)
-  const pageTopColor = isDarkPage
-    ? "#010856" // Home: cor do topo do gradiente (para theme-color e body)
-    : (isDespesas || isReceitas || isLancamentos)
-      ? "#FFFFFF" // Lançamentos/Despesas/Receitas: branco
-      : (isInvestimentos || isMetas || isCategorias || isDashboard || isPerfil)
-        ? "#F8FBFF" // Demais módulos: azul acinzentado suave
-        : "#F7F9FC"; // Fallback
-
-  // Texto/ícones adaptam-se ao fundo da página
-  const isPageDark = isDarkPage;
-  const mobileTextColor = isPageDark ? "text-white" : "text-[#356DD8]";
-  const mobileIconColor = isPageDark ? "text-white" : "text-[#374151]";
-  const mobileSubtitleColor = isPageDark ? "text-white/65" : "text-[#171717]";
+  // Texto/ícones sempre brancos pois o fundo agora é sempre azul escuro
+  const mobileTextColor = "text-white";
+  const mobileIconColor = "text-white";
+  const mobileSubtitleColor = "text-white/65";
 
   useEffect(() => {
     // Atualiza theme-color para acompanhar a superfície da página em toda troca de rota
@@ -197,13 +187,7 @@ export const Navigation = () => {
           : "h-[72px] text-white"
       )}
       style={isMobile ? {
-        // Home: gradiente completo reescalado para viewport; outras páginas: cor sólida
-        background: isDarkPage
-          ? HOME_GRADIENT
-          : pageTopColor,
-        backgroundSize: isDarkPage ? "100vw 100dvh" : undefined,
-        backgroundPosition: isDarkPage ? "top" : undefined,
-        backgroundRepeat: isDarkPage ? "no-repeat" : undefined,
+        backgroundColor: isDarkPage ? "transparent" : pageTopColor,
         paddingTop: "env(safe-area-inset-top)",
         height: "calc(3.5rem + env(safe-area-inset-top))"
       } : {

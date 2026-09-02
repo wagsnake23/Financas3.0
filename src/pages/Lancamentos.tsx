@@ -86,9 +86,7 @@ const Lancamentos = () => {
     !user
   );
 
-  if (isLoading) {
-    return <Loading />;
-  }
+
 
   return (
     <div

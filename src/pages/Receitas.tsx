@@ -595,15 +595,7 @@ export default function Receitas() {
     </>
   );
 
-  if (isLoadingRevenues || isLoadingCategories) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">
-          Carregando Receitas...
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div

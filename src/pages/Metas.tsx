@@ -512,14 +512,7 @@ export default function Metas() {
     ];
   }, [stats]);
 
-  // Loading state
-  if (isLoadingMetas || isLoadingCategories) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Carregando Metas...</div>
-      </div>
-    );
-  }
+
 
   // Card styles reusable
   const novaMetaCardStyle = {

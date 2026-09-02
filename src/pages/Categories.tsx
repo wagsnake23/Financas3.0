@@ -305,13 +305,7 @@ const Categories = () => {
     setIsEditModalOpen(false);
   };
 
-  if (isLoadingCategories) {
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Carregando Categorias...</div>
-      </div>
-    );
-  }
+
 
   return (
     <div

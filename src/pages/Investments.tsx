@@ -681,13 +681,7 @@ export default function Investments() { // Alterado para export default function
     };
   }, [investments, calculatedInvestments]);
 
-  if (isLoadingInvestments || isLoadingCategories) { // Removido isLoadingAllRevenues
-    return (
-      <div className="flex-grow flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Carregando Investimentos...</div>
-      </div>
-    );
-  }
+
 
   return (
     <div className={cn("flex flex-col min-h-screen relative global-bg", isMobile ? "bg-slate-50 pt-0" : "pt-[72px]")}>
