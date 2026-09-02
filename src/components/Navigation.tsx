@@ -168,17 +168,23 @@ export const Navigation = () => {
   const mobileSubtitleColor = isPageDark ? "text-white/65" : "text-[#171717]";
 
   useEffect(() => {
-    if (!isMobile) return;
-
-    // Atualiza theme-color para acompanhar a superfície da página
+    // Atualiza theme-color para acompanhar a superfície da página em toda troca de rota
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
       metaThemeColor.setAttribute("content", pageTopColor);
     }
 
-    // Garante que o body tenha a mesma cor (elimina flash branco)
+    // Garante que o body tenha a mesma cor (elimina flash branco e vaz. de cor)
     document.body.style.backgroundColor = pageTopColor;
-  }, [isMobile, pageTopColor]);
+
+    // DEBUG TEMPORÁRIO — remover após confirmar funcionamento
+    console.log(
+      "[theme-color]",
+      location.pathname,
+      pageTopColor,
+      document.querySelector('meta[name="theme-color"]')?.getAttribute("content")
+    );
+  }, [isMobile, pageTopColor, location.pathname]);
 
   return (
     <>
