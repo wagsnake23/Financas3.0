@@ -217,9 +217,9 @@ export const Navigation = () => {
                 )}
                 style={{
                   fontFamily: "'Inter', sans-serif",
-                  filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
+                  filter: !isMobile ? "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))" : "none",
                   textShadow: isMobile
-                    ? "0px 1px 0px rgba(255,255,255,0.8), 0px 2px 3px rgba(0,0,0,0.1)"
+                    ? "0px 1px 0px rgba(255,255,255,0.8)"
                     : undefined
                 }}>
                   Minhas Finança<span style={{ color: "#22c55e", fontWeight: isMobile ? "600" : 500, textShadow: isMobile ? "0 0 10px rgba(34, 197, 94, 0.3)" : "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
