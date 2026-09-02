@@ -730,7 +730,7 @@ export default function Investments() { // Alterado para export default function
       )}
 
       {/* Main Content */}
-      <main className={cn("container-app flex-grow", isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-4" : "pt-0 pb-8 -mt-6")}>
+      <main className={cn("container-app relative z-20 flex-grow", isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-4" : "pt-0 pb-8 -mt-6")}>
         {!isMobile && (
           <>
 

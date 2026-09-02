@@ -20,7 +20,7 @@ export default function ShoppingList() {
               }}
           />
       )}
-      <main className={cn("container-app flex-grow", isMobile ? "pt-4 pb-20 flex flex-col min-h-0 shrink" : "py-8")}>
+      <main className={cn("container-app relative z-20 flex-grow", isMobile ? "pt-4 pb-20 flex flex-col min-h-0 shrink" : "py-8")}>
 
         <ShoppingListContent user={user} isMobile={isMobile} />
       </main>

@@ -537,7 +537,7 @@ export default function Dashboard() {
 
       <main
         className={cn(
-          "container-app flex-grow",
+          "container-app relative z-20 flex-grow",
           isMobile ? "pt-[2px] pb-2" : "pt-0 pb-8 -mt-6"
         )}
       >
