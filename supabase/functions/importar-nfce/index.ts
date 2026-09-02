@@ -128,15 +128,40 @@ serve(async (req: Request) => {
     console.log("DEPOIS PAGETEXT");
     console.log("CHECKPOINT 3");
     console.log("ANTES CANCELADA CHECK");
-    if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          cancelada: true,
-          message: "NFC-e cancelada ou inválida."
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-      )
+    try {
+      console.log("TIPO PAGETEXT:", typeof pageText);
+      console.log("PAGETEXT LENGTH:", pageText?.length);
+
+      console.log("TESTANDO CANCELADA");
+      const hasCancelada = pageText.includes("cancelada");
+      console.log("HAS CANCELADA:", hasCancelada);
+
+      console.log("TESTANDO DENEGADA");
+      const hasDenegada = pageText.includes("denegada");
+      console.log("HAS DENEGADA:", hasDenegada);
+
+      console.log("TESTANDO INUTILIZADA");
+      const hasInutilizada = pageText.includes("inutilizada");
+      console.log("HAS INUTILIZADA:", hasInutilizada);
+
+      if (
+        hasCancelada ||
+        hasDenegada ||
+        hasInutilizada
+      ) {
+        console.log("ENTROU BLOCO CANCELADA");
+        return new Response(
+          JSON.stringify({
+            success: false,
+            cancelada: true,
+            message: "NFC-e cancelada ou inválida."
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+      }
+    } catch (err) {
+      console.error("ERRO BLOCO CANCELADA:", err);
+      throw err;
     }
     console.log("DEPOIS CANCELADA CHECK");
 
