@@ -310,7 +310,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -331,7 +331,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -396,7 +396,7 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className={cn("h-11 rounded-[10px] bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
+              className={cn("h-11 rounded-[11px] bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
@@ -416,7 +416,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -437,7 +437,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -464,7 +464,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -517,7 +517,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -564,7 +564,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -591,7 +591,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("h-11 rounded-[10px] pl-9 bg-[#F6F8FA] border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("h-11 rounded-[11px] pl-9 bg-white border border-[#D1D5DB] text-[#111827] font-medium placeholder:text-[#9ca3af] placeholder:font-normal focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/10 transition-all duration-200 shadow-[inset_0_3px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(0,0,0,0.08)]", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -630,13 +630,21 @@ export default function Auth() {
   return (
     <div 
       className={cn(
-        "min-h-screen flex flex-col items-center justify-center p-4",
-        isMobile ? "bg-white" : "bg-cover bg-center bg-no-repeat"
+        "flex flex-col min-h-[100dvh] relative overflow-hidden",
+        isMobile ? "global-bg justify-center items-center p-4" : "min-h-screen bg-cover bg-center bg-no-repeat items-center justify-center p-4"
       )}
       style={!isMobile ? { backgroundImage: "url('/backgrounds/login_desktop.webp')" } : undefined}
     >
+      {isMobile && (
+          <div
+              className="absolute inset-0 z-1 pointer-events-none"
+              style={{
+                  background: "linear-gradient(180deg, #F1F5F9 0%, #F1F5F9 120px, #FAFAFA 280px, #FAFAFA 420px, #FCFCFE 100%)"
+              }}
+          />
+      )}
       {isMobile ? (
-        <div className="w-full max-w-md p-4 flex flex-col pb-16">
+        <div className="w-full max-w-md p-4 flex flex-col pb-16 relative z-10">
           {formContent}
           <Footer
             isMobile={isMobile}
