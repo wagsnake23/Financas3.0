@@ -155,7 +155,7 @@ export const Navigation = () => {
   // Texto/ícones sempre escuros pois o fundo agora é sempre claro
   const mobileTextColor = "text-slate-800";
   const mobileIconColor = "text-slate-700";
-  const mobileSubtitleColor = "text-slate-500";
+  const mobileSubtitleColor = "text-[#262626]";
 
   useEffect(() => {
     // Atualiza theme-color para acompanhar a superfície da página em toda troca de rota

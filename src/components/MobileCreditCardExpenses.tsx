@@ -189,10 +189,10 @@ export const MobileCreditCardExpenses: React.FC<
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
           backdropFilter: "blur(18px) saturate(1.4)",
           WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-          border: "1px solid rgba(255,255,255,.75)",
+          border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0">
@@ -229,10 +229,10 @@ export const MobileCreditCardExpenses: React.FC<
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
         backdropFilter: "blur(18px) saturate(1.4)",
         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-        border: "1px solid rgba(255,255,255,.75)",
+        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+        boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
 
@@ -243,11 +243,13 @@ export const MobileCreditCardExpenses: React.FC<
           <div className="w-full" onClick={(e) => e.stopPropagation()}>
             <Select value={selectedCardId} onValueChange={setSelectedCardId}>
               <SelectTrigger 
-                className="w-full h-[32px] text-[13.5px] font-bold tracking-tight px-3.5 rounded-[9px] border border-[#D6DEEC] hover:border-[#C5D1E8] focus:border-[#AFC0E8] shadow-none focus:ring-0 [&>svg]:hidden transition-colors flex items-center justify-between" 
+                className="w-full h-[32px] text-[13.5px] font-bold tracking-tight px-3.5 rounded-[9px] hover:border-[#C5D1E8] focus:border-[#AFC0E8] focus:ring-0 [&>svg]:hidden transition-colors flex items-center justify-between" 
                 style={{ 
-                  background: "#FFFFFF", 
+                  background: "#FAFAFA", 
                   color: "#1e293b",
-                  boxShadow: "none"
+                  border: "1px solid #e2e8f0",
+                  borderTop: "1px solid #cbd5e1",
+                  boxShadow: "inset 0 2px 4px rgba(0,0,0,0.03), 0 1px 0 rgba(255,255,255,0.8)"
                 }}
               >
                 <div className="flex items-center gap-2 min-w-0 truncate">

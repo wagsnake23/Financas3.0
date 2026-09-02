@@ -449,7 +449,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <h2
           className={cn(
             "flex items-center justify-center gap-2 text-2xl font-bold text-[#356DD8] w-full -mt-[4px] mb-[3px]",
-            isMobile && "text-xl"
+            isMobile && "text-xl -mt-[5px]"
           )}
         >
           <DynamicIcon 
