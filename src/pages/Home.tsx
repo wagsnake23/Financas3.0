@@ -443,7 +443,7 @@ export default function Home() {
                 <div
                     className="absolute inset-0 z-10 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 80%, #F7F9FC 92%, #FAFAFA 100%)"
+                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
                     }}
                 />
             )}
