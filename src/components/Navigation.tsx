@@ -184,10 +184,11 @@ export const Navigation = () => {
         !isMobile && "transition-all duration-300",
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
-          ? "bg-transparent shadow-none border-0"
+          ? "shadow-none border-0"
           : "h-[72px] text-white"
       )}
       style={isMobile ? {
+        backgroundColor: pageTopColor,
         paddingTop: "env(safe-area-inset-top)",
         height: "calc(3.5rem + env(safe-area-inset-top))"
       } : {
