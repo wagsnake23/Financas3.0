@@ -441,9 +441,9 @@ export default function Home() {
         >
             {isMobile && (
                 <div
-                    className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
+                    className="absolute inset-0 z-10 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F7F9FC 88%, #FAFAFA 100%)"
+                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 80%, #F7F9FC 92%, #FAFAFA 100%)"
                     }}
                 />
             )}
@@ -546,7 +546,7 @@ export default function Home() {
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,.75)",
+                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -657,7 +657,7 @@ export default function Home() {
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,.75)",
+                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -720,7 +720,7 @@ export default function Home() {
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: "1px solid rgba(255,255,255,.75)",
+                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -1274,7 +1274,7 @@ export default function Home() {
 
             <Footer
                 isMobile={isMobile}
-                className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pt-2 pb-1 z-50 m-0 !bg-transparent" : "mt-8")}
+                className={cn(isMobile ? "relative w-full mt-6 mb-[env(safe-area-inset-bottom,16px)] pt-2 pb-2 z-20 !bg-transparent" : "mt-8")}
                 user={user}
             />
         </div >
