@@ -453,7 +453,7 @@ export default function Home() {
             <div className="relative h-[220px] w-full overflow-hidden shrink-0">
                 <div className={cn(
                     "container-app relative z-10",
-                    isMobile ? "fixed top-[56px] left-0 right-0 h-[42px] z-40 flex items-center pt-0 bg-transparent justify-between" : "pt-[72px] md:pt-[42px] flex justify-between items-start"
+                    isMobile ? "fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 h-[42px] z-40 flex items-center pt-0 bg-transparent justify-between" : "pt-[72px] md:pt-[42px] flex justify-between items-start"
                 )}>
                     <div>
                         <h1 

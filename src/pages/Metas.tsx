@@ -753,7 +753,7 @@ export default function Metas() {
         </div>
       )}
 
-      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
+      <main className={cn("container-app flex-grow", isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-4" : "pt-0 pb-8 -mt-6")}>
         
         {isMobile ? (
           /* ==================== MOBILE LAYOUT ==================== */

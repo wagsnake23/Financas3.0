@@ -233,7 +233,7 @@ export default function Profile() {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "pt-16 pb-10" : "-mt-14 pb-[40px]"
+          isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-10" : "-mt-14 pb-[40px]"
         )}
       >
         {isMobile && (

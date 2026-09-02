@@ -264,7 +264,7 @@ export default function Despesas() {
         {isMobile ? (
           <div className="relative">
             <div
-              className="!fixed top-[56px] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-white"
+              className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-transparent"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-[2px]">

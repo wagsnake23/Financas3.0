@@ -149,39 +149,33 @@ export const Navigation = () => {
     };
   }, [isMobile]);
 
-  // Cores dinâmicas baseadas no tema da página ou estado do modal
-  const forceDarkText = isInvestimentos || isCategorias || isDespesas || isReceitas || isLancamentos || isMetas || isPerfil || isDashboard || isDarkPage;
-  const mobileTextColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#356DD8]");
-  const mobileIconColor = isDarkPage ? "text-white" : ((isModalOpen && !forceDarkText) ? "text-white" : "text-[#374151]");
-  const mobileSubtitleColor = isDarkPage ? "text-white/65" : ((isModalOpen && !forceDarkText) ? "text-white/65" : "text-[#171717]");
+  // Cor do topo da página (usada no theme-color e no body background)
+  const pageTopColor = isDarkPage
+    ? "#010856" // Home: gradiente azul escuro no topo
+    : (isDespesas || isReceitas || isLancamentos)
+      ? "#FFFFFF" // Lançamentos/Despesas/Receitas: branco
+      : (isInvestimentos || isMetas || isCategorias || isDashboard || isPerfil)
+        ? "#F8FBFF" // Demais módulos: azul acinzentado suave
+        : "#F7F9FC"; // Fallback
+
+  // Texto/ícones adaptam-se ao fundo da página
+  const isPageDark = isDarkPage;
+  const mobileTextColor = isPageDark ? "text-white" : "text-[#356DD8]";
+  const mobileIconColor = isPageDark ? "text-white" : "text-[#374151]";
+  const mobileSubtitleColor = isPageDark ? "text-white/65" : "text-[#171717]";
 
   useEffect(() => {
     if (!isMobile) return;
-    
-    let themeColor = "#F7F9FC";
-    let bodyColor = "#F7F9FC";
 
-    if (isDarkPage) {
-      themeColor = "#010856";
-      bodyColor = "#F7F9FC";
-    } else if (isDespesas || isReceitas || isLancamentos) {
-      themeColor = "#FFFFFF";
-      bodyColor = "#FFFFFF";
-    } else if (isInvestimentos || isPerfil || isMetas || isDashboard || isCategorias) {
-      themeColor = "#F8FBFF";
-      bodyColor = "#F8FBFF";
-    } else {
-      themeColor = "#F7F9FC";
-      bodyColor = "#F7F9FC";
-    }
-
+    // Atualiza theme-color para acompanhar a superfície da página
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute("content", themeColor);
+      metaThemeColor.setAttribute("content", pageTopColor);
     }
-    // document.documentElement.style.backgroundColor = bodyColor;
-    document.body.style.backgroundColor = bodyColor;
-  }, [isMobile, isDarkPage, isDespesas, isLancamentos, isReceitas, isInvestimentos, isCategorias, scrolled]);
+
+    // Garante que o body tenha a mesma cor (elimina flash branco)
+    document.body.style.backgroundColor = pageTopColor;
+  }, [isMobile, pageTopColor]);
 
   return (
     <>
@@ -190,25 +184,17 @@ export const Navigation = () => {
         !isMobile && "transition-all duration-300",
         isMobile && isOpen && "opacity-0 pointer-events-none",
         isMobile
-          ? cn(
-            "h-14 shadow-none border-0 before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-inherit before:z-10 before:pointer-events-none",
-            isDarkPage
-                ? "bg-transparent"
-                : (isDespesas || isReceitas || isLancamentos)
-                    ? "bg-[#FFFFFF] border-none"
-                : (isInvestimentos || isPerfil || isMetas || isDashboard || isCategorias)
-                    ? "bg-[#F8FBFF]"
-                : !scrolled
-                    ? "bg-transparent border-transparent"
-                    : "bg-white"
-          )
+          ? "bg-transparent shadow-none border-0"
           : "h-[72px] text-white"
       )}
-      style={!isMobile ? {
+      style={isMobile ? {
+        paddingTop: "env(safe-area-inset-top)",
+        height: "calc(3.5rem + env(safe-area-inset-top))"
+      } : {
         background: "linear-gradient(135deg, #1d3357 0%, #243b63 55%, #2b4975 100%)",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         boxShadow: "0 2px 10px rgba(15,23,42,0.10)"
-      } : undefined}>
+      }}>
         <div className="container-app h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo / Título */}

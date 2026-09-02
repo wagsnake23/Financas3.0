@@ -497,7 +497,7 @@ export default function Dashboard() {
     <div
       className={cn(
         "flex flex-col min-h-screen relative",
-        isMobile ? "pt-[64px] global-bg" : "pt-[72px] global-bg"
+        isMobile ? "pt-[calc(3.5rem+env(safe-area-inset-top))] global-bg" : "pt-[72px] global-bg"
       )}
     >
       {/* HEADER PREMIUM — FINTECH STYLE (DASHBOARD THEME) */}
