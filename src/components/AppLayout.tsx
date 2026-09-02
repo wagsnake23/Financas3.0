@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Navigation } from "./Navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,9 +19,7 @@ export const AppLayout = () => {
     <>
       <Navigation />
       <main>
-        <Suspense fallback={null}>
-          <Outlet />
-        </Suspense>
+        <Outlet />
       </main>
       
       {/* Modal Global de Assinatura */}

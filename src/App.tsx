@@ -8,19 +8,19 @@ import { AuthProvider } from "./hooks/useAuth";
 import { AppLayout } from "./components/AppLayout";
 
 // Importações Dinâmicas (Lazy Loading) apenas para as páginas internas
-const Auth = lazy(() => import("./pages/Auth"));
-const Categories = lazy(() => import("./pages/Categories"));
-const Investments = lazy(() => import("./pages/Investments"));
-const Receitas = lazy(() => import("./pages/Receitas"));
-const Despesas = lazy(() => import("./pages/Despesas"));
-const Lancamentos = lazy(() => import("./pages/Lancamentos"));
-const Charts = lazy(() => import("./components/Charts"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Home = lazy(() => import("./pages/Home"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const ShoppingList = lazy(() => import("./pages/ShoppingList"));
-const Metas = lazy(() => import("./pages/Metas"));
-const Profile = lazy(() => import("./pages/Profile"));
+import Auth from "./pages/Auth";
+import Categories from "./pages/Categories";
+import Investments from "./pages/Investments";
+import Receitas from "./pages/Receitas";
+import Despesas from "./pages/Despesas";
+import Lancamentos from "./pages/Lancamentos";
+import Charts from "./components/Charts";
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import ShoppingList from "./pages/ShoppingList";
+import Metas from "./pages/Metas";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
