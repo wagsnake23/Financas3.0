@@ -601,8 +601,11 @@ export default function Receitas() {
     <div
       className={cn(
         "flex flex-col min-h-screen md:pt-[72px]",
-        isMobile ? "bg-white" : "global-bg"
+        !isMobile && "global-bg"
       )}
+      style={isMobile ? {
+        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF 100%)"
+      } : undefined}
     >
 
       {/* HEADER PREMIUM — FINTECH STYLE (RECEITAS THEME) */}

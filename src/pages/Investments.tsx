@@ -684,7 +684,15 @@ export default function Investments() { // Alterado para export default function
 
 
   return (
-    <div className={cn("flex flex-col min-h-screen relative global-bg", isMobile ? "bg-slate-50 pt-0" : "pt-[72px]")}>
+    <div className={cn("flex flex-col min-h-[100dvh] relative global-bg", isMobile ? "pt-0" : "pt-[72px]")}>
+      {isMobile && (
+          <div
+              className="absolute inset-0 z-10 pointer-events-none"
+              style={{
+                  background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
+              }}
+          />
+      )}
 
       {/* HEADER PREMIUM — FINTECH STYLE (INVESTMENTS THEME) */}
       {!isMobile && (

@@ -182,10 +182,17 @@ export default function Profile() {
   return (
     <div
       className={cn(
-        "flex flex-col min-h-screen global-bg md:pt-[72px]",
-        isMobile && "bg-[#F9FAFB]"
+        "flex flex-col min-h-[100dvh] relative global-bg md:pt-[72px]"
       )}
     >
+      {isMobile && (
+          <div
+              className="absolute inset-0 z-10 pointer-events-none"
+              style={{
+                  background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
+              }}
+          />
+      )}
       {/* HEADER PREMIUM — FINTECH STYLE (DESKTOP) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
