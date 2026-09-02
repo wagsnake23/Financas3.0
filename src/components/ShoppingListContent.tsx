@@ -560,6 +560,11 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       src="/empty/cart.webp"
                       alt="Carrinho vazio"
                       className="w-[340px] max-w-[90vw] h-auto object-contain opacity-95"
+                      style={{
+                        maskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+                        WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 100%)",
+                        mixBlendMode: "multiply"
+                      }}
                     />
                   </div>
                   <h3 className="text-lg font-bold text-[#1E3A8A]/80 mb-1 tracking-tight font-roboto">
