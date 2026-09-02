@@ -60,6 +60,8 @@ export default function Despesas() {
       }
     );
 
+    console.log("OBJETO BRUTO RETORNADO (DATA):", JSON.stringify(data, null, 2));
+    console.log("OBJETO BRUTO RETORNADO (ERROR):", JSON.stringify(error, null, 2));
     console.log("RESPOSTA EDGE:", data);
     console.log("ERRO EDGE:", error);
 
@@ -75,7 +77,8 @@ export default function Despesas() {
 
     if (!data.success) {
         console.error("ERRO NFC-E:", data);
-        showErrorToast("Erro", `❌ Não foi possível importar NFC-e\nDetalhe: ${data?.error || error?.message || 'Erro desconhecido'}`);
+        const errMessage = data?.error || error?.message || "";
+        showErrorToast("Erro", `❌ Não foi possível importar NFC-e\n${errMessage}`);
         return;
     }
 
