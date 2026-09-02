@@ -71,6 +71,8 @@ interface ExpenseFormProps {
   initialTipoPagamento?: "avista" | "parcelado" | "fixo";
   initialNumeroParcelas?: number;
   initialDataVencimento?: Date;
+  initialNfceCnpj?: string;
+  initialNfceEstabelecimento?: string;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -93,6 +95,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialTipoPagamento,
   initialNumeroParcelas,
   initialDataVencimento,
+  initialNfceCnpj,
+  initialNfceEstabelecimento,
 }) => {
   const { showSuccessToast, showErrorToast } = useToast();
   
@@ -434,6 +438,49 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       }
 
       showSuccessToast("Sucesso", "Despesa adicionada com sucesso!");
+
+      if (initialNfceCnpj && selectedSubcategoryId && selectedSubcategoryId !== UNSELECTED_VALUE && user) {
+        console.log('[NFCE] SALVANDO MAPEAMENTO');
+        console.log('[NFCE] USER:', user.id);
+        console.log('[NFCE] CNPJ:', initialNfceCnpj);
+        console.log('[NFCE] ESTABELECIMENTO:', initialNfceEstabelecimento);
+        console.log('[NFCE] CATEGORIA:', selectedSubcategoryId);
+
+        try {
+          const { data: existingMapping } = await supabase
+            .from('nfce_cnpj_categoria')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('cnpj', initialNfceCnpj)
+            .maybeSingle();
+
+          if (existingMapping) {
+            const { error: updateError } = await supabase
+              .from('nfce_cnpj_categoria')
+              .update({
+                categoria_id: selectedSubcategoryId,
+                estabelecimento: initialNfceEstabelecimento || '',
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', existingMapping.id);
+            if (updateError) throw updateError;
+            console.log('[NFCE] MAPEAMENTO ATUALIZADO');
+          } else {
+            const { error: insertError } = await supabase
+              .from('nfce_cnpj_categoria')
+              .insert({
+                user_id: user.id,
+                cnpj: initialNfceCnpj,
+                estabelecimento: initialNfceEstabelecimento || '',
+                categoria_id: selectedSubcategoryId
+              });
+            if (insertError) throw insertError;
+            console.log('[NFCE] MAPEAMENTO CRIADO');
+          }
+        } catch (mappingError) {
+          console.error('[NFCE] ERRO MAPEAMENTO', mappingError);
+        }
+      }
 
       setSelectedSubcategoryId(UNSELECTED_VALUE);
       setFormaPagamento("cartao");

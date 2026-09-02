@@ -250,10 +250,22 @@ serve(async (req: Request) => {
     console.log("DEPOIS PAGAMENTO", forma_pagamento);
 
     let numero_parcelas = 1;
-    const parcelasMatch = html.match(/(\d+)\s*x/i) || html.match(/(\d+)\s*parcelas/i);
-    if (parcelasMatch && parseInt(parcelasMatch[1]) > 0) {
-      numero_parcelas = parseInt(parcelasMatch[1]);
+    const paymentArea = $('#linhaFormaPagamento').text();
+    let parcelasMatch: any = null;
+
+    if (forma_pagamento === "Cartão Crédito") {
+      parcelasMatch = paymentArea.match(/(\d+)\s*x/i) || paymentArea.match(/(\d+)\s*parcelas/i);
+      if (parcelasMatch) {
+        const parcelas = parseInt(parcelasMatch[1]);
+        if (parcelas > 1 && parcelas <= 36) {
+          numero_parcelas = parcelas;
+        }
+      }
     }
+
+    console.log("AREA PAGAMENTO:", paymentArea);
+    console.log("PARCELAS MATCH:", parcelasMatch);
+    console.log("PARCELAS DEFINIDAS:", numero_parcelas);
 
     console.log("ANTES PRODUTOS");
     // FASE 2 - Extrair Produtos
