@@ -46,7 +46,8 @@ export default function Despesas() {
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const handleScan = (barcode: string) => {
-    console.log("QR Code LIDO:", barcode);
+    console.log("QR CODE LIDO:", barcode);
+    alert(barcode);
     setIsScannerOpen(false);
   };
 
