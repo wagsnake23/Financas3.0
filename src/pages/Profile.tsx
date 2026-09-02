@@ -21,24 +21,36 @@ export default function Profile() {
   const { data: profile, isLoading } = useProfile(user?.id);
 
   const handleUpdateApp = async () => {
-    toast.loading("Atualizando aplicação...", { id: "update-app" });
+    const toastId = toast.loading("Atualizando o sistema, aguarde...");
+    
     try {
-      if ('serviceWorker' in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) {
-          await registration.unregister();
-        }
-      }
-      if ('caches' in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map(key => caches.delete(key)));
-      }
-      toast.success("Aplicação atualizada com sucesso", { id: "update-app" });
+      await Promise.race([
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000)),
+        (async () => {
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            // Audita os caches e deleta, mas preserva os caches de fontes (google-fonts-cache e gstatic-fonts-cache) definidos no vite.config.ts
+            const keysToDelete = keys.filter(key => !key.includes('fonts-cache'));
+            await Promise.all(keysToDelete.map(key => caches.delete(key)));
+          }
+          
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+               await registration.update();
+            }
+          }
+        })()
+      ]);
+      
+      toast.success("Sistema atualizado!", { id: toastId });
       setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    } catch (err) {
-      toast.error("Erro ao atualizar a aplicação", { id: "update-app" });
+        window.location.href = '/'; 
+      }, 1000);
+      
+    } catch (error) {
+      console.error("Update falhou ou excedeu timeout:", error);
+      toast.error("Não foi possível concluir a atualização.", { id: toastId });
     }
   };
 
