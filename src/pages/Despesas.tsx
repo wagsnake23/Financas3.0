@@ -205,7 +205,7 @@ export default function Despesas() {
         !isMobile && "global-bg"
       )}
       style={isMobile ? {
-        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF 100%)"
+        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF calc(100% - 120px), #FCFCFE 100%)"
       } : undefined}
     >
 
