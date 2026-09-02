@@ -209,20 +209,20 @@ export const Navigation = () => {
               />
               <div className="flex flex-col justify-center whitespace-nowrap">
                 <span className={cn(
-                  "tracking-[0.5px] font-bold",
-                  isMobile ? "text-[18px] leading-none" : "text-[19px] leading-tight",
+                  "tracking-[0.5px]",
+                  isMobile ? "text-[18px] leading-none font-[900]" : "text-[19px] leading-tight font-bold",
                   !isMobile && "transition-all duration-300",
-                  isMobile ? "text-[#010856]" : "text-white/95",
+                  isMobile ? "text-[#0556C3]" : "text-white/95",
                   isModalOpen && "shadow-none drop-shadow-none filter-none"
                 )}
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   filter: "drop-shadow(0px 1px 1px rgba(0,0,0,0.1))",
-                  textShadow: isMobile && isDarkPage
-                    ? "0 1px 1px rgba(0,0,0,0.12)"
+                  textShadow: isMobile
+                    ? "0px 1px 0px rgba(255,255,255,0.8), 0px 2px 3px rgba(0,0,0,0.1)"
                     : undefined
                 }}>
-                  Minhas Finança<span style={{ color: "#22c55e", fontWeight: 500, textShadow: "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
+                  Minhas Finança<span style={{ color: "#22c55e", fontWeight: isMobile ? "600" : 500, textShadow: isMobile ? "0 0 10px rgba(34, 197, 94, 0.3)" : "0 0 10px rgba(34, 197, 94, 0.4)" }}>$</span>
                 </span>
                 <span className={cn(
                   "leading-none",
