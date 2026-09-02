@@ -441,9 +441,9 @@ export const TransactionList = ({
     const weekdayRaw = format(date, "EEEE", { locale: ptBR });
     const weekday = weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1);
     const day = format(date, "dd", { locale: ptBR });
-    const mmmRaw = format(date, "MMM", { locale: ptBR });
-    const mmm = mmmRaw.charAt(0).toUpperCase() + mmmRaw.slice(1).replace(".", "");
-    return `Hoje • ${weekday}, ${day} ${mmm}`;
+    const monthRaw = format(date, "MMMM", { locale: ptBR });
+    const month = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1);
+    return `Hoje • ${weekday}, ${day} de ${month}`;
   };
 
   // Recuperar a lógica original de exibição e cálculo do índice "Hoje"
@@ -523,7 +523,7 @@ export const TransactionList = ({
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col",
-        isMobile ? "shrink-0 gap-2 mb-1 mt-[1px]" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
+        isMobile ? "shrink-0 gap-2 mb-0 mt-0" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
       )}>
         <div className={cn("flex w-full", isMobile ? "flex-col" : "flex-row gap-2")}>
         {/* Campo de Pesquisa */}
@@ -699,8 +699,7 @@ export const TransactionList = ({
 
         <div 
           className={cn(
-            "mt-1",
-            isMobile ? "bg-[#FFFFFF] flex-1 overflow-y-auto no-scrollbar" : "w-full max-h-[68vh] overflow-y-auto no-scrollbar"
+            isMobile ? "mt-0 bg-[#FFFFFF] flex-1 overflow-y-auto no-scrollbar" : "mt-1 w-full max-h-[68vh] overflow-y-auto no-scrollbar"
           )}
           style={isMobile ? {
             marginLeft: "calc(-1 * clamp(18px, 4vw, 32px))",
@@ -726,18 +725,12 @@ export const TransactionList = ({
                     {todayMarkerIndex === index && (
                       <div 
                         ref={todayMarkerRef} 
-                        className="flex items-center justify-center w-full my-1 h-[20px]"
-                        style={{
-                          paddingLeft: "clamp(18px, 4vw, 32px)",
-                          paddingRight: "clamp(18px, 4vw, 32px)"
-                        }}
+                        className="flex items-center justify-center w-fit mx-auto my-3 bg-transparent"
                       >
-                        <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
+                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold leading-none">
                           <span className="text-[12px] leading-none">📍</span>
                           <span>{getTodayMarkerText()}</span>
                         </div>
-                        <div className="h-[1px] bg-slate-200/80 flex-1"></div>
                       </div>
                     )}
                     <TransactionRow
@@ -757,18 +750,12 @@ export const TransactionList = ({
                 {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
                   <div 
                     ref={todayMarkerRef} 
-                    className="flex items-center justify-center w-full my-1 h-[20px]"
-                    style={{
-                      paddingLeft: "clamp(18px, 4vw, 32px)",
-                      paddingRight: "clamp(18px, 4vw, 32px)"
-                    }}
+                    className="flex items-center justify-center w-fit mx-auto my-3 bg-transparent"
                   >
-                    <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
+                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold leading-none">
                       <span className="text-[12px] leading-none">📍</span>
                       <span>{getTodayMarkerText()}</span>
                     </div>
-                    <div className="h-[1px] bg-slate-200/80 flex-1"></div>
                   </div>
                 )}
               </>
