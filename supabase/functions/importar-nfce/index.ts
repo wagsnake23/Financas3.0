@@ -109,10 +109,20 @@ serve(async (req: Request) => {
         )
     }
 
-    const $ = cheerio.load(html);
+    console.log("CHECKPOINT 1");
+    let $: any;
+    try {
+      $ = cheerio.load(html);
+      console.log("CHEERIO LOAD OK");
+    } catch(err) {
+      console.error("CHEERIO LOAD ERROR", err);
+      throw err;
+    }
+    console.log("CHECKPOINT 2");
     console.log("HTML SIZE:", html.length);
 
     const pageText = $('body').text().toLowerCase();
+    console.log("CHECKPOINT 3");
     if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
         return new Response(
             JSON.stringify({
@@ -126,9 +136,11 @@ serve(async (req: Request) => {
 
     // FASE 1 - Extrair informações principais
     let estabelecimento = $('.txtTopo').first().text().trim() || $('[id^="u"]').first().text().trim();
+    console.log("CHECKPOINT 4");
     if (!estabelecimento) estabelecimento = "Estabelecimento Não Identificado";
     
     let cnpjText = $('.text').filter((_: any, el: any) => $(el).text().includes('CNPJ')).text();
+    console.log("CHECKPOINT 5");
     const cnpjMatch = cnpjText.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/) || cnpjText.match(/\d{14}/);
     const cnpj = cnpjMatch ? cnpjMatch[0] : "";
 
@@ -140,6 +152,7 @@ serve(async (req: Request) => {
     }
 
     let valorText = $('.txtMax').text().trim() || $('#linhaTotal .totalNumb').text().trim();
+    console.log("CHECKPOINT 6");
     if (!valorText) {
         const matchValor = html.match(/Valor a pagar[\s\S]*?(\d+,\d{2})/i);
         if (matchValor) valorText = matchValor[1];
@@ -265,6 +278,12 @@ serve(async (req: Request) => {
 
   } catch (error: any) {
     console.error("Erro geral na Edge Function:", error);
+    console.error(
+      "ERRO COMPLETO:",
+      error,
+      error?.stack,
+      JSON.stringify(error, Object.getOwnPropertyNames(error))
+    );
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
