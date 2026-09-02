@@ -112,7 +112,9 @@ serve(async (req: Request) => {
     console.log("CHECKPOINT 1");
     let $: any;
     try {
+      console.log("ANTES CHEERIO");
       $ = cheerio.load(html);
+      console.log("DEPOIS CHEERIO");
       console.log("CHEERIO LOAD OK");
     } catch(err) {
       console.error("CHEERIO LOAD ERROR", err);
@@ -121,8 +123,11 @@ serve(async (req: Request) => {
     console.log("CHECKPOINT 2");
     console.log("HTML SIZE:", html.length);
 
+    console.log("ANTES PAGETEXT");
     const pageText = $('body').text().toLowerCase();
+    console.log("DEPOIS PAGETEXT");
     console.log("CHECKPOINT 3");
+    console.log("ANTES CANCELADA CHECK");
     if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
         return new Response(
             JSON.stringify({
@@ -133,34 +138,46 @@ serve(async (req: Request) => {
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
         )
     }
+    console.log("DEPOIS CANCELADA CHECK");
 
     // FASE 1 - Extrair informações principais
+    console.log("EXTRAINDO ESTABELECIMENTO");
     let estabelecimento = $('.txtTopo').first().text().trim() || $('[id^="u"]').first().text().trim();
-    console.log("CHECKPOINT 4");
+    console.log("ESTABELECIMENTO:", estabelecimento);
     if (!estabelecimento) estabelecimento = "Estabelecimento Não Identificado";
     
+    console.log("EXTRAINDO CNPJ");
     let cnpjText = $('.text').filter((_: any, el: any) => $(el).text().includes('CNPJ')).text();
-    console.log("CHECKPOINT 5");
+    console.log("CNPJ TEXTO:", cnpjText);
     const cnpjMatch = cnpjText.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/) || cnpjText.match(/\d{14}/);
+    console.log("CNPJ MATCH:", cnpjMatch);
     const cnpj = cnpjMatch ? cnpjMatch[0] : "";
 
+    console.log("EXTRAINDO DATA");
     let dataText = $('strong').filter((_: any, el: any) => $(el).text().includes('Emissão')).parent().text();
+    console.log("DATA TEXTO:", dataText);
     const dateMatch = dataText.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/);
+    console.log("DATE MATCH:", dateMatch);
     let data_compra = new Date().toISOString();
     if (dateMatch) {
       data_compra = new Date(`${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${dateMatch[4]}:${dateMatch[5]}:${dateMatch[6]}`).toISOString();
     }
 
+    console.log("EXTRAINDO VALOR");
     let valorText = $('.txtMax').text().trim() || $('#linhaTotal .totalNumb').text().trim();
-    console.log("CHECKPOINT 6");
+    console.log("VALOR TEXTO:", valorText);
     if (!valorText) {
         const matchValor = html.match(/Valor a pagar[\s\S]*?(\d+,\d{2})/i);
         if (matchValor) valorText = matchValor[1];
     }
+    console.log("ANTES PARSE VALOR");
     let valor_total = parseFloat(valorText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+    console.log("VALOR TOTAL:", valor_total);
 
+    console.log("ANTES FORMA PAGAMENTO");
     let forma_pagamento = "Dinheiro"; // default
     let paymentText = $('#linhaFormaPagamento').text().toLowerCase() || $('.tx').text().toLowerCase() || $('#conteudo').text().toLowerCase();
+    console.log("PAYMENT TEXT:", paymentText);
     
     if (paymentText.includes('cartão') || paymentText.includes('cartao') || paymentText.includes('crédito') || paymentText.includes('debito') || paymentText.includes('credito') || paymentText.includes('cartao de credito') || paymentText.includes('cartão de crédito')) {
         forma_pagamento = "Cartão Crédito";
@@ -171,6 +188,7 @@ serve(async (req: Request) => {
     } else {
         forma_pagamento = "Dinheiro";
     }
+    console.log("DEPOIS PAGAMENTO", forma_pagamento);
 
     let numero_parcelas = 1;
     const parcelasMatch = html.match(/(\d+)\s*x/i) || html.match(/(\d+)\s*parcelas/i);
@@ -178,6 +196,7 @@ serve(async (req: Request) => {
         numero_parcelas = parseInt(parcelasMatch[1]);
     }
 
+    console.log("ANTES PRODUTOS");
     // FASE 2 - Extrair Produtos
     const produtos: any[] = [];
     $('#tabResult tr').each((_: any, el: any) => {
@@ -216,6 +235,7 @@ serve(async (req: Request) => {
     console.log("PRODUTOS:", produtos.length);
 
     // Salvar no Banco
+    console.log("ANTES INSERT COMPRA");
     console.log("INSERINDO COMPRA");
     const { data: compra, error: compraError } = await supabase
       .from('nfce_compras')
@@ -277,6 +297,10 @@ serve(async (req: Request) => {
     )
 
   } catch (error: any) {
+    console.error("ERRO GERAL:", error);
+    console.error("STACK:", error?.stack);
+    console.error("STRING:", String(error));
+    console.error("ERRO DETALHADO:", error);
     console.error("Erro geral na Edge Function:", error);
     console.error(
       "ERRO COMPLETO:",
@@ -285,7 +309,11 @@ serve(async (req: Request) => {
       JSON.stringify(error, Object.getOwnPropertyNames(error))
     );
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ 
+          success: false, 
+          error: String(error),
+          stack: error?.stack 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }
