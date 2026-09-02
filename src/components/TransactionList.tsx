@@ -523,7 +523,7 @@ export const TransactionList = ({
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
         "flex flex-col",
-        isMobile ? "shrink-0 gap-2 mb-0 mt-0" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
+        isMobile ? "shrink-0 gap-2 mb-1 mt-0" : "mb-2 mt-1 pb-3 border-b border-slate-200/60"
       )}>
         <div className={cn("flex w-full", isMobile ? "flex-col" : "flex-row gap-2")}>
         {/* Campo de Pesquisa */}
@@ -725,12 +725,18 @@ export const TransactionList = ({
                     {todayMarkerIndex === index && (
                       <div 
                         ref={todayMarkerRef} 
-                        className="flex items-center justify-center w-fit mx-auto my-3 bg-transparent"
+                        className="flex items-center justify-center w-full my-0 py-2 bg-transparent"
+                        style={{
+                          paddingLeft: "clamp(18px, 4vw, 32px)",
+                          paddingRight: "clamp(18px, 4vw, 32px)"
+                        }}
                       >
-                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold leading-none">
+                        <div className="h-[1px] bg-slate-200/60 flex-1"></div>
+                        <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
                           <span className="text-[12px] leading-none">📍</span>
                           <span>{getTodayMarkerText()}</span>
                         </div>
+                        <div className="h-[1px] bg-slate-200/60 flex-1"></div>
                       </div>
                     )}
                     <TransactionRow
@@ -750,12 +756,18 @@ export const TransactionList = ({
                 {todayMarkerIndex === transactionsToDisplay.length && transactionsToDisplay.length > 0 && (
                   <div 
                     ref={todayMarkerRef} 
-                    className="flex items-center justify-center w-fit mx-auto my-3 bg-transparent"
+                    className="flex items-center justify-center w-full my-0 py-2 bg-transparent"
+                    style={{
+                      paddingLeft: "clamp(18px, 4vw, 32px)",
+                      paddingRight: "clamp(18px, 4vw, 32px)"
+                    }}
                   >
-                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold leading-none">
+                    <div className="h-[1px] bg-slate-200/60 flex-1"></div>
+                    <div className="flex items-center gap-1.5 text-[#2B75D6] text-[12px] font-semibold px-3 leading-none">
                       <span className="text-[12px] leading-none">📍</span>
                       <span>{getTodayMarkerText()}</span>
                     </div>
+                    <div className="h-[1px] bg-slate-200/60 flex-1"></div>
                   </div>
                 )}
               </>
