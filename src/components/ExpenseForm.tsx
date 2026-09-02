@@ -447,7 +447,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         console.log('[NFCE] CATEGORIA:', selectedSubcategoryId);
 
         try {
-          const { data: existingMapping } = await supabase
+          const { data: existingMapping } = await (supabase as any)
             .from('nfce_cnpj_categoria')
             .select('id')
             .eq('user_id', user.id)
@@ -455,7 +455,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             .maybeSingle();
 
           if (existingMapping) {
-            const { error: updateError } = await supabase
+            const { error: updateError } = await (supabase as any)
               .from('nfce_cnpj_categoria')
               .update({
                 categoria_id: selectedSubcategoryId,
@@ -466,7 +466,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             if (updateError) throw updateError;
             console.log('[NFCE] MAPEAMENTO ATUALIZADO');
           } else {
-            const { error: insertError } = await supabase
+            const { error: insertError } = await (supabase as any)
               .from('nfce_cnpj_categoria')
               .insert({
                 user_id: user.id,
