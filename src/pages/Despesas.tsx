@@ -49,15 +49,19 @@ export default function Despesas() {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const handleScan = async (barcode: string) => {
     console.log("QR CODE LIDO:", barcode);
+    console.log("URL NFCE:", barcode);
+    console.log("CHAMANDO EDGE FUNCTION");
     setIsScannerOpen(false);
 
-    console.log("Chamando edge function importar-nfce...");
     const { data, error } = await supabase.functions.invoke(
       'importar-nfce',
       {
         body: { url: barcode }
       }
     );
+
+    console.log("RESPOSTA EDGE:", data);
+    console.log("ERRO EDGE:", error);
 
     if (!data) {
         showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
@@ -70,7 +74,7 @@ export default function Despesas() {
     }
 
     if (!data.success) {
-        showErrorToast("Erro", "❌ Não foi possível importar a NFC-e");
+        showErrorToast("Erro", `❌ Não foi possível importar a NFC-e. Detalhe: ${data.error || 'Desconhecido'}`);
         return;
     }
 
