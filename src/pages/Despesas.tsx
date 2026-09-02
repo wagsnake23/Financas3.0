@@ -59,6 +59,9 @@ export default function Despesas() {
 
     console.log('NFC-E DATA:', data);
     console.log('NFC-E ERROR:', error);
+    
+    // TEMPORÁRIO: Exibir o JSON retornado para fins de validação
+    alert(JSON.stringify(data, null, 2));
   };
 
   // Removed: Estados para preencher o formulário com dados da NFC-e
