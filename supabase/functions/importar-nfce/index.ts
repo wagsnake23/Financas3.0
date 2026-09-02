@@ -62,7 +62,7 @@ serve(async (req: Request) => {
       .select('id')
       .eq('chave_acesso', chave_acesso)
       .maybeSingle()
-      
+
     if (duplicate) {
       return new Response(
         JSON.stringify({
@@ -76,37 +76,37 @@ serve(async (req: Request) => {
 
     let response: Response;
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
-        const fetchOptions: RequestInit = {
-            signal: controller.signal,
-            headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language": "pt-BR,pt;q=0.9"
-            },
-            redirect: "follow"
-        };
-        try {
-            response = await fetch(url, fetchOptions);
-            console.log("FETCH OK");
-            console.log("STATUS:", response.status);
-        } finally {
-            clearTimeout(timeoutId);
-        }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const fetchOptions: RequestInit = {
+        signal: controller.signal,
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "pt-BR,pt;q=0.9"
+        },
+        redirect: "follow"
+      };
+      try {
+        response = await fetch(url, fetchOptions);
+        console.log("FETCH OK");
+        console.log("STATUS:", response.status);
+      } finally {
+        clearTimeout(timeoutId);
+      }
     } catch (e: any) {
-        return new Response(
-            JSON.stringify({ success: false, error: `Falha ao buscar URL: ${e.message}` }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-        )
+      return new Response(
+        JSON.stringify({ success: false, error: `Falha ao buscar URL: ${e.message}` }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      )
     }
 
     const html = await response.text();
     if (!html) {
-        return new Response(
-            JSON.stringify({ success: false, error: "A resposta HTML está vazia." }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-        )
+      return new Response(
+        JSON.stringify({ success: false, error: "A resposta HTML está vazia." }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      )
     }
 
     console.log("CHECKPOINT 1");
@@ -116,7 +116,7 @@ serve(async (req: Request) => {
       $ = cheerio.load(html);
       console.log("DEPOIS CHEERIO");
       console.log("CHEERIO LOAD OK");
-    } catch(err) {
+    } catch (err) {
       console.error("CHEERIO LOAD ERROR", err);
       throw err;
     }
@@ -129,23 +129,29 @@ serve(async (req: Request) => {
     console.log("CHECKPOINT 3");
     console.log("ANTES CANCELADA CHECK");
     if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
-        return new Response(
-            JSON.stringify({
-                success: false,
-                cancelada: true,
-                message: "NFC-e cancelada ou inválida."
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-        )
+      return new Response(
+        JSON.stringify({
+          success: false,
+          cancelada: true,
+          message: "NFC-e cancelada ou inválida."
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      )
     }
     console.log("DEPOIS CANCELADA CHECK");
+
+    console.log("PASSOU CANCELADA CHECK");
+
+    console.log("ANTES ESTABELECIMENTO");
+
+
 
     // FASE 1 - Extrair informações principais
     console.log("EXTRAINDO ESTABELECIMENTO");
     let estabelecimento = $('.txtTopo').first().text().trim() || $('[id^="u"]').first().text().trim();
     console.log("ESTABELECIMENTO:", estabelecimento);
     if (!estabelecimento) estabelecimento = "Estabelecimento Não Identificado";
-    
+
     console.log("EXTRAINDO CNPJ");
     let cnpjText = $('.text').filter((_: any, el: any) => $(el).text().includes('CNPJ')).text();
     console.log("CNPJ TEXTO:", cnpjText);
@@ -167,8 +173,8 @@ serve(async (req: Request) => {
     let valorText = $('.txtMax').text().trim() || $('#linhaTotal .totalNumb').text().trim();
     console.log("VALOR TEXTO:", valorText);
     if (!valorText) {
-        const matchValor = html.match(/Valor a pagar[\s\S]*?(\d+,\d{2})/i);
-        if (matchValor) valorText = matchValor[1];
+      const matchValor = html.match(/Valor a pagar[\s\S]*?(\d+,\d{2})/i);
+      if (matchValor) valorText = matchValor[1];
     }
     console.log("ANTES PARSE VALOR");
     let valor_total = parseFloat(valorText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
@@ -178,52 +184,52 @@ serve(async (req: Request) => {
     let forma_pagamento = "Dinheiro"; // default
     let paymentText = $('#linhaFormaPagamento').text().toLowerCase() || $('.tx').text().toLowerCase() || $('#conteudo').text().toLowerCase();
     console.log("PAYMENT TEXT:", paymentText);
-    
+
     if (paymentText.includes('cartão') || paymentText.includes('cartao') || paymentText.includes('crédito') || paymentText.includes('debito') || paymentText.includes('credito') || paymentText.includes('cartao de credito') || paymentText.includes('cartão de crédito')) {
-        forma_pagamento = "Cartão Crédito";
+      forma_pagamento = "Cartão Crédito";
     } else if (paymentText.includes('pix')) {
-        forma_pagamento = "PIX";
+      forma_pagamento = "PIX";
     } else if (paymentText.includes('dinheiro') || paymentText.includes('vale') || paymentText.includes('alimentação') || paymentText.includes('alimentacao') || paymentText.includes('refeição') || paymentText.includes('refeicao')) {
-        forma_pagamento = "Dinheiro";
+      forma_pagamento = "Dinheiro";
     } else {
-        forma_pagamento = "Dinheiro";
+      forma_pagamento = "Dinheiro";
     }
     console.log("DEPOIS PAGAMENTO", forma_pagamento);
 
     let numero_parcelas = 1;
     const parcelasMatch = html.match(/(\d+)\s*x/i) || html.match(/(\d+)\s*parcelas/i);
     if (parcelasMatch && parseInt(parcelasMatch[1]) > 0) {
-        numero_parcelas = parseInt(parcelasMatch[1]);
+      numero_parcelas = parseInt(parcelasMatch[1]);
     }
 
     console.log("ANTES PRODUTOS");
     // FASE 2 - Extrair Produtos
     const produtos: any[] = [];
     $('#tabResult tr').each((_: any, el: any) => {
-        const descricao = $(el).find('.txtTit').text().trim();
-        const codigo_barras = $(el).find('.RCod').text().replace(/[^0-9]/g, '').trim();
-        const quantidadeText = $(el).find('.Rqtd').text().replace(/[a-zA-Z:\s]/g, '').replace(',', '.').trim();
-        const quantidade = parseFloat(quantidadeText) || 1;
-        const unidade = $(el).find('.RUN').text().replace(/[^a-zA-Z]/g, '').replace('UN', 'UN').trim() || "UN";
-        const valorUnitarioText = $(el).find('.RvlUnit').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
-        const valor_unitario = parseFloat(valorUnitarioText) || 0;
-        const valorTotalText = $(el).find('.valor').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
-        const valor_total_item = parseFloat(valorTotalText) || (quantidade * valor_unitario);
+      const descricao = $(el).find('.txtTit').text().trim();
+      const codigo_barras = $(el).find('.RCod').text().replace(/[^0-9]/g, '').trim();
+      const quantidadeText = $(el).find('.Rqtd').text().replace(/[a-zA-Z:\s]/g, '').replace(',', '.').trim();
+      const quantidade = parseFloat(quantidadeText) || 1;
+      const unidade = $(el).find('.RUN').text().replace(/[^a-zA-Z]/g, '').replace('UN', 'UN').trim() || "UN";
+      const valorUnitarioText = $(el).find('.RvlUnit').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
+      const valor_unitario = parseFloat(valorUnitarioText) || 0;
+      const valorTotalText = $(el).find('.valor').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
+      const valor_total_item = parseFloat(valorTotalText) || (quantidade * valor_unitario);
 
-        if (descricao) {
-            produtos.push({
-                descricao,
-                codigo_barras,
-                quantidade,
-                unidade,
-                valor_unitario,
-                valor_total: valor_total_item
-            });
-        }
+      if (descricao) {
+        produtos.push({
+          descricao,
+          codigo_barras,
+          quantidade,
+          unidade,
+          valor_unitario,
+          valor_total: valor_total_item
+        });
+      }
     });
 
     if (valor_total === 0 && produtos.length > 0) {
-        valor_total = produtos.reduce((acc, item) => acc + item.valor_total, 0);
+      valor_total = produtos.reduce((acc, item) => acc + item.valor_total, 0);
     }
 
     console.log("ESTABELECIMENTO:", estabelecimento);
@@ -240,16 +246,16 @@ serve(async (req: Request) => {
     const { data: compra, error: compraError } = await supabase
       .from('nfce_compras')
       .insert({
-          user_id: user.id,
-          chave_acesso,
-          url_nfce: response.url,
-          estabelecimento,
-          cnpj,
-          data_compra,
-          valor_total,
-          forma_pagamento,
-          numero_parcelas,
-          raw_html: html.substring(0, 200000)
+        user_id: user.id,
+        chave_acesso,
+        url_nfce: response.url,
+        estabelecimento,
+        cnpj,
+        data_compra,
+        valor_total,
+        forma_pagamento,
+        numero_parcelas,
+        raw_html: html.substring(0, 200000)
       })
       .select()
       .single()
@@ -262,16 +268,16 @@ serve(async (req: Request) => {
     console.log("COMPRA INSERIDA:", compra?.id);
 
     if (produtos.length > 0) {
-        const itensToInsert = produtos.map(p => ({
-            compra_id: compra.id,
-            ...p
-        }));
-        console.log("INSERINDO ITENS:", itensToInsert.length);
-        const { error: itensError } = await supabase.from('nfce_itens').insert(itensToInsert);
-        if (itensError) {
-            console.error("Erro ao inserir itens:", itensError);
-        }
-        console.log("ITENS INSERIDOS");
+      const itensToInsert = produtos.map(p => ({
+        compra_id: compra.id,
+        ...p
+      }));
+      console.log("INSERINDO ITENS:", itensToInsert.length);
+      const { error: itensError } = await supabase.from('nfce_itens').insert(itensToInsert);
+      if (itensError) {
+        console.error("Erro ao inserir itens:", itensError);
+      }
+      console.log("ITENS INSERIDOS");
     }
 
     console.log({
@@ -309,10 +315,10 @@ serve(async (req: Request) => {
       JSON.stringify(error, Object.getOwnPropertyNames(error))
     );
     return new Response(
-      JSON.stringify({ 
-          success: false, 
-          error: String(error),
-          stack: error?.stack 
+      JSON.stringify({
+        success: false,
+        error: String(error),
+        stack: error?.stack
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
