@@ -6,6 +6,31 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 // @ts-ignore
 import * as cheerio from 'npm:cheerio'
 
+async function obterCategoriaPorCnpj(supabase: any, cnpj: string) {
+  console.log("[NFCE] CONSULTANDO MAPEAMENTO");
+  const { data: regraCategoria, error: regraError } = await supabase
+    .from("nfce_cnpj_categoria")
+    .select("categoria_id")
+    .eq("cnpj", cnpj)
+    .maybeSingle();
+
+  if (regraError) {
+    console.error("[NFCE] ERRO CONSULTANDO MAPEAMENTO:", regraError);
+  }
+
+  let categoriaId = "alimentacao_supermercado";
+
+  if (regraCategoria?.categoria_id) {
+    categoriaId = regraCategoria.categoria_id;
+    console.log("[NFCE] CATEGORIA ENCONTRADA:", categoriaId);
+  } else {
+    console.log("[NFCE] CNPJ SEM MAPEAMENTO:", cnpj);
+    console.log("[NFCE] USANDO CATEGORIA PADRAO:", categoriaId);
+  }
+
+  return categoriaId;
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -129,39 +154,24 @@ serve(async (req: Request) => {
     console.log("CHECKPOINT 3");
     console.log("ANTES CANCELADA CHECK");
     try {
-      console.log("TIPO PAGETEXT:", typeof pageText);
-      console.log("PAGETEXT LENGTH:", pageText?.length);
+      console.log("VALIDANDO STATUS DA NOTA");
+      
+      const bodyClone = $('body').clone();
+      bodyClone.find('script, style').remove();
+      const visibleText = bodyClone.text().toLowerCase();
 
-      console.log("TESTANDO CANCELADA");
-      const hasCancelada = pageText.includes("cancelada");
-      console.log("HAS CANCELADA:", hasCancelada);
-      if (hasCancelada) {
-        const idx = pageText.indexOf("cancelada");
-        console.log(
-          "TRECHO CANCELADA:",
-          pageText.substring(Math.max(0, idx - 200), idx + 200)
-        );
-      }
+      const canceladaDetectada = visibleText.includes('nfc-e cancelada') || visibleText.includes('nota cancelada');
+      const denegadaDetectada = visibleText.includes('uso denegado') || visibleText.includes('denegada');
+      const inutilizadaDetectada = visibleText.includes('inutilizada');
 
-      console.log("TESTANDO DENEGADA");
-      const hasDenegada = pageText.includes("denegada");
-      console.log("HAS DENEGADA:", hasDenegada);
-      if (hasDenegada) {
-        const idx = pageText.indexOf("denegada");
-        console.log(
-          "TRECHO DENEGADA:",
-          pageText.substring(Math.max(0, idx - 200), idx + 200)
-        );
-      }
-
-      console.log("TESTANDO INUTILIZADA");
-      const hasInutilizada = pageText.includes("inutilizada");
-      console.log("HAS INUTILIZADA:", hasInutilizada);
+      console.log("CANCELADA VISIVEL:", canceladaDetectada);
+      console.log("DENEGADA VISIVEL:", denegadaDetectada);
+      console.log("INUTILIZADA VISIVEL:", inutilizadaDetectada);
 
       if (
-        hasCancelada ||
-        hasDenegada ||
-        hasInutilizada
+        canceladaDetectada ||
+        denegadaDetectada ||
+        inutilizadaDetectada
       ) {
         console.log("ENTROU BLOCO CANCELADA");
         return new Response(
@@ -197,6 +207,10 @@ serve(async (req: Request) => {
     const cnpjMatch = cnpjText.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/) || cnpjText.match(/\d{14}/);
     console.log("CNPJ MATCH:", cnpjMatch);
     const cnpj = cnpjMatch ? cnpjMatch[0] : "";
+    console.log("[NFCE] CNPJ EXTRAIDO:", cnpj);
+
+    // Resolvendo categoria baseada no CNPJ (ou default)
+    const categoria_id = await obterCategoriaPorCnpj(supabase, cnpj);
 
     console.log("EXTRAINDO DATA");
     let dataText = $('strong').filter((_: any, el: any) => $(el).text().includes('Emissão')).parent().text();
@@ -280,6 +294,7 @@ serve(async (req: Request) => {
     console.log("PRODUTOS:", produtos.length);
 
     // Salvar no Banco
+    console.log("NFCE PARCELAS EXTRAIDAS:", numero_parcelas);
     console.log("ANTES INSERT COMPRA");
     console.log("INSERINDO COMPRA");
     const { data: compra, error: compraError } = await supabase
@@ -298,6 +313,8 @@ serve(async (req: Request) => {
       })
       .select()
       .single()
+      
+    console.log("NFCE SALVA:", compra);
 
     if (compraError) {
       console.error("POSTGRES ERROR:", JSON.stringify(compraError, null, 2));
@@ -333,6 +350,7 @@ serve(async (req: Request) => {
       success: true,
       compra,
       produtos,
+      categoria_id,
       quantidadeProdutos: produtos.length
     };
 

@@ -91,10 +91,11 @@ export default function Despesas() {
     }
 
     const compra = data.compra;
+    console.log("NFCE LIDA DO BANCO:", compra);
+    console.log("NFCE ANTES MAPEAMENTO:", data);
     
-    const supermercado = allCategories.find((cat: any) => cat.nome.toLowerCase() === 'supermercado');
-    if (supermercado) {
-        setNfceSubcategoryId(supermercado.id);
+    if (data.categoria_id) {
+        setNfceSubcategoryId(data.categoria_id);
     }
     
     setNfceValor(compra.valor_total);
@@ -110,8 +111,10 @@ export default function Despesas() {
     }
     
     const parcelas = compra.numero_parcelas || 1;
+    console.log("NFCE APOS MAPEAMENTO:", { parcelas });
     setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
     setNfceNumeroParcelas(parcelas);
+    console.log("NFCE PARCELAS EXIBIDAS:", parcelas);
     
     if (compra.data_compra) {
         setNfceDataVencimento(new Date(compra.data_compra));
