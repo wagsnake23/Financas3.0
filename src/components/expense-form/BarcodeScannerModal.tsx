@@ -285,22 +285,24 @@ export function BarcodeScannerModal({ onScan, onClose }: BarcodeScannerModalProp
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-gradient-to-b from-black/80 to-transparent z-10 absolute top-0 left-0 right-0">
         <div className="text-white font-semibold text-[17px]">Leitor de Código</div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mr-12">
           <button 
             onClick={() => setShowDebug(!showDebug)}
-            className="size-[42px] flex items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md active:scale-95 transition-all"
+            className="size-[32px] flex items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md active:scale-95 transition-all"
             title="Diagnóstico do Detector"
           >
-            <Info className="size-5" />
-          </button>
-          <button 
-            onClick={onClose}
-            className="size-[42px] flex items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md active:scale-95 transition-all"
-          >
-            <X className="size-6" />
+            <Info className="size-4" />
           </button>
         </div>
       </div>
+      
+      {/* Botão Fechar Padrão (Canto Superior Direito) */}
+      <button 
+        onClick={onClose}
+        className="absolute right-4 top-4 z-[110] h-7 w-7 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive-darker focus:outline-none flex items-center justify-center shadow-md active:scale-95 transition-all"
+      >
+        <X className="h-[18px] w-[18px]" strokeWidth={4} />
+      </button>
 
       {/* Main Camera Area */}
       <div className="flex-1 relative overflow-hidden bg-black flex items-center justify-center">
