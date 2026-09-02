@@ -212,7 +212,7 @@ export const Navigation = () => {
                   "tracking-[0.5px] font-bold",
                   isMobile ? "text-[18px] leading-none" : "text-[19px] leading-tight",
                   !isMobile && "transition-all duration-300",
-                  isMobile ? mobileTextColor : "text-white/95",
+                  isMobile ? "text-[#010856]" : "text-white/95",
                   isModalOpen && "shadow-none drop-shadow-none filter-none"
                 )}
                 style={{
