@@ -135,10 +135,24 @@ serve(async (req: Request) => {
       console.log("TESTANDO CANCELADA");
       const hasCancelada = pageText.includes("cancelada");
       console.log("HAS CANCELADA:", hasCancelada);
+      if (hasCancelada) {
+        const idx = pageText.indexOf("cancelada");
+        console.log(
+          "TRECHO CANCELADA:",
+          pageText.substring(Math.max(0, idx - 200), idx + 200)
+        );
+      }
 
       console.log("TESTANDO DENEGADA");
       const hasDenegada = pageText.includes("denegada");
       console.log("HAS DENEGADA:", hasDenegada);
+      if (hasDenegada) {
+        const idx = pageText.indexOf("denegada");
+        console.log(
+          "TRECHO DENEGADA:",
+          pageText.substring(Math.max(0, idx - 200), idx + 200)
+        );
+      }
 
       console.log("TESTANDO INUTILIZADA");
       const hasInutilizada = pageText.includes("inutilizada");
