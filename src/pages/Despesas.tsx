@@ -60,22 +60,30 @@ export default function Despesas() {
       }
     );
 
-    console.log("OBJETO BRUTO RETORNADO (DATA):", JSON.stringify(data, null, 2));
-    console.log("OBJETO BRUTO RETORNADO (ERROR):", JSON.stringify(error, null, 2));
-    console.log("RESPOSTA EDGE:", data);
-    console.log("ERRO EDGE:", error);
+    console.log("RESULTADO BRUTO:", { data, error });
+
+    if (error) {
+      console.error("ERRO INVOKE:", error);
+    }
+
+    if (data) {
+      console.log("DATA RETORNADA:", JSON.stringify(data));
+    }
 
     if (!data) {
+        console.log("BRANCH EXECUTADA: (!data)");
         showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
         return;
     }
 
     if (data.duplicada) {
+        console.log("BRANCH EXECUTADA: (data.duplicada)");
         showErrorToast("Atenção", "⚠ Nota fiscal já importada anteriormente");
         return;
     }
 
     if (!data.success) {
+        console.log("BRANCH EXECUTADA: (!data.success)");
         console.error("ERRO NFC-E:", data);
         const errMessage = data?.error || error?.message || "";
         showErrorToast("Erro", `❌ Não foi possível importar NFC-e\n${errMessage}`);
