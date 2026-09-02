@@ -67,6 +67,10 @@ interface ExpenseFormProps {
   initialFormaPagamento?: "dinheiro" | "pix" | "cartao";
   initialCartaoId?: string;
   initialDescricao?: string;
+  initialSubcategoryId?: string;
+  initialTipoPagamento?: "avista" | "parcelado" | "fixo";
+  initialNumeroParcelas?: number;
+  initialDataVencimento?: Date;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -85,6 +89,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialFormaPagamento,
   initialCartaoId,
   initialDescricao,
+  initialSubcategoryId,
+  initialTipoPagamento,
+  initialNumeroParcelas,
+  initialDataVencimento,
 }) => {
   const { showSuccessToast, showErrorToast } = useToast();
   
@@ -193,9 +201,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   useEffect(() => {
     if (initialValor !== undefined) setValor(initialValor);
     if (initialFormaPagamento !== undefined) setFormaPagamento(initialFormaPagamento);
-    if (initialCartaoId !== undefined) setCartaoId(initialCartaoId);
+    if (initialCartaoId !== undefined && initialCartaoId !== UNSELECTED_VALUE) setCartaoId(initialCartaoId);
     if (initialDescricao !== undefined) setDescricao(initialDescricao);
-  }, [initialValor, initialFormaPagamento, initialCartaoId, initialDescricao]);
+    if (initialSubcategoryId !== undefined && initialSubcategoryId !== UNSELECTED_VALUE) setSelectedSubcategoryId(initialSubcategoryId);
+    if (initialTipoPagamento !== undefined) setTipoPagamento(initialTipoPagamento);
+    if (initialNumeroParcelas !== undefined) setNumeroParcelas(initialNumeroParcelas);
+    if (initialDataVencimento !== undefined) setDataVencimento(initialDataVencimento);
+  }, [initialValor, initialFormaPagamento, initialCartaoId, initialDescricao, initialSubcategoryId, initialTipoPagamento, initialNumeroParcelas, initialDataVencimento]);
 
 
   useEffect(() => {

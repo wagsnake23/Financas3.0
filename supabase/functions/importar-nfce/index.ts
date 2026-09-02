@@ -1,6 +1,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 // @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// @ts-ignore
+import { createClient } from 'npm:@supabase/supabase-js@2'
+// @ts-ignore
+import * as cheerio from 'npm:cheerio'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,29 +12,67 @@ const corsHeaders = {
 }
 
 serve(async (req: Request) => {
-  // Handle CORS preflight request
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error("Missing Authorization header")
+    }
+
+    // @ts-ignore
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+    // @ts-ignore
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: authHeader } }
+    })
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      throw new Error("Unauthorized")
+    }
+
     const body = await req.json()
     const url = body.url
 
     if (!url) {
-      console.error("Erro: URL não enviada.")
       return new Response(
         JSON.stringify({ success: false, error: "URL não fornecida." }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    console.log(`Iniciando fetch para a URL: ${url}`)
+    // Extract access key (chave_acesso) from URL
+    const urlObj = new URL(url);
+    const chave_acesso_param = urlObj.searchParams.get('p') || url;
+    const chaveMatch = chave_acesso_param.match(/\d{44}/);
+    const chave_acesso = chaveMatch ? chaveMatch[0] : chave_acesso_param;
+
+    // Check duplicate
+    const { data: duplicate } = await supabase
+      .from('nfce_compras')
+      .select('id')
+      .eq('chave_acesso', chave_acesso)
+      .maybeSingle()
+      
+    if (duplicate) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          duplicada: true,
+          message: "Nota fiscal já importada anteriormente."
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      )
+    }
 
     let response: Response;
     try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const fetchOptions: RequestInit = {
             signal: controller.signal,
             headers: {
@@ -40,50 +82,160 @@ serve(async (req: Request) => {
             },
             redirect: "follow"
         };
-        response = await fetch(url, fetchOptions);
-        clearTimeout(timeoutId);
+        try {
+            response = await fetch(url, fetchOptions);
+        } finally {
+            clearTimeout(timeoutId);
+        }
     } catch (e: any) {
-        console.error("Erro no fetch (Timeout, DNS, etc):", e);
         return new Response(
             JSON.stringify({ success: false, error: `Falha ao buscar URL: ${e.message}` }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
         )
     }
 
-    const finalUrl = response.url;
-    const status = response.status;
-    const contentType = response.headers.get("content-type") || "unknown";
-    
-    console.log("URL original:", url);
-    console.log("URL final:", finalUrl);
-    console.log("Status:", status);
-    console.log("Content-Type:", contentType);
-
     const html = await response.text();
-    
     if (!html) {
-        console.error("Erro: HTML retornado vazio.");
         return new Response(
             JSON.stringify({ success: false, error: "A resposta HTML está vazia." }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
         )
     }
 
-    const htmlLength = html.length;
-    const preview = html.substring(0, 1000);
+    const $ = cheerio.load(html);
+
+    const pageText = $('body').text().toLowerCase();
+    if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
+        return new Response(
+            JSON.stringify({
+                success: false,
+                cancelada: true,
+                message: "NFC-e cancelada ou inválida."
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+    }
+
+    // FASE 1 - Extrair informações principais
+    let estabelecimento = $('.txtTopo').first().text().trim() || $('[id^="u"]').first().text().trim();
+    if (!estabelecimento) estabelecimento = "Estabelecimento Não Identificado";
     
-    console.log("Tamanho HTML:", htmlLength);
+    let cnpjText = $('.text').filter((_: any, el: any) => $(el).text().includes('CNPJ')).text();
+    const cnpjMatch = cnpjText.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/) || cnpjText.match(/\d{14}/);
+    const cnpj = cnpjMatch ? cnpjMatch[0] : "";
+
+    let dataText = $('strong').filter((_: any, el: any) => $(el).text().includes('Emissão')).parent().text();
+    const dateMatch = dataText.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})/);
+    let data_compra = new Date().toISOString();
+    if (dateMatch) {
+      data_compra = new Date(`${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${dateMatch[4]}:${dateMatch[5]}:${dateMatch[6]}`).toISOString();
+    }
+
+    let valorText = $('.txtMax').text().trim() || $('#linhaTotal .totalNumb').text().trim();
+    if (!valorText) {
+        const matchValor = html.match(/Valor a pagar[\s\S]*?(\d+,\d{2})/i);
+        if (matchValor) valorText = matchValor[1];
+    }
+    let valor_total = parseFloat(valorText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+
+    let forma_pagamento = "Dinheiro"; // default
+    let paymentText = $('#linhaFormaPagamento').text().toLowerCase() || $('.tx').text().toLowerCase() || $('#conteudo').text().toLowerCase();
     
+    if (paymentText.includes('cartão') || paymentText.includes('cartao') || paymentText.includes('crédito') || paymentText.includes('debito') || paymentText.includes('credito') || paymentText.includes('cartao de credito') || paymentText.includes('cartão de crédito')) {
+        forma_pagamento = "Cartão Crédito";
+    } else if (paymentText.includes('pix')) {
+        forma_pagamento = "PIX";
+    } else if (paymentText.includes('dinheiro') || paymentText.includes('vale') || paymentText.includes('alimentação') || paymentText.includes('alimentacao') || paymentText.includes('refeição') || paymentText.includes('refeicao')) {
+        forma_pagamento = "Dinheiro";
+    } else {
+        forma_pagamento = "Dinheiro";
+    }
+
+    let numero_parcelas = 1;
+    const parcelasMatch = html.match(/(\d+)\s*x/i) || html.match(/(\d+)\s*parcelas/i);
+    if (parcelasMatch && parseInt(parcelasMatch[1]) > 0) {
+        numero_parcelas = parseInt(parcelasMatch[1]);
+    }
+
+    // FASE 2 - Extrair Produtos
+    const produtos: any[] = [];
+    $('#tabResult tr').each((_: any, el: any) => {
+        const descricao = $(el).find('.txtTit').text().trim();
+        const codigo_barras = $(el).find('.RCod').text().replace(/[^0-9]/g, '').trim();
+        const quantidadeText = $(el).find('.Rqtd').text().replace(/[a-zA-Z:\s]/g, '').replace(',', '.').trim();
+        const quantidade = parseFloat(quantidadeText) || 1;
+        const unidade = $(el).find('.RUN').text().replace(/[^a-zA-Z]/g, '').replace('UN', 'UN').trim() || "UN";
+        const valorUnitarioText = $(el).find('.RvlUnit').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
+        const valor_unitario = parseFloat(valorUnitarioText) || 0;
+        const valorTotalText = $(el).find('.valor').text().replace(/[^0-9,]/g, '').replace(',', '.').trim();
+        const valor_total_item = parseFloat(valorTotalText) || (quantidade * valor_unitario);
+
+        if (descricao) {
+            produtos.push({
+                descricao,
+                codigo_barras,
+                quantidade,
+                unidade,
+                valor_unitario,
+                valor_total: valor_total_item
+            });
+        }
+    });
+
+    if (valor_total === 0 && produtos.length > 0) {
+        valor_total = produtos.reduce((acc, item) => acc + item.valor_total, 0);
+    }
+
+    // Salvar no Banco
+    const { data: compra, error: compraError } = await supabase
+      .from('nfce_compras')
+      .insert({
+          user_id: user.id,
+          chave_acesso,
+          url_nfce: response.url,
+          estabelecimento,
+          cnpj,
+          data_compra,
+          valor_total,
+          forma_pagamento,
+          numero_parcelas,
+          raw_html: html.substring(0, 200000)
+      })
+      .select()
+      .single()
+
+    if (compraError) {
+      console.error("Erro ao inserir compra", compraError);
+      throw compraError;
+    }
+
+    if (produtos.length > 0) {
+        const itensToInsert = produtos.map(p => ({
+            compra_id: compra.id,
+            ...p
+        }));
+        const { error: itensError } = await supabase.from('nfce_itens').insert(itensToInsert);
+        if (itensError) {
+            console.error("Erro ao inserir itens:", itensError);
+        }
+    }
+
+    console.log({
+      estabelecimento,
+      cnpj,
+      data_compra,
+      valor_total,
+      forma_pagamento,
+      numero_parcelas,
+      quantidadeProdutos: produtos.length
+    });
+
     const result = {
       success: true,
-      status,
-      finalUrl,
-      contentType,
-      htmlLength,
-      preview
+      compra,
+      produtos,
+      quantidadeProdutos: produtos.length
     };
-
-    console.log("Retornando sucesso:", result);
 
     return new Response(
       JSON.stringify(result),

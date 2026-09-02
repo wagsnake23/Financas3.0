@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/contexts/ToastContext";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ExpensesDashboard } from "@/components/ExpensesDashboard";
@@ -37,6 +38,7 @@ const UNSELECTED_VALUE = "unselected";
 
 export default function Despesas() {
   const { user } = useAuth();
+  const { showSuccessToast, showErrorToast } = useToast();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
 
@@ -57,18 +59,64 @@ export default function Despesas() {
       }
     );
 
-    console.log('NFC-E DATA:', data);
-    console.log('NFC-E ERROR:', error);
+    if (!data) {
+        showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
+        return;
+    }
+
+    if (data.duplicada) {
+        showErrorToast("Atenção", "⚠ Nota fiscal já importada anteriormente");
+        return;
+    }
+
+    if (!data.success) {
+        showErrorToast("Erro", "❌ Não foi possível importar a NFC-e");
+        return;
+    }
+
+    const compra = data.compra;
     
-    // TEMPORÁRIO: Exibir o JSON retornado para fins de validação
-    alert(JSON.stringify(data, null, 2));
+    const supermercado = allCategories.find((cat: any) => cat.nome.toLowerCase() === 'supermercado');
+    if (supermercado) {
+        setNfceSubcategoryId(supermercado.id);
+    }
+    
+    setNfceValor(compra.valor_total);
+    
+    let formaPgto: "dinheiro" | "pix" | "cartao" = "dinheiro";
+    if (compra.forma_pagamento?.toLowerCase().includes("cart")) formaPgto = "cartao";
+    else if (compra.forma_pagamento?.toLowerCase().includes("pix")) formaPgto = "pix";
+    
+    setNfceFormaPagamento(formaPgto);
+
+    if (formaPgto === "cartao" && cartoes.length > 0) {
+        setNfceCartaoId(cartoes[0].id);
+    }
+    
+    const parcelas = compra.numero_parcelas || 1;
+    setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
+    setNfceNumeroParcelas(parcelas);
+    
+    if (compra.data_compra) {
+        setNfceDataVencimento(new Date(compra.data_compra));
+    }
+    
+    let desc = compra.estabelecimento || "";
+    if (desc.length > 35) desc = desc.substring(0, 35);
+    setNfceDescricao(desc);
+
+    const qtdProdutos = data.produtos ? data.produtos.length : 0;
+    showSuccessToast("Sucesso", `✓ Nota fiscal importada com sucesso\n✓ ${qtdProdutos} produtos encontrados`);
   };
 
-  // Removed: Estados para preencher o formulário com dados da NFC-e
-  // Removed: const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
-  // Removed: const [nfceFormaPagamento, setNfceFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | "boleto">("dinheiro");
-  // Removed: const [nfceCartaoId, setNfceCartaoId] = useState(UNSELECTED_VALUE);
-  // Removed: const [nfceDescricao, setNfceDescricao] = useState(""); // Para itens da nota
+  const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
+  const [nfceFormaPagamento, setNfceFormaPagamento] = useState<"dinheiro" | "pix" | "cartao" | undefined>(undefined);
+  const [nfceCartaoId, setNfceCartaoId] = useState<string | undefined>(undefined);
+  const [nfceDescricao, setNfceDescricao] = useState<string | undefined>(undefined);
+  const [nfceSubcategoryId, setNfceSubcategoryId] = useState<string | undefined>(undefined);
+  const [nfceTipoPagamento, setNfceTipoPagamento] = useState<"avista" | "parcelado" | "fixo" | undefined>(undefined);
+  const [nfceNumeroParcelas, setNfceNumeroParcelas] = useState<number | undefined>(undefined);
+  const [nfceDataVencimento, setNfceDataVencimento] = useState<Date | undefined>(undefined);
 
   const {
     allSubcategories,
@@ -210,11 +258,14 @@ export default function Despesas() {
       isMobile={isMobile}
       isRecurring={isRecurring}
       setIsRecurring={setIsRecurring}
-    // Removed: Passar dados da NFC-e para o formulário
-    // Removed: initialValor={nfceValor}
-    // Removed: initialFormaPagamento={nfceFormaPagamento}
-    // Removed: initialCartaoId={nfceCartaoId}
-    // Removed: initialDescricao={nfceDescricao}
+      initialValor={nfceValor}
+      initialFormaPagamento={nfceFormaPagamento}
+      initialCartaoId={nfceCartaoId}
+      initialDescricao={nfceDescricao}
+      initialSubcategoryId={nfceSubcategoryId}
+      initialTipoPagamento={nfceTipoPagamento}
+      initialNumeroParcelas={nfceNumeroParcelas}
+      initialDataVencimento={nfceDataVencimento}
     />
   );
 
