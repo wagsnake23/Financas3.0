@@ -51,6 +51,11 @@ serve(async (req: Request) => {
     const chaveMatch = chave_acesso_param.match(/\d{44}/);
     const chave_acesso = chaveMatch ? chaveMatch[0] : chave_acesso_param;
 
+    console.log("INICIO FUNCAO");
+    console.log("USER:", user?.id);
+    console.log("URL:", url);
+    console.log("CHAVE:", chave_acesso);
+
     // Check duplicate
     const { data: duplicate } = await supabase
       .from('nfce_compras')
@@ -84,6 +89,8 @@ serve(async (req: Request) => {
         };
         try {
             response = await fetch(url, fetchOptions);
+            console.log("FETCH OK");
+            console.log("STATUS:", response.status);
         } finally {
             clearTimeout(timeoutId);
         }
@@ -103,6 +110,7 @@ serve(async (req: Request) => {
     }
 
     const $ = cheerio.load(html);
+    console.log("HTML SIZE:", html.length);
 
     const pageText = $('body').text().toLowerCase();
     if (pageText.includes('cancelada') || pageText.includes('denegada') || pageText.includes('inutilizada')) {
@@ -186,7 +194,16 @@ serve(async (req: Request) => {
         valor_total = produtos.reduce((acc, item) => acc + item.valor_total, 0);
     }
 
+    console.log("ESTABELECIMENTO:", estabelecimento);
+    console.log("CNPJ:", cnpj);
+    console.log("DATA:", data_compra);
+    console.log("VALOR:", valor_total);
+    console.log("FORMA PAGAMENTO:", forma_pagamento);
+    console.log("PARCELAS:", numero_parcelas);
+    console.log("PRODUTOS:", produtos.length);
+
     // Salvar no Banco
+    console.log("INSERINDO COMPRA");
     const { data: compra, error: compraError } = await supabase
       .from('nfce_compras')
       .insert({
@@ -205,19 +222,23 @@ serve(async (req: Request) => {
       .single()
 
     if (compraError) {
-      console.error("Erro ao inserir compra", compraError);
-      throw compraError;
+      console.error("POSTGRES ERROR:", JSON.stringify(compraError, null, 2));
+      throw new Error(JSON.stringify(compraError));
     }
+
+    console.log("COMPRA INSERIDA:", compra?.id);
 
     if (produtos.length > 0) {
         const itensToInsert = produtos.map(p => ({
             compra_id: compra.id,
             ...p
         }));
+        console.log("INSERINDO ITENS:", itensToInsert.length);
         const { error: itensError } = await supabase.from('nfce_itens').insert(itensToInsert);
         if (itensError) {
             console.error("Erro ao inserir itens:", itensError);
         }
+        console.log("ITENS INSERIDOS");
     }
 
     console.log({

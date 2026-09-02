@@ -74,7 +74,8 @@ export default function Despesas() {
     }
 
     if (!data.success) {
-        showErrorToast("Erro", `❌ Não foi possível importar a NFC-e. Detalhe: ${data.error || 'Desconhecido'}`);
+        console.error("ERRO NFC-E:", data);
+        showErrorToast("Erro", `❌ Não foi possível importar NFC-e\nDetalhe: ${data?.error || error?.message || 'Erro desconhecido'}`);
         return;
     }
 
