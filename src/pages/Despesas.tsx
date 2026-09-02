@@ -127,10 +127,12 @@ export default function Despesas() {
     const qtdProdutos = data.produtos ? data.produtos.length : 0;
     showSuccessToast("Sucesso", `✓ Nota fiscal importada com sucesso\n✓ ${qtdProdutos} produtos encontrados`);
     
+    setNfceId(compra.id);
     setNfceCnpj(compra.cnpj);
     setNfceEstabelecimento(compra.estabelecimento);
   };
 
+  const [nfceId, setNfceId] = useState<string | undefined>(undefined);
   const [nfceCnpj, setNfceCnpj] = useState<string | undefined>(undefined);
   const [nfceEstabelecimento, setNfceEstabelecimento] = useState<string | undefined>(undefined);
   const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
@@ -290,8 +292,14 @@ export default function Despesas() {
       initialTipoPagamento={nfceTipoPagamento}
       initialNumeroParcelas={nfceNumeroParcelas}
       initialDataVencimento={nfceDataVencimento}
+      initialNfceId={nfceId}
       initialNfceCnpj={nfceCnpj}
       initialNfceEstabelecimento={nfceEstabelecimento}
+      onSuccess={() => {
+        setNfceId(undefined);
+        setNfceCnpj(undefined);
+        setNfceEstabelecimento(undefined);
+      }}
     />
   );
 

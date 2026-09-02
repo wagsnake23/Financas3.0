@@ -71,8 +71,10 @@ interface ExpenseFormProps {
   initialTipoPagamento?: "avista" | "parcelado" | "fixo";
   initialNumeroParcelas?: number;
   initialDataVencimento?: Date;
+  initialNfceId?: string;
   initialNfceCnpj?: string;
   initialNfceEstabelecimento?: string;
+  onSuccess?: () => void;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -95,8 +97,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
   initialTipoPagamento,
   initialNumeroParcelas,
   initialDataVencimento,
+  initialNfceId,
   initialNfceCnpj,
   initialNfceEstabelecimento,
+  onSuccess,
 }) => {
   const { showSuccessToast, showErrorToast } = useToast();
   
@@ -437,6 +441,21 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         if (parcelaError) throw parcelaError;
       }
 
+      // NOVO: Link da NFCE com a despesa
+      if (initialNfceId) {
+        console.log('[NFCE] LINKANDO DESPESA COM NFCE_COMPRAS', initialNfceId);
+        const { error: linkError } = await (supabase as any)
+          .from('nfce_compras')
+          .update({ despesa_id: despesaData.id })
+          .eq('id', initialNfceId);
+          
+        if (linkError) {
+          console.error('[NFCE] ERRO AO LINKAR:', linkError);
+        } else {
+          console.log('[NFCE] SUCESSO AO LINKAR COMPRA:', despesaData.id);
+        }
+      }
+
       showSuccessToast("Sucesso", "Despesa adicionada com sucesso!");
 
       if (initialNfceCnpj && selectedSubcategoryId && selectedSubcategoryId !== UNSELECTED_VALUE && user) {
@@ -497,6 +516,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         queryKey: ["expenseInstallments", user?.id],
       });
       queryClient.invalidateQueries({ queryKey: ["allExpenseInstallments"] });
+      
+      setLoading(false);
+      
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: any) {
       showErrorToast("Erro", error.message || "Erro ao adicionar despesa");
       console.error("Supabase error adding expense:", error);
