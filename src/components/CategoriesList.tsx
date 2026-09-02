@@ -478,7 +478,7 @@ const CategoriesList = ({
       className={cn(
         "flex flex-col h-auto",
         !hideCardWrapper && "p-4 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-1.5 pb-6 pt-5" : "md:pl-4 md:pr-2 pb-2 pt-0.5 md:pt-0")
+        hideCardWrapper && (isMobile ? "px-1.5 pb-1 pt-5" : "md:pl-4 md:pr-2 pb-2 pt-0.5 md:pt-0")
       )}
     >
       <div className={cn(

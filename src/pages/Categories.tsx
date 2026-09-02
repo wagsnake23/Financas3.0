@@ -362,7 +362,7 @@ const Categories = () => {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-10" : "-mt-14 pb-[40px]"
+          isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-0" : "-mt-14 pb-[40px]"
         )}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
@@ -427,7 +427,7 @@ const Categories = () => {
               className={cn(
                 "rounded-[24px] overflow-hidden relative card-yellow",
                 isMobile 
-                  ? "px-2 py-4 border-2 border-white shadow-md mb-1" 
+                  ? "px-2 pt-4 pb-0 border-2 border-white shadow-md mb-1" 
                   : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-2"
               )}
               style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
@@ -460,7 +460,11 @@ const Categories = () => {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-0 mb-2 bg-transparent" : "mt-8")} />
+      <Footer
+        isMobile={isMobile}
+        user={user}
+        className={cn(isMobile ? "relative w-full mt-2 mb-[env(safe-area-inset-bottom,16px)] pt-2 pb-2 z-20 !bg-transparent" : "mt-8")}
+      />
 
       {/* Novo Modal de Edição */}
       <EditCategoryModal
