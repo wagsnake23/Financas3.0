@@ -496,7 +496,7 @@ const CategoriesList = ({
                   <span className="text-xl">🗃️</span>
                 </div>
               )}
-              <h2 className="text-xl font-black text-[#374151]">
+              <h2 className="text-2xl font-extrabold text-[#374151]">
                 Categorias Cadastradas
               </h2>
             </div>

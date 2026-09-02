@@ -390,15 +390,23 @@ const Categories = () => {
 
             <Card
               className={cn(
-                "rounded-[24px] relative overflow-hidden card-yellow",
+                "rounded-[24px] relative overflow-hidden",
                 isMobile 
-                  ? "p-6 border-2 border-white shadow-md" 
-                  : "p-[28px_24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                  ? "card-yellow no-rim p-6" 
+                  : "card-yellow p-[28px_24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
               )}
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.45)",
-                backgroundImage: "none"
-              }}
+              style={
+                isMobile
+                  ? {
+                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      border: "1px solid rgba(255,255,255,0.55)",
+                      boxShadow: "0 2px 8px rgba(15,23,42,.05)"
+                    }
+                  : {
+                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      backgroundImage: "none"
+                    }
+              }
             >
               <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
                 {!isMobile ? (
@@ -408,7 +416,7 @@ const Categories = () => {
                 ) : (
                   <span className="text-xl">🗂️</span>
                 )}
-                <h2 className="text-xl font-black text-[#374151]">Nova Subcategoria</h2>
+                <h2 className={cn("font-extrabold text-[#374151]", isMobile ? "text-xl" : "text-2xl")}>Nova Subcategoria</h2>
               </div>
               <CategoryForm
                 key={formKey}
@@ -425,17 +433,29 @@ const Categories = () => {
           <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
             <Card
               className={cn(
-                "rounded-[24px] overflow-hidden relative card-yellow",
+                "rounded-[24px] overflow-hidden relative",
                 isMobile 
-                  ? "px-2 pt-4 pb-0 border-2 border-white shadow-md mb-1" 
-                  : "p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-2"
+                  ? "card-yellow no-rim px-2 pt-4 pb-0 mb-1" 
+                  : "card-yellow p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-2"
               )}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.45)", backgroundImage: "none" }}
+              style={
+                isMobile
+                  ? {
+                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      backgroundImage: "none",
+                      border: "1px solid rgba(255,255,255,0.55)",
+                      boxShadow: "0 2px 8px rgba(15,23,42,.05)"
+                    }
+                  : {
+                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      backgroundImage: "none"
+                    }
+              }
             >
                 {isMobile && (
                   <div className={cn("flex items-center px-4 pb-0 gap-1.5")}>
                     <span className="text-xl">🗃️</span>
-                    <h2 className="text-xl font-black text-[#374151]">Categorias Cadastradas</h2>
+                    <h2 className="text-[19px] font-extrabold text-[#374151]">Categorias Cadastradas</h2>
                   </div>
                 )}
               <React.Suspense fallback={
