@@ -34,6 +34,7 @@ import { AppCategory, TransactionType } from "@/types/finance";
 import { Textarea } from "@/components/ui/textarea";
 import { Tables } from "@/integrations/supabase/types";
 import CurrencyBR from "@/components/ui/currency-br";
+import { supabase } from "@/integrations/supabase/client";
 
 const formSchema = z.object({
   amount: z.number({ required_error: "O valor é obrigatório." }).min(0.01, {
@@ -81,7 +82,7 @@ interface NewExpenseFormProps {
   isLoading: boolean;
   categories: AppCategory[];
   cartoes: Tables<"cartoes">[];
-  bancos: Tables<"bancos">[];
+  bancos: Tables<"contas_bancarias">[];
   onClose: () => void;
   initialData?: Partial<z.infer<typeof formSchema>>;
   isEdit?: boolean;
@@ -115,13 +116,29 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
   const paymentType = form.watch("paymentType");
   const isRecurrent = form.watch("isRecurrent");
 
-  const filteredCategories = categories.filter(
-    (cat) => cat.type === TransactionType.Expense
-  );
+  const filteredCategories = categories; // No need to filter by type as AppCategory does not have it, or assume parent passes filtered
+
+  const testarImportacaoNfce = async () => {
+    const qrCodeLido = "https://www.nfce.fazenda.sp.gov.br/qrcode?p=1234"; // placeholder
+    console.log("Chamando edge function...");
+    const resultado = await supabase.functions.invoke(
+      'importar-nfce',
+      {
+        body: { url: qrCodeLido }
+      }
+    );
+    console.log(resultado);
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        
+        {/* TEMPORÁRIO: Botão para testar Edge Function importar-nfce */}
+        <Button type="button" onClick={testarImportacaoNfce} variant="outline" className="w-full bg-blue-100 text-blue-800 hover:bg-blue-200">
+          Testar Importação NFC-e
+        </Button>
+
         {/* Subcategoria */}
         <FormField
           control={form.control}
@@ -268,7 +285,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                         paymentType === "debit_card"
                         ? cartoes.map((cartao) => (
                           <SelectItem key={cartao.id} value={cartao.id}>
-                            {cartao.nome} ({cartao.final_cartao})
+                            {cartao.nome} ({cartao.ultimos_digitos})
                           </SelectItem>
                         ))
                         : bancos.map((banco) => (

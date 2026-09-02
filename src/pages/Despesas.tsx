@@ -45,10 +45,20 @@ export default function Despesas() {
   const [isRecurring, setIsRecurring] = useState(false);
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const handleScan = (barcode: string) => {
+  const handleScan = async (barcode: string) => {
     console.log("QR CODE LIDO:", barcode);
-    alert(barcode);
     setIsScannerOpen(false);
+
+    console.log("Chamando edge function importar-nfce...");
+    const { data, error } = await supabase.functions.invoke(
+      'importar-nfce',
+      {
+        body: { url: barcode }
+      }
+    );
+
+    console.log('NFC-E DATA:', data);
+    console.log('NFC-E ERROR:', error);
   };
 
   // Removed: Estados para preencher o formulário com dados da NFC-e
