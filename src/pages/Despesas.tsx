@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useExpenseData } from "@/hooks/useExpenseData";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { Footer } from "@/components/Footer";
+import { BarcodeScannerModal } from "@/components/expense-form/BarcodeScannerModal";
 import { cn } from "@/lib/utils";
 import { AppCategory } from "@/types/finance";
 import { Card } from "@/components/ui/card";
@@ -21,6 +22,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
+import { Camera } from "lucide-react";
 
 interface Cartao {
   id: string;
@@ -42,7 +44,11 @@ export default function Despesas() {
   const [cartoes, setCartoes] = useState<Cartao[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
 
-  // Removed: const [isQrScannerOpen, setIsQrScannerOpen] = useState(false); // Estado para controlar o modal do QR Code
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const handleScan = (barcode: string) => {
+    console.log("QR Code LIDO:", barcode);
+    setIsScannerOpen(false);
+  };
 
   // Removed: Estados para preencher o formulário com dados da NFC-e
   // Removed: const [nfceValor, setNfceValor] = useState<number | undefined>(undefined);
@@ -289,15 +295,26 @@ export default function Despesas() {
 
                     <Button
                       variant="ghost"
-                      onClick={() => navigate(-1)}
-                      className="h-8 px-2 font-black text-sm transition-all active:scale-95 !text-[#E54D4D] hover:bg-transparent bg-transparent border-none p-0 shadow-none"
+                      onClick={() => setIsScannerOpen(true)}
+                      className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none bg-transparent hover:bg-transparent transition-all active:scale-90"
+                      aria-label="Importar Nota Fiscal"
                     >
-                      <DynamicIcon name="ArrowLeft" className="mr-1.5 h-4 w-4 !text-[#E54D4D]" strokeWidth={3} />
-                      Voltar
+                      <Camera 
+                        className="w-6 h-6 text-[#2F3542]" 
+                        strokeWidth={2.2} 
+                        style={{ filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.2)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5))" }}
+                      />
                     </Button>
                   </div>
 
                   {formContent}
+                  
+                  {isScannerOpen && (
+                    <BarcodeScannerModal 
+                      onScan={handleScan}
+                      onClose={() => setIsScannerOpen(false)}
+                    />
+                  )}
                 </div>
 
                 <div style={{ marginTop: "-12px", marginBottom: "0px" }}>
