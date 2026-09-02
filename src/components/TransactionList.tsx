@@ -518,7 +518,7 @@ export const TransactionList = ({
 
 
   return (
-    <div className={cn("flex flex-col h-full", isMobile ? "p-0 bg-[#FFFFFF] flex-1 min-h-0" : "pb-0")}>
+    <div className={cn("flex flex-col h-full", isMobile ? "p-0 bg-transparent flex-1 min-h-0" : "pb-0")}>
 
       {/* Barra de Filtros Unificada (Desktop) / Stacked (Mobile) */}
       <div className={cn(
@@ -535,7 +535,7 @@ export const TransactionList = ({
             className={cn(
               "pl-10 pr-10 rounded-xl transition-all placeholder:font-normal",
               isMobile
-                ? "h-9 border border-solid border-[#B8BEC8] shadow-none outline-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#B8BEC8] focus-within:ring-0 bg-white/80 backdrop-blur-sm group-hover:bg-white placeholder:text-gray-400 text-sm"
+                ? "h-9 border border-solid border-[#B8BEC8] shadow-none outline-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#B8BEC8] focus-within:ring-0 bg-[#FFFFFF] placeholder:text-gray-400 text-sm"
                 : "h-[42px] border-[#E2E8F0] shadow-sm bg-white focus-visible:ring-0 text-[15px] placeholder:text-slate-500"
             )}
           />
