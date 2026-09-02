@@ -399,7 +399,7 @@ const Categories = () => {
                 isMobile
                   ? {
                       backgroundColor: "rgba(255, 255, 255, 0.45)",
-                      border: "1px solid rgba(255,255,255,0.55)",
+                      border: "1px solid rgba(0,0,0,0.06)",
                       boxShadow: "0 2px 8px rgba(15,23,42,.05)"
                     }
                   : {
@@ -443,7 +443,7 @@ const Categories = () => {
                   ? {
                       backgroundColor: "rgba(255, 255, 255, 0.45)",
                       backgroundImage: "none",
-                      border: "1px solid rgba(255,255,255,0.55)",
+                      border: "1px solid rgba(0,0,0,0.06)",
                       boxShadow: "0 2px 8px rgba(15,23,42,.05)"
                     }
                   : {
