@@ -936,7 +936,7 @@ export const TransactionList = ({
               <div className="grid grid-cols-3 w-full pt-1">
                 {/* Coluna 1 */}
                 <div className="flex flex-col items-start text-left">
-                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
+                  <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap">
                     {filterType === 'expense' ? 'Pago' : 'Receitas'}
                   </span>
                   <span className="text-sm xs:text-[15px] font-bold text-[#22C55E] mt-0.5 whitespace-nowrap">
@@ -946,7 +946,7 @@ export const TransactionList = ({
 
                 {/* Coluna 2 */}
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
+                  <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap">
                     {filterType === 'income' ? 'Pendente' : 'Despesas'}
                   </span>
                   <span className={cn(
@@ -959,7 +959,7 @@ export const TransactionList = ({
 
                 {/* Coluna 3 */}
                 <div className="flex flex-col items-end text-right">
-                  <span className="text-[11px] xs:text-[12px] sm:text-[13px] text-slate-500 font-bold tracking-wide">
+                  <span className="text-[13px] text-slate-700 font-medium whitespace-nowrap">
                     Saldo
                   </span>
                   <span className="text-sm xs:text-[15px] font-bold text-primary mt-0.5 whitespace-nowrap">
