@@ -443,7 +443,7 @@ export default function Home() {
                 <div
                     className="fixed -top-[1px] left-0 right-0 -bottom-[1px] z-20 pointer-events-none"
                     style={{
-                        background: "linear-gradient(180deg, #010856 0%, #11269B 20%, #4F78D8 45%, #B9C9F3 70%, #F7F9FC 100%)"
+                        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 30%, #F8F9FA 60%, #F7F9FC 100%)"
                     }}
                 />
             )}
@@ -455,14 +455,14 @@ export default function Home() {
                 )}>
                     <div>
                         <h1 
-                            className={cn("font-bold leading-none text-white", isMobile ? "text-[17px] tracking-tight" : "text-2xl font-extrabold tracking-[0.5px] -mt-0.5")}
-                            style={{ fontFamily: "'Inter', sans-serif", textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none" }}
+                            className={cn("font-bold leading-none", isMobile ? "text-[17px] tracking-tight" : "text-2xl font-extrabold tracking-[0.5px] -mt-0.5")}
+                            style={{ fontFamily: "'Inter', sans-serif" }}
                         >
-                            <span className={cn(isMobile ? "text-[#D9E3F5]" : "text-[#1e3a8a]")}>{greeting},</span> <span className={cn(isMobile ? "text-white" : "text-[#1e3a8a]")}>{userName}</span> {profile?.avatar || "👍"}
+                            <span className={cn(isMobile ? "text-slate-500" : "text-[#1e3a8a]")}>{greeting},</span> <span className={cn(isMobile ? "text-slate-800" : "text-[#1e3a8a]")}>{userName}</span> {profile?.avatar || "👍"}
                         </h1>
                         <p 
                             className={cn("font-medium leading-none", isMobile ? "text-[12px] font-normal opacity-[0.85] -mt-[4px]" : "text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80")}
-                            style={{ color: isMobile ? "#D9E3F5" : undefined, textShadow: isMobile ? "0 1px 2px rgba(0,0,0,.18)" : "none", fontFamily: "'Inter', sans-serif" }}
+                            style={{ color: isMobile ? "#64748b" : undefined, fontFamily: "'Inter', sans-serif" }}
                         >
                             {todayStr}
                         </p>
@@ -472,22 +472,21 @@ export default function Home() {
                             <div className="flex items-center gap-[7px]">
                                 <button 
                                     onClick={handlePrevMonth} 
-                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
+                                    className="border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
                                     style={{ 
-                                        background: "rgba(255, 255, 255, 0.15)",
-                                        boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
-                                        borderBottom: "1px solid rgba(0,0,0,0.2)"
+                                        background: "white",
+                                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                                        border: "1px solid #e2e8f0"
                                     }}
                                 >
-                                    <DynamicIcon name="ChevronLeft" className="h-3 w-3 text-white" strokeWidth={3.5} />
+                                    <DynamicIcon name="ChevronLeft" className="h-3 w-3 text-slate-600" strokeWidth={3.5} />
                                 </button>
                                 <div className="w-[38px] flex justify-center items-center">
                                     <span 
                                         className="font-bold tracking-wide uppercase font-sans leading-none text-center"
                                         style={{ 
                                             fontSize: '16.5px', 
-                                            color: isCurrentMonth ? '#FFFFFF' : '#D6DEE8',
-                                            textShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                                            color: isCurrentMonth ? '#334155' : '#94a3b8',
                                             fontWeight: 800
                                         }}
                                     >
@@ -496,23 +495,22 @@ export default function Home() {
                                 </div>
                                 <button 
                                     onClick={handleNextMonth} 
-                                    className="text-white border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
+                                    className="border-none rounded-[8px] p-0 h-6 w-6 flex items-center justify-center transition-all hover:opacity-90 active:scale-95 cursor-pointer translate-y-[2px]"
                                     style={{ 
-                                        background: "rgba(255, 255, 255, 0.15)",
-                                        boxShadow: "0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15)",
-                                        borderBottom: "1px solid rgba(0,0,0,0.2)"
+                                        background: "white",
+                                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                                        border: "1px solid #e2e8f0"
                                     }}
                                 >
-                                    <DynamicIcon name="ChevronRight" className="h-3 w-3 text-white" strokeWidth={3.5} />
+                                    <DynamicIcon name="ChevronRight" className="h-3 w-3 text-slate-600" strokeWidth={3.5} />
                                 </button>
                             </div>
                             <span 
                                 className="font-bold font-sans leading-none"
                                 style={{ 
                                     fontSize: '12.5px', 
-                                    color: '#D9E3F5',
-                                    marginTop: '-0.5px',
-                                    textShadow: '0 1px 2px rgba(0,0,0,0.15)'
+                                    color: '#64748b',
+                                    marginTop: '-0.5px'
                                 }}
                             >
                                 {format(selectedMonth, "yyyy")}

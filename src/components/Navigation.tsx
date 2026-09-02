@@ -150,12 +150,12 @@ export const Navigation = () => {
   }, [isMobile]);
 
   // Cor única fixa para o topo de todas as páginas no mobile (limitação do WebAPK)
-  const pageTopColor = "#010856";
+  const pageTopColor = "#FAFAFA";
 
-  // Texto/ícones sempre brancos pois o fundo agora é sempre azul escuro
-  const mobileTextColor = "text-white";
-  const mobileIconColor = "text-white";
-  const mobileSubtitleColor = "text-white/65";
+  // Texto/ícones sempre escuros pois o fundo agora é sempre claro
+  const mobileTextColor = "text-slate-800";
+  const mobileIconColor = "text-slate-700";
+  const mobileSubtitleColor = "text-slate-500";
 
   useEffect(() => {
     // Atualiza theme-color para acompanhar a superfície da página em toda troca de rota
