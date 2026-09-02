@@ -576,8 +576,8 @@ export default function Home() {
                                                 {/* Investments Icon Button */}
                                                 <Button
                                                     onClick={() => navigate("/dashboard?filter=investments")}
-                                                    className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                    style={{ background: "#2563eb", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(37,99,235,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                    className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                    style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#2563eb", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(37,99,235,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
                                                 >
                                                     <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                 </Button>
