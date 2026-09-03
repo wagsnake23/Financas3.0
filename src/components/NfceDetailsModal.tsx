@@ -97,8 +97,12 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
     enabled: !!activeCompra?.id && open,
   });
 
+  // Check if all necessary data is fully loaded before rendering the dialog
+  const isFullyLoaded = (!isLoadingCompra || !!compraData) && (!activeCompra?.id || !isLoadingItens);
+  const shouldOpen = open && isFullyLoaded;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={shouldOpen} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
           "modal-detalhes-nota",
