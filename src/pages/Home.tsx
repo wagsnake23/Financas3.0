@@ -615,7 +615,7 @@ export default function Home() {
 
                                             {/* Sparkline Graph */}
                                             <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
-                                                <svg viewBox="0 0 160 45" className="w-full max-w-[175px] h-[var(--home-chart-h,64px)] overflow-visible">
+                                                <svg viewBox="0 0 160 45" className="w-full max-w-[190px] h-[var(--home-chart-h,64px)] overflow-visible">
                                                     <defs>
                                                         <linearGradient id="sparkline-grad-mob" x1="0" y1="0" x2="0" y2="1">
                                                             <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
@@ -880,6 +880,65 @@ export default function Home() {
                                                 <DynamicIcon name="ChevronRight" className="h-3 w-3" strokeWidth={3} />
                                             </button>
                                         </div>
+
+                                        {/* Sparkline Graph movido para baixo do Date Selector */}
+                                        <div className="w-full flex flex-col items-center mt-6">
+                                            <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[75px] overflow-visible">
+                                                <defs>
+                                                    <linearGradient id="sparkline-grad-desk" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
+                                                        <stop offset="70%" stopColor="#2563EB" stopOpacity="0.03" />
+                                                        <stop offset="100%" stopColor="#2563EB" stopOpacity="0.00" />
+                                                    </linearGradient>
+                                                    <filter id="line-glow-desk" x="-10%" y="-10%" width="120%" height="130%">
+                                                        <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#2563EB" floodOpacity="0.18" />
+                                                    </filter>
+                                                    <filter id="red-glow-desk" x="-40%" y="-40%" width="180%" height="180%">
+                                                        <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
+                                                        <feOffset dx="0" dy="1" />
+                                                        <feComponentTransfer in="blur" result="glow">
+                                                          <feFuncA type="linear" slope="0.3" />
+                                                        </feComponentTransfer>
+                                                        <feMerge>
+                                                          <feMergeNode in="glow" />
+                                                          <feMergeNode in="SourceGraphic" />
+                                                        </feMerge>
+                                                    </filter>
+                                                </defs>
+                                                <path
+                                                    d={fillPath}
+                                                    fill="url(#sparkline-grad-desk)"
+                                                    style={{ transition: 'all 220ms ease-in-out' }}
+                                                />
+                                                <path
+                                                    d={linePath}
+                                                    fill="none"
+                                                    stroke="#2563EB"
+                                                    strokeWidth="2.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    filter="url(#line-glow-desk)"
+                                                    style={{ transition: 'all 220ms ease-in-out' }}
+                                                />
+                                                {sparklinePoints.map((pt, idx) => {
+                                                    const isSelected = idx === selectedMonthIdx;
+                                                    return (
+                                                        <circle
+                                                            key={idx}
+                                                            cx={pt.x}
+                                                            cy={pt.y}
+                                                            r={isSelected ? 4.2 : 3.5}
+                                                            fill={isSelected ? "#EF6C6C" : "#2563EB"}
+                                                            stroke="#ffffff"
+                                                            strokeWidth={isSelected ? 1.6 : 1.5}
+                                                            filter={isSelected ? "url(#red-glow-desk)" : undefined}
+                                                            style={{ transition: 'all 220ms ease-in-out' }}
+                                                        />
+                                                    );
+                                                })}
+                                            </svg>
+                                            <span className="text-[11px] font-bold text-[#2563EB] leading-none whitespace-nowrap mt-2.5 opacity-90">Últimos 10 meses</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -907,64 +966,6 @@ export default function Home() {
                                         </div>
                                     </div>
 
-                                    {/* Sparkline Graph */}
-                                    <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
-                                        <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[75px] overflow-visible">
-                                            <defs>
-                                                <linearGradient id="sparkline-grad-desk" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
-                                                    <stop offset="70%" stopColor="#2563EB" stopOpacity="0.03" />
-                                                    <stop offset="100%" stopColor="#2563EB" stopOpacity="0.00" />
-                                                </linearGradient>
-                                                <filter id="line-glow-desk" x="-10%" y="-10%" width="120%" height="130%">
-                                                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#2563EB" floodOpacity="0.18" />
-                                                </filter>
-                                                <filter id="red-glow-desk" x="-40%" y="-40%" width="180%" height="180%">
-                                                    <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
-                                                    <feOffset dx="0" dy="1" />
-                                                    <feComponentTransfer in="blur" result="glow">
-                                                      <feFuncA type="linear" slope="0.3" />
-                                                    </feComponentTransfer>
-                                                    <feMerge>
-                                                      <feMergeNode in="glow" />
-                                                      <feMergeNode in="SourceGraphic" />
-                                                    </feMerge>
-                                                </filter>
-                                            </defs>
-                                            <path
-                                                d={fillPath}
-                                                fill="url(#sparkline-grad-desk)"
-                                                style={{ transition: 'all 220ms ease-in-out' }}
-                                            />
-                                            <path
-                                                d={linePath}
-                                                fill="none"
-                                                stroke="#2563EB"
-                                                strokeWidth="2.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                filter="url(#line-glow-desk)"
-                                                style={{ transition: 'all 220ms ease-in-out' }}
-                                            />
-                                            {sparklinePoints.map((pt, idx) => {
-                                                const isSelected = idx === selectedMonthIdx;
-                                                return (
-                                                    <circle
-                                                        key={idx}
-                                                        cx={pt.x}
-                                                        cy={pt.y}
-                                                        r={isSelected ? 4.2 : 3.5}
-                                                        fill={isSelected ? "#EF6C6C" : "#2563EB"}
-                                                        stroke="#ffffff"
-                                                        strokeWidth={isSelected ? 1.6 : 1.5}
-                                                        filter={isSelected ? "url(#red-glow-desk)" : undefined}
-                                                        style={{ transition: 'all 220ms ease-in-out' }}
-                                                    />
-                                                );
-                                            })}
-                                        </svg>
-                                        <span className="text-[11px] font-bold text-[#2563EB] leading-none whitespace-nowrap mt-1.5 opacity-90" style={{ transform: "translateY(-4px)" }}>Últimos 10 meses</span>
-                                    </div>
                                 </div>
                             </div>
                         </Card>

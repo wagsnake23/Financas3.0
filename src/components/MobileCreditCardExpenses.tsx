@@ -180,6 +180,9 @@ export const MobileCreditCardExpenses: React.FC<
     return monthlyCardBalances.findIndex(item => item.monthStr === selStr);
   }, [monthlyCardBalances, selectedMonth]);
 
+  const mainColor = isMobile ? "#6D28D9" : "#2563EB";
+  const gradColor = isMobile ? "#8B5CF6" : "#2563EB";
+
   if (cartoes.length === 0) {
     return (
       <Card
@@ -277,9 +280,9 @@ export const MobileCreditCardExpenses: React.FC<
               <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[var(--home-chart-h,64px)] overflow-visible">
                 <defs>
                   <linearGradient id="card-sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.25" />
-                    <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.12" />
-                    <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.00" />
+                    <stop offset="0%" stopColor={gradColor} stopOpacity="0.25" />
+                    <stop offset="50%" stopColor={gradColor} stopOpacity="0.12" />
+                    <stop offset="100%" stopColor={gradColor} stopOpacity="0.00" />
                   </linearGradient>
                   <filter id="card-point-shadow" x="-30%" y="-30%" width="160%" height="160%">
                     <feDropShadow dx="0" dy="1" stdDeviation="0.6" floodColor="#000" floodOpacity="0.15" />
@@ -304,7 +307,7 @@ export const MobileCreditCardExpenses: React.FC<
                 <path
                   d={linePath}
                   fill="none"
-                  stroke="#6D28D9"
+                  stroke={mainColor}
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   style={{ transition: 'all 220ms ease-in-out' }}
@@ -317,7 +320,7 @@ export const MobileCreditCardExpenses: React.FC<
                       cx={pt.x}
                       cy={pt.y}
                       r={isSelected ? 4.2 : 3}
-                      fill={isSelected ? "#EF6C6C" : "#6D28D9"}
+                      fill={isSelected ? "#EF6C6C" : mainColor}
                       stroke="#fff"
                       strokeWidth={isSelected ? 1.6 : 1.2}
                       filter={isSelected ? "url(#red-glow)" : "url(#card-point-shadow)"}
