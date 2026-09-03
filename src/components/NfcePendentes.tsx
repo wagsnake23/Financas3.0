@@ -152,13 +152,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
   // Loading skeleton
   if (isLoading) {
     return (
-      <Card
-        className={cn(
-          "rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)]",
-          isMobile ? "p-4" : "p-6"
-        )}
-        style={{ backgroundColor: "#FFFFFF" }}
-      >
+      <div className="w-full">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg">🧾</span>
           <div className="h-5 w-48 bg-slate-200 rounded animate-pulse" />
@@ -168,19 +162,13 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
             <div key={i} className="h-16 bg-slate-100 rounded-xl animate-pulse" />
           ))}
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
     <>
-      <Card
-        className={cn(
-          "rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)]",
-          isMobile ? "p-4" : "p-6"
-        )}
-        style={{ backgroundColor: "#FFFFFF" }}
-      >
+      <div className="w-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -284,12 +272,12 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "flex-1 h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all font-semibold gap-1",
-                      isMobile ? "text-[11px]" : "text-xs"
+                      "flex-1 h-9 rounded-xl text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-150 font-semibold gap-2",
+                      isMobile ? "text-[12px]" : "text-[13px]"
                     )}
                     onClick={() => setViewCompra(compra)}
                   >
-                    <DynamicIcon name="Eye" className="h-3.5 w-3.5" strokeWidth={2.5} />
+                    <DynamicIcon name="Eye" className="h-4 w-4 text-blue-600" strokeWidth={2.5} />
                     Visualizar
                   </Button>
 
@@ -298,12 +286,12 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "flex-1 h-8 rounded-lg text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all font-bold gap-1",
-                      isMobile ? "text-[11px]" : "text-xs"
+                      "flex-1 h-9 rounded-xl text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all font-bold gap-2",
+                      isMobile ? "text-[12px]" : "text-[13px]"
                     )}
                     onClick={() => onRegistrar(compra)}
                   >
-                    <DynamicIcon name="SquarePen" className="h-3.5 w-3.5" strokeWidth={2.5} />
+                    <DynamicIcon name="SquarePen" className="h-4 w-4 text-emerald-600" strokeWidth={2.5} />
                     Registrar
                   </Button>
 
@@ -312,18 +300,18 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "h-8 w-8 p-0 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all",
+                      "h-9 w-9 p-0 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 transition-all duration-150",
                     )}
                     onClick={() => setDeleteCompra(compra)}
                   >
-                    <DynamicIcon name="Trash2" className="h-3.5 w-3.5" strokeWidth={2.5} />
+                    <DynamicIcon name="Trash2" className="h-4 w-4 text-red-500" strokeWidth={2.5} />
                   </Button>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </Card>
+      </div>
 
       {/* ═══ MODAL: Visualizar Nota ═══ */}
       <NfceDetailsModal 
