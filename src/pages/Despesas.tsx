@@ -131,6 +131,10 @@ export default function Despesas() {
     setNfceId(compra.id);
     setNfceCnpj(compra.cnpj);
     setNfceEstabelecimento(compra.estabelecimento);
+
+    // Invalidar as queries para atualizar o card de pendentes imediatamente
+    queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
+    queryClient.invalidateQueries({ queryKey: ["nfcePendentesCount"] });
   };
 
   const [nfceId, setNfceId] = useState<string | undefined>(undefined);
