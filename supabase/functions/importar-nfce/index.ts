@@ -6,11 +6,12 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 // @ts-ignore
 import * as cheerio from 'npm:cheerio'
 
-async function obterCategoriaPorCnpj(supabase: any, cnpj: string) {
+async function obterCategoriaPorCnpj(supabase: any, userId: string, cnpj: string) {
   console.log("[NFCE] CONSULTANDO MAPEAMENTO");
   const { data: regraCategoria, error: regraError } = await supabase
     .from("nfce_cnpj_categoria")
     .select("categoria_id")
+    .eq("user_id", userId)
     .eq("cnpj", cnpj)
     .maybeSingle();
 
@@ -18,14 +19,27 @@ async function obterCategoriaPorCnpj(supabase: any, cnpj: string) {
     console.error("[NFCE] ERRO CONSULTANDO MAPEAMENTO:", regraError);
   }
 
-  let categoriaId = "alimentacao_supermercado";
+  let categoriaId = undefined;
 
   if (regraCategoria?.categoria_id) {
     categoriaId = regraCategoria.categoria_id;
     console.log("[NFCE] CATEGORIA ENCONTRADA:", categoriaId);
   } else {
     console.log("[NFCE] CNPJ SEM MAPEAMENTO:", cnpj);
-    console.log("[NFCE] USANDO CATEGORIA PADRAO:", categoriaId);
+    
+    // Busca dinâmica pela categoria Supermercado
+    const { data: catDefault } = await supabase
+      .from("categorias")
+      .select("id")
+      .ilike("nome", "%supermercado%")
+      .maybeSingle();
+
+    if (catDefault?.id) {
+      categoriaId = catDefault.id;
+      console.log("[NFCE] USANDO CATEGORIA PADRAO (DINAMICA):", categoriaId);
+    } else {
+      console.log("[NFCE] CATEGORIA SUPERMERCADO NAO ENCONTRADA NO BANCO");
+    }
   }
 
   return categoriaId;
@@ -209,8 +223,8 @@ serve(async (req: Request) => {
     const cnpj = cnpjMatch ? cnpjMatch[0] : "";
     console.log("[NFCE] CNPJ EXTRAIDO:", cnpj);
 
-    // Resolvendo categoria baseada no CNPJ (ou default)
-    const categoria_id = await obterCategoriaPorCnpj(supabase, cnpj);
+    // Resolvendo categoria baseada no CNPJ do usuário autenticado (isolamento multiusuário)
+    const categoria_id = await obterCategoriaPorCnpj(supabase, user.id, cnpj);
 
     console.log("EXTRAINDO DATA");
     let dataText = $('strong').filter((_: any, el: any) => $(el).text().includes('Emissão')).parent().text();

@@ -48,94 +48,7 @@ export default function Despesas() {
   const [isRecurring, setIsRecurring] = useState(false);
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const handleScan = async (barcode: string) => {
-    console.log("QR CODE LIDO:", barcode);
-    console.log("URL NFCE:", barcode);
-    console.log("CHAMANDO EDGE FUNCTION");
-    setIsScannerOpen(false);
 
-    const { data, error } = await supabase.functions.invoke(
-      'importar-nfce',
-      {
-        body: { url: barcode }
-      }
-    );
-
-    console.log("RESULTADO BRUTO:", { data, error });
-
-    if (error) {
-      console.error("ERRO INVOKE:", error);
-    }
-
-    if (data) {
-      console.log("DATA RETORNADA:", JSON.stringify(data));
-    }
-
-    if (!data) {
-        console.log("BRANCH EXECUTADA: (!data)");
-        showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
-        return;
-    }
-
-    if (data.duplicada) {
-        console.log("BRANCH EXECUTADA: (data.duplicada)");
-        showErrorToast("Atenção", "⚠ Nota fiscal já importada anteriormente");
-        return;
-    }
-
-    if (!data.success) {
-        console.log("BRANCH EXECUTADA: (!data.success)");
-        console.error("ERRO NFC-E:", data);
-        const errMessage = data?.error || error?.message || "";
-        showErrorToast("Erro", `❌ Não foi possível importar NFC-e\n${errMessage}`);
-        return;
-    }
-
-    const compra = data.compra;
-    console.log("NFCE LIDA DO BANCO:", compra);
-    console.log("NFCE ANTES MAPEAMENTO:", data);
-    
-    if (data.categoria_id) {
-        setNfceSubcategoryId(data.categoria_id);
-    }
-    
-    setNfceValor(compra.valor_total);
-    
-    let formaPgto: "dinheiro" | "pix" | "cartao" = "dinheiro";
-    if (compra.forma_pagamento?.toLowerCase().includes("cart")) formaPgto = "cartao";
-    else if (compra.forma_pagamento?.toLowerCase().includes("pix")) formaPgto = "pix";
-    
-    setNfceFormaPagamento(formaPgto);
-
-    if (formaPgto === "cartao" && cartoes.length > 0) {
-        setNfceCartaoId(cartoes[0].id);
-    }
-    
-    const parcelas = compra.numero_parcelas || 1;
-    console.log("NFCE APOS MAPEAMENTO:", { parcelas });
-    setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
-    setNfceNumeroParcelas(parcelas);
-    console.log("NFCE PARCELAS EXIBIDAS:", parcelas);
-    
-    if (compra.data_compra) {
-        setNfceDataVencimento(new Date(compra.data_compra));
-    }
-    
-    let desc = compra.estabelecimento || "";
-    if (desc.length > 35) desc = desc.substring(0, 35);
-    setNfceDescricao(desc);
-
-    const qtdProdutos = data.produtos ? data.produtos.length : 0;
-    showSuccessToast("Sucesso", `✓ Nota fiscal importada com sucesso\n✓ ${qtdProdutos} produtos encontrados`);
-    
-    setNfceId(compra.id);
-    setNfceCnpj(compra.cnpj);
-    setNfceEstabelecimento(compra.estabelecimento);
-
-    // Invalidar as queries para atualizar o card de pendentes imediatamente
-    queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
-    queryClient.invalidateQueries({ queryKey: ["nfcePendentesCount"] });
-  };
 
   const [nfceId, setNfceId] = useState<string | undefined>(undefined);
   const [nfceCnpj, setNfceCnpj] = useState<string | undefined>(undefined);
@@ -280,32 +193,129 @@ export default function Despesas() {
     }
   };
 
-  // Removed: const handleImportNfceData = (data: { totalAmount: number; paymentMethod: string; items: { description: string; quantity: number; unitValue: number; total: number; }[] }) => {
-  // Removed:   setNfceValor(data.totalAmount);
-  // Removed:   // Mapear a forma de pagamento da API para o formato do formulário
-  // Removed:   let mappedPaymentMethod: "dinheiro" | "pix" | "cartao" | "boleto" = "dinheiro";
-  // Removed:   if (data.paymentMethod === "pix") mappedPaymentMethod = "pix";
-  // Removed:   else if (data.paymentMethod === "credit_card" || data.paymentMethod === "debit_card") mappedPaymentMethod = "cartao";
-  // Removed:   else if (data.paymentMethod === "cash") mappedPaymentMethod = "dinheiro";
-  // Removed:   else if (data.paymentMethod === "boleto") mappedPaymentMethod = "boleto";
+  const preencherFormularioNfce = useCallback(async (compra: any, categoriaSugerida?: string) => {
+    let finalCategoryId = categoriaSugerida;
 
-  // Removed:   setNfceFormaPagamento(mappedPaymentMethod);
+    // 1. Se não houver categoria sugerida e temos o CNPJ, buscar na tabela de aprendizado
+    if (!finalCategoryId && compra.cnpj && user) {
+      try {
+        const { data: mapeamento } = await (supabase as any)
+          .from('nfce_cnpj_categoria')
+          .select('categoria_id')
+          .eq('user_id', user.id)
+          .eq('cnpj', compra.cnpj)
+          .maybeSingle();
 
-  // Removed:   // Se for cartão, tentar encontrar um cartão existente ou deixar para o usuário selecionar
-  // Removed:   if (mappedPaymentMethod === "cartao" && cartoes.length > 0) {
-  // Removed:     // TODO: Lógica mais sofisticada para tentar preencher o cartaoId automaticamente
-  // Removed:     // Por enquanto, apenas seleciona o primeiro ou deixa UNSELECTED_VALUE
-  // Removed:     setNfceCartaoId(cartoes[0].id); 
-  // Removed:   } else {
-  // Removed:     setNfceCartaoId(UNSELECTED_VALUE);
-  // Removed:   }
+        if (mapeamento?.categoria_id) {
+          finalCategoryId = mapeamento.categoria_id;
+        }
+      } catch (err) {
+        console.error('[NFCE_PENDENTES] Erro ao buscar mapeamento:', err);
+      }
+    }
 
-  // Removed:   // Concatenar descrições dos itens para o campo de descrição
-  // Removed:   const itemsDescription = data.items.map(item => `${item.description} (x${item.quantity})`).join(", ");
-  // Removed:   setNfceDescricao(`NFC-e: ${itemsDescription}`);
+    // 2. Se ainda não houver categoria (fallback para Supermercado, buscando dinamicamente pelo nome)
+    if (!finalCategoryId) {
+      const supermercadoCat = allCategories.find(c => c.nome.toLowerCase().includes('supermercado'));
+      if (supermercadoCat) {
+        finalCategoryId = supermercadoCat.id;
+      }
+    }
 
-  // Removed:   toast.success("Dados da NFC-e importados para o formulário!", { duration: 1000 });
-  // Removed: };
+    if (finalCategoryId) {
+      setNfceSubcategoryId(finalCategoryId);
+    }
+
+    setNfceValor(compra.valor_total);
+
+    let formaPgto: "dinheiro" | "pix" | "cartao" = "dinheiro";
+    if (compra.forma_pagamento?.toLowerCase().includes("cart")) formaPgto = "cartao";
+    else if (compra.forma_pagamento?.toLowerCase().includes("pix")) formaPgto = "pix";
+
+    setNfceFormaPagamento(formaPgto);
+
+    if (formaPgto === "cartao" && cartoes.length > 0) {
+      setNfceCartaoId(cartoes[0].id);
+    }
+
+    const parcelas = compra.numero_parcelas || 1;
+    setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
+    setNfceNumeroParcelas(parcelas);
+
+    if (compra.data_compra) {
+      setNfceDataVencimento(new Date(compra.data_compra));
+    }
+
+    let desc = compra.estabelecimento || "";
+    if (desc.length > 35) desc = desc.substring(0, 35);
+    setNfceDescricao(desc);
+
+    setNfceId(compra.id);
+    setNfceCnpj(compra.cnpj);
+    setNfceEstabelecimento(compra.estabelecimento);
+
+    if (isMobile) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [user, cartoes, isMobile, allCategories]);
+
+  const handleScan = async (barcode: string) => {
+    console.log("QR CODE LIDO:", barcode);
+    console.log("URL NFCE:", barcode);
+    console.log("CHAMANDO EDGE FUNCTION");
+    setIsScannerOpen(false);
+
+    const { data, error } = await supabase.functions.invoke(
+      'importar-nfce',
+      {
+        body: { url: barcode }
+      }
+    );
+
+    console.log("RESULTADO BRUTO:", { data, error });
+
+    if (error) {
+      console.error("ERRO INVOKE:", error);
+    }
+
+    if (data) {
+      console.log("DATA RETORNADA:", JSON.stringify(data));
+    }
+
+    if (!data) {
+        console.log("BRANCH EXECUTADA: (!data)");
+        showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
+        return;
+    }
+
+    if (data.duplicada) {
+        console.log("BRANCH EXECUTADA: (data.duplicada)");
+        showErrorToast("Atenção", "⚠ Nota fiscal já importada anteriormente");
+        return;
+    }
+
+    if (!data.success) {
+        console.log("BRANCH EXECUTADA: (!data.success)");
+        console.error("ERRO NFC-E:", data);
+        const errMessage = data?.error || error?.message || "";
+        showErrorToast("Erro", `❌ Não foi possível importar NFC-e\n${errMessage}`);
+        return;
+    }
+
+    const compra = data.compra;
+    console.log("NFCE LIDA DO BANCO:", compra);
+    console.log("NFCE ANTES MAPEAMENTO:", data);
+    
+    // Delegação do preenchimento para a função compartilhada
+    preencherFormularioNfce(compra, data.categoria_id);
+
+    const qtdProdutos = data.produtos ? data.produtos.length : 0;
+    showSuccessToast("Sucesso", `✓ Nota fiscal importada com sucesso\n✓ ${qtdProdutos} produtos encontrados`);
+
+    // Invalidar as queries para atualizar o card de pendentes imediatamente
+    queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
+    queryClient.invalidateQueries({ queryKey: ["nfcePendentesCount"] });
+  };
 
 
 
@@ -342,57 +352,9 @@ export default function Despesas() {
 
   // Handler: Registrar NFC-e pendente (reutiliza mesma lógica de handleScan)
   const handleRegistrarNfce = useCallback(async (compra: any) => {
-    // Consultar mapeamento de categoria por CNPJ
-    if (compra.cnpj && user) {
-      try {
-        const { data: mapeamento } = await (supabase as any)
-          .from('nfce_cnpj_categoria')
-          .select('categoria_id')
-          .eq('user_id', user.id)
-          .eq('cnpj', compra.cnpj)
-          .maybeSingle();
-
-        if (mapeamento?.categoria_id) {
-          setNfceSubcategoryId(mapeamento.categoria_id);
-        }
-      } catch (err) {
-        console.error('[NFCE_PENDENTES] Erro ao buscar mapeamento:', err);
-      }
-    }
-
-    setNfceValor(compra.valor_total);
-
-    let formaPgto: "dinheiro" | "pix" | "cartao" = "dinheiro";
-    if (compra.forma_pagamento?.toLowerCase().includes("cart")) formaPgto = "cartao";
-    else if (compra.forma_pagamento?.toLowerCase().includes("pix")) formaPgto = "pix";
-
-    setNfceFormaPagamento(formaPgto);
-
-    if (formaPgto === "cartao" && cartoes.length > 0) {
-      setNfceCartaoId(cartoes[0].id);
-    }
-
-    const parcelas = compra.numero_parcelas || 1;
-    setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
-    setNfceNumeroParcelas(parcelas);
-
-    if (compra.data_compra) {
-      setNfceDataVencimento(new Date(compra.data_compra));
-    }
-
-    let desc = compra.estabelecimento || "";
-    if (desc.length > 35) desc = desc.substring(0, 35);
-    setNfceDescricao(desc);
-
-    setNfceId(compra.id);
-    setNfceCnpj(compra.cnpj);
-    setNfceEstabelecimento(compra.estabelecimento);
-
-    // Scroll to top on mobile to show the form filled
-    if (isMobile) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [user, cartoes, isMobile]);
+    // Delegação do preenchimento para a função compartilhada
+    preencherFormularioNfce(compra);
+  }, [preencherFormularioNfce]);
 
   return (
     <div
