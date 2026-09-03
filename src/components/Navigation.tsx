@@ -205,7 +205,10 @@ export const Navigation = () => {
               <img
                 src="/icons/logo.png"
                 alt="Logo"
-                className="h-8 w-8 md:h-[42px] md:w-[42px] transition-transform group-hover:scale-110"
+                className={cn(
+                  "h-8 w-8 md:h-[42px] md:w-[42px] transition-transform group-hover:scale-110",
+                  isMobile && "-translate-y-[2px]"
+                )}
               />
               <div className="flex flex-col justify-center whitespace-nowrap">
                 <span className={cn(
@@ -334,7 +337,7 @@ export const Navigation = () => {
                     className={cn(
                       "relative p-2 rounded-full",
                       !isMobile && "transition-colors",
-                      isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
+                      isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[3px]` : "text-white hover:bg-white/10"
                     )}
                   >
                     <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
@@ -351,7 +354,7 @@ export const Navigation = () => {
                       <button className={cn(
                         "p-2 rounded-full",
                         !isMobile && "transition-colors",
-                        isMobile ? `${mobileIconColor} hover:bg-current/10` : "text-white hover:bg-white/10"
+                        isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[3px]` : "text-white hover:bg-white/10"
                       )}>
                         <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />
                       </button>
