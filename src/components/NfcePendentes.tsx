@@ -341,17 +341,22 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
         <DialogContent
           className={cn(
             isMobile
-              ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 !rounded-[22px] shadow-none border-none max-h-[85vh] overflow-y-auto"
-              : "sm:max-w-[520px] !pb-4 !rounded-[22px] shadow-none border-none max-h-[85vh] overflow-y-auto"
+              ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
+              : "sm:max-w-[520px] !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
           )}
           style={{
             background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
             backgroundBlendMode: "soft-light",
             backdropFilter: "blur(6px)",
             border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
           }}
         >
+          <style>{`
+            .overflow-y-auto::-webkit-scrollbar { display: none; }
+          `}</style>
           <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left">
             <span className="text-xl leading-none">📄</span>
             <div className="flex flex-col gap-0.5">
@@ -463,8 +468,8 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
         <AlertDialogContent
           className={cn(
             isMobile
-              ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none"
-              : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
+              ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[20px] shadow-none border-none"
+              : "sm:max-w-[425px] !pb-4 !rounded-[20px] shadow-none border-none"
           )}
           style={{
             background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
