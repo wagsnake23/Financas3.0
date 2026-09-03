@@ -43,31 +43,26 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
   const isLoading = isSaving || isDeleting;
 
   return (
-    <div className={cn("w-full flex flex-row items-center justify-between gap-3 relative", className)}>
+    <div className={cn("grid grid-cols-2 gap-2 w-full pt-1", className)}>
       <Button
         type="button"
-        variant="ghost"
         onClick={onTriggerDeleteConfirmation}
-        className={cn(
-          "group flex-1 h-11 rounded-[11px] bg-white text-red-500 hover:text-red-600 border border-slate-300 hover:bg-slate-50 active:bg-slate-100 font-extrabold transition-all active:scale-95 text-[17px] flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_1px_2px_rgba(15,23,42,0.03),inset_0_-1px_0_rgba(15,23,42,0.03)]"
-        )}
+        className="w-full rounded-[14px] font-extrabold tracking-[0.5px] border border-slate-300 transition-all active:scale-95 text-[17px] h-[44px] flex items-center justify-center bg-white text-red-500 hover:bg-slate-50"
         disabled={isLoading}
       >
-        <Trash className="h-[19px] w-[19px] text-red-500 group-hover:text-red-600 opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
         Excluir
       </Button>
 
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "group flex-1 h-11 rounded-[11px] font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[17px] flex items-center justify-center gap-1.5 btn-3d cursor-pointer !shadow-[inset_0_1px_2px_rgba(255,255,255,0.15),0_1px_3px_rgba(15,23,42,0.04)] hover:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.25),0_2px_4px_rgba(15,23,42,0.05)] active:!shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]",
+          "w-full rounded-[14px] font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[17px] h-[44px] flex items-center justify-center btn-3d",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
         disabled={!isExpired && isLoading}
         onClick={isExpired ? handleBlockedClick : onSave}
       >
-        <Save className="h-[19px] w-[19px] text-white opacity-90 transition-transform duration-[180ms] ease-out group-hover:scale-105" strokeWidth={2.5} />
         {isLoading && !isExpired ? "Salvando..." : "Salvar"}
         {isExpired && <span className="ml-1 text-[16px]">🔒</span>}
       </Button>
