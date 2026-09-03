@@ -56,7 +56,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "w-full rounded-[14px] font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[17px] h-[44px] flex items-center justify-center btn-3d",
+          "w-full rounded-[14px] font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[17px] h-[44px] flex items-center justify-center btn-3d-modal",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
