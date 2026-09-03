@@ -111,8 +111,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
             : "sm:max-w-[520px] !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh]"
         )}
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
-          backgroundBlendMode: "soft-light",
+          background: "#FFFFFF",
           backdropFilter: "blur(6px)",
           border: "1px solid rgba(0,0,0,0.06)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)",
@@ -133,7 +132,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
             width: 16px !important;
           }
         `}</style>
-        <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left shrink-0">
+        <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left shrink-0 pb-3 border-b border-[rgba(15,23,42,.08)]">
           <span className="text-xl leading-none">📄</span>
           <div className="flex flex-col gap-0.5">
             <DialogTitle className="text-lg font-extrabold text-slate-700 leading-none">
@@ -154,7 +153,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
           </div>
         ) : activeCompra ? (
           <>
-            <div className="space-y-3 shrink-0 mt-2">
+            <div className="space-y-3 shrink-0 -mt-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
@@ -175,12 +174,12 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Valor Total</p>
-                  <p className="text-[11px] font-bold text-slate-800">{formatCurrency(activeCompra.valor_total)}</p>
+                  <p className="text-[11px] font-bold text-[#0F172A]">{formatCurrency(activeCompra.valor_total)}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col flex-1 min-h-0 pt-2 mt-2 border-t border-slate-100">
+            <div className="flex flex-col flex-1 min-h-0 pt-2 mt-2 border-t border-[rgba(15,23,42,0.06)]">
               {isLoadingItens ? (
                 <div className="space-y-1.5 mt-2 overflow-y-auto">
                   {[1, 2, 3].map(i => (
@@ -193,51 +192,50 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                 </p>
               ) : (
                 <>
-                  {/* Header Fixo */}
-                  <div className="flex items-center gap-1.5 px-1 pb-1 border-b border-slate-100 shrink-0 mt-1">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase flex-1">Descrição</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[28px] shrink-0">Qtd</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[48px] shrink-0">V.Unit</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] shrink-0">Total</p>
-                  </div>
-
-                  {/* Corpo com scroll */}
-                  <div className="flex-1 overflow-y-auto space-y-1 mt-1 pr-1 pb-2">
-                    {viewItens.map((item, idx) => {
-                      let cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
-                      // Strip trailing numbers that look like prices
-                      cleanDesc = cleanDesc.replace(/\s+(?:R\$)?\s*\d+[,.]\d{2}\s*$/i, '').trim();
-                      // Fallback: strip exact string representation of unit or total price if it's lingering at the end
-                      const strUnit = formatCurrency(item.valor_unitario).replace('R$', '').trim();
-                      const strTotal = formatCurrency(item.valor_total).replace('R$', '').trim();
-                      if (cleanDesc.endsWith(strTotal)) cleanDesc = cleanDesc.slice(0, -strTotal.length).trim();
-                      if (cleanDesc.endsWith(strUnit)) cleanDesc = cleanDesc.slice(0, -strUnit.length).trim();
-                      // Also remove trailing "UN" or similar short unit strings if they were left behind before the price
-                      cleanDesc = cleanDesc.replace(/\s+(?:UN|KG|L|ML|CX|PC)$/i, '').trim();
-                      
-                      return (
-                        <div
-                          key={item.id || idx}
-                          className={cn(
-                            "flex items-center gap-1.5 px-1 py-1 rounded-lg",
-                            idx % 2 === 0 ? "bg-slate-50/70" : ""
-                          )}
-                        >
-                          <p className="text-[11px] font-medium text-slate-600 truncate flex-1 min-w-0" title={cleanDesc}>
-                            {cleanDesc}
-                          </p>
-                          <p className="text-[11px] font-semibold text-slate-500 text-right w-[28px] shrink-0">
-                            {String(item.quantidade).replace(/^0[.,]/, '')}
-                          </p>
-                          <p className="text-[11px] font-semibold text-slate-500 text-right w-[48px] shrink-0">
-                            {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
-                          </p>
-                          <p className="text-[11px] font-bold text-slate-700 text-right w-[52px] shrink-0">
-                            {formatCurrency(item.valor_total).replace('R$', '').trim()}
-                          </p>
-                        </div>
-                      );
-                    })}
+                  <div className="flex-1 overflow-y-auto mt-1 pr-1 pb-2">
+                    <table className="w-full border-collapse" style={{ borderSpacing: 0 }}>
+                      <thead className="sticky top-0 bg-[#F4F8FF] z-10 before:absolute before:inset-0 before:border-y before:border-[rgba(15,23,42,.12)] before:pointer-events-none">
+                        <tr>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-left font-sans">Descrição</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[32px] font-sans">Qtd</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] font-sans">V.Unit</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[56px] font-sans">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {viewItens.map((item, idx) => {
+                          let cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
+                          cleanDesc = cleanDesc.replace(/\s+(?:R\$)?\s*\d+[,.]\d{2}\s*$/i, '').trim();
+                          const strUnit = formatCurrency(item.valor_unitario).replace('R$', '').trim();
+                          const strTotal = formatCurrency(item.valor_total).replace('R$', '').trim();
+                          if (cleanDesc.endsWith(strTotal)) cleanDesc = cleanDesc.slice(0, -strTotal.length).trim();
+                          if (cleanDesc.endsWith(strUnit)) cleanDesc = cleanDesc.slice(0, -strUnit.length).trim();
+                          cleanDesc = cleanDesc.replace(/\s+(?:UN|KG|L|ML|CX|PC)$/i, '').trim();
+                          
+                          return (
+                            <tr
+                              key={item.id || idx}
+                              className="even:bg-[#F8FBFF] odd:bg-white"
+                            >
+                              <td className="px-2 py-1.5 text-[11px] font-medium text-[#334155]">
+                                <div className="truncate max-w-[130px] sm:max-w-[200px]" title={cleanDesc}>
+                                  {cleanDesc}
+                                </div>
+                              </td>
+                              <td className="px-2 py-1.5 text-[11px] font-semibold text-[#334155] text-right">
+                                {String(item.quantidade).replace(/^0[.,]/, '')}
+                              </td>
+                              <td className="px-2 py-1.5 text-[11px] font-semibold text-[#1E293B] text-right">
+                                {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
+                              </td>
+                              <td className="px-2 py-1.5 text-[11px] font-semibold text-[#1E293B] text-right">
+                                {formatCurrency(item.valor_total).replace('R$', '').trim()}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </>
               )}
