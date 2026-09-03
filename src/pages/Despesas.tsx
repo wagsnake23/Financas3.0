@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/contexts/ToastContext";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
 import { Camera } from "lucide-react";
+import { NfcePendentes } from "@/components/NfcePendentes";
 
 interface Cartao {
   id: string;
@@ -143,6 +144,36 @@ export default function Despesas() {
   const [nfceTipoPagamento, setNfceTipoPagamento] = useState<"avista" | "parcelado" | "fixo" | undefined>(undefined);
   const [nfceNumeroParcelas, setNfceNumeroParcelas] = useState<number | undefined>(undefined);
   const [nfceDataVencimento, setNfceDataVencimento] = useState<Date | undefined>(undefined);
+
+  const NFCE_LIMITE = 10;
+
+  // Conta NFC-es pendentes para validar limite antes de abrir o scanner
+  const { data: nfcePendentesCount = 0 } = useQuery<number>({
+    queryKey: ["nfcePendentesCount", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const { count, error } = await (supabase as any)
+        .from("nfce_compras")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("status_importacao", "pendente");
+      if (error) return 0;
+      return count ?? 0;
+    },
+    enabled: !!user,
+  });
+
+  // Abre scanner somente se abaixo do limite de 10 pendentes
+  const handleOpenScanner = () => {
+    if (nfcePendentesCount >= NFCE_LIMITE) {
+      showErrorToast(
+        "Limite atingido",
+        "Limite de 10 notas fiscais pendentes atingido. Registre ou exclua uma nota pendente para continuar."
+      );
+      return;
+    }
+    setIsScannerOpen(true);
+  };
 
   const {
     allSubcategories,
@@ -299,9 +330,64 @@ export default function Despesas() {
         setNfceId(undefined);
         setNfceCnpj(undefined);
         setNfceEstabelecimento(undefined);
+        queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
       }}
     />
   );
+
+  // Handler: Registrar NFC-e pendente (reutiliza mesma lógica de handleScan)
+  const handleRegistrarNfce = useCallback(async (compra: any) => {
+    // Consultar mapeamento de categoria por CNPJ
+    if (compra.cnpj && user) {
+      try {
+        const { data: mapeamento } = await (supabase as any)
+          .from('nfce_cnpj_categoria')
+          .select('categoria_id')
+          .eq('user_id', user.id)
+          .eq('cnpj', compra.cnpj)
+          .maybeSingle();
+
+        if (mapeamento?.categoria_id) {
+          setNfceSubcategoryId(mapeamento.categoria_id);
+        }
+      } catch (err) {
+        console.error('[NFCE_PENDENTES] Erro ao buscar mapeamento:', err);
+      }
+    }
+
+    setNfceValor(compra.valor_total);
+
+    let formaPgto: "dinheiro" | "pix" | "cartao" = "dinheiro";
+    if (compra.forma_pagamento?.toLowerCase().includes("cart")) formaPgto = "cartao";
+    else if (compra.forma_pagamento?.toLowerCase().includes("pix")) formaPgto = "pix";
+
+    setNfceFormaPagamento(formaPgto);
+
+    if (formaPgto === "cartao" && cartoes.length > 0) {
+      setNfceCartaoId(cartoes[0].id);
+    }
+
+    const parcelas = compra.numero_parcelas || 1;
+    setNfceTipoPagamento(parcelas > 1 ? "parcelado" : "avista");
+    setNfceNumeroParcelas(parcelas);
+
+    if (compra.data_compra) {
+      setNfceDataVencimento(new Date(compra.data_compra));
+    }
+
+    let desc = compra.estabelecimento || "";
+    if (desc.length > 35) desc = desc.substring(0, 35);
+    setNfceDescricao(desc);
+
+    setNfceId(compra.id);
+    setNfceCnpj(compra.cnpj);
+    setNfceEstabelecimento(compra.estabelecimento);
+
+    // Scroll to top on mobile to show the form filled
+    if (isMobile) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [user, cartoes, isMobile]);
 
   return (
     <div
@@ -395,7 +481,7 @@ export default function Despesas() {
 
                       <Button
                         variant="ghost"
-                        onClick={() => setIsScannerOpen(true)}
+                        onClick={handleOpenScanner}
                         className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none bg-transparent hover:bg-transparent transition-all active:scale-90"
                         aria-label="Importar Nota Fiscal"
                       >
@@ -409,6 +495,14 @@ export default function Despesas() {
 
                     {formContent}
                   </div>
+
+                  <NfcePendentes
+                    user={user}
+                    isMobile={isMobile}
+                    onRegistrar={handleRegistrarNfce}
+                    pendentesCount={nfcePendentesCount}
+                    limite={NFCE_LIMITE}
+                  />
                   
                   {isScannerOpen && (
                     <BarcodeScannerModal 
@@ -434,6 +528,14 @@ export default function Despesas() {
               >
                 {formContent}
               </Card>
+
+              <NfcePendentes
+                user={user}
+                isMobile={isMobile}
+                onRegistrar={handleRegistrarNfce}
+                pendentesCount={nfcePendentesCount}
+                limite={NFCE_LIMITE}
+              />
             </div>
 
             <div className="space-y-6 h-full flex flex-col">

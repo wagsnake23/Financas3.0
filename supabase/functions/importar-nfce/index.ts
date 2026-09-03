@@ -309,6 +309,7 @@ serve(async (req: Request) => {
     console.log("NFCE PARCELAS EXTRAIDAS:", numero_parcelas);
     console.log("ANTES INSERT COMPRA");
     console.log("INSERINDO COMPRA");
+    console.log('[NFCE] VAI INSERIR COMPRA');
     const { data: compra, error: compraError } = await supabase
       .from('nfce_compras')
       .insert({
@@ -321,11 +322,13 @@ serve(async (req: Request) => {
         valor_total,
         forma_pagamento,
         numero_parcelas,
-        raw_html: html.substring(0, 200000)
+        raw_html: html.substring(0, 200000),
+        status_importacao: 'pendente'
       })
       .select()
       .single()
       
+    console.log('[NFCE] INSERT RETORNOU');
     console.log("NFCE SALVA:", compra);
 
     if (compraError) {
