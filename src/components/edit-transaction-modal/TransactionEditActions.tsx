@@ -47,7 +47,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type="button"
         onClick={onTriggerDeleteConfirmation}
-        className="w-full rounded-[14px] font-extrabold tracking-[0.5px] border border-slate-300 transition-all active:scale-95 text-[17px] h-[44px] flex items-center justify-center bg-white text-red-500 hover:bg-slate-50"
+        className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center bg-white text-red-500 hover:bg-slate-50"
         disabled={isLoading}
       >
         Excluir
@@ -56,7 +56,7 @@ export const TransactionEditActions: React.FC<TransactionEditActionsProps> = ({
       <Button
         type={isExpired ? "button" : "submit"}
         className={cn(
-          "w-full rounded-[14px] font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 text-[17px] h-[44px] flex items-center justify-center btn-3d-modal",
+          "w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal",
           isExpired && "opacity-80"
         )}
         style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
