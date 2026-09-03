@@ -352,12 +352,10 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <DialogHeader className="flex flex-row items-start gap-3 space-y-0 text-left">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
-              <span className="text-xl">🧾</span>
-            </div>
+          <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left">
+            <span className="text-xl leading-none">📄</span>
             <div className="flex flex-col gap-0.5">
-              <DialogTitle className="text-lg font-black text-slate-800 leading-none">
+              <DialogTitle className="text-lg font-extrabold text-slate-700 leading-none">
                 Detalhes da Nota
               </DialogTitle>
               <DialogDescription className="text-slate-500 text-xs">
@@ -368,37 +366,28 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
 
           {viewCompra && (
             <div className="space-y-4 mt-2">
-              <div className="rounded-xl bg-white border border-slate-200/80 p-3 space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
-                    <DynamicIcon name="ShoppingCart" className="h-[18px] w-[18px] text-amber-600" strokeWidth={2.5} />
-                  </div>
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
-                    <p className="text-sm font-bold text-slate-700 truncate">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
+                    <p className="text-[11px] font-bold text-slate-700 truncate">
                       {viewCompra.estabelecimento || "Não Identificado"}
                     </p>
                   </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">CNPJ</p>
+                    <p className="text-[11px] font-semibold text-slate-600">{viewCompra.cnpj || "—"}</p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">CNPJ</p>
-                    <p className="text-xs font-semibold text-slate-600">{viewCompra.cnpj || "—"}</p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Data</p>
+                    <p className="text-[11px] font-semibold text-slate-600">{formatDateTime(viewCompra.data_compra)}</p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Data</p>
-                    <p className="text-xs font-semibold text-slate-600">{formatDateTime(viewCompra.data_compra)}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Pagamento</p>
-                    <p className="text-xs font-semibold text-slate-600">
-                      {formatFormaPagamento(viewCompra.forma_pagamento)}{viewCompra.numero_parcelas > 1 ? ` (${viewCompra.numero_parcelas}x)` : ''}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Valor Total</p>
-                    <p className="text-xs font-bold text-slate-800">{formatCurrency(viewCompra.valor_total)}</p>
+                  <div className="text-right shrink-0">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Valor Total</p>
+                    <p className="text-[11px] font-bold text-slate-800">{formatCurrency(viewCompra.valor_total)}</p>
                   </div>
                 </div>
 
@@ -418,15 +407,23 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                       {/* Header */}
                       <div className="flex items-center gap-1.5 px-1 pb-1 border-b border-slate-100">
                         <p className="text-[10px] font-bold text-slate-400 uppercase flex-1">Descrição</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-6 shrink-0">Qtd</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[42px] shrink-0">V.Unit</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[46px] shrink-0">Total</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[28px] shrink-0">Qtd</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[48px] shrink-0">V.Unit</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] shrink-0">Total</p>
                       </div>
 
                       {viewItens.map((item, idx) => {
-                        const cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
-                        const displayDesc = cleanDesc.length > 30 ? cleanDesc.substring(0, 30) + "..." : cleanDesc;
-
+                        let cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
+                        // Strip trailing numbers that look like prices
+                        cleanDesc = cleanDesc.replace(/\s+(?:R\$)?\s*\d+[,.]\d{2}\s*$/i, '').trim();
+                        // Fallback: strip exact string representation of unit or total price if it's lingering at the end
+                        const strUnit = formatCurrency(item.valor_unitario).replace('R$', '').trim();
+                        const strTotal = formatCurrency(item.valor_total).replace('R$', '').trim();
+                        if (cleanDesc.endsWith(strTotal)) cleanDesc = cleanDesc.slice(0, -strTotal.length).trim();
+                        if (cleanDesc.endsWith(strUnit)) cleanDesc = cleanDesc.slice(0, -strUnit.length).trim();
+                        // Also remove trailing "UN" or similar short unit strings if they were left behind before the price
+                        cleanDesc = cleanDesc.replace(/\s+(?:UN|KG|L|ML|CX|PC)$/i, '').trim();
+                        // If "Energ" was a scraper glitch for energy drinks, let's just make sure we did our best.
                         return (
                           <div
                             key={item.id || idx}
@@ -436,15 +433,15 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                             )}
                           >
                             <p className="text-[11px] font-medium text-slate-600 truncate flex-1 min-w-0" title={cleanDesc}>
-                              {displayDesc}
+                              {cleanDesc}
                             </p>
-                            <p className="text-[11px] font-semibold text-slate-500 text-right w-6 shrink-0">
-                              {item.quantidade}
+                            <p className="text-[11px] font-semibold text-slate-500 text-right w-[28px] shrink-0">
+                              {String(item.quantidade).replace(/^0[.,]/, '')}
                             </p>
-                            <p className="text-[11px] font-semibold text-slate-500 text-right w-[42px] shrink-0">
+                            <p className="text-[11px] font-semibold text-slate-500 text-right w-[48px] shrink-0">
                               {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
                             </p>
-                            <p className="text-[11px] font-bold text-slate-700 text-right w-[46px] shrink-0">
+                            <p className="text-[11px] font-bold text-slate-700 text-right w-[52px] shrink-0">
                               {formatCurrency(item.valor_total).replace('R$', '').trim()}
                             </p>
                           </div>
