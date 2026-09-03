@@ -219,15 +219,15 @@ serve(async (req: Request) => {
     console.log("DATE MATCH:", dateMatch);
     let data_compra: string;
     if (dateMatch) {
-      data_compra = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${dateMatch[4]}:${dateMatch[5]}:${dateMatch[6]}`;
+      data_compra = `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}T${dateMatch[4]}:${dateMatch[5]}:${dateMatch[6]}-03:00`;
       console.log('[NFCE] VALOR BRUTO EXTRAÍDO DA SEFAZ:', data_compra);
     } else {
       const d = new Date();
       d.setHours(d.getHours() - 3);
       const pad = (n: number) => n.toString().padStart(2, '0');
-      data_compra = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      data_compra = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}-03:00`;
     }
-    console.log('[NFCE] VALOR FINAL ENVIADO AO BANCO:', data_compra);
+    console.log('[NFCE] DATA FINAL INSERT', data_compra);
 
     console.log("EXTRAINDO VALOR");
     let valorText = $('.txtMax').text().trim() || $('#linhaTotal .totalNumb').text().trim();

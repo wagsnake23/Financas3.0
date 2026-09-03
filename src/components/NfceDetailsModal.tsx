@@ -194,7 +194,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                 <>
                   <div className="flex-1 overflow-y-auto mt-1 pr-1 pb-2">
                     <table className="w-full border-collapse" style={{ borderSpacing: 0 }}>
-                      <thead className="sticky top-0 bg-[#04469E]/5 z-10 before:absolute before:inset-0 before:border-y before:border-[rgba(15,23,42,.12)] before:pointer-events-none">
+                      <thead className="sticky top-0 bg-[#F2F6FA] z-10 before:absolute before:inset-0 before:border-y before:border-[rgba(15,23,42,.12)] before:pointer-events-none">
                         <tr>
                           <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-left font-sans">Descrição</th>
                           <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-right w-[32px] font-sans">Qtd</th>
