@@ -352,19 +352,23 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 text-xl font-black text-slate-800">
-              🧾 Detalhes da Nota
-            </DialogTitle>
-            <DialogDescription className="text-center text-slate-500 text-sm">
-              Nota fiscal importada via scanner
-            </DialogDescription>
+          <DialogHeader className="flex flex-row items-start gap-3 space-y-0 text-left">
+            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
+              <span className="text-xl">🧾</span>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <DialogTitle className="text-lg font-black text-slate-800 leading-none">
+                Detalhes da Nota
+              </DialogTitle>
+              <DialogDescription className="text-slate-500 text-xs">
+                Nota fiscal importada via scanner
+              </DialogDescription>
+            </div>
           </DialogHeader>
 
           {viewCompra && (
             <div className="space-y-4 mt-2">
-              {/* Info da Nota */}
-              <div className="rounded-xl bg-white border border-slate-200/80 p-4 space-y-3">
+              <div className="rounded-xl bg-white border border-slate-200/80 p-3 space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
                     <DynamicIcon name="Store" className="h-[18px] w-[18px] text-amber-600" strokeWidth={2.5} />
@@ -377,7 +381,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   <div>
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">CNPJ</p>
                     <p className="text-xs font-semibold text-slate-600">{viewCompra.cnpj || "—"}</p>
@@ -389,81 +393,75 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                   <div>
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Pagamento</p>
                     <p className="text-xs font-semibold text-slate-600">
-                      {formatFormaPagamento(viewCompra.forma_pagamento)}
+                      {formatFormaPagamento(viewCompra.forma_pagamento)}{viewCompra.numero_parcelas > 1 ? ` (${viewCompra.numero_parcelas}x)` : ''}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Parcelas</p>
-                    <p className="text-xs font-semibold text-slate-600">{viewCompra.numero_parcelas || 1}x</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Valor Total</p>
+                    <p className="text-xs font-bold text-slate-800">{formatCurrency(viewCompra.valor_total)}</p>
                   </div>
                 </div>
-              </div>
 
-              {/* Itens da Nota */}
-              <div className="rounded-xl bg-white border border-slate-200/80 p-4">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-3">
-                  Produtos
-                </p>
-
-                {isLoadingItens ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="h-8 bg-slate-100 rounded-lg animate-pulse" />
-                    ))}
-                  </div>
-                ) : viewItens.length === 0 ? (
-                  <p className="text-xs text-slate-400 text-center py-4">
-                    Nenhum produto encontrado.
-                  </p>
-                ) : (
-                  <div className="space-y-1.5">
-                    {/* Header */}
-                    <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 px-2 pb-1 border-b border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase">Descrição</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-10">Qtd</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-16">V.Unit</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-16">Total</p>
+                <div className="pt-2 border-t border-slate-100">
+                  {isLoadingItens ? (
+                    <div className="space-y-1.5 mt-2">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="h-7 bg-slate-100 rounded-lg animate-pulse" />
+                      ))}
                     </div>
+                  ) : viewItens.length === 0 ? (
+                    <p className="text-xs text-slate-400 text-center py-3">
+                      Nenhum produto encontrado.
+                    </p>
+                  ) : (
+                    <div className="space-y-1 mt-1">
+                      {/* Header */}
+                      <div className="flex items-center gap-1.5 px-1 pb-1 border-b border-slate-100">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase flex-1">Descrição</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-6 shrink-0">Qtd</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[42px] shrink-0">V.Unit</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[46px] shrink-0">Total</p>
+                      </div>
 
-                    {viewItens.map((item, idx) => (
-                      <div
-                        key={item.id || idx}
-                        className={cn(
-                          "grid grid-cols-[1fr_auto_auto_auto] gap-2 px-2 py-1.5 rounded-lg",
-                          idx % 2 === 0 ? "bg-slate-50/70" : ""
-                        )}
-                      >
-                        <p className="text-[11px] font-medium text-slate-600 truncate leading-tight">
-                          {item.descricao}
-                        </p>
-                        <p className="text-[11px] font-semibold text-slate-500 text-right w-10">
-                          {item.quantidade}
-                        </p>
-                        <p className="text-[11px] font-semibold text-slate-500 text-right w-16">
-                          {formatCurrency(item.valor_unitario)}
-                        </p>
-                        <p className="text-[11px] font-bold text-slate-700 text-right w-16">
-                          {formatCurrency(item.valor_total)}
+                      {viewItens.map((item, idx) => (
+                        <div
+                          key={item.id || idx}
+                          className={cn(
+                            "flex items-center gap-1.5 px-1 py-1 rounded-lg",
+                            idx % 2 === 0 ? "bg-slate-50/70" : ""
+                          )}
+                        >
+                          <p className="text-[11px] font-medium text-slate-600 truncate leading-tight flex-1 min-w-0">
+                            {item.descricao}
+                          </p>
+                          <p className="text-[11px] font-semibold text-slate-500 text-right w-6 shrink-0">
+                            {item.quantidade}
+                          </p>
+                          <p className="text-[11px] font-semibold text-slate-500 text-right w-[42px] shrink-0">
+                            {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
+                          </p>
+                          <p className="text-[11px] font-bold text-slate-700 text-right w-[46px] shrink-0">
+                            {formatCurrency(item.valor_total).replace('R$', '').trim()}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {!isLoadingItens && viewItens.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-slate-200/80 flex items-center justify-between">
+                      <p className="text-[10px] font-semibold text-slate-400">
+                        {viewItens.length} {viewItens.length === 1 ? "item" : "itens"}
+                      </p>
+                      <div className="text-right flex items-center gap-2">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total</p>
+                        <p className="text-base font-extrabold text-slate-800 leading-none">
+                          {formatCurrency(viewCompra.valor_total)}
                         </p>
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Footer */}
-                {!isLoadingItens && viewItens.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-slate-200/80 flex items-center justify-between">
-                    <p className="text-[11px] font-semibold text-slate-400">
-                      {viewItens.length} {viewItens.length === 1 ? "item" : "itens"}
-                    </p>
-                    <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total da Nota</p>
-                      <p className="text-lg font-extrabold text-slate-800">
-                        {formatCurrency(viewCompra.valor_total)}
-                      </p>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           )}
