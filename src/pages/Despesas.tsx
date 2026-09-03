@@ -367,46 +367,48 @@ export default function Despesas() {
               className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-transparent"
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
-                <div className="flex flex-col gap-6 pb-6 px-[2px]">
-                  <div className="flex justify-between items-start pt-2">
-                    <div className="flex items-start gap-3">
+                <div className="flex flex-col gap-6 pb-6 px-0">
+                  <div className="bg-white rounded-[18px] p-4 shadow-sm border border-slate-200/60 mb-6 flex flex-col gap-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-start gap-3">
+                        <Button
+                          variant="ghost"
+                          className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none shadow-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
+                          style={{ background: "#ef4444", filter: "saturate(0.95)" }}
+                          onClick={() => navigate("/lancamentos?type=expense")}
+                        >
+                          <DynamicIcon
+                            name="TrendingDown"
+                            className="h-[18px] w-[18px] !text-white"
+                            strokeWidth={3}
+                          />
+                        </Button>
+                        <div className="flex flex-col -translate-y-[4px]">
+                          <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                            Nova Despesa
+                          </h1>
+                          <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
+                            Registre seus gastos
+                          </p>
+                        </div>
+                      </div>
+
                       <Button
                         variant="ghost"
-                        className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none shadow-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                        style={{ background: "#ef4444", filter: "saturate(0.95)" }}
-                        onClick={() => navigate("/lancamentos?type=expense")}
+                        onClick={() => setIsScannerOpen(true)}
+                        className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none bg-transparent hover:bg-transparent transition-all active:scale-90"
+                        aria-label="Importar Nota Fiscal"
                       >
-                        <DynamicIcon
-                          name="TrendingDown"
-                          className="h-[18px] w-[18px] !text-white"
-                          strokeWidth={3}
+                        <Camera 
+                          className="w-6 h-6 text-[#2F3542]" 
+                          strokeWidth={2.2} 
+                          style={{ filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.2)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5))" }}
                         />
                       </Button>
-                      <div className="flex flex-col">
-                        <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
-                          Nova Despesa
-                        </h1>
-                        <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
-                          Registre seus gastos
-                        </p>
-                      </div>
                     </div>
 
-                    <Button
-                      variant="ghost"
-                      onClick={() => setIsScannerOpen(true)}
-                      className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none bg-transparent hover:bg-transparent transition-all active:scale-90"
-                      aria-label="Importar Nota Fiscal"
-                    >
-                      <Camera 
-                        className="w-6 h-6 text-[#2F3542]" 
-                        strokeWidth={2.2} 
-                        style={{ filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.2)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5))" }}
-                      />
-                    </Button>
+                    {formContent}
                   </div>
-
-                  {formContent}
                   
                   {isScannerOpen && (
                     <BarcodeScannerModal 

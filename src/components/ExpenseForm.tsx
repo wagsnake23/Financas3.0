@@ -443,16 +443,22 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       // NOVO: Link da NFCE com a despesa
       if (initialNfceId) {
-        console.log('[NFCE] LINKANDO DESPESA COM NFCE_COMPRAS', initialNfceId);
+        console.log('[NFCE] Vinculando NFC-e à despesa', {
+          nfceId: initialNfceId,
+          despesaId: despesaData.id
+        });
         const { error: linkError } = await (supabase as any)
           .from('nfce_compras')
-          .update({ despesa_id: despesaData.id })
+          .update({ 
+            despesa_id: despesaData.id,
+            status_importacao: 'processada'
+          })
           .eq('id', initialNfceId);
           
         if (linkError) {
           console.error('[NFCE] ERRO AO LINKAR:', linkError);
         } else {
-          console.log('[NFCE] SUCESSO AO LINKAR COMPRA:', despesaData.id);
+          console.log('[NFCE] NFC-e marcada como processada');
         }
       }
 
