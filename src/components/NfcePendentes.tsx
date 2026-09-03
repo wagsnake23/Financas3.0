@@ -371,7 +371,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
               <div className="rounded-xl bg-white border border-slate-200/80 p-3 space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
-                    <DynamicIcon name="Store" className="h-[18px] w-[18px] text-amber-600" strokeWidth={2.5} />
+                    <DynamicIcon name="ShoppingCart" className="h-[18px] w-[18px] text-amber-600" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
@@ -423,44 +423,37 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                         <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[46px] shrink-0">Total</p>
                       </div>
 
-                      {viewItens.map((item, idx) => (
-                        <div
-                          key={item.id || idx}
-                          className={cn(
-                            "flex items-center gap-1.5 px-1 py-1 rounded-lg",
-                            idx % 2 === 0 ? "bg-slate-50/70" : ""
-                          )}
-                        >
-                          <p className="text-[11px] font-medium text-slate-600 truncate leading-tight flex-1 min-w-0">
-                            {item.descricao}
-                          </p>
-                          <p className="text-[11px] font-semibold text-slate-500 text-right w-6 shrink-0">
-                            {item.quantidade}
-                          </p>
-                          <p className="text-[11px] font-semibold text-slate-500 text-right w-[42px] shrink-0">
-                            {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
-                          </p>
-                          <p className="text-[11px] font-bold text-slate-700 text-right w-[46px] shrink-0">
-                            {formatCurrency(item.valor_total).replace('R$', '').trim()}
-                          </p>
-                        </div>
-                      ))}
+                      {viewItens.map((item, idx) => {
+                        const cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
+                        const displayDesc = cleanDesc.length > 30 ? cleanDesc.substring(0, 30) + "..." : cleanDesc;
+
+                        return (
+                          <div
+                            key={item.id || idx}
+                            className={cn(
+                              "flex items-center gap-1.5 px-1 py-1 rounded-lg",
+                              idx % 2 === 0 ? "bg-slate-50/70" : ""
+                            )}
+                          >
+                            <p className="text-[11px] font-medium text-slate-600 truncate flex-1 min-w-0" title={cleanDesc}>
+                              {displayDesc}
+                            </p>
+                            <p className="text-[11px] font-semibold text-slate-500 text-right w-6 shrink-0">
+                              {item.quantidade}
+                            </p>
+                            <p className="text-[11px] font-semibold text-slate-500 text-right w-[42px] shrink-0">
+                              {formatCurrency(item.valor_unitario).replace('R$', '').trim()}
+                            </p>
+                            <p className="text-[11px] font-bold text-slate-700 text-right w-[46px] shrink-0">
+                              {formatCurrency(item.valor_total).replace('R$', '').trim()}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
 
-                  {!isLoadingItens && viewItens.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-slate-200/80 flex items-center justify-between">
-                      <p className="text-[10px] font-semibold text-slate-400">
-                        {viewItens.length} {viewItens.length === 1 ? "item" : "itens"}
-                      </p>
-                      <div className="text-right flex items-center gap-2">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total</p>
-                        <p className="text-base font-extrabold text-slate-800 leading-none">
-                          {formatCurrency(viewCompra.valor_total)}
-                        </p>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               </div>
             </div>
