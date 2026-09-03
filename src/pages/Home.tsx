@@ -669,7 +669,7 @@ export default function Home() {
                                                         );
                                                     })}
                                                 </svg>
-                                                <span className="text-[10px] font-semibold text-[#6b7280] mt-[3px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none" style={{ transform: "translateY(6px)" }}>
+                                                <span className="text-[10px] font-semibold text-[#6b7280] mt-[3px] mb-2.5 md:mb-0 tracking-tight pl-[10px] leading-none" style={{ transform: "translateY(-4px)" }}>
                                                     Últimos 10 meses
                                                 </span>
                                             </div>
