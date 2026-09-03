@@ -135,7 +135,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
         <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left shrink-0 pb-3 border-b border-[rgba(15,23,42,.08)]">
           <span className="text-xl leading-none">📄</span>
           <div className="flex flex-col gap-0.5">
-            <DialogTitle className="text-lg font-extrabold text-slate-700 leading-none">
+            <DialogTitle className="text-lg font-extrabold text-[#04469E] leading-none">
               Detalhes da Nota
             </DialogTitle>
             <DialogDescription className="text-slate-500 text-xs">
@@ -174,12 +174,12 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Valor Total</p>
-                  <p className="text-[11px] font-bold text-[#0F172A]">{formatCurrency(activeCompra.valor_total)}</p>
+                  <p className="text-[11px] font-bold text-[#04469E]">{formatCurrency(activeCompra.valor_total)}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col flex-1 min-h-0 pt-2 mt-2 border-t border-[rgba(15,23,42,0.06)]">
+            <div className="flex flex-col flex-1 min-h-0 mt-2">
               {isLoadingItens ? (
                 <div className="space-y-1.5 mt-2 overflow-y-auto">
                   {[1, 2, 3].map(i => (
@@ -194,12 +194,12 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                 <>
                   <div className="flex-1 overflow-y-auto mt-1 pr-1 pb-2">
                     <table className="w-full border-collapse" style={{ borderSpacing: 0 }}>
-                      <thead className="sticky top-0 bg-[#F4F8FF] z-10 before:absolute before:inset-0 before:border-y before:border-[rgba(15,23,42,.12)] before:pointer-events-none">
+                      <thead className="sticky top-0 bg-[#04469E]/5 z-10 before:absolute before:inset-0 before:border-y before:border-[rgba(15,23,42,.12)] before:pointer-events-none">
                         <tr>
-                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-left font-sans">Descrição</th>
-                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[32px] font-sans">Qtd</th>
-                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] font-sans">V.Unit</th>
-                          <th className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase text-right w-[56px] font-sans">Total</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-left font-sans">Descrição</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-right w-[32px] font-sans">Qtd</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-right w-[52px] font-sans">V.Unit</th>
+                          <th className="px-2 py-1.5 text-[10px] font-bold text-[#04469E] uppercase text-right w-[56px] font-sans">Total</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -215,7 +215,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                           return (
                             <tr
                               key={item.id || idx}
-                              className="even:bg-[#F8FBFF] odd:bg-white"
+                              className="even:bg-[#EDF4FF] odd:bg-white"
                             >
                               <td className="px-2 py-1.5 text-[11px] font-medium text-[#334155]">
                                 <div className="truncate max-w-[130px] sm:max-w-[200px]" title={cleanDesc}>
