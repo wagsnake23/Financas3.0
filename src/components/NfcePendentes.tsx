@@ -226,10 +226,13 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
 
         {/* Empty state */}
         {pendentes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 gap-2">
-            <DynamicIcon name="FileX2" className="h-10 w-10 text-slate-300" strokeWidth={1.5} />
-            <p className="text-sm text-slate-400 font-medium text-center">
-              Nenhuma nota fiscal pendente.
+          <div className="flex flex-col items-center justify-center py-3 gap-1">
+            <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+              <DynamicIcon name="CheckCircle2" className="h-4 w-4" strokeWidth={3} />
+              <span className="text-sm">Tudo em dia</span>
+            </div>
+            <p className="text-xs text-slate-400 font-medium text-center mt-1">
+              Nenhuma nota fiscal aguardando processamento.
             </p>
           </div>
         ) : (
@@ -340,6 +343,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
       <Dialog open={!!viewCompra} onOpenChange={(open) => !open && setViewCompra(null)}>
         <DialogContent
           className={cn(
+            "modal-detalhes-nota",
             isMobile
               ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
               : "sm:max-w-[520px] !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
@@ -356,6 +360,16 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
         >
           <style>{`
             .overflow-y-auto::-webkit-scrollbar { display: none; }
+            .modal-detalhes-nota > button.absolute { 
+              top: 12px !important; 
+              right: 14px !important;
+              height: 26px !important;
+              width: 26px !important;
+            }
+            .modal-detalhes-nota > button.absolute svg {
+              height: 16px !important;
+              width: 16px !important;
+            }
           `}</style>
           <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left">
             <span className="text-xl leading-none">📄</span>
