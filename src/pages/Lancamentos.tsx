@@ -236,7 +236,7 @@ const Lancamentos = () => {
             <div className="flex flex-row items-start gap-[11px] transition-all">
               <span className="text-[26px] select-none leading-none mt-0 md:mt-1">📝</span>
               <div className="flex flex-col gap-[5px] md:gap-[1px]">
-                <DialogTitle className="text-xl md:text-2xl font-bold tracking-[-0.01em] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+                <DialogTitle className="text-xl md:text-2xl font-extrabold text-[#0556C3] tracking-[0.5px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
                 {editingTransaction?.created_at && (
                   <p className="text-[11px] font-normal text-slate-500 leading-none">
                     Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
