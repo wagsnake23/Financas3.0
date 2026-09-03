@@ -272,26 +272,27 @@ const Lancamentos = () => {
               !isMobile && "-mt-2"
             )}
           >
-            <div className="flex flex-row items-center justify-between w-full transition-all gap-2">
-              <div className="flex flex-col gap-[3px] md:gap-0 flex-1 min-w-0">
-                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
-                {editingTransaction?.created_at && (
-                  <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px] truncate">
-                    Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
-                  </p>
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+              <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+                
+                {linkedNfceId && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-auto py-[4px] px-2 bg-white hover:bg-[#F8FAFC] text-[#0556C3] hover:text-[#04449C] shadow-none border border-[rgba(15,23,42,0.08)] hover:border-[rgba(15,23,42,0.15)] shrink-0 flex items-center gap-[3px] transition-colors rounded-[8px] mt-[1px]"
+                    onClick={() => setViewNfceId(linkedNfceId)}
+                  >
+                    <DynamicIcon name="Receipt" className="w-[14px] h-[14px]" />
+                    <span className="text-[12px] font-bold tracking-wide leading-none pt-[1px]">Nota</span>
+                  </Button>
                 )}
               </div>
               
-              {linkedNfceId && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-auto p-0 px-1 mr-6 bg-transparent hover:bg-transparent text-[#0556C3] hover:text-[#04449C] shadow-none border-none shrink-0 flex items-center gap-[3px] transition-colors"
-                  onClick={() => setViewNfceId(linkedNfceId)}
-                >
-                  <DynamicIcon name="Receipt" className="w-[14px] h-[14px]" />
-                  <span className="text-[12px] font-bold tracking-wide leading-none pt-[1px]">Nota</span>
-                </Button>
+              {editingTransaction?.created_at && (
+                <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px] truncate">
+                  Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
+                </p>
               )}
             </div>
           </DialogHeader>
