@@ -215,17 +215,11 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
               </span>
             </h2>
           </div>
-          {(pendentesCountProp ?? pendentes.length) >= limite ? (
+          {(pendentesCountProp ?? pendentes.length) >= limite && (
             <Badge
               className="bg-red-100 text-red-700 border-red-200 hover:bg-red-100 text-[10px] font-black uppercase tracking-wider px-2 py-0.5"
             >
               🔴 Limite atingido
-            </Badge>
-          ) : (
-            <Badge
-              className="bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-100 text-[10px] font-black uppercase tracking-wider px-2 py-0.5"
-            >
-              🟡 Pendente
             </Badge>
           )}
         </div>
@@ -320,7 +314,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
                     )}
                     onClick={() => onRegistrar(compra)}
                   >
-                    <DynamicIcon name="FileEdit" className="h-3.5 w-3.5" strokeWidth={2.5} />
+                    <DynamicIcon name="SquarePen" className="h-3.5 w-3.5" strokeWidth={2.5} />
                     Registrar
                   </Button>
 
