@@ -343,7 +343,7 @@ export const MobileCreditCardExpenses: React.FC<
               <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-[2px]" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
-              <p className="font-[800] leading-none" style={{ fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#6b7280", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+              <p className="leading-none" style={{ fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#6b7280", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                 <FormatCurrencyStyled value={totalPending > 0 ? totalPending : totalPaid} prefixColor={totalPending > 0 ? "#EF6C6C" : "#6b7280"} />
               </p>
             </div>

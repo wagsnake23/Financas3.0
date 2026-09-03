@@ -540,111 +540,139 @@ export default function Home() {
                             >
                                 {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
                                 <Card
-                                    className="home-mobile-card rounded-[16px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
+                                    className="home-mobile-card rounded-[22px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
-                                        borderRadius: "16px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                        backdropFilter: "blur(18px) saturate(1.4)",
-                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
+                                        borderRadius: "22px",
+                                        background: "linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                        border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03)"
                                     }}
                                 >
-                                    <div className="flex justify-between items-stretch w-full relative z-20">
-                                        <div className="flex flex-col justify-between py-0.5">
+                                    {/* Formas orgânicas temáticas de fundo */}
+                                    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                                            <defs>
+                                                <linearGradient id="wave-grad-mob" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                                                </linearGradient>
+                                            </defs>
+                                            {/* Curva suave superior */}
+                                            <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                                            {/* Onda suave que envolve o gráfico */}
+                                            <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-mob)" />
+                                        </svg>
+                                    </div>
+
+                                    <div className="flex flex-col justify-center h-full w-full relative z-20">
+                                        {/* TOPO: Título + Valor e Seletor */}
+                                        <div className="flex justify-between items-start w-full mb-2">
                                             <div 
-                                                className="flex flex-col md:mt-3 cursor-pointer group transition-all active:opacity-70"
+                                                className="flex flex-col cursor-pointer group transition-all active:opacity-70 md:mt-3"
                                                 onClick={() => setIsAjusteModalOpen(true)}
                                             >
-                                                <div className="flex items-center gap-2 mb-0 md:mb-2 md:-mt-[1px]">
-                                                    <h2 className="font-extrabold leading-none tracking-tight md:text-[16px]" style={{ color: "#0556C3", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 1px)" }}>Saldo Atual</h2>
+                                                <div className="flex items-center gap-1.5 mb-2 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 8px)" }}>
+                                                    <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo atual</h2>
                                                     <button 
-                                                        className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md -translate-y-1"
+                                                        className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
                                                         aria-label="Ajustar saldo"
                                                         type="button"
                                                     >
-                                                        <DynamicIcon name="Wallet" className="h-3.5 w-3.5 md:h-4 md:w-4 text-[#0556C3]" />
+                                                        <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
                                                     </button>
                                                 </div>
-                                                <p className="font-[800] leading-none md:text-[25px] transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                                    <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#0556C3" : undefined)} />
+                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "24px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
+                                                    <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
                                                 </p>
-                                            </div>
-                                            <div className="flex items-center mt-3 gap-2">
-                                                {/* Investments Icon Button */}
-                                                <Button
-                                                    onClick={() => navigate("/dashboard?filter=investments")}
-                                                    className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                    style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#2563eb", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(37,99,235,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
-                                                >
-                                                    <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                                </Button>
-                                                <div className="flex flex-col items-start gap-[2px] mt-0.5">
-                                                    <span className="text-[10px] font-semibold leading-none whitespace-nowrap" style={{ color: "#0556C3" }}>Saldo Mensal</span>
-                                                    <span className="text-[13px] font-bold leading-none" style={{ color: "#334155" }}>{formatCurrency(dStats.currentBalance)}</span>
-                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Sparkline Graph */}
-                                        <div className="flex flex-col items-center justify-end pb-0.5 -mr-1">
-                                            <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
-                                                <defs>
-                                                    <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.20" />
-                                                        <stop offset="50%" stopColor="#2f80ff" stopOpacity="0.10" />
-                                                        <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.00" />
-                                                    </linearGradient>
-                                                    <filter id="point-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                                                        <feDropShadow dx="0" dy="1" stdDeviation="0.6" floodColor="#000" floodOpacity="0.15" />
-                                                    </filter>
-                                                    <filter id="red-glow" x="-40%" y="-40%" width="180%" height="180%">
-                                                        <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
-                                                        <feOffset dx="0" dy="1" />
-                                                        <feComponentTransfer in="blur" result="glow">
-                                                            <feFuncA type="linear" slope="0.3" />
-                                                        </feComponentTransfer>
-                                                        <feMerge>
-                                                            <feMergeNode in="glow" />
-                                                            <feMergeNode in="SourceGraphic" />
-                                                        </feMerge>
-                                                    </filter>
-                                                </defs>
-                                                <path
-                                                    d={fillPath}
-                                                    fill="url(#sparkline-grad)"
-                                                    style={{ transition: 'all 220ms ease-in-out' }}
-                                                />
-                                                <path
-                                                    d={linePath}
-                                                    fill="none"
-                                                    stroke="#0556C3"
-                                                    strokeWidth="2.5"
-                                                    strokeLinecap="round"
-                                                    style={{ transition: 'all 220ms ease-in-out' }}
-                                                />
-                                                {sparklinePoints.map((pt, idx) => {
-                                                    const isSelected = idx === selectedMonthIdx;
-                                                    return (
-                                                        <circle
-                                                            key={idx}
-                                                            cx={pt.x}
-                                                            cy={pt.y}
-                                                            r={isSelected ? 4.2 : 3}
-                                                            fill={isSelected ? "#EF6C6C" : "#0556C3"}
-                                                            stroke="#fff"
-                                                            strokeWidth={isSelected ? 1.6 : 1.2}
-                                                            filter={isSelected ? "url(#red-glow)" : "url(#point-shadow)"}
-                                                            style={{ transition: 'all 220ms ease-in-out' }}
-                                                        />
-                                                    );
-                                                })}
-                                            </svg>
-                                            <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                                Últimos 10 meses
-                                            </span>
+                                        {/* BASE: Saldo Mensal à esquerda e Sparkline à direita */}
+                                        <div className="flex justify-between items-end w-full mt-2">
+                                            {/* Informações Secundárias e Ações */}
+                                            <div className="flex flex-col items-start pb-0 z-10 mr-2 -mt-4">
+                                                {/* Saldo Mensal agrupado com Ícone Azul */}
+                                                <div className="flex items-center gap-2.5 mb-2.5">
+                                                    <Button
+                                                        onClick={() => navigate("/dashboard?filter=investments")}
+                                                        className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                        style={{ background: "#2563EB", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(37,99,235,0.15)", transform: "translateY(-4px)" }}
+                                                    >
+                                                        <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                                    </Button>
+                                                    <div className="flex flex-col items-start" style={{ transform: "translateY(-4px)" }}>
+                                                        <span className="text-[11px] font-medium leading-none text-[#64748B] mb-1">
+                                                            Saldo em {format(selectedMonth, "MMMM", { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
+                                                        </span>
+                                                        <span className="text-[15px] font-bold text-[#334155] tracking-tight leading-none">
+                                                            {formatCurrency(dStats.currentBalance)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Sparkline Graph */}
+                                            <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6">
+                                                <svg viewBox="0 0 160 45" className="w-full max-w-[175px] h-[var(--home-chart-h,64px)] overflow-visible">
+                                                    <defs>
+                                                        <linearGradient id="sparkline-grad-mob" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
+                                                            <stop offset="70%" stopColor="#2563EB" stopOpacity="0.03" />
+                                                            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.00" />
+                                                        </linearGradient>
+                                                        <filter id="line-glow-mob" x="-10%" y="-10%" width="120%" height="130%">
+                                                            <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#2563EB" floodOpacity="0.18" />
+                                                        </filter>
+                                                        <filter id="red-glow-mob" x="-40%" y="-40%" width="180%" height="180%">
+                                                            <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
+                                                            <feOffset dx="0" dy="1" />
+                                                            <feComponentTransfer in="blur" result="glow">
+                                                              <feFuncA type="linear" slope="0.3" />
+                                                            </feComponentTransfer>
+                                                            <feMerge>
+                                                              <feMergeNode in="glow" />
+                                                              <feMergeNode in="SourceGraphic" />
+                                                            </feMerge>
+                                                        </filter>
+                                                    </defs>
+                                                    <path
+                                                        d={fillPath}
+                                                        fill="url(#sparkline-grad-mob)"
+                                                        style={{ transition: 'all 220ms ease-in-out' }}
+                                                    />
+                                                    <path
+                                                        d={linePath}
+                                                        fill="none"
+                                                        stroke="#2563EB"
+                                                        strokeWidth="2.5"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        filter="url(#line-glow-mob)"
+                                                        style={{ transition: 'all 220ms ease-in-out' }}
+                                                    />
+                                                    {sparklinePoints.map((pt, idx) => {
+                                                        const isSelected = idx === selectedMonthIdx;
+                                                        return (
+                                                            <circle
+                                                                key={idx}
+                                                                cx={pt.x}
+                                                                cy={pt.y}
+                                                                r={isSelected ? 4.2 : 3}
+                                                                fill={isSelected ? "#EF6C6C" : "#2563EB"}
+                                                                stroke="#ffffff"
+                                                                strokeWidth={isSelected ? 1.6 : 1.2}
+                                                                filter={isSelected ? "url(#red-glow-mob)" : undefined}
+                                                                style={{ transition: 'all 220ms ease-in-out' }}
+                                                            />
+                                                        );
+                                                    })}
+                                                </svg>
+                                                <span className="text-[10px] font-semibold text-[#6b7280] mt-[3px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none" style={{ transform: "translateY(6px)" }}>
+                                                    Últimos 10 meses
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </Card>
@@ -665,8 +693,8 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
-                                            <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <h2 className="leading-none tracking-[0.5px] mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700, marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
+                                            <p className="leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
                                             </p>
                                         </div>
@@ -728,8 +756,8 @@ export default function Home() {
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col md:mt-3">
-                                            <h2 className="font-extrabold leading-none tracking-tight mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
-                                            <p className="font-[800] leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                            <h2 className="leading-none tracking-[0.5px] mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700, marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
+                                            <p className="leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                                 <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                             </p>
                                         </div>
@@ -791,106 +819,131 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px] md:auto-rows-fr md:items-stretch">
                         {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] rounded-[16px] relative overflow-hidden card-saldo md:p-6 md:flex md:flex-col h-full w-full justify-between"
+                            className="pl-4 pr-5 pt-3 pb-3 rounded-[22px] relative overflow-hidden card-saldo md:p-6 md:flex md:flex-col h-full w-full justify-between"
                             style={{
-                                borderRadius: "16px",
-                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                backdropFilter: "blur(18px) saturate(1.4)",
-                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                border: "1px solid rgba(255,255,255,.75)",
+                                borderRadius: "22px",
+                                background: "linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03)"
                             }}
                         >
+                            {/* Formas orgânicas temáticas de fundo */}
+                            <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 220">
+                                    <defs>
+                                        <linearGradient id="wave-grad-desk" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.12" />
+                                        </linearGradient>
+                                    </defs>
+                                    {/* Curva suave superior */}
+                                    <path d="M 80,0 C 180,60 300,75 480,20 L 500,0 Z" fill="rgba(255,255,255,0.5)" />
+                                    {/* Onda orgânica que acompanha o gráfico */}
+                                    <path d="M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z" fill="url(#wave-grad-desk)" />
+                                </svg>
+                            </div>
+
                             <div className="flex flex-col h-full w-full justify-between relative z-20">
-                                {/* HEADER */}
+                                {/* HEADER: Título e seletor de mês com indicador Últimos 10 meses */}
                                 <div className="flex justify-between items-start w-full">
                                     <div 
                                         className="flex flex-col cursor-pointer group transition-all active:opacity-70"
                                         onClick={() => setIsAjusteModalOpen(true)}
                                     >
-                                        <div className="flex items-center gap-2 mb-0 md:mb-1">
-                                            <h2 className="text-[15px] font-extrabold tracking-[0.5px] md:text-[17px]" style={{ color: "#0556C3", fontFamily: "'Inter', sans-serif" }}>Saldo Atual</h2>
+                                        <div className="flex items-center gap-2 mb-1" style={{ marginTop: "8px" }}>
+                                            <h2 className="leading-none tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700 }}>Saldo atual</h2>
                                             <button 
-                                                className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full border-none transition-all bg-[#0556C3]/10 hover:bg-[#0556C3]/20 shadow-sm md:group-hover:shadow-md -translate-y-1"
+                                                className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
                                                 aria-label="Ajustar saldo"
                                                 type="button"
                                             >
-                                                <DynamicIcon name="Wallet" className="h-3.5 w-3.5 md:h-4 md:w-4 text-[#0556C3]" />
+                                                <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
                                             </button>
                                         </div>
-                                        <p className="text-[21px] font-[800] leading-none md:text-[25px] transition-all" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#1f2937" : "#4B5563"), WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                            <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : (isCurrentMonth ? "#0556C3" : undefined)} />
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
+                                            <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
                                         </p>
                                     </div>
-                                    <div className="shrink-0 flex items-start">
+                                    <div className="flex flex-col items-end gap-1.5 shrink-0">
                                         <div
-                                            className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
-                                            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
+                                            className="flex items-center justify-between px-1 rounded-[10px] transition-all h-7 w-[135px] bg-white/60 backdrop-blur-sm border border-white/80 cursor-pointer shadow-xs"
                                         >
-                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
-                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[6px] p-0 h-5 w-5 flex items-center justify-center hover:opacity-90 bg-white shadow-xs" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3 w-3" strokeWidth={3} />
                                             </button>
-                                            <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
+                                            <span className="text-[11px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight whitespace-nowrap">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
-                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[6px] p-0 h-5 w-5 flex items-center justify-center hover:opacity-90 bg-white shadow-xs" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3 w-3" strokeWidth={3} />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* CONTENT/BASE */}
-                                <div className="flex justify-between items-end w-full mt-4">
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            onClick={() => setActiveTrendModal("saldo")}
-                                            className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                            style={{ background: "#2563eb", filter: "saturate(0.95)", boxShadow: "0 4px 10px rgba(37,99,235,0.2), inset 0 1px 1px rgba(255,255,255,0.3)" }}
-                                        >
-                                            <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                        </Button>
-                                        <div className="flex flex-col items-start gap-[2px] mt-1">
-                                            <span className="text-[10px] font-semibold leading-none whitespace-nowrap" style={{ color: "#0556C3" }}>Saldo Mensal</span>
-                                            <span className="text-[13px] font-bold leading-none" style={{ color: "#334155" }}>{formatCurrency(dStats.currentBalance)}</span>
+                                {/* CONTENT/BASE: Saldo Mensal à esquerda e Sparkline à direita */}
+                                <div className="flex justify-between items-end w-full mt-auto mb-2">
+                                    {/* Informações Secundárias e Ações */}
+                                    <div className="flex flex-col items-start justify-center pb-0 z-10 mr-4 -mt-4">
+                                        {/* Saldo Mensal agrupado com Ícone Azul */}
+                                        <div className="flex items-center gap-3">
+                                            <Button
+                                                onClick={() => setActiveTrendModal("saldo")}
+                                                className="w-10 h-10 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                style={{ background: "#2563EB", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(37,99,235,0.15)", transform: "translateY(-4px)" }}
+                                            >
+                                                <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                            </Button>
+                                            <div className="flex flex-col items-start" style={{ transform: "translateY(-4px)" }}>
+                                                <span className="text-[12px] font-medium leading-none text-[#64748B] mb-1.5">
+                                                    Saldo em {format(selectedMonth, "MMMM", { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
+                                                </span>
+                                                <span className="text-[16px] font-bold text-[#334155] tracking-tight leading-none">
+                                                    {formatCurrency(dStats.currentBalance)}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end justify-end pb-0.5 -mr-1">
-                                        <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[64px] overflow-visible">
+
+                                    {/* Sparkline Graph */}
+                                    <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6">
+                                        <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[75px] overflow-visible">
                                             <defs>
-                                                <linearGradient id="sparkline-grad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#2f80ff" stopOpacity="0.20" />
-                                                    <stop offset="50%" stopColor="#2f80ff" stopOpacity="0.10" />
-                                                    <stop offset="100%" stopColor="#2f80ff" stopOpacity="0.00" />
+                                                <linearGradient id="sparkline-grad-desk" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
+                                                    <stop offset="70%" stopColor="#2563EB" stopOpacity="0.03" />
+                                                    <stop offset="100%" stopColor="#2563EB" stopOpacity="0.00" />
                                                 </linearGradient>
-                                                <filter id="point-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                                                    <feDropShadow dx="0" dy="1" stdDeviation="0.6" floodColor="#000" floodOpacity="0.15" />
+                                                <filter id="line-glow-desk" x="-10%" y="-10%" width="120%" height="130%">
+                                                    <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#2563EB" floodOpacity="0.18" />
                                                 </filter>
-                                                <filter id="red-glow" x="-40%" y="-40%" width="180%" height="180%">
+                                                <filter id="red-glow-desk" x="-40%" y="-40%" width="180%" height="180%">
                                                     <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
                                                     <feOffset dx="0" dy="1" />
                                                     <feComponentTransfer in="blur" result="glow">
-                                                        <feFuncA type="linear" slope="0.3" />
+                                                      <feFuncA type="linear" slope="0.3" />
                                                     </feComponentTransfer>
                                                     <feMerge>
-                                                        <feMergeNode in="glow" />
-                                                        <feMergeNode in="SourceGraphic" />
+                                                      <feMergeNode in="glow" />
+                                                      <feMergeNode in="SourceGraphic" />
                                                     </feMerge>
                                                 </filter>
                                             </defs>
                                             <path
                                                 d={fillPath}
-                                                fill="url(#sparkline-grad)"
+                                                fill="url(#sparkline-grad-desk)"
                                                 style={{ transition: 'all 220ms ease-in-out' }}
                                             />
                                             <path
                                                 d={linePath}
                                                 fill="none"
-                                                stroke="#0556C3"
+                                                stroke="#2563EB"
                                                 strokeWidth="2.5"
                                                 strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                filter="url(#line-glow-desk)"
                                                 style={{ transition: 'all 220ms ease-in-out' }}
                                             />
                                             {sparklinePoints.map((pt, idx) => {
@@ -900,19 +953,17 @@ export default function Home() {
                                                         key={idx}
                                                         cx={pt.x}
                                                         cy={pt.y}
-                                                        r={isSelected ? 4.2 : 3}
-                                                        fill={isSelected ? "#EF6C6C" : "#0556C3"}
-                                                        stroke="#fff"
-                                                        strokeWidth={isSelected ? 1.6 : 1.2}
-                                                        filter={isSelected ? "url(#red-glow)" : "url(#point-shadow)"}
+                                                        r={isSelected ? 4.2 : 3.5}
+                                                        fill={isSelected ? "#EF6C6C" : "#2563EB"}
+                                                        stroke="#ffffff"
+                                                        strokeWidth={isSelected ? 1.6 : 1.5}
+                                                        filter={isSelected ? "url(#red-glow-desk)" : undefined}
                                                         style={{ transition: 'all 220ms ease-in-out' }}
                                                     />
                                                 );
                                             })}
                                         </svg>
-                                        <span className="text-[10px] font-semibold text-[#6b7280] mt-[8px] tracking-tight">
-                                            Últimos 10 meses
-                                        </span>
+                                        <span className="text-[11px] font-bold text-[#2563EB] leading-none whitespace-nowrap mt-1.5 opacity-90" style={{ transform: "translateY(-4px)" }}>Últimos 10 meses</span>
                                     </div>
                                 </div>
                             </div>
@@ -936,8 +987,8 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif" }}>Receitas</h2>
-                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Receitas</h2>
+                                        <p className="text-[21px] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                             <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                         </p>
                                     </div>
@@ -1012,8 +1063,8 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] font-extrabold tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif" }}>Despesas</h2>
-                                        <p className="text-[21px] font-[800] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Despesas</h2>
+                                        <p className="text-[21px] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
                                             <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
                                         </p>
                                     </div>
