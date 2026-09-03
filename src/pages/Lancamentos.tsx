@@ -272,11 +272,11 @@ const Lancamentos = () => {
               !isMobile && "-mt-2"
             )}
           >
-            <div className="flex flex-row items-center justify-between w-full transition-all">
-              <div className="flex flex-col gap-[3px] md:gap-0">
-                <DialogTitle className="text-[19px] md:text-[23px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+            <div className="flex flex-row items-center justify-between w-full transition-all gap-2">
+              <div className="flex flex-col gap-[3px] md:gap-0 flex-1 min-w-0">
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
                 {editingTransaction?.created_at && (
-                  <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px]">
+                  <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px] truncate">
                     Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
                   </p>
                 )}
@@ -284,12 +284,13 @@ const Lancamentos = () => {
               
               {linkedNfceId && (
                 <Button 
-                  variant="outline" 
+                  variant="ghost" 
                   size="sm" 
-                  className="h-7 text-[11px] font-bold tracking-wide rounded-full px-3 mr-7 bg-white shadow-sm border-slate-200 text-[#0556C3] hover:bg-slate-50 shrink-0"
+                  className="h-auto p-0 px-1 mr-6 bg-transparent hover:bg-transparent text-[#0556C3] hover:text-[#04449C] shadow-none border-none shrink-0 flex items-center gap-[3px] transition-colors"
                   onClick={() => setViewNfceId(linkedNfceId)}
                 >
-                  <span className="mr-1 text-sm leading-none">🧾</span> Ver Nota
+                  <DynamicIcon name="Receipt" className="w-[14px] h-[14px]" />
+                  <span className="text-[12px] font-bold tracking-wide leading-none pt-[1px]">Nota</span>
                 </Button>
               )}
             </div>
