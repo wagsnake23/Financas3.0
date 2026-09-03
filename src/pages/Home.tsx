@@ -573,7 +573,7 @@ export default function Home() {
                                                 className="flex flex-col cursor-pointer group transition-all active:opacity-70 md:mt-3"
                                                 onClick={() => setIsAjusteModalOpen(true)}
                                             >
-                                                <div className="flex items-center gap-1.5 mb-2 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 8px)" }}>
+                                                <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
                                                     <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo atual</h2>
                                                     <button 
                                                         className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
@@ -583,7 +583,7 @@ export default function Home() {
                                                         <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
                                                     </button>
                                                 </div>
-                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "24px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
+                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
                                                     <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
                                                 </p>
                                             </div>
@@ -614,7 +614,7 @@ export default function Home() {
                                             </div>
 
                                             {/* Sparkline Graph */}
-                                            <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6">
+                                            <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
                                                 <svg viewBox="0 0 160 45" className="w-full max-w-[175px] h-[var(--home-chart-h,64px)] overflow-visible">
                                                     <defs>
                                                         <linearGradient id="sparkline-grad-mob" x1="0" y1="0" x2="0" y2="1">
@@ -852,8 +852,8 @@ export default function Home() {
                                         className="flex flex-col cursor-pointer group transition-all active:opacity-70"
                                         onClick={() => setIsAjusteModalOpen(true)}
                                     >
-                                        <div className="flex items-center gap-2 mb-1" style={{ marginTop: "8px" }}>
-                                            <h2 className="leading-none tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700 }}>Saldo atual</h2>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Saldo atual</h2>
                                             <button 
                                                 className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
                                                 aria-label="Ajustar saldo"
@@ -908,7 +908,7 @@ export default function Home() {
                                     </div>
 
                                     {/* Sparkline Graph */}
-                                    <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6">
+                                    <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
                                         <svg viewBox="0 0 160 45" className="w-full max-w-[210px] h-[75px] overflow-visible">
                                             <defs>
                                                 <linearGradient id="sparkline-grad-desk" x1="0" y1="0" x2="0" y2="1">
