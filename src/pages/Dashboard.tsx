@@ -585,13 +585,7 @@ export default function Dashboard() {
                   </StatCard>
 
                   <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="rounded-[24px] p-6 shadow-sm h-full flex items-center border border-[rgba(0,0,0,0.06)]" style={{ 
-                        background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                        backgroundBlendMode: "soft-light",
-                        backdropFilter: "blur(6px)",
-                        outline: "1px solid rgba(0, 102, 255, 0.08)",
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                     }}>
+                    <div className="rounded-[24px] p-6 shadow-sm h-full flex items-center border border-[rgba(15,23,42,0.10)]" style={{ backgroundColor: "#FFFFFF" }}>
                       <div className="grid grid-cols-2 items-center gap-x-8 gap-y-10 w-full">
                         {/* Total Investido */}
                         <div className="flex items-center justify-start gap-4">
@@ -714,13 +708,7 @@ export default function Dashboard() {
 
                 {/* 4. Card de Resumo (Investment Cockpit) */}
                 <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="py-6 px-[22px] shadow-sm rounded-[24px] border border-[rgba(0,0,0,0.06)]" style={{ 
-                      background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 60%, rgba(0, 102, 255, 0.12) 100%)",
-                      backgroundBlendMode: "soft-light",
-                      backdropFilter: "blur(6px)",
-                      outline: "1px solid rgba(0, 102, 255, 0.08)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(0, 102, 255, 0.10)"
-                   }}>
+                  <div className="py-6 px-[22px] shadow-sm rounded-[18px] border border-[rgba(15,23,42,0.10)]" style={{ backgroundColor: "#FFFFFF" }}>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-7">
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
