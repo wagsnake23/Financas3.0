@@ -331,6 +331,7 @@ export default function Despesas() {
         setNfceCnpj(undefined);
         setNfceEstabelecimento(undefined);
         queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
+        queryClient.invalidateQueries({ queryKey: ["nfcePendentesCount"] });
       }}
     />
   );

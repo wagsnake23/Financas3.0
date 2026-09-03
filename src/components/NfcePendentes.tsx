@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import DynamicIcon from "@/components/DynamicIcon";
+import { CheckCircle2 } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useToast } from "@/contexts/ToastContext";
 import { format } from "date-fns";
@@ -124,6 +125,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
 
       showSuccessToast("Sucesso", "Nota fiscal excluída com sucesso.");
       queryClient.invalidateQueries({ queryKey: ["nfcePendentes"] });
+      queryClient.invalidateQueries({ queryKey: ["nfcePendentesCount"] });
       setDeleteCompra(null);
     } catch (err: any) {
       console.error("[NFCE_PENDENTES] Erro ao excluir:", err);
@@ -228,7 +230,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
         {pendentes.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-3 gap-1">
             <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
-              <DynamicIcon name="CheckCircle2" className="h-4 w-4" strokeWidth={3} />
+              <CheckCircle2 className="h-4 w-4" strokeWidth={3} />
               <span className="text-sm">Tudo em dia</span>
             </div>
             <p className="text-xs text-slate-400 font-medium text-center mt-1">
