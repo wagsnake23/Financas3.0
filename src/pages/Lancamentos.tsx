@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DynamicIcon from "@/components/DynamicIcon";
@@ -25,6 +25,9 @@ import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { NfceDetailsModal } from "@/components/NfceDetailsModal";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -78,6 +81,42 @@ const Lancamentos = () => {
     allRevenues,
     allExpenseInstallments,
   } = useLancamentosLogic(user);
+
+  const [viewNfceId, setViewNfceId] = useState<string | null>(null);
+
+  // Check if current edited transaction is from an NFC-e
+  const { data: linkedNfceId } = useQuery({
+    queryKey: ["linkedNfce", editingTransaction?.id],
+    queryFn: async () => {
+      if (!editingTransaction?.id) return null;
+      
+      const mestreId = editingTransaction.despesa_id || editingTransaction.id;
+      
+      console.log('[NFCE] editingTransaction.id', editingTransaction.id);
+      console.log('[NFCE] editingTransaction.despesa_id', editingTransaction.despesa_id);
+      console.log('[NFCE] query despesa_id (mestre)', mestreId);
+      
+      try {
+        const { data: nfceCompra, error } = await (supabase as any)
+          .from("nfce_compras")
+          .select("id, status_importacao, despesa_id")
+          .eq("despesa_id", mestreId)
+          .eq("status_importacao", "processada")
+          .limit(1)
+          .maybeSingle();
+        
+        if (error) {
+          console.error('[NFCE] error full', error);
+        }
+        
+        return error ? null : (nfceCompra?.id || null);
+      } catch (err) {
+        console.error('[NFCE] error full', err);
+        return null;
+      }
+    },
+    enabled: !!editingTransaction?.id,
+  });
 
   console.log(
     "Lancamentos.tsx: User from useAuth:",
@@ -233,16 +272,26 @@ const Lancamentos = () => {
               !isMobile && "-mt-2"
             )}
           >
-            <div className="flex flex-row items-start gap-[11px] transition-all">
-              <span className="text-[26px] select-none leading-none mt-0 md:mt-1">📝</span>
-              <div className="flex flex-col gap-[5px] md:gap-[1px]">
-                <DialogTitle className="text-xl md:text-2xl font-extrabold text-[#0556C3] tracking-[0.5px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
+            <div className="flex flex-row items-center justify-between w-full transition-all">
+              <div className="flex flex-col gap-[3px] md:gap-0">
+                <DialogTitle className="text-[19px] md:text-[23px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
                 {editingTransaction?.created_at && (
-                  <p className="text-[11px] font-normal text-slate-500 leading-none">
+                  <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px]">
                     Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
                   </p>
                 )}
               </div>
+              
+              {linkedNfceId && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-7 text-[11px] font-bold tracking-wide rounded-full px-3 mr-7 bg-white shadow-sm border-slate-200 text-[#0556C3] hover:bg-slate-50 shrink-0"
+                  onClick={() => setViewNfceId(linkedNfceId)}
+                >
+                  <span className="mr-1 text-sm leading-none">🧾</span> Ver Nota
+                </Button>
+              )}
             </div>
           </DialogHeader>
 
@@ -262,6 +311,12 @@ const Lancamentos = () => {
           )}
         </DialogContent>
       </Dialog>
+      
+      <NfceDetailsModal
+        open={!!viewNfceId}
+        onOpenChange={(open) => !open && setViewNfceId(null)}
+        compraId={viewNfceId}
+      />
     </div >
   );
 };
