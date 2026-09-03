@@ -105,10 +105,10 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
     <Dialog open={shouldOpen} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
-          "modal-detalhes-nota",
+          "modal-detalhes-nota flex flex-col overflow-hidden",
           isMobile
-            ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
-            : "sm:max-w-[520px] !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh] overflow-y-auto"
+            ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh]"
+            : "sm:max-w-[520px] !pb-4 !rounded-[20px] shadow-none border-none max-h-[85vh]"
         )}
         style={{
           background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
@@ -133,7 +133,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
             width: 16px !important;
           }
         `}</style>
-        <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left">
+        <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left shrink-0">
           <span className="text-xl leading-none">📄</span>
           <div className="flex flex-col gap-0.5">
             <DialogTitle className="text-lg font-extrabold text-slate-700 leading-none">
@@ -153,8 +153,8 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
             </div>
           </div>
         ) : activeCompra ? (
-          <div className="space-y-4 mt-2">
-            <div className="space-y-3">
+          <>
+            <div className="space-y-3 shrink-0 mt-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
@@ -178,28 +178,31 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                   <p className="text-[11px] font-bold text-slate-800">{formatCurrency(activeCompra.valor_total)}</p>
                 </div>
               </div>
+            </div>
 
-              <div className="pt-2 border-t border-slate-100">
-                {isLoadingItens ? (
-                  <div className="space-y-1.5 mt-2">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="h-7 bg-slate-100 rounded-lg animate-pulse" />
-                    ))}
+            <div className="flex flex-col flex-1 min-h-0 pt-2 mt-2 border-t border-slate-100">
+              {isLoadingItens ? (
+                <div className="space-y-1.5 mt-2 overflow-y-auto">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-7 bg-slate-100 rounded-lg animate-pulse" />
+                  ))}
+                </div>
+              ) : viewItens.length === 0 ? (
+                <p className="text-xs text-slate-400 text-center py-3 overflow-y-auto">
+                  Nenhum produto encontrado.
+                </p>
+              ) : (
+                <>
+                  {/* Header Fixo */}
+                  <div className="flex items-center gap-1.5 px-1 pb-1 border-b border-slate-100 shrink-0 mt-1">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase flex-1">Descrição</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[28px] shrink-0">Qtd</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[48px] shrink-0">V.Unit</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] shrink-0">Total</p>
                   </div>
-                ) : viewItens.length === 0 ? (
-                  <p className="text-xs text-slate-400 text-center py-3">
-                    Nenhum produto encontrado.
-                  </p>
-                ) : (
-                  <div className="space-y-1 mt-1">
-                    {/* Header */}
-                    <div className="flex items-center gap-1.5 px-1 pb-1 border-b border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase flex-1">Descrição</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[28px] shrink-0">Qtd</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[48px] shrink-0">V.Unit</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase text-right w-[52px] shrink-0">Total</p>
-                    </div>
 
+                  {/* Corpo com scroll */}
+                  <div className="flex-1 overflow-y-auto space-y-1 mt-1 pr-1 pb-2">
                     {viewItens.map((item, idx) => {
                       let cleanDesc = item.descricao.replace(/Vl\.?\s*Total.*/i, '').replace(/Valor\s*Total.*/i, '').trim();
                       // Strip trailing numbers that look like prices
@@ -236,10 +239,10 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
                       );
                     })}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </div>
-          </div>
+          </>
         ) : null}
       </DialogContent>
     </Dialog>
