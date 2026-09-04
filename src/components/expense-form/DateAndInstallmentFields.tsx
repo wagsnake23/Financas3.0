@@ -85,7 +85,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
             variant={"outline"}
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
-              "w-full justify-start text-left font-normal h-11 rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
+              "w-full justify-start text-left font-normal h-11 rounded-xl transition-all duration-200 input-3d-premium",
               !dataVencimento && "text-muted-foreground",
               getBorderClass({ isInvalid: validationErrors.dataVencimento, isValid: validationErrors.dataVencimento === false })
             )}

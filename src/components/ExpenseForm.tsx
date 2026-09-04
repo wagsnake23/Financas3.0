@@ -579,7 +579,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 role="combobox"
                 aria-expanded={isSubcategoryOpen}
                 className={cn(
-                  "flex-1 justify-between font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium rounded-xl text-left border-slate-200 border",
+                  "flex-1 justify-between font-medium transition-all duration-200 input-3d-premium rounded-xl text-left border-slate-200 border",
                   isMobile ? "!h-[39px] text-sm px-3" : "h-10 px-3",
                   getBorderClass({
                     isInvalid: validationErrors.selectedSubcategoryId,
@@ -742,8 +742,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           maxLength={45}
           className={cn(
             "input-3d-premium resize-none py-1.5 px-3", isMobile ? "min-h-[61px] h-[61px]" : "min-h-[51px] h-[51px]",
-            "text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
-            isMobile ? "text-sm" : "!bg-white",
+            "text-gray-800 font-medium transition-all duration-200",
+            isMobile ? "text-sm" : "",
             getBorderClass({ isValid: false })
           )}
         />
