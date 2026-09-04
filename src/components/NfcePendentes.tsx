@@ -170,7 +170,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
     <>
       <div className="w-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className={cn("flex items-center mb-4", isMobile ? "justify-center text-center" : "justify-between")}>
           <div className="flex items-center gap-2">
             <span className="text-lg">🧾</span>
             <h2
