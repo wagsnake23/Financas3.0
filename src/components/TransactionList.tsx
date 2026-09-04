@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { CreditCardInvoiceSummary } from "@/components/CreditCardInvoiceSummary";
 import { Database } from "@/integrations/supabase/types";
 import { ArrowUp, ArrowDown, X, Filter } from "lucide-react"; // Importar ícones de seta, X
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -55,6 +56,7 @@ interface TransactionListProps {
   setFilterCategory: (category: string) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  isLoading?: boolean;
 }
 
 const UNSELECTED_VALUE = "unselected";
@@ -83,6 +85,7 @@ export const TransactionList = ({
   setFilterCategory,
   searchTerm,
   setSearchTerm,
+  isLoading,
 }: TransactionListProps) => {
   console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
   console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
@@ -708,7 +711,18 @@ export const TransactionList = ({
         >
         {isMobile ? (
           <div className="flex flex-col gap-0 pb-4">
-            {finalDisplayTransactions.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 py-3 bg-white border-b border-slate-100" style={{ paddingLeft: "clamp(18px, 4vw, 32px)", paddingRight: "clamp(18px, 4vw, 32px)" }}>
+                  <Skeleton className="w-10 h-10 rounded-full shrink-0" />
+                  <div className="flex-1 flex flex-col gap-2">
+                    <Skeleton className="w-3/4 h-4" />
+                    <Skeleton className="w-1/2 h-3" />
+                  </div>
+                  <Skeleton className="w-16 h-4 shrink-0" />
+                </div>
+              ))
+            ) : finalDisplayTransactions.length === 0 ? (
               <div 
                 className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200"
                 style={{
@@ -775,7 +789,20 @@ export const TransactionList = ({
           </div>
         ) : (
           <div className="flex flex-col gap-[6px] pb-8">
-              {transactionsToDisplay.length === 0 ? (
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-slate-100 shadow-sm mx-1">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                      <div className="flex flex-col gap-2">
+                        <Skeleton className="w-32 h-4" />
+                        <Skeleton className="w-20 h-3" />
+                      </div>
+                    </div>
+                    <Skeleton className="w-24 h-4 shrink-0" />
+                  </div>
+                ))
+              ) : transactionsToDisplay.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground font-medium">
                   Nenhum lançamento encontrado
                 </div>

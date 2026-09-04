@@ -225,6 +225,7 @@ const Lancamentos = () => {
           setFilterCategory={setFilterCategory}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          isLoading={isLoading}
         />
       </main>
       {!isMobile && (

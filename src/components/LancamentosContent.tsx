@@ -43,6 +43,7 @@ interface LancamentosContentProps {
   setFilterCategory: (category: string) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  isLoading?: boolean;
 }
 
 export const LancamentosContent: React.FC<LancamentosContentProps> = ({
@@ -74,6 +75,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   setFilterCategory,
   searchTerm,
   setSearchTerm,
+  isLoading,
 }) => {
   console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
@@ -106,6 +108,7 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
         setFilterCategory={setFilterCategory}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        isLoading={isLoading}
       />
     </div>
   );

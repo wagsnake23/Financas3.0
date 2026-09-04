@@ -37,13 +37,14 @@ interface MobileCreditCardExpensesProps {
   allCategories: AppCategory[];
   isMobile: boolean;
   selectedMonth: Date;
+  isLoading?: boolean;
 }
 
 const UNSELECTED_VALUE = "unselected";
 
 export const MobileCreditCardExpenses: React.FC<
   MobileCreditCardExpensesProps
-> = ({ cartoes, expenseInstallments, isMobile, selectedMonth }) => {
+> = ({ cartoes, expenseInstallments, isMobile, selectedMonth, isLoading }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -182,6 +183,35 @@ export const MobileCreditCardExpenses: React.FC<
 
   const mainColor = isMobile ? "#6D28D9" : "#2563EB";
   const gradColor = isMobile ? "#8B5CF6" : "#2563EB";
+
+  if (isLoading) {
+    return (
+      <Card
+        className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+        style={{
+          borderRadius: "16px",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+          backdropFilter: "blur(18px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+          border: "1px solid rgba(255,255,255,0.85)",
+          backgroundClip: "padding-box",
+          outline: "none",
+          boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+        }}
+      >
+        <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0">
+          <div className="h-8 w-3/4 max-w-[200px] bg-slate-200/60 rounded-md mb-[8px]"></div>
+          <div className="flex items-end justify-between w-full mt-4 mb-[6px]">
+            <div className="flex flex-col gap-2">
+               <div className="h-3 w-16 bg-slate-200/60 rounded"></div>
+               <div className="h-6 w-24 bg-slate-200/60 rounded"></div>
+            </div>
+            <div className="h-9 w-[120px] bg-slate-200/60 rounded-xl"></div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   if (cartoes.length === 0) {
     return (

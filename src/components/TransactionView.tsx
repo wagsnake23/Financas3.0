@@ -34,6 +34,7 @@ interface TransactionViewProps {
   setFilterCategory: (category: string) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  isLoading?: boolean;
 }
 
 export const TransactionView: React.FC<TransactionViewProps> = ({
@@ -61,6 +62,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   setFilterCategory,
   searchTerm,
   setSearchTerm,
+  isLoading,
 }) => {
   console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
@@ -89,6 +91,7 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
       setFilterCategory={setFilterCategory}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
+      isLoading={isLoading}
     />
   );
 
