@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
@@ -20,37 +21,61 @@ export default function Profile() {
 
   const { data: profile, isLoading } = useProfile(user?.id);
 
-  const handleUpdateApp = async () => {
-    const toastId = toast.loading("Atualizando o sistema, aguarde...");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const hardRefreshPWA = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    const toastId = toast.loading("Atualizando sistema...");
+    setTimeout(() => {
+      toast.loading("Limpando cache e reiniciando, aguarde...", { id: toastId });
+    }, 1500);
     
     try {
-      await Promise.race([
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000)),
+      await Promise.all([
         (async () => {
           if ('caches' in window) {
             const keys = await caches.keys();
-            // Audita os caches e deleta, mas preserva os caches de fontes (google-fonts-cache e gstatic-fonts-cache) definidos no vite.config.ts
-            const keysToDelete = keys.filter(key => !key.includes('fonts-cache'));
-            await Promise.all(keysToDelete.map(key => caches.delete(key)));
+            await Promise.all(keys.map(key => caches.delete(key)));
           }
-          
+        })(),
+        (async () => {
           if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
-            for (const registration of registrations) {
-               await registration.update();
+            await Promise.all(registrations.map(reg => reg.unregister()));
+          }
+        })(),
+        (async () => {
+          if ('indexedDB' in window && typeof indexedDB.databases === 'function') {
+            try {
+              const dbs = await indexedDB.databases();
+              await Promise.all(
+                dbs.map(
+                  db =>
+                    new Promise<void>(resolve => {
+                      if (db.name) {
+                        const req = indexedDB.deleteDatabase(db.name);
+                        req.onsuccess = () => resolve();
+                        req.onerror = () => resolve();
+                        req.onblocked = () => resolve();
+                      } else {
+                        resolve();
+                      }
+                    })
+                )
+              );
+            } catch (e) {
+              console.warn("indexedDB.databases() falhou", e);
             }
           }
         })()
       ]);
       
-      toast.success("Sistema atualizado!", { id: toastId });
-      setTimeout(() => {
-        window.location.href = '/'; 
-      }, 1000);
-      
+      window.location.href = window.location.origin + window.location.pathname + '?t=' + Date.now();
     } catch (error) {
-      console.error("Update falhou ou excedeu timeout:", error);
-      toast.error("Não foi possível concluir a atualização.", { id: toastId });
+      console.error("Erro ao realizar hard refresh:", error);
+      window.location.reload();
+      setIsRefreshing(false);
     }
   };
 
@@ -232,12 +257,13 @@ export default function Profile() {
 
 
             <Button
-              onClick={handleUpdateApp}
-              className="btn-3d h-9 w-9 p-0 rounded-xl flex items-center justify-center shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90"
+              onClick={hardRefreshPWA}
+              disabled={isRefreshing}
+              className="btn-3d h-9 w-9 p-0 rounded-xl flex items-center justify-center shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90 disabled:opacity-70"
               style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
               title="Atualizar Aplicação"
             >
-              <DynamicIcon name="RefreshCw" className="w-4 h-4 !text-[#1E6BCE]" strokeWidth={2.5} />
+              <DynamicIcon name="RefreshCw" className={cn("w-4 h-4 !text-[#1E6BCE]", isRefreshing && "animate-spin")} strokeWidth={2.5} />
             </Button>
           </div>
         </div>
@@ -252,7 +278,7 @@ export default function Profile() {
         {isMobile && (
           <div className="mb-6 md:mb-8 flex justify-between items-start w-full">
             <div className="flex gap-2 items-start">
-              <span className="text-[26px] leading-none pt-1">{profile.avatar || "👽"}</span>
+              <span className="text-[26px] leading-none pt-1">{profile?.avatar || "👽"}</span>
               <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold text-[#1e293b] tracking-tight mb-[2px] md:mb-[5px]">
                   Meu Perfil
@@ -261,11 +287,12 @@ export default function Profile() {
               </div>
             </div>
             <button
-              onClick={handleUpdateApp}
-              className="text-slate-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-slate-100 mt-1 -translate-y-[10px]"
+              onClick={hardRefreshPWA}
+              disabled={isRefreshing}
+              className="text-slate-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-slate-100 mt-1 -translate-y-[10px] disabled:opacity-50"
               title="Atualizar Aplicação"
             >
-              <DynamicIcon name="RefreshCw" className="w-5 h-5" />
+              <DynamicIcon name="RefreshCw" className={cn("w-5 h-5", isRefreshing && "animate-spin text-blue-500")} />
             </button>
           </div>
         )}
@@ -310,7 +337,7 @@ export default function Profile() {
 
             <ProfileAvatar 
               userId={user!.id} 
-              currentAvatarEmoji={profile.avatar} 
+              currentAvatarEmoji={profile?.avatar} 
               ringClassName={subDisplay.ringClassName}
               buttonBg={subDisplay.buttonBg}
               decorType={subDisplay.decorType}
@@ -319,7 +346,7 @@ export default function Profile() {
             <h2 className={cn(
               "text-slate-800 tracking-tight text-center relative z-10",
               subDisplay.decorType === "vitalicio" ? "mt-3 text-xl md:text-2xl font-bold" : "mt-4 text-2xl font-extrabold"
-            )}>{profile.nome || "Usuário"}</h2>
+            )}>{profile?.nome || "Usuário"}</h2>
             <p className={cn(
               "text-slate-500/80 text-center relative z-10",
               subDisplay.decorType === "vitalicio" ? "font-medium text-[13px] md:text-[14px] mb-6" : "font-medium text-[15px] mb-8"
