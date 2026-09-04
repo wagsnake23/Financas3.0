@@ -682,7 +682,9 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(239,68,68,.08), transparent 70%), linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -698,7 +700,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.95)", boxShadow: "none", textShadow: "none" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -719,7 +721,10 @@ export default function Home() {
                                                      className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
                                                      style={{ 
                                                          backgroundColor: dStats.expenseVar >= 0 ? 'rgba(255,90,90,0.08)' : 'rgba(46,204,113,0.08)',
-                                                         color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a'
+                                                         color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a',
+                                                         border: "1px solid rgba(255,255,255,.85)",
+                                                         backdropFilter: "blur(6px)",
+                                                         boxShadow: "0 2px 6px rgba(0,0,0,.04)"
                                                      }}
                                                 >
                                                     {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
@@ -729,7 +734,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.84)", boxShadow: "0 6px 14px rgba(0,0,0,0.07)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
@@ -743,7 +748,9 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(34,197,94,.08), transparent 70%), linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
+                                        backdropFilter: "blur(18px) saturate(1.4)",
+                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -759,7 +766,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.95)", boxShadow: "none", textShadow: "none" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                         >
                                             Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -780,7 +787,10 @@ export default function Home() {
                                                      className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
                                                      style={{ 
                                                          backgroundColor: dStats.incomeVar >= 0 ? 'rgba(46,204,113,0.08)' : 'rgba(255,90,90,0.08)',
-                                                         color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626'
+                                                         color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626',
+                                                         border: "1px solid rgba(255,255,255,.85)",
+                                                         backdropFilter: "blur(6px)",
+                                                         boxShadow: "0 2px 6px rgba(0,0,0,.04)"
                                                      }}
                                                 >
                                                     {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
@@ -790,7 +800,7 @@ export default function Home() {
                                         </div>
                                         <Button
                                             className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.84)", boxShadow: "0 6px 14px rgba(0,0,0,0.07)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
@@ -984,7 +994,9 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                background: "radial-gradient(circle at top right, rgba(239,68,68,.08), transparent 70%), linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
+                                backdropFilter: "blur(18px) saturate(1.4)",
+                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1007,9 +1019,9 @@ export default function Home() {
                                                 background: "linear-gradient(135deg, #fcfcfc, #f5f5f5)", 
                                                 border: "1px solid rgba(0,0,0,0.08)",
                                                 borderBottom: "2px solid rgba(0,0,0,0.12)", 
+                                                filter: "saturate(0.85)",
+                                                boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)",
                                                 color: "#b91c1c",
-                                                filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                                                 textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                             }}
                                             onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
@@ -1033,7 +1045,7 @@ export default function Home() {
                                             <div className={cn(
                                                  "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                  dStats.expenseVar >= 0 ? "text-[#dc2626] bg-[#fef2f2]" : "text-[#16a34a] bg-[#f0fdf4]"
-                                            )}>
+                                            )} style={{ border: "1px solid rgba(255,255,255,.85)", backdropFilter: "blur(6px)", boxShadow: "0 2px 6px rgba(0,0,0,.04)" }}>
                                                 {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
                                             </div>
                                             <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
@@ -1042,7 +1054,7 @@ export default function Home() {
                                     <div className="shrink-0 flex items-end">
                                         <Button
                                             className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px]"
-                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/despesas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />
@@ -1058,7 +1070,9 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+                                background: "radial-gradient(circle at top right, rgba(34,197,94,.08), transparent 70%), linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
+                                backdropFilter: "blur(18px) saturate(1.4)",
+                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1082,8 +1096,8 @@ export default function Home() {
                                                 border: "1px solid rgba(0,0,0,0.08)",
                                                 borderBottom: "2px solid rgba(0,0,0,0.12)", 
                                                 color: "#15803d",
-                                                filter: "saturate(0.95)", 
-                                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                                filter: "saturate(0.85)",
+                                                boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)",
                                                 textShadow: "0 1px 1px rgba(0, 0, 0, 0.08)"
                                             }}
                                             onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
@@ -1107,7 +1121,7 @@ export default function Home() {
                                             <div className={cn(
                                                  "flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none",
                                                  dStats.incomeVar >= 0 ? "text-[#16a34a] bg-[#f0fdf4]" : "text-[#dc2626] bg-[#fef2f2]"
-                                            )}>
+                                            )} style={{ border: "1px solid rgba(255,255,255,.85)", backdropFilter: "blur(6px)", boxShadow: "0 2px 6px rgba(0,0,0,.04)" }}>
                                                 {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
                                             </div>
                                             <span className="text-[10px] font-medium leading-tight md:text-[12px]" style={{ color: "#4b5563" }}>Mês anterior</span>
@@ -1116,7 +1130,7 @@ export default function Home() {
                                     <div className="shrink-0 flex items-end">
                                         <Button
                                             className="h-9 md:h-[40px] px-4 rounded-[11px] font-bold text-sm md:text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[150px]"
-                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(0,0,0,0.12)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                            style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                             onClick={() => navigate("/receitas")}
                                         >
                                             <Plus className="mr-1.5 h-4 w-4 text-white" strokeWidth={4} />

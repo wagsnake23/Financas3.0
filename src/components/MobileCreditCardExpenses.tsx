@@ -190,7 +190,9 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
         style={{
           borderRadius: "22px",
-          background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+          background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
+          backdropFilter: "blur(18px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -217,7 +219,9 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "22px",
-          background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+          background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
+          backdropFilter: "blur(18px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -255,7 +259,9 @@ export const MobileCreditCardExpenses: React.FC<
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
-        background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
+        background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
+        backdropFilter: "blur(18px) saturate(1.4)",
+        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
@@ -334,7 +340,7 @@ export const MobileCreditCardExpenses: React.FC<
                   stroke={mainColor}
                   strokeWidth="2.5"
                   strokeLinecap="round"
-                  style={{ transition: 'all 220ms ease-in-out' }}
+                  style={{ transition: 'all 220ms ease-in-out', filter: 'drop-shadow(0 4px 10px rgba(124,58,237,0.18))' }}
                 />
                 {sparklinePoints.map((pt, idx) => {
                   const isSelected = idx === selectedMonthIdx;
