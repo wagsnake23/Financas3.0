@@ -79,10 +79,22 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
   // Dashboard-like gradient card and BarChart for both Mobile and Desktop
   return (
     <div className={cn(
-      "card-cloud p-6 flex flex-col border border-slate-200",
+      "p-6 flex flex-col relative overflow-hidden rounded-[24px]",
       isMobile ? "px-3 py-5" : "h-full justify-between"
-    )} style={{ background: !isMobile ? "#FFFFFF" : "linear-gradient(180deg, #FFFFFF 0%, #F9FCFA 100%)" }}>
-      <div>
+    )} style={{ 
+      background: "linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
+      border: "1px solid rgba(255,255,255,.85)",
+      backgroundClip: "padding-box",
+      boxShadow: "0 8px 24px rgba(37,99,235,.05), 0 2px 6px rgba(37,99,235,.03), inset 0 1px 0 rgba(255,255,255,.95)",
+      backdropFilter: "blur(18px) saturate(1.4)",
+      WebkitBackdropFilter: "blur(18px) saturate(1.4)"
+    }}>
+      {/* SHAPE ORGÂNICA */}
+      <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
+      {/* ILUMINAÇÃO TEMÁTICA */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(34,197,94,.08), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+      
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
         <div className="flex items-center gap-2 mb-6">
           <div className="h-8 w-2 bg-[#1AA361] rounded-full" />
           <h3 className="text-lg font-bold text-[#1AA361] tracking-tight">Receitas por Categoria</h3>
@@ -93,7 +105,8 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
           style={{
             height: isMobile
               ? Math.max(200, chartData.length * 35)
-              : Math.max(300, chartData.length * 40)
+              : Math.max(300, chartData.length * 40),
+            filter: "drop-shadow(0 4px 10px rgba(0,0,0,.06))"
           }}
         >
           <ResponsiveContainer width="100%" height="100%">

@@ -421,7 +421,9 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #FFFBFB 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #FFF7F8 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
+                    {/* Tom do rodapé na lateral esquerda para evidenciar a borda */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #FFF7F8 0%, transparent 20%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                     {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0 }} />
                     
@@ -524,8 +526,10 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "linear-gradient(135deg, #FFFBFB 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
+                style={{ background: "linear-gradient(135deg, #FFF7F8 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
               >
+                {/* Tom do rodapé na lateral esquerda para evidenciar a borda */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #FFF7F8 0%, transparent 20%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                 {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                 

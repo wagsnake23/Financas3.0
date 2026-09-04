@@ -149,16 +149,26 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
     }, [virtualInvestments, projectionMonths, patrimonioHoje]);
 
     return (
-        <Card 
+        <div 
             className={cn(
-                "w-full overflow-hidden shadow-xl bg-gradient-to-b from-[#F9FBFF] to-white",
+                "w-full overflow-hidden flex flex-col relative",
                 isMobile ? "rounded-[21px] p-4" : "border-none rounded-[32px] p-8"
             )}
-            style={isMobile ? {
-                border: "1px solid rgba(0,0,0,0.06)",
-                outline: "1px solid rgba(59, 130, 246, 0.05)"
-            } : undefined}
+            style={{
+                background: "linear-gradient(135deg, #FAFBFF 0%, #FFFFFF 55%, #F4F7FF 100%)",
+                border: "1px solid rgba(255,255,255,.85)",
+                backgroundClip: "padding-box",
+                boxShadow: "0 8px 24px rgba(37,99,235,.05), 0 2px 6px rgba(37,99,235,.03), inset 0 1px 0 rgba(255,255,255,.95)",
+                backdropFilter: "blur(18px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(18px) saturate(1.4)"
+            }}
         >
+            {/* SHAPE ORGÂNICA */}
+            <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
+            {/* ILUMINAÇÃO TEMÁTICA */}
+            <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(59,130,246,.08), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+            
+            <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
             {/* Título do Gráfico */}
             <div className="flex items-center gap-2 mb-6">
                 <div className="h-8 w-2 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full" />
@@ -174,7 +184,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
             </div>
 
             {/* Gráfico */}
-            <div className="w-full h-[280px] mb-2">
+            <div className="w-full h-[280px] mb-2" style={{ filter: "drop-shadow(0 4px 10px rgba(0,0,0,.06))" }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={chartData}
@@ -361,6 +371,7 @@ export function WealthProjection({ investments, isMobile }: WealthProjectionProp
                     </div>
                 </div>
             </div>
-        </Card>
+            </div>
+        </div>
     );
 }

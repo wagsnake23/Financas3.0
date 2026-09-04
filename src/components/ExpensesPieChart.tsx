@@ -51,10 +51,27 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
   }
 
   return (
-    <Card className={cn("p-6 animate-slide-up rounded-xl shadow-sm", isMobile && "p-4")}>
-      <h2 className={cn("text-2xl font-bold mb-6", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
-      <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
-        <PieChart>
+    <div className={cn(
+      "p-6 animate-slide-up relative overflow-hidden rounded-[24px]",
+      isMobile && "p-4"
+    )} style={{
+      background: "linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
+      border: "1px solid rgba(255,255,255,.85)",
+      backgroundClip: "padding-box",
+      boxShadow: "0 8px 24px rgba(37,99,235,.05), 0 2px 6px rgba(37,99,235,.03), inset 0 1px 0 rgba(255,255,255,.95)",
+      backdropFilter: "blur(18px) saturate(1.4)",
+      WebkitBackdropFilter: "blur(18px) saturate(1.4)"
+    }}>
+      {/* SHAPE ORGÂNICA */}
+      <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
+      {/* ILUMINAÇÃO TEMÁTICA */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(239,68,68,.08), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+      
+      <div style={{ position: "relative", zIndex: 1 }}>
+      <h2 className={cn("text-2xl font-bold mb-6 text-[#EF4444]", isMobile && "text-xl mb-4")}>Despesas por Categoria</h2> {/* Título atualizado */}
+      <div style={{ filter: "drop-shadow(0 4px 10px rgba(0,0,0,.06))" }}>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 'auto'} minHeight={isMobile ? undefined : 260}>
+          <PieChart>
           <Pie
             data={chartData}
             cx="50%"
@@ -80,6 +97,8 @@ export const ExpensesPieChart = ({ transactions, allCategories, isMobile }: Expe
           <Legend />
         </PieChart>
       </ResponsiveContainer>
-    </Card>
+      </div>
+      </div>
+    </div>
   );
 };
