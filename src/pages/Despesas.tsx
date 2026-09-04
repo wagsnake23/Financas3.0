@@ -421,13 +421,45 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="bg-white rounded-[18px] p-4 shadow-sm border border-slate-200/60 mb-6 flex flex-col gap-4">
-                    <div className="flex justify-between items-start">
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #FFFBFB 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
+                    {/* GLOW BRANCO: luminosidade base do canto superior direito */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0 }} />
+                    
+                    {/* SHAPE ROSA: maior, mais clara e mais evidente */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.55), transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
+                    
+                    {/* VÉU DE LUZ: overlay suave para dar sensação de vidro */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0 }} />
+
+                    {/* Luz suave no rodapé esquerdo */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at bottom left, rgba(255,255,255,.95), transparent 55%)", pointerEvents: "none", zIndex: 0 }} />
+                    
+                    {/* SHAPE PRINCIPAL: Removida para manter a suavidade da referência */}
+                    
+                    {/* PONTO DE LUZ: Iluminação concentrada atrás do botão da câmera (top right, raio ~180px) */}
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        width: "180px",
+                        height: "180px",
+                        background: "radial-gradient(circle at top right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 45%, transparent 100%)",
+                        pointerEvents: "none",
+                        zIndex: 0,
+                      }}
+                    />
+
+                    {/* LINHAS CURVAS: Removidas para manter o visual limpo e apenas em gradiente como na foto de referência */}
+
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                    <div className="flex justify-between items-start mb-3">
                       <div className="flex items-start gap-3">
                         <Button
                           variant="ghost"
                           className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none shadow-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                          style={{ background: "#ef4444", filter: "saturate(0.95)" }}
+                          style={{ background: "linear-gradient(135deg, #f87171, #ef4444)", filter: "saturate(0.95)", boxShadow: "0 8px 20px rgba(239,68,68,.22), inset 0 1px 0 rgba(255,255,255,.2)" }}
                           onClick={() => navigate("/lancamentos?type=expense")}
                         >
                           <DynamicIcon
@@ -449,18 +481,19 @@ export default function Despesas() {
                       <Button
                         variant="ghost"
                         onClick={handleOpenScanner}
-                        className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none bg-transparent hover:bg-transparent transition-all active:scale-90"
+                        className="w-10 h-10 p-0 flex items-center justify-center cursor-pointer border-none transition-all active:scale-90 rounded-[14px]"
+                        style={{ background: "rgba(255,245,248,0.6)", border: "1.5px solid rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", boxShadow: "0 4px 14px rgba(239,68,68,0.06), inset 0 1px 2px rgba(255,255,255,0.8)" }}
                         aria-label="Importar Nota Fiscal"
                       >
                         <Camera 
-                          className="w-6 h-6 text-[#2F3542]" 
-                          strokeWidth={2.2} 
-                          style={{ filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.2)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.5))" }}
+                          className="w-[22px] h-[22px] text-[#1E293B]" 
+                          strokeWidth={2} 
                         />
                       </Button>
                     </div>
 
                     {formContent}
+                    </div>
                   </div>
 
                   <NfcePendentes
@@ -490,10 +523,42 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
             <div className="space-y-6 flex flex-col">
               <Card
-                className="p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm card-despesas"
-                style={{ backgroundColor: "#FFFFFF" }}
+                className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, #FFFBFB 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
               >
+                {/* GLOW BRANCO: luminosidade base do canto superior direito */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+                
+                {/* SHAPE ROSA: maior, mais clara e mais evidente */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.55), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+                
+                {/* VÉU DE LUZ: overlay suave para dar sensação de vidro */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+
+                {/* Luz suave rodapé esquerdo */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at bottom left, rgba(255,255,255,.95), transparent 55%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+                
+                {/* SHAPE PRINCIPAL: Removida para manter a suavidade da referência */}
+                
+                {/* PONTO DE LUZ: Iluminação concentrada no canto superior direito (raio ~180px) */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "180px",
+                    height: "180px",
+                    background: "radial-gradient(circle at top right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 45%, transparent 100%)",
+                    pointerEvents: "none",
+                    zIndex: 0,
+                  }}
+                />
+
+                {/* LINHAS CURVAS: Removidas para manter o visual limpo e apenas em gradiente como na foto de referência */}
+                <div style={{ position: "relative", zIndex: 1 }}>
                 {formContent}
+                </div>
               </Card>
 
               <NfcePendentes

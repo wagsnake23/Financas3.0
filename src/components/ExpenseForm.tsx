@@ -774,7 +774,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             isMobile ? "h-11 text-lg" : "h-12 text-lg",
             isExpired && "opacity-80"
           )}
-          style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif" } as any}
+          style={{ "--cor-topo": "#EE5D5D", "--cor-base": "#E54D4D", fontFamily: "'Inter', sans-serif", boxShadow: "0 6px 16px rgba(239,68,68,.18), inset 0 1px 0 rgba(255,255,255,.25)" } as any}
           disabled={!isExpired && loading}
         >
           <Save className="h-5 w-5" strokeWidth={2.5} />
