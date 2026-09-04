@@ -421,17 +421,18 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #FFF7F8 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
-                    {/* Tom do rodapé na lateral esquerda para evidenciar a borda */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #FFF7F8 0%, transparent 20%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
                     {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0 }} />
                     
                     {/* SHAPE ROSA: maior, mais clara e mais evidente */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.55), transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
                     
-                    {/* VÉU DE LUZ: overlay suave para dar sensação de vidro */}
+                    {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0 }} />
+                    
+                    {/* ILUMINAÇÃO LATERAL ESQUERDA */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left center, rgba(255,255,255,.55), transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
                     {/* Luz suave no rodapé esquerdo */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at bottom left, rgba(255,255,255,.95), transparent 55%)", pointerEvents: "none", zIndex: 0 }} />
@@ -526,18 +527,19 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "linear-gradient(135deg, #FFF7F8 0%, #FFFFFF 55%, #FFF7F8 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
+                style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
               >
-                {/* Tom do rodapé na lateral esquerda para evidenciar a borda */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #FFF7F8 0%, transparent 20%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                 {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                 
                 {/* SHAPE ROSA: maior, mais clara e mais evidente */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.55), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
                 
-                {/* VÉU DE LUZ: overlay suave para dar sensação de vidro */}
+                {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+
+                {/* ILUMINAÇÃO LATERAL ESQUERDA */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left center, rgba(255,255,255,.55), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
 
                 {/* Luz suave rodapé esquerdo */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at bottom left, rgba(255,255,255,.95), transparent 55%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
