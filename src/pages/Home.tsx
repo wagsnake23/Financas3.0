@@ -685,7 +685,7 @@ export default function Home() {
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
+                                        border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -748,7 +748,7 @@ export default function Home() {
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                         backdropFilter: "blur(18px) saturate(1.4)",
                                         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
+                                        border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -978,7 +978,7 @@ export default function Home() {
                                 background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                 backdropFilter: "blur(18px) saturate(1.4)",
                                 WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                border: "1px solid rgba(255,255,255,.75)",
+                                border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
                                 boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -1054,7 +1054,7 @@ export default function Home() {
                                 background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
                                 backdropFilter: "blur(18px) saturate(1.4)",
                                 WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-                                border: "1px solid rgba(255,255,255,.75)",
+                                border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
                                 boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"

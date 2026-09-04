@@ -192,7 +192,7 @@ export const MobileCreditCardExpenses: React.FC<
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
           backdropFilter: "blur(18px) saturate(1.4)",
           WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-          border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
+          border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
           boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
@@ -232,7 +232,7 @@ export const MobileCreditCardExpenses: React.FC<
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
         backdropFilter: "blur(18px) saturate(1.4)",
         WebkitBackdropFilter: "blur(18px) saturate(1.4)",
-        border: isMobile ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(255,255,255,.75)",
+        border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
         boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
