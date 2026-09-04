@@ -421,7 +421,7 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
                     {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0 }} />
                     
@@ -431,8 +431,8 @@ export default function Despesas() {
                     {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0 }} />
                     
-                    {/* ILUMINAÇÃO LATERAL ESQUERDA */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,255,255,.70), transparent 80%)", pointerEvents: "none", zIndex: 0 }} />
+                    {/* ILUMINAÇÃO LATERAL ESQUERDA: Tom rosado semelhante ao da direita para dar contraste à borda branca */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,210,220,.30), transparent 80%)", pointerEvents: "none", zIndex: 0 }} />
 
                     {/* ILUMINAÇÃO INFERIOR ESQUERDA */}
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left bottom, rgba(255,255,255,.40), transparent 75%)", pointerEvents: "none", zIndex: 0 }} />
@@ -530,7 +530,7 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 10px 30px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
+                style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
               >
                 {/* GLOW BRANCO: luminosidade base do canto superior direito */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
@@ -541,8 +541,8 @@ export default function Despesas() {
                 {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
 
-                {/* ILUMINAÇÃO LATERAL ESQUERDA */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,255,255,.70), transparent 80%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+                {/* ILUMINAÇÃO LATERAL ESQUERDA: Tom rosado semelhante ao da direita para dar contraste à borda branca */}
+                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,210,220,.30), transparent 80%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
 
                 {/* ILUMINAÇÃO INFERIOR ESQUERDA */}
                 <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left bottom, rgba(255,255,255,.40), transparent 75%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
