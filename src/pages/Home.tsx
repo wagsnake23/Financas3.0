@@ -547,7 +547,7 @@ export default function Home() {
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03)"
+                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     {/* Formas orgânicas temáticas de fundo */}
@@ -679,16 +679,14 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[16px]"
+                                    className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
-                                        borderRadius: "16px",
+                                        borderRadius: "22px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                        backdropFilter: "blur(18px) saturate(1.4)",
-                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -742,16 +740,14 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[16px]"
+                                    className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
-                                        borderRadius: "16px",
+                                        borderRadius: "22px",
                                         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                        backdropFilter: "blur(18px) saturate(1.4)",
-                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -827,7 +823,7 @@ export default function Home() {
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03)"
+                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
                             {/* Formas orgânicas temáticas de fundo */}
@@ -985,16 +981,14 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
-                                borderRadius: "16px",
+                                borderRadius: "22px",
                                 background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                backdropFilter: "blur(18px) saturate(1.4)",
-                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
                             <div className="flex flex-col h-full w-full justify-between relative z-20">
@@ -1061,16 +1055,14 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between"
+                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
-                                borderRadius: "16px",
+                                borderRadius: "22px",
                                 background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-                                backdropFilter: "blur(18px) saturate(1.4)",
-                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 10px 28px rgba(15,45,95,.10), 0 3px 10px rgba(15,45,95,.06), inset 0 1px 0 rgba(255,255,255,.95)"
+                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
                             <div className="flex flex-col h-full w-full justify-between relative z-20">

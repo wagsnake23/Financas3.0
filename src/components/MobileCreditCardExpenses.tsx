@@ -187,16 +187,14 @@ export const MobileCreditCardExpenses: React.FC<
   if (isLoading) {
     return (
       <Card
-        className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
+        className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
         style={{
-          borderRadius: "16px",
+          borderRadius: "22px",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-          backdropFilter: "blur(18px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0">
@@ -216,16 +214,14 @@ export const MobileCreditCardExpenses: React.FC<
   if (cartoes.length === 0) {
     return (
       <Card
-        className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
+        className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
-          borderRadius: "16px",
+          borderRadius: "22px",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-          backdropFilter: "blur(18px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0">
@@ -255,17 +251,15 @@ export const MobileCreditCardExpenses: React.FC<
 
   return (
     <Card
-      className={cn("home-mobile-card md:p-6 rounded-[16px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center cursor-pointer transition-transform active:scale-[0.99]")}
+      className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center cursor-pointer transition-transform active:scale-[0.99]")}
       onClick={handlePayMonthlyBill}
       style={{
-        borderRadius: "16px",
+        borderRadius: "22px",
         background: "linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 55%, #F8FBFF 100%)",
-        backdropFilter: "blur(18px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: isMobile ? "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,.95)" : "0 4px 16px rgba(15,45,95,.06), 0 2px 6px rgba(15,45,95,.04), inset 0 1px 0 rgba(255,255,255,.95)"
+        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
 
