@@ -597,8 +597,8 @@ export default function Home() {
                                                 <div className="flex items-center gap-2.5 mb-2.5">
                                                     <Button
                                                         onClick={() => navigate("/dashboard?filter=investments")}
-                                                        className="w-9 h-9 p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                        style={{ background: "#2563EB", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(37,99,235,0.15)", transform: "translateY(-4px)" }}
+                                                        className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                        style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#2563EB", filter: "saturate(0.95)", boxShadow: "0 6px 14px rgba(37,99,235,0.15)", transform: "translateY(-4px)" }}
                                                     >
                                                         <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                     </Button>
