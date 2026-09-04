@@ -763,8 +763,8 @@ body {
 /* Nova Despesa & Nova Receita Form specific premium input styling */
 #expense-form .input-3d-premium,
 .card-despesas .input-3d-premium {
-  background: #F8FAFC !important;
-  border: 1px solid rgba(148,163,184,.18) !important;
+  background: #FAFBFC !important;
+  border: 1px solid rgba(203,213,225,.40) !important;
   border-radius: 0.75rem !important;
   color: #1e293b !important;
   box-shadow: inset 0 1px 2px rgba(15,23,42,.03) !important;
@@ -787,8 +787,8 @@ body {
 #expense-form [role="combobox"],
 #expense-form [aria-haspopup="dialog"],
 #expense-form button.input-3d-premium {
-  background: #F8FAFC !important;
-  border: 1px solid rgba(148,163,184,.18) !important;
+  background: #FAFBFC !important;
+  border: 1px solid rgba(203,213,225,.40) !important;
   box-shadow: inset 0 1px 2px rgba(15,23,42,.03) !important;
 }
 
