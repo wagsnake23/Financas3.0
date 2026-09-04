@@ -108,7 +108,7 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
       <div 
         className={cn("p-6 lg:pb-4 animate-fade-in flex flex-col relative overflow-hidden rounded-[24px]", !isMobile && "h-full")}
         style={{
-          background: "linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
+          background: isMobile ? "linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)" : "#FFFFFF",
           border: "1px solid rgba(255,255,255,.85)",
           backgroundClip: "padding-box",
           boxShadow: "0 8px 24px rgba(37,99,235,.05), 0 2px 6px rgba(37,99,235,.03), inset 0 1px 0 rgba(255,255,255,.95)",
@@ -116,10 +116,14 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
           WebkitBackdropFilter: "blur(18px) saturate(1.4)"
         }}
       >
-        {/* SHAPE ORGÂNICA */}
-        <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
-        {/* ILUMINAÇÃO TEMÁTICA */}
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(220,38,38,.08), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+        {isMobile && (
+          <>
+            {/* SHAPE ORGÂNICA */}
+            <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
+            {/* ILUMINAÇÃO TEMÁTICA */}
+            <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(220,38,38,.08), transparent 70%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
+          </>
+        )}
         
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
         <div className="flex items-center gap-2 mb-6 shrink-0">

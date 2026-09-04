@@ -530,26 +530,8 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
+                style={{ background: "#FFFFFF", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
               >
-                {/* GLOW BRANCO: luminosidade base do canto superior direito */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-                
-                {/* SHAPE ROSA: expandida e com contraste reduzido */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.40), transparent 80%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-                
-                {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-
-                {/* ILUMINAÇÃO LATERAL ESQUERDA: Tom rosado semelhante ao da direita para dar contraste à borda branca */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,210,220,.30), transparent 80%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-
-                {/* ILUMINAÇÃO INFERIOR ESQUERDA */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left bottom, rgba(255,255,255,.40), transparent 75%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-
-                {/* CAMADA INTERMEDIÁRIA CENTRAL */}
-                <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgba(255,255,255,.15), transparent 75%)", pointerEvents: "none", zIndex: 0, borderRadius: "inherit" }} />
-                
                 {/* SHAPE PRINCIPAL: Removida para manter a suavidade da referência */}
                 
                 {/* PONTO DE LUZ: Iluminação concentrada no canto superior direito (raio ~180px) */}
