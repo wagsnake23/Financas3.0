@@ -682,7 +682,7 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.08) 0%, rgba(239,68,68,.05) 35%, rgba(239,68,68,.02) 70%, transparent 100%), #FFFFFF",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.18) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, transparent 100%), #FFFFFF",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -766,7 +766,7 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.05) 35%, rgba(34,197,94,.02) 70%, transparent 100%), #FFFFFF",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.18) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, transparent 100%), #FFFFFF",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -1030,7 +1030,7 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.08) 0%, rgba(239,68,68,.05) 35%, rgba(239,68,68,.02) 70%, transparent 100%), #FFFFFF",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.18) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, transparent 100%), #FFFFFF",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1120,7 +1120,7 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.05) 35%, rgba(34,197,94,.02) 70%, transparent 100%), #FFFFFF",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.18) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, transparent 100%), #FFFFFF",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",

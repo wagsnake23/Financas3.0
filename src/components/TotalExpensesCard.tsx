@@ -27,7 +27,7 @@ export const TotalExpensesCard = ({
       isMobile ? "p-4 min-h-[96px]" : "h-full min-h-[200px]"
     )}
     style={{
-      background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.08) 0%, rgba(239,68,68,.05) 35%, rgba(239,68,68,.02) 70%, transparent 100%), #FFFFFF",
+      background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.18) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, transparent 100%), #FFFFFF",
       border: "1px solid rgba(255,255,255,0.85)",
       backgroundClip: "padding-box",
       outline: "none",

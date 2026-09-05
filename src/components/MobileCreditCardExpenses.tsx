@@ -190,11 +190,11 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #FFFFFF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0 relative z-20">
@@ -217,11 +217,11 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #FFFFFF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
         {/* Formas orgânicas temáticas de fundo */}
@@ -271,11 +271,11 @@ export const MobileCreditCardExpenses: React.FC<
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
-        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
+        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #FFFFFF",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+        boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
       {/* Formas orgânicas temáticas de fundo */}

@@ -26,11 +26,11 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
+                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #FFFFFF",
                 border: "1px solid rgba(255,255,255,0.85)",
                 backgroundClip: "padding-box",
                 outline: "none",
-                boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
             }}
             className={cn(
                 "rounded-[24px] flex flex-col relative transition-all duration-300 animate-fade-in overflow-hidden",
