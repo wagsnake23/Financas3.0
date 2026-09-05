@@ -429,7 +429,7 @@ export default function Despesas() {
                     {/* Curva orgânica restrita ao cabeçalho */}
                     <div aria-hidden="true" className="absolute left-0 right-0 pointer-events-none overflow-hidden" style={{ top: 0, height: "20%", zIndex: 0 }}>
                       <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 60">
-                        <path d="M 0,0 C 100,38 280,42 400,10 L 400,0 Z" fill="rgba(255,255,255,0.45)" />
+                        <path d="M 0,0 C 100,38 280,42 400,10 L 400,0 Z" fill="rgba(255,255,255,0.60)" />
                       </svg>
                     </div>
 
@@ -452,7 +452,7 @@ export default function Despesas() {
                           <h1 className="font-extrabold tracking-[0.5px] -mt-0.5 text-xl text-[#EF4444]" style={{ fontFamily: "'Inter', sans-serif" }}>
                             Nova Despesa
                           </h1>
-                          <p className="font-medium -mt-0.5 leading-none text-xs text-slate-500">
+                          <p className="-mt-0.5 leading-none text-xs text-[#64748B]" style={{ fontWeight: 500 }}>
                             Registre seus gastos
                           </p>
                         </div>
@@ -513,7 +513,7 @@ export default function Despesas() {
                 {/* Curva orgânica restrita ao cabeçalho */}
                 <div aria-hidden="true" className="absolute left-0 right-0 pointer-events-none overflow-hidden" style={{ top: 0, height: "20%", zIndex: 0 }}>
                   <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 70">
-                    <path d="M 0,0 C 120,45 340,50 500,12 L 500,0 Z" fill="rgba(255,255,255,0.45)" />
+                    <path d="M 0,0 C 120,45 340,50 500,12 L 500,0 Z" fill="rgba(255,255,255,0.60)" />
                   </svg>
                 </div>
 
