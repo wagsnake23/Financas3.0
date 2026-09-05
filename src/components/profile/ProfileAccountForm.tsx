@@ -182,7 +182,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
           </FormItem>
         </div>
 
-        <div className="pt-8 border-t border-slate-100 mt-10">
+        <div className="flex md:justify-end mt-8">
           <Button 
             type="submit" 
             disabled={isUpdating}

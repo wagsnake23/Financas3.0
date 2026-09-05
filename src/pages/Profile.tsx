@@ -272,7 +272,7 @@ export default function Profile() {
       <main
         className={cn(
           "container-app relative z-20 space-y-6 flex-grow",
-          isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-10" : "-mt-14 pb-[40px]"
+          isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-0" : "-mt-14 pb-[40px]"
         )}
       >
         {isMobile && (
@@ -397,7 +397,11 @@ export default function Profile() {
         </div>
       </main>
 
-      <Footer isMobile={isMobile} user={user} className={cn(isMobile ? "mt-0 mb-2 bg-transparent" : "mt-8")} />
+      <Footer 
+        isMobile={isMobile} 
+        user={user} 
+        className={cn(isMobile ? "relative w-full mt-2 mb-[env(safe-area-inset-bottom,16px)] pt-2 pb-2 z-20 !bg-transparent" : "mt-8")} 
+      />
     </div>
   );
 }
