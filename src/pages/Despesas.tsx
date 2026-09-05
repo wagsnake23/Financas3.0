@@ -465,7 +465,7 @@ export default function Despesas() {
                         <Button
                           variant="ghost"
                           className="w-9 h-9 p-0 flex items-center justify-center cursor-pointer rounded-xl border-none shadow-none transition-all hover:scale-105 active:scale-90 shrink-0 mt-0"
-                          style={{ background: "linear-gradient(135deg, #f87171, #ef4444)", filter: "saturate(0.95)", boxShadow: "0 8px 20px rgba(239,68,68,.22), inset 0 1px 0 rgba(255,255,255,.2)" }}
+                          style={{ background: "linear-gradient(135deg, #f87171, #ef4444)", filter: "saturate(0.95)", boxShadow: "0 2px 4px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,.2)" }}
                           onClick={() => navigate("/lancamentos?type=expense")}
                         >
                           <DynamicIcon

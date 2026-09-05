@@ -665,7 +665,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               "btn-3d p-0 flex items-center justify-center rounded-xl shadow-none border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
               isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
             )}
-            style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", opacity: 1 } as any}
+            style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", boxShadow: "0 2px 4px rgba(0,0,0,0.05), inset 0px 1px 2px rgba(255, 255, 255, 0.4), inset 0px -2px 4px rgba(0, 0, 0, 0.2)", opacity: 1 } as any}
           >
             <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
           </Button>
