@@ -272,7 +272,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
           onOpenAutoFocus={(e) => e.preventDefault()}
           className={cn(
             isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[11px]" : "sm:max-w-[425px] sm:max-h-[90vh] !rounded-[19px] sm:!pb-[14px]",
-            "shadow-none border-none bg-[#FAFAFA] !gap-2 flex flex-col max-h-[90vh] overflow-hidden"
+            "shadow-none border-none bg-[#FAFAFA] !gap-2 flex flex-col max-h-[90vh] overflow-hidden [&>button]:hidden"
           )}
           style={{
             border: isMobile ? "2px solid #FFFFFF" : "none",
@@ -281,22 +281,20 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         >
           <DialogHeader
             className={cn(
-              "flex flex-col items-start justify-start",
-              isMobile ? "mb-[-6px]" : "mb-[2px]",
-              isMobile && "absolute top-3.5 left-4 right-12 text-left",
-              !isMobile && "-mt-2"
+              "flex flex-col items-center justify-center shrink-0 relative z-10",
+              isMobile ? "mb-2 mt-[2px]" : "mb-[2px] -mt-2"
             )}
           >
-            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
-              <div className="flex flex-row items-center justify-start gap-3 w-full">
-                <DialogTitle className="flex items-center text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate gap-[8px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0">
+              <div className="flex flex-row items-center justify-center gap-3 w-full">
+                <DialogTitle className="flex items-center justify-center text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-center shrink truncate gap-[8px]" style={{ fontFamily: "'Inter', sans-serif" }}>
                   <DynamicIcon name="CreditCard" className="w-[18px] h-[18px] md:w-[20px] md:h-[20px] text-[#0556C3] mt-[-2px]" />
                   <span>Gerenciar Cartões</span>
                 </DialogTitle>
               </div>
             </div>
           </DialogHeader>
-          <div className={cn("pt-[45px] pb-2 flex-1 overflow-y-auto no-scrollbar")} data-dialog-card-form>
+          <div className={cn("pb-2 flex-1 overflow-y-auto no-scrollbar relative", isMobile && "max-h-[330px]")} data-dialog-card-form>
             <div className="space-y-4">
               {cards.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Nenhum cartão cadastrado.</p>
@@ -333,26 +331,20 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                         size="icon"
                         onClick={() => handleEditClick(card)}
                         className={cn(
-                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                          isMobile 
-                            ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                            : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
                         )}
                       >
-                        <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
+                        <span className={cn("text-base")}>✏️</span>
                       </Button>
                       <Button
                         type="button"
                         size="icon"
                         onClick={() => handleDeleteConfirm(card.id)}
                         className={cn(
-                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                          isMobile 
-                            ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                            : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                          "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
                         )}
                       >
-                        <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
+                        <DynamicIcon name="Trash2" className={cn("text-red-500 h-[18px] w-[18px]")} />
                       </Button>
                     </div>
                   </Card>
