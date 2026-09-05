@@ -38,7 +38,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
     return (
       <div className="grid gap-4 grid-cols-1">
         <div className="relative">
-          <Label htmlFor="dataVencimento" className="text-slate-500 font-semibold mb-1.5 inline-block text-[13px]">
+          <Label htmlFor="dataVencimento" className="text-[#64748B] font-[600] mb-1.5 inline-block text-[13px]">
             {dateLabel}
           </Label>
           
@@ -75,7 +75,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   return (
     <div className="grid gap-4 grid-cols-1">
       <div className="relative">
-        <Label htmlFor="dataVencimento" className="text-slate-500 font-semibold mb-1.5 inline-block text-[15px]">
+        <Label htmlFor="dataVencimento" className="text-[#64748B] font-[600] mb-1.5 inline-block text-[15px]">
           {dateLabel}
         </Label>
         

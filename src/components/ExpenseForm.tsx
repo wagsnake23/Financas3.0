@@ -565,7 +565,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       )}
 
       <div>
-        <Label htmlFor="subcategoria" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
+        <Label htmlFor="subcategoria" className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
           Subcategoria
         </Label>
         <div className="flex gap-2">
@@ -579,7 +579,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 role="combobox"
                 aria-expanded={isSubcategoryOpen}
                 className={cn(
-                  "flex-1 justify-between font-medium transition-all duration-200 input-3d-premium rounded-xl text-left border-slate-200 border",
+                  "flex-1 min-w-0 justify-between font-medium transition-all duration-200 input-3d-premium rounded-xl text-left border-slate-200 border",
                   isMobile ? "!h-[39px] text-sm px-3" : "h-10 px-3",
                   getBorderClass({
                     isInvalid: validationErrors.selectedSubcategoryId,
@@ -593,15 +593,15 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   ? (() => {
                       const sel = expenseSubcategories.find((cat) => cat.id === selectedSubcategoryId);
                       return sel ? (
-                        <span className="flex items-center gap-2 truncate">
-                          <span>{sel.icone}</span>
+                        <span className="flex items-center gap-2 truncate min-w-0">
+                          <span className="shrink-0">{sel.icone}</span>
                           <span className="truncate">{sel.nome}</span>
                         </span>
                       ) : (
-                        "Selecione a subcategoria"
+                        <span className="truncate">Selecione a subcategoria</span>
                       );
                     })()
-                  : "Selecione a subcategoria"}
+                  : <span className="truncate">Selecione a subcategoria</span>}
                 <ChevronDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
               </Button>
             </PopoverTrigger>
@@ -730,7 +730,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       {createPortal && <></>} {/* Dummy usage to ensure import is used if tree-shaking is aggressive? No need. */}
 
       <div>
-        <Label htmlFor="descricao" className={cn("text-slate-500 font-semibold mb-0.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
+        <Label htmlFor="descricao" className={cn("text-[#64748B] font-[600] mb-0.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
           Descrição
         </Label>
         <Textarea

@@ -120,7 +120,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2" : "grid-cols-2")}>
         {/* Valor */}
         <div>
-          <Label htmlFor="valor" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Valor Total (R$)</Label>
+          <Label htmlFor="valor" className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Valor Total (R$)</Label>
           <CurrencyBR
             value={valor}
             onChange={(v) => {
@@ -137,7 +137,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
         {/* Tipo de Pagamento (À vista / Parcelado / Fixo) */}
         <div>
-          <Label className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Tipo de Pagamento</Label>
+          <Label className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Tipo de Pagamento</Label>
           <Select
             value={tipoPagamento}
             onValueChange={(v: "avista" | "parcelado" | "fixo") => {
@@ -177,7 +177,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       >
         {/* Forma de Pagamento */}
         <div>
-          <Label className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Forma de Pagamento</Label>
+          <Label className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
             onValueChange={(value: "dinheiro" | "pix" | "cartao") => { // Tipo explícito para 'value'
@@ -211,7 +211,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Número de Parcelas (aparece apenas se tipoPagamento for "parcelado" E NÃO for recorrente) */}
         {tipoPagamento === "parcelado" && !isRecurring && ( // Condição atualizada
           <div>
-            <Label htmlFor="numeroParcelas" className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
+            <Label htmlFor="numeroParcelas" className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>
               Número de Parcelas
             </Label>
             <Input
@@ -242,7 +242,7 @@ export const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
       {formaPagamento === "cartao" && (
         <div className="col-span-full">
-          <Label className={cn("text-slate-500 font-semibold mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Cartão de Crédito</Label>
+          <Label className={cn("text-[#64748B] font-[600] mb-1.5 inline-block", isMobile ? "text-[13px]" : "text-[15px]")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
               value={cartaoId}

@@ -466,7 +466,7 @@ export default function Despesas() {
                         aria-label="Importar Nota Fiscal"
                       >
                         <Camera 
-                          className="w-[22px] h-[22px] text-[#1E293B]" 
+                          className="w-[22px] h-[22px] text-[#334155]" 
                           strokeWidth={2} 
                         />
                       </Button>
