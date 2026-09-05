@@ -119,24 +119,31 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded,
 
       <Dialog open={dialogAddCartaoOpen} onOpenChange={setDialogAddCartaoOpen}>
       <DialogContent className={cn(
-        isMobile ? "w-[98vw] max-w-[98vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
-        "border-none"
+        isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[8px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[11px]",
+        "shadow-none border-none bg-[#FAFAFA]"
       )}
       style={{
-        background: "linear-gradient(180deg, #f7fafc 0%, #f1f5fa 40%, #eaf0f7 100%)",
-        backgroundBlendMode: "soft-light",
-        backdropFilter: "blur(6px)",
-        border: "2px solid rgba(37, 99, 235, 0.15)",
-        outline: "1px solid rgba(37, 99, 235, 0.06)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.75), inset 0 -8px 20px rgba(0,0,0,0.015), inset 0 0 18px rgba(37, 99, 235, 0.06)"
+        border: isMobile ? "2px solid #FFFFFF" : "none",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
       }}>
-        <DialogHeader className={cn(isMobile ? "mt-0" : "mt-2")}>
-          <DialogTitle className="flex items-center justify-center gap-2 w-full font-black">
-            <span>💳</span>
-            <span>Novo Cartão</span>
-          </DialogTitle>
+        <DialogHeader
+          className={cn(
+            "flex flex-col items-start justify-start",
+            isMobile ? "mb-[-6px]" : "mb-[2px]",
+            isMobile && "absolute top-3.5 left-4 right-12 text-left",
+            !isMobile && "-mt-2"
+          )}
+        >
+          <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+            <div className="flex flex-row items-center justify-start gap-3 w-full">
+              <DialogTitle className="flex items-center text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate gap-[8px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <DynamicIcon name="CreditCard" className="w-[18px] h-[18px] md:w-[20px] md:h-[20px] text-[#0556C3] mt-[-2px]" />
+                <span>Novo Cartão</span>
+              </DialogTitle>
+            </div>
+          </div>
         </DialogHeader>
-        <div className={cn("space-y-4", isMobile ? "pt-0 pb-2" : "pb-2")} data-dialog-card-form>
+        <div className={cn("space-y-4 pt-[25px] pb-2")} data-dialog-card-form>
           <div>
             <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
             <Input
@@ -239,8 +246,8 @@ export const AddCardDialog: React.FC<AddCardDialogProps> = ({ user, onCardAdded,
               handleAddNewCartao();
             }}
             className={cn(
-              "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-              isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
+              "w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal",
+              isMobile ? "mt-4" : "mt-2"
             )}
             style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
             disabled={loading}
