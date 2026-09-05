@@ -374,7 +374,7 @@ export default function Receitas() {
                   isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={!isRecurring
-                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", boxShadow: "inset 0px 1px 0px rgba(255, 255, 255, 0.2)" } as any
                   : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
                 }
             >
@@ -395,7 +395,7 @@ export default function Receitas() {
                   isMobile && "!h-[39px] py-0.5 text-sm"
                 )}
                 style={isRecurring
-                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any
+                  ? { "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", boxShadow: "inset 0px 1px 0px rgba(255, 255, 255, 0.2)" } as any
                   : { "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)" } as any
                 }
             >
@@ -476,7 +476,7 @@ export default function Receitas() {
                 "btn-3d p-0 flex items-center justify-center rounded-xl shadow-none border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
                 isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
               )}
-              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1 } as any}
+              style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361", opacity: 1, boxShadow: "inset 0px 1px 0px rgba(255, 255, 255, 0.2)" } as any}
             >
               <Plus className="h-[18px] w-[18px] text-white" strokeWidth={3.5} />
             </Button>
@@ -656,7 +656,7 @@ export default function Receitas() {
         )}
       >
         {isMobile ? (
-          <div className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-transparent">
+          <div className="!fixed top-[calc(3.5rem+env(safe-area-inset-top))] left-0 right-0 pt-0 pb-0 bottom-0 overflow-hidden z-30 container-app bg-[#FAFAFA]">
             <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
               <div className="flex flex-col gap-6 pb-6 px-[2px]">
                 <div className="flex justify-between items-start pt-2">

@@ -771,11 +771,11 @@ body {
 
 #income-form .input-3d-premium,
 .card-receitas .input-3d-premium {
-  background: #F1F5F9 !important;
-  border: 1px solid #cbd5e1 !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(203,213,225,.95) !important;
   border-radius: 0.75rem !important;
   color: #1e293b !important;
-  box-shadow: inset 0 3px 6px rgba(0,0,0,0.04), inset 0 2px 4px rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.95) !important;
 }
 
 /* Unifica a cor de borda suave de todos os campos nos formulÃ¡rios para igualar Ã  descriÃ§Ã£o */
@@ -797,9 +797,9 @@ body {
 #income-form [role="combobox"],
 #income-form [aria-haspopup="dialog"],
 #income-form button.input-3d-premium {
-  background: #F1F5F9 !important;
-  border: 1px solid #cbd5e1 !important;
-  box-shadow: inset 0 3px 6px rgba(0,0,0,0.04), inset 0 2px 4px rgba(15, 23, 42, 0.08) !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(203,213,225,.95) !important;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.95) !important;
 }
 
 #expense-form .input-3d-premium:focus,
@@ -855,11 +855,11 @@ body {
   #income-form textarea,
   #income-form [role="combobox"],
   #income-form [aria-haspopup="dialog"] {
-    background-color: #F1F5F9 !important;
+    background-color: #FFFFFF !important;
     color: #1e293b !important;
-    font-weight: 600 !important; /* Semibold text */
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: inset 0 3px 6px rgba(0,0,0,0.04), inset 0 2px 4px rgba(15, 23, 42, 0.08) !important;
+    font-weight: 600 !important;
+    border: 1px solid rgba(203,213,225,.95) !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.95) !important;
   }
 
   /* Lucide and calendar icons inside popover trigger buttons in mobile */
