@@ -663,7 +663,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             onClick={() => setIsAddSubcategoryModalOpen(true)}
             className={cn(
               "btn-3d p-0 flex items-center justify-center rounded-xl shadow-none border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-              isMobile ? "!h-[39px] !w-[35px] text-sm" : "h-10 w-9 text-base"
+              isMobile ? "!h-[39px] w-[34px] text-sm" : "h-10 w-9 text-base"
             )}
             style={{ "--cor-topo": "#F87171", "--cor-base": "#EF4444", boxShadow: "0 2px 6px rgba(239,68,68,.12), inset 0 1px 0 rgba(255,255,255,.35)", opacity: 1 } as any}
           >
