@@ -190,16 +190,14 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
-          backdropFilter: "blur(18px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
-        <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0">
+        <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0 relative z-20">
           <div className="h-8 w-3/4 max-w-[200px] bg-slate-200/60 rounded-md mb-[8px]"></div>
           <div className="flex items-end justify-between w-full mt-4 mb-[6px]">
             <div className="flex flex-col gap-2">
@@ -219,16 +217,30 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
-          backdropFilter: "blur(18px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
-          boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+          boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
-        <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0">
+        {/* Formas orgânicas temáticas de fundo */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+          <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox={isMobile ? "0 0 400 180" : "0 0 500 220"}>
+            <defs>
+              <linearGradient id={isMobile ? "wave-grad-cartoes-empty-mob" : "wave-grad-cartoes-empty-desk"} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity={isMobile ? "0.15" : "0.12"} />
+              </linearGradient>
+            </defs>
+            {/* Curva suave superior */}
+            <path d={isMobile ? "M 60,0 C 150,55 240,65 380,15 L 400,0 Z" : "M 80,0 C 180,60 300,75 480,20 L 500,0 Z"} fill="rgba(255,255,255,0.5)" />
+            {/* Onda orgânica inferior */}
+            <path d={isMobile ? "M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" : "M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z"} fill={`url(#${isMobile ? "wave-grad-cartoes-empty-mob" : "wave-grad-cartoes-empty-desk"})`} />
+          </svg>
+        </div>
+
+        <div className="flex flex-col items-center justify-center text-center py-2 px-4 h-full md:py-0 relative z-20">
           <div className="flex items-center gap-1.5 mb-1.5">
              <span className="text-base leading-none">💳</span>
              <h3 className="text-[15px] font-extrabold text-slate-800 tracking-tight leading-none pt-[1px]" style={{ color: "#1e3a8a" }}>Nenhum cartão cadastrado</h3>
@@ -259,17 +271,30 @@ export const MobileCreditCardExpenses: React.FC<
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
-        background: "radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 70%), linear-gradient(135deg, #FCFBFF 0%, #FFFFFF 55%, #F7F3FF 100%)",
-        backdropFilter: "blur(18px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.10) 0%, rgba(124,58,237,.06) 35%, rgba(124,58,237,.02) 70%, transparent 100%), #FFFFFF",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
-        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+        boxShadow: "0 8px 24px rgba(124,58,237,0.06), 0 2px 6px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
       }}
     >
+      {/* Formas orgânicas temáticas de fundo */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox={isMobile ? "0 0 400 180" : "0 0 500 220"}>
+          <defs>
+            <linearGradient id={isMobile ? "wave-grad-cartoes-mob" : "wave-grad-cartoes-desk"} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity={isMobile ? "0.15" : "0.12"} />
+            </linearGradient>
+          </defs>
+          {/* Curva suave superior */}
+          <path d={isMobile ? "M 60,0 C 150,55 240,65 380,15 L 400,0 Z" : "M 80,0 C 180,60 300,75 480,20 L 500,0 Z"} fill="rgba(255,255,255,0.5)" />
+          {/* Onda orgânica inferior */}
+          <path d={isMobile ? "M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" : "M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z"} fill={`url(#${isMobile ? "wave-grad-cartoes-mob" : "wave-grad-cartoes-desk"})`} />
+        </svg>
+      </div>
 
-      <div className="flex flex-col w-full h-full justify-between pointer-events-auto" style={{ paddingTop: "0px" }}>
+      <div className="flex flex-col w-full h-full justify-between pointer-events-auto relative z-20" style={{ paddingTop: "0px" }}>
         {/* Top Header Row */}
         <div className="flex justify-between items-start w-full mb-[8px]">
           {/* Header Row: Full width selector */}

@@ -23,39 +23,69 @@ export const TotalRevenueCard = ({
 
   return (
     <Card className={cn(
-      "p-6 animate-fade-in rounded-3xl card-3d bg-soft-green-background flex flex-col relative",
+      "p-6 animate-fade-in rounded-3xl flex flex-col relative overflow-hidden",
       isMobile ? "p-4 min-h-[96px]" : "h-full min-h-[200px]"
-    )}>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className={cn("text-sm font-semibold text-muted-foreground mb-1", isMobile && "text-xs", "font-roboto")}>Total de Receitas</p>
-          <p className={cn("text-3xl font-bold text-success", isMobile && "text-xl", "font-roboto")}>{formatCurrency(totalIncome)}</p>
-        </div>
+    )}
+    style={{
+      background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.05) 35%, rgba(34,197,94,.02) 70%, transparent 100%), #FFFFFF",
+      border: "1px solid rgba(255,255,255,0.85)",
+      backgroundClip: "padding-box",
+      outline: "none",
+      boxShadow: "0 8px 24px rgba(34,197,94,0.06), 0 2px 6px rgba(34,197,94,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+    }}>
+      {/* Formas orgânicas temáticas de fundo */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl" style={{ zIndex: 0 }}>
+        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox={isMobile ? "0 0 400 180" : "0 0 500 220"}>
+          <defs>
+            <linearGradient id={isMobile ? "wave-grad-total-rev-mob" : "wave-grad-total-rev-desk"} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity={isMobile ? "0.15" : "0.12"} />
+            </linearGradient>
+          </defs>
+          {/* Curva suave superior */}
+          <path d={isMobile ? "M 60,0 C 150,55 240,65 380,15 L 400,0 Z" : "M 80,0 C 180,60 300,75 480,20 L 500,0 Z"} fill="rgba(255,255,255,0.5)" />
+          {/* Onda orgânica inferior */}
+          <path d={isMobile ? "M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" : "M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z"} fill={`url(#${isMobile ? "wave-grad-total-rev-mob" : "wave-grad-total-rev-desk"})`} />
+        </svg>
       </div>
 
-      {chartContent && (
-        <div className="mt-4 flex-grow">
-          {chartContent}
-        </div>
-      )}
-
-      <div className={cn(
-        "flex items-center gap-2",
-        isMobile ? "absolute bottom-2 left-2" : "mt-4"
-      )}>
-        <div className={cn(
-          "rounded-xl bg-success/10 p-2 text-success",
-          isMobile ? "p-1" : "p-2"
-        )}>
-          <DynamicIcon name="DollarSign" className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} />
+      <div className="flex flex-col h-full w-full justify-between relative z-20">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className={cn("text-sm text-muted-foreground mb-1", isMobile && "text-xs", "font-roboto")} style={{ fontWeight: 700 }}>Total de Receitas</p>
+            <p className={cn("text-3xl text-success", isMobile && "text-xl", "font-roboto")} style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>{formatCurrency(totalIncome)}</p>
+          </div>
         </div>
 
-        {annualTotalValue !== undefined && (
-          <div className="flex flex-col">
-            <p className="text-xs text-muted-foreground leading-none font-roboto">{annualTotalLabel || "Total Anual"}</p>
-            <p className="text-sm font-bold text-success font-roboto">{formatCurrency(annualTotalValue)}</p>
+        {chartContent && (
+          <div className="mt-4 flex-grow">
+            {chartContent}
           </div>
         )}
+
+        <div className={cn(
+          "flex items-center gap-2",
+          isMobile ? "absolute bottom-2 left-2" : "mt-4"
+        )}>
+          <div className={cn(
+            "rounded-xl bg-success/10 p-2 text-success flex items-center justify-center",
+            isMobile ? "p-1" : "p-2"
+          )}
+          style={{
+            border: "1px solid rgba(255,255,255,.80)",
+            backdropFilter: "blur(6px)",
+            boxShadow: "0 2px 6px rgba(0,0,0,.04)"
+          }}>
+            <DynamicIcon name="DollarSign" className={cn(isMobile ? "h-4 w-4" : "h-6 w-6")} />
+          </div>
+
+          {annualTotalValue !== undefined && (
+            <div className="flex flex-col">
+              <p className="text-xs text-muted-foreground leading-none font-roboto" style={{ fontWeight: 700 }}>{annualTotalLabel || "Total Anual"}</p>
+              <p className="text-sm text-success font-roboto" style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>{formatCurrency(annualTotalValue)}</p>
+            </div>
+          )}
+        </div>
       </div>
     </Card>
   );

@@ -543,7 +543,7 @@ export default function Home() {
                                     className="home-mobile-card rounded-[22px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -682,64 +682,82 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(239,68,68,.08), transparent 70%), linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
-                                        backdropFilter: "blur(18px) saturate(1.4)",
-                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.08) 0%, rgba(239,68,68,.05) 35%, rgba(239,68,68,.02) 70%, transparent 100%), #FFFFFF",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <div className="flex flex-col md:mt-3">
-                                            <h2 className="leading-none tracking-[0.5px] mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700, marginTop: "var(--home-title-mt, 3px)" }}>Despesas</h2>
-                                            <p className="leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                                <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
-                                            </p>
-                                        </div>
-                                        <Button
-                                            className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
-                                            onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
-                                        >
-                                            Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
-                                        </Button>
+                                    {/* Formas orgânicas temáticas de fundo */}
+                                    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                                            <defs>
+                                                <linearGradient id="wave-grad-despesas-mob" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                                                </linearGradient>
+                                            </defs>
+                                            {/* Curva suave superior */}
+                                            <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                                            {/* Onda suave que envolve a base */}
+                                            <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-despesas-mob)" />
+                                        </svg>
                                     </div>
 
-                                    <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-start gap-2">
-                                            <Button
-                                                onClick={() => navigate("/dashboard?filter=expenses")}
-                                                className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#ef4444", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(239,68,68,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
-                                            >
-                                                <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                            </Button>
-                                            <div className="flex flex-col items-start gap-0.5">
-                                                <div 
-                                                     className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
-                                                     style={{ 
-                                                         backgroundColor: dStats.expenseVar >= 0 ? 'rgba(255,90,90,0.08)' : 'rgba(46,204,113,0.08)',
-                                                         color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a',
-                                                         border: "1px solid rgba(255,255,255,.85)",
-                                                         backdropFilter: "blur(6px)",
-                                                         boxShadow: "0 2px 6px rgba(0,0,0,.04)"
-                                                     }}
-                                                >
-                                                    {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                    <div className="flex flex-col justify-center h-full w-full relative z-20">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex flex-col md:mt-3">
+                                                <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
+                                                    <h2 className="leading-none tracking-[0.5px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Despesas</h2>
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
+                                                    <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? (isMobile ? "#ef4444" : "#b91c1c") : undefined} />
+                                                </p>
                                             </div>
+                                            <Button
+                                                className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: isMobile ? "#ef4444" : "#b91c1c", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
+                                                onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                            >
+                                                Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            </Button>
                                         </div>
-                                        <Button
-                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
-                                            onClick={() => navigate("/despesas")}
-                                        >
-                                            <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
-                                            Nova Despesa
-                                        </Button>
+
+                                        <div className="flex items-center justify-between mt-2">
+                                            <div className="flex items-start gap-2">
+                                                <Button
+                                                    onClick={() => navigate("/dashboard?filter=expenses")}
+                                                    className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                    style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "#ef4444", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(239,68,68,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                >
+                                                    <TrendingDown className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                                </Button>
+                                                <div className="flex flex-col items-start gap-0.5">
+                                                    <div 
+                                                         className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
+                                                         style={{ 
+                                                             backgroundColor: dStats.expenseVar >= 0 ? 'rgba(255,90,90,0.08)' : 'rgba(46,204,113,0.08)',
+                                                             color: dStats.expenseVar >= 0 ? '#dc2626' : '#16a34a',
+                                                             border: "1px solid rgba(255,255,255,.85)",
+                                                             backdropFilter: "blur(6px)",
+                                                             boxShadow: "0 2px 6px rgba(0,0,0,.04)"
+                                                         }}
+                                                    >
+                                                        {dStats.expenseVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.expenseVar).toFixed(1)}%
+                                                    </div>
+                                                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                                onClick={() => navigate("/despesas")}
+                                            >
+                                                <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
+                                                Nova Despesa
+                                            </Button>
+                                        </div>
                                     </div>
                                 </Card>
 
@@ -748,64 +766,82 @@ export default function Home() {
                                     className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(34,197,94,.08), transparent 70%), linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
-                                        backdropFilter: "blur(18px) saturate(1.4)",
-                                        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.05) 35%, rgba(34,197,94,.02) 70%, transparent 100%), #FFFFFF",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
-                                        boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                                        boxShadow: "0 8px 24px rgba(34,197,94,0.06), 0 2px 6px rgba(34,197,94,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                                     }}
                                 >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <div className="flex flex-col md:mt-3">
-                                            <h2 className="leading-none tracking-[0.5px] mb-2 md:-mt-[1px] md:text-[16px]" style={{ color: "#15803d", filter: "saturate(0.84)", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700, marginTop: "var(--home-title-mt, 3px)" }}>Receitas</h2>
-                                            <p className="leading-none md:text-[25px]" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
-                                                <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
-                                            </p>
-                                        </div>
-                                        <Button
-                                            className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
-                                            onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
-                                        >
-                                            Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
-                                        </Button>
+                                    {/* Formas orgânicas temáticas de fundo */}
+                                    <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                                            <defs>
+                                                <linearGradient id="wave-grad-receitas-mob" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                                                </linearGradient>
+                                            </defs>
+                                            {/* Curva suave superior */}
+                                            <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                                            {/* Onda suave que envolve a base */}
+                                            <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-receitas-mob)" />
+                                        </svg>
                                     </div>
 
-                                    <div className="flex items-center justify-between mt-2">
-                                        <div className="flex items-start gap-2">
-                                            <Button
-                                                onClick={() => navigate("/dashboard?filter=revenues")}
-                                                className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
-                                                style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(34,197,94,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
-                                            >
-                                                <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
-                                            </Button>
-                                            <div className="flex flex-col items-start gap-0.5">
-                                                <div 
-                                                     className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
-                                                     style={{ 
-                                                         backgroundColor: dStats.incomeVar >= 0 ? 'rgba(46,204,113,0.08)' : 'rgba(255,90,90,0.08)',
-                                                         color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626',
-                                                         border: "1px solid rgba(255,255,255,.85)",
-                                                         backdropFilter: "blur(6px)",
-                                                         boxShadow: "0 2px 6px rgba(0,0,0,.04)"
-                                                     }}
-                                                >
-                                                    {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                    <div className="flex flex-col justify-center h-full w-full relative z-20">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex flex-col md:mt-3">
+                                                <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
+                                                    <h2 className="leading-none tracking-[0.5px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Receitas</h2>
                                                 </div>
-                                                <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
+                                                    <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
+                                                </p>
                                             </div>
+                                            <Button
+                                                className="px-4 rounded-[11px] font-bold border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "#F8FAFC", color: "#15803d", border: "1px solid rgba(0,0,0,0.12)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "none" }}
+                                                onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
+                                            >
+                                                Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
+                                            </Button>
                                         </div>
-                                        <Button
-                                            className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                            style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
-                                            onClick={() => navigate("/receitas")}
-                                        >
-                                            <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
-                                            Nova Receita
-                                        </Button>
+
+                                        <div className="flex items-center justify-between mt-2">
+                                            <div className="flex items-start gap-2">
+                                                <Button
+                                                    onClick={() => navigate("/dashboard?filter=revenues")}
+                                                    className="p-0 flex items-center justify-center rounded-xl border-none transition-all active:scale-90 shrink-0"
+                                                    style={{ width: "var(--home-btn-h, 36px)", height: "var(--home-btn-h, 36px)", background: "linear-gradient(135deg, #22c55e, #16a34a)", filter: "saturate(0.84)", boxShadow: "0 4px 10px rgba(34,197,94,0.12), inset 0 1px 1px rgba(255,255,255,0.3)" }}
+                                                >
+                                                    <TrendingUp className="h-[18px] w-[18px] text-white" strokeWidth={3} />
+                                                </Button>
+                                                <div className="flex flex-col items-start gap-0.5">
+                                                    <div 
+                                                         className="flex items-center px-2 py-0.5 rounded-[10px] text-[10px] font-bold border-none tracking-tight leading-none h-[18px]"
+                                                         style={{ 
+                                                             backgroundColor: dStats.incomeVar >= 0 ? 'rgba(46,204,113,0.08)' : 'rgba(255,90,90,0.08)',
+                                                             color: dStats.incomeVar >= 0 ? '#16a34a' : '#dc2626',
+                                                             border: "1px solid rgba(255,255,255,.85)",
+                                                             backdropFilter: "blur(6px)",
+                                                             boxShadow: "0 2px 6px rgba(0,0,0,.04)"
+                                                         }}
+                                                    >
+                                                        {dStats.incomeVar >= 0 ? "↑ +" : "↓ "} {Math.abs(dStats.incomeVar).toFixed(1)}%
+                                                    </div>
+                                                    <span className="text-[10px] font-medium leading-tight" style={{ color: "#4b5563" }}>Mês anterior</span>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
+                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                                onClick={() => navigate("/receitas")}
+                                            >
+                                                <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
+                                                Nova Receita
+                                            </Button>
+                                        </div>
                                     </div>
                                 </Card>
 
@@ -829,7 +865,7 @@ export default function Home() {
                             className="pl-4 pr-5 pt-3 pb-3 rounded-[22px] relative overflow-hidden card-saldo md:p-6 md:flex md:flex-col h-full w-full justify-between"
                             style={{
                                 borderRadius: "22px",
-                                background: "linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -994,21 +1030,35 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(239,68,68,.08), transparent 70%), linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 55%, #FFF4F4 100%)",
-                                backdropFilter: "blur(18px) saturate(1.4)",
-                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.08) 0%, rgba(239,68,68,.05) 35%, rgba(239,68,68,.02) 70%, transparent 100%), #FFFFFF",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                                boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
+                            {/* Formas orgânicas temáticas de fundo */}
+                            <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 220">
+                                    <defs>
+                                        <linearGradient id="wave-grad-despesas-desk" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.12" />
+                                        </linearGradient>
+                                    </defs>
+                                    {/* Curva suave superior */}
+                                    <path d="M 80,0 C 180,60 300,75 480,20 L 500,0 Z" fill="rgba(255,255,255,0.5)" />
+                                    {/* Onda orgânica inferior */}
+                                    <path d="M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z" fill="url(#wave-grad-despesas-desk)" />
+                                </svg>
+                            </div>
+
                             <div className="flex flex-col h-full w-full justify-between relative z-20">
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
                                         <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Despesas</h2>
-                                        <p className="text-[21px] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
                                             <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
                                         </p>
                                     </div>
@@ -1070,21 +1120,35 @@ export default function Home() {
                             className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                             style={{
                                 borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(34,197,94,.08), transparent 70%), linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
-                                backdropFilter: "blur(18px) saturate(1.4)",
-                                WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.05) 35%, rgba(34,197,94,.02) 70%, transparent 100%), #FFFFFF",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
-                                boxShadow: "0 8px 24px rgba(37,99,235,0.06), 0 2px 6px rgba(37,99,235,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                                boxShadow: "0 8px 24px rgba(34,197,94,0.06), 0 2px 6px rgba(34,197,94,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                             }}
                         >
+                            {/* Formas orgânicas temáticas de fundo */}
+                            <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[22px]" style={{ zIndex: 0 }}>
+                                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 220">
+                                    <defs>
+                                        <linearGradient id="wave-grad-receitas-desk" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.12" />
+                                        </linearGradient>
+                                    </defs>
+                                    {/* Curva suave superior */}
+                                    <path d="M 80,0 C 180,60 300,75 480,20 L 500,0 Z" fill="rgba(255,255,255,0.5)" />
+                                    {/* Onda orgânica inferior */}
+                                    <path d="M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z" fill="url(#wave-grad-receitas-desk)" />
+                                </svg>
+                            </div>
+
                             <div className="flex flex-col h-full w-full justify-between relative z-20">
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
                                         <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Receitas</h2>
-                                        <p className="text-[21px] leading-none md:text-[25px]" style={{ marginTop: "-3px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: isCurrentMonth ? "#1f2937" : "#4B5563", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
                                             <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                         </p>
                                     </div>
