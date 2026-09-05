@@ -26,7 +26,7 @@ export const ProjectedYieldCard = ({
     return (
         <Card
             style={{
-                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #FFFFFF",
+                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
                 border: "1px solid rgba(255,255,255,0.85)",
                 backgroundClip: "padding-box",
                 outline: "none",
