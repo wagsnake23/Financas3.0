@@ -271,8 +271,8 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent 
           onOpenAutoFocus={(e) => e.preventDefault()}
           className={cn(
-            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[11px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[14px]",
-            "shadow-none border-none bg-[#FAFAFA] !gap-2"
+            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[11px]" : "sm:max-w-[425px] sm:max-h-[90vh] !rounded-[19px] sm:!pb-[14px]",
+            "shadow-none border-none bg-[#FAFAFA] !gap-2 flex flex-col max-h-[90vh] overflow-hidden"
           )}
           style={{
             border: isMobile ? "2px solid #FFFFFF" : "none",
@@ -296,8 +296,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               </div>
             </div>
           </DialogHeader>
-          <div className={cn("pt-[45px] pb-2")} data-dialog-card-form>
-          <ScrollArea className="max-h-[300px]">
+          <div className={cn("pt-[45px] pb-2 flex-1 overflow-y-auto no-scrollbar")} data-dialog-card-form>
             <div className="space-y-4">
               {cards.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Nenhum cartão cadastrado.</p>
@@ -305,7 +304,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 cards.map((card) => (
                   <Card
                     key={card.id}
-                    className="flex flex-col p-3 border rounded-xl bg-card shadow-sm relative pr-12 min-h-[96px] justify-center"
+                    className="flex flex-col p-3 border rounded-xl bg-card shadow-sm relative pr-12 min-h-[96px] justify-center shrink-0"
                   >
                     <div>
                       <p className="font-medium">{card.nome}</p>
@@ -360,7 +359,6 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 ))
               )}
             </div>
-          </ScrollArea>
           </div>
           <DialogFooter className={cn(isMobile ? "pb-0 pt-0" : "pb-0")}>
             <Button
