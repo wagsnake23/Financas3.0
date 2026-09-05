@@ -421,7 +421,7 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "#FFF8F8", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}>
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "#FFF5F5", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}>
                     {/* Iluminação branca superior direita — apenas no cabeçalho */}
                     <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(255,255,255,.80), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "18px 18px 0 0" }} />
                     {/* Tom vermelho concentrado no cabeçalho */}
@@ -504,7 +504,7 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "#FFF8F8", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
+                style={{ background: "#FFF5F5", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
               >
                 {/* Iluminação branca superior direita — apenas no cabeçalho */}
                 <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(255,255,255,.80), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "24px 24px 0 0" }} />
