@@ -308,7 +308,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel className="text-sm font-medium text-gray-800 mb-1">
-                Data de Vencimento
+                Data
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

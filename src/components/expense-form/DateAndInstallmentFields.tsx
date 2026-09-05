@@ -32,7 +32,7 @@ export const DateAndInstallmentFields: React.FC<DateAndInstallmentFieldsProps> =
   isMobile,
   tipoPagamento,
 }) => {
-  const dateLabel = tipoPagamento === "parcelado" ? "Data da Primeira Parcela" : "Data de Vencimento";
+  const dateLabel = tipoPagamento === "parcelado" ? "Data da Primeira Parcela" : "Data";
 
   if (isMobile) {
     return (
