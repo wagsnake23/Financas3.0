@@ -421,43 +421,17 @@ export default function Despesas() {
             >
               <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden pb-0 px-0 pt-1">
                 <div className="flex flex-col gap-6 pb-6 px-0">
-                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, #FFF9FA 0%, #FFF7F8 40%, #FFF6F7 100%)", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}>
-                    {/* GLOW BRANCO: luminosidade base do canto superior direito */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,.95), transparent 45%)", pointerEvents: "none", zIndex: 0 }} />
-                    
-                    {/* SHAPE ROSA: expandida e com contraste reduzido */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at top right, rgba(255,210,220,.40), transparent 80%)", pointerEvents: "none", zIndex: 0 }} />
-                    
-                    {/* VÉU DE LUZ TOPO: overlay suave para dar sensação de vidro */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,.35), transparent)", pointerEvents: "none", zIndex: 0 }} />
-                    
-                    {/* ILUMINAÇÃO LATERAL ESQUERDA: Tom rosado semelhante ao da direita para dar contraste à borda branca */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at left center, rgba(255,210,220,.30), transparent 80%)", pointerEvents: "none", zIndex: 0 }} />
-
-                    {/* ILUMINAÇÃO INFERIOR ESQUERDA */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at left bottom, rgba(255,255,255,.40), transparent 75%)", pointerEvents: "none", zIndex: 0 }} />
-
-                    {/* CAMADA INTERMEDIÁRIA CENTRAL */}
-                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgba(255,255,255,.15), transparent 75%)", pointerEvents: "none", zIndex: 0 }} />
-                    
-                    {/* SHAPE PRINCIPAL: Removida para manter a suavidade da referência */}
-                    
-                    {/* PONTO DE LUZ: Iluminação concentrada atrás do botão da câmera (top right, raio ~180px) */}
-                    <div
-                      aria-hidden="true"
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: "180px",
-                        height: "180px",
-                        background: "radial-gradient(circle at top right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 45%, transparent 100%)",
-                        pointerEvents: "none",
-                        zIndex: 0,
-                      }}
-                    />
-
-                    {/* LINHAS CURVAS: Removidas para manter o visual limpo e apenas em gradiente como na foto de referência */}
+                  <div className="nova-despesa-card rounded-[18px] p-4 mb-6 flex flex-col gap-4 relative overflow-hidden" style={{ background: "#FFF8F8", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}>
+                    {/* Iluminação branca superior direita — apenas no cabeçalho */}
+                    <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(255,255,255,.80), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "18px 18px 0 0" }} />
+                    {/* Tom vermelho concentrado no cabeçalho */}
+                    <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(239,68,68,.09), transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+                    {/* Curva orgânica restrita ao cabeçalho */}
+                    <div aria-hidden="true" className="absolute left-0 right-0 pointer-events-none overflow-hidden" style={{ top: 0, height: "20%", zIndex: 0 }}>
+                      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 60">
+                        <path d="M 0,0 C 100,38 280,42 400,10 L 400,0 Z" fill="rgba(255,255,255,0.45)" />
+                      </svg>
+                    </div>
 
                     <div style={{ position: "relative", zIndex: 1 }}>
                     <div className="flex justify-between items-start mb-3">
@@ -530,26 +504,19 @@ export default function Despesas() {
             <div className="space-y-6 flex flex-col">
               <Card
                 className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "#FFFFFF", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)", backdropFilter: "blur(18px) saturate(1.4)", WebkitBackdropFilter: "blur(18px) saturate(1.4)" }}
+                style={{ background: "#FFF8F8", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
               >
-                {/* SHAPE PRINCIPAL: Removida para manter a suavidade da referência */}
-                
-                {/* PONTO DE LUZ: Iluminação concentrada no canto superior direito (raio ~180px) */}
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: "180px",
-                    height: "180px",
-                    background: "radial-gradient(circle at top right, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 45%, transparent 100%)",
-                    pointerEvents: "none",
-                    zIndex: 0,
-                  }}
-                />
+                {/* Iluminação branca superior direita — apenas no cabeçalho */}
+                <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(255,255,255,.80), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "24px 24px 0 0" }} />
+                {/* Tom vermelho concentrado no cabeçalho */}
+                <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(239,68,68,.09), transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+                {/* Curva orgânica restrita ao cabeçalho */}
+                <div aria-hidden="true" className="absolute left-0 right-0 pointer-events-none overflow-hidden" style={{ top: 0, height: "20%", zIndex: 0 }}>
+                  <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 70">
+                    <path d="M 0,0 C 120,45 340,50 500,12 L 500,0 Z" fill="rgba(255,255,255,0.45)" />
+                  </svg>
+                </div>
 
-                {/* LINHAS CURVAS: Removidas para manter o visual limpo e apenas em gradiente como na foto de referência */}
                 <div style={{ position: "relative", zIndex: 1 }}>
                 {formContent}
                 </div>
