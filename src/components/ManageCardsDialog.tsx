@@ -271,24 +271,33 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent 
           onOpenAutoFocus={(e) => e.preventDefault()}
           className={cn(
-            isMobile ? "w-[99vw] max-w-[99vw] dialog-mobile pb-2 !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[80vh] overflow-y-auto !rounded-[22px] shadow-none",
-            "border-none"
+            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[11px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[14px]",
+            "shadow-none border-none bg-[#FAFAFA] !gap-2"
           )}
-        style={{
-          background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
-          backgroundBlendMode: "soft-light",
-          backdropFilter: "blur(6px)",
-          border: "2px solid rgba(37, 99, 235, 0.25)",
-          outline: "1px solid rgba(37, 99, 235, 0.10)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
-        }}>
-          <DialogHeader className={cn("mt-2", !isMobile && "-mt-2")}>
-            <DialogTitle className="flex items-center justify-center gap-2 w-full font-bold">
-              <span>💳</span>
-              <span>Gerenciar Cartões</span>
-            </DialogTitle>
+          style={{
+            border: isMobile ? "2px solid #FFFFFF" : "none",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <DialogHeader
+            className={cn(
+              "flex flex-col items-start justify-start",
+              isMobile ? "mb-[-6px]" : "mb-[2px]",
+              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              !isMobile && "-mt-2"
+            )}
+          >
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+              <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <DialogTitle className="flex items-center text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate gap-[8px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <DynamicIcon name="CreditCard" className="w-[18px] h-[18px] md:w-[20px] md:h-[20px] text-[#0556C3] mt-[-2px]" />
+                  <span>Gerenciar Cartões</span>
+                </DialogTitle>
+              </div>
+            </div>
           </DialogHeader>
-          <ScrollArea className="h-[300px]">
+          <div className={cn("pt-[45px] pb-2")} data-dialog-card-form>
+          <ScrollArea className="max-h-[300px]">
             <div className="space-y-4">
               {cards.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Nenhum cartão cadastrado.</p>
@@ -352,13 +361,14 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
               )}
             </div>
           </ScrollArea>
-          <DialogFooter className={cn(isMobile ? "pb-2 pt-2" : "pb-3")}>
+          </div>
+          <DialogFooter className={cn(isMobile ? "pb-0 pt-0" : "pb-0")}>
             <Button
               type="button"
               onClick={() => setIsManageCardsOpen(false)}
               className={cn(
-                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                isMobile ? "h-11 text-base !shadow-none" : "h-11 text-base shadow-md"
+                "w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal translate-x-[2px]",
+                isMobile ? "mt-[10px]" : "mt-[2px]"
               )}
               style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
             >
@@ -373,24 +383,32 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
         <DialogContent 
           onOpenAutoFocus={(e) => e.preventDefault()} 
           className={cn(
-            isMobile ? "w-[99vw] max-w-[99vw] p-4 pt-10 pb-2 dialog-mobile !rounded-[22px] shadow-none" : "sm:max-w-[425px] sm:max-h-[85vh] sm:pt-10 !rounded-[22px] overflow-y-auto shadow-none",
-            "border-none"
+            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[8px]" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[11px]",
+            "shadow-none border-none bg-[#FAFAFA]"
           )}
-        style={{
-          background: "linear-gradient(180deg, #f1f5f9 0%, #e9f0f7 40%, #dee7f3 100%)",
-          backgroundBlendMode: "soft-light",
-          backdropFilter: "blur(6px)",
-          border: "2px solid rgba(37, 99, 235, 0.25)",
-          outline: "1px solid rgba(37, 99, 235, 0.10)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.03), inset 0 0 18px rgba(37, 99, 235, 0.12)"
-        }}>
-          <DialogHeader className={cn(isMobile ? "mt-0" : "-mt-6")}>
-            <DialogTitle className={cn("flex items-center justify-center gap-2 w-full font-black", !isMobile && "text-xl")}>
-              <span>💳</span>
-              <span>Editar Cartão</span>
-            </DialogTitle>
+          style={{
+            border: isMobile ? "2px solid #FFFFFF" : "none",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <DialogHeader
+            className={cn(
+              "flex flex-col items-start justify-start",
+              isMobile ? "mb-[-6px]" : "mb-[2px]",
+              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              !isMobile && "-mt-2"
+            )}
+          >
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+              <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <DialogTitle className="flex items-center text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate gap-[8px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <DynamicIcon name="Pencil" className="w-[18px] h-[18px] md:w-[20px] md:h-[20px] text-[#0556C3] mt-[-2px]" />
+                  <span>Editar Cartão</span>
+                </DialogTitle>
+              </div>
+            </div>
           </DialogHeader>
-          <div className={cn("space-y-4", isMobile ? "pb-2" : "pb-2")}>
+          <div className={cn("space-y-4 pt-[25px] pb-2")} data-dialog-card-form>
             <div>
               <Label className={cn("text-gray-800 font-medium mb-1.5 inline-block", isMobile ? "text-xs" : "text-sm")}>Nome do Cartão</Label>
               <Input
@@ -488,8 +506,8 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
                 handleUpdateCard();
               }}
               className={cn(
-                "w-full rounded-xl btn-3d font-bold text-white border-none transition-all active:scale-95",
-                isMobile ? "h-11 text-base !shadow-none mt-2" : "h-11 text-base shadow-md mt-2"
+                "w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal",
+                isMobile ? "mt-4" : "mt-2"
               )}
               style={{ "--cor-topo": "#0556C3", "--cor-base": "#03459C" } as any}
               disabled={loading}
