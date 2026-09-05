@@ -261,7 +261,7 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
             variant="ghost"
             className={cn(
               "btn-3d p-0 flex items-center justify-center rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-none transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-transparent",
-              isMobile ? "h-9 w-8 text-sm" : "h-10 w-9 text-base"
+              isMobile ? "!h-[39px] !w-[35px] text-sm" : "h-10 w-9 text-base"
             )}
             style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F8FAFC", opacity: 1 } as any}
           >
