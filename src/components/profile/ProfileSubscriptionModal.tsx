@@ -366,35 +366,31 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                   {plan.description || (displayedPeriod === "yearly" ? "Acesso completo por 1 ano." : "Acesso completo por 1 mês.")}
                 </p>
 
-                <div className="mt-auto flex flex-col pt-1">
-                  {!isHighlighted && (
-                    <div className="h-[20px] mb-0.5 flex items-end">
-                      {displayedPeriod === "yearly" && savingsValue > 0 && (
-                        <span className={cn(
-                          "text-[10px] font-bold px-1.5 py-0.5 rounded-full border inline-flex items-center gap-1 leading-none",
-                          isHighlighted
-                            ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
-                            : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        )}>
-                          💚 Economize R$ {formatPrice(savingsValue)}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
-                        <span className="text-[14px] opacity-80">R$</span>
-                        <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
-                        <span className="text-[11px] font-normal opacity-75 ml-0.5">
-                          /{displayedPeriod === "yearly" ? "ano" : "mês"}
-                        </span>
+                <div className="mt-auto flex items-end justify-between pt-1">
+                  <div className="flex flex-col gap-0.5">
+                    <span className={cn(
+                      "text-[11px] font-bold px-2 h-[22px] rounded-full border inline-flex items-center w-fit transition-opacity",
+                      (!isHighlighted && displayedPeriod === "yearly" && savingsValue > 0)
+                        ? "visible opacity-100"
+                        : "invisible opacity-0",
+                      isHighlighted
+                        ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
+                        : "bg-emerald-50 text-emerald-600 border-emerald-500/25"
+                    )}>
+                      ↓ {formatPrice(savingsValue)}
+                    </span>
+                    
+                    <span className={cn("font-extrabold flex items-baseline gap-0.5", isHighlighted ? "text-white" : "text-slate-800")}>
+                      <span className="text-[14px] opacity-80">R$</span>
+                      <span className="text-[21px] tracking-tight">{formatPrice(plan.price)}</span>
+                      <span className="text-[11px] font-normal opacity-75 ml-0.5">
+                        /{displayedPeriod === "yearly" ? "ano" : "mês"}
                       </span>
-                    </div>
+                    </span>
+                  </div>
                   
                   {isHighlighted ? (
-                    <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-8 px-1">
+                    <div className="flex items-center justify-end gap-1 text-emerald-300 font-bold text-[11px] h-9 px-1">
                       <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
                       <span className="leading-none mt-[1px] whitespace-nowrap">
                         Acesso Premium ativo
@@ -421,7 +417,6 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                         : "Assinar Premium"}
                     </Button>
                   )}
-                  </div>
                 </div>
               </div>
             );
