@@ -21,7 +21,7 @@ export const Footer = ({ isMobile, forceMobileStyle, className, user }: FooterPr
       {/* MOBILE */}
       <div className={cn(
         !forceMobileStyle && "md:hidden",
-        "text-center text-gray-800 font-roboto w-full font-medium",
+        "text-center text-muted-foreground font-roboto w-full font-medium",
         (isMobile || forceMobileStyle) ? "text-[12px] py-[2px] opacity-75" : "py-6 text-sm"
       )}>
         © {new Date().getFullYear()} Minhas Finanças — By{" "}
