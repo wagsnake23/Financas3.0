@@ -330,14 +330,9 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                       value={premiumPeriod}
                       onValueChange={(v) => v && setPremiumPeriod(v as "monthly" | "yearly")}
                       className={cn(
-                        "btn-3d flex items-center justify-between p-1 rounded-full transition-all h-8 w-[130px] border shadow-none cursor-default",
-                        isHighlighted ? "bg-white/10 border-white/20" : "bg-slate-100/90 border-slate-200/80"
+                        "flex items-center justify-between p-1 rounded-full transition-all h-8 w-[130px] border",
+                        isHighlighted ? "bg-white/10 border-white/20" : "bg-white border-slate-200"
                       )}
-                      style={{
-                        "--cor-topo": isHighlighted ? "rgba(255,255,255,0.15)" : "#E6F0FF",
-                        "--cor-base": isHighlighted ? "rgba(255,255,255,0.05)" : "#DCEBFF",
-                        boxShadow: isHighlighted ? "inset 0px 1px 2px rgba(255, 255, 255, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.2)" : "inset 0px 1px 2px rgba(255, 255, 255, 0.25), inset 0px -2px 3px rgba(0, 0, 0, 0.1)"
-                      } as any}
                     >
                       <ToggleGroupItem
                         value="monthly"
@@ -345,7 +340,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                           "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
                           isHighlighted
                             ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
-                            : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                            : "data-[state=on]:bg-blue-600 data-[state=on]:text-white text-slate-500 hover:text-slate-700"
                         )}
                       >
                         Mensal
@@ -356,7 +351,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                           "rounded-full flex-1 text-[11px] font-bold h-6 transition-all",
                           isHighlighted
                             ? "data-[state=on]:bg-white data-[state=on]:text-[#1E3A8B] text-white/70"
-                            : "data-[state=on]:bg-gradient-to-b data-[state=on]:from-[#4B76D1] data-[state=on]:to-[#3555A2] data-[state=on]:text-white data-[state=on]:shadow-[inset_0px_1px_1px_rgba(255,255,255,0.4),inset_0px_-1px_1px_rgba(0,0,0,0.1)] text-[#1E6BCE]"
+                            : "data-[state=on]:bg-blue-600 data-[state=on]:text-white text-slate-500 hover:text-slate-700"
                         )}
                       >
                         Anual
