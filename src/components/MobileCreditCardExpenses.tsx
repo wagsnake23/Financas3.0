@@ -44,10 +44,11 @@ const UNSELECTED_VALUE = "unselected";
 
 export const MobileCreditCardExpenses: React.FC<
   MobileCreditCardExpensesProps
-> = ({ cartoes, expenseInstallments, isMobile, selectedMonth, isLoading }) => {
+> = React.memo(({ cartoes, expenseInstallments, isMobile, selectedMonth, isLoading, allCategories }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+
 
   // 1. Initial/Default selection calculated synchronously
   const defaultCardId = useMemo(() => {
@@ -66,6 +67,18 @@ export const MobileCreditCardExpenses: React.FC<
     }
     return defaultCardId;
   }, [userSelectedCardId, defaultCardId, cartoes]);
+
+  // AUDITORIA TEMPORÁRIA
+  if (process.env.NODE_ENV === 'development') {
+    console.count("MobileCreditCardExpenses render");
+    console.log({
+      selectedCardId,
+      userSelectedCardId,
+      cartoes: cartoes?.length || 0,
+      parcelas: expenseInstallments?.length || 0,
+      isLoading
+    });
+  }
 
   // 4. Performance: Pre-filter installments ONCE for the active card
   const cardInstallments = useMemo(() => {
@@ -214,7 +227,7 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.02) 100%), #F7F2FF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -249,7 +262,7 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.02) 100%), #F7F2FF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -303,7 +316,7 @@ export const MobileCreditCardExpenses: React.FC<
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
-        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
+        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.02) 100%), #F7F2FF",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
@@ -449,7 +462,7 @@ export const MobileCreditCardExpenses: React.FC<
       </div>
     </Card>
   );
-};
+});
 
 const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixColor?: string }) => {
   const formatted = formatCurrency(value);

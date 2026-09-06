@@ -81,6 +81,8 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
     return <>{formatted}</>;
 };
 
+const EMPTY_ARRAY: any[] = [];
+
 export default function Home() {
     const { user, loading: authLoading } = useAuth();
     const isMobile = useIsMobile();
@@ -91,7 +93,7 @@ export default function Home() {
 
 
     // Fetch all revenues for memory-based filtering (needed for variations and 10-month graph)
-    const { data: allRevenues = [], isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
+    const { data: allRevenues = EMPTY_ARRAY, isLoading: isLoadingRevenues, isPlaceholderData: isPlaceholderRevenues } = useQuery<
         Tables<"receitas">[]
     >({
         queryKey: ["allRevenues", user?.id, format(selectedMonth, "yyyy")],
@@ -115,7 +117,7 @@ export default function Home() {
 
     // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 10-month graph)
     const { 
-        data: allExpenseInstallments = [], 
+        data: allExpenseInstallments = EMPTY_ARRAY, 
         isLoading: isLoadingExpenses, 
         isPending: isPendingExpenses,
         isSuccess: isSuccessExpenses,
@@ -161,7 +163,7 @@ export default function Home() {
 
     // Fetch cards
     const { 
-        data: cartoes = [], 
+        data: cartoes = EMPTY_ARRAY, 
         isLoading: isLoadingCartoes,
         isPending: isPendingCartoes,
         isSuccess: isSuccessCartoes,
@@ -181,7 +183,7 @@ export default function Home() {
     });
 
     // Fetch investimentos to subtract from Caixa Atual
-    const { data: investimentos = [], isLoading: isLoadingInvestments } = useQuery<Tables<"investimentos">[]>({
+    const { data: investimentos = EMPTY_ARRAY, isLoading: isLoadingInvestments } = useQuery<Tables<"investimentos">[]>({
         queryKey: ["investments", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -227,7 +229,7 @@ export default function Home() {
     });
 
     // Fetch categories
-    const { data: allSubcategories = [] } = useQuery({
+    const { data: allSubcategories = EMPTY_ARRAY } = useQuery({
         queryKey: ["categories", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -567,7 +569,7 @@ export default function Home() {
                                     className="home-mobile-card rounded-[22px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F0F7FF 100%)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -703,10 +705,10 @@ export default function Home() {
 
                                 {/* CARD DESPESAS */}
                                 <Card
-                                    className="home-mobile-card relative overflow-hidden card-despesas h-full w-full flex flex-col justify-center rounded-[22px]"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, transparent 100%), #FFF5F5",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.02) 100%), #FFF5F5",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -788,10 +790,10 @@ export default function Home() {
 
                                 {/* CARD RECEITAS */}
                                 <Card
-                                    className="home-mobile-card relative overflow-hidden card-receitas h-full w-full flex flex-col justify-center rounded-[22px]"
+                                    className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, transparent 100%), #F3FFF7",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.02) 100%), #F3FFF7",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -1053,10 +1055,9 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card"
                             style={{
-                                borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, transparent 100%), #FFF5F5",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.02) 100%), #FFF5F5",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1145,10 +1146,9 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card"
                             style={{
-                                borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, transparent 100%), #F3FFF7",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.02) 100%), #F3FFF7",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
