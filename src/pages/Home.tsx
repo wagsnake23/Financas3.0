@@ -892,7 +892,7 @@ export default function Home() {
                         <Card
                             className="rounded-[24px] relative overflow-hidden card-saldo h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.06) 85%, rgba(37,99,235,0.09) 100%)",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.11) 85%, rgba(37,99,235,0.15) 100%)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -932,7 +932,7 @@ export default function Home() {
                                                 <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
                                             </button>
                                         </div>
-                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
                                             <FormatCurrencyStyled value={dStats.currentCaixaAtual} prefixColor={dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A"} />
                                         </p>
                                     </div>
@@ -1057,7 +1057,7 @@ export default function Home() {
                         <Card
                             className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.07) 70%, rgba(239,68,68,.08) 85%, rgba(239,68,68,.10) 100%), #FFF5F5",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.07) 70%, rgba(239,68,68,.12) 85%, rgba(239,68,68,.16) 100%), #FFF5F5",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1084,10 +1084,10 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <div className="flex items-center gap-2 mb-1 relative -top-[5px]">
+                                        <div className="flex items-center gap-2 mb-1">
                                             <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Despesas</h2>
                                         </div>
-                                        <p className="leading-none transition-all relative -top-[3px]" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
                                             <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
                                         </p>
                                     </div>
@@ -1148,7 +1148,7 @@ export default function Home() {
                         <Card
                             className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.07) 70%, rgba(34,197,94,.08) 85%, rgba(34,197,94,.10) 100%), #F3FFF7",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.07) 70%, rgba(34,197,94,.12) 85%, rgba(34,197,94,.16) 100%), #F3FFF7",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1175,10 +1175,10 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <div className="flex items-center gap-2 mb-1 relative -top-[5px]">
+                                        <div className="flex items-center gap-2 mb-1">
                                             <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Receitas</h2>
                                         </div>
-                                        <p className="leading-none transition-all relative -top-[3px]" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
+                                        <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
                                             <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                         </p>
                                     </div>

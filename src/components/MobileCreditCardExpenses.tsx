@@ -227,7 +227,7 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center md:p-6 md:flex md:flex-col md:justify-between")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.07) 85%, rgba(124,58,237,.09) 100%), #F7F2FF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.11) 85%, rgba(124,58,237,.15) 100%), #F7F2FF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -262,7 +262,7 @@ export const MobileCreditCardExpenses: React.FC<
         className={cn("home-mobile-card md:pt-[8px] md:pb-[7px] md:px-8 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center items-center")}
         style={{
           borderRadius: "22px",
-          background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.07) 85%, rgba(124,58,237,.09) 100%), #F7F2FF",
+          background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.11) 85%, rgba(124,58,237,.15) 100%), #F7F2FF",
           border: "1px solid rgba(255,255,255,0.85)",
           backgroundClip: "padding-box",
           outline: "none",
@@ -316,7 +316,7 @@ export const MobileCreditCardExpenses: React.FC<
       onClick={handlePayMonthlyBill}
       style={{
         borderRadius: "22px",
-        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.07) 85%, rgba(124,58,237,.09) 100%), #F7F2FF",
+        background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, rgba(124,58,237,.11) 85%, rgba(124,58,237,.15) 100%), #F7F2FF",
         border: "1px solid rgba(255,255,255,0.85)",
         backgroundClip: "padding-box",
         outline: "none",
@@ -443,10 +443,10 @@ export const MobileCreditCardExpenses: React.FC<
               >
                 {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
               </span>
-              <h2 className="text-[13.8px] font-extrabold leading-none tracking-tight mb-[2px]" style={{ color: totalPending > 0 ? "#EF6C6C" : "#15803D", fontFamily: "'Inter', sans-serif" }}>
+              <h2 className="text-[15px] tracking-[0.5px] md:text-[17px] mb-1" style={{ color: totalPending > 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#15803D", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
-              <p className="leading-none" style={{ fontSize: "var(--home-val-text, 19.5px)", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#6b7280", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", letterSpacing: "-0.015em", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textShadow: "0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.1), 0 0 4px rgba(255,255,255,0.4)" }}>
+              <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: isMobile ? "21px" : "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#6b7280", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
                 <FormatCurrencyStyled value={totalPending > 0 ? totalPending : totalPaid} prefixColor={totalPending > 0 ? "#EF6C6C" : "#6b7280"} />
               </p>
             </div>
