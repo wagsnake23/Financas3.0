@@ -48,31 +48,44 @@ export const MobileCreditCardExpenses: React.FC<
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [selectedCardId, setSelectedCardId] =
-    useState<string>(UNSELECTED_VALUE);
 
-  useEffect(() => {
-    if (cartoes.length > 0 && selectedCardId === UNSELECTED_VALUE) {
-      const principalCard = cartoes.find(c => (c as any).is_principal);
-      setSelectedCardId(principalCard ? principalCard.id : cartoes[0].id);
-    } else if (cartoes.length === 0 && selectedCardId !== UNSELECTED_VALUE) {
-      setSelectedCardId(UNSELECTED_VALUE);
+  // 1. Initial/Default selection calculated synchronously
+  const defaultCardId = useMemo(() => {
+    if (!cartoes || cartoes.length === 0) return UNSELECTED_VALUE;
+    const principalCard = cartoes.find((c) => (c as any).is_principal);
+    return principalCard ? principalCard.id : cartoes[0].id;
+  }, [cartoes]);
+
+  // 2. User-controlled selection state
+  const [userSelectedCardId, setUserSelectedCardId] = useState<string | null>(null);
+
+  // 3. Current active selectedCardId (instant, no useEffect delay or re-renders)
+  const selectedCardId = useMemo(() => {
+    if (userSelectedCardId && cartoes?.some((c) => c.id === userSelectedCardId)) {
+      return userSelectedCardId;
     }
-  }, [cartoes, selectedCardId]);
+    return defaultCardId;
+  }, [userSelectedCardId, defaultCardId, cartoes]);
 
+  // 4. Performance: Pre-filter installments ONCE for the active card
+  const cardInstallments = useMemo(() => {
+    if (!selectedCardId || selectedCardId === UNSELECTED_VALUE || !expenseInstallments) return [];
+    return expenseInstallments.filter(
+      (p) =>
+        p.despesas?.forma_pagamento === "cartao" &&
+        p.despesas.cartao_id === selectedCardId
+    );
+  }, [expenseInstallments, selectedCardId]);
+
+  // 5. Filter for currently selected month
   const filteredExpenses = useMemo(() => {
-    if (selectedCardId === UNSELECTED_VALUE) return [];
+    if (cardInstallments.length === 0) return [];
 
     const monthStart = startOfMonth(selectedMonth);
     const startStr = format(monthStart, "yyyy-MM-01");
     const nextMonthStartStr = format(addMonths(monthStart, 1), "yyyy-MM-01");
 
-    return expenseInstallments
-      .filter(
-        (p) =>
-          p.despesas?.forma_pagamento === "cartao" &&
-          p.despesas.cartao_id === selectedCardId
-      )
+    return cardInstallments
       .filter((p) => {
         const vencimentoDate = p.vencimento.substring(0, 10);
         return vencimentoDate >= startStr && vencimentoDate < nextMonthStartStr;
@@ -81,18 +94,20 @@ export const MobileCreditCardExpenses: React.FC<
         (a, b) =>
           new Date(a.vencimento).getTime() - new Date(b.vencimento).getTime()
       );
-  }, [expenseInstallments, selectedCardId, selectedMonth]);
+  }, [cardInstallments, selectedMonth]);
 
+  // 6. Totals for current month bill
   const { totalPaid, totalPending, totalCardExpenses } = useMemo(() => {
     let paid = 0;
     let pending = 0;
-    filteredExpenses.forEach((installment) => {
+    for (let i = 0; i < filteredExpenses.length; i++) {
+      const installment = filteredExpenses[i];
       if (installment.pago) {
         paid += installment.valor_parcela;
       } else {
         pending += installment.valor_parcela;
       }
-    });
+    }
     return {
       totalPaid: paid,
       totalPending: pending,
@@ -106,6 +121,7 @@ export const MobileCreditCardExpenses: React.FC<
     navigate(`/lancamentos?cardId=${selectedCardId}&month=${formattedMonth}`);
   };
 
+  // 7. Monthly balances for the 10-month sparkline (Single-pass accumulation)
   const monthlyCardBalances = useMemo(() => {
     if (selectedCardId === UNSELECTED_VALUE) return [];
     
@@ -113,28 +129,35 @@ export const MobileCreditCardExpenses: React.FC<
     const diffMonths = (today.getFullYear() - selectedMonth.getFullYear()) * 12 + (today.getMonth() - selectedMonth.getMonth());
     const endMonth = (diffMonths >= 0 && diffMonths < 10) ? today : selectedMonth;
     
-    const list = [];
+    const list: { monthStr: string; balance: number; date: Date }[] = [];
+    const monthTotals: Record<string, number> = {};
+
     for (let i = 9; i >= 0; i--) {
       const m = subMonths(endMonth, i);
       const mStr = format(m, "yyyy-MM");
-      
-      const billValue = expenseInstallments
-        .filter(
-          (p) =>
-            p.despesas?.forma_pagamento === "cartao" &&
-            p.despesas.cartao_id === selectedCardId &&
-            p.vencimento.startsWith(mStr)
-        )
-        .reduce((sum, p) => sum + p.valor_parcela, 0);
-        
+      monthTotals[mStr] = 0;
       list.push({
         monthStr: mStr,
-        balance: billValue,
+        balance: 0,
         date: m
       });
     }
+
+    // Single-pass over cardInstallments to compute all 10 months simultaneously
+    for (let i = 0; i < cardInstallments.length; i++) {
+      const p = cardInstallments[i];
+      const mStr = p.vencimento.substring(0, 7);
+      if (monthTotals[mStr] !== undefined) {
+        monthTotals[mStr] += p.valor_parcela;
+      }
+    }
+
+    for (let i = 0; i < list.length; i++) {
+      list[i].balance = monthTotals[list[i].monthStr] || 0;
+    }
+
     return list;
-  }, [expenseInstallments, selectedCardId, selectedMonth]);
+  }, [cardInstallments, selectedCardId, selectedMonth]);
 
   const sparklinePoints = useMemo(() => {
     if (monthlyCardBalances.length === 0) return [];
@@ -184,7 +207,8 @@ export const MobileCreditCardExpenses: React.FC<
   const mainColor = isMobile ? "#6D28D9" : "#2563EB";
   const gradColor = isMobile ? "#8B5CF6" : "#2563EB";
 
-  if (isLoading) {
+  // GUARD: If explicitly loading or cartoes is not available yet, render SKELETON
+  if (isLoading || !cartoes) {
     return (
       <Card
         className={cn("home-mobile-card md:p-6 rounded-[22px] relative overflow-hidden card-cartoes h-full w-full flex flex-col justify-center")}
@@ -197,14 +221,22 @@ export const MobileCreditCardExpenses: React.FC<
           boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
         }}
       >
-        <div className="flex flex-col w-full h-full justify-between animate-pulse p-4 md:p-0 relative z-20">
-          <div className="h-8 w-3/4 max-w-[200px] bg-slate-200/60 rounded-md mb-[8px]"></div>
-          <div className="flex items-end justify-between w-full mt-4 mb-[6px]">
-            <div className="flex flex-col gap-2">
-               <div className="h-3 w-16 bg-slate-200/60 rounded"></div>
-               <div className="h-6 w-24 bg-slate-200/60 rounded"></div>
+        <div className="flex flex-col w-full h-full justify-between pointer-events-none relative z-20" style={{ paddingTop: "0px" }}>
+          {/* Top Header Row skeleton */}
+          <div className="flex justify-between items-start w-full mb-[8px]">
+            <div className="w-full" style={{ position: 'relative', top: isMobile ? '2px' : '0' }}>
+              <div className="w-full h-[32px] rounded-[9px] bg-slate-200/60 animate-pulse border border-[#e2e8f0]" />
             </div>
-            <div className="h-9 w-[120px] bg-slate-200/60 rounded-xl"></div>
+          </div>
+
+          {/* Bottom Indicators skeleton */}
+          <div className="flex justify-between items-end w-full relative z-20 -translate-y-[2px] animate-pulse">
+            <div className="w-[120px] h-[var(--home-chart-h,64px)] bg-slate-200/40 rounded-lg -ml-1" />
+            <div className="w-[135px] shrink-0 flex flex-col justify-end items-end gap-1 text-right">
+              <div className="h-[12px] w-20 bg-slate-200/60 rounded mb-[2px]" />
+              <div className="h-[14px] w-24 bg-slate-200/60 rounded mb-[2px]" />
+              <div className="h-[20px] w-28 bg-slate-200/60 rounded" />
+            </div>
           </div>
         </div>
       </Card>
@@ -299,7 +331,7 @@ export const MobileCreditCardExpenses: React.FC<
         <div className="flex justify-between items-start w-full mb-[8px]">
           {/* Header Row: Full width selector */}
           <div className="w-full" onClick={(e) => e.stopPropagation()} style={{ position: 'relative', top: isMobile ? '2px' : '0' }}>
-            <Select value={selectedCardId} onValueChange={setSelectedCardId}>
+            <Select value={selectedCardId} onValueChange={setUserSelectedCardId}>
               <SelectTrigger 
                 className="w-full h-[32px] text-[13.5px] font-bold tracking-tight px-3.5 rounded-[9px] hover:border-[#C5D1E8] focus:border-[#AFC0E8] focus:ring-0 [&>svg]:hidden transition-colors flex items-center justify-between" 
                 style={{ 

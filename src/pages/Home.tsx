@@ -82,7 +82,7 @@ const FormatCurrencyStyled = ({ value, prefixColor }: { value: number, prefixCol
 };
 
 export default function Home() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -114,7 +114,13 @@ export default function Home() {
     });
 
     // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 10-month graph)
-    const { data: allExpenseInstallments = [], isLoading: isLoadingExpenses, isPlaceholderData: isPlaceholderExpenses } =
+    const { 
+        data: allExpenseInstallments = [], 
+        isLoading: isLoadingExpenses, 
+        isPending: isPendingExpenses,
+        isSuccess: isSuccessExpenses,
+        isPlaceholderData: isPlaceholderExpenses 
+    } =
         useQuery<
             (Tables<"despesas_parcelas"> & {
                 despesas: Pick<
@@ -154,7 +160,12 @@ export default function Home() {
 
 
     // Fetch cards
-    const { data: cartoes = [], isLoading: isLoadingCartoes } = useQuery<Tables<"cartoes">[]>({
+    const { 
+        data: cartoes = [], 
+        isLoading: isLoadingCartoes,
+        isPending: isPendingCartoes,
+        isSuccess: isSuccessCartoes,
+    } = useQuery<Tables<"cartoes">[]>({
         queryKey: ["cartoes", user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
@@ -323,6 +334,19 @@ export default function Home() {
     const dStats = lastStableData.current.stats;
     const dExpenses = lastStableData.current.allExpenseInstallments;
     const dMonth = lastStableData.current.selectedMonth;
+
+    // Loading estrito do card de cartões: apenas exibe conteúdo após confirmação definitiva do Supabase
+    const isCardsLoading = useMemo(() => {
+        if (authLoading || !user) return true;
+        if (!isSuccessCartoes || isLoadingCartoes || isPendingCartoes) return true;
+        // Se o usuário possui cartões, aguarda as despesas para evitar flash de valor zerado (R$ 0,00) ou gráfico vazio
+        if (cartoes.length > 0) {
+            if (!isSuccessExpenses || (isLoadingExpenses && dExpenses.length === 0)) {
+                return true;
+            }
+        }
+        return false;
+    }, [authLoading, user, isSuccessCartoes, isLoadingCartoes, isPendingCartoes, cartoes.length, isSuccessExpenses, isLoadingExpenses, dExpenses.length]);
 
     const location = useLocation();
 
@@ -854,7 +878,7 @@ export default function Home() {
                                         allCategories={allSubcategories as any}
                                         isMobile={isMobile}
                                         selectedMonth={dMonth}
-                                        isLoading={isLoadingCartoes || isLoadingExpenses}
+                                        isLoading={isCardsLoading}
                                     />
                                 </div>
                             </div>
@@ -1015,7 +1039,7 @@ export default function Home() {
                             </div>
                         </Card>
 
-                        {/* CARD DE CARTÃƒO DE CRÃ‰DITO */}
+                        {/* CARD DE CARTÃO DE CRÉDITO */}
                         <div id="cartoes-section" className="mb-4 h-full w-full flex">
                             <MobileCreditCardExpenses
                                 cartoes={cartoes}
@@ -1023,7 +1047,7 @@ export default function Home() {
                                 allCategories={allSubcategories as any}
                                 isMobile={isMobile}
                                 selectedMonth={dMonth}
-                                isLoading={isLoadingCartoes || isLoadingExpenses}
+                                isLoading={isCardsLoading}
                             />
                         </div>
 
