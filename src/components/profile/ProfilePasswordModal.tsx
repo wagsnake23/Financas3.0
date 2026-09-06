@@ -71,7 +71,7 @@ export function ProfilePasswordModal() {
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[425px] rounded-3xl p-6">
+      <DialogContent className="sm:max-w-[400px] rounded-[22px] p-6 bg-[#F6F8FA]">
         <DialogHeader className="mb-4">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-[#EEF5FF] rounded-2xl flex items-center justify-center shadow-sm border border-blue-100/50">
@@ -85,7 +85,7 @@ export function ProfilePasswordModal() {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="password"
@@ -144,12 +144,12 @@ export function ProfilePasswordModal() {
               )}
             />
 
-            <div className={cn("flex flex-row gap-4 w-full", isMobile ? "mt-2" : "mt-8")}>
+            <div className={cn("flex flex-row gap-4 w-full", isMobile ? "!mt-6" : "!mt-10")}>
               <Button 
                 type="button" 
                 onClick={() => setIsOpen(false)} 
                 className={cn(
-                  "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                  "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg md:text-[19px] md:h-[46px]",
                   isMobile && "h-11 text-lg"
                 )}
                 style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
@@ -161,7 +161,7 @@ export function ProfilePasswordModal() {
                 type="submit" 
                 disabled={isUpdating} 
                 className={cn(
-                  "flex-1 rounded-xl btn-3d font-black !text-[#374151] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg",
+                  "flex-1 rounded-xl btn-3d font-black !text-[#374151] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg md:text-[19px] md:h-[46px]",
                   isMobile && "h-11 text-lg"
                 )}
                 style={{ "--cor-topo": "#FFD54F", "--cor-base": "#FFC107" } as any}
