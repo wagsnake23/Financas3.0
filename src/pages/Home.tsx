@@ -602,11 +602,12 @@ export default function Home() {
                                                 <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
                                                     <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo atual</h2>
                                                     <button 
-                                                        className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
+                                                        className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                         aria-label="Ajustar saldo"
                                                         type="button"
+                                                        style={{ "--cor-topo": "#ffffff", "--cor-base": "#eff6ff" } as any}
                                                     >
-                                                        <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
+                                                        <DynamicIcon name="Wallet" className="h-4 w-4 text-[#2563EB]" style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.05))" }} />
                                                     </button>
                                                 </div>
                                                 <p className="leading-none transition-all" style={{ marginTop: "var(--home-val-mt, -5px)", fontSize: "22px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px" }}>
@@ -927,11 +928,12 @@ export default function Home() {
                                         <div className="flex items-center gap-2 mb-1">
                                             <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Saldo atual</h2>
                                             <button 
-                                                className="w-5 h-5 flex items-center justify-center rounded-full border-none transition-all bg-[#2563EB]/10 hover:bg-[#2563EB]/20 shadow-xs"
+                                                className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                 aria-label="Ajustar saldo"
                                                 type="button"
+                                                style={{ "--cor-topo": "#ffffff", "--cor-base": "#eff6ff" } as any}
                                             >
-                                                <DynamicIcon name="Wallet" className="h-3 w-3 text-[#2563EB]" />
+                                                <DynamicIcon name="Wallet" className="h-4 w-4 text-[#2563EB]" style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.05))" }} />
                                             </button>
                                         </div>
                                         <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: dStats.currentCaixaAtual < 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#0F172A", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
