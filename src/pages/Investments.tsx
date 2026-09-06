@@ -684,7 +684,13 @@ export default function Investments() { // Alterado para export default function
 
 
   return (
-    <div className={cn("flex flex-col min-h-[100dvh] relative global-bg", isMobile ? "pt-0" : "pt-[72px]")}>
+    <div className={cn("flex flex-col min-h-[100dvh] relative global-bg investments-module", isMobile ? "pt-0" : "pt-[72px]")}>
+      <style>{`
+        .investments-module .input-3d-premium {
+          background-color: #FFFFFF !important;
+          background: #FFFFFF !important;
+        }
+      `}</style>
       {isMobile && (
           <div
               className="absolute inset-0 z-10 pointer-events-none"
