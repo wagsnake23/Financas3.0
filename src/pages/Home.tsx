@@ -569,7 +569,7 @@ export default function Home() {
                                     className="home-mobile-card rounded-[22px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F0F7FF 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.06) 85%, rgba(37,99,235,0.09) 100%)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -708,7 +708,7 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-despesas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.02) 100%), #FFF5F5",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.07) 85%, rgba(239,68,68,.10) 100%), #FFF5F5",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -793,7 +793,7 @@ export default function Home() {
                                     className="pl-3 pr-[20px] pt-[8px] pb-[12px] relative overflow-hidden card-receitas md:p-6 md:flex md:flex-col h-full w-full justify-between rounded-[22px]"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.02) 100%), #F3FFF7",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.07) 85%, rgba(34,197,94,.10) 100%), #F3FFF7",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -888,12 +888,11 @@ export default function Home() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[21px] md:auto-rows-fr md:items-stretch">
-                        {/* CARD PRINCIPAL â€” SALDO MENSAL (HERO) */}
+                        {/* CARD PRINCIPAL — SALDO MENSAL (HERO) */}
                         <Card
-                            className="pl-4 pr-5 pt-3 pb-3 rounded-[22px] relative overflow-hidden card-saldo md:p-6 md:flex md:flex-col h-full w-full justify-between"
+                            className="rounded-[24px] relative overflow-hidden card-saldo h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                borderRadius: "22px",
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #F8FAFF 100%)",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.06) 85%, rgba(37,99,235,0.09) 100%)",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1055,9 +1054,9 @@ export default function Home() {
 
                         {/* CARD DESPESAS */}
                         <Card
-                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.05) 70%, rgba(239,68,68,.02) 100%), #FFF5F5",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.06) 0%, rgba(239,68,68,.10) 35%, rgba(239,68,68,.07) 70%, rgba(239,68,68,.08) 85%, rgba(239,68,68,.10) 100%), #FFF5F5",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
@@ -1146,9 +1145,9 @@ export default function Home() {
 
                         {/* CARD RECEITAS */}
                         <Card
-                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card"
+                            className="rounded-[24px] relative overflow-hidden h-full flex flex-col justify-center home-desk-card md:p-6 md:flex md:flex-col md:justify-between"
                             style={{
-                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.05) 70%, rgba(34,197,94,.02) 100%), #F3FFF7",
+                                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.13) 0%, rgba(34,197,94,.10) 35%, rgba(34,197,94,.07) 70%, rgba(34,197,94,.08) 85%, rgba(34,197,94,.10) 100%), #F3FFF7",
                                 border: "1px solid rgba(255,255,255,0.85)",
                                 backgroundClip: "padding-box",
                                 outline: "none",
