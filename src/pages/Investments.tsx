@@ -1062,7 +1062,7 @@ export default function Investments() { // Alterado para export default function
             <div className="mt-2">
               <Card
                 className={cn("p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
-                style={{ backgroundColor: "#FFFFFF" }}
+                style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className={cn("text-2xl font-extrabold text-[#0556C3]", isMobile && "text-xl")}>💰 Meus Investimentos</h2>
@@ -1126,7 +1126,7 @@ export default function Investments() { // Alterado para export default function
                           style={isMobile ? {
                             backgroundColor: "#FFFFFF",
                             border: "1px solid rgba(0,0,0,0.08)",
-                            boxShadow: "0 8px 24px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
+                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
                           } : {
                             backgroundColor: "#FFFFFF"
                           }}
@@ -1552,7 +1552,7 @@ export default function Investments() { // Alterado para export default function
             <div>
               <Card
                 className={cn("p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
-                style={{ backgroundColor: "#FFFFFF" }}
+                style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
                   <h2 className={cn("text-2xl font-extrabold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
@@ -1637,7 +1637,7 @@ export default function Investments() { // Alterado para export default function
                           style={isMobile ? {
                             backgroundColor: "#FFFFFF",
                             border: "1px solid rgba(0,0,0,0.08)",
-                            boxShadow: "0 8px 24px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
+                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
                           } : {
                             backgroundColor: "#FFFFFF",
                             border: "1px solid rgba(0,0,0,0.08)",
