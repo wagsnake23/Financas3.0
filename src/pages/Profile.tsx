@@ -295,10 +295,10 @@ export default function Profile() {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-8 items-start">
+        <div className="flex flex-col md:flex-row gap-8 items-start md:items-stretch">
           {/* Card Esquerdo - Avatar e Infos Rápidas */}
           <div className={cn(
-            "w-full md:w-[40%] -mt-1 md:mt-0 bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] p-5 md:p-8 flex flex-col items-center relative overflow-hidden",
+            "w-full md:w-[calc(40%-130px)] -mt-1 md:mt-0 bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.05),_inset_0_2px_4px_rgba(255,255,255,0.6)] p-5 md:p-8 flex flex-col items-center relative overflow-hidden",
             subDisplay.decorType === "vitalicio" ? "border-[1px] border-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.1),_0_8px_30px_rgb(0,0,0,0.05)]" : "border border-slate-100/80"
           )}>
             {/* 1. Faixa Superior Temática */}
@@ -389,7 +389,7 @@ export default function Profile() {
           </div>
 
           {/* Card Direito - Formulário */}
-          <div className="w-full md:w-[60%] bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.5)] border border-slate-100 p-5 md:p-10">
+          <div className="w-full md:w-[calc(60%+130px)] bg-white rounded-[25px] shadow-[0_8px_30px_rgb(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.5)] border border-slate-100 p-5 md:p-10">
             <ProfileAccountForm profile={profile} user={user!} />
           </div>
         </div>
