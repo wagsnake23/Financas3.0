@@ -809,7 +809,7 @@ export default function Investments() { // Alterado para export default function
                 "p-6 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                 isMobile && "p-4"
               )}
-              style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
+              style={{ backgroundColor: "#F6F8FA" }}
             >
               <h2 className={cn("text-xl text-[#0556C3] font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-6", isMobile && "mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>💶 Novo Investimento</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -824,7 +824,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl input-3d-premium font-bold transition-all duration-200",
+                      "rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
@@ -871,7 +871,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -885,7 +885,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -915,7 +915,7 @@ export default function Investments() { // Alterado para export default function
                         fixedDecimalScale={false}
                         maxLength={7}
                         className={cn(
-                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
+                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 bg-white",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                         )}
@@ -932,7 +932,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm",
+                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm bg-white",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
@@ -949,7 +949,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200",
+                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 bg-white",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
@@ -1295,7 +1295,7 @@ export default function Investments() { // Alterado para export default function
                   "p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas",
                   isMobile && "border-none shadow-none bg-transparent p-4 h-auto"
                 )}
-                style={{ background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)", backgroundBlendMode: "soft-light" }}
+                style={{ backgroundColor: "#F6F8FA" }}
               >
                 <h2 className={cn("text-2xl font-extrabold mb-6", isMobile && "text-xl mb-4")} style={{ color: "#0556C3" }}>💶 Novo Investimento</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
