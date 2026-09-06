@@ -258,7 +258,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           <div className="col-start-3 row-start-2 flex flex-col items-end shrink-0 ml-3 justify-center">
             <span className={cn(
               "text-[11px] tracking-wide leading-none mb-[5px] font-medium",
-              transaction.status === "Recebida" ? "text-[#10B955]/70" : "text-slate-400"
+              transaction.status === "Recebida" ? "text-[#10B955]/70" : "text-slate-500"
             )}>
               {transaction.status === "Recebida" ? (transaction.type === "income" ? "Recebido" : "Pago") : "Pendente"}
             </span>
@@ -271,7 +271,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
                 "w-[38px] h-[19px] rounded-full p-[2px] transition-all duration-300 cursor-pointer flex items-center",
                 transaction.status === "Recebida"
                   ? "bg-[#22C55E]/90"
-                  : "bg-[#D6DCE5]"
+                  : "bg-slate-300"
               )}
             >
               <div
