@@ -1169,8 +1169,8 @@ export default function Investments() { // Alterado para export default function
                           {/* 1. Top: Icon, Name, Type */}
                           <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3")}>
                             <div className={cn("flex items-center gap-2.5", !isMobile && "-ml-1.5 items-start")}>
-                              <div className={cn("flex items-center justify-center shrink-0 rounded-[14px]", isMobile ? "h-9 w-9" : "h-11 w-11")} style={{ backgroundColor: "#F6F8FA" }}>
-                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-[34px] w-[34px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className={cn("flex items-center justify-center shrink-0 rounded-[12px]", isMobile ? "h-[34px] w-[34px]" : "h-[38px] w-[38px]")} style={{ backgroundColor: "#F6F8FA" }}>
+                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80 leading-none", isMobile ? "h-8 w-8 text-[28px]" : "h-9 w-9 text-[32px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               </div>
                               <div className="flex flex-col">
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "leading-tight text-base")}>
@@ -1649,8 +1649,8 @@ export default function Investments() { // Alterado para export default function
                           {/* 1. Top: Icon, Name, Type and Actions */}
                           <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3.5")}>
                             <div className="flex items-center gap-2.5">
-                              <div className={cn("flex items-center justify-center shrink-0 rounded-[14px]", isMobile ? "h-9 w-9" : "h-11 w-11")} style={{ backgroundColor: "#F6F8FA" }}>
-                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-[34px] w-[34px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className={cn("flex items-center justify-center shrink-0 rounded-[12px]", isMobile ? "h-[34px] w-[34px]" : "h-[38px] w-[38px]")} style={{ backgroundColor: "#F6F8FA" }}>
+                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80 leading-none", isMobile ? "h-8 w-8 text-[28px]" : "h-9 w-9 text-[32px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               </div>
                               <div className="flex flex-col">
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}>
