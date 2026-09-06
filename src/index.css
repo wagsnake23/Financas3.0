@@ -636,6 +636,10 @@ body {
   padding-bottom: 0 !important;
 }
 
+.auth-page-container .input-3d-premium:not(textarea) {
+  font-size: 16px !important;
+}
+
 @media (max-width: 767px) {
   .input-3d-premium:not(textarea) {
     height: 39px !important;
@@ -649,6 +653,19 @@ body {
     height: 2.5rem !important;
     min-height: 2.5rem !important;
     max-height: 2.5rem !important;
+  }
+  .auth-page-container .input-3d-premium:not(textarea) {
+    height: 45px !important;
+    min-height: 45px !important;
+    max-height: 45px !important;
+    border-radius: 14px !important;
+  }
+  .auth-page-container button[type="submit"] {
+    height: 45px !important;
+    min-height: 45px !important;
+    max-height: 45px !important;
+    border-radius: 14px !important;
+    font-size: 22px !important;
   }
 }
 

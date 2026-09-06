@@ -310,7 +310,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -331,7 +331,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -351,7 +351,7 @@ export default function Auth() {
           >
             {loading ? "Entrando..." : "Entrar"}
           </Button>
-          <div className="text-right text-sm mb-8 sm:mb-1">
+          <div className="text-right text-sm md:text-[15px] mb-8 sm:mb-1">
             <button
               type="button"
               onClick={() => {
@@ -363,7 +363,7 @@ export default function Auth() {
               Esqueci minha senha
             </button>
           </div>
-          <div className="text-center text-sm mt-8 sm:mt-0 flex justify-center items-center gap-1" style={{ marginTop: isMobile ? "20px" : "11px" }}>
+          <div className="text-center text-sm md:text-[15px] mt-8 sm:mt-0 flex justify-center items-center gap-1" style={{ marginTop: isMobile ? "20px" : "11px" }}>
             <span className="text-muted-foreground font-medium">Não possui uma conta?</span>
             <button
               type="button"
@@ -397,7 +397,7 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
+              className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
@@ -417,7 +417,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -438,7 +438,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -465,7 +465,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -481,17 +481,18 @@ export default function Auth() {
             className="w-full rounded-xl text-xl font-bold transition-all duration-100 bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(30,64,175,0.1),inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_-1px_0px_rgba(0,0,0,0.3)] hover:opacity-90 active:translate-y-[1px]"
             size="lg"
             disabled={loading}
+            style={{ marginTop: "15px" }}
           >
             {loading ? "Criando conta..." : "Cadastrar"}
           </Button>
-          <div className="text-center text-sm">
+          <div className="text-center text-sm md:text-[15px]">
             <button
               type="button"
               onClick={() => {
                 setViewMode("login");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block w-full"
+              className="text-primary hover:underline block w-full font-bold"
             >
               Já tenho conta
             </button>
@@ -518,7 +519,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -530,14 +531,14 @@ export default function Auth() {
           >
             {loading ? "Enviando..." : "Enviar link de recuperação"}
           </Button>
-          <div className="text-center text-sm">
+          <div className="text-center text-sm md:text-[15px]">
             <button
               type="button"
               onClick={() => {
                 setViewMode("login");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block w-full"
+              className="text-primary hover:underline block w-full font-bold"
             >
               Voltar para login
 
@@ -565,7 +566,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -592,7 +593,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("!h-11 !min-h-[44px] !max-h-[44px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -611,14 +612,14 @@ export default function Auth() {
           >
             {loading ? "Redefinindo..." : "Redefinir senha"}
           </Button>
-          <div className="text-center text-sm">
+          <div className="text-center text-sm md:text-[15px]">
             <button
               type="button"
               onClick={() => {
                 setViewMode("login");
                 setValidationErrors({});
               }}
-              className="text-primary hover:underline block w-full"
+              className="text-primary hover:underline block w-full font-bold"
             >
               Voltar para login
             </button>
@@ -631,7 +632,7 @@ export default function Auth() {
   return (
     <div 
       className={cn(
-        "flex flex-col min-h-[100dvh] relative overflow-hidden",
+        "auth-page-container flex flex-col min-h-[100dvh] relative overflow-hidden",
         isMobile ? "global-bg justify-center items-center p-4" : "min-h-screen bg-cover bg-center bg-no-repeat items-center justify-center p-4"
       )}
       style={!isMobile ? { backgroundImage: "url('/backgrounds/login_desktop.webp')" } : undefined}
@@ -655,7 +656,7 @@ export default function Auth() {
           />
         </div>
       ) : (
-        <Card className="w-full max-w-[355px] px-6 pt-4 pb-0 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border-t border-l border-white/20 bg-white/95 backdrop-blur-sm rounded-3xl flex flex-col relative z-10 transition-all duration-300">
+        <Card className="w-full max-w-[400px] px-8 pt-6 pb-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border-t border-l border-white/20 bg-white/95 backdrop-blur-sm rounded-3xl flex flex-col relative z-10 transition-all duration-300">
           <div className="flex-grow">
             {formContent}
           </div>
