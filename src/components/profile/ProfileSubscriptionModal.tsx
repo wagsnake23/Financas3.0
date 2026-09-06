@@ -410,7 +410,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                       onClick={() => handleSelectPlan(plan)}
                       disabled={(isCurrent && !isExpired) || isInferior || isBlocked || loadingPlan === plan.code}
                       className={cn(
-                        "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
+                        "h-9 px-4 rounded-[10px] font-bold transition-all text-[14px]",
                         (isCurrent && !isExpired) || isInferior || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
                           : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
@@ -494,7 +494,7 @@ export function ProfileSubscriptionModal({ currentPlanId, subscriptionStatus, pa
                       onClick={() => handleSelectPlan(plan)}
                       disabled={isCurrent || isBlocked || loadingPlan === plan.code}
                       className={cn(
-                        "h-8 px-3 rounded-[10px] font-bold transition-all text-[12px]",
+                        "h-9 px-4 rounded-[10px] font-bold transition-all text-[14px]",
                         isCurrent || isBlocked
                           ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default shadow-none border border-slate-200"
                           : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95 shadow-[0_4px_10px_rgba(37,99,235,0.3)] hover:scale-[1.03]"
