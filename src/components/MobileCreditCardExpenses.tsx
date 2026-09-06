@@ -298,7 +298,7 @@ export const MobileCreditCardExpenses: React.FC<
         {/* Top Header Row */}
         <div className="flex justify-between items-start w-full mb-[8px]">
           {/* Header Row: Full width selector */}
-          <div className="w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full" onClick={(e) => e.stopPropagation()} style={{ position: 'relative', top: isMobile ? '2px' : '0' }}>
             <Select value={selectedCardId} onValueChange={setSelectedCardId}>
               <SelectTrigger 
                 className="w-full h-[32px] text-[13.5px] font-bold tracking-tight px-3.5 rounded-[9px] hover:border-[#C5D1E8] focus:border-[#AFC0E8] focus:ring-0 [&>svg]:hidden transition-colors flex items-center justify-between" 
@@ -384,7 +384,7 @@ export const MobileCreditCardExpenses: React.FC<
                   );
                 })}
               </svg>
-              <span className="text-[10px] font-semibold text-[#6b7280] mt-[3px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none">
+              <span className="text-[10px] font-medium text-[#0F172A] mt-[3px] mb-[1px] md:mb-0 tracking-tight pl-[10px] leading-none">
                 Últimos 10 meses
               </span>
             </div>
