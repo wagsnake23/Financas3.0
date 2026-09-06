@@ -824,7 +824,7 @@ export default function Investments() { // Alterado para export default function
                     disabled={loadingForm}
                   >
                     <SelectTrigger id="investment-category" className={cn(
-                      "rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white",
+                      "rounded-xl input-3d-premium font-bold transition-all duration-200 !bg-white !bg-none",
                       selectedInvestmentCategoryId === UNSELECTED_VALUE && "text-gray-400",
                       isMobile && "h-9 text-sm",
                       getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false, variant: "green" })
@@ -871,7 +871,7 @@ export default function Investments() { // Alterado para export default function
                         }
                       }}
                     >
-                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white", isMobile && "h-9 text-sm")}>
+                      <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 !bg-white !bg-none", isMobile && "h-9 text-sm")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -885,7 +885,7 @@ export default function Investments() { // Alterado para export default function
                     <div className="space-y-[6px] animate-in fade-in slide-in-from-left-2 duration-300">
                       <Label className={cn("text-[#283c5a]", isMobile && "text-xs")}>Indexador</Label>
                       <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 bg-white", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-bold transition-all duration-200 !bg-white !bg-none", isMobile && "h-9 text-sm")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -915,7 +915,7 @@ export default function Investments() { // Alterado para export default function
                         fixedDecimalScale={false}
                         maxLength={7}
                         className={cn(
-                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 bg-white",
+                          "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 !bg-white !bg-none",
                           isMobile && "h-9 text-sm",
                           getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false, variant: "green" })
                         )}
@@ -932,7 +932,7 @@ export default function Investments() { // Alterado para export default function
                         }}
                         placeholder="0,00"
                         className={cn(
-                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm bg-white",
+                          "h-9 rounded-xl input-3d-premium font-bold px-3 text-sm !bg-white !bg-none",
                           getBorderClass({ isInvalid: validationErrors.percentualIndexador, variant: "green" })
                         )}
                       />
@@ -949,7 +949,7 @@ export default function Investments() { // Alterado para export default function
                       }}
                       disabled={loadingForm}
                       className={cn(
-                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 bg-white",
+                        "rounded-xl input-3d-premium font-bold px-3 transition-all duration-200 !bg-white !bg-none",
                         isMobile && "h-9 text-sm",
                         getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false, variant: "green" })
                       )}
@@ -1169,7 +1169,9 @@ export default function Investments() { // Alterado para export default function
                           {/* 1. Top: Icon, Name, Type */}
                           <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3")}>
                             <div className={cn("flex items-center gap-2.5", !isMobile && "-ml-1.5 items-start")}>
-                              <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-10 w-10")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className={cn("flex items-center justify-center shrink-0 rounded-[14px]", isMobile ? "h-9 w-9" : "h-11 w-11")} style={{ backgroundColor: "#F6F8FA" }}>
+                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-[34px] w-[34px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              </div>
                               <div className="flex flex-col">
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "leading-tight text-base")}>
                                   {investmentNameDisplay}
@@ -1647,7 +1649,9 @@ export default function Investments() { // Alterado para export default function
                           {/* 1. Top: Icon, Name, Type and Actions */}
                           <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3.5")}>
                             <div className="flex items-center gap-2.5">
-                              <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-10 w-10")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              <div className={cn("flex items-center justify-center shrink-0 rounded-[14px]", isMobile ? "h-9 w-9" : "h-11 w-11")} style={{ backgroundColor: "#F6F8FA" }}>
+                                <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-[34px] w-[34px]")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                              </div>
                               <div className="flex flex-col">
                                 <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}>
                                   {investmentNameDisplay}
