@@ -569,7 +569,7 @@ export default function Home() {
                                     className="home-mobile-card rounded-[22px] relative overflow-hidden card-saldo h-full w-full flex flex-col justify-center"
                                     style={{
                                         borderRadius: "22px",
-                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, rgba(37,99,235,0.06) 85%, rgba(37,99,235,0.09) 100%)",
+                                        background: "radial-gradient(circle at top right, rgba(255,255,255,.60), transparent 65%), linear-gradient(135deg, #E2EDFC 0%, #E8F1FD 35%, #EEF5FF 70%, #E0EDFF 85%, #D1E1FF 100%)",
                                         border: "1px solid rgba(255,255,255,0.85)",
                                         backgroundClip: "padding-box",
                                         outline: "none",
@@ -581,12 +581,12 @@ export default function Home() {
                                         <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
                                             <defs>
                                                 <linearGradient id="wave-grad-mob" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
-                                                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                                                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.45" />
+                                                    <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.30" />
                                                 </linearGradient>
                                             </defs>
                                             {/* Curva suave superior */}
-                                            <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                                            <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.45)" />
                                             {/* Onda suave que envolve o gráfico */}
                                             <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-mob)" />
                                         </svg>
