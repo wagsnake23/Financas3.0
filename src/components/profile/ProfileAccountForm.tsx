@@ -103,7 +103,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
                   <FormControl>
                     <Input 
                       placeholder="Seu nome completo" 
-                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 font-medium focus-visible:ring-[#3B5B96]" 
+                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 text-[15px] font-semibold focus-visible:ring-[#3B5B96]" 
                       {...field} 
                     />
                 </FormControl>
@@ -125,7 +125,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
                     <Input 
                       placeholder="Como prefere ser chamado" 
                       maxLength={15}
-                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 font-medium focus-visible:ring-[#3B5B96] pr-16" 
+                      className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-slate-800 text-[15px] font-semibold focus-visible:ring-[#3B5B96] pr-16" 
                       {...field} 
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-400 select-none pointer-events-none">
@@ -148,7 +148,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
               <Input 
                 value={user.email} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed text-[15px] font-semibold" 
               />
             </FormControl>
           </FormItem>
@@ -161,7 +161,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
               <Input 
                 value={user.created_at ? new Intl.DateTimeFormat("pt-BR").format(new Date(user.created_at)) : "Indisponível"} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed text-[15px] font-semibold" 
               />
             </FormControl>
           </FormItem>
@@ -176,7 +176,7 @@ export function ProfileAccountForm({ profile, user }: ProfileFormProps) {
               <Input 
                 value={formatDate(user.last_sign_in_at)} 
                 readOnly 
-                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed font-medium" 
+                className="h-12 rounded-[16px] bg-[#F1F5F9] border border-slate-200 border-t-slate-300 shadow-[inset_0_3px_6px_rgba(0,0,0,0.05)] text-[#3B5B96] cursor-not-allowed text-[15px] font-semibold" 
               />
             </FormControl>
           </FormItem>
