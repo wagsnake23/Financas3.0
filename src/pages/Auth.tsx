@@ -635,7 +635,8 @@ export default function Auth() {
       )}
       style={!isMobile ? { backgroundImage: "url('/backgrounds/login_desktop.webp')" } : undefined}
     >
-      {isMobile && (
+      {!isMobile && (<div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(rgba(18,40,90,0.35), rgba(18,40,90,0.35))" }}></div>)}
+{isMobile && (
           <div
               className="absolute inset-0 z-1 pointer-events-none"
               style={{
