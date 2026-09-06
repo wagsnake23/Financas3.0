@@ -1119,68 +1119,62 @@ export default function Investments() { // Alterado para export default function
                         <div
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
-                          className="relative group overflow-hidden transition-all duration-300 py-[14px] pl-4 pr-[52px] rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
-                          style={{
+                          className={cn(
+                            "relative group overflow-hidden transition-all duration-300",
+                            isMobile ? "pt-[14px] pb-[14px] px-5 cursor-pointer active:scale-[0.98] rounded-[18px] mb-4 last:mb-0" : "py-[14px] pl-4 pr-[52px] rounded-[16px] mb-4 last:mb-0 border border-[rgba(0,0,0,0.08)] shadow-sm cursor-pointer active:scale-[0.98]"
+                          )}
+                          style={isMobile ? {
+                            backgroundColor: "#FFFFFF",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                            boxShadow: "0 8px 24px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
+                          } : {
                             backgroundColor: "#FFFFFF"
                           }}
                         >
                           {/* Coluna Vertical de Ações (Direita) */}
-                          <div className="absolute right-3 top-0 bottom-0 flex flex-col justify-center gap-3">
-                            <Button
-                              type="button"
-                              size="icon"
-                              onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                              className={cn(
-                                "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                isMobile
-                                  ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                  : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                              )}
-                            >
-                              <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-                            </Button>
-
-                            <Button
-                              type="button"
-                              size="icon"
-                              onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                              className={cn(
-                                "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                isMobile
-                                  ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                  : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                              )}
-                            >
-                              <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-                            </Button>
-
-                            {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                          {!isMobile && (
+                            <div className="absolute right-3 top-0 bottom-0 flex flex-col justify-center gap-2.5">
                               <Button
                                 type="button"
                                 size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
-                                className={cn(
-                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                  isMobile
-                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                )}
-                                title="Resgatar Investimento"
+                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
+                                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
                               >
-                                <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
+                                <span>✏️</span>
                               </Button>
-                            )}
-                          </div>
+
+                              <Button
+                                type="button"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
+                                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                              >
+                                <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
+                              </Button>
+
+                              {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
+                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                  title="Resgatar Investimento"
+                                >
+                                  <span>💰</span>
+                                </Button>
+                              )}
+                            </div>
+                          )}
 
                           {/* 1. Top: Icon, Name, Type */}
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-start gap-[5px] -ml-1.5">
-                              <DynamicIcon name={investmentIcon} className="h-9 w-9 text-primary/80" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                          <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3")}>
+                            <div className={cn("flex items-center gap-2.5", !isMobile && "-ml-1.5 items-start")}>
+                              <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-10 w-10")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               <div className="flex flex-col">
-                                <h3 className="font-bold text-gray-800 leading-tight text-base">
+                                <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "leading-tight text-base")}>
                                   {investmentNameDisplay}
                                 </h3>
-                                <p className="text-xs text-gray-600 font-bold flex items-center gap-2">
+                                <p className={cn("text-gray-600 font-bold flex items-center gap-2", isMobile ? "text-[11px] leading-none" : "text-xs")}>
                                   {typeLabel}
                                   {investment.status === 'resgatado' && (
                                     <span className="bg-slate-100 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md border border-slate-200">
@@ -1193,44 +1187,33 @@ export default function Investments() { // Alterado para export default function
                           </div>
 
                           {/* 2. Main Value and Yield */}
-                          <div className="flex flex-col justify-between gap-4">
-                            <div className="space-y-1">
-                              <div className="flex items-center justify-between">
-                                <div className="flex flex-col">
-                                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider leading-none mb-1">Saldo Líquido Total</span>
-                                  <span className="font-bold tracking-tight text-[#0556C3] text-2xl">
-                                    {formatCurrency(investment.valorLiquido)}
-                                  </span>
-                                </div>
+                          <div className={cn("flex justify-between", isMobile ? "flex-col gap-4" : "flex-col gap-4")}>
+                            <div className="space-y-[7px] w-full">
+                              <div className="flex flex-col">
+                                <span className={cn("text-slate-500 font-black uppercase tracking-wider leading-none", isMobile ? "text-[10px] mb-1" : "text-[10px] mb-1")}>Saldo Líquido Total</span>
+                                <span className={cn("font-bold tracking-tight text-[#0556C3]", isMobile ? "text-[26px] leading-none mb-1.5" : "text-2xl")}>
+                                  {formatCurrency(investment.valorLiquido)}
+                                </span>
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
-                              <div className="flex items-center gap-1.5 text-[12px] font-bold text-success/90 w-fit ml-0.5">
-                                <span className="text-sm">🔥</span>
+                              <div className={cn("flex items-center gap-1 font-bold text-success/90 w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5 gap-1.5")}>
+                                <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>🔥</span>
                                 <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                               </div>
                             </div>
 
-                            <div className="flex items-end justify-between">
+                            <div className={cn("flex", isMobile ? "flex-row justify-between items-center w-full" : "items-end justify-between")}>
                               {/* Profitability Badge */}
-                              <div
-                                className="inline-flex items-center gap-1.5 text-[#1E40AF] px-3.5 py-1.5 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                              >
+                              <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
                                 <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                                <div className="flex flex-col items-start leading-[1.1]">
-                                  <span className="text-[13px] font-black">
-                                    {investment.rentabilidadeLiquida.toFixed(2)}%
-                                  </span>
-                                  <span className="text-[10px] opacity-70 font-bold">
-                                    {investment.tipo_rentabilidade === "indexado"
-                                      ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                      : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
-                                  </span>
-                                </div>
+                                <span className="font-black text-[13px] leading-none">
+                                  {investment.rentabilidadeLiquida.toFixed(2)}%
+                                </span>
                               </div>
 
                               {/* Data Bottom Right */}
-                              <div className="text-[12px] text-slate-500 font-black uppercase tracking-widest">
+                              <div className={cn("font-black uppercase tracking-widest text-slate-500", isMobile ? "text-[11px]" : "text-[12px] whitespace-nowrap")}>
                                 {formattedDate}
                               </div>
                             </div>
@@ -1648,113 +1631,98 @@ export default function Investments() { // Alterado para export default function
                           key={investment.id}
                           onClick={() => { if (isMobile) handleEditClick(investment); }}
                           className={cn(
-                            "relative group overflow-hidden transition-all duration-300 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm",
-                            isMobile ? "pt-[12px] pb-[13px] px-4 cursor-pointer active:scale-[0.98]" : "py-4 px-5"
+                            "relative group overflow-hidden transition-all duration-300",
+                            isMobile ? "pt-[14px] pb-[14px] px-5 cursor-pointer active:scale-[0.98] rounded-[18px]" : "py-4 px-5 rounded-[16px] border border-[rgba(15,23,42,0.10)] shadow-sm"
                           )}
-                          style={{
+                          style={isMobile ? {
+                            backgroundColor: "#FFFFFF",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                            boxShadow: "0 8px 24px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.03)"
+                          } : {
                             backgroundColor: "#FFFFFF",
                             border: "1px solid rgba(0,0,0,0.08)",
                             boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)"
                           }}
                         >
                           {/* 1. Top: Icon, Name, Type and Actions */}
-                          <div className={cn("flex items-start justify-between mb-3.5", isMobile && "mb-3")}>
-                            <div className="flex items-start gap-1.5 -ml-1">
-                              <DynamicIcon name={investmentIcon} className="h-8 w-8 text-primary/80 mt-1" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
+                          <div className={cn("flex items-start justify-between", isMobile ? "mb-4" : "mb-3.5")}>
+                            <div className="flex items-center gap-2.5">
+                              <DynamicIcon name={investmentIcon} className={cn("text-primary/80", isMobile ? "h-7 w-7" : "h-10 w-10")} style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.15))" }} />
                               <div className="flex flex-col">
-                                <h3 className={cn("font-bold text-gray-800 leading-none mb-1.5", isMobile ? "text-base" : "text-[1.05rem]")}>
+                                <h3 className={cn("font-bold text-gray-800 leading-none", isMobile ? "text-[15px] mb-1" : "text-[1.05rem] mb-1.5")}>
                                   {investmentNameDisplay}
                                 </h3>
                                 <p className="text-[11px] text-gray-500 font-bold leading-none">{typeLabel}</p>
                               </div>
                             </div>
 
-                            <div className="flex gap-1.5">
-                              <Button
-                                type="button"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
-                                className={cn(
-                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                  isMobile
-                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                )}
-                              >
-                                <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-                              </Button>
-                              {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                            {!isMobile && (
+                              <div className="flex gap-2.5">
                                 <Button
                                   type="button"
                                   size="icon"
-                                  onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
-                                  className={cn(
-                                    "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                    isMobile
-                                      ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                      : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                                  )}
-                                  title="Resgatar Investimento"
+                                  onClick={(e) => { e.stopPropagation(); handleEditClick(investment); }}
+                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
                                 >
-                                  <span className={cn(isMobile ? "text-base" : "text-sm")}>💰</span>
+                                  <span>✏️</span>
                                 </Button>
-                              )}
-                              <Button
-                                type="button"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
-                                className={cn(
-                                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                                  isMobile
-                                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
+                                {investment.origem_investimento === 'saldo_atual' && investment.status !== 'resgatado' && (
+                                  <Button
+                                    type="button"
+                                    size="icon"
+                                    onClick={(e) => { e.stopPropagation(); handleRescue(investment); }}
+                                    className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                    title="Resgatar Investimento"
+                                  >
+                                    <span>💰</span>
+                                  </Button>
                                 )}
-                              >
-                                <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-                              </Button>
-                            </div>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  onClick={(e) => { e.stopPropagation(); handleDelete(investment.id); }}
+                                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+                                >
+                                  <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
 
                           {/* 2. Main Value and Yield */}
-                          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                            <div className="space-y-[7px]">
+                          <div className={cn("flex flex-col md:flex-row md:items-end justify-between", isMobile ? "gap-4" : "gap-4")}>
+                            <div className="space-y-[7px] w-full">
                               <div className="flex flex-col">
-                                <span className="text-[9px] text-slate-500 font-black uppercase tracking-wider leading-none mb-0.5">Saldo Líquido Total</span>
+                                <span className={cn("text-slate-500 font-black uppercase tracking-wider leading-none", isMobile ? "text-[10px] mb-1" : "text-[9px] mb-0.5")}>Saldo Líquido Total</span>
                                 <span className={cn(
                                   "font-bold tracking-tight text-[#0556C3]",
-                                  isMobile ? "text-[1.4rem]" : "text-[1.4rem]"
+                                  isMobile ? "text-[26px] leading-none mb-1.5" : "text-[1.4rem]"
                                 )}>
                                   {formatCurrency(investment.valorLiquido)}
                                 </span>
                               </div>
 
                               {/* Rendimento Diário / Mensal */}
-                              <div className="flex items-center gap-1 text-[12px] font-bold text-success/90 w-fit ml-0.5">
+                              <div className={cn("flex items-center gap-1 font-bold text-success/90 w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5")}>
                                 <span className="text-[13px]">🔥</span>
                                 <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
                               </div>
                             </div>
 
-                            <div className="flex flex-col items-end gap-1.5">
+                            <div className={cn(
+                              "flex",
+                              isMobile ? "flex-row justify-between items-center w-full" : "flex-col items-end gap-1.5"
+                            )}>
                               {/* Profitability Badge */}
-                              <div
-                                className="inline-flex items-center gap-1 text-[#1E40AF] px-3 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                              >
-                                <DynamicIcon name="TrendingUp" className="h-3 w-3" />
-                                <div className="flex flex-col items-start leading-none">
-                                  <span className="text-[12px] font-black">
-                                    {investment.rentabilidadeLiquida.toFixed(2)}%
-                                  </span>
-                                  <span className="text-[9px] opacity-70 font-bold mt-0.5">
-                                    {investment.tipo_rentabilidade === "indexado"
-                                      ? `${investment.percentual_indexador}% ${investment.indexador}`
-                                      : `Bruto: ${investment.rentabilidade.toFixed(2)}%`}
-                                  </span>
-                                </div>
+                              <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                                <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                <span className="font-black text-[13px] leading-none">
+                                  {investment.rentabilidadeLiquida.toFixed(2)}%
+                                </span>
                               </div>
 
                               {/* Data Bottom Right */}
-                              <div className="text-[11px] sm:text-[12px] text-slate-400 font-black uppercase tracking-widest mt-1">
+                              <div className={cn("font-black uppercase tracking-widest text-slate-500", isMobile ? "text-[11px]" : "text-[12px] whitespace-nowrap")}>
                                 {formattedDate}
                               </div>
                             </div>
