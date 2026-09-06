@@ -395,16 +395,16 @@ export default function Home() {
         
         return monthlyBalances.map((item, i) => {
             // max balance maps to Y=5, min balance maps to Y=40
-            // start at X=22 (margin left), end at X=150 (margin right)
+            // start at X=5 and end at 155 for mobile (to stretch fully to the right)
             const y = 40 - ((item.balance - minBal) / range) * 35;
             return {
-                x: 22 + i * (128 / 9),
+                x: isMobile ? 5 + i * (150 / 9) : 22 + i * (128 / 9),
                 y,
                 monthStr: item.monthStr,
                 balance: item.balance
             };
         });
-    }, [monthlyBalances]);
+    }, [monthlyBalances, isMobile]);
 
     const linePath = useMemo(() => {
         if (sparklinePoints.length === 0) return "";
@@ -618,7 +618,7 @@ export default function Home() {
                                         {/* BASE: Saldo Mensal à esquerda e Sparkline à direita */}
                                         <div className="flex justify-between items-end w-full mt-2">
                                             {/* Informações Secundárias e Ações */}
-                                            <div className="flex flex-col items-start pb-0 z-10 mr-2 -mt-4">
+                                            <div className="w-[135px] md:w-auto shrink-0 flex flex-col items-start pb-0 z-10 mr-2 -mt-4">
                                                 {/* Saldo Mensal agrupado com Ícone Azul */}
                                                 <div className="flex items-center gap-2.5 mb-2.5">
                                                     <Button
@@ -629,7 +629,7 @@ export default function Home() {
                                                         <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                     </Button>
                                                     <div className="flex flex-col items-start" style={{ transform: "translateY(-4px)" }}>
-                                                        <span className="text-[12px] font-medium leading-[1.2] tracking-normal text-[#64748B] mb-0.5">
+                                                        <span className="text-[12px] font-medium leading-[1.2] tracking-normal text-[#64748B] mb-0.5 whitespace-nowrap">
                                                             Saldo em {format(selectedMonth, "MMMM", { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
                                                         </span>
                                                         <span className="text-[15px] font-bold text-[#334155] tracking-tight leading-none">
@@ -640,8 +640,9 @@ export default function Home() {
                                             </div>
 
                                             {/* Sparkline Graph */}
-                                            <div className="flex-1 min-w-0 flex flex-col items-center justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
-                                                <svg viewBox="0 0 160 45" className="w-full max-w-[190px] h-[var(--home-chart-h,64px)] overflow-visible">
+                                            <div className="flex-1 min-w-0 flex flex-col items-end justify-end -mt-6" style={{ transform: "translateY(-14px)" }}>
+                                                <div className="flex flex-col items-center w-full">
+                                                    <svg viewBox="0 0 160 45" className="w-full h-[var(--home-chart-h,64px)] overflow-visible">
                                                     <defs>
                                                         <linearGradient id="sparkline-grad-mob" x1="0" y1="0" x2="0" y2="1">
                                                             <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
@@ -694,10 +695,11 @@ export default function Home() {
                                                             />
                                                         );
                                                     })}
-                                                </svg>
-                                                <span className="text-[10px] font-medium text-[#0F172A] mt-[3px] mb-2.5 md:mb-0 tracking-tight pl-[10px] leading-none" style={{ transform: "translateY(-4px)" }}>
-                                                    Últimos 10 meses
-                                                </span>
+                                                    </svg>
+                                                    <span className="text-[10px] font-medium text-[#0F172A] mt-[3px] mb-2.5 md:mb-0 tracking-tight leading-none text-center" style={{ transform: "translateY(-4px)" }}>
+                                                        Últimos 10 meses
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
