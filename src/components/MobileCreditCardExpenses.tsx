@@ -217,8 +217,8 @@ export const MobileCreditCardExpenses: React.FC<
     return monthlyCardBalances.findIndex(item => item.monthStr === selStr);
   }, [monthlyCardBalances, selectedMonth]);
 
-  const mainColor = isMobile ? "#6D28D9" : "#2563EB";
-  const gradColor = isMobile ? "#8B5CF6" : "#2563EB";
+  const mainColor = "#6D28D9";
+  const gradColor = "#8B5CF6";
 
   // GUARD: If explicitly loading or cartoes is not available yet, render SKELETON
   if (isLoading || !cartoes) {
@@ -245,7 +245,7 @@ export const MobileCreditCardExpenses: React.FC<
           {/* Bottom Indicators skeleton */}
           <div className="flex justify-between items-end w-full relative z-20 -translate-y-[2px] animate-pulse">
             <div className="w-[120px] h-[var(--home-chart-h,64px)] bg-slate-200/40 rounded-lg -ml-1" />
-            <div className="w-[135px] shrink-0 flex flex-col justify-end items-end gap-1 text-right">
+            <div className="w-[135px] md:w-[150px] shrink-0 flex flex-col justify-end items-end gap-1 text-right">
               <div className="h-[12px] w-20 bg-slate-200/60 rounded mb-[2px]" />
               <div className="h-[14px] w-24 bg-slate-200/60 rounded mb-[2px]" />
               <div className="h-[20px] w-28 bg-slate-200/60 rounded" />
@@ -434,8 +434,8 @@ export const MobileCreditCardExpenses: React.FC<
               </span>
             </div>
 
-            {/* Lado direito: Título e Valor principal (Exact 135px width to align with button) */}
-            <div className="w-[135px] shrink-0 flex flex-col justify-end items-end text-right">
+            {/* Lado direito: Título e Valor principal (Exact width to align with button) */}
+            <div className="w-[135px] md:w-[150px] shrink-0 flex flex-col justify-end items-end text-right">
               {/* Período da fatura */}
               <span 
                 className="text-[12px] font-extrabold tracking-wide uppercase mb-[2px]" 
@@ -443,7 +443,7 @@ export const MobileCreditCardExpenses: React.FC<
               >
                 {format(selectedMonth, "MMM | yyyy", { locale: ptBR }).replace(".", "")}
               </span>
-              <h2 className="text-[15px] tracking-[0.5px] md:text-[17px] mb-1" style={{ color: totalPending > 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#15803D", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>
+              <h2 className="text-[15px] tracking-[0.5px] md:text-[17px] mb-1 whitespace-nowrap" style={{ color: totalPending > 0 ? (isMobile ? "#ef4444" : "#b91c1c") : "#15803D", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>
                 {totalPending > 0 ? "Fatura Pendente" : "Fatura Paga"}
               </h2>
               <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: isMobile ? "21px" : "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: totalPending > 0 ? "#1f2937" : "#6b7280", letterSpacing: "-0.5px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"', textRendering: "optimizeLegibility" }}>
