@@ -1903,8 +1903,8 @@ export default function Investments() { // Alterado para export default function
               onClick={handleConfirmRescue}
               disabled={rescueInvestmentMutation.isPending}
               className={cn(
-                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                isMobile && "h-12 text-lg"
+                "flex-1 rounded-xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-11 text-lg"
               )}
               style={{ "--cor-topo": "#3B82F6", "--cor-base": "#2563EB" } as any}
             >
