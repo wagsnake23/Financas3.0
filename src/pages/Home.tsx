@@ -603,7 +603,7 @@ export default function Home() {
                                                         <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                                     </Button>
                                                     <div className="flex flex-col items-start" style={{ transform: "translateY(-4px)" }}>
-                                                        <span className="text-[11px] font-medium leading-none text-[#64748B] mb-1">
+                                                        <span className="text-[12px] font-medium leading-[1.2] tracking-normal text-[#64748B] mb-0.5">
                                                             Saldo em {format(selectedMonth, "MMMM", { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
                                                         </span>
                                                         <span className="text-[15px] font-bold text-[#334155] tracking-tight leading-none">
@@ -1001,7 +1001,7 @@ export default function Home() {
                                                 <DynamicIcon name="LineChart" className="h-[18px] w-[18px] text-white" strokeWidth={3} />
                                             </Button>
                                             <div className="flex flex-col items-start" style={{ transform: "translateY(-4px)" }}>
-                                                <span className="text-[12px] font-medium leading-none text-[#64748B] mb-1.5">
+                                                <span className="text-[12px] font-medium leading-[1.2] tracking-normal text-[#64748B] mb-1">
                                                     Saldo em {format(selectedMonth, "MMMM", { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
                                                 </span>
                                                 <span className="text-[16px] font-bold text-[#334155] tracking-tight leading-none">
