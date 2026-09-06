@@ -347,14 +347,13 @@ const Categories = () => {
               </div>
             </div>
 
-            <Button
+            <button
               onClick={() => navigate(-1)}
-              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1E6BCE] bg-white hover:bg-white/90"
-              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              className="flex items-center gap-1 font-bold text-sm !text-[#1E6BCE] hover:opacity-80 transition-colors bg-transparent border-none outline-none focus:outline-none shadow-none mt-2 pr-4 cursor-pointer"
             >
-              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1E6BCE]" strokeWidth={3} />
+              <DynamicIcon name="ArrowLeft" className="h-[18px] w-[18px]" strokeWidth={2.5} />
               Voltar
-            </Button>
+            </button>
           </div>
         </div>
       )}
