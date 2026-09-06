@@ -762,7 +762,7 @@ body {
 /* Nova Despesa Form specific premium input styling */
 #expense-form .input-3d-premium,
 .card-despesas .input-3d-premium {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
   border: 1px solid rgba(203,213,225,.95) !important;
   border-radius: 0.75rem !important;
   color: #1e293b !important;
@@ -771,7 +771,7 @@ body {
 
 #income-form .input-3d-premium,
 .card-receitas .input-3d-premium {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
   border: 1px solid rgba(203,213,225,.95) !important;
   border-radius: 0.75rem !important;
   color: #1e293b !important;
@@ -785,7 +785,7 @@ body {
 #expense-form [role="combobox"],
 #expense-form [aria-haspopup="dialog"],
 #expense-form button.input-3d-premium {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
   border: 1px solid rgba(203,213,225,.95) !important;
   box-shadow: 0 1px 2px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.95) !important;
 }
@@ -797,7 +797,7 @@ body {
 #income-form [role="combobox"],
 #income-form [aria-haspopup="dialog"],
 #income-form button.input-3d-premium {
-  background: #FFFFFF !important;
+  background: #F8FAFC !important;
   border: 1px solid rgba(203,213,225,.95) !important;
   box-shadow: 0 1px 2px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.95) !important;
 }

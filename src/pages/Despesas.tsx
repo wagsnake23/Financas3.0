@@ -503,23 +503,10 @@ export default function Despesas() {
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.6fr] gap-6">
             <div className="space-y-6 flex flex-col">
               <Card
-                className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] card-despesas relative overflow-hidden"
-                style={{ background: "#FFF5F5", border: "1px solid rgba(255,255,255,.85)", backgroundClip: "padding-box", boxShadow: "0 8px 24px rgba(239,68,68,0.06), 0 2px 6px rgba(239,68,68,0.03), inset 0 1px 0 rgba(255,255,255,.95)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
+                className="nova-despesa-card p-6 lg:pt-6 lg:px-6 lg:pb-[15px] rounded-[24px] shadow-sm card-despesas relative overflow-hidden"
+                style={{ backgroundColor: "#FFFFFF" }}
               >
-                {/* Iluminação branca superior direita — apenas no cabeçalho */}
-                <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(255,255,255,.70), transparent 65%)", pointerEvents: "none", zIndex: 0, borderRadius: "24px 24px 0 0" }} />
-                {/* Tom vermelho concentrado no cabeçalho */}
-                <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "20%", background: "radial-gradient(circle at top right, rgba(239,68,68,.07), transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-                {/* Curva orgânica restrita ao cabeçalho */}
-                <div aria-hidden="true" className="absolute left-0 right-0 pointer-events-none overflow-hidden" style={{ top: 0, height: "20%", zIndex: 0 }}>
-                  <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 500 70">
-                    <path d="M 0,0 C 120,45 340,50 500,12 L 500,0 Z" fill="rgba(255,255,255,0.50)" />
-                  </svg>
-                </div>
-
-                <div style={{ position: "relative", zIndex: 1 }}>
                 {formContent}
-                </div>
               </Card>
 
               <NfcePendentes

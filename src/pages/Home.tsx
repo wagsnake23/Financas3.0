@@ -938,16 +938,17 @@ export default function Home() {
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5 shrink-0">
                                         <div
-                                            className="flex items-center justify-between px-1 rounded-[10px] transition-all h-7 w-[135px] bg-white/60 backdrop-blur-sm border border-white/80 cursor-pointer shadow-xs"
+                                            className="flex items-center justify-between px-1 rounded-[11px] transition-all h-9 w-[150px] bg-[#f1f5f9] cursor-pointer border border-slate-200/60"
+                                            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}
                                         >
-                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[6px] p-0 h-5 w-5 flex items-center justify-center hover:opacity-90 bg-white shadow-xs" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
-                                                <DynamicIcon name="ChevronLeft" className="h-3 w-3" strokeWidth={3} />
+                                            <button onClick={handlePrevMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronLeft" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
-                                            <span className="text-[11px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight whitespace-nowrap">
+                                            <span className="text-[12px] font-bold text-[#1e293b] px-1 flex-1 text-center uppercase tracking-tight pt-[1px] whitespace-nowrap md:text-[13px]">
                                                 {format(selectedMonth, "MMM / y", { locale: ptBR }).replace(".", "")}
                                             </span>
-                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[6px] p-0 h-5 w-5 flex items-center justify-center hover:opacity-90 bg-white shadow-xs" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
-                                                <DynamicIcon name="ChevronRight" className="h-3 w-3" strokeWidth={3} />
+                                            <button onClick={handleNextMonth} className="text-[#4b5563] border-none rounded-[8px] p-0 h-7 w-7 flex items-center justify-center transition-all hover:opacity-90 bg-white shadow-sm" style={{ border: "1px solid rgba(0,0,0,0.05)" }}>
+                                                <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={3} />
                                             </button>
                                         </div>
 
