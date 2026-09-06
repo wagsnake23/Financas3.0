@@ -377,7 +377,7 @@ export const MobileCreditCardExpenses: React.FC<
           <div className="flex justify-between items-end w-full relative z-20 -translate-y-[2px]">
             {/* Lado esquerdo: Gráfico de tendência roxo */}
             <div className="flex-1 min-w-0 flex flex-col items-start justify-end -ml-1">
-              <svg viewBox="0 0 160 45" className="w-full max-w-[170px] h-[var(--home-chart-h,64px)] overflow-visible">
+              <svg viewBox="0 0 160 45" className={`w-full overflow-visible ${isMobile ? "max-w-[170px] h-[var(--home-chart-h,64px)]" : "max-w-[210px] h-[75px]"}`}>
                 <defs>
                   <linearGradient id="card-sparkline-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={gradColor} stopOpacity="0.25" />
@@ -419,10 +419,10 @@ export const MobileCreditCardExpenses: React.FC<
                       key={idx}
                       cx={pt.x}
                       cy={pt.y}
-                      r={isSelected ? 4.2 : 3}
+                      r={isSelected ? 4.2 : (isMobile ? 3 : 3.5)}
                       fill={isSelected ? "#EF6C6C" : mainColor}
                       stroke="#fff"
-                      strokeWidth={isSelected ? 1.6 : 1.2}
+                      strokeWidth={isSelected ? 1.6 : (isMobile ? 1.2 : 1.5)}
                       filter={isSelected ? "url(#red-glow)" : "url(#card-point-shadow)"}
                       style={{ transition: 'all 220ms ease-in-out' }}
                     />
