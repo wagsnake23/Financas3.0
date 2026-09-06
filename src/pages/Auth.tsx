@@ -357,7 +357,7 @@ export default function Auth() {
                 setViewMode("forgot-password");
                 setValidationErrors({});
               }}
-              className="text-destructive hover:text-destructive"
+              className="text-destructive hover:text-destructive font-semibold"
             >
               Esqueci minha senha
             </button>
@@ -638,9 +638,9 @@ export default function Auth() {
       {!isMobile && (<div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(rgba(18,40,90,0.35), rgba(18,40,90,0.35))" }}></div>)}
 {isMobile && (
           <div
-              className="absolute inset-0 z-1 pointer-events-none"
+              className="absolute inset-0 z-10 pointer-events-none"
               style={{
-                  background: "linear-gradient(180deg, #F1F5F9 0%, #F1F5F9 120px, #FAFAFA 280px, #FAFAFA 420px, #FCFCFE 100%)"
+                  background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
               }}
           />
       )}
@@ -649,7 +649,7 @@ export default function Auth() {
           {formContent}
           <Footer
             isMobile={isMobile}
-            className="fixed bottom-0 left-0 right-0 py-2 bg-white/80 backdrop-blur-sm z-50 m-0 text-xs"
+            className="fixed bottom-0 left-0 right-0 py-2 bg-transparent z-50 m-0 text-xs"
             user={null}
           />
         </div>
