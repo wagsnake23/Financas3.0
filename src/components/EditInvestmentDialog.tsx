@@ -267,7 +267,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 bg-slate-50/50 border-b border-slate-100">
             <div className="bg-white p-2 rounded-xl border border-[rgba(0,0,0,0.06)] shadow-sm">
-               <DynamicIcon name={allSubcategories.find(c => c.id === investmentToEdit.nome)?.icone || "MoreHorizontal"} className="h-6 w-6 text-[#0556C3]" />
+               <DynamicIcon name={allSubcategories.find(c => c.id === investmentToEdit.nome)?.icone || "MoreHorizontal"} className="h-[34px] w-[34px] text-[34px] leading-none text-[#0556C3]" />
             </div>
             <div className="flex flex-col">
               <span className="text-base font-black text-slate-800 leading-tight">
