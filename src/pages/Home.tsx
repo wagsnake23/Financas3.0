@@ -706,7 +706,7 @@ export default function Home() {
                                     </div>
 
                                     <div className="flex flex-col justify-center h-full w-full relative z-20">
-                                        <div className="flex justify-between items-start mb-2">
+                                        <div className="flex justify-between items-start w-full mb-2">
                                             <div className="flex flex-col md:mt-3">
                                                 <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
                                                     <h2 className="leading-none tracking-[0.5px]" style={{ color: isMobile ? "#ef4444" : "#b91c1c", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Despesas</h2>
@@ -790,7 +790,7 @@ export default function Home() {
                                     </div>
 
                                     <div className="flex flex-col justify-center h-full w-full relative z-20">
-                                        <div className="flex justify-between items-start mb-2">
+                                        <div className="flex justify-between items-start w-full mb-2">
                                             <div className="flex flex-col md:mt-3">
                                                 <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
                                                     <h2 className="leading-none tracking-[0.5px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Receitas</h2>
@@ -1057,7 +1057,9 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Despesas</h2>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#b91c1c", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Despesas</h2>
+                                        </div>
                                         <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
                                             <FormatCurrencyStyled value={dStats.currentExpenses} prefixColor={isCurrentMonth ? "#b91c1c" : undefined} />
                                         </p>
@@ -1147,7 +1149,9 @@ export default function Home() {
                                 {/* HEADER */}
                                 <div className="flex justify-between items-start w-full">
                                     <div className="flex flex-col">
-                                        <h2 className="text-[15px] tracking-[0.5px] mb-1 md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Receitas</h2>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#15803d", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Receitas</h2>
+                                        </div>
                                         <p className="leading-none transition-all" style={{ marginTop: "-3px", fontSize: "26px", fontWeight: 700, fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', color: "#0F172A", letterSpacing: "-0.5px" }}>
                                             <FormatCurrencyStyled value={dStats.currentIncome} prefixColor={isCurrentMonth ? "#15803d" : undefined} />
                                         </p>
