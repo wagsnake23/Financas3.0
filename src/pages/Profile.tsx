@@ -236,19 +236,17 @@ export default function Profile() {
           <div className="container-app relative z-10 pt-12 md:pt-[72px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
-                <Button
-                  variant="ghost"
-                  className="btn-3d p-2 rounded-xl flex items-center justify-center shadow-sm border-none cursor-pointer hover:scale-105 active:scale-95 transition-all h-auto w-auto mt-1"
+                <div
+                  className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-1"
                   style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-                  onClick={() => navigate(-1)}
                 >
-                  <span className="text-xl">👤</span>
-                </Button>
+                  <span className="text-xl leading-none select-none">👤</span>
+                </div>
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
+                  <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Meu Perfil
                   </h1>
-                  <p className="text-sm font-bold -mt-0.5 leading-none text-slate-500">
+                  <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
                     Gerencie suas informações e configurações da conta
                   </p>
                 </div>
