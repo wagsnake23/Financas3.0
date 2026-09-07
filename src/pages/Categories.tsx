@@ -368,8 +368,8 @@ const Categories = () => {
           <div className={cn("flex flex-col", isMobile ? "gap-4" : "gap-[21px] max-w-[420px]")}>
             {!isMobile && (
               <Card
-                className="p-[14px] rounded-[24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative overflow-hidden"
-                style={{ background: "linear-gradient(to bottom, #f3efe3, #f7f4ea)" }}
+                className="p-[14px] rounded-[24px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
+                style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className="flex items-center gap-2 mb-3 px-1">
                   <Search className="h-4 w-4 text-[#374151]" strokeWidth={3} />
@@ -392,7 +392,7 @@ const Categories = () => {
                 "rounded-[24px] relative overflow-hidden",
                 isMobile 
                   ? "card-yellow no-rim p-6" 
-                  : "card-yellow p-[28px_24px] border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                  : "card-despesas p-[28px_24px] border border-[rgba(15,23,42,0.10)] shadow-sm"
               )}
               style={
                 isMobile
@@ -402,7 +402,7 @@ const Categories = () => {
                       boxShadow: "0 2px 8px rgba(15,23,42,.05)"
                     }
                   : {
-                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      backgroundColor: "#F6F8FA",
                       backgroundImage: "none"
                     }
               }
@@ -435,7 +435,7 @@ const Categories = () => {
                 "rounded-[24px] overflow-hidden relative",
                 isMobile 
                   ? "card-yellow no-rim px-2 pt-4 pb-0 mb-1" 
-                  : "card-yellow p-5 border border-[rgba(245,158,11,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-auto min-h-unset pb-2"
+                  : "card-despesas p-5 border border-[rgba(15,23,42,0.10)] shadow-sm h-auto min-h-unset pb-2"
               )}
               style={
                 isMobile
@@ -446,7 +446,7 @@ const Categories = () => {
                       boxShadow: "0 2px 8px rgba(15,23,42,.05)"
                     }
                   : {
-                      backgroundColor: "rgba(255, 255, 255, 0.45)",
+                      backgroundColor: "#F6F8FA",
                       backgroundImage: "none"
                     }
               }
