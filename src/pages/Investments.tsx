@@ -1560,7 +1560,7 @@ export default function Investments() { // Alterado para export default function
             {/* Investments List */}
             <div>
               <Card
-                className={cn("p-6 lg:pb-4 rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
+                className={cn("p-6 lg:pb-[18px] rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
                 style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
