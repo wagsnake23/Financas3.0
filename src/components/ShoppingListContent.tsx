@@ -511,7 +511,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               <AlertDialogTrigger asChild>
                 <Button
                   className={cn(
-                    "btn-3d rounded-[12px] h-[38px] sm:h-[42px] px-3 sm:px-4 text-[13px] sm:text-[15px] font-bold shrink-0 ml-1 sm:ml-2 min-w-max"
+                    "btn-3d rounded-[12px] h-[38px] sm:h-[42px] px-3 sm:px-[26px] text-[13px] sm:text-[15px] font-bold shrink-0 ml-1 sm:ml-2 min-w-max"
                   )}
                   style={
                     {
@@ -525,7 +525,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent 
-                className={cn("sm:max-w-[450px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
+                className={cn("sm:max-w-[425px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
                 style={{
                   background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
                   backdropFilter: "blur(8px)"
@@ -755,7 +755,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                   <div className="col-span-5">
                     <span
                       className={cn(
-                        "text-sm",
+                        "text-lg font-bold",
                         item.status && "text-gray-400"
                       )}
                     >
@@ -763,7 +763,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                     </span>
 
                     {item.status && item.date && (
-                      <p className="mt-[1px] text-[10px] text-gray-500">
+                      <p className="mt-[1px] text-sm font-medium text-gray-500">
                         📅 {item.date}
                       </p>
                     )}
