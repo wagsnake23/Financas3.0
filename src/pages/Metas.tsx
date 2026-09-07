@@ -1072,19 +1072,35 @@ export default function Metas() {
               <p className="text-xs text-gray-600 font-bold">{parentName}</p>
             </div>
           </div>
-          <Button
-            type="button"
-            size="icon"
-            onClick={(e) => { e.stopPropagation(); handleEditClick(meta); }}
-            className={cn(
-              "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-              isMobile 
-                ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-            )}
-          >
-            <span className={cn(isMobile ? "text-base" : "text-sm")}>✏️</span>
-          </Button>
+          {isMobile ? (
+            <Button
+              type="button"
+              size="icon"
+              onClick={(e) => { e.stopPropagation(); handleEditClick(meta); }}
+              className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+            >
+              <span className="text-base">✏️</span>
+            </Button>
+          ) : (
+            <div className="flex gap-2.5">
+              <Button
+                type="button"
+                size="icon"
+                onClick={(e) => { e.stopPropagation(); handleEditClick(meta); }}
+                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+              >
+                <span>✏️</span>
+              </Button>
+              <Button
+                type="button"
+                size="icon"
+                onClick={(e) => { e.stopPropagation(); handleDeleteClick(meta); }}
+                className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-slate-50 border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:bg-slate-100 h-9 w-9 text-[15px]"
+              >
+                <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Values */}
@@ -1098,19 +1114,16 @@ export default function Metas() {
                   {formatCurrency(meta.realizado)}
                 </span>
               </div>
-              <Button
-                type="button"
-                size="icon"
-                onClick={(e) => { e.stopPropagation(); handleDeleteClick(meta); }}
-                className={cn(
-                  "p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100",
-                  isMobile 
-                    ? "bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
-                    : "bg-transparent border-none hover:bg-slate-100 h-8 w-8 text-sm"
-                )}
-              >
-                <DynamicIcon name="Trash2" className={cn("text-red-500", isMobile ? "h-[18px] w-[18px]" : "h-4 w-4")} />
-              </Button>
+              {isMobile && (
+                <Button
+                  type="button"
+                  size="icon"
+                  onClick={(e) => { e.stopPropagation(); handleDeleteClick(meta); }}
+                  className="p-0 flex items-center justify-center rounded-xl transition-all active:scale-90 flex-shrink-0 !opacity-100 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium !border-slate-400/60 border hover:bg-slate-50 h-8 w-8 text-sm"
+                >
+                  <DynamicIcon name="Trash2" className="text-red-500 h-[18px] w-[18px]" />
+                </Button>
+              )}
             </div>
 
             <div className="text-xs font-bold text-slate-500">
