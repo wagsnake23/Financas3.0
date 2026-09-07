@@ -117,7 +117,7 @@ const CategoryItem = ({
                 border: `1px solid ${effectiveColor}33`
             }}
           >
-            <DynamicIcon name={category.icone} className={cn("text-white drop-shadow-sm", (!isMobile && level > 0) ? "h-4 w-4" : "h-5 w-5")} />
+            <DynamicIcon name={category.icone} className={cn("text-white drop-shadow-sm", (!isMobile && level > 0) ? "h-4 w-4 text-lg" : "h-5 w-5 text-2xl")} />
           </div>
           <div className="flex-1 min-w-0 py-0.5 ml-0.5">
             <p className={cn(
@@ -406,7 +406,7 @@ const CategoriesList = ({
                   "w-full flex items-center gap-3 p-3 rounded-xl transition-all border text-left",
                   isActive 
                     ? "shadow-sm border-[rgba(245,158,11,0.35)]" 
-                    : "border-[rgba(245,158,11,0.12)] hover:border-[rgba(245,158,11,0.25)]"
+                    : "border-slate-200 hover:border-slate-300"
                 )}
                 style={{ backgroundColor: isActive ? "rgba(254, 249, 195, 0.7)" : "#ffffff" }}
               >
@@ -420,7 +420,7 @@ const CategoriesList = ({
                     boxShadow: isActive ? `0 4px 12px ${color}44` : 'none'
                   }}
                 >
-                  <DynamicIcon name={category.icone} className="h-5 w-5 text-white" />
+                  <DynamicIcon name={category.icone} className="h-5 w-5 text-white text-2xl" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={cn("font-bold text-[14px] truncate", isActive ? "text-primary" : "text-slate-700")}>
