@@ -12,14 +12,12 @@ export default function ShoppingList() {
 
   return (
     <div className={cn("flex flex-col global-bg pt-[calc(3.5rem+env(safe-area-inset-top))] md:pt-[72px]", isMobile ? "h-[100dvh] relative overflow-hidden" : "min-h-screen relative")}>
-      {isMobile && (
-          <div
-              className="absolute inset-0 z-10 pointer-events-none"
-              style={{
-                  background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
-              }}
-          />
-      )}
+      <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+              background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 75%, #F8F9FB 88%, #FCFCFE 100%)"
+          }}
+      />
       <main className={cn("container-app relative z-20 flex-grow", isMobile ? "pt-4 pb-20 flex flex-col min-h-0 shrink" : "py-8")}>
 
         <ShoppingListContent user={user} isMobile={isMobile} />
@@ -27,7 +25,7 @@ export default function ShoppingList() {
       <Footer
         isMobile={isMobile}
         user={user}
-        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pb-2 pt-0 bg-transparent z-50 m-0" : "mt-8")}
+        className={cn(isMobile ? "fixed bottom-0 left-0 right-0 pb-2 pt-0 bg-transparent z-50 m-0" : "mt-8 relative z-20")}
       />
     </div>
   );

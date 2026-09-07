@@ -505,6 +505,54 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
               {boughtItems} Comprados
             </span>
           </button>
+
+          {!isMobile && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className={cn(
+                    "btn-3d rounded-[12px] h-[38px] sm:h-[42px] px-3 sm:px-4 text-[13px] sm:text-[15px] font-bold shrink-0 ml-1 sm:ml-2 min-w-max"
+                  )}
+                  style={
+                    {
+                      "--cor-topo": "#FF6D6D",
+                      "--cor-base": "#E85454",
+                    } as React.CSSProperties
+                  }
+                  disabled={totalItems === 0}
+                >
+                  <DynamicIcon name="Trash2" className="mr-1 sm:mr-2 h-4 w-4" /> Limpar Lista
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent 
+                className={cn("sm:max-w-[450px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
+                style={{
+                  background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+                  backdropFilter: "blur(8px)"
+                }}
+              >
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
+                    <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+                    Limpar Lista?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
+                    Essa ação irá remover <span className="text-destructive font-bold">TODOS</span> os itens da sua lista permanentemente.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex flex-row gap-2">
+                  <AlertDialogCancel className="flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0" style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleClearList}
+                    className="flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11"
+                    style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+                  >
+                    Limpar Tudo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
 
@@ -531,7 +579,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         <div
           className={cn(
             "w-full flex-1 min-h-0 overflow-y-auto no-scrollbar",
-            isMobile ? "" : "rounded-xl border bg-lancamentos-mobile-bg mb-2 font-roboto"
+            isMobile ? "" : "rounded-xl border bg-transparent mb-2 font-roboto"
           )}
         >
           {/* Sticky Header - Oculto em mobile */}
@@ -547,7 +595,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
           )}
 
           {/* LISTA COM SCROLL */}
-          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-lancamentos-mobile-bg")}>
+          <div className={cn("bg-transparent", !isMobile && "divide-y divide-gray-200 bg-transparent")}>
             {filteredItems.length === 0 && (
               searchTerm ? (
                 <div className="p-8 text-center text-sm text-muted-foreground animate-fade-in">
@@ -791,71 +839,57 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
         </div>
       </div>
 
-      {/* Buttons Container */}
-      <div className={cn(
-        "shrink-0 w-full",
-        isMobile ? "fixed bottom-[28px] left-0 right-0 py-2 bg-transparent z-40 mb-0 container-app" : "mt-4 mb-2"
-      )}>
-        <div className={cn("flex w-full gap-3 justify-between", isMobile && "px-[4px]")}>
-        {/* Limpar Lista Button with Confirmation Modal */}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              className={cn(
-                "btn-3d",
-                "rounded-xl flex-1",
-                isMobile ? "h-[39px] text-[14.5px] font-[800]" : "h-9 text-sm font-bold"
-              )}
-              style={
-                {
-                  "--cor-topo": "#FF6D6D",
-                  "--cor-base": "#E85454",
-                } as React.CSSProperties
-              }
-              disabled={totalItems === 0}
-            >
-              <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent 
-            className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[450px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
-            style={{
-              background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
-              backdropFilter: "blur(8px)"
-            }}
-          >
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
-                <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
-                Limpar Lista?
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
-                Essa ação irá remover <span className="text-destructive font-bold">TODOS</span> os itens da sua lista permanentemente.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className={cn("flex flex-row gap-2", isMobile && "items-center justify-between mt-4")}>
-              <AlertDialogCancel className={cn(
-                "flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11 mt-0",
-                isMobile && "h-12 text-lg"
-              )} style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleClearList}
-                className={cn(
-                  "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
-                  isMobile && "h-12 text-lg"
-                )}
-                style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+      {/* Buttons Container for Mobile Only */}
+      {isMobile && (
+        <div className="shrink-0 w-full fixed bottom-[28px] left-0 right-0 py-2 bg-transparent z-40 mb-0 container-app">
+          <div className="flex w-full gap-3 justify-between px-[4px]">
+            {/* Limpar Lista Button with Confirmation Modal */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="btn-3d rounded-xl flex-1 h-[39px] text-[14.5px] font-[800]"
+                  style={
+                    {
+                      "--cor-topo": "#FF6D6D",
+                      "--cor-base": "#E85454",
+                    } as React.CSSProperties
+                  }
+                  disabled={totalItems === 0}
+                >
+                  <DynamicIcon name="Trash2" className="mr-2 h-4 w-4" /> Limpar Lista
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent 
+                className="dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl"
+                style={{
+                  background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+                  backdropFilter: "blur(8px)"
+                }}
               >
-                Limpar Tudo
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Salvar Button */}
-        {/* Salvar Button (Removed) */}
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
+                    <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+                    Limpar Lista?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center text-gray-500 font-medium font-roboto">
+                    Essa ação irá remover <span className="text-destructive font-bold">TODOS</span> os itens da sua lista permanentemente.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex flex-row gap-2 items-center justify-between mt-4">
+                  <AlertDialogCancel className="flex-1 rounded-2xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] h-12 text-lg mt-0" style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleClearList}
+                    className="flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] h-12 text-lg"
+                    style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
+                  >
+                    Limpar Tudo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
