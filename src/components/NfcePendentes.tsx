@@ -326,7 +326,7 @@ export const NfcePendentes: React.FC<NfcePendentesProps> = ({
           className={cn(
             isMobile
               ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[20px] shadow-none border-none"
-              : "sm:max-w-[425px] !pb-4 !rounded-[20px] shadow-none border-none"
+              : "sm:max-w-[400px] !pb-4 !rounded-[20px] shadow-none border-none"
           )}
           style={{
             background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",

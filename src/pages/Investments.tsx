@@ -1319,7 +1319,7 @@ export default function Investments() { // Alterado para export default function
                     >
                       <SelectTrigger id="investment-category" className={cn(
                         "rounded-xl input-3d-premium font-medium transition-all duration-200",
-                        isMobile && "h-9 text-sm",
+                        isMobile ? "h-9 text-sm" : "h-10",
                         getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                       )}>
                         <SelectValue placeholder="Selecione o investimento" />
@@ -1364,7 +1364,7 @@ export default function Investments() { // Alterado para export default function
                           }
                         }}
                       >
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-medium transition-all duration-200", isMobile && "h-9 text-sm")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-medium transition-all duration-200", isMobile ? "h-9 text-sm" : "h-10")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1378,7 +1378,7 @@ export default function Investments() { // Alterado para export default function
                       <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
                         <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
                         <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                          <SelectTrigger className="h-10 rounded-xl input-3d-premium text-sm font-bold">
+                          <SelectTrigger className={cn("rounded-xl input-3d-premium transition-all duration-200", isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium")}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1409,7 +1409,7 @@ export default function Investments() { // Alterado para export default function
                           maxLength={7}
                           className={cn(
                             "rounded-xl input-3d-premium font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
-                            isMobile && "h-9 text-sm",
+                            isMobile ? "h-9 text-sm" : "h-10",
                             getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                           )}
                         />
@@ -1425,7 +1425,8 @@ export default function Investments() { // Alterado para export default function
                           }}
                           placeholder="0,00"
                           className={cn(
-                            "h-10 rounded-xl input-3d-premium text-sm font-bold placeholder:text-slate-300 placeholder:font-normal",
+                            "rounded-xl input-3d-premium placeholder:text-slate-300 placeholder:font-normal transition-all duration-200",
+                            isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
                             getBorderClass({ isInvalid: validationErrors.percentualIndexador })
                           )}
                         />
@@ -1443,7 +1444,7 @@ export default function Investments() { // Alterado para export default function
                         disabled={loadingForm}
                         className={cn(
                           "rounded-xl input-3d-premium font-medium transition-all duration-200",
-                          isMobile && "h-9 text-sm",
+                          isMobile ? "h-9 text-sm" : "h-10",
                           getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                         )}
                       />
@@ -1518,7 +1519,7 @@ export default function Investments() { // Alterado para export default function
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
                           "input-3d-premium transition-all duration-200",
                           !date && "text-muted-foreground",
-                          isMobile && "h-9 text-sm",
+                          isMobile ? "h-9 text-sm" : "h-10",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
                         )}
                         disabled={loadingForm}
@@ -1798,7 +1799,7 @@ export default function Investments() { // Alterado para export default function
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[400px] !pb-4 !rounded-[22px] shadow-none border-none"
           )}
           style={{
             background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",

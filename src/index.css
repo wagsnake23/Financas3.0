@@ -906,7 +906,17 @@ body {
   #income-form textarea,
   #income-form [role="combobox"],
   #income-form [aria-haspopup="dialog"],
-  #income-form button.input-3d-premium {
+  #income-form button.input-3d-premium,
+  .investments-module input,
+  .investments-module textarea,
+  .investments-module [role="combobox"],
+  .investments-module [aria-haspopup="dialog"],
+  .investments-module button.input-3d-premium,
+  .metas-module input,
+  .metas-module textarea,
+  .metas-module [role="combobox"],
+  .metas-module [aria-haspopup="dialog"],
+  .metas-module button.input-3d-premium {
     font-size: 1rem !important; /* text-base */
     font-weight: 700 !important; /* bold */
 }

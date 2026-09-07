@@ -556,9 +556,9 @@ export default function Metas() {
           onValueChange={(v) => { setParentIdFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}selectedParentId`]: false }); }}
         >
           <SelectTrigger id={`${fieldPrefix}selectedParentId`} className={cn(
-            "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200",
+            "rounded-xl input-3d-premium bg-white transition-all duration-200",
             parentId === UNSELECTED_VALUE && "text-gray-400",
-            isMobile && "h-9 text-sm",
+            isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
             getBorderClass({ isInvalid: errors[`${fieldPrefix}selectedParentId`], isValid: errors[`${fieldPrefix}selectedParentId`] === false, variant: "green" })
           )}>
             <SelectValue placeholder="Selecione a categoria" />
@@ -595,8 +595,8 @@ export default function Metas() {
             }}
             placeholder="Ex: Trocar de carro"
             className={cn(
-              "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200",
-              isMobile && "h-9 text-sm",
+              "rounded-xl input-3d-premium bg-white transition-all duration-200",
+              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}nomeMeta`], isValid: errors[`${fieldPrefix}nomeMeta`] === false, variant: "green" })
             )}
           />
@@ -655,8 +655,8 @@ export default function Metas() {
             value={vObj}
             onChange={(v) => { setVObjFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorObjetivo`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium bg-white font-bold px-3 transition-all duration-200",
-              isMobile && "h-9 text-sm",
+              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200",
+              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorObjetivo`], isValid: errors[`${fieldPrefix}valorObjetivo`] === false, variant: "green" })
             )}
           />
@@ -668,8 +668,8 @@ export default function Metas() {
             value={vMen}
             onChange={(v) => { setVMenFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorMensal`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium bg-white font-bold px-3 transition-all duration-200",
-              isMobile && "h-9 text-sm",
+              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200",
+              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorMensal`], isValid: errors[`${fieldPrefix}valorMensal`] === false, variant: "green" })
             )}
           />
@@ -684,10 +684,10 @@ export default function Metas() {
           type="button"
           onClick={() => setCalOpenFn(true)}
           className={cn(
-            "w-full justify-start text-left font-bold h-10 rounded-xl",
+            "w-full justify-start text-left rounded-xl",
             "input-3d-premium bg-white px-3 transition-all duration-200",
             !dLim && "text-gray-400",
-            isMobile && "h-9 text-sm"
+            isMobile ? "font-bold h-9 text-sm" : "font-medium h-10 text-sm"
           )}
         >
           <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70" />
@@ -709,7 +709,7 @@ export default function Metas() {
   );
 
   return (
-    <div className={cn("flex flex-col min-h-[100dvh] relative global-bg", isMobile ? "pt-0" : "pt-[72px]")}>
+    <div className={cn("flex flex-col min-h-[100dvh] relative global-bg metas-module", isMobile ? "pt-0" : "pt-[72px]")}>
       {isMobile && (
           <div
               className="absolute inset-0 z-10 pointer-events-none"
@@ -993,7 +993,7 @@ export default function Metas() {
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
         <AlertDialogContent
           className={cn(
-            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[425px] !pb-4 !rounded-[22px] shadow-none border-none"
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[400px] !pb-4 !rounded-[22px] shadow-none border-none"
           )}
           style={{
             background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",

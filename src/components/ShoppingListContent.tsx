@@ -525,7 +525,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent 
-                className={cn("sm:max-w-[425px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
+                className={cn("sm:max-w-[400px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
                 style={{
                   background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
                   backdropFilter: "blur(8px)"
@@ -701,7 +701,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                             </button>
                           </AlertDialogTrigger>
                           <AlertDialogContent 
-                            className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
+                            className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[400px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
                             style={{
                               background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
                               backdropFilter: "blur(8px)"
@@ -797,7 +797,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                           </button>
                         </AlertDialogTrigger>
                         <AlertDialogContent 
-                          className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[425px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
+                          className={cn(isMobile ? "dialog-mobile w-[99%] max-w-[99%] !rounded-[22px] !pb-4 !border-2 !border-white shadow-2xl" : "sm:max-w-[400px] !pb-4 !rounded-[22px] !border-2 !border-white shadow-2xl")}
                           style={{
                             background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
                             backdropFilter: "blur(8px)"
