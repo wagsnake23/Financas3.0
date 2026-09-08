@@ -159,7 +159,7 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
                               {String(payload.value)}
                             </div>
                             <div className="shrink-0 text-[1.15em] leading-normal translate-y-[2px]">
-                              {item?.icone}
+                              {item?.icone && String(item.icone).startsWith("brand:") ? null : item?.icone}
                             </div>
                           </div>
                         </div>
@@ -238,7 +238,9 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
               >
                   <div className="bg-white/95 backdrop-blur-md pt-[9px] pb-3 px-[11px] shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl max-w-[190px] relative" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
                       <div className="flex items-center gap-2 mb-1.5">
-                          <span className="text-xl drop-shadow-sm">{chartData[activeBarIndex].icone}</span>
+                          <span className="text-xl drop-shadow-sm">
+                            {chartData[activeBarIndex].icone && String(chartData[activeBarIndex].icone).startsWith("brand:") ? null : chartData[activeBarIndex].icone}
+                          </span>
                           <div className="flex flex-col">
                               <span className="text-sm font-bold text-gray-800 leading-tight line-clamp-2" style={{ wordBreak: 'break-word' }}>{chartData[activeBarIndex].name}</span>
                           </div>

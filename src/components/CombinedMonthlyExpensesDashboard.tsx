@@ -806,7 +806,7 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                       {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                                     </div>
                                     <div className="shrink-0 text-[1.15em] leading-normal translate-y-[2px]">
-                                      {item?.icone}
+                                      {item?.icone && String(item.icone).startsWith("brand:") ? null : item?.icone}
                                     </div>
                                   </div>
                                 </div>
