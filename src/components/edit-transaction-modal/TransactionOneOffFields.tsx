@@ -111,7 +111,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 .map((cat) => (
                   <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                     <span className="flex items-center gap-2">
-                      <span>{cat.icone}</span>
+                      <span className="shrink-0"><DynamicIcon name={cat.icone} className="w-5 h-5" /></span>
                       <span>{cat.nome}</span>
                     </span>
                   </SelectItem>

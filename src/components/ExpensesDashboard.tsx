@@ -192,7 +192,9 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                       return (
                         <div className="bg-white p-4 shadow-xl border border-gray-100 rounded-xl">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xl">{data.icone}</span>
+                            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                              <DynamicIcon name={data.icone} className="w-6 h-6" />
+                            </div>
                             <span className="font-bold text-gray-800">{data.nome}</span>
                           </div>
                           <div className="flex items-baseline gap-2">

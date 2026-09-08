@@ -10,16 +10,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"; // Import Dialog components
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppCategory } from "@/types/finance";
 import { toast } from "sonner";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { PAYMENT_METHODS } from "@/data/colorPalette"; // Manter para referência, se necessário
-import { X } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile"; // Importar useIsMobile
-import { cn, getBorderClass } from "@/lib/utils"; // Importar cn e getBorderClass
-import DynamicIcon from "./DynamicIcon"; // Importar DynamicIcon
+import EmojiPicker, { EmojiClickData, Categories } from "emoji-picker-react";
+import { PAYMENT_METHODS } from "@/data/colorPalette";
+import { X, Search as SearchIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn, getBorderClass } from "@/lib/utils";
+import DynamicIcon from "./DynamicIcon";
 import { getCategoryColor } from "@/lib/categoryColors";
+import { BRANDS } from "@/data/brands";
 
 interface CategoryFormProps {
   onAddCategory: (
@@ -31,14 +33,14 @@ interface CategoryFormProps {
   ) => void;
   editingCategory?: AppCategory | null;
   onCancelEdit?: () => void;
-  allCategories: AppCategory[]; // Agora recebe todas as categorias (principais e sub)
-  hideCardWrapper?: boolean; // NOVA PROP
-  excludeCategoryIds?: string[]; // Prop para excluir categorias específicas
-  defaultParentId?: string; // Prop para definir uma categoria pai padrão e travada
+  allCategories: AppCategory[];
+  hideCardWrapper?: boolean;
+  excludeCategoryIds?: string[];
+  defaultParentId?: string;
 }
 
 const UNSELECTED_VALUE = "unselected";
-const toastDuration = 1000; // 1 segundo para todos os dispositivos
+const toastDuration = 1000;
 const toastSuccessStyle = { backgroundColor: "#FFFFFF", color: "#006000", border: "1px solid #E5FFE5" };
 const toastErrorStyle = { backgroundColor: "#FFFFFF", color: "#FF2929", border: "1px solid #FFE5E5" };
 
@@ -48,8 +50,8 @@ export const CategoryForm = ({
   editingCategory,
   onCancelEdit,
   allCategories,
-  hideCardWrapper = false, // Valor padrão é false
-  excludeCategoryIds = [], // Valor padrão é vazio
+  hideCardWrapper = false,
+  excludeCategoryIds = [],
   defaultParentId,
 }: CategoryFormProps) => {
   const [nome, setNome] = useState("");
@@ -57,10 +59,10 @@ export const CategoryForm = ({
   const [cor, setCor] = useState("hsl(210, 70%, 50%)");
   const [selectedParentId, setSelectedParentId] = useState<string | null>(defaultParentId || null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  // Removed emojiPickerRef as it's no longer needed for modal
-  const isMobile = useIsMobile(); // Usar o hook useIsMobile
+  const [activeTab, setActiveTab] = useState("emojis");
+  const [searchBrandQuery, setSearchBrandQuery] = useState("");
+  const isMobile = useIsMobile();
 
-  // Load editing data when editingCategory changes
   useEffect(() => {
     if (editingCategory) {
       setNome(editingCategory.nome);
@@ -68,11 +70,9 @@ export const CategoryForm = ({
       setCor(editingCategory.cor);
       setSelectedParentId(editingCategory.parent_id);
     } else {
-      // Reset form when not editing
       setNome("");
       setIcone("😀");
 
-      // If there's a default parent, set its color
       if (defaultParentId) {
         const parent = allCategories.find(c => c.id === defaultParentId);
         if (parent) {
@@ -88,13 +88,21 @@ export const CategoryForm = ({
     }
   }, [editingCategory, defaultParentId, allCategories]);
 
-  // Removed outside click handler effect as Dialog handles closing
-
-
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setIcone(emojiData.emoji);
     setShowEmojiPicker(false);
   };
+
+  const handleBrandClick = (brandId: string) => {
+    setIcone(`brand:${brandId}`);
+    setShowEmojiPicker(false);
+  };
+
+  const filteredBrands = useMemo(() => {
+    if (!searchBrandQuery) return BRANDS;
+    const q = searchBrandQuery.toLowerCase();
+    return BRANDS.filter(b => b.name.toLowerCase().includes(q) || b.id.toLowerCase().includes(q));
+  }, [searchBrandQuery]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,9 +138,8 @@ export const CategoryForm = ({
       onAddCategory(categoryData);
     }
 
-    // Reset form (handled by useEffect when editingCategory becomes null)
     if (!editingCategory && onCancelEdit) {
-      onCancelEdit(); // This will clear the form
+      onCancelEdit();
     }
   };
 
@@ -142,7 +149,6 @@ export const CategoryForm = ({
     }
   };
 
-  // Filter categories that can be selected as a parent (only root categories)
   const possibleParentCategories = useMemo(() => {
     return allCategories.filter((cat) =>
       cat.parent_id === null && !excludeCategoryIds.includes(cat.id)
@@ -151,7 +157,7 @@ export const CategoryForm = ({
 
   const formContent = (
     <>
-      {!hideCardWrapper && ( // Renderiza o título apenas se não estiver escondendo o Card Wrapper
+      {!hideCardWrapper && (
         <div className="flex items-center justify-between mb-6">
           <h2 className={cn("text-2xl font-bold", isMobile && "text-xl")}>
             🗂️ {editingCategory ? "Editar Subcategoria" : "Nova Subcategoria"}
@@ -184,7 +190,6 @@ export const CategoryForm = ({
               const newParentId = value === UNSELECTED_VALUE ? null : value;
               setSelectedParentId(newParentId);
 
-              // NEW: Automatically match the parent's color for the subcategory
               if (newParentId) {
                 const parent = allCategories.find(c => c.id === newParentId);
                 if (parent) {
@@ -263,34 +268,100 @@ export const CategoryForm = ({
               )}
               disabled={editingCategory?.user_id === null}
             >
-              {icone}
+              <DynamicIcon name={icone} className={cn(isMobile ? "w-10 h-10" : "w-12 h-12")} />
             </button>
 
             <Dialog open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
               <DialogContent
                 className={cn(
                   "p-0 overflow-hidden flex flex-col gap-0 !rounded-[28px] !border-2 !border-white shadow-2xl",
-                  isMobile ? "w-[98vw] max-w-full" : "sm:max-w-[850px]"
+                  isMobile ? "w-[98vw] h-[85vh] max-h-[600px]" : "sm:max-w-[500px] h-[600px]"
                 )}
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
-                <div className="h-14 flex items-center justify-center border-b bg-gray-50/50">
+                <div className="h-14 shrink-0 flex items-center justify-center border-b bg-gray-50/50">
                   <DialogTitle className="font-black text-center text-lg">
                     Escolha um Ícone
                   </DialogTitle>
                 </div>
 
-                <div className="p-2 bg-white flex justify-center">
-                  <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    width="100%"
-                    height={isMobile ? 440 : 480}
-                    autoFocusSearch={false}
-                    searchDisabled={false}
-                    previewConfig={{ showPreview: false }}
-                    skinTonesDisabled={true}
-                    searchPlaceholder="Buscar..."
-                  />
+                <div className="flex-1 bg-white flex flex-col overflow-hidden">
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
+                    <div className="px-4 pt-3 pb-2 shrink-0">
+                      <TabsList className="w-full grid grid-cols-2 bg-gray-100 p-1 rounded-xl h-12">
+                        <TabsTrigger value="emojis" className="rounded-lg text-sm sm:text-base font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm h-full">
+                          😀 Emojis
+                        </TabsTrigger>
+                        <TabsTrigger value="brands" className="rounded-lg text-sm sm:text-base font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm h-full flex items-center gap-2">
+                          <span>🏢</span> Marcas
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+                    
+                    <div className="flex-1 relative overflow-hidden">
+                      <TabsContent value="emojis" className="absolute inset-0 m-0 border-none outline-none data-[state=inactive]:hidden flex justify-center">
+                        <EmojiPicker
+                          onEmojiClick={handleEmojiClick}
+                          width="100%"
+                          height="100%"
+                          autoFocusSearch={false}
+                          searchDisabled={false}
+                          previewConfig={{ showPreview: false }}
+                          skinTonesDisabled={true}
+                          searchPlaceholder="Buscar emojis..."
+                          categories={[
+                            { name: 'Sugeridos', category: Categories.SUGGESTED },
+                            { name: 'Smileys', category: Categories.SMILEYS_PEOPLE },
+                            { name: 'Animais', category: Categories.ANIMALS_NATURE },
+                            { name: 'Comida', category: Categories.FOOD_DRINK },
+                            { name: 'Viagens', category: Categories.TRAVEL_PLACES },
+                            { name: 'Atividades', category: Categories.ACTIVITIES },
+                            { name: 'Objetos', category: Categories.OBJECTS },
+                            { name: 'Símbolos', category: Categories.SYMBOLS },
+                          ]}
+                        />
+                      </TabsContent>
+                      
+                      <TabsContent value="brands" className="absolute inset-0 m-0 flex flex-col data-[state=inactive]:hidden bg-white">
+                        <div className="px-4 pb-3 shrink-0">
+                          <div className="relative">
+                            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Input
+                              type="text"
+                              placeholder="Buscar marcas..."
+                              value={searchBrandQuery}
+                              onChange={(e) => setSearchBrandQuery(e.target.value)}
+                              className="w-full pl-9 h-11 bg-gray-100/50 border-gray-200 rounded-xl focus-visible:ring-1 focus-visible:ring-gray-300"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-1 overflow-y-auto px-4 pb-4">
+                          <div className="grid grid-cols-4 sm:grid-cols-4 gap-2">
+                            {filteredBrands.map(brand => (
+                              <button
+                                key={brand.id}
+                                type="button"
+                                onClick={() => handleBrandClick(brand.id)}
+                                className="flex flex-col items-center justify-start gap-2 p-2 rounded-xl border-2 border-transparent hover:border-blue-100 hover:bg-blue-50/50 active:scale-95 transition-all group"
+                              >
+                                <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors p-2 shadow-sm border border-gray-100">
+                                  <img src={brand.icon} alt={brand.name} className="w-full h-full object-contain" />
+                                </div>
+                                <span className="text-[10px] sm:text-[11px] font-semibold text-center text-gray-600 leading-tight line-clamp-2 w-full px-1">
+                                  {brand.name}
+                                </span>
+                              </button>
+                            ))}
+                            {filteredBrands.length === 0 && (
+                              <div className="col-span-4 py-8 text-center text-gray-500 text-sm">
+                                Nenhuma marca encontrada para "{searchBrandQuery}"
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </TabsContent>
+                    </div>
+                  </Tabs>
                 </div>
               </DialogContent>
             </Dialog>
@@ -299,7 +370,7 @@ export const CategoryForm = ({
 
         {isMobile && <div className="h-4" />}
         <div className={cn("flex gap-4 w-full", isMobile ? "mt-0" : "!mt-[38px]")}>
-          {editingCategory && ( // Botão Cancelar à esquerda quando editando
+          {editingCategory && (
             <Button
               type="button"
               onClick={handleCancel}

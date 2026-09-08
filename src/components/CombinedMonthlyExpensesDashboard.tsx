@@ -569,7 +569,9 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                             />
                             
                             {/* Ícone Emoji */}
-                            <span className="text-xl drop-shadow-sm min-w-[28px] text-center">{entry.icone}</span>
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 flex-shrink-0">
+                            <DynamicIcon name={entry.icone} className="w-5 h-5 drop-shadow-sm" />
+                          </div>
                             
                             {/* Nome da Categoria */}
                             <span className={cn(

@@ -594,7 +594,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                       const sel = expenseSubcategories.find((cat) => cat.id === selectedSubcategoryId);
                       return sel ? (
                         <span className="flex items-center gap-2 truncate min-w-0">
-                          <span className="shrink-0">{sel.icone}</span>
+                          <span className="shrink-0"><DynamicIcon name={sel.icone} className="w-4 h-4" /></span>
                           <span className="truncate">{sel.nome}</span>
                         </span>
                       ) : (
@@ -644,7 +644,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                           }}
                         >
                           <span className="flex items-center gap-2.5 w-full">
-                            <span className="text-base">{cat.icone}</span>
+                            <span className="shrink-0"><DynamicIcon name={cat.icone} className="w-5 h-5" /></span>
                             <span className="text-slate-700 font-medium truncate">{cat.nome}</span>
                             {isMeta && <Target className="h-4 w-4 text-orange-500 ml-auto shrink-0 opacity-80" strokeWidth={2.5} />}
                           </span>

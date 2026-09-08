@@ -4,9 +4,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AppCategory } from "@/types/finance";
 import { cn } from "@/lib/utils";
-import { CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
+import { CurrencyInputField as CurrencyInput } from "@/components/ui/currency-input"; // Importar CurrencyInput
 import { StatusToggleButton } from "@/components/StatusToggleButton"; // NEW IMPORT
 import { Database } from "@/integrations/supabase/types"; // NEW IMPORT for ReceitaStatus
+import DynamicIcon from "@/components/DynamicIcon";
 
 type ReceitaStatus = Database['public']['Enums']['receita_status'];
 
@@ -80,7 +81,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
               filteredCategories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id} className={cn(isMobile && "text-sm")}>
                     <span className="flex items-center gap-2">
-                      <span>{cat.icone}</span>
+                      <span className="shrink-0"><DynamicIcon name={cat.icone} className="w-5 h-5" /></span>
                       <span>{getCategoryDisplayName(cat.id)}</span>
                     </span>
                   </SelectItem>

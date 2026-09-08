@@ -1,0 +1,96 @@
+export const BRANDS = [
+  // Bancos e Pagamentos
+  { id: "nubank", name: "Nubank", icon: "/brands/nubank.svg" },
+  { id: "itau", name: "Itaú", icon: "/brands/itau.svg" },
+  { id: "banco-do-brasil", name: "Banco do Brasil", icon: "/brands/banco-do-brasil-com-fundo.svg" },
+  { id: "bradesco", name: "Bradesco", icon: "/brands/bradesco.svg" },
+  { id: "caixa", name: "Caixa Econômica", icon: "/brands/Caixa_Econômica_Federal_logo_1997.svg" },
+  { id: "santander", name: "Santander", icon: "/brands/banco-santander-logo.svg" },
+  { id: "sofisa", name: "Banco Sofisa", icon: "/brands/Logo_do_Banco_Sofisa.svg" },
+  { id: "banco-bmg", name: "Banco BMG", icon: "/brands/banco-bmg-logo.svg" },
+  { id: "sicoob", name: "Sicoob", icon: "/brands/sicoob-vector-logo.svg" },
+  { id: "daycoval", name: "Daycoval", icon: "/brands/logo-Daycoval-com-fundo.svg" },
+  { id: "mercado-pago", name: "Mercado Pago", icon: "/brands/mercado-pago.svg" },
+  { id: "picpay", name: "PicPay", icon: "/brands/Logo-PicPay.svg" },
+  { id: "infinitepay", name: "InfinitePay", icon: "/brands/InfitePay.svg" },
+  { id: "recargapay", name: "RecargaPay", icon: "/brands/RecargaPay.svg" },
+  { id: "xp", name: "XP Investimentos", icon: "/brands/xp-investimentos-logo.svg" },
+  { id: "mastercard", name: "Mastercard", icon: "/brands/mastercard.svg" },
+  { id: "loterias", name: "Loterias", icon: "/brands/loterias.svg" },
+  { id: "bitcoin", name: "Bitcoin", icon: "/brands/bitcoin.svg" },
+  { id: "ethereum", name: "Ethereum", icon: "/brands/ethereum.svg" },
+
+  // Streaming e Entretenimento
+  { id: "netflix", name: "Netflix", icon: "/brands/Netflix_icon.svg" },
+  { id: "prime-video", name: "Prime Video", icon: "/brands/Amazon_Prime_Video_logo_(2024).svg" },
+  { id: "disney-plus", name: "Disney+", icon: "/brands/Disney+_logo.svg" },
+  { id: "hbo-max", name: "Max", icon: "/brands/HBO_Max_(2025).svg" },
+  { id: "apple-tv", name: "Apple TV", icon: "/brands/Apple_TV_logo.svg" },
+  { id: "globoplay", name: "Globoplay", icon: "/brands/Globoplay_2018.svg" },
+  { id: "spotify", name: "Spotify", icon: "/brands/spotify-icon.svg" },
+  { id: "deezer", name: "Deezer", icon: "/brands/Deezer_logo,_2023.svg" },
+  { id: "youtube", name: "YouTube", icon: "/brands/YouTube_full-color_icon_(2017).svg" },
+
+  // Food e Delivery
+  { id: "ifood", name: "iFood", icon: "/brands/IFood_logo.svg" },
+  { id: "burger-king", name: "Burger King", icon: "/brands/Burger_King_2020.svg" },
+  { id: "mcdonalds", name: "McDonald's", icon: "/brands/McDonald's_SVG_logo.svg" },
+  { id: "subway", name: "Subway", icon: "/brands/Subway_icon.svg" },
+  { id: "kfc", name: "KFC", icon: "/brands/KFC_logo_wordmark.svg" },
+  { id: "dominos", name: "Domino's Pizza", icon: "/brands/Domino's_pizza_logo.svg" },
+  { id: "pizza-hut", name: "Pizza Hut", icon: "/brands/Pizza_Hut.svg" },
+  { id: "habibs", name: "Habib's", icon: "/brands/Logotipo_do_Habib's_(2021).svg" },
+  { id: "bobs", name: "Bob's", icon: "/brands/Logotipo_do_Bob's.svg" },
+  { id: "starbucks", name: "Starbucks", icon: "/brands/Starbucks_Corporation_Logo_2011.svg" },
+
+  // Tecnologia e Serviços
+  { id: "apple", name: "Apple", icon: "/brands/apple.svg" },
+  { id: "google", name: "Google", icon: "/brands/Google__G__logo.svg" },
+  { id: "microsoft", name: "Microsoft", icon: "/brands/Microsoft_logo.svg" },
+  { id: "aws", name: "AWS", icon: "/brands/aws.svg" },
+  { id: "chatgpt", name: "ChatGPT", icon: "/brands/ChatGPT_logo.svg" },
+  { id: "gemini", name: "Google Gemini", icon: "/brands/google-gemini-icon.svg" },
+  { id: "openai", name: "OpenAI", icon: "/brands/openai-icon.svg" },
+  { id: "grok", name: "Grok", icon: "/brands/grok-icon.svg" },
+  { id: "github", name: "GitHub", icon: "/brands/github-icon.svg" },
+  { id: "intel", name: "Intel", icon: "/brands/intel.svg" },
+  { id: "samsung", name: "Samsung", icon: "/brands/Samsung_wordmark.svg" },
+  { id: "xiaomi", name: "Xiaomi", icon: "/brands/Xiaomi_logo.svg" },
+  { id: "chrome", name: "Chrome", icon: "/brands/chrome.svg" },
+  { id: "firefox", name: "Firefox", icon: "/brands/firefox.svg" },
+  { id: "cloudflare", name: "Cloudflare", icon: "/brands/cloudflare-icon.svg" },
+  { id: "uber", name: "Uber", icon: "/brands/uber.svg" },
+  { id: "cpfl", name: "CPFL Energia", icon: "/brands/CPFL_Energia.svg" },
+  { id: "sabesp", name: "Sabesp", icon: "/brands/Sabesp.svg" },
+
+  // Google Workspace
+  { id: "gmail", name: "Gmail", icon: "/brands/google-gmail.svg" },
+  { id: "google-drive", name: "Google Drive", icon: "/brands/google-drive.svg" },
+  { id: "google-maps", name: "Google Maps", icon: "/brands/google-maps.svg" },
+  { id: "google-meet", name: "Google Meet", icon: "/brands/google-meet.svg" },
+  { id: "google-fotos", name: "Google Fotos", icon: "/brands/google-photos.svg" },
+  { id: "play-store", name: "Play Store", icon: "/brands/google-play-icon.svg" },
+
+  // Redes Sociais e Mensagens
+  { id: "whatsapp", name: "WhatsApp", icon: "/brands/whatsapp-icon.svg" },
+  { id: "instagram", name: "Instagram", icon: "/brands/Instagram_logo_2022.svg" },
+  { id: "facebook", name: "Facebook", icon: "/brands/2023_Facebook_icon.svg" },
+  { id: "tiktok", name: "TikTok", icon: "/brands/Tiktok_icon.svg" },
+  { id: "twitter", name: "X (Twitter)", icon: "/brands/twitter.svg" },
+  { id: "telegram", name: "Telegram", icon: "/brands/telegram.svg" },
+
+  // Varejo e E-commerce
+  { id: "amazon", name: "Amazon", icon: "/brands/Amazon_logo.svg" },
+  { id: "mercado-livre", name: "Mercado Livre", icon: "/brands/mercado-libre.svg" },
+  { id: "shopee", name: "Shopee", icon: "/brands/Shopee_logo.svg" },
+  { id: "casas-bahia", name: "Casas Bahia", icon: "/brands/Casas_Bahia_icon.svg" },
+  { id: "lojas-americanas", name: "Lojas Americanas", icon: "/brands/Lojas_Americanas_Logo.svg" },
+  { id: "havan", name: "Havan", icon: "/brands/Havan_logo.svg" },
+  { id: "kabum", name: "KaBuM!", icon: "/brands/Logotipo_da_KaBuM!.svg" },
+  { id: "app-store", name: "App Store", icon: "/brands/apple-app-store.svg" },
+
+  // Telecom
+  { id: "vivo", name: "Vivo", icon: "/brands/vivo-119.svg" },
+  { id: "claro", name: "Claro", icon: "/brands/Claro.svg" },
+  { id: "tim", name: "TIM", icon: "/brands/TIM_logo_(2016-present).svg" }
+];

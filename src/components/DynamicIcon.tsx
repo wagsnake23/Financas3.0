@@ -15,6 +15,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { cn } from "@/lib/utils"; // Importar cn para mesclar classes
+import { BRANDS } from "@/data/brands"; // Importar o catálogo de marcas
 
 // Mapeia os nomes dos ícones para seus respectivos componentes Lucide
 const iconMap: { [key: string]: React.ElementType } = {
@@ -49,8 +50,22 @@ const DynamicIcon: React.FC<DynamicIconProps> = ({ name, className, color, ...pr
   if (IconComponent) {
     // Se for um nome de ícone Lucide válido, renderiza o componente Lucide
     return <IconComponent className={className} style={{ color: color }} {...props} />;
+  } else if (safeName.startsWith("brand:")) {
+    // Renderiza a logo da marca buscando o caminho correto no catálogo
+    const id = safeName.replace("brand:", "");
+    const brand = BRANDS.find((b) => b.id === id);
+    const src = brand ? brand.icon : `/brands/${id}.svg`;
+
+    return (
+      <img
+        src={src}
+        alt={brand?.name || id}
+        className={cn("w-5 h-5 object-contain", className)}
+        {...props as any}
+      />
+    );
   } else if (safeName) {
-    // Se não for um ícone Lucide, mas não for vazio, assume que é um emoji ou texto
+    // Se não for um ícone Lucide nem marca, mas não for vazio, assume que é um emoji ou texto
     // Removemos props incompatíveis com span que vêm de SVGProps (como ref disparando erro TS)
     const { ref, ...htmlProps } = props as any;
     
