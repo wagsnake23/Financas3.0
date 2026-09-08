@@ -114,7 +114,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             <CurrencyInput
               id="value"
               value={value}
-              onValueChange={(values) => setValue(values.floatValue)}
+              onValueChange={(_value, _name, values) => setValue(values?.float ?? undefined)}
               placeholder="0,00"
               required
               disabled={loading}
@@ -144,7 +144,7 @@ export const CommonFields: React.FC<CommonFieldsProps> = ({
             <CurrencyInput
               id="value"
               value={value}
-              onValueChange={(values) => setValue(values.floatValue)}
+              onValueChange={(_value, _name, values) => setValue(values?.float ?? undefined)}
               placeholder="0,00"
               required
               disabled={loading}

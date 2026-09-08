@@ -75,27 +75,31 @@ export const StatCard = ({
 }: StatCardProps) => {
   const premiumStyles = {
     income: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(52,211,153,0.16) 0%, rgba(52,211,153,0.02) 28%, #FCFDFE 38%, #FCFDFE 72%, #F2F5F8 82%, #F2F5F8 100%)" : "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
-      outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(34, 197, 94, 0.05)",
-      shadow: dashboardPremiumStyle ? "0 12px 32px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
+      background: dashboardPremiumStyle ? "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(34,197,94,.20) 0%, rgba(34,197,94,.12) 35%, rgba(34,197,94,.06) 70%, transparent 100%), #F0FDF4" : "linear-gradient(135deg, rgba(34, 197, 94, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(34, 197, 94, 0.09) 100%)",
+      border: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.85)" : "none",
+      outline: dashboardPremiumStyle ? "none" : "1px solid rgba(34, 197, 94, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 8px 24px rgba(34,197,94,0.10), 0 2px 6px rgba(34,197,94,0.05), inset 0 1px 0 rgba(255,255,255,.95)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(34, 197, 94, 0.09)",
       titleColor: "#16a34a"
     },
     expense: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(248,113,113,0.16) 0%, rgba(248,113,113,0.02) 28%, #FCFDFE 38%, #FCFDFE 72%, #F2F5F8 82%, #F2F5F8 100%)" : "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
-      outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(239, 68, 68, 0.05)",
-      shadow: dashboardPremiumStyle ? "0 12px 32px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
+      background: dashboardPremiumStyle ? "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(239,68,68,.20) 0%, rgba(239,68,68,.12) 35%, rgba(239,68,68,.06) 70%, transparent 100%), #FEF2F2" : "linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(239, 68, 68, 0.09) 100%)",
+      border: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.85)" : "none",
+      outline: dashboardPremiumStyle ? "none" : "1px solid rgba(239, 68, 68, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 8px 24px rgba(239,68,68,0.10), 0 2px 6px rgba(239,68,68,0.05), inset 0 1px 0 rgba(255,255,255,.95)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(239, 68, 68, 0.09)",
       titleColor: "#dc2626"
     },
     balance: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(96,165,250,0.16) 0%, rgba(96,165,250,0.02) 28%, #FCFDFE 38%, #FCFDFE 72%, #F2F5F8 82%, #F2F5F8 100%)" : "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
-      outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(59, 130, 246, 0.05)",
-      shadow: dashboardPremiumStyle ? "0 12px 32px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
+      background: dashboardPremiumStyle ? "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(59,130,246,.20) 0%, rgba(59,130,246,.12) 35%, rgba(59,130,246,.06) 70%, transparent 100%), #EFF6FF" : "linear-gradient(135deg, rgba(59, 130, 246, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(59, 130, 246, 0.09) 100%)",
+      border: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.85)" : "none",
+      outline: dashboardPremiumStyle ? "none" : "1px solid rgba(59, 130, 246, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 8px 24px rgba(59,130,246,0.10), 0 2px 6px rgba(59,130,246,0.05), inset 0 1px 0 rgba(255,255,255,.95)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(59, 130, 246, 0.09)",
       titleColor: "#2563eb"
     },
     yield: {
-      background: dashboardPremiumStyle ? "linear-gradient(180deg, rgba(168,85,247,0.16) 0%, rgba(168,85,247,0.02) 28%, #FCFDFE 38%, #FCFDFE 72%, #F2F5F8 82%, #F2F5F8 100%)" : "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
-      outline: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.65)" : "1px solid rgba(147, 51, 234, 0.05)",
-      shadow: dashboardPremiumStyle ? "0 12px 32px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
+      background: dashboardPremiumStyle ? "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF" : "linear-gradient(135deg, rgba(147, 51, 234, 0.09) 0%, #FFFFFF 20%, #FFFFFF 80%, rgba(147, 51, 234, 0.09) 100%)",
+      border: dashboardPremiumStyle ? "1px solid rgba(255, 255, 255, 0.85)" : "none",
+      outline: dashboardPremiumStyle ? "none" : "1px solid rgba(147, 51, 234, 0.05)",
+      shadow: dashboardPremiumStyle ? "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)" : "inset 0 1px 0 rgba(255,255,255,1), inset 0 -4px 12px rgba(0,0,0,0.01), inset 0 0 14px rgba(147, 51, 234, 0.09)",
       titleColor: "hsl(var(--yield-darker))",
       badgeBg: "bg-purple-600",
       badgeShadow: "shadow-[0_0_12px_rgba(147,51,234,0.4)]"
@@ -131,10 +135,11 @@ export const StatCard = ({
       style={{
         background: currentStyle.background,
         backgroundBlendMode: "soft-light",
-        backdropFilter: "blur(6px)",
-        border: dashboardPremiumStyle ? "none" : "1px solid rgba(0,0,0,0.06)",
-        outline: dashboardPremiumStyle ? currentStyle.outline : currentStyle.outline,
-        boxShadow: dashboardPremiumStyle ? currentStyle.shadow : currentStyle.shadow,
+        backdropFilter: dashboardPremiumStyle ? "none" : "blur(6px)",
+        backgroundClip: dashboardPremiumStyle ? "padding-box" : undefined,
+        border: dashboardPremiumStyle ? currentStyle.border : "1px solid rgba(0,0,0,0.06)",
+        outline: currentStyle.outline,
+        boxShadow: currentStyle.shadow,
       }}
       className={cn(
         "transition-all duration-300 animate-fade-in flex flex-col relative overflow-hidden",
@@ -143,8 +148,25 @@ export const StatCard = ({
         className
       )}
     >
+      {/* Formas orgânicas temáticas de fundo */}
+      {dashboardPremiumStyle && (
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
+          <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox={isMobile ? "0 0 400 180" : "0 0 500 220"}>
+            <defs>
+              <linearGradient id={`wave-grad-${variant}-${isMobile ? "mob" : "desk"}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity={isMobile ? "0.15" : "0.12"} />
+              </linearGradient>
+            </defs>
+            <path d={isMobile ? "M 60,0 C 150,55 240,65 380,15 L 400,0 Z" : "M 80,0 C 180,60 300,75 480,20 L 500,0 Z"} fill="rgba(255,255,255,0.5)" />
+            <path d={isMobile ? "M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" : "M 0,220 Q 150,135 280,165 T 500,105 L 500,220 Z"} fill={`url(#wave-grad-${variant}-${isMobile ? "mob" : "desk"})`} />
+          </svg>
+        </div>
+      )}
+
+      <div className={cn("flex flex-col h-full w-full justify-between relative", dashboardPremiumStyle ? "z-20" : "")}>
       {/* Top Section: Trend, Title/Value and Month Navigator */}
-      <div className="flex justify-between items-start mb-1 -mt-[2px]">
+      <div className="flex justify-between items-start mb-1 -mt-[2px] w-full">
         <div className="flex items-center gap-3">
           <div className="flex flex-col gap-0">
             <div className="flex items-center gap-1.5 -translate-y-[2px]">
@@ -277,10 +299,11 @@ export const StatCard = ({
 
       {/* Legacy Port Case */}
       {bottomRightContent && !chartContent && (
-        <div className="absolute bottom-4 right-8">
+        <div className={cn("absolute bottom-4 right-8", dashboardPremiumStyle ? "z-20" : "")}>
           {bottomRightContent}
         </div>
       )}
+      </div>
     </Card>
   );
 };
