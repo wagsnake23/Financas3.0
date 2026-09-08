@@ -4,7 +4,7 @@ export const BRANDS = [
   { id: "itau", name: "Itaú", icon: "/brands/itau.svg" },
   { id: "banco-do-brasil", name: "Banco do Brasil", icon: "/brands/banco-do-brasil-com-fundo.svg" },
   { id: "bradesco", name: "Bradesco", icon: "/brands/bradesco.svg" },
-  { id: "caixa", name: "Caixa Econômica", icon: "/brands/Caixa_Econômica_Federal_logo_1997.svg" },
+  { id: "caixa", name: "Caixa", icon: "/brands/Caixa.svg" },
   { id: "santander", name: "Santander", icon: "/brands/banco-santander-logo.svg" },
   { id: "sofisa", name: "Banco Sofisa", icon: "/brands/Logo_do_Banco_Sofisa.svg" },
   { id: "banco-bmg", name: "Banco BMG", icon: "/brands/banco-bmg-logo.svg" },
@@ -62,6 +62,7 @@ export const BRANDS = [
   { id: "uber", name: "Uber", icon: "/brands/uber.svg" },
   { id: "cpfl", name: "CPFL Energia", icon: "/brands/CPFL_Energia.svg" },
   { id: "sabesp", name: "Sabesp", icon: "/brands/Sabesp.svg" },
+  { id: "Porto", name: "Porto Seguro", icon: "/brands/Porto.svg" },
 
   // Google Workspace
   { id: "gmail", name: "Gmail", icon: "/brands/google-gmail.svg" },
