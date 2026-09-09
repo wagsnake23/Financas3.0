@@ -600,7 +600,7 @@ export default function Home() {
                                                 onClick={() => setIsAjusteModalOpen(true)}
                                             >
                                                 <div className="flex items-center gap-1.5 mb-1 md:-mt-[1px]" style={{ marginTop: "calc(var(--home-title-mt, 3px) + 10px)" }}>
-                                                    <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo atual</h2>
+                                                    <h2 className="leading-none tracking-[0.5px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontSize: "var(--home-title-text, 15px)", fontWeight: 700 }}>Saldo em conta</h2>
                                                     <button 
                                                         className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                         aria-label="Ajustar saldo"
@@ -926,7 +926,7 @@ export default function Home() {
                                         onClick={() => setIsAjusteModalOpen(true)}
                                     >
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Saldo atual</h2>
+                                            <h2 className="text-[15px] tracking-[0.5px] md:text-[17px]" style={{ color: "#2563EB", fontFamily: "'Inter', sans-serif", fontWeight: 700 }}>Saldo em conta</h2>
                                             <button 
                                                 className="btn-3d w-7 h-7 flex items-center justify-center rounded-full border border-blue-200/50 transition-all active:scale-95 shadow-[0_2px_5px_rgba(37,99,235,0.15)]"
                                                 aria-label="Ajustar saldo"
