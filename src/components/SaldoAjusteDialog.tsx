@@ -125,9 +125,9 @@ export const SaldoAjusteDialog: React.FC<SaldoAjusteDialogProps> = ({
             
             <div className="flex flex-col border-b border-slate-200 pb-4">
               <div className="flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[13px] font-bold text-slate-500 mb-0.5">Saldo Calculado</span>
-                  <span className="text-[16px] font-semibold text-slate-800 tracking-tight">{formatCurrency(saldoCalculadoSistema)}</span>
+                <div className="flex flex-col opacity-50 select-none">
+                  <span className="text-[13px] font-bold text-slate-400 mb-0.5">Saldo Calculado</span>
+                  <span className="text-[16px] font-semibold text-slate-400 tracking-tight">{formatCurrency(saldoCalculadoSistema)}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[13px] font-bold text-slate-600 mb-0.5">Saldo Atual</span>
