@@ -200,9 +200,9 @@ export default function Receitas() {
     });
 
   const incomeSubcategories = useMemo(() => {
-    return fetchedCategories.filter(
-      (cat) => cat.parent_id === "receitas_e_investimentos"
-    );
+    return fetchedCategories
+      .filter((cat) => cat.parent_id === "receitas_e_investimentos")
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
   }, [fetchedCategories]);
 
   useEffect(() => {

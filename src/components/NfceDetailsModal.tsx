@@ -133,7 +133,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
           }
         `}</style>
         <DialogHeader className="flex flex-row items-start gap-2 space-y-0 text-left shrink-0 pb-3 border-b border-[rgba(15,23,42,.08)]">
-          <span className="text-xl leading-none">📄</span>
+          <span className="text-xl leading-none" style={{ marginTop: '3px' }}>📄</span>
           <div className="flex flex-col gap-0.5">
             <DialogTitle className="text-lg font-extrabold text-[#04469E] leading-none">
               Detalhes da Nota
@@ -157,7 +157,7 @@ export const NfceDetailsModal: React.FC<NfceDetailsModalProps> = ({
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Estabelecimento</p>
-                  <p className="text-[11px] font-bold text-slate-700 truncate">
+                  <p className="text-[11px] font-semibold text-slate-700 truncate uppercase">
                     {activeCompra.estabelecimento || "Não Identificado"}
                   </p>
                 </div>
