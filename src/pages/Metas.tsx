@@ -760,38 +760,58 @@ export default function Metas() {
           <div className="grid grid-cols-1 gap-4">
             {/* Form Card */}
             <Card
-              className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo", isMobile && "p-4")}
-              style={novaMetaCardStyle}
+              className="p-[24px_20px] rounded-[24px] relative overflow-hidden transition-all duration-300"
+              style={{
+                background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(234,88,12,.15) 0%, rgba(234,88,12,.08) 35%, rgba(234,88,12,.03) 70%, transparent 100%), #FFFaf5",
+                border: "1px solid rgba(255,255,255,0.85)",
+                backgroundClip: "padding-box",
+                outline: "none",
+                boxShadow: "0 8px 24px rgba(234,88,12,0.10), 0 2px 6px rgba(234,88,12,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
+              }}
             >
-              <h2 className={cn("text-xl text-[#B95521] font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>🎯 Nova Meta</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {renderFormFields(
-                  selectedParentId, setSelectedParentId,
-                  nomeMeta, setNomeMeta,
-                  icone, setIcone,
-                  valorObjetivo, (v) => setValorObjetivo(v),
-                  valorMensal, (v) => setValorMensal(v),
-                  dataLimite, setDataLimite,
-                  isCalendarOpen, setIsCalendarOpen,
-                  showEmojiPicker, setShowEmojiPicker,
-                  validationErrors, setValidationErrors,
-                  ""
-                )}
-                <Button
-                  type={isExpired ? "button" : "submit"}
-                  onClick={isExpired ? handleBlockedClick : undefined}
-                  className={cn(
-                    "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
-                    "h-11 text-lg",
-                    isExpired && "opacity-80"
+              <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
+                  <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                      <defs>
+                          <linearGradient id="wave-grad-meta-mob" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                          </linearGradient>
+                      </defs>
+                      <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                      <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-meta-mob)" />
+                  </svg>
+              </div>
+              <div className="relative z-10 w-full h-full flex flex-col">
+                <h2 className={cn("text-xl text-[#B95521] font-extrabold tracking-[0.2px] pb-[1px] m-0 leading-none text-left mb-4")} style={{ fontFamily: "'Inter', sans-serif" }}>🎯 Nova Meta</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {renderFormFields(
+                    selectedParentId, setSelectedParentId,
+                    nomeMeta, setNomeMeta,
+                    icone, setIcone,
+                    valorObjetivo, (v) => setValorObjetivo(v),
+                    valorMensal, (v) => setValorMensal(v),
+                    dataLimite, setDataLimite,
+                    isCalendarOpen, setIsCalendarOpen,
+                    showEmojiPicker, setShowEmojiPicker,
+                    validationErrors, setValidationErrors,
+                    ""
                   )}
-                  style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
-                  disabled={!isExpired && loadingForm}
-                >
-                  {loadingForm && !isExpired ? "Criando..." : "Criar Meta"}
-                  {isExpired && <span className="ml-1.5 text-base">🔒</span>}
-                </Button>
-              </form>
+                  <Button
+                    type={isExpired ? "button" : "submit"}
+                    onClick={isExpired ? handleBlockedClick : undefined}
+                    className={cn(
+                      "w-full rounded-xl btn-3d font-extrabold tracking-[0.5px] text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg flex items-center justify-center",
+                      "h-11 text-lg",
+                      isExpired && "opacity-80"
+                    )}
+                    style={{ "--cor-topo": "#EA580C", "--cor-base": "#C2410C", fontFamily: "'Inter', sans-serif" } as any}
+                    disabled={!isExpired && loadingForm}
+                  >
+                    {loadingForm && !isExpired ? "Criando..." : "Criar Meta"}
+                    {isExpired && <span className="ml-1.5 text-base">🔒</span>}
+                  </Button>
+                </form>
+              </div>
             </Card>
 
             {/* Metas List */}

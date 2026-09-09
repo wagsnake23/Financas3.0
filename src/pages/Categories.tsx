@@ -393,17 +393,19 @@ const Categories = () => {
 
             <Card
               className={cn(
-                "rounded-[24px] relative overflow-hidden",
+                "rounded-[24px] relative overflow-hidden transition-all duration-300",
                 isMobile 
-                  ? "card-yellow no-rim p-[24px_20px]" 
+                  ? "p-[24px_20px]" 
                   : "nova-subcategoria-card card-despesas p-[28px_20px] border border-[rgba(15,23,42,0.10)] shadow-sm"
               )}
               style={
                 isMobile
                   ? {
-                      backgroundColor: "rgba(255, 255, 255, 0.45)",
-                      border: "1px solid rgba(0,0,0,0.06)",
-                      boxShadow: "0 2px 8px rgba(15,23,42,.05)"
+                      background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
+                      border: "1px solid rgba(255,255,255,0.85)",
+                      backgroundClip: "padding-box",
+                      outline: "none",
+                      boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
                     }
                   : {
                       backgroundColor: "#F6F8FA",
@@ -411,43 +413,60 @@ const Categories = () => {
                     }
               }
             >
-              <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
-                {!isMobile ? (
-                  <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+              {isMobile && (
+                <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
+                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                        <defs>
+                            <linearGradient id="wave-grad-cat-mob" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                        <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-cat-mob)" />
+                    </svg>
+                </div>
+              )}
+              <div className="relative z-10 w-full h-full flex flex-col">
+                <div className={cn("flex items-center mb-6", isMobile ? "gap-1.5" : "gap-2")}>
+                  {!isMobile ? (
+                    <div className="p-2 rounded-full bg-[#374151]/10 flex items-center justify-center">
+                      <span className="text-xl">🗂️</span>
+                    </div>
+                  ) : (
                     <span className="text-xl">🗂️</span>
-                  </div>
-                ) : (
-                  <span className="text-xl">🗂️</span>
-                )}
-                <h2 className={cn("font-extrabold text-[#1e3a8a]", isMobile ? "text-xl" : "text-2xl")} style={{ color: '#1e3a8a' }}>Nova Subcategoria</h2>
+                  )}
+                  <h2 className={cn("font-extrabold text-[#1e3a8a]", isMobile ? "text-xl" : "text-2xl")} style={{ color: '#1e3a8a' }}>Nova Subcategoria</h2>
+                </div>
+                <CategoryForm
+                  key={formKey}
+                  onAddCategory={handleAddCategory}
+                  onUpdateCategory={handleUpdateCategory}
+                  editingCategory={null}
+                  onCancelEdit={handleCancelEdit}
+                  allCategories={allCategories}
+                  hideCardWrapper={true}
+                />
               </div>
-              <CategoryForm
-                key={formKey}
-                onAddCategory={handleAddCategory}
-                onUpdateCategory={handleUpdateCategory}
-                editingCategory={null}
-                onCancelEdit={handleCancelEdit}
-                allCategories={allCategories}
-                hideCardWrapper={true}
-              />
             </Card>
           </div>
 
           <div className={cn(isMobile ? "max-w-sm mx-auto w-full" : "h-full")}>
             <Card
               className={cn(
-                "rounded-[24px] overflow-hidden relative",
+                "rounded-[24px] overflow-hidden relative transition-all duration-300",
                 isMobile 
-                  ? "card-yellow no-rim px-2 pt-4 pb-0 mb-1" 
+                  ? "px-2 pt-4 pb-0 mb-1" 
                   : "card-despesas p-5 border border-[rgba(15,23,42,0.10)] shadow-sm h-full min-h-unset pb-2"
               )}
               style={
                 isMobile
                   ? {
-                      backgroundColor: "rgba(255, 255, 255, 0.45)",
-                      backgroundImage: "none",
-                      border: "1px solid rgba(0,0,0,0.06)",
-                      boxShadow: "0 2px 8px rgba(15,23,42,.05)"
+                      background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(124,58,237,.20) 0%, rgba(124,58,237,.12) 35%, rgba(124,58,237,.06) 70%, transparent 100%), #F7F2FF",
+                      border: "1px solid rgba(255,255,255,0.85)",
+                      backgroundClip: "padding-box",
+                      outline: "none",
+                      boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
                     }
                   : {
                       backgroundColor: "#F6F8FA",
@@ -455,29 +474,45 @@ const Categories = () => {
                     }
               }
             >
+              {isMobile && (
+                <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
+                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                        <defs>
+                            <linearGradient id="wave-grad-cat-list-mob" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                        <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-cat-list-mob)" />
+                    </svg>
+                </div>
+              )}
+              <div className="relative z-10 w-full h-full flex flex-col">
                 {isMobile && (
                   <div className={cn("flex items-center px-4 pb-0 gap-1.5")}>
                     <span className="text-xl">🗃️</span>
                     <h2 className="text-[19px] font-extrabold text-[#374151]">Categorias Cadastradas</h2>
                   </div>
                 )}
-              <React.Suspense fallback={
-                <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
-                  Carregando lista de categorias...
-                </div>
-              }>
-                <CategoriesList
-                  categories={hierarchicalCategories}
-                  onDeleteCategory={handleDeleteCategory}
-                  onEditCategory={handleEditCategory}
-                  isMobile={isMobile}
-                  allFlatCategories={allCategories}
-                  hideCardWrapper={true}
-                  hideTitle={isMobile}
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
-              </React.Suspense>
+                <React.Suspense fallback={
+                  <div className="p-12 text-center text-muted-foreground animate-pulse font-medium">
+                    Carregando lista de categorias...
+                  </div>
+                }>
+                  <CategoriesList
+                    categories={hierarchicalCategories}
+                    onDeleteCategory={handleDeleteCategory}
+                    onEditCategory={handleEditCategory}
+                    isMobile={isMobile}
+                    allFlatCategories={allCategories}
+                    hideCardWrapper={true}
+                    hideTitle={isMobile}
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                  />
+                </React.Suspense>
+              </div>
             </Card>
           </div>
         </div>
