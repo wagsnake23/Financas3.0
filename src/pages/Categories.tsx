@@ -405,7 +405,7 @@ const Categories = () => {
                       border: "1px solid rgba(255,255,255,0.85)",
                       backgroundClip: "padding-box",
                       outline: "none",
-                      boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
+                      boxShadow: "0 4px 12px rgba(124,58,237,0.06), 0 1px 3px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                     }
                   : {
                       backgroundColor: "#F6F8FA",
@@ -466,7 +466,7 @@ const Categories = () => {
                       border: "1px solid rgba(255,255,255,0.85)",
                       backgroundClip: "padding-box",
                       outline: "none",
-                      boxShadow: "0 8px 24px rgba(124,58,237,0.10), 0 2px 6px rgba(124,58,237,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
+                      boxShadow: "0 4px 12px rgba(124,58,237,0.06), 0 1px 3px rgba(124,58,237,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
                     }
                   : {
                       backgroundColor: "#F6F8FA",

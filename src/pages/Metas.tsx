@@ -766,7 +766,7 @@ export default function Metas() {
                 border: "1px solid rgba(255,255,255,0.85)",
                 backgroundClip: "padding-box",
                 outline: "none",
-                boxShadow: "0 8px 24px rgba(234,88,12,0.10), 0 2px 6px rgba(234,88,12,0.05), inset 0 1px 0 rgba(255,255,255,.95)"
+                boxShadow: "0 4px 12px rgba(234,88,12,0.06), 0 1px 3px rgba(234,88,12,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
               }}
             >
               <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
@@ -817,18 +817,38 @@ export default function Metas() {
             {/* Metas List */}
             <div className="mt-2">
               <Card
-                className={cn("p-6 rounded-[24px] shadow-sm border border-[rgba(0,0,0,0.06)] card-saldo text-card-foreground", isMobile && "p-4")}
-                style={minhasMetasCardStyle}
+                className="p-[24px_20px] rounded-[24px] relative overflow-hidden transition-all duration-300"
+                style={{
+                  background: "radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, rgba(234,88,12,.15) 0%, rgba(234,88,12,.08) 35%, rgba(234,88,12,.03) 70%, transparent 100%), #FFFaf5",
+                  border: "1px solid rgba(255,255,255,0.85)",
+                  backgroundClip: "padding-box",
+                  outline: "none",
+                  boxShadow: "0 4px 12px rgba(234,88,12,0.06), 0 1px 3px rgba(234,88,12,0.03), inset 0 1px 0 rgba(255,255,255,.95)"
+                }}
               >
-                <h2 className={cn("text-xl font-extrabold text-[#B95521] mb-4")}>🎯 Minhas Metas</h2>
-                <div className="space-y-5 max-h-[560px] overflow-y-auto no-scrollbar">
-                  {calculatedMetas.length === 0 ? (
-                    <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
-                      Nenhuma meta cadastrada ainda.
-                    </p>
-                  ) : (
-                    calculatedMetas.map((meta) => renderMetaCard(meta))
-                  )}
+                <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
+                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 180">
+                        <defs>
+                            <linearGradient id="wave-grad-meta-list-mob" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
+                                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M 60,0 C 150,55 240,65 380,15 L 400,0 Z" fill="rgba(255,255,255,0.5)" />
+                        <path d="M 0,180 Q 120,115 220,135 T 400,85 L 400,180 Z" fill="url(#wave-grad-meta-list-mob)" />
+                    </svg>
+                </div>
+                <div className="relative z-10 w-full h-full flex flex-col">
+                  <h2 className={cn("text-xl font-extrabold text-[#B95521] mb-4")}>🎯 Minhas Metas</h2>
+                  <div className="space-y-5 max-h-[560px] overflow-y-auto no-scrollbar">
+                    {calculatedMetas.length === 0 ? (
+                      <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
+                        Nenhuma meta cadastrada ainda.
+                      </p>
+                    ) : (
+                      calculatedMetas.map((meta) => renderMetaCard(meta))
+                    )}
+                  </div>
                 </div>
               </Card>
             </div>
