@@ -17,7 +17,7 @@ import { EditCategoryModal } from "@/components/EditCategoryModal";
 import { Card } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, getBorderClass } from "@/lib/utils";
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -368,7 +368,7 @@ const Categories = () => {
           <div className={cn("flex flex-col", isMobile ? "gap-4" : "gap-[21px] max-w-[420px]")}>
             {!isMobile && (
               <Card
-                className="p-[14px] pb-[18px] rounded-[17px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
+                className="nova-subcategoria-card p-[14px] pb-[18px] rounded-[17px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
                 style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className="flex items-center gap-2 mb-3 px-1">
@@ -381,7 +381,11 @@ const Categories = () => {
                     placeholder="O que você procura?"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full h-10 rounded-xl bg-white/80 border-slate-200 focus:bg-white transition-all pl-3"
+                    className={cn(
+                      "w-full rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium input-white px-4",
+                      "h-[42px] text-[15px]",
+                      getBorderClass({ variant: "yellow" })
+                    )}
                   />
                 </div>
               </Card>
@@ -392,7 +396,7 @@ const Categories = () => {
                 "rounded-[24px] relative overflow-hidden",
                 isMobile 
                   ? "card-yellow no-rim p-6" 
-                  : "card-despesas p-[28px_24px] border border-[rgba(15,23,42,0.10)] shadow-sm"
+                  : "nova-subcategoria-card card-despesas p-[28px_24px] border border-[rgba(15,23,42,0.10)] shadow-sm"
               )}
               style={
                 isMobile

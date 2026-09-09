@@ -654,6 +654,11 @@ body {
     min-height: 2.5rem !important;
     max-height: 2.5rem !important;
   }
+  .nova-subcategoria-card .input-3d-premium:not(textarea) {
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+  }
   .auth-page-container .input-3d-premium:not(textarea) {
     height: 45px !important;
     min-height: 45px !important;

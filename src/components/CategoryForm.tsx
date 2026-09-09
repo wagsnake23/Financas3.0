@@ -203,10 +203,11 @@ export const CategoryForm = ({
               id="parent_id"
               className={cn(
                 "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium",
-                isMobile ? "h-9 text-sm" : "h-[42px]",
+                isMobile ? "h-9 text-sm" : "h-[46px] text-[15px]",
                 getBorderClass({ variant: "yellow" }),
                 "input-white"
               )}
+              style={!isMobile ? { height: '46px', minHeight: '46px', maxHeight: '46px' } : undefined}
             >
               <SelectValue placeholder="Selecione a Categoria Principal" />
             </SelectTrigger>
@@ -248,9 +249,10 @@ export const CategoryForm = ({
             required
             className={cn(
               "rounded-xl text-gray-800 font-bold transition-all duration-200 input-3d-premium input-white",
-              isMobile ? "h-9 text-sm" : "h-[42px]",
+              isMobile ? "h-9 text-sm" : "h-[46px] text-[15px]",
               getBorderClass({ variant: "yellow" })
             )}
+            style={!isMobile ? { height: '46px', minHeight: '46px', maxHeight: '46px' } : undefined}
             disabled={editingCategory?.user_id === null}
           />
         </div>
