@@ -395,8 +395,8 @@ const Categories = () => {
               className={cn(
                 "rounded-[24px] relative overflow-hidden",
                 isMobile 
-                  ? "card-yellow no-rim p-6" 
-                  : "nova-subcategoria-card card-despesas p-[28px_24px] border border-[rgba(15,23,42,0.10)] shadow-sm"
+                  ? "card-yellow no-rim p-[24px_20px]" 
+                  : "nova-subcategoria-card card-despesas p-[28px_20px] border border-[rgba(15,23,42,0.10)] shadow-sm"
               )}
               style={
                 isMobile
