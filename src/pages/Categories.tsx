@@ -368,7 +368,7 @@ const Categories = () => {
           <div className={cn("flex flex-col", isMobile ? "gap-4" : "gap-[21px] max-w-[420px]")}>
             {!isMobile && (
               <Card
-                className="p-[14px] rounded-[17px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
+                className="p-[14px] pb-[18px] rounded-[17px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
                 style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className="flex items-center gap-2 mb-3 px-1">
