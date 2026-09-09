@@ -337,7 +337,7 @@ const Categories = () => {
                   <span className="text-xl">📚</span>
                 </Button>
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-[#1e3a8a]" style={{ color: '#1e3a8a' }}>
+                  <h1 className="text-2xl font-extrabold tracking-tight -mt-0.5 text-[#1e3a8a]" style={{ color: '#1e3a8a' }}>
                     Categorias
                   </h1>
                   <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
@@ -415,7 +415,7 @@ const Categories = () => {
                 ) : (
                   <span className="text-xl">🗂️</span>
                 )}
-                <h2 className={cn("font-extrabold text-[#374151]", isMobile ? "text-xl" : "text-2xl")}>Nova Subcategoria</h2>
+                <h2 className={cn("font-extrabold text-[#1e3a8a]", isMobile ? "text-xl" : "text-2xl")} style={{ color: '#1e3a8a' }}>Nova Subcategoria</h2>
               </div>
               <CategoryForm
                 key={formKey}
