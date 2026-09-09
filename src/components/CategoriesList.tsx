@@ -478,11 +478,11 @@ const CategoriesList = ({
       className={cn(
         "flex flex-col h-auto",
         !hideCardWrapper && "p-4 rounded-xl shadow-sm",
-        hideCardWrapper && (isMobile ? "px-1.5 pb-1 pt-5" : "md:pl-4 md:pr-2 pb-2 pt-0.5 md:pt-0")
+        hideCardWrapper && (isMobile ? "px-1.5 pb-1 pt-5" : "md:pl-4 md:pr-2 pb-2 pt-0 md:pt-0")
       )}
     >
       <div className={cn(
-        isMobile ? "flex-shrink-0 mb-2" : "sticky top-[-4px] z-30 bg-transparent py-2 mb-2 mt-[-4px]"
+        isMobile ? "flex-shrink-0 mb-2" : "sticky top-[-4px] z-30 bg-transparent py-0 mb-1 mt-0"
       )}>
         <div className={cn(
           "flex flex-col sm:flex-row sm:items-center gap-2", 
@@ -496,7 +496,7 @@ const CategoriesList = ({
                   <span className="text-xl">🗃️</span>
                 </div>
               )}
-              <h2 className="text-2xl font-extrabold text-[#374151]">
+              <h2 className="text-2xl font-extrabold text-[#1e3a8a]" style={{ color: '#1e3a8a' }}>
                 Categorias Cadastradas
               </h2>
             </div>

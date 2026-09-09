@@ -324,7 +324,7 @@ const Categories = () => {
 
       {/* HEADER PREMIUM — FINTECH STYLE (CATEGORIAS THEME) */}
       {!isMobile && (
-        <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
+        <div className="relative h-[185px] w-full overflow-hidden bg-transparent">
           <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
@@ -337,7 +337,7 @@ const Categories = () => {
                   <span className="text-xl">📚</span>
                 </Button>
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-slate-800">
+                  <h1 className="text-2xl font-black tracking-tight -mt-0.5 text-[#1e3a8a]" style={{ color: '#1e3a8a' }}>
                     Categorias
                   </h1>
                   <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
@@ -364,11 +364,11 @@ const Categories = () => {
           isMobile ? "pt-[calc(4rem+env(safe-area-inset-top))] pb-0" : "-mt-14 pb-[40px]"
         )}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 items-stretch">
           <div className={cn("flex flex-col", isMobile ? "gap-4" : "gap-[21px] max-w-[420px]")}>
             {!isMobile && (
               <Card
-                className="p-[14px] rounded-[24px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
+                className="p-[14px] rounded-[17px] border border-[rgba(15,23,42,0.10)] shadow-sm relative overflow-hidden"
                 style={{ backgroundColor: "#F6F8FA" }}
               >
                 <div className="flex items-center gap-2 mb-3 px-1">
@@ -429,13 +429,13 @@ const Categories = () => {
             </Card>
           </div>
 
-          <div className={cn(isMobile && "max-w-sm mx-auto w-full")}>
+          <div className={cn(isMobile ? "max-w-sm mx-auto w-full" : "h-full")}>
             <Card
               className={cn(
                 "rounded-[24px] overflow-hidden relative",
                 isMobile 
                   ? "card-yellow no-rim px-2 pt-4 pb-0 mb-1" 
-                  : "card-despesas p-5 border border-[rgba(15,23,42,0.10)] shadow-sm h-auto min-h-unset pb-2"
+                  : "card-despesas p-5 border border-[rgba(15,23,42,0.10)] shadow-sm h-full min-h-unset pb-2"
               )}
               style={
                 isMobile
