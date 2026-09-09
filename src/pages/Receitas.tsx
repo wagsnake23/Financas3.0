@@ -10,12 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card"; // Corrected line
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useToast } from "@/contexts/ToastContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,19 +24,14 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { AppCategory } from "@/types/finance";
 import { format, getDate, addMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Save, Lock } from "lucide-react";
+import { CalendarIcon, Save, Lock, ChevronDown } from "lucide-react";
 import {
   cn,
   getBorderClass,
   formatInTimeZone,
   TARGET_TIMEZONE,
 } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { DatePickerModal } from "@/components/ui/DatePickerModal";
 import { Footer } from "@/components/Footer";
 import CurrencyBR from "@/components/ui/currency-br";
@@ -84,6 +77,8 @@ export default function Receitas() {
     Record<string, boolean>
   >({});
   const [isAddSubcategoryModalOpen, setIsAddSubcategoryModalOpen] = useState(false);
+  const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const addCategoryMutation = useMutation({
     mutationFn: async (newCategory: Omit<AppCategory, "id" | "user_id" | "created_at">) => {
@@ -416,57 +411,95 @@ export default function Receitas() {
             Subcategoria de Receita
           </Label>
           <div className="flex gap-2">
-            <Select
-              value={tipoReceitaId}
-              onValueChange={(value) => {
-                setTipoReceitaId(value);
-                setValidationErrors((prev) => ({ ...prev, tipoReceitaId: false }));
-              }}
-            >
-              <SelectTrigger
-                className={cn(
-                  "flex-1 rounded-xl text-gray-800 font-medium transition-all duration-200 bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium",
-                  isMobile ? "!h-[39px] text-sm" : "h-10",
-                  getBorderClass({
-                    isInvalid: validationErrors.tipoReceitaId,
-                    isValid: validationErrors.tipoReceitaId === false,
-                  })
-                )}
-              >
-                <SelectValue placeholder="Selecione a subcategoria" />
-              </SelectTrigger>
-              <SelectContent className="w-[--radix-select-trigger-width] rounded-2xl border-none shadow-xl">
-                <SelectItem
-                  value={UNSELECTED_VALUE}
-                  disabled
-                  className={cn(isMobile && "text-sm")}
+            <Popover open={isSubcategoryOpen} onOpenChange={(open) => {
+              setIsSubcategoryOpen(open);
+              if (open) setSearchQuery("");
+            }}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={isSubcategoryOpen}
+                  type="button"
+                  className={cn(
+                    "flex-1 min-w-0 justify-between font-medium transition-all duration-200 input-3d-premium rounded-xl text-left border-slate-200 border",
+                    isMobile ? "!h-[39px] text-sm px-3" : "h-10 px-3",
+                    getBorderClass({
+                      isInvalid: validationErrors.tipoReceitaId,
+                      isValid: validationErrors.tipoReceitaId === false,
+                    }),
+                    tipoReceitaId === UNSELECTED_VALUE ? "text-slate-500 font-normal" : "text-gray-800"
+                  )}
+                  style={{ fontWeight: tipoReceitaId === UNSELECTED_VALUE ? "normal" : 500 }}
                 >
-                  Selecione a subcategoria
-                </SelectItem>
-                {incomeSubcategories.length === 0 ? (
-                  <SelectItem
-                    value={UNSELECTED_VALUE}
-                    disabled
-                    className={cn(isMobile && "text-sm")}
-                  >
-                    Nenhum tipo de receita disponível
-                  </SelectItem>
-                ) : (
-                  incomeSubcategories.map((tipo) => (
-                    <SelectItem
-                      key={tipo.id}
-                      value={tipo.id}
-                      className={cn(isMobile && "text-sm")}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{tipo.icone}</span>
-                        <span>{tipo.nome}</span>
-                      </span>
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+                  {tipoReceitaId !== UNSELECTED_VALUE
+                    ? (() => {
+                        const sel = incomeSubcategories.find((cat) => cat.id === tipoReceitaId);
+                        return sel ? (
+                          <span className="flex items-center gap-2 truncate min-w-0">
+                            <span className="shrink-0"><DynamicIcon name={sel.icone} className="w-4 h-4" /></span>
+                            <span className="truncate">{sel.nome}</span>
+                          </span>
+                        ) : (
+                          <span className="truncate">Selecione a subcategoria</span>
+                        );
+                      })()
+                    : <span className="truncate">Selecione a subcategoria</span>}
+                  <ChevronDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="p-0 rounded-2xl shadow-xl w-[--radix-popover-trigger-width] bg-white border border-slate-100 !backdrop-blur-none"
+                align="start"
+              >
+                <div className="flex flex-col max-h-[320px]">
+                  <div className="flex items-center border-b border-slate-100 px-3 shrink-0">
+                    <span className="text-sm mr-2 opacity-70">🔎</span>
+                    <input
+                      className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Buscar subcategoria..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className="overflow-y-auto p-1.5 scroll-smooth no-scrollbar">
+                    {(() => {
+                      const normalizedQuery = searchQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                      const filtered = incomeSubcategories.filter(cat => {
+                        if (!searchQuery) return true;
+                        const normalizedName = cat.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        return normalizedName.includes(normalizedQuery);
+                      });
+                      return filtered.length === 0 ? (
+                        <div className="py-6 text-center text-sm text-slate-500">
+                          Nenhuma subcategoria encontrada.
+                        </div>
+                      ) : (
+                        filtered.map((tipo) => (
+                          <div
+                            key={tipo.id}
+                            className={cn(
+                              "relative flex w-full select-none items-center rounded-xl px-2.5 py-1 text-sm outline-none cursor-pointer transition-colors mb-0.5 last:mb-0",
+                              tipo.id === tipoReceitaId ? "bg-emerald-50 hover:bg-emerald-100/70" : "hover:bg-slate-100/80 active:bg-slate-200/60"
+                            )}
+                            onClick={() => {
+                              setTipoReceitaId(tipo.id);
+                              setValidationErrors((prev) => ({ ...prev, tipoReceitaId: false }));
+                              setIsSubcategoryOpen(false);
+                            }}
+                          >
+                            <span className="flex items-center gap-2.5 w-full">
+                              <span className="shrink-0"><DynamicIcon name={tipo.icone} className="w-5 h-5" /></span>
+                              <span className="text-slate-700 font-medium truncate">{tipo.nome}</span>
+                            </span>
+                          </div>
+                        ))
+                      );
+                    })()}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
             <Button
               type="button"
               size="icon"
