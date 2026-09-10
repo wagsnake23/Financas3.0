@@ -14,7 +14,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
 import { Transaction } from "@/types/finance";
 
-type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type DeleteScope = "thisMonth" | "thisMonthForward" | "oneOff";
 
 interface TransactionDeleteDialogsProps {
   showDeleteOptionsDialog: boolean;
@@ -165,19 +165,7 @@ export const TransactionDeleteDialogs: React.FC<TransactionDeleteDialogsProps> =
                   Deste mês em diante
                 </label>
               </div>
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem
-                  value="all"
-                  id="delete-all"
-                  className="peer bg-white border-[#E54D4D] data-[state=checked]:border-[#E54D4D] data-[state=checked]:after:bg-[#E54D4D] data-[state=checked]:ring-[#E54D4D] data-[state=checked]:text-[#E54D4D]"
-                />
-                <label
-                  htmlFor="delete-all"
-                  className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
-                >
-                  Todo o período
-                </label>
-              </div>
+
             </RadioGroup>
           </div>
           <AlertDialogFooter

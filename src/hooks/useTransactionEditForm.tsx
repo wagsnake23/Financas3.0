@@ -7,8 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { isValidUuid } from "@/lib/utils";
 
 type ReceitaStatus = Database["public"]["Enums"]["receita_status"];
-type DeleteScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
-type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type DeleteScope = "thisMonth" | "thisMonthForward" | "oneOff";
+type SaveScope = "thisMonth" | "thisMonthForward" | "oneOff";
 
 interface UseTransactionEditFormProps {
   editingTransaction: Transaction | null;

@@ -10,10 +10,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import DynamicIcon from "@/components/DynamicIcon";
 import { cn } from "@/lib/utils";
 
-type SaveScope = "thisMonth" | "thisMonthForward" | "all" | "oneOff";
+type SaveScope = "thisMonth" | "thisMonthForward" | "oneOff";
 
 interface TransactionSaveDialogsProps {
   showSaveOptionsDialog: boolean;
@@ -93,19 +92,6 @@ export const TransactionSaveDialogs: React.FC<TransactionSaveDialogsProps> = ({
                 className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
               >
                 Deste mês em diante
-              </label>
-            </div>
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem
-                value="all"
-                id="save-all"
-                className="peer bg-white border-[#25D366] data-[state=checked]:border-[#25D366] data-[state=checked]:after:bg-[#25D366] data-[state=checked]:ring-[#25D366]"
-              />
-              <label
-                htmlFor="save-all"
-                className="text-sm font-medium leading-none text-slate-500 peer-data-[state=checked]:text-black peer-data-[state=checked]:font-bold peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"
-              >
-                Todo o período
               </label>
             </div>
           </RadioGroup>
