@@ -454,8 +454,8 @@ export default function Orcamentos() {
 
 
             {/* Bloco Planejamento do Mês */}
-            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 p-4 mb-4">
-              <h2 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight mb-5 flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 pt-[10px] pb-2 px-3 mb-4">
+              <h2 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight mb-4 flex items-center gap-1.5" style={{ fontFamily: "'Inter', sans-serif" }}>
                 <span className="text-[1.3rem] select-none mt-[1px]">🧮</span> Planejamento do Mês
               </h2>
               
@@ -473,21 +473,21 @@ export default function Orcamentos() {
                 else if (atingidoGeral) progressColorGeral = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
 
                 return (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     {/* Valores Superiores */}
-                    <div className="flex justify-between items-start">
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-semibold text-slate-500 text-[11px]">Utilizado</span>
-                        <span className="font-bold text-slate-800 text-[15px]">{formatCurrency(totalRealizado)}</span>
+                    <div className="flex justify-between items-start mb-0.5">
+                      <div className="flex flex-col gap-0">
+                        <span className="font-semibold text-slate-500 text-[11px] leading-tight">Utilizado</span>
+                        <span className="font-bold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
                       </div>
-                      <div className="flex flex-col items-end gap-0.5">
-                        <span className="font-semibold text-slate-500 text-[11px]">Planejado</span>
-                        <span className="font-bold text-slate-800 text-[15px]">{formatCurrency(totalPlanejado)}</span>
+                      <div className="flex flex-col items-end gap-0">
+                        <span className="font-bold text-slate-500 text-[11px] leading-tight">Planejado</span>
+                        <span className="font-bold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalPlanejado)}</span>
                       </div>
                     </div>
 
                     {/* Barra de Progresso */}
-                    <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] mt-1">
+                    <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
                       <div 
                         className={cn("h-full rounded-full transition-all duration-500", progressColorGeral)}
                         style={{ width: semPlanejamentoGeral ? '0%' : `${pctGeralClamped}%` }}
@@ -495,7 +495,7 @@ export default function Orcamentos() {
                     </div>
                     
                     {/* Status Inferior */}
-                    <div className="flex justify-between items-center mt-0.5">
+                    <div className="flex justify-between items-center mt-[-1px]">
                       <span className="font-bold text-slate-500 text-[12px]">
                         {semPlanejamentoGeral ? "Sem planejamento definido" : `${pctGeral.toFixed(0)}% utilizado`}
                       </span>
