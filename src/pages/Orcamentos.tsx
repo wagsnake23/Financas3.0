@@ -658,6 +658,7 @@ export default function Orcamentos() {
                 const excedido = group.totalGasto > group.totalPlanejado;
                 const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
                 const restante = group.totalPlanejado - group.totalGasto;
+                const groupPctReceita = receitaPrevista > 0 ? Math.round((group.totalPlanejado / receitaPrevista) * 100) : 0;
 
                 let progressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
                 if (semPlanejamento) progressColor = "bg-transparent";
@@ -697,9 +698,9 @@ export default function Orcamentos() {
                           </div>
                           <div className="flex justify-between items-center text-xs mt-0.5">
                             {semPlanejamento ? (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>Sem planejamento definido <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{groupPctReceita}% da receita <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
                             ) : (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{groupPctReceita}% da receita <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
                             )}
                             
                             {semPlanejamento ? null : excedido ? (
@@ -753,10 +754,15 @@ export default function Orcamentos() {
                               <div className="flex flex-col gap-1.5 w-full">
                                 {/* Header da linha */}
                                 <div className="flex justify-between items-start w-full">
-                                  <div className="flex items-center gap-2.5 truncate pr-2 mt-0.5">
-                                    <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-4 h-4 shrink-0" style={{ color: item.subCat?.cor }} />
-                                    <span className="font-bold text-slate-700 text-[13px] leading-tight truncate">
-                                      {item.subCat?.nome}
+                                  <div className="flex flex-col gap-0 truncate pr-2 mt-0.5">
+                                    <div className="flex items-center gap-2.5">
+                                      <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-4 h-4 shrink-0" style={{ color: item.subCat?.cor }} />
+                                      <span className="font-bold text-slate-700 text-[13px] leading-tight truncate">
+                                        {item.subCat?.nome}
+                                      </span>
+                                    </div>
+                                    <span className="text-[10px] font-semibold text-[#0556C3]/70 ml-[26px] mt-0.5">
+                                      {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
                                     </span>
                                   </div>
                                   <div className="flex flex-col items-end shrink-0">
