@@ -376,7 +376,7 @@ export default function Orcamentos() {
       
       {/* HEADER PREMIUM — FINTECH STYLE (ORÇAMENTOS) */}
       {!isMobile && (
-        <div className="relative h-[160px] w-full overflow-hidden bg-transparent">
+        <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
           <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">
             <div>
               <div className="flex items-start gap-3">
@@ -397,19 +397,18 @@ export default function Orcamentos() {
               </div>
             </div>
 
-            <Button
+            <button
               onClick={() => navigate(-1)}
-              className="btn-3d h-9 px-3 rounded-xl font-black text-xs shadow-sm border-none transition-all active:scale-95 !text-[#1e3a8a] bg-white hover:bg-white/90"
-              style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
+              className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-slate-800 transition-colors bg-transparent border-none outline-none focus:outline-none shadow-none mt-2 pr-4"
             >
-              <DynamicIcon name="ChevronLeft" className="mr-1 h-4 w-4 !text-[#1e3a8a]" strokeWidth={3} />
+              <DynamicIcon name="ArrowLeft" className="h-[18px] w-[18px]" strokeWidth={2.5} />
               Voltar
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
-      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
+      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}>
         {/* Cabeçalho Mobile */}
         {isMobile && (
           <div className="flex flex-col gap-2 mb-3">
@@ -442,25 +441,28 @@ export default function Orcamentos() {
           </div>
         )}
 
-        {/* Controles: Seletor de Mês e Novo Planejamento */}
+        {/* Controles: Seletor de Mês e Novo Planejamento (Apenas Desktop) */}
         {!isMobile && (
-          <div className="flex flex-row justify-between items-center mb-6 gap-4 w-full">
-            <div className="w-auto [&>div]:!w-[180px] [&>div]:!max-w-none [&>div]:!h-[38px] [&>div]:!rounded-xl">
-              <MonthNavigatorCompact 
+          <div className="relative flex flex-row justify-between items-center w-full shrink-0 -mt-[63px] mb-4 h-10">
+            <div className="w-[180px]" /> {/* Spacer to balance center */}
+            <div className="flex-1 flex justify-center">
+              <MonthNavigator
                 selectedMonth={currentDate}
                 onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
                 onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
-                variant="balance"
-                premiumMode={true}
+                isMobile={false}
+                backButtonColor="#1e3a8a"
               />
             </div>
-            <Button 
-              onClick={handleOpenAdd}
-              className="h-[38px] w-auto px-5 rounded-xl font-bold text-[13px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
-            >
-              <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
-              Novo Planejamento
-            </Button>
+            <div className="w-[180px] flex justify-end">
+              <Button 
+                onClick={handleOpenAdd}
+                className="h-[40px] px-5 rounded-xl font-bold text-[13px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
+                Novo Planejamento
+              </Button>
+            </div>
           </div>
         )}
           
@@ -603,7 +605,7 @@ export default function Orcamentos() {
           <DialogHeader
             className={cn(
               "flex flex-col items-start justify-start",
-              isMobile ? "mb-[-6px]" : "mb-[2px]",
+              isMobile ? "mb-[4px]" : "mb-[12px]",
               isMobile && "absolute top-3.5 left-4 right-12 text-left",
               !isMobile && "-mt-2"
             )}
@@ -617,10 +619,10 @@ export default function Orcamentos() {
             </div>
           </DialogHeader>
 
-          <div className={cn("flex flex-col gap-5", isMobile && "pt-[18px]")}>
+          <div className={cn("flex flex-col gap-5", isMobile ? "pt-[36px]" : "pt-3")}>
             {/* Categoria Pai */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Categoria Principal</Label>
+              <Label className="text-[15px] font-medium text-slate-600 ml-1">Categoria principal</Label>
               <Select 
                 value={formParentId} 
                 onValueChange={(val) => {
@@ -629,7 +631,7 @@ export default function Orcamentos() {
                 }}
                 disabled={!!editingItem} // Só leitura na edição
               >
-                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-slate-200">
+                <SelectTrigger className="h-12 rounded-xl bg-white border-slate-200">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
@@ -647,13 +649,13 @@ export default function Orcamentos() {
 
             {/* Subcategoria */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Subcategoria (Alvo)</Label>
+              <Label className="text-[15px] font-medium text-slate-600 ml-1">Subcategoria (alvo)</Label>
               <Select 
                 value={formSubId} 
                 onValueChange={setFormSubId}
                 disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
               >
-                <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-slate-200">
+                <SelectTrigger className="h-12 rounded-xl bg-white border-slate-200">
                   <SelectValue placeholder="Selecione a subcategoria..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
@@ -671,17 +673,17 @@ export default function Orcamentos() {
 
             {/* Tipo de Planejamento */}
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Tipo de Planejamento</Label>
+              <Label className="text-[15px] font-medium text-slate-600 ml-1">Tipo de planejamento</Label>
               <RadioGroup value={formTipo} onValueChange={(val: "valor" | "percentual") => {
                 setFormTipo(val);
                 setFormValor(undefined);
               }} className="flex gap-4">
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="valor" id="r1" />
+                  <RadioGroupItem value="valor" id="r1" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3]" />
                   <Label htmlFor="r1" className="font-semibold text-slate-700 cursor-pointer">Valor Fixo (R$)</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="percentual" id="r2" />
+                  <RadioGroupItem value="percentual" id="r2" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3]" />
                   <Label htmlFor="r2" className="font-semibold text-slate-700 cursor-pointer">Percentual (%)</Label>
                 </div>
               </RadioGroup>
@@ -689,14 +691,14 @@ export default function Orcamentos() {
 
             {/* Valor */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">
-                {formTipo === "valor" ? "Valor Planejado" : "Percentual da Receita"}
+              <Label className="text-[15px] font-medium text-slate-600 ml-1">
+                {formTipo === "valor" ? "Valor planejado" : "Percentual da receita"}
               </Label>
               {formTipo === "valor" ? (
                 <CurrencyBR
                   value={formValor || 0}
                   onChange={setFormValor}
-                  className="h-14 text-xl font-bold bg-slate-50 rounded-xl"
+                  className="h-12 text-xl font-bold bg-white rounded-xl border-slate-200"
                   placeholder="R$ 0,00"
                 />
               ) : (
@@ -705,7 +707,7 @@ export default function Orcamentos() {
                     type="number"
                     value={formValor || ""}
                     onChange={(e) => setFormValor(parseFloat(e.target.value))}
-                    className="h-14 text-xl font-bold bg-slate-50 rounded-xl pl-4 pr-10"
+                    className="h-12 text-xl font-bold bg-white rounded-xl pl-4 pr-10 border-slate-200"
                     placeholder="0"
                     step="0.1"
                     min="0"
