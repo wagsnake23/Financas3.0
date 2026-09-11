@@ -521,9 +521,9 @@ export default function Orcamentos() {
                 const excedido = group.totalGasto > group.totalPlanejado;
                 const restante = group.totalPlanejado - group.totalGasto;
 
-                let progressColor = "bg-emerald-500";
-                if (pctGasto > 100) progressColor = "bg-red-500";
-                else if (pctGasto >= 80) progressColor = "bg-amber-500";
+                let progressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                if (pctGasto > 100) progressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                else if (pctGasto >= 80) progressColor = "bg-amber-500/85 border border-amber-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
 
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-slate-200/80 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
@@ -555,7 +555,7 @@ export default function Orcamentos() {
                         </div>
 
                         <div className="flex flex-col gap-2 pr-2">
-                          <div className={cn("w-full bg-slate-100 rounded-full overflow-hidden", isMobile ? "h-2" : "h-2.5")}>
+                          <div className={cn("w-full bg-slate-200/70 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)]", isMobile ? "h-2" : "h-2.5")}>
                             <div 
                               className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
                               style={{ width: `${pctClamped}%` }}
@@ -578,9 +578,9 @@ export default function Orcamentos() {
                       <div className={cn("flex flex-col", isMobile ? "divide-y divide-slate-200" : "gap-3")}>
                         {group.items.map((item) => {
                           const itemPctClamped = Math.min(100, Math.max(0, item.percentualGasto));
-                          let itemProgressColor = "bg-emerald-500";
-                          if (item.percentualGasto > 100) itemProgressColor = "bg-red-500";
-                          else if (item.percentualGasto >= 80) itemProgressColor = "bg-amber-500";
+                          let itemProgressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                          if (item.percentualGasto > 100) itemProgressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                          else if (item.percentualGasto >= 80) itemProgressColor = "bg-amber-500/85 border border-amber-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
 
                           return (
                             <div 
@@ -612,7 +612,7 @@ export default function Orcamentos() {
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
-                                <div className="flex-1 bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                                <div className="flex-1 bg-slate-200/70 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]">
                                   <div 
                                     className={cn("h-full rounded-full transition-all", itemProgressColor)}
                                     style={{ width: `${itemPctClamped}%` }}
