@@ -753,25 +753,25 @@ export default function Orcamentos() {
                             >
                               <div className="flex flex-col gap-1.5 w-full">
                                 {/* Header da linha */}
-                                <div className="flex justify-between items-start w-full">
-                                  <div className="flex flex-col gap-0 truncate pr-2 mt-0.5">
-                                    <div className="flex items-center gap-2.5">
-                                      <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-4 h-4 shrink-0" style={{ color: item.subCat?.cor }} />
-                                      <span className="font-bold text-slate-700 text-[13px] leading-tight truncate">
+                                <div className="flex items-center gap-3 w-full mt-0.5">
+                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[28px] h-[28px] shrink-0" style={{ color: item.subCat?.cor }} />
+                                  <div className="flex flex-col flex-1 min-w-0 gap-[4px]">
+                                    <div className="flex justify-between items-center w-full">
+                                      <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
                                         {item.subCat?.nome}
                                       </span>
+                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
+                                        {formatCurrency(item.gasto)}
+                                      </span>
                                     </div>
-                                    <span className="text-[10px] font-semibold text-[#0556C3]/70 ml-[26px] mt-0.5">
-                                      {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
-                                    </span>
-                                  </div>
-                                  <div className="flex flex-col items-end shrink-0">
-                                    <span className={cn("font-bold text-[14px] leading-tight", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
-                                      {formatCurrency(item.gasto)}
-                                    </span>
-                                    <span className="font-semibold text-slate-400 text-[10px] leading-tight mt-[3px]">
-                                      {semPlanejamentoItem ? "Não planejado" : `de ${formatCurrency(item.absoluto)}`}
-                                    </span>
+                                    <div className="flex justify-between items-center w-full">
+                                      <span className="text-[11px] font-semibold text-[#0556C3]/70 leading-none truncate pr-2">
+                                        {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
+                                      </span>
+                                      <span className="font-semibold text-slate-400 text-[10.5px] leading-none shrink-0">
+                                        {semPlanejamentoItem ? "Não planejado" : `de ${formatCurrency(item.absoluto)}`}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                                 
