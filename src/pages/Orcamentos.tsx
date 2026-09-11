@@ -411,19 +411,19 @@ export default function Orcamentos() {
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-6")}>
         {/* Cabeçalho Mobile */}
         {isMobile && (
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex items-start gap-3 mb-2 px-1">
+          <div className="flex flex-col gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-1 px-1">
               <div
-                className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-1"
+                className="btn-3d btn-3d-icon p-1.5 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-0.5"
                 style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
               >
-                <span className="text-xl select-none">🧮</span>
+                <span className="text-[1.15rem] select-none">🧮</span>
               </div>
               <div className="flex flex-col">
-                <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <h1 className="text-[1.15rem] font-extrabold text-[#1e3a8a] tracking-[0.3px] leading-tight line-clamp-2" style={{ fontFamily: "'Inter', sans-serif" }}>
                   Planejamento Mensal
                 </h1>
-                <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
+                <p className="text-[11px] font-bold text-slate-500 mt-0.5 tracking-wider opacity-80 leading-none">
                   Planeje e acompanhe seus gastos
                 </p>
               </div>
@@ -432,18 +432,20 @@ export default function Orcamentos() {
         )}
 
         {/* Controles: Seletor de Mês e Novo Planejamento (Apenas Mobile) */}
-        <div className="flex flex-row justify-between items-center mb-6 gap-2">
-          <MonthNavigatorCompact 
-            selectedMonth={currentDate}
-            onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
-            onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
-            variant="balance"
-            premiumMode={true}
-          />
+        <div className={cn("flex flex-row justify-between items-center gap-2", isMobile ? "mb-3" : "mb-6")}>
+          <div className={cn(isMobile ? "flex-1 w-[calc(100%-48px)]" : "w-full")}>
+            <MonthNavigatorCompact 
+              selectedMonth={currentDate}
+              onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
+              onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+              variant="balance"
+              premiumMode={true}
+            />
+          </div>
           {isMobile && (
             <Button 
               onClick={handleOpenAdd}
-              className="h-[34px] px-3 rounded-full font-bold text-xs bg-[#1E3A8B] hover:bg-[#1C2F55] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center"
+              className="h-[34px] w-[40px] px-0 shrink-0 rounded-full font-bold text-xs bg-[#1E3A8B] hover:bg-[#1C2F55] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center"
             >
               <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
             </Button>
@@ -453,47 +455,49 @@ export default function Orcamentos() {
 
 
         {/* Card Resumo Superior */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-          <Card className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-white shadow-sm border-blue-100 flex flex-col justify-center">
-            <span className="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-1">Receita Prevista</span>
-            <span className="text-lg font-bold text-slate-800">{formatCurrency(receitaPrevista)}</span>
+        <div className={cn("grid", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-2 md:grid-cols-5 gap-3 mb-6")}>
+          <Card className={cn("rounded-2xl bg-gradient-to-br from-blue-50 to-white shadow-sm border-blue-100 flex flex-col justify-center", isMobile ? "p-3" : "p-4")}>
+            <span className={cn("font-semibold text-blue-700 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Receita Prevista</span>
+            <span className={cn("font-bold text-slate-800", isMobile ? "text-base" : "text-lg")}>{formatCurrency(receitaPrevista)}</span>
           </Card>
           <Card className={cn(
-            "p-4 rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
+            "rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
+            isMobile ? "p-3" : "p-4",
             planejadoUltrapassaReceita ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
           )}>
-            <span className={cn("text-xs font-semibold uppercase tracking-wider mb-1", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-500")}>Total Planejado</span>
-            <span className={cn("text-lg font-bold", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
+            <span className={cn("font-semibold uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-500")}>Total Planejado</span>
+            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
           </Card>
           <Card className={cn(
-            "p-4 rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
+            "rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
+            isMobile ? "p-3" : "p-4",
             realizadoUltrapassaPlanejado ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
           )}>
-            <span className={cn("text-xs font-semibold uppercase tracking-wider mb-1", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-500")}>Total Realizado</span>
-            <span className={cn("text-lg font-bold", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalRealizado)}</span>
+            <span className={cn("font-semibold uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-500")}>Total Realizado</span>
+            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalRealizado)}</span>
           </Card>
-          <Card className="p-4 rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Disponível</span>
-            <span className={cn("text-lg font-bold", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
+          <Card className={cn("rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center", isMobile ? "p-3" : "p-4")}>
+            <span className={cn("font-semibold text-slate-500 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Disponível</span>
+            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
           </Card>
-          <Card className="p-4 rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-2 md:col-span-1">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Saldo Planejado</span>
-            <span className={cn("text-lg font-bold", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
+          <Card className={cn("rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-2 md:col-span-1", isMobile ? "p-3" : "p-4")}>
+            <span className={cn("font-semibold text-slate-500 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Saldo Planejado</span>
+            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
           </Card>
         </div>
 
         {/* Lista de Orçamentos Agrupados */}
-        <div className="flex flex-col gap-8 pb-24">
+        <div className={cn("flex flex-col pb-24", isMobile ? "gap-6" : "gap-8")}>
           {groupedOrcamentos.length === 0 ? (
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
             </div>
           ) : (
             groupedOrcamentos.map((group) => (
-              <div key={group.parent.id} className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 pl-1 mb-1">
-                  <DynamicIcon name={group.parent.icone} className="w-5 h-5 text-slate-400" />
-                  <h3 className="text-base font-bold text-slate-700">{group.parent.nome}</h3>
+              <div key={group.parent.id} className={cn("flex flex-col", isMobile ? "gap-2" : "gap-3")}>
+                <div className={cn("flex items-center gap-2 pl-1 mb-1", isMobile && "mt-1")}>
+                  <DynamicIcon name={group.parent.icone} className={cn("text-slate-500", isMobile ? "w-4 h-4" : "w-5 h-5")} />
+                  <h3 className={cn("font-black text-slate-800", isMobile ? "text-[17px] tracking-tight" : "text-base")}>{group.parent.nome}</h3>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -507,41 +511,45 @@ export default function Orcamentos() {
                     return (
                       <Card 
                         key={item.id} 
-                        className="p-4 rounded-2xl border-slate-100/60 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-md cursor-pointer transition-all active:scale-[0.98] group"
+                        className={cn("rounded-2xl border-slate-100/60 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-md cursor-pointer transition-all active:scale-[0.98] group", isMobile ? "p-3" : "p-4")}
                         onClick={() => handleOpenEdit(item)}
                       >
-                        <div className="flex justify-between items-start mb-3">
+                        <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-center gap-2.5">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${item.subCat?.cor}15` }}>
-                              <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-5 h-5" style={{ color: item.subCat?.cor }} />
+                            <div className={cn("rounded-xl flex items-center justify-center shrink-0", isMobile ? "w-8 h-8" : "w-10 h-10")} style={{ backgroundColor: `${item.subCat?.cor}15` }}>
+                              <DynamicIcon name={item.subCat?.icone || "Tag"} className={cn(isMobile ? "w-4 h-4" : "w-5 h-5")} style={{ color: item.subCat?.cor }} />
                             </div>
                             <div className="flex flex-col">
-                              <span className="font-semibold text-slate-800 leading-tight">{item.subCat?.nome}</span>
-                              <span className="text-[11px] font-medium text-slate-400 mt-0.5">
+                              <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{item.subCat?.nome}</span>
+                              <span className={cn("font-medium text-slate-400 mt-0.5", isMobile ? "text-[10px]" : "text-[11px]")}>
                                 Planejado: {formatCurrency(item.absoluto)} {item.tipo_planejamento === "percentual" && `(${item.percentual_planejado}%)`}
                               </span>
                             </div>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className={cn("font-bold", item.excedido ? "text-red-600" : "text-slate-700")}>
+                            <span className={cn("font-bold", item.excedido ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
                               {formatCurrency(item.gasto)}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Gasto</span>
+                            <span className={cn("font-bold text-slate-400 uppercase tracking-wider mt-0.5", isMobile ? "text-[9px]" : "text-[10px]")}>Gasto</span>
                           </div>
                         </div>
 
                         <div className="flex flex-col gap-2">
-                          <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div className={cn("w-full bg-slate-100 rounded-full overflow-hidden", isMobile ? "h-2" : "h-2.5")}>
                             <div 
                               className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
                               style={{ width: `${pctClamped}%` }}
                             />
                           </div>
                           <div className="flex justify-between items-center text-xs">
-                            <span className="font-bold text-slate-500">{item.percentualGasto.toFixed(0)}%</span>
-                            <span className={cn("font-semibold", item.excedido ? "text-red-500" : "text-emerald-600")}>
-                              {item.excedido ? `⚠ Excedido em ${formatCurrency(Math.abs(item.restante))}` : `Restam ${formatCurrency(item.restante)}`}
-                            </span>
+                            <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{item.percentualGasto.toFixed(0)}% utilizado</span>
+                            {item.excedido ? (
+                              <span className={cn("bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
+                                Excedido em {formatCurrency(Math.abs(item.restante))}
+                              </span>
+                            ) : (
+                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(item.restante)}</span>
+                            )}
                           </div>
                         </div>
                       </Card>
@@ -701,22 +709,51 @@ export default function Orcamentos() {
 
       {/* Confirm Delete Dialog */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <AlertDialogContent className="rounded-[24px] max-w-[90vw] w-[360px] p-6 border-slate-100 shadow-2xl">
+        <AlertDialogContent
+          className={cn(
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[180px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[400px] !pb-4 !rounded-[22px] shadow-none border-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-slate-800">Excluir planejamento?</AlertDialogTitle>
-            <AlertDialogDescription className="text-[15px] text-slate-500 mt-2">
-              Esta ação removerá este planejamento. Os lançamentos reais não serão afetados.
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-black">
+              <DynamicIcon name="Trash2" className="h-6 w-6 text-destructive" />
+              Confirmar Exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              Tem certeza que deseja excluir este planejamento? Esta ação não afetará os lançamentos reais.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-6 flex-col-reverse sm:flex-row gap-2 sm:gap-3">
-            <AlertDialogCancel className="h-12 rounded-xl font-semibold border-slate-200 sm:mt-0">
+          <AlertDialogFooter
+            className={cn(
+              "flex flex-col sm:flex-row justify-center gap-2 mt-4",
+              isMobile && "flex-row items-center justify-between"
+            )}
+          >
+            <AlertDialogCancel
+              className={cn(
+                "flex-1 rounded-xl btn-3d font-black !text-[#1E40AF] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg mt-0 h-11",
+                isMobile && "h-11 text-lg"
+              )}
+              style={{ "--cor-topo": "#E0E7FF", "--cor-base": "#C7D2FE" } as any}
+            >
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete}
-              className="h-12 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold"
+              className={cn(
+                "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
+                isMobile && "h-12 text-lg"
+              )}
+              style={{ "--cor-topo": "#FF6B6B", "--cor-base": "#E54D4D" } as any}
             >
-              Sim, excluir
+              Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
