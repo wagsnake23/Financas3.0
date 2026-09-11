@@ -23,6 +23,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CurrencyBR from "@/components/ui/currency-br";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Footer } from "@/components/Footer";
 const UNSELECTED_VALUE = "unselected";
 
 export default function Orcamentos() {
@@ -527,7 +528,7 @@ export default function Orcamentos() {
 
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-slate-200/80 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
-                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50", isMobile ? "px-3 py-[9px] min-h-[109px]" : "p-4 min-h-[115px]")}>
+                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50", isMobile ? "px-3 py-[5px] min-h-[101px]" : "p-4 min-h-[115px]")}>
                       <div className="flex flex-col w-full text-left">
                         <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-start gap-2.5">
@@ -853,6 +854,7 @@ export default function Orcamentos() {
         </AlertDialogContent>
       </AlertDialog>
 
+      {!isMobile && <Footer isMobile={isMobile} user={user} />}
     </div>
   );
 }
