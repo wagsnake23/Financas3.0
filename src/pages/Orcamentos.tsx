@@ -574,14 +574,34 @@ export default function Orcamentos() {
 
       {/* Modal de Inclusão / Edição */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="w-[95vw] max-w-md rounded-3xl p-6 border-slate-100 shadow-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="mb-4">
-            <DialogTitle className="text-xl font-bold text-slate-800">
-              {editingItem ? "Editar Planejamento" : "Novo Planejamento"}
-            </DialogTitle>
+        <DialogContent
+          className={cn(
+            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
+            "shadow-none border-none bg-[#FAFAFA]"
+          )}
+          style={{
+            border: isMobile ? "2px solid #FFFFFF" : "none",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <DialogHeader
+            className={cn(
+              "flex flex-col items-start justify-start",
+              isMobile ? "mb-[-6px]" : "mb-[2px]",
+              isMobile && "absolute top-3.5 left-4 right-12 text-left",
+              !isMobile && "-mt-2"
+            )}
+          >
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+              <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {editingItem ? "Editar Planejamento" : "Novo Planejamento"}
+                </DialogTitle>
+              </div>
+            </div>
           </DialogHeader>
 
-          <div className="flex flex-col gap-5">
+          <div className={cn("flex flex-col gap-5", isMobile && "pt-[18px]")}>
             {/* Categoria Pai */}
             <div className="space-y-1.5">
               <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Categoria Principal</Label>
@@ -685,22 +705,25 @@ export default function Orcamentos() {
               )}
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className={cn("grid gap-2 w-full pt-1", editingItem ? "grid-cols-2" : "grid-cols-1")}>
               {editingItem && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  type="button"
                   onClick={() => setIsConfirmDeleteOpen(true)}
-                  className="h-12 rounded-xl text-red-500 border-red-200 hover:bg-red-50 hover:border-red-300 font-bold w-12 shrink-0 px-0"
+                  className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center bg-white text-red-500 hover:bg-slate-50"
+                  disabled={isSaving}
                 >
-                  <DynamicIcon name="Trash2" className="w-5 h-5" />
+                  Excluir
                 </Button>
               )}
-              <Button 
-                onClick={handleSave}
+              <Button
+                type="button"
+                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal"
+                style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
                 disabled={isSaving}
-                className="h-12 rounded-xl bg-[#1E3A8B] hover:bg-[#1C2F55] text-white font-bold text-[15px] flex-1 shadow-md"
+                onClick={handleSave}
               >
-                {isSaving ? "Salvando..." : "Salvar Planejamento"}
+                {isSaving ? "Salvando..." : "Salvar"}
               </Button>
             </div>
           </div>
