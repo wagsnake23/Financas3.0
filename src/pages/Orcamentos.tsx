@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CurrencyBR from "@/components/ui/currency-br";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 const UNSELECTED_VALUE = "unselected";
 
 export default function Orcamentos() {
@@ -255,7 +255,13 @@ export default function Orcamentos() {
 
   // Agrupamento por Categoria Pai
   const groupedOrcamentos = useMemo(() => {
-    const groups: Record<string, { parent: AppCategory; items: typeof calculatedOrcamentos }> = {};
+    const groups: Record<string, { 
+      parent: AppCategory; 
+      items: typeof calculatedOrcamentos;
+      totalPlanejado: number;
+      totalGasto: number;
+      ativosCount: number;
+    }> = {};
     
     calculatedOrcamentos.forEach(item => {
       // Exibir apenas se houver planejamento ou gasto
@@ -263,18 +269,21 @@ export default function Orcamentos() {
         const p = item.parentCat;
         if (p) {
           if (!groups[p.id]) {
-            groups[p.id] = { parent: p, items: [] };
+            groups[p.id] = { parent: p, items: [], totalPlanejado: 0, totalGasto: 0, ativosCount: 0 };
           }
           groups[p.id].items.push(item);
+          groups[p.id].totalPlanejado += item.absoluto;
+          groups[p.id].totalGasto += item.gasto;
+          groups[p.id].ativosCount += 1;
         }
       }
     });
 
     Object.values(groups).forEach(g => {
-      g.items.sort((a, b) => b.absoluto - a.absoluto);
+      g.items.sort((a, b) => b.gasto - a.gasto);
     });
 
-    return Object.values(groups).sort((a, b) => a.parent.nome.localeCompare(b.parent.nome));
+    return Object.values(groups).sort((a, b) => b.totalGasto - a.totalGasto);
   }, [calculatedOrcamentos]);
 
   // Indicadores Superiores
@@ -499,54 +508,53 @@ export default function Orcamentos() {
         </div>
 
         {/* Lista de Orçamentos Agrupados */}
-        <div className={cn("flex flex-col pb-24", isMobile ? "gap-6" : "gap-8")}>
+        <div className={cn("flex flex-col pb-24", isMobile ? "gap-4" : "gap-6")}>
           {groupedOrcamentos.length === 0 ? (
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
             </div>
           ) : (
-            groupedOrcamentos.map((group) => (
-              <div key={group.parent.id} className={cn("flex flex-col", isMobile ? "gap-2" : "gap-3")}>
-                <div className={cn("flex items-center gap-2 pl-1 mb-1", isMobile && "mt-1")}>
-                  <DynamicIcon name={group.parent.icone} className={cn("text-slate-500", isMobile ? "w-4 h-4" : "w-5 h-5")} />
-                  <h3 className={cn("font-black text-slate-800", isMobile ? "text-[17px] tracking-tight" : "text-base")}>{group.parent.nome}</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {group.items.map((item) => {
-                    const pctClamped = Math.min(100, Math.max(0, item.percentualGasto));
-                    
-                    let progressColor = "bg-emerald-500";
-                    if (item.percentualGasto > 100) progressColor = "bg-red-500";
-                    else if (item.percentualGasto >= 80) progressColor = "bg-amber-500";
+            <Accordion type="single" collapsible className="w-full flex flex-col gap-3 md:gap-4">
+              {groupedOrcamentos.map((group) => {
+                const pctGasto = group.totalPlanejado > 0 ? (group.totalGasto / group.totalPlanejado) * 100 : (group.totalGasto > 0 ? 100 : 0);
+                const pctClamped = Math.min(100, Math.max(0, pctGasto));
+                const excedido = group.totalGasto > group.totalPlanejado;
+                const restante = group.totalPlanejado - group.totalGasto;
 
-                    return (
-                      <Card 
-                        key={item.id} 
-                        className={cn("rounded-2xl border-slate-100/60 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-md cursor-pointer transition-all active:scale-[0.98] group", isMobile ? "p-3" : "p-4")}
-                        onClick={() => handleOpenEdit(item)}
-                      >
+                let progressColor = "bg-emerald-500";
+                if (pctGasto > 100) progressColor = "bg-red-500";
+                else if (pctGasto >= 80) progressColor = "bg-amber-500";
+
+                return (
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border-none bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
+                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50", isMobile ? "p-3" : "p-4")}>
+                      <div className="flex flex-col w-full text-left">
                         <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-center gap-2.5">
-                            <div className={cn("rounded-xl flex items-center justify-center shrink-0", isMobile ? "w-8 h-8" : "w-10 h-10")} style={{ backgroundColor: `${item.subCat?.cor}15` }}>
-                              <DynamicIcon name={item.subCat?.icone || "Tag"} className={cn(isMobile ? "w-4 h-4" : "w-5 h-5")} style={{ color: item.subCat?.cor }} />
+                            <div className={cn("rounded-xl flex items-center justify-center shrink-0", isMobile ? "w-8 h-8" : "w-10 h-10")} style={{ backgroundColor: `${group.parent.cor}15` }}>
+                              <DynamicIcon name={group.parent.icone || "Tag"} className={cn(isMobile ? "w-4 h-4" : "w-5 h-5")} style={{ color: group.parent.cor }} />
                             </div>
                             <div className="flex flex-col">
-                              <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{item.subCat?.nome}</span>
+                              <div className="flex items-center gap-2">
+                                <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{group.parent.nome}</span>
+                                <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                  {group.ativosCount} ativos
+                                </span>
+                              </div>
                               <span className={cn("font-medium text-slate-400 mt-0.5", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                Planejado: {formatCurrency(item.absoluto)} {item.tipo_planejamento === "percentual" && `(${item.percentual_planejado}%)`}
+                                Planejado: {formatCurrency(group.totalPlanejado)}
                               </span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className={cn("font-bold", item.excedido ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
-                              {formatCurrency(item.gasto)}
+                          <div className="flex flex-col items-end mr-2">
+                            <span className={cn("font-bold", excedido ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
+                              {formatCurrency(group.totalGasto)}
                             </span>
                             <span className={cn("font-bold text-slate-400 uppercase tracking-wider mt-0.5", isMobile ? "text-[9px]" : "text-[10px]")}>Gasto</span>
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 pr-2">
                           <div className={cn("w-full bg-slate-100 rounded-full overflow-hidden", isMobile ? "h-2" : "h-2.5")}>
                             <div 
                               className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
@@ -554,22 +562,76 @@ export default function Orcamentos() {
                             />
                           </div>
                           <div className="flex justify-between items-center text-xs">
-                            <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{item.percentualGasto.toFixed(0)}% utilizado</span>
-                            {item.excedido ? (
+                            <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado</span>
+                            {excedido ? (
                               <span className={cn("bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
-                                Excedido em {formatCurrency(Math.abs(item.restante))}
+                                Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : (
-                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(item.restante)}</span>
+                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
                             )}
                           </div>
                         </div>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </div>
-            ))
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className={cn("border-t border-slate-100 bg-slate-50/30", isMobile ? "px-3 py-2" : "px-4 py-3")}>
+                      <div className="flex flex-col gap-3">
+                        {group.items.map((item) => {
+                          const itemPctClamped = Math.min(100, Math.max(0, item.percentualGasto));
+                          let itemProgressColor = "bg-emerald-500";
+                          if (item.percentualGasto > 100) itemProgressColor = "bg-red-500";
+                          else if (item.percentualGasto >= 80) itemProgressColor = "bg-amber-500";
+
+                          return (
+                            <div 
+                              key={item.id}
+                              onClick={() => handleOpenEdit(item)}
+                              className="flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white hover:shadow-sm cursor-pointer transition-all active:scale-[0.99] group/item border border-transparent hover:border-slate-100"
+                            >
+                              <div className="flex justify-between items-start w-full">
+                                <div className="flex items-center gap-2">
+                                  <div className="rounded-lg flex items-center justify-center shrink-0 w-6 h-6" style={{ backgroundColor: `${item.subCat?.cor}15` }}>
+                                    <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-3 h-3" style={{ color: item.subCat?.cor }} />
+                                  </div>
+                                  <span className={cn("font-bold text-slate-700 leading-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
+                                    {item.subCat?.nome}
+                                  </span>
+                                </div>
+                                <div className="flex items-baseline gap-1">
+                                  <span className={cn("font-bold text-slate-800", isMobile ? "text-[12px]" : "text-[13px]")}>
+                                    {formatCurrency(item.gasto)}
+                                  </span>
+                                  <span className={cn("font-bold text-slate-400", isMobile ? "text-[10px]" : "text-[11px]")}>
+                                    / {formatCurrency(item.absoluto)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1 bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                                  <div 
+                                    className={cn("h-full rounded-full transition-all", itemProgressColor)}
+                                    style={{ width: `${itemPctClamped}%` }}
+                                  />
+                                </div>
+                                {item.excedido ? (
+                                  <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1 rounded">
+                                    Excedido {formatCurrency(Math.abs(item.restante))}
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">
+                                    Restam {formatCurrency(item.restante)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
           )}
         </div>
       </main>
