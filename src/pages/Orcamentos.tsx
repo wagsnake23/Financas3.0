@@ -508,13 +508,13 @@ export default function Orcamentos() {
         </div>
 
         {/* Lista de Orçamentos Agrupados */}
-        <div className={cn("flex flex-col pb-24", isMobile ? "gap-4" : "gap-6")}>
+        <div className={cn("flex flex-col", isMobile ? "gap-4 pb-8" : "gap-6 pb-24")}>
           {groupedOrcamentos.length === 0 ? (
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
             </div>
           ) : (
-            <Accordion type="single" collapsible className="w-full flex flex-col gap-3 md:gap-4">
+            <Accordion type="single" collapsible className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 items-start">
               {groupedOrcamentos.map((group) => {
                 const pctGasto = group.totalPlanejado > 0 ? (group.totalGasto / group.totalPlanejado) * 100 : (group.totalGasto > 0 ? 100 : 0);
                 const pctClamped = Math.min(100, Math.max(0, pctGasto));
@@ -527,7 +527,7 @@ export default function Orcamentos() {
 
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-slate-200/80 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
-                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50", isMobile ? "p-3" : "p-4")}>
+                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50 min-h-[115px]", isMobile ? "p-3" : "p-4")}>
                       <div className="flex flex-col w-full text-left">
                         <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-center gap-2.5">
