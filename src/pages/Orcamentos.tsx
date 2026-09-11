@@ -599,8 +599,8 @@ export default function Orcamentos() {
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className={cn("border-t border-slate-100", isMobile ? "bg-transparent px-3 py-1" : "bg-slate-50/30 px-4 py-3")}>
-                      <div className={cn("flex flex-col", isMobile ? "divide-y divide-slate-200" : "gap-3")}>
+                    <AccordionContent className="border-t border-slate-100 bg-transparent px-3 py-3">
+                      <div className="flex flex-col gap-3">
                         {group.items.map((item) => {
                           const semPlanejamentoItem = item.absoluto <= 0;
                           const itemPctGasto = semPlanejamentoItem ? 0 : (item.gasto / item.absoluto) * 100;
@@ -609,67 +609,71 @@ export default function Orcamentos() {
                           const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
                           const itemRestante = item.absoluto - item.gasto;
 
-                          let itemProgressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                          if (semPlanejamentoItem) itemProgressColor = "bg-transparent";
-                          else if (itemExcedido) itemProgressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                          else if (itemAtingido) itemProgressColor = "bg-[#0556C3]/85 border border-[#044299]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                          let itemProgressColor = "bg-emerald-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                          let itemBorderColor = "border-emerald-500/20";
+                          
+                          if (semPlanejamentoItem) {
+                            itemProgressColor = "bg-transparent";
+                            itemBorderColor = "border-slate-400/20";
+                          }
+                          else if (itemExcedido) {
+                            itemProgressColor = "bg-red-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                            itemBorderColor = "border-red-500/20";
+                          }
+                          else if (itemAtingido) {
+                            itemProgressColor = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                            itemBorderColor = "border-blue-500/20";
+                          }
 
                           return (
                             <div 
                               key={item.id}
                               onClick={() => handleOpenEdit(item)}
                               className={cn(
-                                "flex flex-col gap-1.5 cursor-pointer transition-all active:scale-[0.99] group/item",
-                                isMobile 
-                                  ? "py-3" 
-                                  : "p-2 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100"
+                                "flex flex-col w-full p-3 rounded-xl border cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50",
+                                itemBorderColor
                               )}
                             >
-                              <div className="flex justify-between items-start w-full">
-                                <div className="flex items-center gap-2">
-                                  <div className="rounded-lg flex items-center justify-center shrink-0 w-6 h-6" style={{ backgroundColor: `${item.subCat?.cor}15` }}>
-                                    <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-3 h-3" style={{ color: item.subCat?.cor }} />
+                              <div className="flex flex-col gap-1.5 w-full">
+                                {/* Header da linha */}
+                                <div className="flex justify-between items-start w-full">
+                                  <div className="flex items-center gap-2.5 truncate pr-2 mt-0.5">
+                                    <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-4 h-4 shrink-0" style={{ color: item.subCat?.cor }} />
+                                    <span className="font-bold text-slate-700 text-[13px] leading-tight truncate">
+                                      {item.subCat?.nome}
+                                    </span>
                                   </div>
-                                  <span className={cn("font-bold text-slate-700 leading-tight", isMobile ? "text-[12px]" : "text-[13px]")}>
-                                    {item.subCat?.nome}
-                                  </span>
+                                  <div className="flex flex-col items-end shrink-0">
+                                    <span className={cn("font-bold text-[14px] leading-tight", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
+                                      {formatCurrency(item.gasto)}
+                                    </span>
+                                    <span className="font-semibold text-slate-400 text-[10px] leading-tight mt-[3px]">
+                                      {semPlanejamentoItem ? "Não planejado" : `de ${formatCurrency(item.absoluto)}`}
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="flex items-baseline gap-1">
-                                  <span className={cn("font-bold", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800", isMobile ? "text-[12px]" : "text-[13px]")}>
-                                    {formatCurrency(item.gasto)}
-                                  </span>
-                                  <span className={cn("font-bold text-slate-400", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                    {semPlanejamentoItem ? " / Não definido" : ` / ${formatCurrency(item.absoluto)}`}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex flex-col w-full gap-0.5">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex-1 bg-slate-200/70 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]">
+                                
+                                {/* Progresso e Status */}
+                                <div className="flex items-center gap-2.5 w-full mt-0.5">
+                                  <div className="flex-1 bg-slate-200 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
                                     <div 
-                                      className={cn("h-full rounded-full transition-all", itemProgressColor)}
-                                      style={{ width: `${itemPctClamped}%` }}
+                                      className={cn("h-full rounded-full transition-all duration-500", itemProgressColor)}
+                                      style={{ width: semPlanejamentoItem ? '0%' : `${itemPctClamped}%` }}
                                     />
                                   </div>
-                                  {!semPlanejamentoItem && (
-                                    itemExcedido ? (
-                                      <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1 rounded">
-                                        Excedido {formatCurrency(Math.abs(itemRestante))}
-                                      </span>
-                                    ) : itemAtingido ? (
-                                      <span className="text-[9px] font-bold text-[#0556C3] bg-blue-50 px-1 rounded">
-                                        Atingido
-                                      </span>
-                                    ) : (
-                                      <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">
-                                        Restam {formatCurrency(itemRestante)}
-                                      </span>
-                                    )
+                                  {!semPlanejamentoItem ? (
+                                    <span className={cn(
+                                      "text-[10px] font-bold shrink-0",
+                                      itemExcedido ? "text-red-600" : itemAtingido ? "text-[#0556C3]" : "text-emerald-600"
+                                    )}>
+                                      {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[10px] font-bold text-slate-400 shrink-0">
+                                      Sem planejamento
+                                    </span>
                                   )}
                                 </div>
-                                {semPlanejamentoItem && (
-                                  <span className="text-[9px] font-bold text-slate-500">Sem planejamento definido</span>
-                                )}
                               </div>
                             </div>
                           );
