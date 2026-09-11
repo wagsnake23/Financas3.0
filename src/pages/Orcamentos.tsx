@@ -454,10 +454,18 @@ export default function Orcamentos() {
 
 
             {/* Bloco Planejamento do Mês */}
-            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 pt-[10px] pb-2 px-3 mb-4">
-              <h2 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight mb-4 flex items-center gap-1.5" style={{ fontFamily: "'Inter', sans-serif" }}>
-                <span className="text-[1.3rem] select-none mt-[1px]">🧮</span> Planejamento do Mês
-              </h2>
+            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 p-3 mb-4">
+              <div className="flex items-start gap-1.5 mb-2.5">
+                <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
+                <div className="flex flex-col">
+                  <h2 className="text-[1.05rem] font-semibold text-[#0556C3] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    Planejamento Mensal
+                  </h2>
+                  <span className="text-[13px] font-medium text-slate-500 mt-[2px] leading-tight">
+                    {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
+                  </span>
+                </div>
+              </div>
               
               {(() => {
                 const semPlanejamentoGeral = totalPlanejado <= 0;
@@ -481,13 +489,13 @@ export default function Orcamentos() {
                         <span className="font-bold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
                       </div>
                       <div className="flex flex-col items-end gap-0">
-                        <span className="font-bold text-slate-500 text-[11px] leading-tight">Planejado</span>
-                        <span className="font-bold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalPlanejado)}</span>
+                        <span className="font-semibold text-slate-500 text-[11px] leading-tight">Planejado</span>
+                        <span className="font-semibold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalPlanejado)}</span>
                       </div>
                     </div>
 
                     {/* Barra de Progresso */}
-                    <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
+                    <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] mt-0.5">
                       <div 
                         className={cn("h-full rounded-full transition-all duration-500", progressColorGeral)}
                         style={{ width: semPlanejamentoGeral ? '0%' : `${pctGeralClamped}%` }}
@@ -495,7 +503,7 @@ export default function Orcamentos() {
                     </div>
                     
                     {/* Status Inferior */}
-                    <div className="flex justify-between items-center mt-[-1px]">
+                    <div className="flex justify-between items-center">
                       <span className="font-bold text-slate-500 text-[12px]">
                         {semPlanejamentoGeral ? "Sem planejamento definido" : `${pctGeral.toFixed(0)}% utilizado`}
                       </span>
@@ -505,23 +513,23 @@ export default function Orcamentos() {
                           "text-[12px] font-bold",
                           excedidoGeral ? "text-red-600" : atingidoGeral ? "text-[#0556C3]" : "text-emerald-600"
                         )}>
-                          {excedidoGeral ? `Excedido em ${formatCurrency(Math.abs(restanteGeral))}` : atingidoGeral ? "Atingido" : `Restam ${formatCurrency(restanteGeral)}`}
+                          {excedidoGeral ? `Excedido em ${formatCurrency(Math.abs(restanteGeral))}` : atingidoGeral ? "Atingido" : `${formatCurrency(restanteGeral)} disponíveis`}
                         </span>
                       )}
                     </div>
+
+                    {/* Botão Novo Planejamento Mobile */}
+                    <Button 
+                      onClick={handleOpenAdd}
+                      className="h-[36px] w-full mt-1.5 px-0 rounded-xl font-semibold text-[14px] bg-[#0556C3] hover:bg-[#044299] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                    >
+                      <DynamicIcon name="Plus" className="w-[14px] h-[14px] text-white" strokeWidth={2.5} />
+                      Novo Planejamento
+                    </Button>
                   </div>
                 );
               })()}
             </div>
-
-            {/* Botão Novo Planejamento Mobile */}
-            <Button 
-              onClick={handleOpenAdd}
-              className="h-[40px] w-full px-0 rounded-[14px] font-medium text-[15px] bg-[#0556C3] hover:bg-[#044299] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
-            >
-              <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={2.5} />
-              Novo Planejamento
-            </Button>
           </div>
         )}
 
