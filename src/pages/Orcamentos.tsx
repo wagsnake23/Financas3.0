@@ -666,8 +666,8 @@ export default function Orcamentos() {
                 else if (atingido) progressColor = "bg-[#0556C3]/85 border border-[#044299]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
 
                 return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-slate-200/80 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
-                    <AccordionTrigger className={cn("hover:no-underline hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-slate-50/50", isMobile ? "px-3 py-[5px] min-h-[101px]" : "p-4 min-h-[115px]")}>
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-[#DCE8F7] bg-[#F8FBFF] rounded-2xl shadow-sm overflow-hidden mb-2">
+                    <AccordionTrigger className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-[5px] min-h-[101px]" : "p-4 min-h-[115px]")}>
                       <div className="flex flex-col w-full text-left">
                         <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-start gap-2.5">
@@ -690,7 +690,7 @@ export default function Orcamentos() {
                         </div>
 
                         <div className="flex flex-col gap-2 pr-2">
-                          <div className={cn("w-full bg-slate-200/70 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)]", isMobile ? "h-2" : "h-2.5")}>
+                          <div className={cn("w-full bg-white/60 border border-blue-100/50 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)]", isMobile ? "h-2" : "h-2.5")}>
                             <div 
                               className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
                               style={{ width: `${pctClamped}%` }}
@@ -704,7 +704,7 @@ export default function Orcamentos() {
                             )}
                             
                             {semPlanejamento ? null : excedido ? (
-                              <span className={cn("bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
+                              <span className={cn("bg-red-100/80 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : atingido ? (
@@ -716,8 +716,8 @@ export default function Orcamentos() {
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="border-t border-slate-100 bg-transparent px-3 py-3">
-                      <div className="flex flex-col gap-3">
+                    <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
+                      <div className="flex flex-col gap-[10px]">
                         {group.items.map((item) => {
                           const semPlanejamentoItem = item.absoluto <= 0;
                           const itemPctGasto = semPlanejamentoItem ? 0 : (item.gasto / item.absoluto) * 100;
@@ -727,19 +727,15 @@ export default function Orcamentos() {
                           const itemRestante = item.absoluto - item.gasto;
 
                           let itemProgressColor = "bg-emerald-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                          let itemBorderColor = "border-emerald-500/20";
                           
                           if (semPlanejamentoItem) {
                             itemProgressColor = "bg-transparent";
-                            itemBorderColor = "border-slate-400/20";
                           }
                           else if (itemExcedido) {
                             itemProgressColor = "bg-red-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                            itemBorderColor = "border-red-500/20";
                           }
                           else if (itemAtingido) {
                             itemProgressColor = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                            itemBorderColor = "border-blue-500/20";
                           }
 
                           return (
@@ -747,8 +743,7 @@ export default function Orcamentos() {
                               key={item.id}
                               onClick={() => handleOpenEdit(item)}
                               className={cn(
-                                "flex flex-col w-full p-3 rounded-xl border cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50",
-                                itemBorderColor
+                                "flex flex-col w-full p-3 rounded-xl border border-[#E5EEF8] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
                               )}
                             >
                               <div className="flex flex-col gap-1.5 w-full">
@@ -777,7 +772,7 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex-1 bg-slate-200 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]">
+                                  <div className="flex-1 bg-slate-100 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]">
                                     <div 
                                       className={cn("h-full rounded-full transition-all duration-500", itemProgressColor)}
                                       style={{ width: semPlanejamentoItem ? '0%' : `${itemPctClamped}%` }}
