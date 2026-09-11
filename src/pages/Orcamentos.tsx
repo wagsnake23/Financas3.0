@@ -743,8 +743,11 @@ export default function Orcamentos() {
                               key={item.id}
                               onClick={() => handleOpenEdit(item)}
                               className={cn(
-                                "flex flex-col w-full p-3 rounded-xl border border-[#E5EEF8] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
+                                "flex flex-col w-full p-[14px] rounded-xl border border-[#D6E3F3] bg-[#FCFDFE] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
                               )}
+                              style={{
+                                boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)"
+                              }}
                             >
                               <div className="flex flex-col gap-1.5 w-full">
                                 {/* Header da linha */}
@@ -772,7 +775,12 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex-1 bg-slate-100 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]">
+                                  <div 
+                                    className="flex-1 bg-slate-100/80 rounded-full h-1.5 overflow-hidden"
+                                    style={{
+                                      boxShadow: "inset 0 1px 2px rgba(15,23,42,0.08), inset 0 -1px 1px rgba(255,255,255,0.8)"
+                                    }}
+                                  >
                                     <div 
                                       className={cn("h-full rounded-full transition-all duration-500", itemProgressColor)}
                                       style={{ width: semPlanejamentoItem ? '0%' : `${itemPctClamped}%` }}
