@@ -689,6 +689,7 @@ export default function Orcamentos() {
       {/* Modal de Inclusão / Edição */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
           className={cn(
             isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
             "shadow-none border-none bg-[#FAFAFA]"
@@ -708,7 +709,7 @@ export default function Orcamentos() {
           >
             <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
               <div className="flex flex-row items-center justify-start gap-3 w-full">
-                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3]/90 tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
                   {editingItem ? "Editar Planejamento" : "Novo Planejamento"}
                 </DialogTitle>
               </div>
@@ -719,7 +720,7 @@ export default function Orcamentos() {
             {/* Categoria Pai */}
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5 ml-1">
-                <LayoutGrid className="w-4 h-4 text-slate-400" />
+                <span className="text-[16px] leading-none">🗂️</span>
                 <Label className="text-[14px] font-medium text-slate-600">Categoria principal</Label>
               </div>
               <Select 
@@ -749,7 +750,7 @@ export default function Orcamentos() {
             {/* Subcategoria */}
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5 ml-1">
-                <Tag className="w-4 h-4 text-slate-400" />
+                <span className="text-[16px] leading-none">🏷️</span>
                 <Label className="text-[14px] font-medium text-slate-600">Subcategoria (alvo)</Label>
               </div>
               {formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem ? (
@@ -787,19 +788,19 @@ export default function Orcamentos() {
             {/* Abrangência */}
             <div className="space-y-2">
               <div className="flex items-center gap-1.5 ml-1">
-                <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-[16px] leading-none">📅</span>
                 <Label className="text-[14px] font-medium text-slate-600">Abrangência</Label>
               </div>
               <RadioGroup value={formAbrangencia} onValueChange={(val: "current_month" | "future_months") => setFormAbrangencia(val)} className="grid grid-cols-2 gap-2 md:gap-3">
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "future_months" ? "border-[#0556C3] bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("future_months")}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "future_months" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("future_months")}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="future_months" id="abr1" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3] shrink-0" />
+                    <RadioGroupItem value="future_months" id="abr1" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
                     <Label htmlFor="abr1" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Aplicar aos próximos meses</Label>
                   </div>
                 </div>
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "current_month" ? "border-[#0556C3] bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("current_month")}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "current_month" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("current_month")}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="current_month" id="abr2" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3] shrink-0" />
+                    <RadioGroupItem value="current_month" id="abr2" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
                     <Label htmlFor="abr2" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Apenas este mês</Label>
                   </div>
                 </div>
@@ -809,19 +810,19 @@ export default function Orcamentos() {
             {/* Tipo de Planejamento */}
             <div className="space-y-2">
               <div className="flex items-center gap-1.5 ml-1">
-                <Settings className="w-4 h-4 text-slate-400" />
+                <span className="text-[16px] leading-none">⚙️</span>
                 <Label className="text-[14px] font-medium text-slate-600">Tipo de planejamento</Label>
               </div>
               <RadioGroup value={formTipo} onValueChange={(val: "valor" | "percentual") => { setFormTipo(val); setFormValor(undefined); }} className="grid grid-cols-2 gap-2 md:gap-3">
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "valor" ? "border-[#0556C3] bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("valor"); setFormValor(undefined); }}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "valor" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("valor"); setFormValor(undefined); }}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="valor" id="r1" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3] shrink-0" />
+                    <RadioGroupItem value="valor" id="r1" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
                     <Label htmlFor="r1" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Valor Fixo (R$)</Label>
                   </div>
                 </div>
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "percentual" ? "border-[#0556C3] bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("percentual"); setFormValor(undefined); }}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "percentual" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("percentual"); setFormValor(undefined); }}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="percentual" id="r2" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3] shrink-0" />
+                    <RadioGroupItem value="percentual" id="r2" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
                     <Label htmlFor="r2" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Percentual (%)</Label>
                   </div>
                 </div>
@@ -831,7 +832,7 @@ export default function Orcamentos() {
             {/* Valor */}
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5 ml-1">
-                <BadgeDollarSign className="w-4 h-4 text-slate-400" />
+                <span className="text-[16px] leading-none">💰</span>
                 <Label className="text-[14px] font-medium text-slate-600">
                   {formTipo === "valor" ? "Valor planejado" : "Percentual da receita"}
                 </Label>
@@ -840,7 +841,7 @@ export default function Orcamentos() {
                 <CurrencyBR
                   value={formValor || 0}
                   onChange={setFormValor}
-                  className="h-[50px] md:h-[53px] text-xl font-bold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
+                  className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
                   placeholder="R$ 0,00"
                 />
               ) : (
@@ -849,13 +850,13 @@ export default function Orcamentos() {
                     type="number"
                     value={formValor || ""}
                     onChange={(e) => setFormValor(parseFloat(e.target.value))}
-                    className="h-[50px] md:h-[53px] text-xl font-bold rounded-xl pl-4 pr-10 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
+                    className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl pl-4 pr-10 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
                     placeholder="0"
                     step="0.1"
                     min="0"
                     max="100"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">%</span>
                 </div>
               )}
               {formTipo === "percentual" && formValor !== undefined && (
