@@ -979,11 +979,38 @@ export default function Orcamentos() {
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">%</span>
                 </div>
               )}
-              {formTipo === "percentual" && formValor !== undefined && (
-                <p className="text-xs text-slate-500 ml-1 mt-1">
-                  Corresponde a aprox. <strong className="text-slate-700">{formatCurrency((receitaPrevista * formValor) / 100)}</strong>
-                </p>
-              )}
+              {(() => {
+                if (formValor === undefined || formValor === 0) return null;
+                const valorInformadoNum = formValor;
+                const valorEmReais = formTipo === "valor" ? valorInformadoNum : ((receitaPrevista * valorInformadoNum) / 100);
+                const pctReceita = receitaPrevista > 0 ? (valorEmReais / receitaPrevista) * 100 : 0;
+                const isHighPct = pctReceita > 80;
+                
+                const planejadoAnterior = editingItem ? editingItem.absoluto : 0;
+                const novoTotalPlanejado = totalPlanejado - planejadoAnterior + valorEmReais;
+                const saldoRestante = receitaPrevista - novoTotalPlanejado;
+                const excedeReceita = saldoRestante < 0;
+
+                if (excedeReceita) {
+                  return (
+                    <div className="text-[12px] font-semibold text-red-600 mt-2 ml-1">
+                      ⚠ Excede o saldo disponível em {formatCurrency(Math.abs(saldoRestante))}
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="flex items-center text-[12px] mt-2 ml-1">
+                    <span className="font-semibold text-emerald-600">
+                      {formatCurrency(saldoRestante)} disponíveis
+                    </span>
+                    <span className="text-slate-300 mx-1.5">|</span>
+                    <span className={cn("font-semibold", isHighPct ? "text-amber-500" : "text-[#0556C3]")}>
+                      {pctReceita.toFixed(1).replace('.', ',')}% da receita
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
 
             <div className={cn("grid gap-2 w-full pt-1", editingItem ? "grid-cols-2" : "grid-cols-1")}>
