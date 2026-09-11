@@ -574,8 +574,8 @@ export default function Orcamentos() {
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className={cn("border-t border-slate-100 bg-slate-50/30", isMobile ? "px-3 py-2" : "px-4 py-3")}>
-                      <div className="flex flex-col gap-3">
+                    <AccordionContent className={cn("border-t border-slate-100", isMobile ? "bg-transparent px-3 py-1" : "bg-slate-50/30 px-4 py-3")}>
+                      <div className={cn("flex flex-col", isMobile ? "divide-y divide-slate-200" : "gap-3")}>
                         {group.items.map((item) => {
                           const itemPctClamped = Math.min(100, Math.max(0, item.percentualGasto));
                           let itemProgressColor = "bg-emerald-500";
@@ -586,7 +586,12 @@ export default function Orcamentos() {
                             <div 
                               key={item.id}
                               onClick={() => handleOpenEdit(item)}
-                              className="flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white hover:shadow-sm cursor-pointer transition-all active:scale-[0.99] group/item border border-transparent hover:border-slate-100"
+                              className={cn(
+                                "flex flex-col gap-1.5 cursor-pointer transition-all active:scale-[0.99] group/item",
+                                isMobile 
+                                  ? "py-3" 
+                                  : "p-2 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100"
+                              )}
                             >
                               <div className="flex justify-between items-start w-full">
                                 <div className="flex items-center gap-2">
