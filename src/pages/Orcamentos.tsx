@@ -412,15 +412,10 @@ export default function Orcamentos() {
         {/* Cabeçalho Mobile */}
         {isMobile && (
           <div className="flex flex-col gap-2 mb-3">
-            <div className="flex items-center gap-2 mb-1 px-1">
-              <div
-                className="btn-3d btn-3d-icon p-1.5 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-0.5"
-                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-              >
-                <span className="text-[1.15rem] select-none">🧮</span>
-              </div>
+            <div className="flex items-start gap-2 mb-1 px-1">
+              <span className="text-[1.4rem] select-none mt-[1px]">🧮</span>
               <div className="flex flex-col">
-                <h1 className="text-[1.15rem] font-extrabold text-[#1e3a8a] tracking-[0.3px] leading-tight line-clamp-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <h1 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight line-clamp-2" style={{ fontFamily: "'Inter', sans-serif" }}>
                   Planejamento Mensal
                 </h1>
                 <p className="text-[11px] font-bold text-slate-500 mt-0.5 tracking-wider opacity-80 leading-none">
@@ -434,7 +429,7 @@ export default function Orcamentos() {
                 onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
                 onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
                 isMobile={isMobile}
-                onBack={() => navigate(-1)}
+                onBack={undefined}
                 backButtonColor="#1e3a8a"
               />
             </div>
@@ -503,9 +498,9 @@ export default function Orcamentos() {
             <div className="col-span-2 flex items-center justify-center mt-1">
               <Button 
                 onClick={handleOpenAdd}
-                className="h-[44px] w-full px-0 rounded-2xl font-black text-sm bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
+                className="h-[44px] w-full px-0 rounded-2xl font-semibold text-[17px] bg-[#0556C3] hover:bg-[#044299] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
               >
-                <DynamicIcon name="Plus" className="w-[16px] h-[16px]" strokeWidth={3} />
+                <DynamicIcon name="Plus" className="w-[18px] h-[18px]" strokeWidth={3} />
                 Novo Planejamento
               </Button>
             </div>
