@@ -496,13 +496,13 @@ export default function Orcamentos() {
                     </div>
 
                     {/* Barra de Progresso Inteligente */}
-                    <div className="flex w-full bg-slate-200 rounded-full h-[12px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] mt-0.5 mb-1.5">
+                    <div className="flex w-full bg-slate-300/70 rounded-full h-[12px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] mt-0.5 mb-1.5">
                       <div 
                         className="h-full bg-[#0556C3]/90 transition-all duration-500"
                         style={{ width: `${pctAzulVisual}%` }}
                       />
                       <div 
-                        className="h-full bg-emerald-500/90 transition-all duration-500"
+                        className="h-full bg-purple-500/90 transition-all duration-500"
                         style={{ width: `${pctRoxoVisual}%` }}
                       />
                       {isExcedidoReceita && (
@@ -517,7 +517,7 @@ export default function Orcamentos() {
                     <div className="flex justify-between items-start mt-0.5">
                       <div className="flex flex-col gap-0">
                         <span className="font-medium text-slate-500 text-[11px] leading-tight">Disponível</span>
-                        <span className="font-bold text-emerald-600 text-[13px] leading-tight mt-[1px]">{formatCurrency(disponivelPlanejamento)}</span>
+                        <span className="font-bold text-purple-600 text-[13px] leading-tight mt-[1px]">{formatCurrency(disponivelPlanejamento)}</span>
                       </div>
                       <div className="flex flex-col items-end gap-0">
                         <span className="font-medium text-slate-500 text-[11px] leading-tight">Não Planejado</span>
