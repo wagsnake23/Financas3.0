@@ -531,8 +531,8 @@ export default function Orcamentos() {
                       <div className="flex flex-col w-full text-left">
                         <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
                           <div className="flex items-start gap-2.5">
-                            <div className={cn("flex items-center justify-center shrink-0 leading-none", isMobile ? "mt-[1px]" : "mt-[2px]")}>
-                              <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[22px]" : "text-[26px]")} style={{ color: group.parent.cor }} />
+                            <div className={cn("flex items-center justify-center shrink-0 leading-none", isMobile ? "mt-[2px]" : "mt-[1px]")}>
+                              <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                             </div>
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2">
