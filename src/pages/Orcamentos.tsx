@@ -517,14 +517,17 @@ export default function Orcamentos() {
           ) : (
             <Accordion type="single" collapsible className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 items-start">
               {groupedOrcamentos.map((group) => {
-                const pctGasto = group.totalPlanejado > 0 ? (group.totalGasto / group.totalPlanejado) * 100 : (group.totalGasto > 0 ? 100 : 0);
+                const semPlanejamento = group.totalPlanejado <= 0;
+                const pctGasto = semPlanejamento ? 0 : (group.totalGasto / group.totalPlanejado) * 100;
                 const pctClamped = Math.min(100, Math.max(0, pctGasto));
                 const excedido = group.totalGasto > group.totalPlanejado;
+                const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
                 const restante = group.totalPlanejado - group.totalGasto;
 
                 let progressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                if (pctGasto > 100) progressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                else if (pctGasto >= 80) progressColor = "bg-amber-500/85 border border-amber-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                if (semPlanejamento) progressColor = "bg-transparent";
+                else if (excedido) progressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                else if (atingido) progressColor = "bg-[#0556C3]/85 border border-[#044299]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
 
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-slate-200/80 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] overflow-hidden">
@@ -562,13 +565,20 @@ export default function Orcamentos() {
                               style={{ width: `${pctClamped}%` }}
                             />
                           </div>
-                          <div className="flex justify-between items-center text-xs">
-                            <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado</span>
+                          <div className="flex justify-between items-center text-xs mt-0.5">
+                            {semPlanejamento ? (
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>Sem planejamento definido</span>
+                            ) : (
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado</span>
+                            )}
+                            
                             {excedido ? (
                               <span className={cn("bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
-                            ) : (
+                            ) : atingido ? (
+                              <span className={cn("font-semibold text-[#0556C3]", isMobile ? "text-[10px]" : "text-xs")}>Planejamento atingido</span>
+                            ) : semPlanejamento ? null : (
                               <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
                             )}
                           </div>
@@ -578,10 +588,17 @@ export default function Orcamentos() {
                     <AccordionContent className={cn("border-t border-slate-100", isMobile ? "bg-transparent px-3 py-1" : "bg-slate-50/30 px-4 py-3")}>
                       <div className={cn("flex flex-col", isMobile ? "divide-y divide-slate-200" : "gap-3")}>
                         {group.items.map((item) => {
-                          const itemPctClamped = Math.min(100, Math.max(0, item.percentualGasto));
+                          const semPlanejamentoItem = item.absoluto <= 0;
+                          const itemPctGasto = semPlanejamentoItem ? 0 : (item.gasto / item.absoluto) * 100;
+                          const itemPctClamped = Math.min(100, Math.max(0, itemPctGasto));
+                          const itemExcedido = item.gasto > item.absoluto;
+                          const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
+                          const itemRestante = item.absoluto - item.gasto;
+
                           let itemProgressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                          if (item.percentualGasto > 100) itemProgressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                          else if (item.percentualGasto >= 80) itemProgressColor = "bg-amber-500/85 border border-amber-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                          if (semPlanejamentoItem) itemProgressColor = "bg-transparent";
+                          else if (itemExcedido) itemProgressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                          else if (itemAtingido) itemProgressColor = "bg-[#0556C3]/85 border border-[#044299]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
 
                           return (
                             <div 
@@ -619,13 +636,21 @@ export default function Orcamentos() {
                                     style={{ width: `${itemPctClamped}%` }}
                                   />
                                 </div>
-                                {item.excedido ? (
+                                {itemExcedido ? (
                                   <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1 rounded">
-                                    Excedido {formatCurrency(Math.abs(item.restante))}
+                                    Excedido {formatCurrency(Math.abs(itemRestante))}
+                                  </span>
+                                ) : itemAtingido ? (
+                                  <span className="text-[9px] font-bold text-[#0556C3] bg-blue-50 px-1 rounded">
+                                    Atingido
+                                  </span>
+                                ) : semPlanejamentoItem ? (
+                                  <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1 rounded">
+                                    Sem planejamento
                                   </span>
                                 ) : (
                                   <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">
-                                    Restam {formatCurrency(item.restante)}
+                                    Restam {formatCurrency(itemRestante)}
                                   </span>
                                 )}
                               </div>
