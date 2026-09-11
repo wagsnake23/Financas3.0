@@ -602,7 +602,7 @@ export default function Orcamentos() {
             </div>
           </DialogHeader>
 
-          <div className={cn("flex flex-col gap-5", isMobile ? "pt-[36px]" : "pt-3")}>
+          <div className={cn("flex flex-col gap-5", isMobile ? "pt-[36px]" : "pt-[2px]")}>
             {/* Categoria Pai */}
             <div className="space-y-1.5">
               <Label className="text-[15px] font-medium text-slate-600 ml-1">Categoria principal</Label>
@@ -614,7 +614,7 @@ export default function Orcamentos() {
                 }}
                 disabled={!!editingItem} // Só leitura na edição
               >
-                <SelectTrigger className="h-12 rounded-xl bg-white border-slate-200">
+                <SelectTrigger className="h-[50px] md:h-[53px] text-[15px] rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
@@ -638,7 +638,7 @@ export default function Orcamentos() {
                 onValueChange={setFormSubId}
                 disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
               >
-                <SelectTrigger className="h-12 rounded-xl bg-white border-slate-200">
+                <SelectTrigger className="h-[50px] md:h-[53px] text-[15px] rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800">
                   <SelectValue placeholder="Selecione a subcategoria..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
@@ -681,7 +681,7 @@ export default function Orcamentos() {
                 <CurrencyBR
                   value={formValor || 0}
                   onChange={setFormValor}
-                  className="h-12 text-xl font-bold bg-white rounded-xl border-slate-200"
+                  className="h-[50px] md:h-[53px] text-xl font-bold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
                   placeholder="R$ 0,00"
                 />
               ) : (
@@ -690,7 +690,7 @@ export default function Orcamentos() {
                     type="number"
                     value={formValor || ""}
                     onChange={(e) => setFormValor(parseFloat(e.target.value))}
-                    className="h-12 text-xl font-bold bg-white rounded-xl pl-4 pr-10 border-slate-200"
+                    className="h-[50px] md:h-[53px] text-xl font-bold rounded-xl pl-4 pr-10 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
                     placeholder="0"
                     step="0.1"
                     min="0"
