@@ -433,7 +433,7 @@ export default function Orcamentos() {
       )}
 
       <main 
-        className={cn("container-app flex-grow", isMobile ? "pt-0 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}
+        className={cn("container-app flex-grow", isMobile ? "pt-0 pb-2" : "pt-0 pb-8 -mt-[86px] space-y-6")}
         style={isMobile ? {
           background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF calc(100% - 120px), #FCFCFE 100%)"
         } : undefined}
@@ -986,8 +986,7 @@ export default function Orcamentos() {
                 </div>
               )}
               {(() => {
-                if (formValor === undefined || formValor === 0) return null;
-                const valorInformadoNum = formValor;
+                const valorInformadoNum = formValor || 0;
                 const valorEmReais = formTipo === "valor" ? valorInformadoNum : ((receitaPrevista * valorInformadoNum) / 100);
                 const pctReceita = receitaPrevista > 0 ? (valorEmReais / receitaPrevista) * 100 : 0;
                 const isHighPct = pctReceita > 80;
