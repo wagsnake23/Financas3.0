@@ -432,8 +432,8 @@ export default function Orcamentos() {
         )}
 
         {/* Controles: Seletor de Mês e Novo Planejamento (Apenas Mobile) */}
-        <div className={cn("flex flex-row justify-between items-center gap-2", isMobile ? "mb-3" : "mb-6")}>
-          <div className={cn(isMobile ? "flex-1 w-[calc(100%-48px)]" : "w-full")}>
+        <div className={cn(isMobile ? "grid grid-cols-2 gap-[10px] mb-3" : "flex flex-row justify-between items-center mb-6 gap-2", "w-full")}>
+          <div className={cn(isMobile ? "w-full [&>div]:!w-full [&>div]:!max-w-none [&>div]:!h-[38px] [&>div]:!rounded-xl" : "w-full")}>
             <MonthNavigatorCompact 
               selectedMonth={currentDate}
               onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
@@ -445,9 +445,10 @@ export default function Orcamentos() {
           {isMobile && (
             <Button 
               onClick={handleOpenAdd}
-              className="h-[34px] w-[40px] px-0 shrink-0 rounded-full font-bold text-xs bg-[#1E3A8B] hover:bg-[#1C2F55] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center"
+              className="h-[38px] w-full px-0 rounded-xl font-bold text-[11px] sm:text-xs bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
             >
-              <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
+              <DynamicIcon name="Plus" className="w-[14px] h-[14px]" strokeWidth={3} />
+              Novo Planej.
             </Button>
           )}
         </div>
