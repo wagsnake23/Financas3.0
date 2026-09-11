@@ -28,10 +28,10 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
         setToasts((prev) => [...prev, newToast]);
 
-        // Auto dismiss after 4 seconds
+        const duration = type === "success" ? 1500 : 4000;
         setTimeout(() => {
             removeToast(id);
-        }, 4000);
+        }, duration);
     }, []);
 
     const removeToast = useCallback((id: string) => {
