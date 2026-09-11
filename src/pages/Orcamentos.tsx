@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
+import { MonthNavigator } from "@/components/MonthNavigator";
 import { useOrcamentos } from "@/hooks/useOrcamentos";
 import { startOfMonth, endOfMonth, format, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -428,30 +429,40 @@ export default function Orcamentos() {
                 </p>
               </div>
             </div>
+            <div className="relative flex items-center justify-center w-full shrink-0 mt-2 mb-1 h-8">
+              <MonthNavigator
+                selectedMonth={currentDate}
+                onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
+                onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+                isMobile={isMobile}
+                onBack={() => navigate(-1)}
+                backButtonColor="#1e3a8a"
+              />
+            </div>
           </div>
         )}
 
-        {/* Controles: Seletor de Mês e Novo Planejamento (Apenas Mobile) */}
-        <div className={cn(isMobile ? "grid grid-cols-2 gap-[10px] mb-3" : "flex flex-row justify-between items-center mb-6 gap-2", "w-full")}>
-          <div className={cn(isMobile ? "w-full [&>div]:!w-full [&>div]:!max-w-none [&>div]:!h-[38px] [&>div]:!rounded-xl" : "w-full")}>
-            <MonthNavigatorCompact 
-              selectedMonth={currentDate}
-              onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
-              onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
-              variant="balance"
-              premiumMode={true}
-            />
-          </div>
-          {isMobile && (
+        {/* Controles: Seletor de Mês e Novo Planejamento */}
+        {!isMobile && (
+          <div className="flex flex-row justify-between items-center mb-6 gap-4 w-full">
+            <div className="w-auto [&>div]:!w-[180px] [&>div]:!max-w-none [&>div]:!h-[38px] [&>div]:!rounded-xl">
+              <MonthNavigatorCompact 
+                selectedMonth={currentDate}
+                onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
+                onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+                variant="balance"
+                premiumMode={true}
+              />
+            </div>
             <Button 
               onClick={handleOpenAdd}
-              className="h-[38px] w-full px-0 rounded-xl font-bold text-[11px] sm:text-xs bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              className="h-[38px] w-auto px-5 rounded-xl font-bold text-[13px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
             >
-              <DynamicIcon name="Plus" className="w-[14px] h-[14px]" strokeWidth={3} />
-              Novo Planej.
+              <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
+              Novo Planejamento
             </Button>
-          )}
-        </div>
+          </div>
+        )}
           
 
 
@@ -481,10 +492,22 @@ export default function Orcamentos() {
             <span className={cn("font-semibold text-slate-500 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Disponível</span>
             <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
           </Card>
-          <Card className={cn("rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-2 md:col-span-1", isMobile ? "p-3" : "p-4")}>
-            <span className={cn("font-semibold text-slate-500 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Saldo Planejado</span>
-            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
-          </Card>
+          {!isMobile ? (
+            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-2 md:col-span-1 p-4">
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-xs mb-1">Saldo Planejado</span>
+              <span className={cn("font-bold text-lg", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
+            </Card>
+          ) : (
+            <div className="col-span-2 flex items-center justify-center mt-1">
+              <Button 
+                onClick={handleOpenAdd}
+                className="h-[44px] w-full px-0 rounded-2xl font-black text-sm bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
+                <DynamicIcon name="Plus" className="w-[16px] h-[16px]" strokeWidth={3} />
+                Novo Planejamento
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Lista de Orçamentos Agrupados */}
@@ -563,15 +586,7 @@ export default function Orcamentos() {
         </div>
       </main>
 
-      {/* FAB - Floating Action Button (Apenas Desktop) */}
-      {!isMobile && (
-        <button 
-          onClick={handleOpenAdd}
-          className="fixed bottom-[90px] md:bottom-8 right-4 md:right-8 w-14 h-14 rounded-full bg-[#0556C3] text-white shadow-lg shadow-blue-500/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40"
-        >
-          <DynamicIcon name="Plus" className="w-6 h-6" strokeWidth={3} />
-        </button>
-      )}
+
 
       {/* Modal de Inclusão / Edição */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
