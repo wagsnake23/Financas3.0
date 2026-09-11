@@ -436,21 +436,11 @@ export default function Orcamentos() {
       )}
 
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}>
-        {/* Cabeçalho Mobile */}
+        {/* Cabeçalho Mobile Reformulado */}
         {isMobile && (
-          <div className="flex flex-col gap-2 mb-3">
-            <div className="flex items-start gap-2 mb-1 px-1">
-              <span className="text-[1.4rem] select-none mt-[1px]">🧮</span>
-              <div className="flex flex-col">
-                <h1 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight line-clamp-2" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  Planejamento Mensal
-                </h1>
-                <p className="text-[11px] font-bold text-slate-500 mt-0.5 tracking-wider opacity-80 leading-none">
-                  Planeje e acompanhe seus gastos
-                </p>
-              </div>
-            </div>
-            <div className="relative flex items-center justify-center w-full shrink-0 mt-2 mb-1 h-8">
+          <div className="flex flex-col mb-4">
+            {/* Seletor de Mês */}
+            <div className="relative flex items-center justify-center w-full shrink-0 mb-3 h-8">
               <MonthNavigator
                 selectedMonth={currentDate}
                 onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
@@ -460,6 +450,78 @@ export default function Orcamentos() {
                 backButtonColor="#1e3a8a"
               />
             </div>
+            
+
+
+            {/* Bloco Planejamento do Mês */}
+            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 p-4 mb-4">
+              <h2 className="text-[1.15rem] font-extrabold text-[#0556C3] tracking-[0.3px] leading-tight mb-5 flex items-center gap-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <span className="text-[1.3rem] select-none mt-[1px]">🧮</span> Planejamento do Mês
+              </h2>
+              
+              {(() => {
+                const semPlanejamentoGeral = totalPlanejado <= 0;
+                const pctGeral = semPlanejamentoGeral ? 0 : (totalRealizado / totalPlanejado) * 100;
+                const pctGeralClamped = Math.min(100, Math.max(0, pctGeral));
+                const excedidoGeral = totalRealizado > totalPlanejado;
+                const atingidoGeral = totalRealizado === totalPlanejado && !semPlanejamentoGeral;
+                const restanteGeral = totalPlanejado - totalRealizado;
+
+                let progressColorGeral = "bg-emerald-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                if (semPlanejamentoGeral) progressColorGeral = "bg-transparent";
+                else if (excedidoGeral) progressColorGeral = "bg-red-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                else if (atingidoGeral) progressColorGeral = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+
+                return (
+                  <div className="flex flex-col gap-2">
+                    {/* Valores Superiores */}
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-semibold text-slate-500 text-[11px]">Utilizado</span>
+                        <span className="font-bold text-slate-800 text-[15px]">{formatCurrency(totalRealizado)}</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-0.5">
+                        <span className="font-semibold text-slate-500 text-[11px]">Planejado</span>
+                        <span className="font-bold text-slate-800 text-[15px]">{formatCurrency(totalPlanejado)}</span>
+                      </div>
+                    </div>
+
+                    {/* Barra de Progresso */}
+                    <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] mt-1">
+                      <div 
+                        className={cn("h-full rounded-full transition-all duration-500", progressColorGeral)}
+                        style={{ width: semPlanejamentoGeral ? '0%' : `${pctGeralClamped}%` }}
+                      />
+                    </div>
+                    
+                    {/* Status Inferior */}
+                    <div className="flex justify-between items-center mt-0.5">
+                      <span className="font-bold text-slate-500 text-[12px]">
+                        {semPlanejamentoGeral ? "Sem planejamento definido" : `${pctGeral.toFixed(0)}% utilizado`}
+                      </span>
+                      
+                      {!semPlanejamentoGeral && (
+                        <span className={cn(
+                          "text-[12px] font-bold",
+                          excedidoGeral ? "text-red-600" : atingidoGeral ? "text-[#0556C3]" : "text-emerald-600"
+                        )}>
+                          {excedidoGeral ? `Excedido em ${formatCurrency(Math.abs(restanteGeral))}` : atingidoGeral ? "Atingido" : `Restam ${formatCurrency(restanteGeral)}`}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Botão Novo Planejamento Mobile */}
+            <Button 
+              onClick={handleOpenAdd}
+              className="h-[40px] w-full px-0 rounded-[14px] font-medium text-[15px] bg-[#0556C3] hover:bg-[#044299] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={2.5} />
+              Novo Planejamento
+            </Button>
           </div>
         )}
 
@@ -475,52 +537,38 @@ export default function Orcamentos() {
             />
           </div>
         )}
-          
 
-
-        {/* Card Resumo Superior */}
-        <div className={cn("grid", isMobile ? "grid-cols-2 gap-2 mb-4" : "grid-cols-2 md:grid-cols-5 gap-3 mb-6")}>
-          <Card className={cn("rounded-2xl bg-gradient-to-br from-blue-50 to-white shadow-sm border-blue-100 flex flex-col justify-center", isMobile ? "p-3" : "p-4")}>
-            <span className={cn("font-semibold text-blue-700 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Receita Prevista</span>
-            <span className={cn("font-bold text-slate-800", isMobile ? "text-base" : "text-lg")}>{formatCurrency(receitaPrevista)}</span>
-          </Card>
-          <Card className={cn(
-            "rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
-            isMobile ? "p-3" : "p-4",
-            planejadoUltrapassaReceita ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
-          )}>
-            <span className={cn("font-semibold uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-500")}>Total Planejado</span>
-            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
-          </Card>
-          <Card className={cn(
-            "rounded-2xl shadow-sm flex flex-col justify-center transition-colors",
-            isMobile ? "p-3" : "p-4",
-            realizadoUltrapassaPlanejado ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
-          )}>
-            <span className={cn("font-semibold uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-500")}>Total Realizado</span>
-            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalRealizado)}</span>
-          </Card>
-          <Card className={cn("rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center", isMobile ? "p-3" : "p-4")}>
-            <span className={cn("font-semibold text-slate-500 uppercase tracking-wider", isMobile ? "text-[10px] mb-0.5" : "text-xs mb-1")}>Disponível</span>
-            <span className={cn("font-bold", isMobile ? "text-base" : "text-lg", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
-          </Card>
-          {!isMobile ? (
-            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-2 md:col-span-1 p-4">
+        {/* Card Resumo Superior (Apenas Desktop) */}
+        {!isMobile && (
+          <div className="grid grid-cols-5 gap-3 mb-6">
+            <Card className="rounded-2xl bg-gradient-to-br from-blue-50 to-white shadow-sm border-blue-100 flex flex-col justify-center p-4">
+              <span className="font-semibold text-blue-700 uppercase tracking-wider text-xs mb-1">Receita Prevista</span>
+              <span className="font-bold text-slate-800 text-lg">{formatCurrency(receitaPrevista)}</span>
+            </Card>
+            <Card className={cn(
+              "rounded-2xl shadow-sm flex flex-col justify-center transition-colors p-4",
+              planejadoUltrapassaReceita ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
+            )}>
+              <span className={cn("font-semibold uppercase tracking-wider text-xs mb-1", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-500")}>Total Planejado</span>
+              <span className={cn("font-bold text-lg", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
+            </Card>
+            <Card className={cn(
+              "rounded-2xl shadow-sm flex flex-col justify-center transition-colors p-4",
+              realizadoUltrapassaPlanejado ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
+            )}>
+              <span className={cn("font-semibold uppercase tracking-wider text-xs mb-1", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-500")}>Total Realizado</span>
+              <span className={cn("font-bold text-lg", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalRealizado)}</span>
+            </Card>
+            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center p-4">
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-xs mb-1">Disponível</span>
+              <span className={cn("font-bold text-lg", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
+            </Card>
+            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-1 p-4">
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-xs mb-1">Saldo Planejado</span>
               <span className={cn("font-bold text-lg", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
             </Card>
-          ) : (
-            <div className="col-span-2 flex items-center justify-center mt-1">
-              <Button 
-                onClick={handleOpenAdd}
-                className="h-[44px] w-full px-0 rounded-2xl font-semibold text-[17px] bg-[#0556C3] hover:bg-[#044299] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-2"
-              >
-                <DynamicIcon name="Plus" className="w-[18px] h-[18px]" strokeWidth={3} />
-                Novo Planejamento
-              </Button>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Lista de Orçamentos Agrupados */}
         <div className={cn("flex flex-col", isMobile ? "gap-4 pb-8" : "gap-6 pb-24")}>
