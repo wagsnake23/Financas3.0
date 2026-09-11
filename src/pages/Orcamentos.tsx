@@ -754,7 +754,7 @@ export default function Orcamentos() {
                               <div className="flex flex-col gap-1.5 w-full">
                                 {/* Header da linha */}
                                 <div className="flex items-center gap-3 w-full mt-0.5">
-                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[28px] h-[28px] shrink-0" style={{ color: item.subCat?.cor }} />
+                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
                                   <div className="flex flex-col flex-1 min-w-0 gap-[4px]">
                                     <div className="flex justify-between items-center w-full">
                                       <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
