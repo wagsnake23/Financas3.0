@@ -258,12 +258,15 @@ export default function Orcamentos() {
     const groups: Record<string, { parent: AppCategory; items: typeof calculatedOrcamentos }> = {};
     
     calculatedOrcamentos.forEach(item => {
-      const p = item.parentCat;
-      if (p) {
-        if (!groups[p.id]) {
-          groups[p.id] = { parent: p, items: [] };
+      // Exibir apenas se houver planejamento ou gasto
+      if (item.absoluto > 0 || item.gasto > 0) {
+        const p = item.parentCat;
+        if (p) {
+          if (!groups[p.id]) {
+            groups[p.id] = { parent: p, items: [] };
+          }
+          groups[p.id].items.push(item);
         }
-        groups[p.id].items.push(item);
       }
     });
 
