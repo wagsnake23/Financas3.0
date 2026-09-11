@@ -470,54 +470,59 @@ export default function Orcamentos() {
               </div>
               
               {(() => {
-                const semPlanejamentoGeral = totalPlanejado <= 0;
-                const pctGeral = semPlanejamentoGeral ? 0 : (totalRealizado / totalPlanejado) * 100;
-                const pctGeralClamped = Math.min(100, Math.max(0, pctGeral));
-                const excedidoGeral = totalRealizado > totalPlanejado;
-                const atingidoGeral = totalRealizado === totalPlanejado && !semPlanejamentoGeral;
-                const restanteGeral = totalPlanejado - totalRealizado;
-
-                let progressColorGeral = "bg-emerald-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                if (semPlanejamentoGeral) progressColorGeral = "bg-transparent";
-                else if (excedidoGeral) progressColorGeral = "bg-red-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                else if (atingidoGeral) progressColorGeral = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
+                const saldoNaoPlanejado = Math.max(0, receitaPrevista - totalPlanejado);
+                
+                const pctDispPlan = receitaPrevista > 0 ? Math.round((disponivelPlanejamento / receitaPrevista) * 100) : 0;
+                const pctNaoPlan = receitaPrevista > 0 ? Math.round((saldoNaoPlanejado / receitaPrevista) * 100) : 0;
+                
+                const isExcedidoReceita = totalRealizado > receitaPrevista;
+                const pctVermelhoVisual = isExcedidoReceita ? 15 : 0; 
+                const pctAzulVisual = isExcedidoReceita ? 85 : (receitaPrevista > 0 ? Math.min(100, (totalRealizado / receitaPrevista) * 100) : 0);
+                const pctRoxoVisual = isExcedidoReceita ? 0 : (receitaPrevista > 0 ? Math.min(100 - pctAzulVisual, (disponivelPlanejamento / receitaPrevista) * 100) : 0);
 
                 return (
                   <div className="flex flex-col gap-1.5">
                     {/* Valores Superiores */}
                     <div className="flex justify-between items-start mb-0.5">
                       <div className="flex flex-col gap-0">
-                        <span className="font-semibold text-slate-500 text-[11px] leading-tight">Utilizado</span>
-                        <span className="font-bold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
+                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Utilizado</span>
+                        <span className="font-bold text-[#0556C3] text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
                       </div>
                       <div className="flex flex-col items-end gap-0">
-                        <span className="font-semibold text-slate-500 text-[11px] leading-tight">Planejado</span>
-                        <span className="font-semibold text-slate-800 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalPlanejado)}</span>
+                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Planejado</span>
+                        <span className="font-bold text-purple-600 text-[15px] leading-tight mt-[1px]">{formatCurrency(totalPlanejado)}</span>
                       </div>
                     </div>
 
-                    {/* Barra de Progresso */}
-                    <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] mt-0.5">
+                    {/* Barra de Progresso Inteligente */}
+                    <div className="flex w-full bg-slate-200 rounded-full h-[12px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] mt-0.5 mb-1.5">
                       <div 
-                        className={cn("h-full rounded-full transition-all duration-500", progressColorGeral)}
-                        style={{ width: semPlanejamentoGeral ? '0%' : `${pctGeralClamped}%` }}
+                        className="h-full bg-[#0556C3]/90 transition-all duration-500"
+                        style={{ width: `${pctAzulVisual}%` }}
                       />
+                      <div 
+                        className="h-full bg-emerald-500/90 transition-all duration-500"
+                        style={{ width: `${pctRoxoVisual}%` }}
+                      />
+                      {isExcedidoReceita && (
+                        <div 
+                          className="h-full bg-red-500/90 transition-all duration-500"
+                          style={{ width: `${pctVermelhoVisual}%` }}
+                        />
+                      )}
                     </div>
                     
                     {/* Status Inferior */}
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-slate-500 text-[12px]">
-                        {semPlanejamentoGeral ? "Sem planejamento definido" : `${pctGeral.toFixed(0)}% utilizado`}
-                      </span>
-                      
-                      {!semPlanejamentoGeral && (
-                        <span className={cn(
-                          "text-[12px] font-bold",
-                          excedidoGeral ? "text-red-600" : atingidoGeral ? "text-[#0556C3]" : "text-emerald-600"
-                        )}>
-                          {excedidoGeral ? `Excedido em ${formatCurrency(Math.abs(restanteGeral))}` : atingidoGeral ? "Atingido" : `${formatCurrency(restanteGeral)} disponíveis`}
-                        </span>
-                      )}
+                    <div className="flex justify-between items-start mt-0.5">
+                      <div className="flex flex-col gap-0">
+                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Disponível</span>
+                        <span className="font-bold text-emerald-600 text-[13px] leading-tight mt-[1px]">{formatCurrency(disponivelPlanejamento)}</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-0">
+                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Não Planejado</span>
+                        <span className="font-bold text-slate-500 text-[13px] leading-tight mt-[1px]">{formatCurrency(saldoNaoPlanejado)}</span>
+                      </div>
                     </div>
 
                     {/* Botão Novo Planejamento Mobile */}
