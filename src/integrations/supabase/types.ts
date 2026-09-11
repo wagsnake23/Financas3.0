@@ -599,6 +599,50 @@ export type Database = {
           },
         ]
       }
+      orcamentos: {
+        Row: {
+          id: string
+          user_id: string
+          categoria_id: string
+          mes_ano: string
+          tipo_planejamento: string
+          valor_planejado: number
+          percentual_planejado: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          categoria_id: string
+          mes_ano: string
+          tipo_planejamento?: string
+          valor_planejado?: number
+          percentual_planejado?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          categoria_id?: string
+          mes_ano?: string
+          tipo_planejamento?: string
+          valor_planejado?: number
+          percentual_planejado?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orcamentos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

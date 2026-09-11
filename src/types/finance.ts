@@ -76,3 +76,16 @@ export interface Meta {
   created_at?: string;
   updated_at?: string;
 }
+
+// NOVO: Interface para Orçamento Mensal
+export interface Orcamento {
+  id: string;
+  user_id: string;
+  categoria_id: string; // Deve ser uma subcategoria
+  mes_ano: string; // Formato YYYY-MM
+  tipo_planejamento: "valor" | "percentual";
+  valor_planejado: number;
+  percentual_planejado: number;
+  created_at?: string;
+  updated_at?: string;
+}

@@ -20,6 +20,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import ShoppingList from "./pages/ShoppingList";
 import Metas from "./pages/Metas";
+import Orcamentos from "./pages/Orcamentos";
 import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/categorias" element={<Categories />} />
                 <Route path="/investimentos" element={<Investments />} />
                 <Route path="/metas" element={<Metas />} />
+                <Route path="/orcamentos" element={<Orcamentos />} />
                 <Route path="/receitas" element={<Receitas />} />
                 <Route path="/despesas" element={<Despesas />} />
                 <Route path="/lancamentos" element={<Lancamentos />} />
