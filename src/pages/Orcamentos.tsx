@@ -307,8 +307,16 @@ export default function Orcamentos() {
 
   const formSubOptions = useMemo(() => {
     if (formParentId === UNSELECTED_VALUE) return [];
-    return subCategories.filter(s => s.parent_id === formParentId);
-  }, [formParentId, subCategories]);
+    const subs = subCategories.filter(s => s.parent_id === formParentId);
+    if (editingItem) {
+      return subs.filter(s => s.id === editingItem.categoria_id);
+    }
+    return subs.filter(sub => {
+      const orc = orcamentos.find(o => o.categoria_id === sub.id);
+      const temPlanejamento = orc && (orc.tipo_planejamento === "valor" ? orc.valor_planejado > 0 : (orc.percentual_planejado || 0) > 0);
+      return !temPlanejamento;
+    });
+  }, [formParentId, subCategories, editingItem, orcamentos]);
 
   const handleOpenEdit = (item: typeof calculatedOrcamentos[0]) => {
     setEditingItem(item);
@@ -339,8 +347,9 @@ export default function Orcamentos() {
     }
 
     try {
+      const existingOrc = orcamentos.find(o => o.categoria_id === formSubId);
       await saveOrcamento({
-        id: editingItem?.id,
+        id: editingItem?.id || existingOrc?.id,
         user_id: user?.id || "",
         categoria_id: formSubId,
         mes_ano: mesAno,
@@ -732,25 +741,36 @@ export default function Orcamentos() {
             {/* Subcategoria */}
             <div className="space-y-1.5">
               <Label className="text-[15px] font-medium text-slate-600 ml-1">Subcategoria (alvo)</Label>
-              <Select 
-                value={formSubId} 
-                onValueChange={setFormSubId}
-                disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
-              >
-                <SelectTrigger className="h-[50px] md:h-[53px] text-[15px] rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800">
-                  <SelectValue placeholder="Selecione a subcategoria..." />
-                </SelectTrigger>
-                <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
-                  {formSubOptions.map(cat => (
-                    <SelectItem key={cat.id} value={cat.id} className="rounded-lg py-2.5">
-                      <div className="flex items-center gap-2">
-                        <DynamicIcon name={cat.icone} className="w-4 h-4" style={{ color: cat.cor }} />
-                        <span className="font-semibold text-slate-700">{cat.nome}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem ? (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                  <p className="text-sm font-medium text-amber-800 leading-tight">
+                    Nenhuma subcategoria disponível.
+                  </p>
+                  <p className="text-[11.5px] font-medium text-amber-700/80 mt-1">
+                    Todas as subcategorias desta categoria já possuem planejamento para este mês.
+                  </p>
+                </div>
+              ) : (
+                <Select 
+                  value={formSubId} 
+                  onValueChange={setFormSubId}
+                  disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
+                >
+                  <SelectTrigger className="h-[50px] md:h-[53px] text-[15px] rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800">
+                    <SelectValue placeholder="Selecione a subcategoria..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[250px] rounded-xl border-slate-100 shadow-xl">
+                    {formSubOptions.map(cat => (
+                      <SelectItem key={cat.id} value={cat.id} className="rounded-lg py-2.5">
+                        <div className="flex items-center gap-2">
+                          <DynamicIcon name={cat.icone} className="w-4 h-4" style={{ color: cat.cor }} />
+                          <span className="font-semibold text-slate-700">{cat.nome}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             {/* Tipo de Planejamento */}
@@ -818,9 +838,9 @@ export default function Orcamentos() {
               )}
               <Button
                 type="button"
-                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal"
+                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal disabled:opacity-50 disabled:pointer-events-none"
                 style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
-                disabled={isSaving}
+                disabled={isSaving || (formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem)}
                 onClick={handleSave}
               >
                 {isSaving ? "Salvando..." : "Salvar"}
