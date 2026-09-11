@@ -397,13 +397,13 @@ export default function Orcamentos() {
               </div>
             </div>
 
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-slate-800 transition-colors bg-transparent border-none outline-none focus:outline-none shadow-none mt-2 pr-4"
+            <Button 
+              onClick={handleOpenAdd}
+              className="h-[40px] px-5 rounded-xl font-semibold text-[17px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5 mt-1"
             >
-              <DynamicIcon name="ArrowLeft" className="h-[18px] w-[18px]" strokeWidth={2.5} />
-              Voltar
-            </button>
+              <DynamicIcon name="Plus" className="w-5 h-5" strokeWidth={3} />
+              Novo Planejamento
+            </Button>
           </div>
         </div>
       )}
@@ -436,28 +436,16 @@ export default function Orcamentos() {
           </div>
         )}
 
-        {/* Controles: Seletor de Mês e Novo Planejamento (Apenas Desktop) */}
+        {/* Controles: Seletor de Mês (Apenas Desktop) */}
         {!isMobile && (
-          <div className="relative flex flex-row justify-between items-center w-full shrink-0 -mt-[63px] mb-4 h-10">
-            <div className="w-[180px]" /> {/* Spacer to balance center */}
-            <div className="flex-1 flex justify-center">
-              <MonthNavigator
-                selectedMonth={currentDate}
-                onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
-                onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
-                isMobile={false}
-                backButtonColor="#1e3a8a"
-              />
-            </div>
-            <div className="w-[180px] flex justify-end">
-              <Button 
-                onClick={handleOpenAdd}
-                className="h-[40px] px-5 rounded-xl font-bold text-[13px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
-              >
-                <DynamicIcon name="Plus" className="w-4 h-4" strokeWidth={3} />
-                Novo Planejamento
-              </Button>
-            </div>
+          <div className="relative flex flex-row justify-center items-center w-full shrink-0 -mt-[63px] mb-4 h-10">
+            <MonthNavigator
+              selectedMonth={currentDate}
+              onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
+              onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+              isMobile={false}
+              backButtonColor="#1e3a8a"
+            />
           </div>
         )}
           
