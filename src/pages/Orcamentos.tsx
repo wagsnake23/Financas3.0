@@ -551,62 +551,86 @@ export default function Orcamentos() {
         {/* Card Resumo Superior (Apenas Desktop) */}
         {!isMobile && (
           <div className="grid grid-cols-5 gap-3 mb-6">
-            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
-              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-blue-500/10 flex items-center justify-center">
-                <DynamicIcon name="TrendingUp" className="w-[16px] h-[16px] text-blue-600" strokeWidth={2.5} />
+            <Card 
+              className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
+              style={{ background: "linear-gradient(180deg, rgba(59, 130, 246, 0.04) 0%, rgba(59, 130, 246, 0) 40%), #ffffff" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-blue-500" />
+              <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-blue-500/10 flex items-center justify-center">
+                <DynamicIcon name="TrendingUp" className="w-[18px] h-[18px] text-blue-600" strokeWidth={2.5} />
               </div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Receita Prevista</span>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Receita Prevista</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(receitaPrevista)}</span>
-              <div className="flex justify-end mt-3 h-[11px]"></div>
+              <div className="mt-1.5">
+                <span className="text-[12px] font-semibold text-blue-600/90 leading-none">
+                  100% da receita
+                </span>
+              </div>
             </Card>
 
-            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
-              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-purple-500/10 flex items-center justify-center">
-                <DynamicIcon name="Target" className="w-[16px] h-[16px] text-purple-600" strokeWidth={2.5} />
+            <Card 
+              className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
+              style={{ background: "linear-gradient(180deg, rgba(168, 85, 247, 0.04) 0%, rgba(168, 85, 247, 0) 40%), #ffffff" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-purple-500" />
+              <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-purple-500/10 flex items-center justify-center">
+                <DynamicIcon name="Target" className="w-[18px] h-[18px] text-purple-600" strokeWidth={2.5} />
               </div>
-              <span className={cn("font-semibold uppercase tracking-wider text-[11px] mb-1.5 pr-10", planejadoUltrapassaReceita ? "text-red-500" : "text-slate-500")}>Total Planejado</span>
+              <span className={cn("font-semibold uppercase tracking-wider text-[11px] mb-1 pr-10", planejadoUltrapassaReceita ? "text-red-500" : "text-slate-500")}>Total Planejado</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", planejadoUltrapassaReceita ? "text-red-600" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
-              <div className="flex justify-end mt-3">
-                <span className={cn("text-[11px] font-semibold leading-none", planejadoUltrapassaReceita ? "text-red-500/90" : "text-purple-600/90")}>
+              <div className="mt-1.5">
+                <span className={cn("text-[12px] font-semibold leading-none", planejadoUltrapassaReceita ? "text-red-500/90" : "text-purple-600/90")}>
                   {receitaPrevista > 0 ? Math.round((totalPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
             </Card>
 
-            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
-              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-red-500/10 flex items-center justify-center">
-                <DynamicIcon name="Receipt" className="w-[16px] h-[16px] text-red-600" strokeWidth={2.5} />
+            <Card 
+              className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
+              style={{ background: "linear-gradient(180deg, rgba(239, 68, 68, 0.04) 0%, rgba(239, 68, 68, 0) 40%), #ffffff" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-red-500" />
+              <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-red-500/10 flex items-center justify-center">
+                <DynamicIcon name="Receipt" className="w-[18px] h-[18px] text-red-600" strokeWidth={2.5} />
               </div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Total Gasto</span>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Total Gasto</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(totalRealizado)}</span>
-              <div className="flex justify-end mt-3">
-                <span className="text-[11px] font-semibold leading-none text-red-600/90">
+              <div className="mt-1.5">
+                <span className="text-[12px] font-semibold text-red-600/90 leading-none">
                   {receitaPrevista > 0 ? Math.round((totalRealizado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
             </Card>
 
-            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
-              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-emerald-500/10 flex items-center justify-center">
-                <DynamicIcon name="Wallet" className="w-[16px] h-[16px] text-emerald-600" strokeWidth={2.5} />
+            <Card 
+              className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
+              style={{ background: "linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, rgba(16, 185, 129, 0) 40%), #ffffff" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-emerald-500" />
+              <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-emerald-500/10 flex items-center justify-center">
+                <DynamicIcon name="Wallet" className="w-[18px] h-[18px] text-emerald-600" strokeWidth={2.5} />
               </div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Saldo Disponível</span>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Disponível</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", disponivel < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(disponivel)}</span>
-              <div className="flex justify-end mt-3">
-                <span className={cn("text-[11px] font-semibold leading-none", disponivel < 0 ? "text-red-500/90" : "text-emerald-600/90")}>
+              <div className="mt-1.5">
+                <span className={cn("text-[12px] font-semibold leading-none", disponivel < 0 ? "text-red-500/90" : "text-emerald-600/90")}>
                   {receitaPrevista > 0 ? Math.round((disponivel / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
             </Card>
 
-            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px] col-span-1">
-              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-amber-500/10 flex items-center justify-center">
-                <DynamicIcon name="Landmark" className="w-[16px] h-[16px] text-amber-600" strokeWidth={2.5} />
+            <Card 
+              className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px] col-span-1"
+              style={{ background: "linear-gradient(180deg, rgba(245, 158, 11, 0.04) 0%, rgba(245, 158, 11, 0) 40%), #ffffff" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[3px] bg-amber-500" />
+              <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-amber-500/10 flex items-center justify-center">
+                <DynamicIcon name="Landmark" className="w-[18px] h-[18px] text-amber-600" strokeWidth={2.5} />
               </div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Saldo Não Planejado</span>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Não Planejado</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
-              <div className="flex justify-end mt-3">
-                <span className={cn("text-[11px] font-semibold leading-none", saldoPlanejado < 0 ? "text-red-500/90" : "text-amber-600/90")}>
+              <div className="mt-1.5">
+                <span className={cn("text-[12px] font-semibold leading-none", saldoPlanejado < 0 ? "text-red-500/90" : "text-amber-600/90")}>
                   {receitaPrevista > 0 ? Math.round((saldoPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
