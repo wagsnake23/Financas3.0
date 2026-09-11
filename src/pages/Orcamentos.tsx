@@ -395,10 +395,7 @@ export default function Orcamentos() {
 
   return (
     <div 
-      className={cn("flex flex-col min-h-screen relative", !isMobile ? "global-bg pt-[72px]" : "pt-0")}
-      style={isMobile ? {
-        background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF calc(100% - 120px), #FCFCFE 100%)"
-      } : undefined}
+      className={cn("flex flex-col min-h-screen relative", !isMobile ? "global-bg pt-[72px]" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")}
     >
       
       {/* HEADER PREMIUM — FINTECH STYLE (ORÇAMENTOS) */}
@@ -435,7 +432,12 @@ export default function Orcamentos() {
         </div>
       )}
 
-      <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}>
+      <main 
+        className={cn("container-app flex-grow", isMobile ? "pt-0 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}
+        style={isMobile ? {
+          background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF calc(100% - 120px), #FCFCFE 100%)"
+        } : undefined}
+      >
         {/* Cabeçalho Mobile Reformulado */}
         {isMobile && (
           <div className="flex flex-col">
@@ -609,13 +611,8 @@ export default function Orcamentos() {
                               <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                             </div>
                             <div className="flex flex-col">
-                              <div className="flex items-center gap-2">
-                                <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{group.parent.nome}</span>
-                                <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                                  {group.ativosCount} ativos
-                                </span>
-                              </div>
-                              <span className={cn("font-medium text-slate-400 mt-0.5", isMobile ? "text-[10px]" : "text-[11px]")}>
+                              <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{group.parent.nome}</span>
+                              <span className={cn("font-semibold text-slate-400 mt-0.5", isMobile ? "text-[11px]" : "text-[12px]")}>
                                 {semPlanejamento ? "Planejamento não definido" : `Planejado: ${formatCurrency(group.totalPlanejado)}`}
                               </span>
                             </div>
@@ -637,9 +634,9 @@ export default function Orcamentos() {
                           </div>
                           <div className="flex justify-between items-center text-xs mt-0.5">
                             {semPlanejamento ? (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>Sem planejamento definido</span>
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>Sem planejamento definido <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
                             ) : (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado</span>
+                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
                             )}
                             
                             {semPlanejamento ? null : excedido ? (
