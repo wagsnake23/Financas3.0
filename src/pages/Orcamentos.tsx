@@ -460,10 +460,10 @@ export default function Orcamentos() {
               <div className="flex items-start gap-1.5 mb-2.5">
                 <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
                 <div className="flex flex-col">
-                  <h2 className="text-[1.05rem] font-semibold text-[#0556C3] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <h2 className="text-[1.05rem] font-bold text-[#0556C3] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Planejamento Mensal
                   </h2>
-                  <span className="text-[13px] font-medium text-slate-500 mt-[2px] leading-tight">
+                  <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
                     {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
                   </span>
                 </div>
