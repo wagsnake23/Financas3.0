@@ -551,37 +551,71 @@ export default function Orcamentos() {
         {/* Card Resumo Superior (Apenas Desktop) */}
         {!isMobile && (
           <div className="grid grid-cols-5 gap-3 mb-6">
-            <Card className="rounded-2xl bg-gradient-to-br from-blue-50 to-white shadow-sm border-blue-100 flex flex-col justify-center p-4">
-              <span className="font-semibold text-blue-700 uppercase tracking-wider text-xs mb-1">Receita Prevista</span>
-              <span className="font-bold text-slate-800 text-lg">{formatCurrency(receitaPrevista)}</span>
+            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
+              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-blue-500/10 flex items-center justify-center">
+                <DynamicIcon name="TrendingUp" className="w-[16px] h-[16px] text-blue-600" strokeWidth={2.5} />
+              </div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Receita Prevista</span>
+              <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(receitaPrevista)}</span>
+              <div className="flex justify-end mt-3 h-[11px]"></div>
             </Card>
-            <Card className={cn(
-              "rounded-2xl shadow-sm flex flex-col justify-center transition-colors p-4",
-              planejadoUltrapassaReceita ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
-            )}>
-              <span className={cn("font-semibold uppercase tracking-wider text-xs mb-1", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-500")}>Total Planejado</span>
-              <span className={cn("font-bold text-lg", planejadoUltrapassaReceita ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
+
+            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
+              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-purple-500/10 flex items-center justify-center">
+                <DynamicIcon name="Target" className="w-[16px] h-[16px] text-purple-600" strokeWidth={2.5} />
+              </div>
+              <span className={cn("font-semibold uppercase tracking-wider text-[11px] mb-1.5 pr-10", planejadoUltrapassaReceita ? "text-red-500" : "text-slate-500")}>Total Planejado</span>
+              <span className={cn("font-bold text-[1.15rem] leading-none", planejadoUltrapassaReceita ? "text-red-600" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
+              <div className="flex justify-end mt-3">
+                <span className={cn("text-[11px] font-semibold leading-none", planejadoUltrapassaReceita ? "text-red-500/90" : "text-purple-600/90")}>
+                  {receitaPrevista > 0 ? Math.round((totalPlanejado / receitaPrevista) * 100) : 0}% da receita
+                </span>
+              </div>
             </Card>
-            <Card className={cn(
-              "rounded-2xl shadow-sm flex flex-col justify-center transition-colors p-4",
-              realizadoUltrapassaPlanejado ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
-            )}>
-              <span className={cn("font-semibold uppercase tracking-wider text-xs mb-1", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-500")}>Total Realizado</span>
-              <span className={cn("font-bold text-lg", realizadoUltrapassaPlanejado ? "text-red-700" : "text-slate-800")}>{formatCurrency(totalRealizado)}</span>
+
+            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
+              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-red-500/10 flex items-center justify-center">
+                <DynamicIcon name="Receipt" className="w-[16px] h-[16px] text-red-600" strokeWidth={2.5} />
+              </div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Total Gasto</span>
+              <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(totalRealizado)}</span>
+              <div className="flex justify-end mt-3">
+                <span className="text-[11px] font-semibold leading-none text-red-600/90">
+                  {receitaPrevista > 0 ? Math.round((totalRealizado / receitaPrevista) * 100) : 0}% da receita
+                </span>
+              </div>
             </Card>
-            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center p-4">
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-xs mb-1">Disponível</span>
-              <span className={cn("font-bold text-lg", disponivel < 0 ? "text-red-600" : "text-emerald-600")}>{formatCurrency(disponivel)}</span>
+
+            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px]">
+              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-emerald-500/10 flex items-center justify-center">
+                <DynamicIcon name="Wallet" className="w-[16px] h-[16px] text-emerald-600" strokeWidth={2.5} />
+              </div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Saldo Disponível</span>
+              <span className={cn("font-bold text-[1.15rem] leading-none", disponivel < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(disponivel)}</span>
+              <div className="flex justify-end mt-3">
+                <span className={cn("text-[11px] font-semibold leading-none", disponivel < 0 ? "text-red-500/90" : "text-emerald-600/90")}>
+                  {receitaPrevista > 0 ? Math.round((disponivel / receitaPrevista) * 100) : 0}% da receita
+                </span>
+              </div>
             </Card>
-            <Card className="rounded-2xl bg-white shadow-sm border-slate-100 flex flex-col justify-center col-span-1 p-4">
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-xs mb-1">Saldo Planejado</span>
-              <span className={cn("font-bold text-lg", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
+
+            <Card className="rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col p-4 relative min-h-[105px] col-span-1">
+              <div className="absolute top-3 right-3 w-[32px] h-[32px] rounded-full bg-amber-500/10 flex items-center justify-center">
+                <DynamicIcon name="Landmark" className="w-[16px] h-[16px] text-amber-600" strokeWidth={2.5} />
+              </div>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1.5 pr-10">Saldo Não Planejado</span>
+              <span className={cn("font-bold text-[1.15rem] leading-none", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
+              <div className="flex justify-end mt-3">
+                <span className={cn("text-[11px] font-semibold leading-none", saldoPlanejado < 0 ? "text-red-500/90" : "text-amber-600/90")}>
+                  {receitaPrevista > 0 ? Math.round((saldoPlanejado / receitaPrevista) * 100) : 0}% da receita
+                </span>
+              </div>
             </Card>
           </div>
         )}
 
         {/* Lista de Orçamentos Agrupados */}
-        <div className={cn("flex flex-col", isMobile ? "gap-4 pb-8" : "gap-6 pb-24")}>
+        <div className={cn("flex flex-col", isMobile ? "gap-4 pb-0" : "gap-6 pb-24")}>
           {groupedOrcamentos.length === 0 ? (
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
@@ -1006,7 +1040,11 @@ export default function Orcamentos() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {!isMobile && <Footer isMobile={isMobile} user={user} />}
+      <Footer
+        isMobile={isMobile}
+        user={user}
+        className={cn(isMobile ? "relative w-full mt-2 mb-[env(safe-area-inset-bottom,16px)] pt-2 pb-2 z-20 !bg-transparent" : "mt-8")}
+      />
     </div>
   );
 }
