@@ -546,12 +546,12 @@ export default function Orcamentos() {
                                 </span>
                               </div>
                               <span className={cn("font-medium text-slate-400 mt-0.5", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                Planejado: {formatCurrency(group.totalPlanejado)}
+                                {semPlanejamento ? "Planejamento não definido" : `Planejado: ${formatCurrency(group.totalPlanejado)}`}
                               </span>
                             </div>
                           </div>
                           <div className="flex flex-col items-end mr-2">
-                            <span className={cn("font-bold", excedido ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
+                            <span className={cn("font-bold", excedido && !semPlanejamento ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
                               {formatCurrency(group.totalGasto)}
                             </span>
                             <span className={cn("font-bold text-slate-400 uppercase tracking-wider mt-0.5", isMobile ? "text-[9px]" : "text-[10px]")}>Gasto</span>
@@ -572,13 +572,13 @@ export default function Orcamentos() {
                               <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{pctGasto.toFixed(0)}% utilizado</span>
                             )}
                             
-                            {excedido ? (
+                            {semPlanejamento ? null : excedido ? (
                               <span className={cn("bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : atingido ? (
                               <span className={cn("font-semibold text-[#0556C3]", isMobile ? "text-[10px]" : "text-xs")}>Planejamento atingido</span>
-                            ) : semPlanejamento ? null : (
+                            ) : (
                               <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
                             )}
                           </div>
@@ -621,37 +621,40 @@ export default function Orcamentos() {
                                   </span>
                                 </div>
                                 <div className="flex items-baseline gap-1">
-                                  <span className={cn("font-bold text-slate-800", isMobile ? "text-[12px]" : "text-[13px]")}>
+                                  <span className={cn("font-bold", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800", isMobile ? "text-[12px]" : "text-[13px]")}>
                                     {formatCurrency(item.gasto)}
                                   </span>
                                   <span className={cn("font-bold text-slate-400", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                    / {formatCurrency(item.absoluto)}
+                                    {semPlanejamentoItem ? " / Não definido" : ` / ${formatCurrency(item.absoluto)}`}
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <div className="flex-1 bg-slate-200/70 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]">
-                                  <div 
-                                    className={cn("h-full rounded-full transition-all", itemProgressColor)}
-                                    style={{ width: `${itemPctClamped}%` }}
-                                  />
+                              <div className="flex flex-col w-full gap-0.5">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-1 bg-slate-200/70 rounded-full h-1.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]">
+                                    <div 
+                                      className={cn("h-full rounded-full transition-all", itemProgressColor)}
+                                      style={{ width: `${itemPctClamped}%` }}
+                                    />
+                                  </div>
+                                  {!semPlanejamentoItem && (
+                                    itemExcedido ? (
+                                      <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1 rounded">
+                                        Excedido {formatCurrency(Math.abs(itemRestante))}
+                                      </span>
+                                    ) : itemAtingido ? (
+                                      <span className="text-[9px] font-bold text-[#0556C3] bg-blue-50 px-1 rounded">
+                                        Atingido
+                                      </span>
+                                    ) : (
+                                      <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">
+                                        Restam {formatCurrency(itemRestante)}
+                                      </span>
+                                    )
+                                  )}
                                 </div>
-                                {itemExcedido ? (
-                                  <span className="text-[9px] font-bold text-red-600 bg-red-50 px-1 rounded">
-                                    Excedido {formatCurrency(Math.abs(itemRestante))}
-                                  </span>
-                                ) : itemAtingido ? (
-                                  <span className="text-[9px] font-bold text-[#0556C3] bg-blue-50 px-1 rounded">
-                                    Atingido
-                                  </span>
-                                ) : semPlanejamentoItem ? (
-                                  <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1 rounded">
-                                    Sem planejamento
-                                  </span>
-                                ) : (
-                                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 rounded">
-                                    Restam {formatCurrency(itemRestante)}
-                                  </span>
+                                {semPlanejamentoItem && (
+                                  <span className="text-[9px] font-bold text-slate-500">Sem planejamento definido</span>
                                 )}
                               </div>
                             </div>
