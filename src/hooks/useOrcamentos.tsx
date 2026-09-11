@@ -25,8 +25,10 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
 
   // Mutação para adicionar ou atualizar orçamento
   const saveOrcamentoMutation = useMutation({
-    mutationFn: async (orcamento: Omit<Orcamento, "id" | "created_at" | "updated_at"> & { id?: string }) => {
+    mutationFn: async (orcamento: Omit<Orcamento, "id" | "created_at" | "updated_at"> & { id?: string; applyToFuture?: boolean }) => {
       if (!userId) throw new Error("User not authenticated");
+
+      let currentData = null;
 
       if (orcamento.id) {
         // Atualização
@@ -42,7 +44,7 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
           .select()
           .single();
         if (error) throw error;
-        return data;
+        currentData = data;
       } else {
         // Criação
         const { data, error } = await supabase
@@ -58,8 +60,27 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
           .select()
           .single();
         if (error) throw error;
-        return data;
+        currentData = data;
       }
+
+      // Se applyToFuture for true, atualiza todos os orçamentos futuros existentes dessa subcategoria
+      if (orcamento.applyToFuture) {
+        const { error: futureError } = await supabase
+          .from("orcamentos")
+          .update({
+            tipo_planejamento: orcamento.tipo_planejamento,
+            valor_planejado: orcamento.valor_planejado,
+            percentual_planejado: orcamento.percentual_planejado,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", userId)
+          .eq("categoria_id", orcamento.categoria_id)
+          .gt("mes_ano", orcamento.mes_ano);
+          
+        if (futureError) throw futureError;
+      }
+
+      return currentData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orcamentos", userId] });

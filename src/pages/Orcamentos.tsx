@@ -304,6 +304,7 @@ export default function Orcamentos() {
   const [formSubId, setFormSubId] = useState<string>(UNSELECTED_VALUE);
   const [formTipo, setFormTipo] = useState<"valor" | "percentual">("valor");
   const [formValor, setFormValor] = useState<number | undefined>(undefined);
+  const [formAbrangencia, setFormAbrangencia] = useState<"current_month" | "future_months">("future_months");
 
   const formSubOptions = useMemo(() => {
     if (formParentId === UNSELECTED_VALUE) return [];
@@ -324,6 +325,7 @@ export default function Orcamentos() {
     setFormSubId(item.categoria_id);
     setFormTipo(item.tipo_planejamento as "valor" | "percentual");
     setFormValor(item.tipo_planejamento === "valor" ? item.valor_planejado : item.percentual_planejado);
+    setFormAbrangencia("future_months");
     setIsModalOpen(true);
   };
 
@@ -333,6 +335,7 @@ export default function Orcamentos() {
     setFormSubId(UNSELECTED_VALUE);
     setFormTipo("valor");
     setFormValor(undefined);
+    setFormAbrangencia("future_months");
     setIsModalOpen(true);
   };
 
@@ -356,6 +359,7 @@ export default function Orcamentos() {
         tipo_planejamento: formTipo,
         valor_planejado: formTipo === "valor" ? formValor : 0,
         percentual_planejado: formTipo === "percentual" ? formValor : 0,
+        applyToFuture: formAbrangencia === "future_months",
       });
       showSuccessToast("Planejamento salvo com sucesso!");
       setIsModalOpen(false);
@@ -713,7 +717,7 @@ export default function Orcamentos() {
           <div className={cn("flex flex-col gap-5", isMobile ? "pt-[36px]" : "pt-[2px]")}>
             {/* Categoria Pai */}
             <div className="space-y-1.5">
-              <Label className="text-[15px] font-medium text-slate-600 ml-1">Categoria principal</Label>
+              <Label className="text-[14px] font-medium text-slate-600 ml-1">Categoria principal</Label>
               <Select 
                 value={formParentId} 
                 onValueChange={(val) => {
@@ -740,7 +744,7 @@ export default function Orcamentos() {
 
             {/* Subcategoria */}
             <div className="space-y-1.5">
-              <Label className="text-[15px] font-medium text-slate-600 ml-1">Subcategoria (alvo)</Label>
+              <Label className="text-[14px] font-medium text-slate-600 ml-1">Subcategoria (alvo)</Label>
               {formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem ? (
                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
                   <p className="text-sm font-medium text-amber-800 leading-tight">
@@ -775,7 +779,7 @@ export default function Orcamentos() {
 
             {/* Tipo de Planejamento */}
             <div className="space-y-2">
-              <Label className="text-[15px] font-medium text-slate-600 ml-1">Tipo de planejamento</Label>
+              <Label className="text-[14px] font-medium text-slate-600 ml-1">Tipo de planejamento</Label>
               <RadioGroup value={formTipo} onValueChange={(val: "valor" | "percentual") => {
                 setFormTipo(val);
                 setFormValor(undefined);
@@ -791,9 +795,26 @@ export default function Orcamentos() {
               </RadioGroup>
             </div>
 
+            {/* Abrangência */}
+            <div className="space-y-2">
+              <Label className="text-[14px] font-medium text-slate-600 ml-1">Abrangência</Label>
+              <RadioGroup value={formAbrangencia} onValueChange={(val: "current_month" | "future_months") => {
+                setFormAbrangencia(val);
+              }} className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="future_months" id="abr1" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3]" />
+                  <Label htmlFor="abr1" className="font-semibold text-slate-700 cursor-pointer">Aplicar aos próximos meses</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="current_month" id="abr2" className="data-[state=checked]:after:bg-[#0556C3] data-[state=checked]:border-[#0556C3] text-[#0556C3]" />
+                  <Label htmlFor="abr2" className="font-semibold text-slate-700 cursor-pointer">Apenas este mês</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             {/* Valor */}
             <div className="space-y-1.5">
-              <Label className="text-[15px] font-medium text-slate-600 ml-1">
+              <Label className="text-[14px] font-medium text-slate-600 ml-1">
                 {formTipo === "valor" ? "Valor planejado" : "Percentual da receita"}
               </Label>
               {formTipo === "valor" ? (
