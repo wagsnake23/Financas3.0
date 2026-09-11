@@ -438,9 +438,9 @@ export default function Orcamentos() {
       <main className={cn("container-app flex-grow", isMobile ? "pt-16 pb-4" : "pt-0 pb-8 -mt-[86px] space-y-6")}>
         {/* Cabeçalho Mobile Reformulado */}
         {isMobile && (
-          <div className="flex flex-col mb-4">
+          <div className="flex flex-col">
             {/* Seletor de Mês */}
-            <div className="relative flex items-center justify-center w-full shrink-0 mb-3 h-8">
+            <div className="relative flex items-center justify-center w-full shrink-0 mb-4 h-8">
               <MonthNavigator
                 selectedMonth={currentDate}
                 onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
