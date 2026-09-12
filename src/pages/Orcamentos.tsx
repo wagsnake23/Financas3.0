@@ -771,19 +771,37 @@ export default function Orcamentos() {
                     </div>
 
                     {/* Barra de Progresso Inteligente */}
-                    <div className="flex w-full bg-slate-300/70 rounded-full h-[18px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] mt-0.5 mb-1.5">
+                    <div 
+                      className="flex w-full rounded-full h-[16px] overflow-hidden mt-0.5 mb-1.5"
+                      style={{ 
+                        background: "linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 50%, #CBD5E1 100%)",
+                        boxShadow: "inset 0 2px 4px rgba(0,0,0,0.15)"
+                      }}
+                    >
                       <div 
-                        className="h-full bg-[#0556C3]/90 transition-all duration-500"
-                        style={{ width: `${pctAzulVisual}%` }}
+                        className="h-full transition-all duration-500 relative z-10"
+                        style={{ 
+                          width: `${pctAzulVisual}%`,
+                          background: "linear-gradient(180deg, #3EA0FF 0%, #1677FF 45%, #0F5FD7 100%)",
+                          boxShadow: "inset 0 2px 2px rgba(255,255,255,0.5), 4px 0 6px -1px rgba(22, 119, 255, 0.5)"
+                        }}
                       />
                       <div 
-                        className="h-full bg-purple-500/90 transition-all duration-500"
-                        style={{ width: `${pctRoxoVisual}%` }}
+                        className="h-full transition-all duration-500 relative z-0"
+                        style={{ 
+                          width: `${pctRoxoVisual}%`,
+                          background: "linear-gradient(180deg, #D8B4FE 0%, #C084FC 45%, #A855F7 100%)",
+                          boxShadow: "inset 0 2px 2px rgba(255,255,255,0.5), inset 4px 0 8px -2px rgba(22, 119, 255, 0.3)"
+                        }}
                       />
                       {isExcedidoReceita && (
                         <div 
-                          className="h-full bg-red-500/90 transition-all duration-500"
-                          style={{ width: `${pctVermelhoVisual}%` }}
+                          className="h-full transition-all duration-500 relative z-20"
+                          style={{ 
+                            width: `${pctVermelhoVisual}%`,
+                            background: "linear-gradient(180deg, #f87171 0%, #dc2626 45%, #991b1b 100%)",
+                            boxShadow: "inset 0 1.5px 1.5px rgba(255,255,255,0.35), -4px 0 6px -1px rgba(220, 38, 38, 0.6)"
+                          }}
                         />
                       )}
                     </div>
@@ -803,7 +821,7 @@ export default function Orcamentos() {
                     {/* Botão Novo Planejamento Mobile */}
                     <Button 
                       onClick={handleOpenAdd}
-                      className="h-[36px] w-full mt-1.5 px-0 rounded-xl font-semibold text-[14px] bg-[#0556C3] hover:bg-[#044299] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                      className="h-[36px] w-full mt-1.5 px-0 rounded-xl font-semibold text-[14px] bg-[#1D6FF0] hover:bg-[#1662D8] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
                     >
                       <DynamicIcon name="Plus" className="w-[14px] h-[14px] text-white" strokeWidth={2.5} />
                       Novo Planejamento
