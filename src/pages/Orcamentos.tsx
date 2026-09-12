@@ -672,8 +672,6 @@ export default function Orcamentos() {
                     pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
                     pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
                   }
-                } else if (group.totalGasto > 0) {
-                  pctVerde = 100;
                 }
 
                 return (
@@ -704,18 +702,18 @@ export default function Orcamentos() {
                         </div>
 
                         <div className="flex flex-col gap-2.5 pr-1">
-                          <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]">
+                          <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                             <div 
-                              className="h-full bg-emerald-500/90 transition-all duration-500"
+                              className="h-full bg-emerald-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                               style={{ width: `${pctVerde}%` }}
                             />
                             <div 
-                              className="h-full bg-purple-400/80 transition-all duration-500"
+                              className="h-full bg-[#C4B5FD] transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                               style={{ width: `${pctRoxo}%` }}
                             />
                             {excedido && (
                               <div 
-                                className="h-full bg-red-500/90 transition-all duration-500"
+                                className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                                 style={{ width: `${pctVermelho}%` }}
                               />
                             )}
@@ -761,8 +759,6 @@ export default function Orcamentos() {
                               itemPctVerde = (item.gasto / item.absoluto) * 100;
                               itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
                             }
-                          } else if (item.gasto > 0) {
-                            itemPctVerde = 100;
                           }
 
                           return (
@@ -802,18 +798,18 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]">
+                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                                     <div 
-                                      className="h-full bg-emerald-500/90 transition-all duration-500"
+                                      className="h-full bg-emerald-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                                       style={{ width: `${itemPctVerde}%` }}
                                     />
                                     <div 
-                                      className="h-full bg-purple-400/80 transition-all duration-500"
+                                      className="h-full bg-[#C4B5FD] transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                                       style={{ width: `${itemPctRoxo}%` }}
                                     />
                                     {itemExcedido && (
                                       <div 
-                                        className="h-full bg-red-500/90 transition-all duration-500"
+                                        className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
                                         style={{ width: `${itemPctVermelho}%` }}
                                       />
                                     )}
