@@ -596,7 +596,7 @@ export default function Orcamentos() {
                         <span className="font-bold text-purple-600 text-[13px] leading-tight mt-[1px]">{formatCurrency(disponivelPlanejamento)}</span>
                       </div>
                       <div className="flex flex-col items-end gap-0">
-                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Não Planejado</span>
+                        <span className="font-medium text-slate-500 text-[11px] leading-tight">Sem Planejamento</span>
                         <span className="font-bold text-slate-500 text-[13px] leading-tight mt-[1px]">{formatCurrency(saldoNaoPlanejado)}</span>
                       </div>
                     </div>
@@ -708,7 +708,7 @@ export default function Orcamentos() {
               <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full bg-amber-500/10 flex items-center justify-center">
                 <DynamicIcon name="Landmark" className="w-[18px] h-[18px] text-amber-600" strokeWidth={2.5} />
               </div>
-              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Não Planejado</span>
+              <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Sem Planejamento</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
               <div className="mt-1.5">
                 <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
@@ -732,7 +732,8 @@ export default function Orcamentos() {
                 const excedido = group.totalGasto > group.totalPlanejado;
                 const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
                 const restante = group.totalPlanejado - group.totalGasto;
-                const groupPctReceita = receitaPrevista > 0 ? Math.round((group.totalPlanejado / receitaPrevista) * 100) : 0;
+                const groupPctReceita = receitaPrevista > 0 ? Math.round(((semPlanejamento ? group.totalGasto : group.totalPlanejado) / receitaPrevista) * 100) : 0;
+                const groupPctGasto = receitaPrevista > 0 ? Math.round((group.totalGasto / receitaPrevista) * 100) : 0;
 
                 let pctVerde = 0;
                 let pctRoxo = 0;
@@ -778,7 +779,7 @@ export default function Orcamentos() {
                               <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
                                 semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
                               )}>
-                                {semPlanejamento ? "Não planejado" : `de ${formatCurrency(group.totalPlanejado)}`}
+                                {semPlanejamento ? "Sem planejamento" : `de ${formatCurrency(group.totalPlanejado)}`}
                               </span>
                             </div>
                           </div>
@@ -803,7 +804,7 @@ export default function Orcamentos() {
                           </div>
                           <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
                             <div className="flex items-center gap-2">
-                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos</span>
+                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos | {groupPctGasto}% gasto</span>
                             </div>
                             
                             {semPlanejamento ? null : excedido ? (
@@ -870,12 +871,12 @@ export default function Orcamentos() {
                                     </div>
                                     <div className="flex justify-between items-center w-full">
                                       <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#0556C3]">
-                                        {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
+                                        {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
                                       </span>
                                       <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
                                         semPlanejamentoItem ? "text-slate-400" : (itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75"
                                       )}>
-                                        {semPlanejamentoItem ? "Não planejado" : `de ${formatCurrency(item.absoluto)}`}
+                                        {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
                                       </span>
                                     </div>
                                   </div>
