@@ -821,9 +821,10 @@ export default function Orcamentos() {
                     {/* Botão Novo Planejamento Mobile */}
                     <Button 
                       onClick={handleOpenAdd}
-                      className="h-[36px] w-full mt-1.5 px-0 rounded-xl font-semibold text-[14px] bg-[#1D6FF0] hover:bg-[#1662D8] text-white shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                      className="h-[36px] w-full mt-1.5 px-0 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1"
+                      style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                     >
-                      <DynamicIcon name="Plus" className="w-[14px] h-[14px] text-white" strokeWidth={2.5} />
+                      <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
                       Novo Planejamento
                     </Button>
                   </div>
