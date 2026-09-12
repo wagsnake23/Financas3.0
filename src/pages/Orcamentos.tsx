@@ -500,10 +500,10 @@ export default function Orcamentos() {
                           </div>
                           <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
                             <div className="flex justify-between items-center w-full">
-                              <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
+                              <span className={cn("font-semibold text-[#112B5E] leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
                                 {group.parent.nome}
                               </span>
-                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-slate-800")}>
+                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-[#112B5E]")}>
                                 {formatCurrency(group.totalGasto)}
                               </span>
                             </div>
@@ -598,10 +598,10 @@ export default function Orcamentos() {
                                   <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
                                   <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
                                     <div className="flex justify-between items-center w-full">
-                                      <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
+                                      <span className="font-bold text-[#112B5E] text-[14.5px] leading-none truncate pr-2">
                                         {item.subCat?.nome}
                                       </span>
-                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
+                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-[#112B5E]")}>
                                         {formatCurrency(item.gasto)}
                                       </span>
                                     </div>
