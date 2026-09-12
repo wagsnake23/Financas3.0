@@ -508,7 +508,7 @@ export default function Orcamentos() {
                               </span>
                             </div>
                             <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
-                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#0556C3]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
+                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#1D6FF0]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
                                 {groupPctReceita}% da receita
                               </span>
                               <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
@@ -543,7 +543,7 @@ export default function Orcamentos() {
                             </div>
                             
                             {semPlanejamento ? null : excedido ? (
-                              <span className={cn("bg-red-100/80 text-red-700 px-2 py-1 rounded-md font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
+                              <span className={cn("inline-flex items-center justify-center px-3 py-[3px] leading-tight rounded-[26px] bg-red-100/80 text-red-700 border border-red-500/20 shadow-[0_2px_4px_rgba(239,68,68,0.08)] font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : atingido ? (
@@ -606,7 +606,7 @@ export default function Orcamentos() {
                                       </span>
                                     </div>
                                     <div className="flex justify-between items-center w-full">
-                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#0556C3]">
+                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#1D6FF0]">
                                         {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
                                       </span>
                                       <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
@@ -762,7 +762,7 @@ export default function Orcamentos() {
                     <div className="flex justify-between items-start mb-0.5">
                       <div className="flex flex-col gap-0">
                         <span className="font-medium text-slate-500 text-[11px] leading-tight">Utilizado</span>
-                        <span className="font-bold text-[#0556C3] text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
+                        <span className="font-bold text-[#1D6FF0] text-[15px] leading-tight mt-[1px]">{formatCurrency(totalRealizado)}</span>
                       </div>
                       <div className="flex flex-col items-end gap-0">
                         <span className="font-medium text-slate-500 text-[11px] leading-tight">Planejado</span>
@@ -772,7 +772,7 @@ export default function Orcamentos() {
 
                     {/* Barra de Progresso Inteligente */}
                     <div 
-                      className="flex w-full rounded-full h-[16px] overflow-hidden mt-0.5 mb-1.5"
+                      className="flex w-full rounded-full h-[26px] overflow-hidden mt-0.5 mb-1.5"
                       style={{ 
                         background: "linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 50%, #CBD5E1 100%)",
                         boxShadow: "inset 0 2px 4px rgba(0,0,0,0.15)"
@@ -860,7 +860,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Receita Prevista</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(receitaPrevista)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
+                <span className="text-[12px] font-semibold text-[#1D6FF0] leading-none">
                   100% da receita
                 </span>
               </div>
@@ -877,7 +877,7 @@ export default function Orcamentos() {
               <span className={cn("font-semibold uppercase tracking-wider text-[11px] mb-1 pr-10", planejadoUltrapassaReceita ? "text-red-500" : "text-slate-500")}>Total Planejado</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", planejadoUltrapassaReceita ? "text-red-600" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
+                <span className="text-[12px] font-semibold text-[#1D6FF0] leading-none">
                   {receitaPrevista > 0 ? Math.round((totalPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -894,7 +894,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Total Gasto</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(totalRealizado)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
+                <span className="text-[12px] font-semibold text-[#1D6FF0] leading-none">
                   {receitaPrevista > 0 ? Math.round((totalRealizado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -911,7 +911,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Disponível</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", disponivel < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(disponivel)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
+                <span className="text-[12px] font-semibold text-[#1D6FF0] leading-none">
                   {receitaPrevista > 0 ? Math.round((disponivel / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -928,7 +928,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Sem Planejamento</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
+                <span className="text-[12px] font-semibold text-[#1D6FF0] leading-none">
                   {receitaPrevista > 0 ? Math.round((saldoPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -987,7 +987,7 @@ export default function Orcamentos() {
           >
             <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
               <div className="flex flex-row items-center justify-start gap-3 w-full">
-                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3]/90 tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#1D6FF0]/90 tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
                   {editingItem ? "Editar Planejamento" : "Novo Planejamento"}
                 </DialogTitle>
               </div>
@@ -1119,7 +1119,7 @@ export default function Orcamentos() {
                       {formatCurrency(saldoRestante)} disponíveis
                     </span>
                     <span className="text-slate-300 mx-1.5">|</span>
-                    <span className="font-semibold text-[#0556C3]">
+                    <span className="font-semibold text-[#1D6FF0]">
                       {pctReceita.toFixed(1).replace('.', ',')}% da receita
                     </span>
                   </div>
