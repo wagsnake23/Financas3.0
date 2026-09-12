@@ -933,7 +933,7 @@ export default function Orcamentos() {
         <DialogContent
           onOpenAutoFocus={(e) => e.preventDefault()}
           className={cn(
-            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[425px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px]",
+            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 !pb-[13px]" : "sm:max-w-[421px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[16px]",
             "shadow-none border-none bg-[#FAFAFA]"
           )}
           style={{
