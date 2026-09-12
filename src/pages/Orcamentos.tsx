@@ -666,8 +666,11 @@ export default function Orcamentos() {
 
                 if (group.totalPlanejado > 0) {
                   if (excedido) {
-                    pctVerde = (group.totalPlanejado / group.totalGasto) * 100;
-                    pctVermelho = ((group.totalGasto - group.totalPlanejado) / group.totalGasto) * 100;
+                    pctVerde = 0;
+                    pctVermelho = 100;
+                  } else if (atingido) {
+                    pctVerde = 100;
+                    pctRoxo = 0;
                   } else {
                     pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
                     pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
@@ -685,7 +688,7 @@ export default function Orcamentos() {
                           <div className="flex items-center justify-center shrink-0 leading-none">
                             <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                           </div>
-                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-[2px]" : "gap-1")}>
+                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
                             <div className="flex justify-between items-center w-full">
                               <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
                                 {group.parent.nome}
@@ -695,10 +698,14 @@ export default function Orcamentos() {
                               </span>
                             </div>
                             <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
-                              <span className={cn("font-semibold text-[#0556C3]/70 leading-none truncate pr-2", isMobile ? "text-[11.5px]" : "text-[12.5px]")}>
+                              <span className={cn("font-semibold leading-none truncate pr-2", isMobile ? "text-[12.5px]" : "text-[13.5px]",
+                                semPlanejamento ? "text-slate-400" : excedido ? "text-red-600" : atingido ? "text-blue-500" : "text-emerald-600"
+                              )}>
                                 {groupPctReceita}% da receita
                               </span>
-                              <span className={cn("font-semibold text-slate-400 leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]")}>
+                              <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
+                                semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
+                              )}>
                                 {semPlanejamento ? "Não planejado" : `de ${formatCurrency(group.totalPlanejado)}`}
                               </span>
                             </div>
@@ -708,7 +715,7 @@ export default function Orcamentos() {
                         <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
                           <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                             <div 
-                              className="h-full bg-emerald-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
+                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", atingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
                               style={{ width: `${pctVerde}%` }}
                             />
                             <div 
@@ -732,7 +739,7 @@ export default function Orcamentos() {
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : atingido ? (
-                              <span className={cn("font-semibold text-[#0556C3]", isMobile ? "text-[11px]" : "text-xs")}>Planejamento atingido</span>
+                              <span className={cn("font-semibold text-blue-500", isMobile ? "text-[12px]" : "text-[13px]")}>Planejamento atingido</span>
                             ) : (
                               <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
                             )}
@@ -754,8 +761,11 @@ export default function Orcamentos() {
 
                           if (item.absoluto > 0) {
                             if (itemExcedido) {
-                              itemPctVerde = (item.absoluto / item.gasto) * 100;
-                              itemPctVermelho = ((item.gasto - item.absoluto) / item.gasto) * 100;
+                              itemPctVerde = 0;
+                              itemPctVermelho = 100;
+                            } else if (itemAtingido) {
+                              itemPctVerde = 100;
+                              itemPctRoxo = 0;
                             } else {
                               itemPctVerde = (item.gasto / item.absoluto) * 100;
                               itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
@@ -777,7 +787,7 @@ export default function Orcamentos() {
                                 {/* Header da linha */}
                                 <div className="flex items-center gap-3 w-full mt-0.5">
                                   <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
-                                  <div className="flex flex-col flex-1 min-w-0 gap-[4px]">
+                                  <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
                                     <div className="flex justify-between items-center w-full">
                                       <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
                                         {item.subCat?.nome}
@@ -787,10 +797,14 @@ export default function Orcamentos() {
                                       </span>
                                     </div>
                                     <div className="flex justify-between items-center w-full">
-                                      <span className="text-[11px] font-semibold text-[#0556C3]/70 leading-none truncate pr-2">
+                                      <span className={cn("font-semibold leading-none truncate pr-2 text-[12px]",
+                                        semPlanejamentoItem ? "text-slate-400" : itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
+                                      )}>
                                         {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
                                       </span>
-                                      <span className="font-semibold text-slate-400 text-[10.5px] leading-none shrink-0">
+                                      <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
+                                        semPlanejamentoItem ? "text-slate-400" : (itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75"
+                                      )}>
                                         {semPlanejamentoItem ? "Não planejado" : `de ${formatCurrency(item.absoluto)}`}
                                       </span>
                                     </div>
@@ -801,7 +815,7 @@ export default function Orcamentos() {
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
                                   <div className="flex flex-1 bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                                     <div 
-                                      className="h-full bg-emerald-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
+                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemAtingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
                                       style={{ width: `${itemPctVerde}%` }}
                                     />
                                     <div 
@@ -816,10 +830,10 @@ export default function Orcamentos() {
                                     )}
                                   </div>
                                   {!semPlanejamentoItem ? (
-                                    <span className={cn(
-                                      "text-[10px] font-bold shrink-0",
-                                      itemExcedido ? "text-red-600" : itemAtingido ? "text-[#0556C3]" : "text-emerald-600"
-                                    )}>
+                                      <span className={cn(
+                                        "text-[11px] font-bold shrink-0",
+                                        itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
+                                      )}>
                                       {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
                                     </span>
                                   ) : (
