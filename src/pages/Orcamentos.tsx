@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
-import { LayoutGrid, Tag, Calendar, Settings, BadgeDollarSign, Trash2, Check } from "lucide-react";
+import { LayoutGrid, Tag, Calendar, Settings, BadgeDollarSign, Trash2, Check, Save } from "lucide-react";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { useOrcamentos } from "@/hooks/useOrcamentos";
 import { startOfMonth, endOfMonth, format, addMonths, subMonths } from "date-fns";
@@ -1030,23 +1030,23 @@ export default function Orcamentos() {
                 <Button
                   type="button"
                   onClick={() => setIsConfirmDeleteOpen(true)}
-                  className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-1.5 bg-white text-red-500 hover:bg-slate-50"
+                  className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-red-500 hover:bg-slate-50"
                   disabled={isSaving}
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
                   Excluir
                 </Button>
               )}
               <Button
                 type="button"
-                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-1.5 btn-3d-modal disabled:opacity-50 disabled:pointer-events-none"
+                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal disabled:opacity-50 disabled:pointer-events-none"
                 style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
                 disabled={isSaving || (formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem)}
                 onClick={handleSave}
               >
                 {isSaving ? "Salvando..." : (
                   <>
-                    <Check className="w-5 h-5" strokeWidth={3} />
+                    <Save className="w-[18px] h-[18px]" strokeWidth={2.5} />
                     Salvar
                   </>
                 )}
