@@ -731,7 +731,7 @@ export default function Orcamentos() {
 
 
             {/* Bloco Planejamento do Mês */}
-            <div className="flex flex-col bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-slate-200/80 p-3 mb-4">
+            <div className="flex flex-col rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,.06)] border border-slate-200/80 p-3 mb-4" style={{ background: "linear-gradient(180deg, #FFFFFF, #FAFBFD)" }}>
               <div className="flex items-start gap-1.5 mb-2.5">
                 <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
                 <div className="flex flex-col">
