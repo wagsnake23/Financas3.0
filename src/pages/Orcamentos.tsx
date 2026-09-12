@@ -488,7 +488,7 @@ export default function Orcamentos() {
                 }
 
                 return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-2")}>
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-0")}>
                     <AccordionTrigger 
                       className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-primary [&>svg]:stroke-[4px]", isMobile ? "px-3 py-2.5" : "p-4")}
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
@@ -521,19 +521,19 @@ export default function Orcamentos() {
                         </div>
 
                         <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
-                          <div className="flex w-full rounded-full h-[8px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)', boxShadow: 'inset 0 1.5px 3px rgba(0,0,0,0.1)' }}>
-                            <div 
+                          <div className="relative flex w-full rounded-full h-[8px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
+                            <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15)' }} />                            <div 
                               className="h-full transition-all duration-500 relative z-10"
-                              style={{ width: `${pctVerde}%`, background: atingido ? 'linear-gradient(90deg, #3B82F6, #2563EB)' : 'linear-gradient(90deg, #22C55E, #10B981, #34D399)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
+                              style={{ width: `${pctVerde}%`, background: atingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
                             />
                             <div 
                               className="h-full transition-all duration-500 relative z-0"
-                              style={{ width: `${pctRoxo}%`, background: excedido ? 'linear-gradient(90deg, #A855F7, #9333EA)' : 'linear-gradient(90deg, #D8B4FE, #C4B5FD)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
+                              style={{ width: `${pctRoxo}%`, background: excedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
                             />
                             {excedido && (
                               <div 
                                 className="h-full transition-all duration-500 relative z-20"
-                                style={{ width: `${pctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
+                                style={{ width: `${pctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
                               />
                             )}
                           </div>
@@ -620,22 +620,22 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex flex-1 rounded-full h-[6px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)', boxShadow: 'inset 0 1.5px 3px rgba(0,0,0,0.1)' }}>
-                                    <div 
-                                      className="h-full transition-all duration-500 relative z-10"
-                                      style={{ width: `${itemPctVerde}%`, background: itemAtingido ? 'linear-gradient(90deg, #3B82F6, #2563EB)' : 'linear-gradient(90deg, #22C55E, #10B981, #34D399)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
-                                    />
-                                    <div 
-                                      className="h-full transition-all duration-500 relative z-0"
-                                      style={{ width: `${itemPctRoxo}%`, background: itemExcedido ? 'linear-gradient(90deg, #A855F7, #9333EA)' : 'linear-gradient(90deg, #D8B4FE, #C4B5FD)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
-                                    />
-                                    {itemExcedido && (
-                                      <div 
-                                        className="h-full transition-all duration-500 relative z-20"
-                                        style={{ width: `${itemPctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
+                                  <div className="relative flex flex-1 rounded-full h-[6px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
+                                      <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.15)' }} />                                      <div 
+                                        className="h-full transition-all duration-500 relative z-10"
+                                        style={{ width: `${itemPctVerde}%`, background: itemAtingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
                                       />
-                                    )}
-                                  </div>
+                                      <div 
+                                        className="h-full transition-all duration-500 relative z-0"
+                                        style={{ width: `${itemPctRoxo}%`, background: itemExcedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                                      />
+                                      {itemExcedido && (
+                                        <div 
+                                          className="h-full transition-all duration-500 relative z-20"
+                                          style={{ width: `${itemPctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                                        />
+                                      )}
+                                    </div>
                                   {!semPlanejamentoItem ? (
                                       <span className={cn(
                                         "text-[11px] font-bold shrink-0",
@@ -985,17 +985,16 @@ export default function Orcamentos() {
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
             </div>
-          ) : (
-            <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4")}>
+          ) : (            <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")}>
 
               {isMobile ? (
                 groupedOrcamentos.map((group) => renderAccordionGroup(group))
               ) : (
                 <>
-                  <div className="flex flex-col gap-4 w-full">
+                  <div className="flex flex-col gap-3 w-full">
                     {groupedOrcamentos.filter((_, i) => i % 2 === 0).map((group) => renderAccordionGroup(group))}
                   </div>
-                  <div className="flex flex-col gap-4 w-full">
+                  <div className="flex flex-col gap-3 w-full">
                     {groupedOrcamentos.filter((_, i) => i % 2 === 1).map((group) => renderAccordionGroup(group))}
                   </div>
                 </>
