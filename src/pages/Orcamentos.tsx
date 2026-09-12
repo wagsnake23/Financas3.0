@@ -655,64 +655,87 @@ export default function Orcamentos() {
             <Accordion type="single" collapsible className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 items-start">
               {groupedOrcamentos.map((group) => {
                 const semPlanejamento = group.totalPlanejado <= 0;
-                const pctGasto = semPlanejamento ? 0 : (group.totalGasto / group.totalPlanejado) * 100;
-                const pctClamped = Math.min(100, Math.max(0, pctGasto));
                 const excedido = group.totalGasto > group.totalPlanejado;
                 const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
                 const restante = group.totalPlanejado - group.totalGasto;
                 const groupPctReceita = receitaPrevista > 0 ? Math.round((group.totalPlanejado / receitaPrevista) * 100) : 0;
 
-                let progressColor = "bg-emerald-500/85 border border-emerald-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                if (semPlanejamento) progressColor = "bg-transparent";
-                else if (excedido) progressColor = "bg-red-500/85 border border-red-600/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
-                else if (atingido) progressColor = "bg-[#0556C3]/85 border border-[#044299]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]";
+                let pctVerde = 0;
+                let pctRoxo = 0;
+                let pctVermelho = 0;
+
+                if (group.totalPlanejado > 0) {
+                  if (excedido) {
+                    pctVerde = (group.totalPlanejado / group.totalGasto) * 100;
+                    pctVermelho = ((group.totalGasto - group.totalPlanejado) / group.totalGasto) * 100;
+                  } else {
+                    pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
+                    pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
+                  }
+                } else if (group.totalGasto > 0) {
+                  pctVerde = 100;
+                }
 
                 return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-[#DCE8F7] bg-[#F8FBFF] rounded-2xl shadow-sm overflow-hidden mb-2">
-                    <AccordionTrigger className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-[5px] min-h-[101px]" : "p-4 min-h-[115px]")}>
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden mb-2">
+                    <AccordionTrigger 
+                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-3" : "p-4")}
+                      style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
+                    >
                       <div className="flex flex-col w-full text-left">
-                        <div className={cn("flex justify-between items-start", isMobile ? "mb-2" : "mb-3")}>
-                          <div className="flex items-start gap-2.5">
-                            <div className={cn("flex items-center justify-center shrink-0 leading-none", isMobile ? "mt-[2px]" : "mt-[1px]")}>
+                        <div className={cn("flex justify-between items-center", isMobile ? "mb-3" : "mb-4")}>
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center shrink-0 leading-none">
                               <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                             </div>
-                            <div className="flex flex-col">
-                              <span className={cn("font-bold text-slate-800 leading-tight", isMobile ? "text-sm" : "font-semibold")}>{group.parent.nome}</span>
-                              <span className={cn("font-semibold text-slate-400 mt-0.5", isMobile ? "text-[11px]" : "text-[12px]")}>
+                            <div className="flex flex-col justify-center">
+                              <span className={cn("font-semibold text-slate-800 leading-tight", isMobile ? "text-[18px]" : "text-[20px]")}>{group.parent.nome}</span>
+                              <span className={cn("font-medium text-slate-500 mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
                                 {semPlanejamento ? "Planejamento não definido" : `Planejado: ${formatCurrency(group.totalPlanejado)}`}
                               </span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end mr-2">
-                            <span className={cn("font-bold", excedido && !semPlanejamento ? "text-red-600" : "text-slate-700", isMobile ? "text-[13px]" : "")}>
+                          <div className="flex flex-col items-end mr-1">
+                            <span className={cn("font-bold", excedido && !semPlanejamento ? "text-red-600" : "text-slate-700", isMobile ? "text-[14px]" : "text-[15px]")}>
                               {formatCurrency(group.totalGasto)}
                             </span>
                             <span className={cn("font-bold text-slate-400 uppercase tracking-wider mt-0.5", isMobile ? "text-[9px]" : "text-[10px]")}>Gasto</span>
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-2 pr-2">
-                          <div className={cn("w-full bg-white/60 border border-blue-100/50 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)]", isMobile ? "h-2" : "h-2.5")}>
+                        <div className="flex flex-col gap-2.5 pr-1">
+                          <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]">
                             <div 
-                              className={cn("h-full rounded-full transition-all duration-500 ease-out", progressColor)}
-                              style={{ width: `${pctClamped}%` }}
+                              className="h-full bg-emerald-500/90 transition-all duration-500"
+                              style={{ width: `${pctVerde}%` }}
                             />
-                          </div>
-                          <div className="flex justify-between items-center text-xs mt-0.5">
-                            {semPlanejamento ? (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{groupPctReceita}% da receita <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
-                            ) : (
-                              <span className={cn("font-bold text-slate-500", isMobile ? "text-[10px]" : "text-xs")}>{groupPctReceita}% da receita <span className="text-slate-300 font-normal mx-0.5">|</span> {group.ativosCount} ativos</span>
+                            <div 
+                              className="h-full bg-purple-400/80 transition-all duration-500"
+                              style={{ width: `${pctRoxo}%` }}
+                            />
+                            {excedido && (
+                              <div 
+                                className="h-full bg-red-500/90 transition-all duration-500"
+                                style={{ width: `${pctVermelho}%` }}
+                              />
                             )}
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <div className="flex items-center gap-2">
+                              <span className="bg-blue-500/10 text-blue-600 rounded-full px-2.5 py-1 text-[12px] font-semibold leading-none">
+                                {groupPctReceita}% da receita
+                              </span>
+                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos</span>
+                            </div>
                             
                             {semPlanejamento ? null : excedido ? (
-                              <span className={cn("bg-red-100/80 text-red-700 px-1.5 py-0.5 rounded font-bold", isMobile ? "text-[9px]" : "text-[10px]")}>
+                              <span className={cn("bg-red-100/80 text-red-700 px-2 py-1 rounded-md font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
                                 Excedido em {formatCurrency(Math.abs(restante))}
                               </span>
                             ) : atingido ? (
-                              <span className={cn("font-semibold text-[#0556C3]", isMobile ? "text-[10px]" : "text-xs")}>Planejamento atingido</span>
+                              <span className={cn("font-semibold text-[#0556C3]", isMobile ? "text-[11px]" : "text-xs")}>Planejamento atingido</span>
                             ) : (
-                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[10px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
+                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
                             )}
                           </div>
                         </div>
@@ -722,22 +745,24 @@ export default function Orcamentos() {
                       <div className="flex flex-col gap-[10px]">
                         {group.items.map((item) => {
                           const semPlanejamentoItem = item.absoluto <= 0;
-                          const itemPctGasto = semPlanejamentoItem ? 0 : (item.gasto / item.absoluto) * 100;
-                          const itemPctClamped = Math.min(100, Math.max(0, itemPctGasto));
                           const itemExcedido = item.gasto > item.absoluto;
                           const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
                           const itemRestante = item.absoluto - item.gasto;
 
-                          let itemProgressColor = "bg-emerald-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                          
-                          if (semPlanejamentoItem) {
-                            itemProgressColor = "bg-transparent";
-                          }
-                          else if (itemExcedido) {
-                            itemProgressColor = "bg-red-400/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
-                          }
-                          else if (itemAtingido) {
-                            itemProgressColor = "bg-[#3B82F6]/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]";
+                          let itemPctVerde = 0;
+                          let itemPctRoxo = 0;
+                          let itemPctVermelho = 0;
+
+                          if (item.absoluto > 0) {
+                            if (itemExcedido) {
+                              itemPctVerde = (item.absoluto / item.gasto) * 100;
+                              itemPctVermelho = ((item.gasto - item.absoluto) / item.gasto) * 100;
+                            } else {
+                              itemPctVerde = (item.gasto / item.absoluto) * 100;
+                              itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
+                            }
+                          } else if (item.gasto > 0) {
+                            itemPctVerde = 100;
                           }
 
                           return (
@@ -777,16 +802,21 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div 
-                                    className="flex-1 bg-slate-100/80 rounded-full h-1.5 overflow-hidden"
-                                    style={{
-                                      boxShadow: "inset 0 1px 2px rgba(15,23,42,0.08), inset 0 -1px 1px rgba(255,255,255,0.8)"
-                                    }}
-                                  >
+                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)]">
                                     <div 
-                                      className={cn("h-full rounded-full transition-all duration-500", itemProgressColor)}
-                                      style={{ width: semPlanejamentoItem ? '0%' : `${itemPctClamped}%` }}
+                                      className="h-full bg-emerald-500/90 transition-all duration-500"
+                                      style={{ width: `${itemPctVerde}%` }}
                                     />
+                                    <div 
+                                      className="h-full bg-purple-400/80 transition-all duration-500"
+                                      style={{ width: `${itemPctRoxo}%` }}
+                                    />
+                                    {itemExcedido && (
+                                      <div 
+                                        className="h-full bg-red-500/90 transition-all duration-500"
+                                        style={{ width: `${itemPctVermelho}%` }}
+                                      />
+                                    )}
                                   </div>
                                   {!semPlanejamentoItem ? (
                                     <span className={cn(
