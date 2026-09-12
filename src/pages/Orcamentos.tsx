@@ -697,27 +697,27 @@ export default function Orcamentos() {
                       <div 
                         className="relative flex w-full rounded-full h-[11px] overflow-hidden"
                         style={{ 
-                          background: "linear-gradient(180deg, #F8FAFC 0%, #E2E8F0 45%, #CBD5E1 100%)",
-                          boxShadow: "inset 0 2px 4px rgba(255,255,255,.85), inset 0 -2px 6px rgba(0,0,0,.08)"
+                          background: "#D4DBE5",
+                          boxShadow: "inset 0 3px 8px rgba(0,0,0,0.18), inset 0 -2px 4px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.08)",
+                          border: "1px solid rgba(255,255,255,0.65)"
                         }}
                       >
-                        <div className="absolute top-0 left-0 w-full h-[35%] rounded-t-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,.40), rgba(255,255,255,0))" }} />
+                        <div className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.18), transparent 35%)" }} />
                         <div 
                           className="h-full transition-all duration-500 relative z-10"
                           style={{ 
                             width: `${pctAzulVisual}%`,
                             background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6)",
-                            boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                            boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                           }}
                         >
-                          <div className="absolute top-0 right-0 w-[2px] h-full z-20" style={{ background: "rgba(255,255,255,.65)", filter: "blur(1px)" }} />
                         </div>
                         <div 
                           className="h-full transition-all duration-500 relative z-0"
                           style={{ 
                             width: `${pctRoxoVisual}%`,
                             background: "linear-gradient(90deg, #9333EA, #A855F7, #C084FC)",
-                            boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                            boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                           }}
                         />
                         {isExcedidoReceita && (
@@ -726,7 +726,7 @@ export default function Orcamentos() {
                             style={{ 
                               width: `${pctVermelhoVisual}%`,
                               background: "linear-gradient(180deg, #F87171 0%, #DC2626 45%, #B91C1C 100%)",
-                              boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                              boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                             }}
                           />
                         )}
@@ -748,7 +748,6 @@ export default function Orcamentos() {
           </div>
         </div>
       )}
-
       <main 
         className={cn("container-app flex-grow", isMobile ? "pt-0 pb-2" : "pt-0 pb-8 -mt-[86px] space-y-6")}
         style={isMobile ? {
@@ -814,18 +813,20 @@ export default function Orcamentos() {
 
                     {/* Barra de Progresso Inteligente */}
                     <div 
-                      className="flex w-full rounded-full h-[26px] overflow-hidden mt-0.5 mb-1.5"
+                      className="relative flex w-full rounded-full h-[26px] overflow-hidden mt-0.5 mb-1.5"
                       style={{ 
-                        background: "linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 50%, #CBD5E1 100%)",
-                        boxShadow: "inset 0 2px 4px rgba(0,0,0,0.15)"
+                        background: "#D4DBE5",
+                        boxShadow: "inset 0 3px 8px rgba(0,0,0,0.18), inset 0 -2px 4px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.08)",
+                        border: "1px solid rgba(255,255,255,0.65)"
                       }}
                     >
+                      <div className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.18), transparent 35%)" }} />
                       <div 
                         className="h-full transition-all duration-500 relative z-10"
                         style={{ 
                           width: `${pctAzulVisual}%`,
                           background: "linear-gradient(180deg, #3EA0FF 0%, #1677FF 45%, #0F5FD7 100%)",
-                          boxShadow: "inset 0 2px 2px rgba(255,255,255,0.5), 4px 0 6px -1px rgba(22, 119, 255, 0.5)"
+                          boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                         }}
                       />
                       <div 
@@ -833,7 +834,7 @@ export default function Orcamentos() {
                         style={{ 
                           width: `${pctRoxoVisual}%`,
                           background: "linear-gradient(180deg, #D8B4FE 0%, #C084FC 45%, #A855F7 100%)",
-                          boxShadow: "inset 0 2px 2px rgba(255,255,255,0.5), inset 4px 0 8px -2px rgba(22, 119, 255, 0.3)"
+                          boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                         }}
                       />
                       {isExcedidoReceita && (
@@ -842,7 +843,7 @@ export default function Orcamentos() {
                           style={{ 
                             width: `${pctVermelhoVisual}%`,
                             background: "linear-gradient(180deg, #f87171 0%, #dc2626 45%, #991b1b 100%)",
-                            boxShadow: "inset 0 1.5px 1.5px rgba(255,255,255,0.35), -4px 0 6px -1px rgba(220, 38, 38, 0.6)"
+                            boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                           }}
                         />
                       )}
