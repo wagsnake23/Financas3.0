@@ -303,9 +303,8 @@ export default function Orcamentos() {
   
   const [formParentId, setFormParentId] = useState<string>(UNSELECTED_VALUE);
   const [formSubId, setFormSubId] = useState<string>(UNSELECTED_VALUE);
-  const [formTipo, setFormTipo] = useState<"valor" | "percentual">("valor");
   const [formValor, setFormValor] = useState<number | undefined>(undefined);
-  const [formAbrangencia, setFormAbrangencia] = useState<"current_month" | "future_months">("future_months");
+  const [formAbrangencia, setFormAbrangencia] = useState<"current_month" | "future_months">("current_month");
 
   const formSubOptions = useMemo(() => {
     if (formParentId === UNSELECTED_VALUE) return [];
@@ -324,9 +323,8 @@ export default function Orcamentos() {
     setEditingItem(item);
     setFormParentId(item.parentCat?.id || UNSELECTED_VALUE);
     setFormSubId(item.categoria_id);
-    setFormTipo(item.tipo_planejamento as "valor" | "percentual");
-    setFormValor(item.tipo_planejamento === "valor" ? item.valor_planejado : item.percentual_planejado);
-    setFormAbrangencia("future_months");
+    setFormValor(item.absoluto);
+    setFormAbrangencia("current_month");
     setIsModalOpen(true);
   };
 
@@ -334,9 +332,8 @@ export default function Orcamentos() {
     setEditingItem(null);
     setFormParentId(UNSELECTED_VALUE);
     setFormSubId(UNSELECTED_VALUE);
-    setFormTipo("valor");
     setFormValor(undefined);
-    setFormAbrangencia("future_months");
+    setFormAbrangencia("current_month");
     setIsModalOpen(true);
   };
 
@@ -357,9 +354,9 @@ export default function Orcamentos() {
         user_id: user?.id || "",
         categoria_id: formSubId,
         mes_ano: mesAno,
-        tipo_planejamento: formTipo,
-        valor_planejado: formTipo === "valor" ? formValor : 0,
-        percentual_planejado: formTipo === "percentual" ? formValor : 0,
+        tipo_planejamento: "valor",
+        valor_planejado: formValor,
+        percentual_planejado: 0,
         applyToFuture: formAbrangencia === "future_months",
       });
       showSuccessToast("Planejamento salvo com sucesso!");
@@ -926,38 +923,16 @@ export default function Orcamentos() {
                 <Label className="text-[14px] font-medium text-slate-600">Abrangência</Label>
               </div>
               <RadioGroup value={formAbrangencia} onValueChange={(val: "current_month" | "future_months") => setFormAbrangencia(val)} className="grid grid-cols-2 gap-2 md:gap-3">
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "future_months" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("future_months")}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[42px] rounded-xl border cursor-pointer transition-all", formAbrangencia === "current_month" ? "border-[#2F6FED] bg-[#F5F9FF]" : "border-[#D7E1EE] bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("current_month")}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="future_months" id="abr1" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
-                    <Label htmlFor="abr1" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Aplicar aos próximos meses</Label>
-                  </div>
-                </div>
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formAbrangencia === "current_month" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("current_month")}>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="current_month" id="abr2" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
+                    <RadioGroupItem value="current_month" id="abr2" className="data-[state=checked]:after:bg-[#2F6FED] data-[state=checked]:border-[#2F6FED] text-[#2F6FED] shrink-0" />
                     <Label htmlFor="abr2" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Apenas este mês</Label>
                   </div>
                 </div>
-              </RadioGroup>
-            </div>
-
-            {/* Tipo de Planejamento */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-1.5 ml-1">
-                <span className="text-[16px] leading-none">⚙️</span>
-                <Label className="text-[14px] font-medium text-slate-600">Tipo de planejamento</Label>
-              </div>
-              <RadioGroup value={formTipo} onValueChange={(val: "valor" | "percentual") => { setFormTipo(val); setFormValor(undefined); }} className="grid grid-cols-2 gap-2 md:gap-3">
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "valor" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("valor"); setFormValor(undefined); }}>
+                <div className={cn("relative flex items-center p-2 md:p-3 h-[42px] rounded-xl border cursor-pointer transition-all", formAbrangencia === "future_months" ? "border-[#2F6FED] bg-[#F5F9FF]" : "border-[#D7E1EE] bg-white hover:border-slate-300")} onClick={() => setFormAbrangencia("future_months")}>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="valor" id="r1" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
-                    <Label htmlFor="r1" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Valor Fixo (R$)</Label>
-                  </div>
-                </div>
-                <div className={cn("relative flex items-center p-2 md:p-3 h-[46px] rounded-xl border-2 cursor-pointer transition-all", formTipo === "percentual" ? "border-[#0556C3]/90 bg-[#0556C3]/5" : "border-slate-200 bg-white hover:border-slate-300")} onClick={() => { setFormTipo("percentual"); setFormValor(undefined); }}>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="percentual" id="r2" className="data-[state=checked]:after:bg-[#0556C3]/90 data-[state=checked]:border-[#0556C3]/90 text-[#0556C3]/90 shrink-0" />
-                    <Label htmlFor="r2" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Percentual (%)</Label>
+                    <RadioGroupItem value="future_months" id="abr1" className="data-[state=checked]:after:bg-[#2F6FED] data-[state=checked]:border-[#2F6FED] text-[#2F6FED] shrink-0" />
+                    <Label htmlFor="abr1" className="font-bold text-slate-700 cursor-pointer text-[12px] sm:text-sm leading-tight">Aplicar aos próximos meses</Label>
                   </div>
                 </div>
               </RadioGroup>
@@ -968,34 +943,17 @@ export default function Orcamentos() {
               <div className="flex items-center gap-1.5 ml-1">
                 <span className="text-[16px] leading-none">💰</span>
                 <Label className="text-[14px] font-medium text-slate-600">
-                  {formTipo === "valor" ? "Valor planejado" : "Percentual da receita"}
+                  Valor planejado
                 </Label>
               </div>
-              {formTipo === "valor" ? (
-                <CurrencyBR
-                  value={formValor || 0}
-                  onChange={setFormValor}
-                  className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
-                  placeholder="R$ 0,00"
-                />
-              ) : (
-                <div className="relative">
-                  <Input 
-                    type="number"
-                    value={formValor || ""}
-                    onChange={(e) => setFormValor(parseFloat(e.target.value))}
-                    className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl pl-4 pr-10 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
-                    placeholder="0"
-                    step="0.1"
-                    min="0"
-                    max="100"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">%</span>
-                </div>
-              )}
+              <CurrencyBR
+                value={formValor || 0}
+                onChange={setFormValor}
+                className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
+                placeholder="R$ 0,00"
+              />
               {(() => {
-                const valorInformadoNum = formValor || 0;
-                const valorEmReais = formTipo === "valor" ? valorInformadoNum : ((receitaPrevista * valorInformadoNum) / 100);
+                const valorEmReais = formValor || 0;
                 const pctReceita = receitaPrevista > 0 ? (valorEmReais / receitaPrevista) * 100 : 0;
                 const isHighPct = pctReceita > 80;
                 
