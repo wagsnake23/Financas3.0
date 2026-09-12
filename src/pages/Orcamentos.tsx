@@ -678,7 +678,7 @@ export default function Orcamentos() {
                 }
 
                 return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden mb-2">
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-2")}>
                     <AccordionTrigger 
                       className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-2.5" : "p-4")}
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
