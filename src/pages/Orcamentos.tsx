@@ -374,7 +374,12 @@ export default function Orcamentos() {
   const handleDelete = async () => {
     if (!editingItem) return;
     try {
-      await deleteOrcamento(editingItem.id);
+      await deleteOrcamento({
+        id: editingItem.id,
+        applyToFuture: formAbrangencia === "future_months",
+        categoria_id: formSubId,
+        mes_ano: mesAno,
+      });
       showSuccessToast("Planejamento removido com sucesso.");
       setIsConfirmDeleteOpen(false);
       setIsModalOpen(false);
@@ -1072,7 +1077,9 @@ export default function Orcamentos() {
               Confirmar Exclusão
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center">
-              Tem certeza que deseja excluir este planejamento? Esta ação não afetará os lançamentos reais.
+              {formAbrangencia === "future_months" 
+                ? "Deseja excluir este planejamento deste mês e de todos os meses futuros?"
+                : "Deseja excluir este planejamento apenas do mês atual?"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter

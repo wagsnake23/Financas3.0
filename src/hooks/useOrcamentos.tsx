@@ -89,9 +89,22 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
 
   // Mutação para excluir orçamento
   const deleteOrcamentoMutation = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (payload: string | { id: string; applyToFuture?: boolean; categoria_id?: string; mes_ano?: string }) => {
+      const id = typeof payload === 'string' ? payload : payload.id;
       const { error } = await supabase.from("orcamentos").delete().eq("id", id);
       if (error) throw error;
+      
+      if (typeof payload === 'object' && payload.applyToFuture && payload.categoria_id && payload.mes_ano) {
+        if (!userId) throw new Error("User not authenticated");
+        const { error: futureError } = await supabase
+          .from("orcamentos")
+          .delete()
+          .eq("user_id", userId)
+          .eq("categoria_id", payload.categoria_id)
+          .gt("mes_ano", payload.mes_ano);
+          
+        if (futureError) throw futureError;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orcamentos", userId] });
