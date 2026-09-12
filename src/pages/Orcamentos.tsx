@@ -521,19 +521,19 @@ export default function Orcamentos() {
                         </div>
 
                         <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
-                          <div className="flex w-full bg-slate-200/80 rounded-full h-[8px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                          <div className="flex w-full rounded-full h-[8px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)', boxShadow: 'inset 0 1.5px 3px rgba(0,0,0,0.1)' }}>
                             <div 
-                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", atingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
-                              style={{ width: `${pctVerde}%` }}
+                              className="h-full transition-all duration-500 relative z-10"
+                              style={{ width: `${pctVerde}%`, background: atingido ? 'linear-gradient(90deg, #3B82F6, #2563EB)' : 'linear-gradient(90deg, #22C55E, #10B981, #34D399)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                             />
                             <div 
-                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", excedido ? "bg-purple-500/90" : "bg-[#C4B5FD]")}
-                              style={{ width: `${pctRoxo}%` }}
+                              className="h-full transition-all duration-500 relative z-0"
+                              style={{ width: `${pctRoxo}%`, background: excedido ? 'linear-gradient(90deg, #A855F7, #9333EA)' : 'linear-gradient(90deg, #D8B4FE, #C4B5FD)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                             />
                             {excedido && (
                               <div 
-                                className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                                style={{ width: `${pctVermelho}%` }}
+                                className="h-full transition-all duration-500 relative z-20"
+                                style={{ width: `${pctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                               />
                             )}
                           </div>
@@ -620,19 +620,19 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[6px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                                  <div className="flex flex-1 rounded-full h-[6px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)', boxShadow: 'inset 0 1.5px 3px rgba(0,0,0,0.1)' }}>
                                     <div 
-                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemAtingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
-                                      style={{ width: `${itemPctVerde}%` }}
+                                      className="h-full transition-all duration-500 relative z-10"
+                                      style={{ width: `${itemPctVerde}%`, background: itemAtingido ? 'linear-gradient(90deg, #3B82F6, #2563EB)' : 'linear-gradient(90deg, #22C55E, #10B981, #34D399)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                                     />
                                     <div 
-                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemExcedido ? "bg-purple-500/90" : "bg-[#C4B5FD]")}
-                                      style={{ width: `${itemPctRoxo}%` }}
+                                      className="h-full transition-all duration-500 relative z-0"
+                                      style={{ width: `${itemPctRoxo}%`, background: itemExcedido ? 'linear-gradient(90deg, #A855F7, #9333EA)' : 'linear-gradient(90deg, #D8B4FE, #C4B5FD)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                                     />
                                     {itemExcedido && (
                                       <div 
-                                        className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                                        style={{ width: `${itemPctVermelho}%` }}
+                                        className="h-full transition-all duration-500 relative z-20"
+                                        style={{ width: `${itemPctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)' }}
                                       />
                                     )}
                                   </div>
