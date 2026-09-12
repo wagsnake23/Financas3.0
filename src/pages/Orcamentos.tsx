@@ -676,31 +676,73 @@ export default function Orcamentos() {
       {/* HEADER PREMIUM — FINTECH STYLE (ORÇAMENTOS) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
-          <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">
-            <div>
-              <div className="flex items-start gap-3">
-                <div
-                  className="btn-3d btn-3d-icon p-2 rounded-xl flex items-center justify-center border-none cursor-default h-auto w-auto mt-1"
-                  style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9" } as any}
-                >
-                  <span className="text-xl select-none">🧮</span>
-                </div>
-                <div className="flex flex-col">
-                  <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">            <div className="flex-1">
+              <div className="flex flex-col items-start gap-1 w-full">
+                <div className="flex items-center gap-2">
+                  <span className="text-[22px] select-none leading-none -mt-0.5">🧮</span>
+                  <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Planejamento Mensal
                   </h1>
-                  <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
-                    Planeje e acompanhe seus gastos
-                  </p>
                 </div>
+                {(() => {
+                  const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
+                  const isExcedidoReceita = totalRealizado > receitaPrevista;
+                  
+                  let pctAzulVisual = isExcedidoReceita ? 85 : (receitaPrevista > 0 ? Math.min(100, (totalRealizado / receitaPrevista) * 100) : 0);
+                  let pctRoxoVisual = isExcedidoReceita ? 0 : (receitaPrevista > 0 ? Math.min(100 - pctAzulVisual, (disponivelPlanejamento / receitaPrevista) * 100) : 0);
+                  let pctVermelhoVisual = isExcedidoReceita ? 15 : 0;
+
+                  return (
+                    <div className="w-[280px] mt-[1px]">
+                      <div 
+                        className="relative flex w-full rounded-full h-[11px] overflow-hidden"
+                        style={{ 
+                          background: "linear-gradient(180deg, #F8FAFC 0%, #E2E8F0 45%, #CBD5E1 100%)",
+                          boxShadow: "inset 0 2px 4px rgba(255,255,255,.85), inset 0 -2px 6px rgba(0,0,0,.08)"
+                        }}
+                      >
+                        <div className="absolute top-0 left-0 w-full h-[35%] rounded-t-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,.40), rgba(255,255,255,0))" }} />
+                        <div 
+                          className="h-full transition-all duration-500 relative z-10"
+                          style={{ 
+                            width: `${pctAzulVisual}%`,
+                            background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6)",
+                            boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                          }}
+                        >
+                          <div className="absolute top-0 right-0 w-[2px] h-full z-20" style={{ background: "rgba(255,255,255,.65)", filter: "blur(1px)" }} />
+                        </div>
+                        <div 
+                          className="h-full transition-all duration-500 relative z-0"
+                          style={{ 
+                            width: `${pctRoxoVisual}%`,
+                            background: "linear-gradient(90deg, #9333EA, #A855F7, #C084FC)",
+                            boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                          }}
+                        />
+                        {isExcedidoReceita && (
+                          <div 
+                            className="h-full transition-all duration-500 relative z-20"
+                            style={{ 
+                              width: `${pctVermelhoVisual}%`,
+                              background: "linear-gradient(180deg, #F87171 0%, #DC2626 45%, #B91C1C 100%)",
+                              boxShadow: "inset 0 1px 2px rgba(255,255,255,0.3)"
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 
             <Button 
               onClick={handleOpenAdd}
-              className="h-[40px] px-5 rounded-xl font-semibold text-[17px] bg-[#1E3A8B] hover:bg-[#1C2F55] text-white/95 shadow-sm border-none transition-all active:scale-95 flex items-center justify-center gap-1.5 mt-1"
+              className="h-[40px] px-5 rounded-[11px] font-bold text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1 mt-1"
+              style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
             >
-              <DynamicIcon name="Plus" className="w-5 h-5" strokeWidth={3} />
+              <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
               Novo Planejamento
             </Button>
           </div>
