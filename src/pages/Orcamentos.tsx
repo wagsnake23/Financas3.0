@@ -961,8 +961,7 @@ export default function Orcamentos() {
           <div className={cn("flex flex-col gap-5", isMobile ? "pt-[36px]" : "pt-[2px]")}>
             {/* Categoria Pai */}
             <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5 ml-1">
-                <span className="text-[16px] leading-none">🗂️</span>
+              <div className="flex items-center ml-1">
                 <Label className="text-[14px] font-medium text-slate-600">Categoria principal</Label>
               </div>
               <Select 
@@ -991,8 +990,7 @@ export default function Orcamentos() {
 
             {/* Subcategoria */}
             <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5 ml-1">
-                <span className="text-[16px] leading-none">🏷️</span>
+              <div className="flex items-center ml-1">
                 <Label className="text-[14px] font-medium text-slate-600">Subcategoria (alvo)</Label>
               </div>
               {formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem ? (
@@ -1029,8 +1027,7 @@ export default function Orcamentos() {
 
             {/* Abrangência */}
             <div className="space-y-2">
-              <div className="flex items-center gap-1.5 ml-1">
-                <span className="text-[16px] leading-none">📅</span>
+              <div className="flex items-center ml-1">
                 <Label className="text-[14px] font-medium text-slate-600">Abrangência</Label>
               </div>
               <RadioGroup value={formAbrangencia} onValueChange={(val: "current_month" | "future_months") => setFormAbrangencia(val)} className="grid grid-cols-2 gap-2 md:gap-3">
@@ -1051,8 +1048,7 @@ export default function Orcamentos() {
 
             {/* Valor */}
             <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5 ml-1">
-                <span className="text-[16px] leading-none">💰</span>
+              <div className="flex items-center ml-1">
                 <Label className="text-[14px] font-medium text-slate-600">
                   Valor planejado
                 </Label>
