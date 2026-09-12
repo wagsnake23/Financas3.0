@@ -677,15 +677,15 @@ export default function Orcamentos() {
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className="border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden mb-2">
                     <AccordionTrigger 
-                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-3" : "p-4")}
+                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-2.5" : "p-4")}
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
                     >
                       <div className="flex flex-col w-full text-left">
-                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-3" : "gap-4 mb-4")}>
+                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
                           <div className="flex items-center justify-center shrink-0 leading-none">
                             <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                           </div>
-                          <div className="flex flex-col flex-1 min-w-0 gap-1">
+                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-[2px]" : "gap-1")}>
                             <div className="flex justify-between items-center w-full">
                               <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
                                 {group.parent.nome}
@@ -694,7 +694,7 @@ export default function Orcamentos() {
                                 {formatCurrency(group.totalGasto)}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center w-full mt-0.5">
+                            <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
                               <span className={cn("font-semibold text-[#0556C3]/70 leading-none truncate pr-2", isMobile ? "text-[11.5px]" : "text-[12.5px]")}>
                                 {groupPctReceita}% da receita
                               </span>
@@ -705,7 +705,7 @@ export default function Orcamentos() {
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-2.5 pr-1">
+                        <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
                           <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                             <div 
                               className="h-full bg-emerald-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
@@ -722,7 +722,7 @@ export default function Orcamentos() {
                               />
                             )}
                           </div>
-                          <div className="flex justify-between items-center mt-1">
+                          <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
                             <div className="flex items-center gap-2">
                               <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos</span>
                             </div>
