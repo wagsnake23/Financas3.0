@@ -686,7 +686,7 @@ export default function Orcamentos() {
                   <span className="text-xl select-none">🧮</span>
                 </div>
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-extrabold text-[#1e3a8a] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] -mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Planejamento Mensal
                   </h1>
                   <p className="text-sm font-bold text-slate-500 -mt-0.5 tracking-wider opacity-80">
@@ -735,7 +735,7 @@ export default function Orcamentos() {
               <div className="flex items-start gap-1.5 mb-2.5">
                 <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
                 <div className="flex flex-col">
-                  <h2 className="text-[1.05rem] font-bold text-[#0556C3] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Planejamento Mensal
                   </h2>
                   <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
