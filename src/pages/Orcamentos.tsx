@@ -461,6 +461,205 @@ export default function Orcamentos() {
 
   const navigate = useNavigate();
 
+  const renderAccordionGroup = (group: any) => {
+                const semPlanejamento = group.totalPlanejado <= 0;
+                const excedido = group.totalGasto > group.totalPlanejado;
+                const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
+                const restante = group.totalPlanejado - group.totalGasto;
+                const groupPctReceita = receitaPrevista > 0 ? Math.round(((semPlanejamento ? group.totalGasto : group.totalPlanejado) / receitaPrevista) * 100) : 0;
+                const groupPctGasto = receitaPrevista > 0 ? Math.round((group.totalGasto / receitaPrevista) * 100) : 0;
+
+                let pctVerde = 0;
+                let pctRoxo = 0;
+                let pctVermelho = 0;
+
+                if (group.totalPlanejado > 0) {
+                  if (excedido) {
+                    pctVerde = 0;
+                    pctRoxo = (group.totalPlanejado / group.totalGasto) * 100;
+                    pctVermelho = ((group.totalGasto - group.totalPlanejado) / group.totalGasto) * 100;
+                  } else if (atingido) {
+                    pctVerde = 100;
+                    pctRoxo = 0;
+                  } else {
+                    pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
+                    pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
+                  }
+                }
+
+                return (
+                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-2")}>
+                    <AccordionTrigger 
+                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-primary [&>svg]:stroke-[4px]", isMobile ? "px-3 py-2.5" : "p-4")}
+                      style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
+                    >
+                      <div className="flex flex-col w-full text-left">
+                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
+                          <div className="flex items-center justify-center shrink-0 leading-none">
+                            <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
+                          </div>
+                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
+                            <div className="flex justify-between items-center w-full">
+                              <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
+                                {group.parent.nome}
+                              </span>
+                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-slate-800")}>
+                                {formatCurrency(group.totalGasto)}
+                              </span>
+                            </div>
+                            <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
+                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#0556C3]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
+                                {groupPctReceita}% da receita
+                              </span>
+                              <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
+                                semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
+                              )}>
+                                {semPlanejamento ? "Sem planejamento" : `de ${formatCurrency(group.totalPlanejado)}`}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
+                          <div className="flex w-full bg-slate-200/80 rounded-full h-[8px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                            <div 
+                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", atingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
+                              style={{ width: `${pctVerde}%` }}
+                            />
+                            <div 
+                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", excedido ? "bg-purple-500/90" : "bg-[#C4B5FD]")}
+                              style={{ width: `${pctRoxo}%` }}
+                            />
+                            {excedido && (
+                              <div 
+                                className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
+                                style={{ width: `${pctVermelho}%` }}
+                              />
+                            )}
+                          </div>
+                          <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos | {groupPctGasto}% gasto</span>
+                            </div>
+                            
+                            {semPlanejamento ? null : excedido ? (
+                              <span className={cn("bg-red-100/80 text-red-700 px-2 py-1 rounded-md font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
+                                Excedido em {formatCurrency(Math.abs(restante))}
+                              </span>
+                            ) : atingido ? (
+                              <span className={cn("font-semibold text-blue-500", isMobile ? "text-[12px]" : "text-[13px]")}>Planejamento atingido</span>
+                            ) : (
+                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
+                      <div className="flex flex-col gap-[10px]">
+                        {group.items.map((item) => {
+                          const semPlanejamentoItem = item.absoluto <= 0;
+                          const itemExcedido = item.gasto > item.absoluto;
+                          const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
+                          const itemRestante = item.absoluto - item.gasto;
+
+                          let itemPctVerde = 0;
+                          let itemPctRoxo = 0;
+                          let itemPctVermelho = 0;
+
+                          if (item.absoluto > 0) {
+                            if (itemExcedido) {
+                              itemPctVerde = 0;
+                              itemPctRoxo = (item.absoluto / item.gasto) * 100;
+                              itemPctVermelho = ((item.gasto - item.absoluto) / item.gasto) * 100;
+                            } else if (itemAtingido) {
+                              itemPctVerde = 100;
+                              itemPctRoxo = 0;
+                            } else {
+                              itemPctVerde = (item.gasto / item.absoluto) * 100;
+                              itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
+                            }
+                          }
+
+                          return (
+                            <div 
+                              key={item.id}
+                              onClick={() => handleOpenEdit(item)}
+                              className={cn(
+                                "flex flex-col w-full p-[14px] rounded-xl border border-[#D6E3F3] bg-[#FCFDFE] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
+                              )}
+                              style={{
+                                boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)"
+                              }}
+                            >
+                              <div className="flex flex-col gap-1.5 w-full">
+                                {/* Header da linha */}
+                                <div className="flex items-center gap-3 w-full mt-0.5">
+                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
+                                  <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
+                                    <div className="flex justify-between items-center w-full">
+                                      <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
+                                        {item.subCat?.nome}
+                                      </span>
+                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
+                                        {formatCurrency(item.gasto)}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between items-center w-full">
+                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#0556C3]">
+                                        {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
+                                      </span>
+                                      <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
+                                        semPlanejamentoItem ? "text-slate-400" : (itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75"
+                                      )}>
+                                        {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Progresso e Status */}
+                                <div className="flex items-center gap-2.5 w-full mt-0.5">
+                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[6px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                                    <div 
+                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemAtingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
+                                      style={{ width: `${itemPctVerde}%` }}
+                                    />
+                                    <div 
+                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemExcedido ? "bg-purple-500/90" : "bg-[#C4B5FD]")}
+                                      style={{ width: `${itemPctRoxo}%` }}
+                                    />
+                                    {itemExcedido && (
+                                      <div 
+                                        className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
+                                        style={{ width: `${itemPctVermelho}%` }}
+                                      />
+                                    )}
+                                  </div>
+                                  {!semPlanejamentoItem ? (
+                                      <span className={cn(
+                                        "text-[11px] font-bold shrink-0",
+                                        itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
+                                      )}>
+                                      {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[10px] font-bold text-slate-400 shrink-0">
+                                      Sem planejamento
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+  };
+
+
   if (isOrcamentosLoading || isLoadingCategories) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[50vh]">
@@ -726,202 +925,20 @@ export default function Orcamentos() {
               Nenhuma subcategoria disponível para orçamento.
             </div>
           ) : (
-            <Accordion type="single" collapsible className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 items-start">
-              {groupedOrcamentos.map((group) => {
-                const semPlanejamento = group.totalPlanejado <= 0;
-                const excedido = group.totalGasto > group.totalPlanejado;
-                const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
-                const restante = group.totalPlanejado - group.totalGasto;
-                const groupPctReceita = receitaPrevista > 0 ? Math.round(((semPlanejamento ? group.totalGasto : group.totalPlanejado) / receitaPrevista) * 100) : 0;
-                const groupPctGasto = receitaPrevista > 0 ? Math.round((group.totalGasto / receitaPrevista) * 100) : 0;
+            <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4")}>
 
-                let pctVerde = 0;
-                let pctRoxo = 0;
-                let pctVermelho = 0;
-
-                if (group.totalPlanejado > 0) {
-                  if (excedido) {
-                    pctVerde = 0;
-                    pctVermelho = 100;
-                  } else if (atingido) {
-                    pctVerde = 100;
-                    pctRoxo = 0;
-                  } else {
-                    pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
-                    pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
-                  }
-                }
-
-                return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-2")}>
-                    <AccordionTrigger 
-                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-primary [&>svg]:stroke-[4px]", isMobile ? "px-3 py-2.5" : "p-4")}
-                      style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
-                    >
-                      <div className="flex flex-col w-full text-left">
-                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
-                          <div className="flex items-center justify-center shrink-0 leading-none">
-                            <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
-                          </div>
-                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
-                            <div className="flex justify-between items-center w-full">
-                              <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
-                                {group.parent.nome}
-                              </span>
-                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-slate-800")}>
-                                {formatCurrency(group.totalGasto)}
-                              </span>
-                            </div>
-                            <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
-                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#0556C3]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
-                                {groupPctReceita}% da receita
-                              </span>
-                              <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
-                                semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
-                              )}>
-                                {semPlanejamento ? "Sem planejamento" : `de ${formatCurrency(group.totalPlanejado)}`}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
-                          <div className="flex w-full bg-slate-200/80 rounded-full h-[8px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
-                            <div 
-                              className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", atingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
-                              style={{ width: `${pctVerde}%` }}
-                            />
-                            <div 
-                              className="h-full bg-[#C4B5FD] transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                              style={{ width: `${pctRoxo}%` }}
-                            />
-                            {excedido && (
-                              <div 
-                                className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                                style={{ width: `${pctVermelho}%` }}
-                              />
-                            )}
-                          </div>
-                          <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
-                            <div className="flex items-center gap-2">
-                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos | {groupPctGasto}% gasto</span>
-                            </div>
-                            
-                            {semPlanejamento ? null : excedido ? (
-                              <span className={cn("bg-red-100/80 text-red-700 px-2 py-1 rounded-md font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                Excedido em {formatCurrency(Math.abs(restante))}
-                              </span>
-                            ) : atingido ? (
-                              <span className={cn("font-semibold text-blue-500", isMobile ? "text-[12px]" : "text-[13px]")}>Planejamento atingido</span>
-                            ) : (
-                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
-                      <div className="flex flex-col gap-[10px]">
-                        {group.items.map((item) => {
-                          const semPlanejamentoItem = item.absoluto <= 0;
-                          const itemExcedido = item.gasto > item.absoluto;
-                          const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
-                          const itemRestante = item.absoluto - item.gasto;
-
-                          let itemPctVerde = 0;
-                          let itemPctRoxo = 0;
-                          let itemPctVermelho = 0;
-
-                          if (item.absoluto > 0) {
-                            if (itemExcedido) {
-                              itemPctVerde = 0;
-                              itemPctVermelho = 100;
-                            } else if (itemAtingido) {
-                              itemPctVerde = 100;
-                              itemPctRoxo = 0;
-                            } else {
-                              itemPctVerde = (item.gasto / item.absoluto) * 100;
-                              itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
-                            }
-                          }
-
-                          return (
-                            <div 
-                              key={item.id}
-                              onClick={() => handleOpenEdit(item)}
-                              className={cn(
-                                "flex flex-col w-full p-[14px] rounded-xl border border-[#D6E3F3] bg-[#FCFDFE] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
-                              )}
-                              style={{
-                                boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)"
-                              }}
-                            >
-                              <div className="flex flex-col gap-1.5 w-full">
-                                {/* Header da linha */}
-                                <div className="flex items-center gap-3 w-full mt-0.5">
-                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
-                                  <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
-                                    <div className="flex justify-between items-center w-full">
-                                      <span className="font-bold text-slate-700 text-[14.5px] leading-none truncate pr-2">
-                                        {item.subCat?.nome}
-                                      </span>
-                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-slate-800")}>
-                                        {formatCurrency(item.gasto)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between items-center w-full">
-                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#0556C3]">
-                                        {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
-                                      </span>
-                                      <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
-                                        semPlanejamentoItem ? "text-slate-400" : (itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75"
-                                      )}>
-                                        {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                {/* Progresso e Status */}
-                                <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[6px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
-                                    <div 
-                                      className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemAtingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
-                                      style={{ width: `${itemPctVerde}%` }}
-                                    />
-                                    <div 
-                                      className="h-full bg-[#C4B5FD] transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                                      style={{ width: `${itemPctRoxo}%` }}
-                                    />
-                                    {itemExcedido && (
-                                      <div 
-                                        className="h-full bg-red-500/90 transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                                        style={{ width: `${itemPctVermelho}%` }}
-                                      />
-                                    )}
-                                  </div>
-                                  {!semPlanejamentoItem ? (
-                                      <span className={cn(
-                                        "text-[11px] font-bold shrink-0",
-                                        itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
-                                      )}>
-                                      {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
-                                    </span>
-                                  ) : (
-                                    <span className="text-[10px] font-bold text-slate-400 shrink-0">
-                                      Sem planejamento
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
+              {isMobile ? (
+                groupedOrcamentos.map((group) => renderAccordionGroup(group))
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4 w-full">
+                    {groupedOrcamentos.filter((_, i) => i % 2 === 0).map((group) => renderAccordionGroup(group))}
+                  </div>
+                  <div className="flex flex-col gap-4 w-full">
+                    {groupedOrcamentos.filter((_, i) => i % 2 === 1).map((group) => renderAccordionGroup(group))}
+                  </div>
+                </>
+              )}
             </Accordion>
           )}
         </div>
