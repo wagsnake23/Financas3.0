@@ -643,7 +643,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Receita Prevista</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(receitaPrevista)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-blue-600/90 leading-none">
+                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
                   100% da receita
                 </span>
               </div>
@@ -660,7 +660,7 @@ export default function Orcamentos() {
               <span className={cn("font-semibold uppercase tracking-wider text-[11px] mb-1 pr-10", planejadoUltrapassaReceita ? "text-red-500" : "text-slate-500")}>Total Planejado</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", planejadoUltrapassaReceita ? "text-red-600" : "text-slate-800")}>{formatCurrency(totalPlanejado)}</span>
               <div className="mt-1.5">
-                <span className={cn("text-[12px] font-semibold leading-none", planejadoUltrapassaReceita ? "text-red-500/90" : "text-purple-600/90")}>
+                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
                   {receitaPrevista > 0 ? Math.round((totalPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -677,7 +677,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Total Gasto</span>
               <span className="font-bold text-slate-800 text-[1.15rem] leading-none">{formatCurrency(totalRealizado)}</span>
               <div className="mt-1.5">
-                <span className="text-[12px] font-semibold text-red-600/90 leading-none">
+                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
                   {receitaPrevista > 0 ? Math.round((totalRealizado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -694,7 +694,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Disponível</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", disponivel < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(disponivel)}</span>
               <div className="mt-1.5">
-                <span className={cn("text-[12px] font-semibold leading-none", disponivel < 0 ? "text-red-500/90" : "text-emerald-600/90")}>
+                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
                   {receitaPrevista > 0 ? Math.round((disponivel / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -711,7 +711,7 @@ export default function Orcamentos() {
               <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px] mb-1 pr-10">Saldo Não Planejado</span>
               <span className={cn("font-bold text-[1.15rem] leading-none", saldoPlanejado < 0 ? "text-red-600" : "text-slate-800")}>{formatCurrency(saldoPlanejado)}</span>
               <div className="mt-1.5">
-                <span className={cn("text-[12px] font-semibold leading-none", saldoPlanejado < 0 ? "text-red-500/90" : "text-amber-600/90")}>
+                <span className="text-[12px] font-semibold text-[#0556C3] leading-none">
                   {receitaPrevista > 0 ? Math.round((saldoPlanejado / receitaPrevista) * 100) : 0}% da receita
                 </span>
               </div>
@@ -772,9 +772,7 @@ export default function Orcamentos() {
                               </span>
                             </div>
                             <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
-                              <span className={cn("font-semibold leading-none truncate pr-2", isMobile ? "text-[12.5px]" : "text-[13.5px]",
-                                semPlanejamento ? "text-slate-400" : excedido ? "text-red-600" : atingido ? "text-blue-500" : "text-emerald-600"
-                              )}>
+                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#0556C3]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
                                 {groupPctReceita}% da receita
                               </span>
                               <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
@@ -871,9 +869,7 @@ export default function Orcamentos() {
                                       </span>
                                     </div>
                                     <div className="flex justify-between items-center w-full">
-                                      <span className={cn("font-semibold leading-none truncate pr-2 text-[12px]",
-                                        semPlanejamentoItem ? "text-slate-400" : itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
-                                      )}>
+                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#0556C3]">
                                         {receitaPrevista > 0 ? Math.round((item.gasto / receitaPrevista) * 100) : 0}% da receita
                                       </span>
                                       <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
@@ -1091,7 +1087,7 @@ export default function Orcamentos() {
                       {formatCurrency(saldoRestante)} disponíveis
                     </span>
                     <span className="text-slate-300 mx-1.5">|</span>
-                    <span className={cn("font-semibold", isHighPct ? "text-amber-500" : "text-[#0556C3]")}>
+                    <span className="font-semibold text-[#0556C3]">
                       {pctReceita.toFixed(1).replace('.', ',')}% da receita
                     </span>
                   </div>
