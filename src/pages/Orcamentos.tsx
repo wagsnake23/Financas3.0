@@ -572,7 +572,7 @@ export default function Orcamentos() {
                     </div>
 
                     {/* Barra de Progresso Inteligente */}
-                    <div className="flex w-full bg-slate-300/70 rounded-full h-[12px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] mt-0.5 mb-1.5">
+                    <div className="flex w-full bg-slate-300/70 rounded-full h-[18px] overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.12)] mt-0.5 mb-1.5">
                       <div 
                         className="h-full bg-[#0556C3]/90 transition-all duration-500"
                         style={{ width: `${pctAzulVisual}%` }}
@@ -754,7 +754,7 @@ export default function Orcamentos() {
                 return (
                   <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-2")}>
                     <AccordionTrigger 
-                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent", isMobile ? "px-3 py-2.5" : "p-4")}
+                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-primary [&>svg]:stroke-[4px]", isMobile ? "px-3 py-2.5" : "p-4")}
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
                     >
                       <div className="flex flex-col w-full text-left">
@@ -787,7 +787,7 @@ export default function Orcamentos() {
                         </div>
 
                         <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
-                          <div className="flex w-full bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                          <div className="flex w-full bg-slate-200/80 rounded-full h-[8px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                             <div 
                               className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", atingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
                               style={{ width: `${pctVerde}%` }}
@@ -887,7 +887,7 @@ export default function Orcamentos() {
                                 
                                 {/* Progresso e Status */}
                                 <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[10px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
+                                  <div className="flex flex-1 bg-slate-200/80 rounded-full h-[6px] overflow-hidden shadow-[inset_0_1px_2px_rgba(15,23,42,0.08),inset_0_-1px_1px_rgba(255,255,255,0.8)]">
                                     <div 
                                       className={cn("h-full transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]", itemAtingido ? "bg-blue-500/90" : "bg-emerald-500/90")}
                                       style={{ width: `${itemPctVerde}%` }}
