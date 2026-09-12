@@ -367,6 +367,80 @@ export default function Orcamentos() {
   };
 
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [deleteValidationAlert, setDeleteValidationAlert] = useState<{
+    open: boolean;
+    type: "current" | "future";
+    category?: string;
+    parentCatName?: string;
+    parentCatIcon?: string;
+    month?: string;
+    spent?: number;
+  } | null>(null);
+  const [isCheckingExpenses, setIsCheckingExpenses] = useState(false);
+
+  const handleTriggerDelete = async () => {
+    if (!editingItem) return;
+
+    const subCatId = editingItem.categoria_id;
+    const isFuture = formAbrangencia === "future_months";
+
+    if (editingItem.gasto > 0) {
+      setDeleteValidationAlert({
+        open: true,
+        type: "current",
+        category: editingItem.subCat?.nome,
+        parentCatName: editingItem.parentCat?.nome,
+        parentCatIcon: editingItem.parentCat?.icone,
+        month: format(new Date(mesAno + "-01T00:00:00"), "MMMM/yyyy", { locale: ptBR }),
+        spent: editingItem.gasto
+      });
+      return;
+    }
+
+    if (!isFuture) {
+      setIsConfirmDeleteOpen(true);
+    } else {
+      setIsCheckingExpenses(true);
+      try {
+        const nextMonthStart = format(addMonths(new Date(mesAno + "-01T00:00:00"), 1), "yyyy-MM-dd");
+
+        const { data: despesas, error: despError } = await supabase
+          .from("despesas")
+          .select("id")
+          .eq("user_id", user?.id)
+          .eq("categoria_id", subCatId);
+
+        if (despError) throw despError;
+
+        if (despesas && despesas.length > 0) {
+          const despesaIds = despesas.map((d: any) => d.id);
+          
+          const { data: parcelas, error: parcError } = await supabase
+            .from("despesas_parcelas")
+            .select("id")
+            .in("despesa_id", despesaIds)
+            .gte("vencimento", nextMonthStart)
+            .limit(1);
+
+          if (parcError) throw parcError;
+
+          if (parcelas && parcelas.length > 0) {
+            setDeleteValidationAlert({
+              open: true,
+              type: "future"
+            });
+            return;
+          }
+        }
+        
+        setIsConfirmDeleteOpen(true);
+      } catch (err) {
+        showErrorToast("Erro ao verificar lançamentos futuros.");
+      } finally {
+        setIsCheckingExpenses(false);
+      }
+    }
+  };
 
   const handleDelete = async () => {
     if (!editingItem) return;
@@ -1029,19 +1103,19 @@ export default function Orcamentos() {
               {editingItem && (
                 <Button
                   type="button"
-                  onClick={() => setIsConfirmDeleteOpen(true)}
+                  onClick={handleTriggerDelete}
                   className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-red-500 hover:bg-slate-50"
-                  disabled={isSaving}
+                  disabled={isSaving || isCheckingExpenses}
                 >
                   <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
-                  Excluir
+                  {isCheckingExpenses ? "Verificando..." : "Excluir"}
                 </Button>
               )}
               <Button
                 type="button"
                 className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal disabled:opacity-50 disabled:pointer-events-none"
                 style={{ "--cor-topo": "#25AF6A", "--cor-base": "#1AA361" } as any}
-                disabled={isSaving || (formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem)}
+                disabled={isSaving || isCheckingExpenses || (formParentId !== UNSELECTED_VALUE && formSubOptions.length === 0 && !editingItem)}
                 onClick={handleSave}
               >
                 {isSaving ? "Salvando..." : (
@@ -1055,6 +1129,56 @@ export default function Orcamentos() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Validation Alert */}
+      <AlertDialog open={deleteValidationAlert?.open || false} onOpenChange={(open) => !open && setDeleteValidationAlert(null)}>
+        <AlertDialogContent 
+          className={cn("sm:max-w-[340px] !p-5 !pb-4 !rounded-2xl shadow-lg border border-[#DCE8F7] dialog-mobile w-[96%] max-w-[96%]")}
+          style={{ backgroundColor: "#F5F9FF" }}
+        >
+          <AlertDialogHeader className="text-center space-y-3">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-[19px] font-black text-red-600 m-0 leading-none">
+              <DynamicIcon name="AlertTriangle" className="h-[22px] w-[22px]" />
+              Exclusão Bloqueada
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center flex flex-col gap-3 text-slate-700 m-0">
+              <p className="text-[14px] leading-[1.3] m-0 font-medium">
+                {deleteValidationAlert?.type === "current" 
+                  ? "Existem gastos registrados nesta subcategoria."
+                  : "Foram encontrados gastos vinculados a esta subcategoria em períodos futuros."}
+              </p>
+
+              {deleteValidationAlert?.type === "current" && (
+                <div className="flex flex-col mt-1 gap-2">
+                  {/* Informações da Subcategoria */}
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-[20px] leading-none">🛒</span>
+                    <span className="font-[700] text-[17px] text-slate-800 tracking-tight">{deleteValidationAlert.category}</span>
+                  </div>
+
+                  {/* Valor Gasto */}
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="font-black text-red-600 text-[28px] leading-none tracking-tight mb-0.5">
+                      {deleteValidationAlert.spent !== undefined ? formatCurrency(deleteValidationAlert.spent) : 'R$ 0,00'}
+                    </span>
+                    <span className="text-[14px] text-slate-500 font-medium">
+                      Valor já gasto em <span className="capitalize">{deleteValidationAlert.month}</span>
+                    </span>
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-0 flex justify-center sm:justify-center w-full">
+            <AlertDialogCancel
+              className="w-[85%] max-w-[280px] rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center btn-3d-modal m-0 mx-auto"
+              style={{ "--cor-topo": "#3B82F6", "--cor-base": "#2563EB" } as any}
+            >
+              Entendi
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Confirm Delete Dialog */}
       <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
