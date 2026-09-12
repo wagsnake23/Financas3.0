@@ -681,23 +681,27 @@ export default function Orcamentos() {
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
                     >
                       <div className="flex flex-col w-full text-left">
-                        <div className={cn("flex justify-between items-center", isMobile ? "mb-3" : "mb-4")}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center shrink-0 leading-none">
-                              <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
-                            </div>
-                            <div className="flex flex-col justify-center">
-                              <span className={cn("font-semibold text-slate-800 leading-tight", isMobile ? "text-[18px]" : "text-[20px]")}>{group.parent.nome}</span>
-                              <span className={cn("font-medium text-slate-500 mt-0.5", isMobile ? "text-[12px]" : "text-[13px]")}>
-                                {semPlanejamento ? "Planejamento não definido" : `Planejado: ${formatCurrency(group.totalPlanejado)}`}
+                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-3" : "gap-4 mb-4")}>
+                          <div className="flex items-center justify-center shrink-0 leading-none">
+                            <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
+                          </div>
+                          <div className="flex flex-col flex-1 min-w-0 gap-1">
+                            <div className="flex justify-between items-center w-full">
+                              <span className={cn("font-semibold text-slate-800 leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
+                                {group.parent.nome}
+                              </span>
+                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-slate-800")}>
+                                {formatCurrency(group.totalGasto)}
                               </span>
                             </div>
-                          </div>
-                          <div className="flex flex-col items-end mr-1">
-                            <span className={cn("font-bold", excedido && !semPlanejamento ? "text-red-600" : "text-slate-700", isMobile ? "text-[14px]" : "text-[15px]")}>
-                              {formatCurrency(group.totalGasto)}
-                            </span>
-                            <span className={cn("font-bold text-slate-400 uppercase tracking-wider mt-0.5", isMobile ? "text-[9px]" : "text-[10px]")}>Gasto</span>
+                            <div className="flex justify-between items-center w-full mt-0.5">
+                              <span className={cn("font-semibold text-[#0556C3]/70 leading-none truncate pr-2", isMobile ? "text-[11.5px]" : "text-[12.5px]")}>
+                                {groupPctReceita}% da receita
+                              </span>
+                              <span className={cn("font-semibold text-slate-400 leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]")}>
+                                {semPlanejamento ? "Não planejado" : `de ${formatCurrency(group.totalPlanejado)}`}
+                              </span>
+                            </div>
                           </div>
                         </div>
 
@@ -720,9 +724,6 @@ export default function Orcamentos() {
                           </div>
                           <div className="flex justify-between items-center mt-1">
                             <div className="flex items-center gap-2">
-                              <span className="bg-blue-500/10 text-blue-600 rounded-full px-2.5 py-1 text-[12px] font-semibold leading-none">
-                                {groupPctReceita}% da receita
-                              </span>
                               <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos</span>
                             </div>
                             
