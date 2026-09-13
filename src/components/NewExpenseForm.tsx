@@ -290,7 +290,7 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                         ))
                         : bancos.map((banco) => (
                           <SelectItem key={banco.id} value={banco.id}>
-                            {banco.nome}
+                            {banco.banco}
                           </SelectItem>
                         ))}
                     </SelectContent>
@@ -355,11 +355,18 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
                 Descrição
               </FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Adicione uma descrição (opcional)"
-                  className="resize-y input-3d-premium"
-                  {...field}
-                />
+                  <Textarea
+                    placeholder="Adicione uma descrição (opcional)"
+                    className="resize-y input-3d-premium"
+                    {...field}
+                    onChange={(e) => {
+                      let val = e.target.value;
+                      if (val.length > 0) {
+                        val = val.charAt(0).toUpperCase() + val.slice(1);
+                      }
+                      field.onChange(val);
+                    }}
+                  />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -556,9 +556,9 @@ export default function Metas() {
           onValueChange={(v) => { setParentIdFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}selectedParentId`]: false }); }}
         >
           <SelectTrigger id={`${fieldPrefix}selectedParentId`} className={cn(
-            "rounded-xl input-3d-premium bg-white transition-all duration-200",
+            "rounded-xl input-3d-premium bg-white transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800",
             parentId === UNSELECTED_VALUE && "text-gray-400",
-            isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
+            "h-[50px] md:h-[53px] text-[15px] font-medium",
             getBorderClass({ isInvalid: errors[`${fieldPrefix}selectedParentId`], isValid: errors[`${fieldPrefix}selectedParentId`] === false, variant: "green" })
           )}>
             <SelectValue placeholder="Selecione a categoria" />
@@ -595,8 +595,8 @@ export default function Metas() {
             }}
             placeholder="Ex: Trocar de carro"
             className={cn(
-              "rounded-xl input-3d-premium bg-white transition-all duration-200",
-              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
+              "rounded-xl input-3d-premium bg-white transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800",
+              "h-[50px] md:h-[53px] text-[15px] font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}nomeMeta`], isValid: errors[`${fieldPrefix}nomeMeta`] === false, variant: "green" })
             )}
           />
@@ -609,7 +609,7 @@ export default function Metas() {
             onClick={() => setEmojiOpenFn(true)}
             className={cn(
               "rounded-xl input-3d-premium bg-white font-bold transition-all duration-200 text-2xl px-3",
-              isMobile ? "h-9 w-12" : "h-10 w-14"
+              "h-[50px] w-[50px] md:h-[53px] md:w-[53px]"
             )}
           >
             {currentIcone}
@@ -655,8 +655,8 @@ export default function Metas() {
             value={vObj}
             onChange={(v) => { setVObjFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorObjetivo`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200",
-              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
+              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800",
+              "h-[50px] md:h-[53px] text-[15px] font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorObjetivo`], isValid: errors[`${fieldPrefix}valorObjetivo`] === false, variant: "green" })
             )}
           />
@@ -668,8 +668,8 @@ export default function Metas() {
             value={vMen}
             onChange={(v) => { setVMenFn(v); setErrorsFn({ ...errors, [`${fieldPrefix}valorMensal`]: false }); }}
             className={cn(
-              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200",
-              isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
+              "rounded-xl input-3d-premium bg-white px-3 transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] text-gray-800",
+              "h-[50px] md:h-[53px] text-[15px] font-medium",
               getBorderClass({ isInvalid: errors[`${fieldPrefix}valorMensal`], isValid: errors[`${fieldPrefix}valorMensal`] === false, variant: "green" })
             )}
           />
@@ -684,10 +684,10 @@ export default function Metas() {
           type="button"
           onClick={() => setCalOpenFn(true)}
           className={cn(
-            "w-full justify-start text-left rounded-xl",
+            "w-full justify-start text-left rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]",
             "input-3d-premium bg-white px-3 transition-all duration-200",
             !dLim && "text-gray-400",
-            isMobile ? "font-bold h-9 text-sm" : "font-medium h-10 text-sm"
+            "h-[50px] md:h-[53px] text-[15px] font-medium"
           )}
         >
           <DynamicIcon name="📅" className="mr-2 h-4 w-4 text-[#1e3a8a]/70" />

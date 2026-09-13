@@ -363,7 +363,13 @@ export const TransactionForm = ({ onAddTransaction }: TransactionFormProps) => {
           <Textarea
             id="description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              let val = e.target.value;
+              if (val.length > 0) {
+                val = val.charAt(0).toUpperCase() + val.slice(1);
+              }
+              setDescription(val);
+            }}
             placeholder="Adicione uma descrição..."
             rows={3}
             className="rounded-xl"

@@ -736,7 +736,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <Textarea
           id="descricao"
           value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
+          onChange={(e) => {
+            let val = e.target.value;
+            if (val.length > 0) {
+              val = val.charAt(0).toUpperCase() + val.slice(1);
+            }
+            setDescricao(val);
+          }}
           placeholder="Detalhes sobre a despesa..."
           rows={2}
           maxLength={45}
