@@ -488,19 +488,34 @@ export default function Orcamentos() {
                 }
 
                 return (
-                  <AccordionItem key={group.parent.id} value={group.parent.id} className={cn("border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden", isMobile ? "mb-[3px]" : "mb-0")}>
+                  <AccordionItem 
+                    key={group.parent.id} 
+                    value={group.parent.id} 
+                    className={cn(
+                      "border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-200",
+                      "data-[state=open]:bg-[linear-gradient(180deg,#FAFCFF_0%,#F5F9FF_100%)] data-[state=open]:border-[#BFD7FF]",
+                      isMobile ? "mb-[3px]" : "mb-0"
+                    )}
+                  >
                     <AccordionTrigger 
-                      className={cn("hover:no-underline hover:bg-transparent transition-colors [&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-primary [&>svg]:stroke-[4px]", isMobile ? "px-3 py-2.5" : "p-4")}
+                      className={cn(
+                        "group hover:no-underline hover:bg-transparent transition-colors",
+                        "[&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-[#2563EB] [&>svg]:stroke-[4px]",
+                        isMobile ? "px-3 py-2.5" : "p-4"
+                      )}
                       style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
                     >
                       <div className="flex flex-col w-full text-left">
                         <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
-                          <div className="flex items-center justify-center shrink-0 leading-none">
+                          <div className="flex items-center justify-center shrink-0 leading-none transition-all duration-200 group-data-[state=open]:drop-shadow-sm group-data-[state=open]:brightness-110">
                             <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
                           </div>
                           <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
                             <div className="flex justify-between items-center w-full">
-                              <span className={cn("font-semibold text-[#112B5E] leading-none tracking-tight truncate pr-2", isMobile ? "text-[16px]" : "text-[18px]")}>
+                              <span className={cn(
+                                "font-semibold group-data-[state=open]:font-bold transition-all text-[#112B5E] leading-none tracking-tight truncate pr-2",
+                                isMobile ? "text-[16px]" : "text-[18px]"
+                              )}>
                                 {group.parent.nome}
                               </span>
                               <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-[#112B5E]")}>
@@ -586,11 +601,11 @@ export default function Orcamentos() {
                               key={item.id}
                               onClick={() => handleOpenEdit(item)}
                               className={cn(
-                                "flex flex-col w-full p-[14px] rounded-xl border border-[#D6E3F3] bg-[#FCFDFE] cursor-pointer transition-colors hover:bg-slate-50/80 active:bg-slate-100/50"
+                                "flex flex-col w-full p-[14px] bg-[#FFFFFF] cursor-pointer",
+                                "border border-[#DCE7F7] rounded-[16px] shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
+                                !isMobile && "transition-all duration-[180ms] ease-out hover:border-[#7AA7FF] hover:-translate-y-[1px]",
+                                isMobile && "active:scale-[0.98] active:transition-transform active:duration-[100ms] active:ease-out"
                               )}
-                              style={{
-                                boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -1px 3px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)"
-                              }}
                             >
                               <div className="flex flex-col gap-1.5 w-full">
                                 {/* Header da linha */}
