@@ -871,16 +871,27 @@ export default function Orcamentos() {
 
             {/* Bloco Planejamento do Mês */}
             <div className="flex flex-col rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,.06)] border border-slate-200/80 p-3 mb-4" style={{ background: "linear-gradient(180deg, #FFFFFF, #FAFBFD)" }}>
-              <div className="flex items-start gap-1.5 mb-2.5">
-                <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
-                <div className="flex flex-col">
-                  <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
-                    Planejamento Mensal
-                  </h2>
-                  <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
-                    {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
-                  </span>
+              <div className="flex items-start justify-between mb-2.5">
+                <div className="flex items-start gap-1.5">
+                  <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
+                  <div className="flex flex-col">
+                    <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+                      Planejamento Mensal
+                    </h2>
+                    <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
+                      {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
+                    </span>
+                  </div>
                 </div>
+
+                <button
+                  onClick={handleOpenDelete}
+                  disabled={orcamentos.length === 0}
+                  className="flex items-center justify-center w-[34px] h-[34px] rounded-[10px] bg-red-500/10 text-red-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-500/20 active:scale-95"
+                  title={orcamentos.length === 0 ? "Nenhum planejamento para excluir" : "Excluir Planejamentos"}
+                >
+                  <Trash2 className="w-[17px] h-[17px]" strokeWidth={2.5} />
+                </button>
               </div>
               
               {(() => {
