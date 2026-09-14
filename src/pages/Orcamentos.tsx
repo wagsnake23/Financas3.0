@@ -45,7 +45,9 @@ export default function Orcamentos() {
     deleteOrcamento,
     isDeleting,
     syncOrcamentos,
-    isSyncing
+    isSyncing,
+    deleteOrcamentosMassAction,
+    isDeletingMass
   } = useOrcamentos(user?.id, mesAno);
 
   // Fetch Categories
@@ -88,18 +90,18 @@ export default function Orcamentos() {
   const receitaPrevista = useMemo(() => receitas.reduce((acc, curr) => acc + curr.valor, 0), [receitas]);
 
   // Fetch Realizado (Despesas do mês)
-  const orcamentoSubIds = useMemo(() => orcamentos.map(o => o.categoria_id), [orcamentos]);
+  const allSubIds = useMemo(() => subCategories.map(s => s.id), [subCategories]);
   
   const { data: realizadoMap = {} } = useQuery<Record<string, number>>({
-    queryKey: ["orcamentos-realizado", user?.id, mesAno, orcamentoSubIds],
+    queryKey: ["orcamentos-realizado", user?.id, mesAno, allSubIds],
     queryFn: async () => {
-      if (!user?.id || orcamentoSubIds.length === 0) return {};
+      if (!user?.id || allSubIds.length === 0) return {};
       
       const { data: despesas, error: despError } = await supabase
         .from("despesas")
         .select("id, categoria_id")
         .eq("user_id", user.id)
-        .in("categoria_id", orcamentoSubIds);
+        .in("categoria_id", allSubIds);
       
       if (despError) throw despError;
       if (!despesas || despesas.length === 0) return {};
@@ -131,7 +133,7 @@ export default function Orcamentos() {
 
       return result;
     },
-    enabled: !!user && orcamentoSubIds.length > 0,
+    enabled: !!user && allSubIds.length > 0,
   });
 
   // LOGICA DE AUTO-CRIAÇÃO E REPLICAÇÃO SILENCIOSA
@@ -139,6 +141,12 @@ export default function Orcamentos() {
     async function handleAutoSync() {
       if (!user?.id || isLoadingCategories || isOrcamentosLoading || isSyncing) return;
       
+      const clearedFrom = localStorage.getItem(`orcamentos_cleared_from_${user.id}`);
+      if (clearedFrom && mesAno >= clearedFrom) return;
+      
+      const clearedExact = localStorage.getItem(`orcamentos_cleared_exact_${user.id}_${mesAno}`);
+      if (clearedExact === "true") return;
+
       // Checar se o usuário tem QUALQUER orçamento na vida
       const { data: anyOrcamento, error: checkError } = await supabase
         .from("orcamentos")
@@ -229,21 +237,25 @@ export default function Orcamentos() {
 
   // Estruturação dos dados para a View
   const calculatedOrcamentos = useMemo(() => {
-    return orcamentos.map(orc => {
-      const subCat = subCategories.find(c => c.id === orc.categoria_id);
-      const parentCat = subCat ? parentCategories.find(p => p.id === subCat.parent_id) : null;
+    return subCategories.map(subCat => {
+      const orc = orcamentos.find(o => o.categoria_id === subCat.id);
+      const parentCat = parentCategories.find(p => p.id === subCat.parent_id) || null;
       
-      let absoluto = orc.tipo_planejamento === "valor" 
-        ? orc.valor_planejado 
-        : (receitaPrevista * (orc.percentual_planejado || 0)) / 100;
+      const gasto = realizadoMap[subCat.id] || 0;
+
+      let absoluto = 0;
+      if (orc) {
+        absoluto = orc.tipo_planejamento === "valor" 
+          ? orc.valor_planejado 
+          : (receitaPrevista * (orc.percentual_planejado || 0)) / 100;
+      }
       
-      const gasto = realizadoMap[orc.categoria_id] || 0;
       const percentualGasto = absoluto > 0 ? (gasto / absoluto) * 100 : (gasto > 0 ? 100 : 0);
       const excedido = gasto > absoluto;
       const restante = absoluto - gasto;
 
       return {
-        ...orc,
+        ...(orc || { id: `virtual-${subCat.id}`, user_id: user?.id || "", categoria_id: subCat.id, mes_ano: mesAno, tipo_planejamento: "valor" as const, valor_planejado: 0, percentual_planejado: 0, created_at: "", updated_at: "" }),
         absoluto,
         gasto,
         percentualGasto,
@@ -252,8 +264,8 @@ export default function Orcamentos() {
         subCat,
         parentCat,
       };
-    }).filter(o => o.subCat != null);
-  }, [orcamentos, subCategories, parentCategories, receitaPrevista, realizadoMap]);
+    }).filter(o => o.parentCat != null);
+  }, [orcamentos, subCategories, parentCategories, receitaPrevista, realizadoMap, mesAno, user?.id]);
 
   // Agrupamento por Categoria Pai
   const groupedOrcamentos = useMemo(() => {
@@ -306,6 +318,65 @@ export default function Orcamentos() {
   const [formValor, setFormValor] = useState<number | undefined>(undefined);
   const [formAbrangencia, setFormAbrangencia] = useState<"current_month" | "future_months">("current_month");
 
+  // Estados Delete Modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteApplyToFuture, setDeleteApplyToFuture] = useState<boolean>(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Fetch impact count for delete
+  const { data: deleteAffectedCount = null, isLoading: isLoadingDeleteCount } = useQuery({
+    queryKey: ["orcamentos-count", user?.id, mesAno, deleteApplyToFuture],
+    queryFn: async () => {
+      if (!user?.id || !isDeleteModalOpen) return null;
+      let query = supabase.from("orcamentos").select("id", { count: "exact" }).eq("user_id", user.id);
+      if (deleteApplyToFuture) query = query.gte("mes_ano", mesAno);
+      else query = query.eq("mes_ano", mesAno);
+      const { count, error } = await query;
+      if (error) throw error;
+      return count;
+    },
+    enabled: isDeleteModalOpen && !!user?.id,
+  });
+
+  const handleOpenDelete = () => {
+    setDeleteApplyToFuture(false);
+    setShowDeleteConfirm(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleTriggerDeleteMass = () => {
+    if (deleteAffectedCount === 0) {
+      showErrorToast("Não existem planejamentos para remover no período selecionado.");
+      return;
+    }
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteMass = async () => {
+    try {
+      if (deleteOrcamentosMassAction) {
+        await deleteOrcamentosMassAction({
+          mes_ano: mesAno,
+          applyToFuture: deleteApplyToFuture
+        });
+        
+        // Registrar a exclusão manual para evitar que o Auto Sync recrie os orçamentos
+        if (deleteApplyToFuture) {
+          localStorage.setItem(`orcamentos_cleared_from_${user?.id}`, mesAno);
+        } else {
+          localStorage.setItem(`orcamentos_cleared_exact_${user?.id}_${mesAno}`, "true");
+        }
+
+        showSuccessToast("Planejamentos excluídos com sucesso!");
+        setIsDeleteModalOpen(false);
+        setShowDeleteConfirm(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+      showErrorToast(error.message || "Erro ao excluir planejamentos.");
+    }
+  };
+
   const formSubOptions = useMemo(() => {
     if (formParentId === UNSELECTED_VALUE) return [];
     const subs = subCategories.filter(s => s.parent_id === formParentId);
@@ -323,7 +394,10 @@ export default function Orcamentos() {
     setEditingItem(item);
     setFormParentId(item.parentCat?.id || UNSELECTED_VALUE);
     setFormSubId(item.categoria_id);
-    setFormValor(item.absoluto);
+    
+    const valorInicial = item.absoluto > 0 ? item.absoluto : item.gasto;
+    setFormValor(valorInicial);
+    
     setFormAbrangencia("current_month");
     setIsModalOpen(true);
   };
@@ -625,7 +699,7 @@ export default function Orcamentos() {
                                         {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
                                       </span>
                                       <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
-                                        semPlanejamentoItem ? "text-slate-400" : (itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75"
+                                        semPlanejamentoItem ? "text-slate-400" : ((itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75")
                                       )}>
                                         {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
                                       </span>
@@ -752,14 +826,23 @@ export default function Orcamentos() {
               </div>
             </div>
 
-            <Button 
-              onClick={handleOpenAdd}
-              className="h-[40px] px-5 rounded-[11px] font-bold text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1 mt-1"
-              style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
-            >
-              <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
-              Novo Planejamento
-            </Button>
+            <div className="hidden md:flex items-center gap-3">
+              <Button 
+                onClick={handleOpenDelete}
+                className="h-[40px] px-5 rounded-[11px] font-bold text-[14px] text-red-600 bg-white border border-red-500/30 hover:bg-red-50 hover:border-red-500/50 transition-all flex items-center justify-center gap-2 mt-1 shadow-sm"
+              >
+                <Trash2 className="h-4 w-4" />
+                Excluir Planejamento
+              </Button>
+              <Button 
+                onClick={handleOpenAdd}
+                className="h-[40px] px-5 rounded-[11px] font-bold text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1 mt-1"
+                style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+              >
+                <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
+                Novo Planejamento
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -1150,7 +1233,7 @@ export default function Orcamentos() {
               <CurrencyBR
                 value={formValor || 0}
                 onChange={setFormValor}
-                className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800"
+                className="h-[50px] md:h-[53px] text-[18px] font-semibold rounded-xl transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800 disabled:opacity-75 disabled:bg-slate-50"
                 placeholder="R$ 0,00"
               />
               {(() => {
@@ -1215,6 +1298,128 @@ export default function Orcamentos() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* EXCLUIR PLANEJAMENTO MODAL */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent 
+          className={cn(
+            isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[300px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[400px] !pb-5 !rounded-[22px] shadow-none border-none"
+          )}
+          style={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+            backgroundBlendMode: "soft-light",
+            backdropFilter: "blur(6px)",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 10px 40px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset"
+          }}
+        >
+          <DialogHeader className={cn("flex flex-row items-center justify-between !text-left !mt-0 relative pb-2", isMobile ? "!mb-3" : "!mb-4")} style={{ borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
+            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+              <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#ef4444]/90 tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Excluir Planejamentos
+                </DialogTitle>
+              </div>
+              <p className="text-[13px] text-slate-500 font-medium leading-snug mt-2">
+                Remova os valores planejados do período selecionado. Os gastos já registrados permanecerão intactos.
+              </p>
+            </div>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-5 w-full">
+            <div className="grid gap-3 w-full mt-2">
+              <Label className="font-bold text-[13px] text-slate-700 ml-1">Abrangência da Exclusão <span className="text-red-500">*</span></Label>
+              <RadioGroup 
+                value={deleteApplyToFuture ? "future_months" : "current_month"} 
+                onValueChange={(val) => setDeleteApplyToFuture(val === "future_months")}
+                className="flex flex-col gap-3"
+              >
+                <div className={cn(
+                  "flex items-center space-x-3 border p-3.5 rounded-2xl cursor-pointer transition-all duration-200",
+                  !deleteApplyToFuture ? "border-red-500 bg-red-50/50 shadow-sm" : "border-slate-200 hover:border-slate-300 bg-white"
+                )}
+                onClick={() => setDeleteApplyToFuture(false)}>
+                  <RadioGroupItem value="current_month" id="del-current" className={cn("w-5 h-5", !deleteApplyToFuture ? "text-red-500 border-red-500 after:bg-red-500" : "border-slate-300")} />
+                  <div className="flex flex-col flex-1 leading-tight gap-1">
+                    <Label htmlFor="del-current" className={cn("font-bold cursor-pointer text-[14px]", !deleteApplyToFuture ? "text-red-500" : "text-slate-700")}>Excluir somente este mês</Label>
+                  </div>
+                </div>
+                
+                <div className={cn(
+                  "flex items-center space-x-3 border p-3.5 rounded-2xl cursor-pointer transition-all duration-200",
+                  deleteApplyToFuture ? "border-red-500 bg-red-50/50 shadow-sm" : "border-slate-200 hover:border-slate-300 bg-white"
+                )}
+                onClick={() => setDeleteApplyToFuture(true)}>
+                  <RadioGroupItem value="future_months" id="del-future" className={cn("w-5 h-5", deleteApplyToFuture ? "text-red-500 border-red-500 after:bg-red-500" : "border-slate-300")} />
+                  <div className="flex flex-col flex-1 leading-tight gap-1">
+                    <Label htmlFor="del-future" className={cn("font-bold cursor-pointer text-[14px]", deleteApplyToFuture ? "text-red-500" : "text-slate-700")}>Aplicar aos próximos meses</Label>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            {deleteAffectedCount !== null && (
+              <div className="w-full bg-slate-50 border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-1 shadow-sm items-center justify-center text-center">
+                <span className="text-[14px] font-medium text-slate-600">
+                  {isLoadingDeleteCount ? "Calculando..." : `Serão removidos ${deleteAffectedCount} planejamentos.`}
+                </span>
+              </div>
+            )}
+
+            <div className="grid gap-2 w-full pt-1">
+              <Button
+                type="button"
+                className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal disabled:opacity-50 disabled:pointer-events-none"
+                style={{ "--cor-topo": "#EF4444", "--cor-base": "#DC2626" } as any}
+                disabled={isDeletingMass || isLoadingDeleteCount}
+                onClick={handleTriggerDeleteMass}
+              >
+                {isDeletingMass ? "Excluindo..." : (
+                  <>
+                    <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
+                    Excluir Planejamentos
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent className="sm:max-w-[400px] !rounded-[22px] dialog-mobile w-[96%] max-w-[96%] border-none shadow-xl bg-white p-6">
+          <AlertDialogHeader className="mb-2">
+            <AlertDialogTitle className="flex items-center justify-center gap-2 text-xl font-bold text-slate-800 tracking-tight leading-tight m-0">
+              <DynamicIcon name="AlertTriangle" className="h-[24px] w-[24px] text-amber-500" />
+              Atenção
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-slate-600 text-[15px] font-medium leading-relaxed mt-2">
+              Esta ação removerá apenas os valores planejados do módulo Orçamentos.<br/><br/>
+              Nenhuma despesa, parcelamento ou lançamento financeiro será excluído.<br/><br/>
+              Deseja continuar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex items-center gap-3 w-full mt-4">
+            <AlertDialogAction 
+              onClick={(e) => { e.preventDefault(); handleDeleteMass(); }}
+              className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal m-0"
+              style={{ "--cor-topo": "#EF4444", "--cor-base": "#DC2626" } as any}
+            >
+              {isDeletingMass ? "Aguarde..." : (
+                <>
+                  <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
+                  Excluir
+                </>
+              )}
+            </AlertDialogAction>
+            <AlertDialogCancel 
+              className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-slate-600 hover:bg-slate-50 m-0"
+            >
+              Cancelar
+            </AlertDialogCancel>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Delete Validation Alert */}
       <AlertDialog open={deleteValidationAlert?.open || false} onOpenChange={(open) => !open && setDeleteValidationAlert(null)}>

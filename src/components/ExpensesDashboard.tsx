@@ -29,13 +29,15 @@ const groupSubcategories = (data: any[], limit: number) => {
 };
 
 interface ExpensesDashboardProps {
+  getMonthlyExpensesFn?: (month: string) => number;
+  getAnnualTotalFn?: (type: string, year: string) => number;
   expenses: Tables<'despesas'>[];
   expenseInstallments: (Tables<'despesas_parcelas'> & { despesas: Pick<Tables<'despesas'>, 'categoria_id'> | null })[];
   categories: AppCategory[];
   isMobile: boolean;
 }
 
-export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, isMobile }: ExpensesDashboardProps) => {
+export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, isMobile, getMonthlyExpensesFn, getAnnualTotalFn }: ExpensesDashboardProps) => {
   const allCategories = categories;
   const subcategories = allCategories.filter(c => c.parent_id !== null);
 

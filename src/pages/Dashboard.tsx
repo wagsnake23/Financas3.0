@@ -28,6 +28,7 @@ import {
 import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
+import { useFinancialProjection } from "@/hooks/useFinancialProjection";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard";
@@ -170,66 +171,36 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
+  // ── Centralized Financial Projection ─────────────────────────────────────
+  const {
+    getMonthlyExpenses,
+    getMonthlyRevenues,
+    getMonthlyBalance,
+    getAnnualExpenses,
+    getAnnualRevenues,
+    getAnnualBalance,
+    getMonthlyTrends,
+    isMonthProjected,
+  } = useFinancialProjection({
+    user,
+    allExpenseInstallments,
+    allRevenues,
+    enabled: !!user,
+  });
+
+  const selectedMonthStr = format(selectedMonth, "yyyy-MM");
+  const prevMonthStr = format(subMonths(selectedMonth, 1), "yyyy-MM");
+
   const stats = useMemo(() => {
-    const totalIncome = monthlyFilteredTransactions
-      .filter((t) => t.type === "income")
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalExpenses = monthlyFilteredTransactions
-      .filter((t) => t.type === "expense")
-      .reduce((sum, t) => sum + t.amount, 0);
-
+    const totalIncome = getMonthlyRevenues(selectedMonthStr);
+    const totalExpenses = getMonthlyExpenses(selectedMonthStr);
     const balance = totalIncome - totalExpenses;
-
     return { totalIncome, totalExpenses, balance };
-  }, [monthlyFilteredTransactions]);
+  }, [getMonthlyRevenues, getMonthlyExpenses, selectedMonthStr]);
 
   const monthlyTrends = useMemo(() => {
-    const currentMonthStr = format(selectedMonth, "yyyy-MM");
-    const prevMonthStr = format(subMonths(selectedMonth, 1), "yyyy-MM");
-
-    const calculateIncome = (monthStr: string) => {
-      return allRevenues
-        .filter((r) => r.data.startsWith(monthStr))
-        .reduce((sum, r) => sum + r.valor, 0);
-    };
-
-    const calculateExpenses = (monthStr: string) => {
-      return allExpenseInstallments
-        .filter((p) => p.vencimento.startsWith(monthStr))
-        .reduce((sum, p) => sum + p.valor_parcela, 0);
-    };
-
-    const currentIncome = calculateIncome(currentMonthStr);
-    const currentExpenses = calculateExpenses(currentMonthStr);
-    const currentBalance = currentIncome - currentExpenses;
-
-    const previousIncome = calculateIncome(prevMonthStr);
-    const previousExpenses = calculateExpenses(prevMonthStr);
-    const previousBalance = previousIncome - previousExpenses;
-
-    const calcTrendVar = (curr: number, prev: number) => {
-      if (prev === 0) return curr > 0 ? 100 : 0;
-      return ((curr - prev) / Math.abs(prev)) * 100;
-    };
-
-    const incomeVar = calcTrendVar(currentIncome, previousIncome);
-    const expenseVar = calcTrendVar(currentExpenses, previousExpenses);
-    const balanceVar = calcTrendVar(currentBalance, previousBalance);
-
-    const formatTrend = (val: number) => {
-      return `${val > 0 ? '+' : ''}${val.toFixed(0)}%`;
-    };
-
-    return {
-      incomeTrend: formatTrend(incomeVar),
-      incomeIsPositive: currentIncome >= previousIncome,
-      expenseTrend: formatTrend(expenseVar),
-      expenseIsPositive: currentExpenses >= previousExpenses, 
-      balanceTrend: formatTrend(balanceVar),
-      balanceIsPositive: currentBalance >= previousBalance,
-    };
-  }, [allRevenues, allExpenseInstallments, selectedMonth]);
+    return getMonthlyTrends(selectedMonthStr, prevMonthStr);
+  }, [getMonthlyTrends, selectedMonthStr, prevMonthStr]);
 
   const totalPaidMonthlyExpenses = useMemo(() => {
     return monthlyFilteredTransactions
@@ -246,27 +217,21 @@ export default function Dashboard() {
   const currentYear = getYear(selectedMonth);
 
   const totalAnnualExpenses = useMemo(() => {
-    if (!allExpenseInstallments) return 0;
-    return allExpenseInstallments
-      .filter((p) => Number(p.vencimento.substring(0, 4)) === currentYear)
-      .reduce((sum, p) => sum + p.valor_parcela, 0);
-  }, [allExpenseInstallments, currentYear]);
+    return getAnnualExpenses(currentYear);
+  }, [getAnnualExpenses, currentYear]);
 
   const totalAnnualRevenues = useMemo(() => {
-    if (!allRevenues) return 0;
-    return allRevenues
-      .filter((r) => Number(r.data.substring(0, 4)) === currentYear)
-      .reduce((sum, r) => sum + r.valor, 0);
-  }, [allRevenues, currentYear]);
+    return getAnnualRevenues(currentYear);
+  }, [getAnnualRevenues, currentYear]);
 
   const overallBalance = useMemo(() => {
-    const totalAllRevenues = allRevenues.reduce((sum, r) => sum + r.valor, 0);
-    const totalAllExpenses = allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+    const totalAllRevenues = getAnnualRevenues(currentYear);
+    const totalAllExpenses = getAnnualExpenses(currentYear);
     return totalAllRevenues - totalAllExpenses;
   }, [allRevenues, allExpenseInstallments]);
 
   const totalOverallExpenses = useMemo(() => {
-    return allExpenseInstallments.reduce((sum, p) => sum + p.valor_parcela, 0);
+    return getMonthlyExpenses(selectedMonthStr);
   }, [allExpenseInstallments]);
 
   const calculatedInvestments = useMemo(() => {
@@ -399,30 +364,16 @@ export default function Dashboard() {
     let cumulativeBalance = 0;
 
     // Calculate cumulative balance from current year up to projectedYear
-    // Only if endYear >= startYear, otherwise just use current year
     const rangeEnd = Math.max(startYear, endYear);
 
     for (let year = startYear; year <= rangeEnd; year++) {
-      const yearRevs = allRevenues
-        .filter((r) => Number(r.data.substring(0, 4)) === year)
-        .reduce((sum, r) => sum + r.valor, 0);
-
-      const yearExps = allExpenseInstallments
-        .filter((p) => Number(p.vencimento.substring(0, 4)) === year)
-        .reduce((sum, p) => sum + p.valor_parcela, 0);
-
-      const yearBalance = (yearRevs - yearExps) + currentYieldStats.annualYields;
+      const yearBalance = getAnnualBalance(year) + currentYieldStats.annualYields;
       cumulativeBalance += yearBalance;
     }
 
-    // Still need the specific values for the selected endYear to show in the card's main stats
-    const revs = allRevenues
-      .filter((r) => Number(r.data.substring(0, 4)) === endYear)
-      .reduce((sum, r) => sum + r.valor, 0);
-
-    const exps = allExpenseInstallments
-      .filter((p) => Number(p.vencimento.substring(0, 4)) === endYear)
-      .reduce((sum, p) => sum + p.valor_parcela, 0);
+    // Specific values for the selected endYear
+    const revs = getAnnualRevenues(endYear);
+    const exps = getAnnualExpenses(endYear);
 
     const monthlyProjection = (revs - exps) / 12 + currentYieldStats.monthYields;
     const annualBalance = (revs - exps) + currentYieldStats.annualYields;
@@ -435,7 +386,7 @@ export default function Dashboard() {
       revenues: revs,
       expenses: exps
     };
-  }, [allRevenues, allExpenseInstallments, projectedYear, currentYieldStats]);
+  }, [getAnnualBalance, getAnnualRevenues, getAnnualExpenses, projectedYear, currentYieldStats]);
 
   const projectedEndDate = useMemo(() => {
     if (allRevenues.length === 0 && allExpenseInstallments.length === 0) return "";
@@ -683,6 +634,9 @@ export default function Dashboard() {
                       currentDate={selectedMonth}
                       isMobile={isMobile}
                       onMonthClick={handleMonthClick}
+                      getMonthlyExpensesFn={getMonthlyExpenses}
+                      getMonthlyRevenuesFn={getMonthlyRevenues}
+                      isMonthProjectedFn={isMonthProjected}
                     />
                   }
                   annualTotalLabel="Saldo anual"
@@ -796,6 +750,8 @@ export default function Dashboard() {
                     currentDate={selectedMonth}
                     isMobile={isMobile}
                     onMonthClick={handleMonthClick}
+                    getMonthlyExpensesFn={getMonthlyExpenses}
+                    isMonthProjectedFn={isMonthProjected}
                   />
                 }
                 annualTotalLabel="Total anual"
@@ -838,6 +794,7 @@ export default function Dashboard() {
                     currentDate={selectedMonth}
                     isMobile={isMobile}
                     onMonthClick={handleMonthClick}
+                    getMonthlyRevenuesFn={getMonthlyRevenues}
                   />
                 }
                 annualTotalLabel="Receita anual"
@@ -998,6 +955,8 @@ export default function Dashboard() {
                       currentDate={selectedMonth}
                       isMobile={false}
                       onMonthClick={handleMonthClick}
+                      getMonthlyExpensesFn={getMonthlyExpenses}
+                      isMonthProjectedFn={isMonthProjected}
                     />
                   }
                   annualTotalLabel="Total anual"
@@ -1035,6 +994,7 @@ export default function Dashboard() {
                       currentDate={selectedMonth}
                       isMobile={false}
                       onMonthClick={handleMonthClick}
+                      getMonthlyRevenuesFn={getMonthlyRevenues}
                     />
                   }
                   annualTotalLabel="Receita anual"

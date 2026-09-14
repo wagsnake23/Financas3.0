@@ -10,6 +10,7 @@ interface MonthlyRevenueBarChartProps {
   currentDate: Date;
   isMobile?: boolean;
   onMonthClick: (date: Date) => void;
+  getMonthlyRevenuesFn?: (monthStr: string) => number;
 }
 
 export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
@@ -17,6 +18,7 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
   currentDate,
   isMobile,
   onMonthClick,
+  getMonthlyRevenuesFn,
 }) => {
   const chartData = useMemo(() => {
     const dataMap: { [key: string]: { month: string; revenues: number; fullDate: Date; isCurrentMonth: boolean } } = {};
@@ -30,24 +32,19 @@ export const MonthlyRevenueBarChart: React.FC<MonthlyRevenueBarChartProps> = ({
       dataMap[monthKey] = { month: monthKey, revenues: 0, fullDate: monthDate, isCurrentMonth };
     }
 
-    revenues.forEach(revenue => {
-      const data = revenue.data;
-      const revenueYear = Number(data.substring(0, 4));
-      const revenueMonthIndex = Number(data.substring(5, 7)) - 1;
-
-      if (revenueYear === currentYear) {
-        // Find the month name for the key
-        const monthDate = new Date(currentYear, revenueMonthIndex, 1);
-        const monthKey = format(monthDate, "MMM", { locale: ptBR });
-
-        if (dataMap[monthKey]) {
-          dataMap[monthKey].revenues += revenue.valor;
-        }
+    if (getMonthlyRevenuesFn) {
+      Object.values(dataMap).forEach(entry => {
+        const monthStr = format(entry.fullDate, "yyyy-MM");
+        entry.revenues = getMonthlyRevenuesFn(monthStr);
+      });
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[MonthlyRevenueBarChart] Missing required prop: getMonthlyRevenuesFn');
       }
-    });
+    }
 
     return Object.values(dataMap).sort((a, b) => a.fullDate.getTime() - b.fullDate.getTime());
-  }, [revenues, currentDate]);
+  }, [revenues, currentDate, getMonthlyRevenuesFn]);
 
   if (chartData.every(d => d.revenues === 0)) {
     return (

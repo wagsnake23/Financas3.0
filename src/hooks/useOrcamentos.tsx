@@ -30,7 +30,7 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
 
       let currentData = null;
 
-      if (orcamento.id) {
+      if (orcamento.id && !orcamento.id.startsWith("virtual-")) {
         // Atualização
         const { data, error } = await supabase
           .from("orcamentos")
@@ -125,6 +125,31 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
     },
   });
 
+  // Mutação para exclusão em massa de orçamentos (limpeza do periodo)
+  const deleteOrcamentosMassActionMutation = useMutation({
+    mutationFn: async (payload: { mes_ano: string; applyToFuture: boolean }) => {
+      if (!userId) throw new Error("User not authenticated");
+      
+      let query = supabase
+        .from("orcamentos")
+        .delete()
+        .eq("user_id", userId);
+        
+      if (payload.applyToFuture) {
+        query = query.gte("mes_ano", payload.mes_ano);
+      } else {
+        query = query.eq("mes_ano", payload.mes_ano);
+      }
+      
+      const { error } = await query;
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orcamentos"] });
+      queryClient.invalidateQueries({ queryKey: ["orcamentos-projection"] });
+    },
+  });
+
   return {
     orcamentos,
     isLoading,
@@ -135,5 +160,7 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
     isDeleting: deleteOrcamentoMutation.isPending,
     syncOrcamentos: syncOrcamentosMutation.mutateAsync,
     isSyncing: syncOrcamentosMutation.isPending,
+    deleteOrcamentosMassAction: deleteOrcamentosMassActionMutation.mutateAsync,
+    isDeletingMass: deleteOrcamentosMassActionMutation.isPending,
   };
 }

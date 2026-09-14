@@ -29,6 +29,7 @@ import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
 import { MonthlyExpenseBarChart } from "@/components/MonthlyExpenseBarChart";
 import { MonthlyRevenueBarChart } from "@/components/MonthlyRevenueBarChart";
 import { SaldoAjusteDialog } from "@/components/SaldoAjusteDialog";
+import { useFinancialProjection } from "@/hooks/useFinancialProjection";
 
 
 const MiniFinanceBars = ({ expenses, revenues, balance, height = 32, showScaleLines = true }: { expenses: number, revenues: number, balance: number, height?: number, showScaleLines?: boolean }) => {
@@ -246,39 +247,34 @@ export default function Home() {
 
     const { data: profile, refetch: refetchProfile } = useProfile(user?.id);
 
+    // ── Centralized Financial Projection ─────────────────────────────────────
+    const {
+        getMonthlyExpenses,
+        getMonthlyRevenues,
+        getMonthlyBalance,
+        getMonthlyTrends,
+        getAnnualExpenses,
+        getAnnualRevenues,
+        isMonthProjected,
+    } = useFinancialProjection({
+        user,
+        allExpenseInstallments,
+        allRevenues,
+        enabled: !!user,
+    });
+
+    const selectedMonthStr = useMemo(() => format(selectedMonth, "yyyy-MM"), [selectedMonth]);
+    const prevMonthStr = useMemo(() => format(subMonths(selectedMonth, 1), "yyyy-MM"), [selectedMonth]);
 
     const stats = useMemo(() => {
-        const currentMonthStr = format(selectedMonth, "yyyy-MM");
-        const prevMonthStr = format(subMonths(selectedMonth, 1), "yyyy-MM");
-
-        const calculateIncome = (monthStr: string) => {
-            return allRevenues
-                .filter((r) => r.data.startsWith(monthStr))
-                .reduce((sum, r) => sum + r.valor, 0);
-        };
-
-        const calculateReceivedIncome = (monthStr: string) => {
-            return allRevenues
-                .filter((r) => r.data.startsWith(monthStr) && r.status === 'Recebida')
-                .reduce((sum, r) => sum + r.valor, 0);
-        };
-
-        const calculateExpenses = (monthStr: string) => {
-            return allExpenseInstallments
-                .filter((p) => p.vencimento.startsWith(monthStr))
-                .reduce((sum, p) => sum + p.valor_parcela, 0);
-        };
-
-        const calculatePaidExpenses = (monthStr: string) => {
-            return allExpenseInstallments
-                .filter((p) => p.vencimento.startsWith(monthStr) && p.pago === true)
-                .reduce((sum, p) => sum + p.valor_parcela, 0);
-        };
-
-        const currentIncome = calculateIncome(currentMonthStr);
-        const currentReceivedIncome = calculateReceivedIncome(currentMonthStr);
-        const currentExpenses = calculateExpenses(currentMonthStr);
-        const currentPaidExpenses = calculatePaidExpenses(currentMonthStr);
+        const currentIncome = getMonthlyRevenues(selectedMonthStr);
+        const currentReceivedIncome = allRevenues
+            .filter((r) => r.data.startsWith(selectedMonthStr) && r.status === 'Recebida')
+            .reduce((sum, r) => sum + r.valor, 0);
+        const currentExpenses = getMonthlyExpenses(selectedMonthStr);
+        const currentPaidExpenses = allExpenseInstallments
+            .filter((p) => p.vencimento.startsWith(selectedMonthStr) && p.pago === true)
+            .reduce((sum, p) => sum + p.valor_parcela, 0);
         
         // Subtract Active Investments (originated from saldo_atual)
         const currentActiveInvestments = investimentos
@@ -293,14 +289,16 @@ export default function Home() {
         
         const currentBalance = currentIncome - currentExpenses;
 
-        const previousIncome = calculateIncome(prevMonthStr);
-        const previousExpenses = calculateExpenses(prevMonthStr);
-        const previousBalance = previousIncome - previousExpenses;
+        const trends = getMonthlyTrends(selectedMonthStr, prevMonthStr);
 
         const calculateVar = (curr: number, prev: number) => {
             if (prev === 0) return curr > 0 ? 100 : 0;
             return ((curr - prev) / prev) * 100;
         };
+
+        const previousIncome = getMonthlyRevenues(prevMonthStr);
+        const previousExpenses = getMonthlyExpenses(prevMonthStr);
+        const previousBalance = previousIncome - previousExpenses;
 
         return {
             currentIncome,
@@ -314,7 +312,7 @@ export default function Home() {
             expenseVar: calculateVar(currentExpenses, previousExpenses),
             balanceVar: calculateVar(currentBalance, previousBalance),
         };
-    }, [allRevenues, allExpenseInstallments, selectedMonth, investimentos, globalReceivedIncome, globalPaidExpenses, profile?.saldo_ajuste]);
+    }, [getMonthlyRevenues, getMonthlyExpenses, getMonthlyTrends, selectedMonthStr, prevMonthStr, allRevenues, allExpenseInstallments, investimentos, globalReceivedIncome, globalPaidExpenses, profile?.saldo_ajuste]);
 
     // Snapshot mechanism to avoid flickering to R$ 0,00 during month transitions
     const lastStableData = React.useRef({
@@ -364,13 +362,8 @@ export default function Home() {
             const m = subMonths(endMonth, i);
             const mStr = format(m, "yyyy-MM");
             
-            const income = allRevenues
-                .filter((r) => r.data.startsWith(mStr))
-                .reduce((sum, r) => sum + r.valor, 0);
-                
-            const expenses = allExpenseInstallments
-                .filter((p) => p.vencimento.startsWith(mStr))
-                .reduce((sum, p) => sum + p.valor_parcela, 0);
+            const income = getMonthlyRevenues(mStr);
+            const expenses = getMonthlyExpenses(mStr);
                 
             list.push({
                 monthStr: mStr,
@@ -379,7 +372,7 @@ export default function Home() {
             });
         }
         return list;
-    }, [allRevenues, allExpenseInstallments, selectedMonth]);
+    }, [getMonthlyRevenues, getMonthlyExpenses, selectedMonth]);
 
     const selectedMonthIdx = useMemo(() => {
         const selStr = format(selectedMonth, "yyyy-MM");
@@ -1285,8 +1278,8 @@ export default function Home() {
                     <div className="p-6 pt-2 pb-6 h-auto flex flex-col w-full">
                         {activeTrendModal === 'saldo' && (() => {
                             const year = format(selectedMonth, "yyyy");
-                            const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
-                            const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
+                            const annualRev = getAnnualRevenues(Number(year));
+                            const annualExp = getAnnualExpenses(Number(year));
                             const annualBal = annualRev - annualExp;
                             return (
                             <div className="flex flex-col w-full">
@@ -1315,7 +1308,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <div className="h-[250px] w-full mb-6">
-                                    <MonthlyBalanceBarChart revenues={allRevenues} expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                    <MonthlyBalanceBarChart revenues={allRevenues} expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} getMonthlyExpensesFn={getMonthlyExpenses} getMonthlyRevenuesFn={getMonthlyRevenues} isMonthProjectedFn={isMonthProjected} />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
                                     <div className="flex flex-col items-start gap-0.5">
@@ -1334,7 +1327,7 @@ export default function Home() {
                         })()}
                         {activeTrendModal === 'despesas' && (() => {
                             const year = format(selectedMonth, "yyyy");
-                            const annualExp = allExpenseInstallments.filter(e => e.vencimento.startsWith(year)).reduce((a, b) => a + Number(b.valor_parcela), 0);
+                            const annualExp = getAnnualExpenses(Number(year));
                             return (
                             <div className="flex flex-col w-full">
                                 <div className="flex justify-between items-start w-full mb-6">
@@ -1362,7 +1355,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <div className="h-[250px] w-full mb-6">
-                                    <MonthlyExpenseBarChart expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                    <MonthlyExpenseBarChart expenseInstallments={allExpenseInstallments} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} getMonthlyExpensesFn={getMonthlyExpenses} isMonthProjectedFn={isMonthProjected} />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
                                     <div className="flex flex-col items-start gap-0.5">
@@ -1381,7 +1374,7 @@ export default function Home() {
                         })()}
                         {activeTrendModal === 'receitas' && (() => {
                             const year = format(selectedMonth, "yyyy");
-                            const annualRev = allRevenues.filter(r => r.data.startsWith(year)).reduce((a, b) => a + Number(b.valor), 0);
+                            const annualRev = getAnnualRevenues(Number(year));
                             return (
                             <div className="flex flex-col w-full">
                                 <div className="flex justify-between items-start w-full mb-6">
@@ -1409,7 +1402,13 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <div className="h-[250px] w-full mb-6">
-                                    <MonthlyRevenueBarChart revenues={allRevenues} currentDate={selectedMonth} isMobile={false} onMonthClick={(date) => setSelectedMonth(date)} />
+                                    <MonthlyRevenueBarChart 
+                                        revenues={allRevenues} 
+                                        currentDate={selectedMonth} 
+                                        isMobile={false} 
+                                        onMonthClick={(date) => setSelectedMonth(date)} 
+                                        getMonthlyRevenuesFn={getMonthlyRevenues}
+                                    />
                                 </div>
                                 <div className="flex justify-between items-end w-full">
                                     <div className="flex flex-col items-start gap-0.5">
@@ -1438,3 +1437,4 @@ export default function Home() {
         </div >
     );
 };
+
