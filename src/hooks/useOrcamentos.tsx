@@ -78,22 +78,26 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
         // Buscar orçamentos existentes nesses meses
         const { data: existingFuture, error: fetchError } = await supabase
           .from("orcamentos")
-          .select("id, mes_ano")
+          .select("id, mes_ano, user_id, categoria_id")
           .eq("user_id", userId)
           .eq("categoria_id", orcamento.categoria_id)
           .in("mes_ano", futureMonths);
 
         if (fetchError) throw fetchError;
 
-        const existingMap = new Map((existingFuture || []).map(o => [o.mes_ano, o.id]));
+        const existingMap = new Map((existingFuture || []).map(o => [o.mes_ano, o]));
 
         const toUpdate = [];
         const toInsert = [];
 
         for (const fMes of futureMonths) {
           if (existingMap.has(fMes)) {
+            const existingRecord = existingMap.get(fMes);
             toUpdate.push({
-              id: existingMap.get(fMes),
+              id: existingRecord.id,
+              user_id: existingRecord.user_id,
+              categoria_id: existingRecord.categoria_id,
+              mes_ano: existingRecord.mes_ano,
               tipo_planejamento: orcamento.tipo_planejamento,
               valor_planejado: orcamento.valor_planejado,
               percentual_planejado: orcamento.percentual_planejado,
@@ -113,14 +117,41 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
 
         // Executar upsert para atualizações
         if (toUpdate.length > 0) {
+          console.log("=== AUDITORIA APPLY_TO_FUTURE (UPSERT) ===");
+          console.log("TOTAL_REGISTROS", toUpdate.length);
+          console.log("PRIMEIRO", toUpdate[0]);
+          console.log("ULTIMO", toUpdate[toUpdate.length - 1]);
+          console.log("TO_UPDATE_SAMPLE", toUpdate[0]);
+          
           const { error: updateError } = await supabase.from("orcamentos").upsert(toUpdate);
-          if (updateError) throw updateError;
+          if (updateError) {
+            console.error("ERRO SUPABASE UPSERT:", {
+              code: updateError.code,
+              message: updateError.message,
+              details: updateError.details,
+              hint: updateError.hint
+            });
+            throw updateError;
+          }
         }
 
         // Executar insert para novas criações
         if (toInsert.length > 0) {
+          console.log("=== AUDITORIA APPLY_TO_FUTURE (INSERT) ===");
+          console.log("TOTAL_REGISTROS", toInsert.length);
+          console.log("PRIMEIRO", toInsert[0]);
+          console.log("ULTIMO", toInsert[toInsert.length - 1]);
+          
           const { error: insertError } = await supabase.from("orcamentos").insert(toInsert);
-          if (insertError) throw insertError;
+          if (insertError) {
+            console.error("ERRO SUPABASE INSERT:", {
+              code: insertError.code,
+              message: insertError.message,
+              details: insertError.details,
+              hint: insertError.hint
+            });
+            throw insertError;
+          }
         }
       }
 

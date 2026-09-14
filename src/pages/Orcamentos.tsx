@@ -383,12 +383,8 @@ export default function Orcamentos() {
     if (editingItem) {
       return subs.filter(s => s.id === editingItem.categoria_id);
     }
-    return subs.filter(sub => {
-      const orc = orcamentos.find(o => o.categoria_id === sub.id);
-      const temPlanejamento = orc && (orc.tipo_planejamento === "valor" ? orc.valor_planejado > 0 : (orc.percentual_planejado || 0) > 0);
-      return !temPlanejamento;
-    });
-  }, [formParentId, subCategories, editingItem, orcamentos]);
+    return subs;
+  }, [formParentId, subCategories, editingItem]);
 
   const handleOpenEdit = (item: typeof calculatedOrcamentos[0]) => {
     setEditingItem(item);
@@ -409,6 +405,29 @@ export default function Orcamentos() {
     setFormValor(undefined);
     setFormAbrangencia("current_month");
     setIsModalOpen(true);
+  };
+
+  const handleSubCategoryChange = (subId: string) => {
+    setFormSubId(subId);
+    
+    if (subId === UNSELECTED_VALUE) {
+      setFormValor(undefined);
+      return;
+    }
+
+    const existingOrc = orcamentos.find(o => o.categoria_id === subId);
+    if (existingOrc) {
+      setFormValor(existingOrc.valor_planejado);
+      return;
+    }
+
+    const calcCat = calculatedOrcamentos.find(c => c.categoria_id === subId);
+    if (calcCat && calcCat.gasto > 0) {
+      setFormValor(calcCat.gasto);
+      return;
+    }
+
+    setFormValor(0);
   };
 
   const handleSave = async () => {
@@ -1157,6 +1176,7 @@ export default function Orcamentos() {
                 onValueChange={(val) => {
                   setFormParentId(val);
                   setFormSubId(UNSELECTED_VALUE);
+                  setFormValor(undefined);
                 }}
                 disabled={!!editingItem} // Só leitura na edição
               >
@@ -1193,7 +1213,7 @@ export default function Orcamentos() {
               ) : (
                 <Select 
                   value={formSubId} 
-                  onValueChange={setFormSubId}
+                  onValueChange={handleSubCategoryChange}
                   disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
                 >
                   <SelectTrigger className="h-[50px] md:h-[53px] text-[15px] rounded-xl font-medium transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium input-white text-gray-800">
