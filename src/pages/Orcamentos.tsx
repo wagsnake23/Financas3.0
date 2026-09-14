@@ -1394,12 +1394,17 @@ export default function Orcamentos() {
               Atenção
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-slate-600 text-[15px] font-medium leading-relaxed mt-2">
-              Esta ação removerá apenas os valores planejados do módulo Orçamentos.<br/><br/>
+              Esta ação removerá apenas os valores planejados.<br/><br/>
               Nenhuma despesa, parcelamento ou lançamento financeiro será excluído.<br/><br/>
               Deseja continuar?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex items-center gap-3 w-full mt-4">
+            <AlertDialogCancel 
+              className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-slate-600 hover:bg-slate-50 m-0"
+            >
+              Cancelar
+            </AlertDialogCancel>
             <AlertDialogAction 
               onClick={(e) => { e.preventDefault(); handleDeleteMass(); }}
               className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal m-0"
@@ -1412,11 +1417,6 @@ export default function Orcamentos() {
                 </>
               )}
             </AlertDialogAction>
-            <AlertDialogCancel 
-              className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-slate-600 hover:bg-slate-50 m-0"
-            >
-              Cancelar
-            </AlertDialogCancel>
           </div>
         </AlertDialogContent>
       </AlertDialog>
