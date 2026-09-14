@@ -70,6 +70,8 @@ function getFutureMonthStrings(count: number): string[] {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
+export const ORCAMENTO_HORIZON_MONTHS = 120;
+
 export function useFinancialProjection({
   user,
   allExpenseInstallments,
@@ -78,7 +80,6 @@ export function useFinancialProjection({
 }: UseFinancialProjectionProps) {
   // 🔍 Fetch all orcamentos for the next 120 months 
   // ============================================================================
-  const ORCAMENTO_HORIZON_MONTHS = 120;
   const futureMonths = useMemo(() => getFutureMonthStrings(ORCAMENTO_HORIZON_MONTHS), []);
 
   const { data: allOrcamentos = [], isLoading: isLoadingOrcamentos } = useQuery<

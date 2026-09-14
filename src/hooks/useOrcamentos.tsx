@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Orcamento } from "@/types/finance";
+import { ORCAMENTO_HORIZON_MONTHS } from "./useFinancialProjection";
 
 export function useOrcamentos(userId: string | undefined, mesAno: string) {
   const queryClient = useQueryClient();
@@ -63,17 +64,22 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
         currentData = data;
       }
 
-      // Se applyToFuture for true, cria ou atualiza os próximos 11 meses (horizonte de 1 ano)
+      // Se applyToFuture for true, cria ou atualiza os meses seguintes até completar o horizonte
       if (orcamento.applyToFuture) {
-        // Gerar os próximos 11 meses
+        // Gerar os meses futuros
         const [anoStr, mesStr] = orcamento.mes_ano.split("-");
         let baseDate = new Date(Number(anoStr), Number(mesStr) - 1, 1);
         
         const futureMonths = [];
-        for (let i = 1; i <= 11; i++) {
+        const futureCount = ORCAMENTO_HORIZON_MONTHS - 1;
+        for (let i = 1; i <= futureCount; i++) {
           const nextDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
           futureMonths.push(`${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, "0")}`);
         }
+        
+        console.log("TOTAL_MESES_GERADOS", futureMonths.length);
+        console.log("PRIMEIRO_MES", futureMonths[0]);
+        console.log("ULTIMO_MES", futureMonths[futureMonths.length - 1]);
 
         // Buscar orçamentos existentes nesses meses
         const { data: existingFuture, error: fetchError } = await supabase
@@ -113,6 +119,16 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
               percentual_planejado: orcamento.percentual_planejado,
             });
           }
+        }
+
+        console.log("TO_UPDATE", toUpdate.length);
+        if (toUpdate.length > 0) {
+          console.log("ULTIMO_REGISTRO_UPDATE", toUpdate[toUpdate.length - 1]);
+        }
+        
+        console.log("TO_INSERT", toInsert.length);
+        if (toInsert.length > 0) {
+          console.log("ULTIMO_REGISTRO_INSERT", toInsert[toInsert.length - 1]);
         }
 
         // Executar upsert para atualizações
