@@ -63,21 +63,65 @@ export function useOrcamentos(userId: string | undefined, mesAno: string) {
         currentData = data;
       }
 
-      // Se applyToFuture for true, atualiza todos os orçamentos futuros existentes dessa subcategoria
+      // Se applyToFuture for true, cria ou atualiza os próximos 11 meses (horizonte de 1 ano)
       if (orcamento.applyToFuture) {
-        const { error: futureError } = await supabase
+        // Gerar os próximos 11 meses
+        const [anoStr, mesStr] = orcamento.mes_ano.split("-");
+        let baseDate = new Date(Number(anoStr), Number(mesStr) - 1, 1);
+        
+        const futureMonths = [];
+        for (let i = 1; i <= 11; i++) {
+          const nextDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + i, 1);
+          futureMonths.push(`${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, "0")}`);
+        }
+
+        // Buscar orçamentos existentes nesses meses
+        const { data: existingFuture, error: fetchError } = await supabase
           .from("orcamentos")
-          .update({
-            tipo_planejamento: orcamento.tipo_planejamento,
-            valor_planejado: orcamento.valor_planejado,
-            percentual_planejado: orcamento.percentual_planejado,
-            updated_at: new Date().toISOString(),
-          })
+          .select("id, mes_ano")
           .eq("user_id", userId)
           .eq("categoria_id", orcamento.categoria_id)
-          .gt("mes_ano", orcamento.mes_ano);
-          
-        if (futureError) throw futureError;
+          .in("mes_ano", futureMonths);
+
+        if (fetchError) throw fetchError;
+
+        const existingMap = new Map((existingFuture || []).map(o => [o.mes_ano, o.id]));
+
+        const toUpdate = [];
+        const toInsert = [];
+
+        for (const fMes of futureMonths) {
+          if (existingMap.has(fMes)) {
+            toUpdate.push({
+              id: existingMap.get(fMes),
+              tipo_planejamento: orcamento.tipo_planejamento,
+              valor_planejado: orcamento.valor_planejado,
+              percentual_planejado: orcamento.percentual_planejado,
+              updated_at: new Date().toISOString(),
+            });
+          } else {
+            toInsert.push({
+              user_id: userId,
+              categoria_id: orcamento.categoria_id,
+              mes_ano: fMes,
+              tipo_planejamento: orcamento.tipo_planejamento,
+              valor_planejado: orcamento.valor_planejado,
+              percentual_planejado: orcamento.percentual_planejado,
+            });
+          }
+        }
+
+        // Executar upsert para atualizações
+        if (toUpdate.length > 0) {
+          const { error: updateError } = await supabase.from("orcamentos").upsert(toUpdate);
+          if (updateError) throw updateError;
+        }
+
+        // Executar insert para novas criações
+        if (toInsert.length > 0) {
+          const { error: insertError } = await supabase.from("orcamentos").insert(toInsert);
+          if (insertError) throw insertError;
+        }
       }
 
       return currentData;
