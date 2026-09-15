@@ -60,7 +60,7 @@ export const FinancialNotificationsPopover = () => {
       <div className={cn(
         "relative flex items-center justify-center w-[40px] h-[40px] rounded-full pointer-events-none cursor-default",
         !isMobile && "transition-colors",
-        isMobile ? "text-slate-400 opacity-60 -translate-y-[2px]" : "text-white/50"
+        isMobile ? "text-slate-400 opacity-60 -translate-y-[2px] translate-x-[4px]" : "text-white/50"
       )}>
         <Bell className="h-[22px] w-[22px]" strokeWidth={2.5} />
       </div>
@@ -75,7 +75,7 @@ export const FinancialNotificationsPopover = () => {
           className={cn(
             "relative flex items-center justify-center w-[40px] h-[40px] rounded-full",
             !isMobile && "transition-colors",
-            isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px]` : "text-white hover:bg-white/10"
+            isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px] translate-x-[4px]` : "text-white hover:bg-white/10"
           )}
           aria-label="Notificações Financeiras"
         >

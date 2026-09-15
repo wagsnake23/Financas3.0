@@ -342,7 +342,7 @@ export const Navigation = () => {
                     className={cn(
                       "relative flex items-center justify-center w-[40px] h-[40px] rounded-full",
                       !isMobile && "transition-colors",
-                      isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px]` : "text-white hover:bg-white/10"
+                      isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px] translate-x-[2px]` : "text-white hover:bg-white/10"
                     )}
                   >
                     <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={2.5} />
