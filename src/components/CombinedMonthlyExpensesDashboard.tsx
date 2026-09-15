@@ -889,9 +889,28 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                         transform: 'translate(-50%, -100%) translateY(-20px)',
                       }}
                     >
+                      {(() => {
+                        const item = subcategoryChartData[activeBarIndex];
+                        console.log('[TOOLTIP_SUBCATEGORIA]', {
+                          subcategoria: item.name,
+                          icone: item.icone,
+                          tipoIcone: typeof item.icone,
+                          svgEncontrado: typeof item.icone === 'string' && item.icone.startsWith('brand:')
+                        });
+                        return null;
+                      })()}
                       <div className="bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="text-2xl drop-shadow-sm">{subcategoryChartData[activeBarIndex].icone}</span>
+                          <div className="flex items-center justify-center shrink-0 drop-shadow-sm">
+                            {subcategoryChartData[activeBarIndex].icone ? (
+                              <DynamicIcon 
+                                name={subcategoryChartData[activeBarIndex].icone as string} 
+                                className="w-8 h-8 rounded-md object-contain" 
+                              />
+                            ) : (
+                              <span className="text-2xl drop-shadow-sm">📁</span>
+                            )}
+                          </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Subcategoria</span>
                             <span className="font-bold text-gray-800 leading-tight">{subcategoryChartData[activeBarIndex].name}</span>
