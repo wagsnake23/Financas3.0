@@ -267,10 +267,28 @@ export const InvestmentsYieldChart = ({ investments, allSubcategories, isMobile 
                             }}
                         >
                             <div className="bg-white/95 backdrop-blur-md pt-[9px] pb-3 px-[11px] shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl max-w-[190px] relative" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+                                {(() => {
+                                    const item = chartData[activeBarIndex];
+                                    console.log('[INVESTIMENTO_TOOLTIP_ICON]', {
+                                        investimento: item.name,
+                                        svgEncontrado: typeof item.icone === 'string' && item.icone.startsWith('brand:'),
+                                        origemIcone: typeof item.icone,
+                                        renderizado: !!item.icone
+                                    });
+                                    return null;
+                                })()}
                                 <div className="flex items-center gap-2 mb-1.5">
-                                    <span className="text-xl drop-shadow-sm">
-                                        {chartData[activeBarIndex].icone && String(chartData[activeBarIndex].icone).startsWith("brand:") ? null : chartData[activeBarIndex].icone}
-                                    </span>
+                                    <div className="flex items-center justify-center shrink-0 drop-shadow-sm">
+                                        {chartData[activeBarIndex].icone ? (
+                                            <DynamicIcon 
+                                                name={chartData[activeBarIndex].icone as string} 
+                                                className="w-[20px] h-[20px] object-contain" 
+                                                style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                                            />
+                                        ) : (
+                                            <span className="text-xl drop-shadow-sm">📁</span>
+                                        )}
+                                    </div>
                                     <div className="flex flex-col">
                                         <span className="text-sm font-bold text-gray-800 leading-tight line-clamp-2" style={{ wordBreak: 'break-word' }}>{chartData[activeBarIndex].name}</span>
                                     </div>
