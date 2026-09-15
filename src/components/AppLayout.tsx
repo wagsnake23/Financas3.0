@@ -4,6 +4,7 @@ import { Navigation } from "./Navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { ProfileSubscriptionModal } from "@/components/profile/ProfileSubscriptionModal";
+import { TransactionEditProvider } from "@/contexts/TransactionEditContext";
 
 export const AppLayout = () => {
   const { pathname } = useLocation();
@@ -16,7 +17,7 @@ export const AppLayout = () => {
   }, [pathname]);
 
   return (
-    <>
+    <TransactionEditProvider>
       <Navigation />
       <main>
         <Outlet />
@@ -32,6 +33,6 @@ export const AppLayout = () => {
         expiresAt={sub?.expires_at}
         hideTrigger={true}
       />
-    </>
+    </TransactionEditProvider>
   );
 };

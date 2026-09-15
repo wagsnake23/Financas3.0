@@ -1,0 +1,148 @@
+import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
+import { Transaction } from "@/types/finance";
+import { TransactionEditForm } from "@/components/TransactionEditForm";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { AppCategory } from "@/types/finance";
+import { useTransactionMutations } from "@/hooks/useTransactionMutations";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+interface TransactionEditContextType {
+  openEditModal: (transaction: Transaction) => void;
+  closeEditModal: () => void;
+}
+
+const TransactionEditContext = createContext<TransactionEditContextType | undefined>(undefined);
+
+export const useTransactionEdit = () => {
+  const context = useContext(TransactionEditContext);
+  if (!context) {
+    throw new Error("useTransactionEdit must be used within a TransactionEditProvider");
+  }
+  return context;
+};
+
+export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [loadingEditData, setLoadingEditData] = useState(false);
+
+  // Fetch Categories
+  const { data: allCategories = [] } = useQuery<AppCategory[]>({
+    queryKey: ["categories", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("categorias")
+        .select("*")
+        .or(`user_id.eq.${user.id},user_id.is.null`)
+        .order("nome");
+      if (error) throw error;
+      return data as AppCategory[];
+    },
+    enabled: !!user,
+  });
+
+  // Fetch Cartões
+  const { data: cartoes = [], refetch: refetchCartoes } = useQuery({
+    queryKey: ["cartoes", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from("cartoes")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("nome");
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  // Simulated monthlyFilteredTransactions with just the currently editing transaction
+  // This is required by useTransactionMutations to find the original transaction
+  const simulatedFilteredTransactions = useMemo(() => {
+    return editingTransaction ? [editingTransaction] : [];
+  }, [editingTransaction]);
+
+  const {
+    handleUpdateTransaction,
+    handleDeleteTransaction,
+  } = useTransactionMutations({
+    user,
+    queryClient,
+    monthlyFilteredTransactions: simulatedFilteredTransactions,
+    setLoadingEditData,
+    setEditingTransaction,
+    setIsEditModalOpen,
+    selectedMonth: new Date(), // Just a fallback, mainly used for local state resets
+  });
+
+  const openEditModal = useCallback((transaction: Transaction) => {
+    setEditingTransaction(transaction);
+    setIsEditModalOpen(true);
+  }, []);
+
+  const closeEditModal = useCallback(() => {
+    setIsEditModalOpen(false);
+    setTimeout(() => {
+      setEditingTransaction(null);
+    }, 300);
+  }, []);
+
+  return (
+    <TransactionEditContext.Provider value={{ openEditModal, closeEditModal }}>
+      {children}
+      
+      {isEditModalOpen && editingTransaction && (
+        <Dialog open={isEditModalOpen} onOpenChange={closeEditModal}>
+          <style>{`
+            .edit-lancamento-modal > button {
+              transform: translate(3px, -3px) !important;
+            }
+          `}</style>
+          <DialogContent
+            className={
+              window.innerWidth < 768 
+                ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4 shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal" 
+                : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px] shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal"
+            }
+            style={{
+              border: window.innerWidth < 768 ? "2px solid #FFFFFF" : "none",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            <div className={
+                window.innerWidth < 768
+                  ? "flex flex-col items-start justify-start mb-[-6px] absolute top-3.5 left-4 right-12 text-left"
+                  : "flex flex-col items-start justify-start mb-[2px] -mt-2"
+              }
+            >
+              <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
+                <div className="flex flex-row items-center justify-start gap-3 w-full">
+                  <h2 className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</h2>
+                </div>
+              </div>
+            </div>
+
+            <div className={window.innerWidth < 768 ? "form-body pb-0 pt-[18px]" : "form-body pb-0"}>
+              <TransactionEditForm
+                editingTransaction={editingTransaction}
+                onUpdateTransaction={handleUpdateTransaction}
+                onCancelEdit={closeEditModal}
+                onDeleteTransaction={handleDeleteTransaction}
+                allCategories={allCategories}
+                isMobile={window.innerWidth < 768}
+                cartoes={cartoes}
+                refetchCartoes={refetchCartoes}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </TransactionEditContext.Provider>
+  );
+};

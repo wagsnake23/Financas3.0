@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import DynamicIcon from "./DynamicIcon";
 import { useAuth } from "@/hooks/useAuth";
 import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
+import { FinancialNotificationsPopover } from "./FinancialNotificationsPopover";
 
 interface MainHeaderProps {
   toggleSidebar: () => void;
@@ -52,6 +53,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
               </span>
             )}
           </button>
+
+          <FinancialNotificationsPopover />
 
           {/* Botão Menu (hambúrguer) */}
           <Button

@@ -44,6 +44,8 @@ export const useTransactionMutations = ({
     queryClient.invalidateQueries({ queryKey: ["transactions"] });
     queryClient.invalidateQueries({ queryKey: ["despesas", user?.id] });
     queryClient.invalidateQueries({ queryKey: ["cartoes", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["pending-receipts-notifications", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["overdue-expenses-notifications", user?.id] });
   }, [queryClient, user?.id]);
 
   const handleDeleteTransaction = useCallback(

@@ -8,8 +8,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
 import DynamicIcon from "./DynamicIcon";
+import { FinancialNotificationsPopover } from "./FinancialNotificationsPopover";
 import { usePendingShoppingItemsCount } from "@/hooks/usePendingShoppingItemsCount";
 import { ShoppingCart, Home, LayoutDashboard, Plus, CreditCard, User, LogOut, Settings, Wallet, TrendingUp, TrendingDown, ChevronDown } from 'lucide-react';
 import {
@@ -332,18 +334,20 @@ export const Navigation = () => {
               )}
 
               {isMobile && (
-                <div className="flex items-center gap-2 -mr-2">
+                <div className="flex items-center gap-[6px] -mr-[4px]">
+                  <FinancialNotificationsPopover />
+
                   <button
                     onClick={() => navigate("/lista-de-compras")}
                     className={cn(
-                      "relative p-2 rounded-full",
+                      "relative flex items-center justify-center w-[40px] h-[40px] rounded-full",
                       !isMobile && "transition-colors",
-                      isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[3px]` : "text-white hover:bg-white/10"
+                      isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px]` : "text-white hover:bg-white/10"
                     )}
                   >
-                    <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
+                    <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={2.5} />
                     {pendingCount > 0 && (
-                      <span className="absolute top-0.5 right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-white border-2 border-white">
+                      <span className="absolute top-[3px] right-[2px] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white border-[2px] border-white">
                         {pendingCount}
                       </span>
                     )}
@@ -353,11 +357,11 @@ export const Navigation = () => {
                   <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
                       <button className={cn(
-                        "p-2 rounded-full",
+                        "relative flex items-center justify-center w-[40px] h-[40px] rounded-full",
                         !isMobile && "transition-colors",
-                        isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[3px]` : "text-white hover:bg-white/10"
+                        isMobile ? `${mobileIconColor} hover:bg-current/10 -translate-y-[2px]` : "text-white hover:bg-white/10"
                       )}>
-                        <DynamicIcon name="Menu" className="h-6 w-6" strokeWidth={3} />
+                        <DynamicIcon name="Menu" className="h-[24px] w-[24px]" strokeWidth={3} />
                       </button>
                     </SheetTrigger>
                     <SheetContent

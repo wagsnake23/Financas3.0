@@ -1158,7 +1158,7 @@ export default function Orcamentos() {
           >
             <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
               <div className="flex flex-row items-center justify-start gap-3 w-full">
-                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#1D6FF0]/90 tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#112B5E] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>
                   {editingItem ? "Editar Planejamento" : "Novo Planejamento"}
                 </DialogTitle>
               </div>

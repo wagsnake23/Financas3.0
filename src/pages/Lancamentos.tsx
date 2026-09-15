@@ -28,6 +28,7 @@ import { ptBR } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { NfceDetailsModal } from "@/components/NfceDetailsModal";
+import { useTransactionEdit } from "@/contexts/TransactionEditContext";
 
 const Lancamentos = () => {
   const isMobile = useIsMobile();
@@ -40,6 +41,7 @@ const Lancamentos = () => {
   }, [isMobile]);
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { openEditModal } = useTransactionEdit();
 
   const {
     selectedMonth,
@@ -208,7 +210,7 @@ const Lancamentos = () => {
           monthlyFilteredTransactions={monthlyFilteredTransactions}
           cartoes={cartoes}
           user={user}
-          onEditTransaction={handleEditTransaction}
+          onEditTransaction={openEditModal}
           queryClient={logicQueryClient}
           filterPaymentOptionId={filterPaymentOptionId}
           setFilterPaymentOptionId={setFilterPaymentOptionId}
@@ -240,80 +242,6 @@ const Lancamentos = () => {
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       )}
-      <Dialog 
-        open={isEditModalOpen} 
-        onOpenChange={(open) => {
-          if (!open) {
-            handleCancelEdit();
-          } else {
-            setIsEditModalOpen(true);
-          }
-        }}
-      >
-        <style>{`
-          .edit-lancamento-modal > button {
-            transform: translate(3px, -3px) !important;
-          }
-        `}</style>
-        <DialogContent
-          className={cn(
-            isMobile ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4" : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px]",
-            "shadow-none border-none bg-[#FAFAFA] edit-lancamento-modal"
-          )}
-          style={{
-            border: isMobile ? "2px solid #FFFFFF" : "none",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -8px 20px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0, 0, 0, 0.1)"
-          }}
-        >
-          <DialogHeader
-            className={cn(
-              "flex flex-col items-start justify-start",
-              isMobile ? "mb-[-6px]" : "mb-[2px]",
-              isMobile && "absolute top-3.5 left-4 right-12 text-left",
-              !isMobile && "-mt-2"
-            )}
-          >
-            <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
-              <div className="flex flex-row items-center justify-start gap-3 w-full">
-                <DialogTitle className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</DialogTitle>
-                
-                {linkedNfceId && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-auto py-[4px] px-2 bg-white hover:bg-[#F8FAFC] text-[#0556C3] hover:text-[#04449C] shadow-none border border-[rgba(15,23,42,0.08)] hover:border-[rgba(15,23,42,0.15)] shrink-0 flex items-center gap-[3px] transition-colors rounded-[8px] mt-[1px]"
-                    onClick={() => setViewNfceId(linkedNfceId)}
-                  >
-                    <DynamicIcon name="Receipt" className="w-[14px] h-[14px]" />
-                    <span className="text-[12px] font-bold tracking-wide leading-none pt-[1px]">Nota</span>
-                  </Button>
-                )}
-              </div>
-              
-              {editingTransaction?.created_at && (
-                <p className="text-[11px] font-normal text-slate-500 leading-none mt-1 md:mt-[2px] truncate">
-                  Registrado em {format(new Date(editingTransaction.created_at), "dd MMM yyyy '•' HH:mm", { locale: ptBR })}
-                </p>
-              )}
-            </div>
-          </DialogHeader>
-
-          {editingTransaction && (
-            <div className={cn("form-body pb-0", isMobile && "pt-[18px]")}>
-              <TransactionEditForm
-                editingTransaction={editingTransaction}
-                onUpdateTransaction={handleUpdateTransaction}
-                onCancelEdit={handleCancelEdit}
-                onDeleteTransaction={handleDeleteTransaction}
-                allCategories={fetchedCategories}
-                isMobile={isMobile}
-                cartoes={cartoes}
-                refetchCartoes={refetchCartoes}
-              />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
       
       <NfceDetailsModal
         open={!!viewNfceId}
