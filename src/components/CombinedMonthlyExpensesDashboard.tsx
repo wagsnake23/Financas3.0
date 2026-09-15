@@ -798,16 +798,30 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                 height={40}
                               >
                                 <div className="w-full flex flex-col items-end justify-center pr-0.5 select-none pointer-events-none" style={{ height: '40px' }}>
-                                  <div className="flex flex-row items-baseline justify-end gap-1.5 w-full">
+                                  <div className="flex flex-row items-center justify-end gap-[8px] w-full">
                                     <div className={cn(
                                       "text-right text-[12px] md:text-[13px] font-semibold leading-[1.1] overflow-hidden break-words whitespace-normal",
                                       isActive ? "text-indigo-600" : "text-gray-700"
                                     )} style={{ maxHeight: '2.2em' }}>
                                       {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                                     </div>
-                                    <div className="shrink-0 text-[1.15em] leading-normal translate-y-[2px]">
-                                      {item?.icone && String(item.icone).startsWith("brand:") ? null : item?.icone}
-                                    </div>
+                                    {(() => {
+                                      console.log('[DASHBOARD_ICON_RENDER]', {
+                                        nome: payload.value,
+                                        svgEncontrado: typeof item?.icone === 'string' && item.icone.startsWith('brand:'),
+                                        origemIcone: typeof item?.icone,
+                                        renderizado: !!item?.icone
+                                      });
+                                      return (
+                                        <div className="shrink-0 flex items-center justify-center translate-y-[1px]" style={{ width: '18px', height: '18px' }}>
+                                          {item?.icone ? (
+                                            <DynamicIcon name={item.icone as string} className="w-[18px] h-[18px] object-contain shrink-0" style={{ width: '18px', height: '18px', objectFit: 'contain', flexShrink: 0 }} />
+                                          ) : (
+                                            <span className="text-[16px] leading-none drop-shadow-sm">📁</span>
+                                          )}
+                                        </div>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                               </foreignObject>
