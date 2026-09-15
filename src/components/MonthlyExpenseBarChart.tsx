@@ -129,7 +129,7 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
 
             const gradientId = `barGrad-exp-${isCurrentMonth ? 'act' : 'inact'}`;
             const strokeGradId = `strokeGrad-exp-${isCurrentMonth ? 'act' : 'inact'}`;
-            const patternId = `pattern-projected-exp`;
+            const patternId = `pattern-projected-exp-${isCurrentMonth ? 'sel' : 'unsel'}`;
 
             return (
               <g>
@@ -142,16 +142,29 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
                     <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.6 : (payload.isProjected ? 0.2 : 0.3)} />
                     <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.05 : 0.02} />
                   </linearGradient>
-                  <pattern id={patternId} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                    <rect width="2" height="4" fill={gradientColors.start} fillOpacity="0.5" />
-                    <rect x="2" width="2" height="4" fill="transparent" />
+                  <pattern id={patternId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    {isCurrentMonth ? (
+                      <>
+                        <rect width="6" height="6" fill="#fee2e2" fillOpacity="0.85" />
+                        <rect width="3" height="6" fill="#dc2626" fillOpacity="0.9" />
+                      </>
+                    ) : (
+                      <>
+                        <rect width="6" height="6" fill="transparent" />
+                        <rect width="3" height="6" fill="#f87171" fillOpacity="1" />
+                      </>
+                    )}
                   </pattern>
                 </defs>
                 {isCurrentMonth && (
-                  <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="6" opacity="0.12" filter="blur(3px)" />
+                  <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="6" opacity={payload.isProjected ? 0.25 : 0.12} filter="blur(3px)" />
                 )}
                 {payload.isProjected ? (
-                  <path d={path} fill={`url(#${patternId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" strokeDasharray="2 2" />
+                  isCurrentMonth ? (
+                    <path d={path} fill={`url(#${patternId})`} stroke="#dc2626" strokeWidth="2" />
+                  ) : (
+                    <path d={path} fill={`url(#${patternId})`} stroke="#f87171" strokeWidth="1.5" strokeDasharray="3 3" />
+                  )
                 ) : (
                   <path d={path} fill={`url(#${gradientId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" />
                 )}
