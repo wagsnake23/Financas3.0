@@ -27,7 +27,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { NfceDetailsModal } from "@/components/NfceDetailsModal";
+
 import { useTransactionEdit } from "@/contexts/TransactionEditContext";
 
 const Lancamentos = () => {
@@ -83,43 +83,6 @@ const Lancamentos = () => {
     allRevenues,
     allExpenseInstallments,
   } = useLancamentosLogic(user);
-
-  const [viewNfceId, setViewNfceId] = useState<string | null>(null);
-
-  // Check if current edited transaction is from an NFC-e
-  const { data: linkedNfceId } = useQuery({
-    queryKey: ["linkedNfce", editingTransaction?.id],
-    queryFn: async () => {
-      if (!editingTransaction?.id) return null;
-      
-      const mestreId = editingTransaction.despesa_id || editingTransaction.id;
-      
-      console.log('[NFCE] editingTransaction.id', editingTransaction.id);
-      console.log('[NFCE] editingTransaction.despesa_id', editingTransaction.despesa_id);
-      console.log('[NFCE] query despesa_id (mestre)', mestreId);
-      
-      try {
-        const { data: nfceCompra, error } = await (supabase as any)
-          .from("nfce_compras")
-          .select("id, status_importacao, despesa_id")
-          .eq("despesa_id", mestreId)
-          .eq("status_importacao", "processada")
-          .limit(1)
-          .maybeSingle();
-        
-        if (error) {
-          console.error('[NFCE] error full', error);
-        }
-        
-        return error ? null : (nfceCompra?.id || null);
-      } catch (err) {
-        console.error('[NFCE] error full', err);
-        return null;
-      }
-    },
-    enabled: !!editingTransaction?.id,
-  });
-
   console.log(
     "Lancamentos.tsx: User from useAuth:",
     user?.id,
@@ -242,12 +205,6 @@ const Lancamentos = () => {
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         </div>
       )}
-      
-      <NfceDetailsModal
-        open={!!viewNfceId}
-        onOpenChange={(open) => !open && setViewNfceId(null)}
-        compraId={viewNfceId}
-      />
     </div >
   );
 };

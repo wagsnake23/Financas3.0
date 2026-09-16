@@ -7,6 +7,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { AppCategory } from "@/types/finance";
 import { useTransactionMutations } from "@/hooks/useTransactionMutations";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import DynamicIcon from "@/components/DynamicIcon";
+import { NfceDetailsModal } from "@/components/NfceDetailsModal";
+import { Button } from "@/components/ui/button";
 
 interface TransactionEditContextType {
   openEditModal: (transaction: Transaction) => void;
@@ -29,6 +34,32 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [loadingEditData, setLoadingEditData] = useState(false);
+  const [viewNfceId, setViewNfceId] = useState<string | null>(null);
+
+  // Check if current edited transaction is from an NFC-e
+  const { data: linkedNfceId } = useQuery({
+    queryKey: ["linkedNfce", editingTransaction?.id],
+    queryFn: async () => {
+      if (!editingTransaction?.id) return null;
+      
+      const mestreId = editingTransaction.despesa_id || editingTransaction.id;
+      
+      try {
+        const { data: nfceCompra, error } = await (supabase as any)
+          .from("nfce_compras")
+          .select("id, status_importacao, despesa_id")
+          .eq("despesa_id", mestreId)
+          .eq("status_importacao", "processada")
+          .limit(1)
+          .maybeSingle();
+        
+        return error ? null : (nfceCompra?.id || null);
+      } catch (err) {
+        return null;
+      }
+    },
+    enabled: !!editingTransaction?.id,
+  });
 
   // Fetch Categories
   const { data: allCategories = [] } = useQuery<AppCategory[]>({
@@ -122,9 +153,37 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
               }
             >
               <div className="flex flex-col w-full transition-all gap-[3px] md:gap-0 pr-6">
-                <div className="flex flex-row items-center justify-start gap-3 w-full">
+                <div className="flex flex-row items-center justify-start gap-2 w-full">
                   <h2 className="text-[19px] md:text-[21px] font-extrabold text-[#0556C3] tracking-[0.2px] pb-[1px] m-0 leading-none text-left shrink truncate" style={{ fontFamily: "'Inter', sans-serif" }}>Editar Lançamento</h2>
+                  {linkedNfceId && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-auto py-[4px] px-2 bg-white hover:bg-[#F8FAFC] text-[#0556C3] hover:text-[#04449C] shadow-none border border-[rgba(15,23,42,0.08)] hover:border-[rgba(15,23,42,0.15)] shrink-0 flex items-center gap-[3px] transition-colors rounded-[8px] mt-[1px]"
+                      onClick={() => setViewNfceId(linkedNfceId)}
+                    >
+                      <DynamicIcon name="Receipt" className="w-[14px] h-[14px]" />
+                      <span className="text-[12px] font-bold tracking-wide leading-none pt-[1px]">Nota</span>
+                    </Button>
+                  )}
                 </div>
+                {editingTransaction.created_at && (
+                  <span className="text-[11px] font-medium text-gray-500 tracking-tight leading-none mt-1">
+                    Registrado em: {format(new Date(editingTransaction.created_at), "ddMMMMyyyy 'as' HH:mm", { locale: ptBR })
+                      .replace('janeiro', 'jan')
+                      .replace('fevereiro', 'fev')
+                      .replace('março', 'mar')
+                      .replace('abril', 'abr')
+                      .replace('maio', 'mai')
+                      .replace('junho', 'jun')
+                      .replace('julho', 'jul')
+                      .replace('agosto', 'ago')
+                      .replace('setembro', 'set')
+                      .replace('outubro', 'out')
+                      .replace('novembro', 'nov')
+                      .replace('dezembro', 'dez')}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -143,6 +202,12 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
           </DialogContent>
         </Dialog>
       )}
+
+      <NfceDetailsModal
+        open={!!viewNfceId}
+        onOpenChange={(open) => !open && setViewNfceId(null)}
+        compraId={viewNfceId}
+      />
     </TransactionEditContext.Provider>
   );
 };
