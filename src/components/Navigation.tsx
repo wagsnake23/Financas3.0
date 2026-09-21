@@ -369,7 +369,7 @@ export const Navigation = () => {
                       className="w-[85%] max-w-[340px] p-0 [&>button]:hidden flex flex-col h-full bg-white shadow-2xl border-l-0"
                     >
                       {/* Cabeçalho Integrado com Dashboard */}
-                      <div className="relative px-5 py-4 flex items-center w-full bg-[linear-gradient(to_bottom,#ffffff_0px,#ffffff_10px,#fcfdff_20px,#f9fbfe_30px,#f6fafe_40px,#f4f8ff_60px,#f4f8ff_100%)] border-b border-[rgba(180,200,230,0.5)] shadow-[0_4px_20px_rgba(15,23,42,0.04)] overflow-hidden shrink-0 rounded-bl-[20px] min-h-[90px]">
+                      <div className="relative px-5 py-4 flex items-center w-full bg-[linear-gradient(to_bottom,#FAFAFA_0px,#FAFAFA_10px,#fcfdff_20px,#f9fbfe_30px,#f6fafe_40px,#f4f8ff_60px,#f4f8ff_100%)] border-b border-[rgba(180,200,230,0.5)] shadow-[0_4px_20px_rgba(15,23,42,0.04)] overflow-hidden shrink-0 rounded-bl-[20px] min-h-[90px]">
                         <div className="relative z-10 flex items-center w-full gap-[11px] -ml-[3px]">
                           <div 
                             className="h-[56px] w-[56px] rounded-[16px] border-[1.5px] border-[rgba(180,200,230,0.5)] overflow-hidden bg-[#EEF4FF] flex items-center justify-center shrink-0"
@@ -491,23 +491,24 @@ export const Navigation = () => {
                       </div>
                       
                       {/* Rodapé Fixo Compacto */}
-                      <div className="shrink-0 pt-[14px] pb-[18px] px-4 bg-[linear-gradient(135deg,#ffffff_0%,#fbfdff_50%,#f4f8ff_100%)] border-t border-[rgba(180,200,230,0.5)] shadow-[0_-4px_20px_rgba(15,23,42,0.02)] flex flex-col relative text-left">
-                        <div className="flex flex-row items-center justify-between w-full">
-                          <div className="flex flex-row items-center gap-1.5 leading-[1.1]">
-                            <span className="text-[15px] font-extrabold text-[#1E3A8B] tracking-tight leading-none">
+                      <div className="shrink-0 pt-[14px] pb-[18px] px-4 bg-[linear-gradient(135deg,#ffffff_0%,#fbfdff_50%,#f4f8ff_100%)] border-t border-[rgba(180,200,230,0.5)] shadow-[0_-4px_20px_rgba(15,23,42,0.02)] flex items-center justify-between relative">
+                        <div className="flex items-center gap-2.5">
+                          <img src="/icons/logo.png" alt="Logo" className="w-[34px] h-[34px] shrink-0" />
+                          <div className="flex flex-col text-left">
+                            <span className="text-[15px] font-extrabold text-[#1E3A8B] tracking-tight leading-[1] mb-0.5">
                               Minhas Finança<span className="text-[#22c55e]">$</span>
                             </span>
+                            <p className="text-[11px] text-slate-600 font-medium leading-tight mb-0">Controle Financeiro</p>
+                            <p className="text-[10px] text-slate-400 leading-tight m-0">Versão 3.0.0</p>
                           </div>
-                          <button 
-                            onClick={signOut}
-                            className="flex items-center gap-1.5 py-1 px-2 -mr-2 rounded-lg hover:bg-red-50 active:bg-red-100 transition-colors"
-                          >
-                            <span className="text-[14px] font-semibold text-[#dc2626]">Sair</span>
-                            <LogOut className="w-[18px] h-[18px] text-[#dc2626]" strokeWidth={2.5} />
-                          </button>
                         </div>
-                        <p className="text-[11px] text-slate-600 font-medium leading-tight mt-1 mb-0">Controle Financeiro</p>
-                        <p className="text-[10px] text-slate-400 leading-tight">Versão 3.0.0</p>
+                        <button 
+                          onClick={signOut}
+                          className="flex items-center gap-1.5 py-1 px-2 -mr-2 rounded-lg hover:bg-red-50 active:bg-red-100 transition-colors shrink-0"
+                        >
+                          <span className="text-[14px] font-semibold text-[#dc2626]">Sair</span>
+                          <LogOut className="w-[18px] h-[18px] text-[#dc2626]" strokeWidth={2.5} />
+                        </button>
                       </div>
                     </SheetContent>
                   </Sheet>
