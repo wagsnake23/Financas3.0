@@ -514,13 +514,14 @@ export default function Dashboard() {
                     isMobile={isMobile}
                     childrenAlignment="start"
                     chartContent={
-                      <MonthlyBalanceBarChart
-                        revenues={allRevenues}
-                        expenseInstallments={allExpenseInstallments}
-                        currentDate={selectedMonth}
-                        isMobile={isMobile}
-                        onMonthClick={handleMonthClick}
-                      />
+                    <MonthlyBalanceBarChart
+                      revenues={allRevenues}
+                      expenseInstallments={allExpenseInstallments}
+                      currentDate={selectedMonth}
+                      isMobile={isMobile}
+                      onMonthClick={handleMonthClick}
+                      disablePattern={filter === 'investments'}
+                    />
                     }
                     annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}
                     annualTotalLabel="Saldo anual"
@@ -637,6 +638,7 @@ export default function Dashboard() {
                       getMonthlyExpensesFn={getMonthlyExpenses}
                       getMonthlyRevenuesFn={getMonthlyRevenues}
                       isMonthProjectedFn={isMonthProjected}
+                      disablePattern={filter === 'investments'}
                     />
                   }
                   annualTotalLabel="Saldo anual"
@@ -837,6 +839,10 @@ export default function Dashboard() {
                     currentDate={selectedMonth}
                     isMobile={isMobile}
                     onMonthClick={handleMonthClick}
+                    getMonthlyExpensesFn={getMonthlyExpenses}
+                    getMonthlyRevenuesFn={getMonthlyRevenues}
+                    isMonthProjectedFn={isMonthProjected}
+                    disablePattern={filter === 'investments'}
                   />
                 }
                 trend={monthlyTrends.balanceTrend}
@@ -1031,6 +1037,7 @@ export default function Dashboard() {
                       currentDate={selectedMonth}
                       isMobile={false}
                       onMonthClick={handleMonthClick}
+                      disablePattern={filter === 'investments'}
                     />
                   }
                   annualTotalValue={totalAnnualRevenues - totalAnnualExpenses}

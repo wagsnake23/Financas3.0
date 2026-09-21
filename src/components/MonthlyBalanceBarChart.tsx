@@ -14,6 +14,7 @@ interface MonthlyBalanceBarChartProps {
     getMonthlyExpensesFn?: (monthStr: string) => number;
     getMonthlyRevenuesFn?: (monthStr: string) => number;
     isMonthProjectedFn?: (monthStr: string) => boolean;
+    disablePattern?: boolean;
 }
 
 export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
@@ -25,6 +26,7 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
     getMonthlyExpensesFn,
     getMonthlyRevenuesFn,
     isMonthProjectedFn,
+    disablePattern,
 }) => {
     const chartData = useMemo(() => {
         const dataMap: { [key: string]: { month: string; balance: number; fullDate: Date; isCurrentMonth: boolean; isProjected: boolean } } = {};
@@ -145,15 +147,18 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                 activeBar={false}
                 shape={(props: any) => {
                     const { x, y, width, height, payload } = props;
-                    if (height === 0 || Number.isNaN(height)) return null;
+                    if (Number.isNaN(height)) return null;
+
+                    const newHeight = height === 0 ? 4 : height;
+                    const newY = height === 0 ? y - 4 : y;
 
                     const isCurrentMonth = payload.isCurrentMonth;
                     const isPositive = payload.balance >= 0;
-                    const newHeight = height;
-                    const newY = y;
                     
                     const r = Math.min(4, newHeight / 2); // Reverted radius
                     const path = `M${x},${newY + r} A${r},${r} 0 0,1 ${x + r},${newY} L${x + width - r},${newY} A${r},${r} 0 0,1 ${x + width},${newY + r} L${x + width},${newY + newHeight - r} A${r},${r} 0 0,1 ${x + width - r},${newY + newHeight} L${x + r},${newY + newHeight} A${r},${r} 0 0,1 ${x},${newY + newHeight - r} Z`;
+
+                    const useProjected = disablePattern ? false : payload.isProjected;
 
                     let gradientColors = isPositive 
                         ? { start: "#bfdbfe", end: "#3b82f6" } 
@@ -172,11 +177,11 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                         <g>
                             <defs>
                                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : (payload.isProjected ? 0.4 : 0.85)} />
-                                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : (payload.isProjected ? 0.2 : 0.65)} />
+                                    <stop offset="0%" stopColor={gradientColors.start} stopOpacity={isCurrentMonth ? 1 : (useProjected ? 0.4 : 0.85)} />
+                                    <stop offset="100%" stopColor={gradientColors.end} stopOpacity={isCurrentMonth ? 1 : (useProjected ? 0.2 : 0.65)} />
                                 </linearGradient>
                                 <linearGradient id={strokeGradId} x1="0" y1="0" x2="1" y2="0">
-                                    <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.6 : (payload.isProjected ? 0.2 : 0.3)} />
+                                    <stop offset="0%" stopColor="#ffffff" stopOpacity={isCurrentMonth ? 0.6 : (useProjected ? 0.2 : 0.3)} />
                                     <stop offset="100%" stopColor="#000000" stopOpacity={isCurrentMonth ? 0.05 : 0.02} />
                                 </linearGradient>
                                 <pattern id={patternId} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -187,12 +192,12 @@ export const MonthlyBalanceBarChart: React.FC<MonthlyBalanceBarChartProps> = ({
                             {isCurrentMonth && (
                                 <path d={path} fill="none" stroke={gradientColors.end} strokeWidth="6" opacity="0.12" filter="blur(3px)" />
                             )}
-                            {payload.isProjected ? (
+                            {useProjected ? (
                                 <path d={path} fill={`url(#${patternId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" strokeDasharray="2 2" />
                             ) : (
                                 <path d={path} fill={`url(#${gradientId})`} stroke={`url(#${strokeGradId})`} strokeWidth="1" />
                             )}
-                            {!payload.isProjected && <rect x={x + 3} y={newY + 2} width={Math.max(0, width - 6)} height={4} rx={2} fill="#ffffff" opacity={isCurrentMonth ? 0.6 : 0.25} />}
+                            {!useProjected && <rect x={x + 3} y={newY + 2} width={Math.max(0, width - 6)} height={4} rx={2} fill="#ffffff" opacity={isCurrentMonth ? 0.6 : 0.25} />}
                         </g>
                     );
                 }}
