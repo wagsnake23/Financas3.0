@@ -366,94 +366,148 @@ export const Navigation = () => {
                     </SheetTrigger>
                     <SheetContent
                       side="right"
-                      className="w-[280px] border-l-0 p-0 shadow-2xl overflow-hidden bg-white flex flex-col [&>button]:top-[10px] [&>button]:right-[10px] [&>button]:text-white [&>button]:opacity-100 hover:[&>button]:opacity-90"
+                      className="w-[85%] max-w-[340px] p-0 [&>button]:hidden flex flex-col h-full bg-white shadow-2xl border-l-0"
                     >
-                      <SheetHeader 
-                        className="relative text-left pt-10 pb-5 px-5 border-none shadow-sm flex flex-row items-center gap-[12px]"
-                        style={{
-                          backgroundImage: "url('/sky.webp')",
-                          backgroundSize: "cover",
-                          backgroundPosition: "center top",
-                          backgroundRepeat: "no-repeat"
-                        }}
-                      >
-                        <div className="w-[48px] h-[48px] rounded-[16px] border-[1.5px] border-[#1C2F55] shadow-sm overflow-hidden bg-[#EEF4FF] flex items-center justify-center shrink-0">
-                          <span className="text-[34px] leading-none">
-                            {avatarEmoji}
-                          </span>
-                        </div>
-                        <div className="flex flex-col overflow-hidden justify-center flex-1">
-                          <span className="text-[16px] font-bold text-white truncate drop-shadow-sm leading-tight">
-                            {displayName}
-                          </span>
-                          <span className={cn(
-                            "inline-flex items-center gap-1 mt-0.5 self-start max-w-full",
-                            subDisplay.color,
-                            subDisplay.bg
-                          )}>
-                            <span className="text-[12px] font-semibold tracking-[0.015em] leading-none truncate">
-                              {subDisplay.title}
+                      {/* Cabeçalho Integrado com Dashboard */}
+                      <div className="relative px-5 py-4 flex items-center w-full bg-[linear-gradient(to_bottom,#ffffff_0px,#ffffff_10px,#fcfdff_20px,#f9fbfe_30px,#f6fafe_40px,#f4f8ff_60px,#f4f8ff_100%)] border-b border-[rgba(180,200,230,0.5)] shadow-[0_4px_20px_rgba(15,23,42,0.04)] overflow-hidden shrink-0 rounded-bl-[20px] min-h-[90px]">
+                        <div className="relative z-10 flex items-center w-full gap-[11px] -ml-[3px]">
+                          <div 
+                            className="h-[56px] w-[56px] rounded-[16px] border-[1.5px] border-[rgba(180,200,230,0.5)] overflow-hidden bg-[#EEF4FF] flex items-center justify-center shrink-0"
+                            style={{ boxShadow: '0 2px 8px rgba(37, 99, 235, 0.12)' }}
+                          >
+                            <span className="text-[34px] leading-none">
+                              {avatarEmoji}
                             </span>
-                            <span className="text-[12px] leading-none shrink-0">{subDisplay.icon}</span>
-                          </span>
+                          </div>
+                          <div className="flex flex-col flex-1 min-w-0 justify-center">
+                            <h3 className="text-[18px] font-bold text-[#295BA7] tracking-tight truncate pr-2 leading-tight drop-shadow-sm text-left">
+                              {displayName}
+                            </h3>
+                            <div className="inline-flex mt-1 text-left">
+                              <div className={cn(
+                                "px-[8px] py-[6px] rounded-[8px] border-[0.5px] text-[10px] font-bold uppercase tracking-wider leading-none shadow-[0_1px_2px_rgba(0,0,0,0.05)] flex items-center justify-center text-center",
+                                "border-amber-200/80 bg-amber-50 text-amber-700"
+                              )}>
+                                {subDisplay.title}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </SheetHeader>
+                      </div>
 
-                      <div className="flex-1 overflow-y-auto pb-4">
-                        <div className="flex flex-col gap-0.5 mt-1 px-3">
-                          {navItems.map((item) => (
-                            <RouterNavLink
-                              key={item.to}
-                              to={item.to}
-                              onClick={() => setIsOpen(false)}
-                              className={({ isActive }) => cn(
-                                "flex items-center gap-3 px-4 py-1 transition-all mx-1 rounded-xl",
-                                isActive
-                                  ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
-                                  : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
-                              )}
-                            >
-                              <span className="text-[18px]">{item.icon}</span>
-                              <span className="text-[15px] tracking-tight">{item.label}</span>
-                            </RouterNavLink>
-                          ))}
+                      {/* Área Rolável */}
+                      <div className="flex-1 overflow-y-auto bg-white scrollbar-hide relative z-0 pb-4">
+                        <div className="flex flex-col pt-1">
+                          <div className="py-[6px] flex flex-col gap-[2px]">
+                            {[
+                              { to: "/", label: "Home", icon: "🏠" },
+                              { to: "/despesas", label: "Despesas", icon: "💸" },
+                              { to: "/receitas", label: "Receitas", icon: "💰" },
+                              { to: "/lancamentos", label: "Lançamentos", icon: "📝" },
+                              { to: "/dashboard", label: "Dashboard", icon: "📊" },
+                            ].map((item) => (
+                              <RouterNavLink
+                                key={item.to}
+                                to={item.to}
+                                onClick={() => setIsOpen(false)}
+                                className={({ isActive }) => cn(
+                                  "relative w-[calc(100%-24px)] mx-3 flex items-center justify-start gap-[10px] px-3 py-1 min-h-[34px] rounded-[14px] transition-colors duration-200 outline-none",
+                                  isActive 
+                                    ? "bg-[#F1F6FF] border border-[#D6E4FF] shadow-[0_2px_7px_rgba(15,23,42,0.02)] text-[#295BA7] font-semibold" 
+                                    : "bg-transparent text-slate-700 font-semibold hover:bg-[#F8FAFC] active:bg-[#F1F5F9] border border-transparent"
+                                )}
+                              >
+                                {({ isActive }) => (
+                                  <>
+                                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] bg-[#295BA7] rounded-r-[3px]" />}
+                                    <span className="flex items-center justify-center w-5 h-5 text-[18px] shrink-0">{item.icon}</span>
+                                    <span className="text-[14px] font-semibold">{item.label}</span>
+                                  </>
+                                )}
+                              </RouterNavLink>
+                            ))}
+                          </div>
                           
-                          <RouterNavLink
-                            to="/perfil"
-                            onClick={() => setIsOpen(false)}
-                            className={({ isActive }) => cn(
-                              "flex items-center gap-3 px-4 py-1 transition-all mx-1 rounded-xl",
-                              isActive
-                                ? "bg-[#EEF5FF] text-[#1E3A8B] font-bold"
-                                : "text-[#344054] hover:bg-slate-50 hover:text-[#1E3A8B] font-medium"
-                            )}
-                          >
-                            <span className="text-[18px]">👤</span>
-                            <span className="text-[15px] tracking-tight">Meu Perfil</span>
-                          </RouterNavLink>
+                          <div className="shrink-0" style={{ borderTop: '1px solid #D7E3F4', margin: '10px 14px' }} />
+                          
+                          <div className="py-[6px] flex flex-col gap-[2px]">
+                            {[
+                              { to: "/investimentos", label: "Investimentos", icon: "📈" },
+                              { to: "/metas", label: "Metas", icon: "🎯" },
+                              { to: "/orcamentos", label: "Planejamento", icon: "🧮" },
+                            ].map((item) => (
+                              <RouterNavLink
+                                key={item.to}
+                                to={item.to}
+                                onClick={() => setIsOpen(false)}
+                                className={({ isActive }) => cn(
+                                  "relative w-[calc(100%-24px)] mx-3 flex items-center justify-start gap-[10px] px-3 py-1 min-h-[34px] rounded-[14px] transition-colors duration-200 outline-none",
+                                  isActive 
+                                    ? "bg-[#F1F6FF] border border-[#D6E4FF] shadow-[0_2px_7px_rgba(15,23,42,0.02)] text-[#295BA7] font-semibold" 
+                                    : "bg-transparent text-slate-700 font-semibold hover:bg-[#F8FAFC] active:bg-[#F1F5F9] border border-transparent"
+                                )}
+                              >
+                                {({ isActive }) => (
+                                  <>
+                                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] bg-[#295BA7] rounded-r-[3px]" />}
+                                    <span className="flex items-center justify-center w-5 h-5 text-[18px] shrink-0">{item.icon}</span>
+                                    <span className="text-[14px] font-semibold">{item.label}</span>
+                                  </>
+                                )}
+                              </RouterNavLink>
+                            ))}
+                          </div>
 
-                          <Button
-                            variant="ghost"
-                            onClick={signOut}
-                            className="w-full justify-start px-4 h-8 mx-1 text-[#DC2626] hover:bg-red-50 hover:text-[#B91C1C] rounded-xl font-medium transition-colors mt-0.5"
-                          >
-                            <LogOut className="h-4 w-4 mr-3" strokeWidth={2.5} />
-                            <span className="text-[15px]">Sair da Conta</span>
-                          </Button>
+                          <div className="shrink-0" style={{ borderTop: '1px solid #D7E3F4', margin: '10px 14px' }} />
+
+                          <div className="py-[6px] flex flex-col gap-[2px]">
+                            {[
+                              { to: "/categorias", label: "Categorias", icon: "🗂️" },
+                              { to: "/lista-de-compras", label: "Lista de Compras", icon: "🛒" },
+                              { to: "/perfil", label: "Meu Perfil", icon: "👤" },
+                            ].map((item) => (
+                              <RouterNavLink
+                                key={item.to}
+                                to={item.to}
+                                onClick={() => setIsOpen(false)}
+                                className={({ isActive }) => cn(
+                                  "relative w-[calc(100%-24px)] mx-3 flex items-center justify-start gap-[10px] px-3 py-1 min-h-[34px] rounded-[14px] transition-colors duration-200 outline-none",
+                                  isActive 
+                                    ? "bg-[#F1F6FF] border border-[#D6E4FF] shadow-[0_2px_7px_rgba(15,23,42,0.02)] text-[#295BA7] font-semibold" 
+                                    : "bg-transparent text-slate-700 font-semibold hover:bg-[#F8FAFC] active:bg-[#F1F5F9] border border-transparent"
+                                )}
+                              >
+                                {({ isActive }) => (
+                                  <>
+                                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] bg-[#295BA7] rounded-r-[3px]" />}
+                                    <span className="flex items-center justify-center w-5 h-5 text-[18px] shrink-0">{item.icon}</span>
+                                    <span className="text-[14px] font-semibold">{item.label}</span>
+                                  </>
+                                )}
+                              </RouterNavLink>
+                            ))}
+                          </div>
                         </div>
                       </div>
                       
-                      {/* Rodapé Elegante */}
-                      <div className="bg-[#F1F5F9] px-5 py-[13px] flex items-center justify-between border-t border-[#E5E7EB] mt-auto">
-                        <div className="flex items-center gap-3">
-                          <img src="/icons/logo.png" alt="Logo" className="w-[34px] h-[34px]" />
-                          <div className="flex flex-col">
-                            <span className="text-[15px] font-extrabold text-[#1E3A8B] tracking-tight leading-none mb-0.5">
+                      {/* Rodapé Fixo Compacto */}
+                      <div className="shrink-0 pt-[14px] pb-[18px] px-4 bg-[linear-gradient(135deg,#ffffff_0%,#fbfdff_50%,#f4f8ff_100%)] border-t border-[rgba(180,200,230,0.5)] shadow-[0_-4px_20px_rgba(15,23,42,0.02)] flex flex-col relative text-left">
+                        <div className="flex flex-row items-center justify-between w-full">
+                          <div className="flex flex-row items-center gap-1.5 leading-[1.1]">
+                            <span className="text-[15px] font-extrabold text-[#1E3A8B] tracking-tight leading-none">
                               Minhas Finança<span className="text-[#22c55e]">$</span>
                             </span>
-                            <span className="text-[11px] font-medium text-slate-400 leading-none mt-0.5">Versão 3.0.0</span>
                           </div>
+                          <button 
+                            onClick={signOut}
+                            className="flex items-center gap-1.5 py-1 px-2 -mr-2 rounded-lg hover:bg-red-50 active:bg-red-100 transition-colors"
+                          >
+                            <span className="text-[14px] font-semibold text-[#dc2626]">Sair</span>
+                            <LogOut className="w-[18px] h-[18px] text-[#dc2626]" strokeWidth={2.5} />
+                          </button>
                         </div>
+                        <p className="text-[11px] text-slate-600 font-medium leading-tight mt-1 mb-0">Controle Financeiro</p>
+                        <p className="text-[10px] text-slate-400 leading-tight">Versão 3.0.0</p>
                       </div>
                     </SheetContent>
                   </Sheet>
