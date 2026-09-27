@@ -357,6 +357,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           numero_parcelas: isRecurring ? 0 : numeroParcelas,
           descricao,
           is_recurring_master: isRecurring,
+          data_competencia: formatInTimeZone(
+            dataVencimento as Date,
+            TARGET_TIMEZONE,
+            "yyyy-MM-dd"
+          ),
         })
         .select()
         .single();

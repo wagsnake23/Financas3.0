@@ -303,6 +303,31 @@ export default function Orcamentos() {
   const planejadoUltrapassaReceita = totalPlanejado > receitaPrevista;
   const realizadoUltrapassaPlanejado = totalRealizado > totalPlanejado;
 
+  useEffect(() => {
+    if (mesAno === "2026-10") {
+      console.log("=== PLANEJAMENTO (Orcamentos.tsx - Out/2026) ===");
+      console.log("1. totalPlanejado:", totalPlanejado);
+      console.log("2. totalRealizado:", totalRealizado);
+      console.log("3. calculatedOrcamentos completo:", calculatedOrcamentos);
+      console.log("4. Lista de todas as subcategorias consideradas:", subCategories.map(s => s.nome));
+      console.log("5. Lista de todos os orçamentos considerados:", orcamentos);
+      
+      const despesasConsideradas: any[] = [];
+      calculatedOrcamentos.forEach(item => {
+        despesasConsideradas.push({
+          "Categoria Pai": item.parentCat?.nome || "Sem pai",
+          "Subcategoria": item.subCat?.nome || "Sem sub",
+          "Valor Planejado Absoluto": item.absoluto,
+          "Valor Realizado": item.gasto,
+          "Percentual": item.percentual_planejado || 0,
+          "Receita Prevista": receitaPrevista
+        });
+      });
+      console.log("6. Lista de todas as despesas consideradas (Planejamento):");
+      console.table(despesasConsideradas);
+    }
+  }, [mesAno, totalPlanejado, totalRealizado, calculatedOrcamentos, subCategories, orcamentos, receitaPrevista]);
+
   // Estados Form Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<typeof calculatedOrcamentos[0] | null>(null);

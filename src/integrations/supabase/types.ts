@@ -198,6 +198,7 @@ export type Database = {
           cartao_id: string | null
           categoria_id: string | null
           created_at: string | null
+          data_competencia: string
           descricao: string | null
           forma_pagamento: string
           id: string
@@ -212,6 +213,7 @@ export type Database = {
           cartao_id?: string | null
           categoria_id?: string | null
           created_at?: string | null
+          data_competencia?: string
           descricao?: string | null
           forma_pagamento: string
           id?: string
@@ -226,6 +228,7 @@ export type Database = {
           cartao_id?: string | null
           categoria_id?: string | null
           created_at?: string | null
+          data_competencia?: string
           descricao?: string | null
           forma_pagamento?: string
           id?: string

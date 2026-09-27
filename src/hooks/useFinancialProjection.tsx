@@ -260,8 +260,11 @@ export function useFinancialProjection({
       // One-off "avista" expenses in the future (already created)
       const avistaFuture = allExpenseInstallments
         .filter((p) => {
-          const m = p.vencimento.substring(0, 7);
-          return m === monthStr && p.despesas?.tipo_pagamento === "avista";
+          const isAvista = p.despesas?.tipo_pagamento === "avista";
+          const m = isAvista && p.despesas?.data_competencia 
+            ? p.despesas.data_competencia.substring(0, 7) 
+            : p.vencimento.substring(0, 7);
+          return m === monthStr && isAvista;
         })
         .reduce((sum, p) => sum + p.valor_parcela, 0);
 
@@ -269,66 +272,57 @@ export function useFinancialProjection({
       const orcamentosForMonth = monthlyOrcamentosMap.get(monthStr);
       const obligationCats = monthlyObligationCategories.get(monthStr) || new Set<string>();
 
-      if (monthStr === "2027-07") {
-        let orcCount = orcamentosForMonth ? orcamentosForMonth.size : 0;
-        let orcTotal = 0;
-        if (orcamentosForMonth) {
-          for (let val of orcamentosForMonth.values()) orcTotal += val;
-        }
-
-        let fixosCount = 0;
-        let parcelasCount = 0;
-        let avistaCount = 0;
+      if (monthStr === "2026-10") {
+        let orcCount = 0;
+        let orcTotalAdicionado = 0;
+        let orcTotalRemovido = 0;
+        
+        const dashboardItens: any[] = [];
+        let fixosTot = 0;
+        let parceladasTot = 0;
+        let avulsasTot = 0;
 
         allExpenseInstallments.forEach(p => {
-          if (p.vencimento.substring(0, 7) === "2027-07") {
-            if (p.despesas?.tipo_pagamento === "fixo") fixosCount++;
-            else if (p.despesas?.tipo_pagamento === "parcelado") parcelasCount++;
-            else if (p.despesas?.tipo_pagamento === "avista") avistaCount++;
+          if (p.vencimento.substring(0, 7) === "2026-10") {
+            const origem = p.despesas?.tipo_pagamento || "desconhecido";
+            if (origem === "fixo") fixosTot += p.valor_parcela;
+            else if (origem === "parcelado") parceladasTot += p.valor_parcela;
+            else if (origem === "avista") avulsasTot += p.valor_parcela;
+
+            dashboardItens.push({
+              id: p.id,
+              descrição: p.despesas?.descricao || "Sem desc",
+              categoria_id: p.despesas?.categoria_id,
+              valor: p.valor_parcela,
+              origem: origem
+            });
           }
         });
 
-        let variavelFiltered = 0;
         if (orcamentosForMonth) {
           orcamentosForMonth.forEach((valor, catId) => {
-            if (!obligationCats.has(catId)) variavelFiltered += valor;
+            if (!obligationCats.has(catId)) {
+               orcTotalAdicionado += valor;
+               dashboardItens.push({ id: `orc-${catId}`, descrição: "Orçamento (Variável)", categoria_id: catId, valor: valor, origem: "orçamento" });
+            } else {
+               orcTotalRemovido += valor;
+            }
           });
         }
 
-        console.log("====================================");
-        console.log("VALIDAÇÃO JUL/2027");
-        console.log("====================================");
-        console.log("");
-        console.log("1. Total de orçamentos encontrados:");
-        console.log("- quantidade de subcategorias:", orcCount);
-        console.log("- valor total planejado:", orcTotal);
-        console.log("");
-        console.log("2. Total de despesas fixas encontradas:");
-        console.log("- quantidade:", fixosCount);
-        console.log("- valor total:", fixos);
-        console.log("");
-        console.log("3. Total de parcelamentos encontrados:");
-        console.log("- quantidade:", parcelasCount);
-        console.log("- valor total:", parcelas);
-        console.log("");
-        console.log("4. Total de despesas futuras avulsas encontradas:");
-        console.log("- quantidade:", avistaCount);
-        console.log("- valor total:", avistaFuture);
-        console.log("");
-        console.log("5. Valor final retornado por:");
-        console.log(`getMonthlyExpenses("2027-07")`);
-        console.log("");
-        console.log("6. Mostrar a composição completa:");
-        console.log("");
-        console.log(`Orçamentos: R$ ${variavelFiltered} (após anti-duplicidade)`);
-        console.log(`Fixas: R$ ${fixos}`);
-        console.log(`Parcelamentos: R$ ${parcelas}`);
-        console.log(`Avulsas: R$ ${avistaFuture}`);
-        console.log("");
-        console.log(`Total Final: R$ ${fixos + parcelas + avistaFuture + variavelFiltered}`);
-        console.log("");
-        console.log("====================================");
+        const totalGeral = fixosTot + parceladasTot + avulsasTot + orcTotalAdicionado;
+
+        console.log("=== DASHBOARD (useFinancialProjection - Out/2026) ===");
+        console.log("1. Valor total retornado:", totalGeral);
+        console.log("2. Total de despesas fixas:", fixosTot);
+        console.log("3. Total de despesas parceladas:", parceladasTot);
+        console.log("4. Total de despesas avulsas futuras:", avulsasTot);
+        console.log("5. Total de orçamentos variáveis adicionados:", orcTotalAdicionado);
+        console.log("6. Total removido pela lógica anti-duplicidade:", orcTotalRemovido);
+        console.log("7. Lista completa dos registros:");
+        console.table(dashboardItens);
       }
+ 
 
       let variavel = 0;
       if (orcamentosForMonth) {
@@ -396,8 +390,11 @@ export function useFinancialProjection({
 
       const avistaFuture = allExpenseInstallments
         .filter((p) => {
-          const m = p.vencimento.substring(0, 7);
-          return m === monthStr && p.despesas?.tipo_pagamento === "avista";
+          const isAvista = p.despesas?.tipo_pagamento === "avista";
+          const m = isAvista && p.despesas?.data_competencia 
+            ? p.despesas.data_competencia.substring(0, 7) 
+            : p.vencimento.substring(0, 7);
+          return m === monthStr && isAvista;
         })
         .reduce((sum, p) => sum + p.valor_parcela, 0);
 

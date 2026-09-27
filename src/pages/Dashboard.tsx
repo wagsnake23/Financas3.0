@@ -105,7 +105,7 @@ export default function Dashboard() {
         const { data, error } = await supabase
           .from("despesas_parcelas")
           .select(
-            "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)"
+            "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas, data_competencia)"
           )
           .filter("despesas.user_id", "eq", user.id)
           .order("vencimento", { ascending: true });

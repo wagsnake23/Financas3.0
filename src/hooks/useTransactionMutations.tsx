@@ -363,6 +363,7 @@ export const useTransactionMutations = ({
               tipo_pagamento: updatedTransaction.tipo_pagamento,
               forma_pagamento: updatedTransaction.forma_pagamento,
               cartao_id: updatedTransaction.cartao_id,
+              data_competencia: formatInTimeZone(parseISO(updatedTransaction.date), TARGET_TIMEZONE, "yyyy-MM-dd"),
             })
             .eq("id", parentDespesaId)
             .eq("user_id", user.id);

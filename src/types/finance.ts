@@ -21,6 +21,7 @@ export interface Transaction {
   tipo_pagamento?: "avista" | "parcelado" | "fixo"; // NOVO: Adicionado tipo_pagamento
   paymentTimestamp?: string | null; // NOVO: Data e hora do pagamento/recebimento
   created_at?: string; // NOVO: Data de criação do registro
+  data_competencia?: string; // NOVO: Mês/competência real da despesa
 }
 
 // Interface principal para categorias, alinhada com a tabela 'categorias' do Supabase

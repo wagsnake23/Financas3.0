@@ -29,7 +29,7 @@ export const useExpenseData = (user: User | null, selectedParentCategoryId: stri
         .from("despesas")
         .select("*")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .order("data_competencia", { ascending: false });
       if (error) throw error;
       return data;
     },

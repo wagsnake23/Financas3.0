@@ -180,7 +180,10 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
 
     const monthlyExpenseTransactions: Transaction[] = expenseInstallments
       .filter(p => {
-        const dateStr = p.vencimento.substring(0, 10);
+        const isAvista = p.despesas?.tipo_pagamento === "avista";
+        const dateStr = isAvista && p.despesas?.data_competencia 
+          ? p.despesas.data_competencia.substring(0, 10) 
+          : p.vencimento.substring(0, 10);
         return dateStr >= startStr && dateStr < nextMonthStr;
       })
       .map(p => {
@@ -204,6 +207,7 @@ export const useTransactionsData = ({ user, selectedMonth, enabled }: UseTransac
           tipo_pagamento: parentDespesa?.tipo_pagamento as "avista" | "parcelado" | "fixo",
           paymentTimestamp: p.data_pagamento,
           created_at: p.created_at,
+          data_competencia: parentDespesa?.data_competencia,
         } as Transaction;
       });
 
