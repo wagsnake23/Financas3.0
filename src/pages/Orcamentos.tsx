@@ -11,13 +11,14 @@ import { useQuery } from "@tanstack/react-query";
 import { AppCategory } from "@/types/finance";
 import { cn, formatCurrency } from "@/lib/utils";
 import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
-import { LayoutGrid, Tag, Calendar, Settings, BadgeDollarSign, Trash2, Check, Save } from "lucide-react";
+import { LayoutGrid, Tag, Calendar, Settings, BadgeDollarSign, Trash2, Check, Save, Bell } from "lucide-react";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { useOrcamentos } from "@/hooks/useOrcamentos";
 import { useCategories } from "@/hooks/useCategories";
 import { startOfMonth, endOfMonth, format, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -341,6 +342,75 @@ export default function Orcamentos() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteApplyToFuture, setDeleteApplyToFuture] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Estados Pending Bell
+  const [isPendingPopoverOpen, setIsPendingPopoverOpen] = useState(false);
+
+  const pendingOrcamentos = useMemo(() => {
+    return calculatedOrcamentos
+      .filter(o => o.gasto > 0 && o.absoluto <= 0)
+      .sort((a, b) => b.gasto - a.gasto);
+  }, [calculatedOrcamentos]);
+
+  const renderPendingBell = () => {
+    const hasPending = pendingOrcamentos.length > 0;
+    
+    return (
+      <Popover open={isPendingPopoverOpen} onOpenChange={setIsPendingPopoverOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className={cn(
+              "relative flex items-center justify-center w-[36px] h-[36px] rounded-full transition-colors shrink-0",
+              isMobile 
+                ? "text-slate-700 hover:bg-slate-200/50" 
+                : "text-[#112B5E] hover:bg-black/5 bg-transparent"
+            )}
+            title="Categorias sem planejamento"
+          >
+            <Bell className={cn("h-[20px] w-[20px] transition-transform", hasPending ? "text-red-500" : "")} strokeWidth={2.5} />
+            {hasPending && (
+              <span className="absolute top-[2px] right-[2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-[3px] text-[9.5px] font-bold text-white border-[2px] border-white transition-transform duration-300">
+                {pendingOrcamentos.length > 9 ? "9+" : pendingOrcamentos.length}
+              </span>
+            )}
+          </button>
+        </PopoverTrigger>
+        
+        <PopoverContent 
+          align="end" 
+          className="w-[280px] p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]" 
+          style={{ maxHeight: '60vh', overflowY: 'auto' }}
+        >
+          <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center">
+            <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
+              <span className="text-[16px]">⚠️</span> Sem Planejamento
+            </h3>
+          </div>
+
+          <div className="flex flex-col">
+            {pendingOrcamentos.map((item) => (
+              <button
+                key={item.categoria_id}
+                onClick={() => {
+                  setIsPendingPopoverOpen(false);
+                  handleOpenEdit(item);
+                }}
+                className="flex items-center justify-between px-4 py-3 border-b border-slate-100/50 last:border-0 hover:bg-slate-50 transition-colors text-left"
+              >
+                <span className="text-[13px] font-semibold text-slate-700 truncate mr-3 flex-1">
+                  {item.subCat.nome}
+                </span>
+                <span className="text-[13px] font-bold text-red-500 whitespace-nowrap">
+                  {formatCurrency(item.gasto)}
+                </span>
+              </button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  };
 
   // Fetch impact count for delete
   const { data: deleteAffectedCount = null, isLoading: isLoadingDeleteCount } = useQuery({
@@ -810,6 +880,7 @@ export default function Orcamentos() {
                   <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Planejamento Mensal
                   </h1>
+                  {renderPendingBell()}
                 </div>
                 {(() => {
                   const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
@@ -913,9 +984,12 @@ export default function Orcamentos() {
                 <div className="flex items-start gap-1.5">
                   <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
                   <div className="flex flex-col">
-                    <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      Planejamento Mensal
-                    </h2>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+                        Planejamento Mensal
+                      </h2>
+                      {renderPendingBell()}
+                    </div>
                     <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
                       {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
                     </span>
