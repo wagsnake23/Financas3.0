@@ -383,10 +383,10 @@ export default function Orcamentos() {
             align={isMobile ? "center" : "end"}
             collisionPadding={isMobile ? 24 : 16}
             sideOffset={isMobile ? -3 : 8}
-            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]", isMobile ? "w-[calc(100vw-64px)]" : "w-[280px]")}
-            style={{ maxHeight: '60vh', overflowY: 'auto' }}
+            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white", isMobile ? "w-[calc(100vw-64px)]" : "w-[320px]")}
+            style={{ maxHeight: '60vh', overflowY: 'auto', background: '#FFFFFF', backdropFilter: 'none', WebkitBackdropFilter: 'none' }}
           >
-          <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center">
+          <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center">
             <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
               <span className="text-[16px]">⚠️</span> Sem Planejamento
             </h3>
@@ -400,10 +400,10 @@ export default function Orcamentos() {
                   setIsPendingPopoverOpen(false);
                   handleOpenEdit(item);
                 }}
-                className="flex items-center justify-between px-4 py-3 border-b border-slate-100/50 last:border-0 hover:bg-slate-50 transition-colors text-left"
+                className="flex items-center justify-between px-4 py-3 border-b border-[#E5E7EB] last:border-0 hover:bg-slate-50 transition-colors text-left"
               >
                 <div className="flex items-center gap-2.5 truncate mr-3 flex-1">
-                  <span className="text-[15px] opacity-90">{item.subCat?.icone || "📁"}</span>
+                  <DynamicIcon name={item.subCat?.icone || "FolderKanban"} className="w-[18px] h-[18px] shrink-0 opacity-90" />
                   <span className="text-[13px] font-semibold text-slate-700 truncate">
                     {item.subCat?.nome}
                   </span>
