@@ -382,6 +382,7 @@ export default function Orcamentos() {
           <PopoverContent 
             align={isMobile ? "center" : "end"}
             collisionPadding={isMobile ? 24 : 16}
+            sideOffset={isMobile ? -3 : 8}
             className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]", isMobile ? "w-[calc(100vw-64px)]" : "w-[280px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto' }}
           >
