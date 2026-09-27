@@ -364,14 +364,14 @@ export default function Orcamentos() {
               "relative flex items-center justify-center w-[36px] h-[36px] rounded-full transition-colors shrink-0",
               !hasPending ? "pointer-events-none" : "",
               isMobile 
-                ? (hasPending ? "text-slate-700 hover:bg-slate-200/50" : "text-slate-400 bg-transparent") 
+                ? (hasPending ? "text-[#112B5E] hover:bg-slate-200/50" : "text-slate-400 bg-transparent") 
                 : (hasPending ? "text-[#112B5E] hover:bg-black/5 bg-transparent" : "text-slate-400 bg-transparent")
             )}
             title="Categorias sem planejamento"
           >
-            <Bell className={cn("h-[20px] w-[20px]", hasPending ? "text-red-500 transition-transform" : "text-slate-400")} strokeWidth={hasPending ? 2.5 : 2} />
+            <Bell className={cn("h-[20px] w-[20px]", hasPending ? "text-[#112B5E]" : "text-slate-400")} strokeWidth={hasPending ? 2.5 : 2} />
             {hasPending && (
-              <span className="absolute top-[2px] right-[2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-[3px] text-[9.5px] font-bold text-white border-[2px] border-white transition-transform duration-300">
+              <span className="absolute top-[2px] right-[2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-[3px] text-[9.5px] font-bold text-white border-[2px] border-white">
                 {pendingOrcamentos.length > 9 ? "9+" : pendingOrcamentos.length}
               </span>
             )}
@@ -380,9 +380,9 @@ export default function Orcamentos() {
         
         {hasPending && (
           <PopoverContent 
-            align={isMobile ? "start" : "end"}
-            alignOffset={isMobile ? -80 : 0}
-            className="w-[280px] p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]" 
+            align={isMobile ? "center" : "end"}
+            collisionPadding={isMobile ? 28 : 16}
+            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]", isMobile ? "w-[calc(100vw-56px)]" : "w-[280px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto' }}
           >
           <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center">
@@ -401,9 +401,12 @@ export default function Orcamentos() {
                 }}
                 className="flex items-center justify-between px-4 py-3 border-b border-slate-100/50 last:border-0 hover:bg-slate-50 transition-colors text-left"
               >
-                <span className="text-[13px] font-semibold text-slate-700 truncate mr-3 flex-1">
-                  {item.subCat.nome}
-                </span>
+                <div className="flex items-center gap-2.5 truncate mr-3 flex-1">
+                  <span className="text-[15px] opacity-90">{item.subCat?.icone || "📁"}</span>
+                  <span className="text-[13px] font-semibold text-slate-700 truncate">
+                    {item.subCat?.nome}
+                  </span>
+                </div>
                 <span className="text-[13px] font-bold text-red-500 whitespace-nowrap">
                   {formatCurrency(item.gasto)}
                 </span>
@@ -983,7 +986,7 @@ export default function Orcamentos() {
 
 
             {/* Bloco Planejamento do Mês */}
-            <div className="flex flex-col rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,.06)] border border-slate-200/80 p-3 mb-4" style={{ background: "linear-gradient(180deg, #FFFFFF, #FAFBFD)" }}>
+            <div className="flex flex-col rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,.06)] border border-slate-200/80 px-3 pb-3 pt-2 mb-4" style={{ background: "linear-gradient(180deg, #FFFFFF, #FAFBFD)" }}>
               <div className="flex items-start justify-between mb-2.5">
                 <div className="flex items-start gap-1.5">
                   <span className="text-[1.2rem] select-none mt-[5px]">🧮</span>
@@ -994,7 +997,7 @@ export default function Orcamentos() {
                       </h2>
                       {renderPendingBell()}
                     </div>
-                    <span className="text-[13px] font-medium text-slate-500 mt-0 leading-tight">
+                    <span className="text-[13px] font-medium text-slate-500 mt-[-5px] leading-tight">
                       {(new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).charAt(0).toUpperCase() + (new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate).replace(' de ', '/')).slice(1)}
                     </span>
                   </div>
