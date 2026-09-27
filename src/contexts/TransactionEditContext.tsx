@@ -12,6 +12,7 @@ import { ptBR } from "date-fns/locale";
 import DynamicIcon from "@/components/DynamicIcon";
 import { NfceDetailsModal } from "@/components/NfceDetailsModal";
 import { Button } from "@/components/ui/button";
+import { useCategories } from "@/hooks/useCategories";
 
 interface TransactionEditContextType {
   openEditModal: (transaction: Transaction) => void;
@@ -61,21 +62,8 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
     enabled: !!editingTransaction?.id,
   });
 
-  // Fetch Categories
-  const { data: allCategories = [] } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
-      return data as AppCategory[];
-    },
-    enabled: !!user,
-  });
+  // Fetch Categories via SSOT
+  const { data: allCategories = [] } = useCategories(user?.id);
 
   // Fetch Cartões
   const { data: cartoes = [], refetch: refetchCartoes } = useQuery({

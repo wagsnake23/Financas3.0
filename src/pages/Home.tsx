@@ -23,6 +23,7 @@ import DynamicIcon from "@/components/DynamicIcon";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { useCategories } from "@/hooks/useCategories";
 import Loading from "@/components/Loading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MonthlyBalanceBarChart } from "@/components/MonthlyBalanceBarChart";
@@ -229,21 +230,8 @@ export default function Home() {
         enabled: !!user,
     });
 
-    // Fetch categories
-    const { data: allSubcategories = EMPTY_ARRAY } = useQuery({
-        queryKey: ["categories", user?.id],
-        queryFn: async () => {
-            if (!user?.id) return [];
-            const { data, error } = await supabase
-                .from("categorias")
-                .select("*")
-                .or(`user_id.eq.${user.id},user_id.is.null`)
-                .order("nome");
-            if (error) throw error;
-            return data;
-        },
-        enabled: !!user,
-    });
+    // Fetch categories via SSOT
+    const { data: allSubcategories = EMPTY_ARRAY } = useCategories(user?.id);
 
     const { data: profile, refetch: refetchProfile } = useProfile(user?.id);
 

@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Meta, AppCategory } from "@/types/finance";
+import { useCategories } from "@/hooks/useCategories";
 import { cn, getBorderClass, formatCurrency } from "@/lib/utils";
 import { format, addMonths, differenceInMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -74,20 +75,7 @@ export default function Metas() {
   const [deleteHasDependencies, setDeleteHasDependencies] = useState(false);
 
   // Fetch all categories
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
-      return data as AppCategory[];
-    },
-    enabled: !!user,
-  });
+  const { data: allCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 
   const parentCategories = useMemo(() => {
     return allCategories.filter(c => c.parent_id === null && !["receitas", "investimentos", "receitas e investimentos"].includes(c.nome.toLowerCase()));

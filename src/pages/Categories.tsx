@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn, getBorderClass } from "@/lib/utils";
+import { useCategories } from "@/hooks/useCategories";
 
 const CategoriesList = React.lazy(() => import("../components/CategoriesList").then(module => ({ default: module.default })));
 
@@ -73,84 +74,69 @@ const Categories = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  // Fetch ALL categories (both main and subcategories) for the Categories page
-  // A filtragem para subcategorias será feita no CategoryForm e CategoryList
-  const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
+  const { data: rawCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 
-      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
-      let cryptoAdded = false;
-      let poupancaAdded = false;
-      const normalizedData = (data as AppCategory[])
-        .filter(cat => {
-          const lowerNome = cat.nome.toLowerCase();
-          
-          // Filtro de Aportes
-          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+  const fetchedCategories = useMemo(() => {
+    let cryptoAdded = false;
+    let poupancaAdded = false;
+    return rawCategories
+      .filter(cat => {
+        const lowerNome = cat.nome.toLowerCase();
+        
+        // Filtro de Aportes
+        if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
 
-          // Filtro de Ações: remover dividendos e venda
-          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
-            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
-          }
-          
-          // Consolidação de Criptomoedas
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            if (cryptoAdded) return false;
-            cryptoAdded = true;
-          }
+        // Filtro de Ações: remover dividendos e venda
+        if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+          if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+        }
+        
+        // Consolidação de Criptomoedas
+        if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+          if (cryptoAdded) return false;
+          cryptoAdded = true;
+        }
 
-          // Consolidação de Poupança
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            if (poupancaAdded) return false;
-            poupancaAdded = true;
-          }
+        // Consolidação de Poupança
+        if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+          if (poupancaAdded) return false;
+          poupancaAdded = true;
+        }
 
-          // Novos filtros solicitados: remover subcategorias específicas
-          const filterOut = [
-            "juros sobre capital",
-            "reembolsos",
-            "tesouro",
-            "rendimentos de fundos",
-            "outros rendimentos",
-            "dividendos",
-            "receitas extras",
-            "aluguel de imóveis",
-            "criptomoedas"
-          ];
-          
-          if (filterOut.some(term => lowerNome.includes(term))) return false;
-          
-          return true;
-        })
-        .map(cat => {
-          // Normalização padrão para Família
-          if (cat.id === "familia_filhos") {
-            return { ...cat, nome: "Família" };
-          }
-          const lowerNome = cat.nome.toLowerCase();
-          // Normalização para Criptomoedas
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            return { ...cat, nome: "Criptomoedas" };
-          }
-          // Normalização para Poupança
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            return { ...cat, nome: "Poupança" };
-          }
-          return cat;
-        });
-
-      return normalizedData;
-    },
-    enabled: !!user,
-  });
+        // Novos filtros solicitados: remover subcategorias específicas
+        const filterOut = [
+          "juros sobre capital",
+          "reembolsos",
+          "tesouro",
+          "rendimentos de fundos",
+          "outros rendimentos",
+          "dividendos",
+          "receitas extras",
+          "aluguel de imóveis",
+          "criptomoedas"
+        ];
+        
+        if (filterOut.some(term => lowerNome.includes(term))) return false;
+        
+        return true;
+      })
+      .map(cat => {
+        // Normalização padrão para Família
+        if (cat.id === "familia_filhos") {
+          return { ...cat, nome: "Família" };
+        }
+        const lowerNome = cat.nome.toLowerCase();
+        // Normalização para Criptomoedas
+        if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+          return { ...cat, nome: "Criptomoedas" };
+        }
+        // Normalização para Poupança
+        if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+          return { ...cat, nome: "Poupança" };
+        }
+        return cat;
+      });
+  }, [rawCategories]);
 
   const allCategories = fetchedCategories;
 

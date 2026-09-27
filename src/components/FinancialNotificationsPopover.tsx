@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useCategories } from "@/hooks/useCategories";
 
 export const FinancialNotificationsPopover = () => {
   const { allNotifications, overdueExpenses, pendingReceipts, totalNotifications } = useFinancialNotifications();
@@ -21,19 +22,11 @@ export const FinancialNotificationsPopover = () => {
   const isMobile = useIsMobile();
   const { user } = useAuth();
 
-  const { data: allCategories = [] } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .eq("user_id", user.id);
-      if (error) throw error;
-      return data as AppCategory[];
-    },
-    enabled: !!user,
-  });
+  const { data: rawCategories = [] } = useCategories(user?.id);
+
+  const allCategories = React.useMemo(() => {
+    return rawCategories.filter(cat => cat.user_id === user?.id);
+  }, [rawCategories, user?.id]);
 
   useEffect(() => {
     if (totalNotifications > prevTotal) {

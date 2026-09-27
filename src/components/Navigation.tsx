@@ -245,7 +245,7 @@ export const Navigation = () => {
               {/* Navegação Desktop */}
               {!isMobile && (
                 <div className="hidden md:flex items-center gap-1">
-                  {navItems.filter(item => item.label !== "Lista de Compras").map((item) => (
+                  {navItems.filter(item => item.label !== "Lista de Compras" && item.label !== "Metas").map((item) => (
                     <RouterNavLink
                       key={item.to}
                       to={item.to}
@@ -265,6 +265,8 @@ export const Navigation = () => {
                   ))}
 
                   <div className="h-6 w-px bg-white/20 mx-2" />
+
+                  <FinancialNotificationsPopover />
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -303,6 +305,12 @@ export const Navigation = () => {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                      <DropdownMenuItem asChild className="rounded-xl cursor-pointer p-3 hover:bg-slate-50">
+                        <RouterNavLink to="/metas" className="flex items-center w-full">
+                          <span className="text-lg mr-3">🎯</span>
+                          <span className="font-semibold text-slate-700">Metas</span>
+                        </RouterNavLink>
+                      </DropdownMenuItem>
                       <DropdownMenuItem asChild className="rounded-xl cursor-pointer p-3 hover:bg-slate-50">
                         <RouterNavLink to="/lista-de-compras" className="flex items-center w-full">
                           <span className="text-lg mr-3">🛒</span>

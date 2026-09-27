@@ -3,34 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/integrations/supabase/types";
-import { AppCategory } from "@/types/finance";
+import { useCategories } from "@/hooks/useCategories";
 
 const UNSELECTED_VALUE = "unselected";
 
 export const useExpenseData = (user: User | null, selectedParentCategoryId: string, enabled: boolean) => {
-  const { data: fetchedCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
+  const { data: rawCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 
-      // Normalização: Garante que "Família e Filhos" seja exibido sempre como "Família"
-      const normalizedData = (data as AppCategory[]).map(cat => {
-        if (cat.id === "familia_filhos") {
-          return { ...cat, nome: "Família" };
-        }
-        return cat;
-      });
-
-      return normalizedData;
-    },
-    enabled: enabled,
-  });
+  const fetchedCategories = useMemo(() => {
+    return rawCategories.map(cat => {
+      if (cat.id === "familia_filhos") {
+        return { ...cat, nome: "Família" };
+      }
+      return cat;
+    });
+  }, [rawCategories]);
 
   const allSubcategories = fetchedCategories;
 

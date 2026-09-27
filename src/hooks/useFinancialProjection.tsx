@@ -244,6 +244,7 @@ export function useFinancialProjection({
    * - future: fixos + parcelas + variable planning (with anti-duplication)
    */
   const getMonthlyExpenses = useMemo(() => {
+    console.log('[MEMO RECALCULADO]', 'getMonthlyExpenses (Closure Creator)', new Date().toISOString());
     return (monthStr: string): number => {
       const type = getMonthType(monthStr);
 

@@ -14,6 +14,7 @@ import { MonthNavigatorCompact } from "@/components/MonthNavigatorCompact";
 import { LayoutGrid, Tag, Calendar, Settings, BadgeDollarSign, Trash2, Check, Save } from "lucide-react";
 import { MonthNavigator } from "@/components/MonthNavigator";
 import { useOrcamentos } from "@/hooks/useOrcamentos";
+import { useCategories } from "@/hooks/useCategories";
 import { startOfMonth, endOfMonth, format, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -50,21 +51,8 @@ export default function Orcamentos() {
     isDeletingMass
   } = useOrcamentos(user?.id, mesAno);
 
-  // Fetch Categories
-  const { data: allCategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .order("nome");
-      if (error) throw error;
-      return data as AppCategory[];
-    },
-    enabled: !!user,
-  });
+  // Fetch Categories via SSOT
+  const { data: allCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 
   const parentCategories = useMemo(() => allCategories.filter(c => c.parent_id === null), [allCategories]);
   const subCategories = useMemo(() => allCategories.filter(c => c.parent_id !== null), [allCategories]);
@@ -299,6 +287,12 @@ export default function Orcamentos() {
 
     return Object.values(groups).sort((a, b) => b.totalGasto - a.totalGasto);
   }, [calculatedOrcamentos]);
+
+  console.log('[ORCAMENTOS]');
+  console.log('categorias (allCategories)', allCategories);
+  console.log('subcategorias', subCategories);
+  console.log('orcamentos', orcamentos);
+  console.log('groupedOrcamentos', groupedOrcamentos);
 
   // Indicadores Superiores
   const totalPlanejado = calculatedOrcamentos.reduce((acc, curr) => acc + curr.absoluto, 0);
@@ -1114,7 +1108,10 @@ export default function Orcamentos() {
             <div className="text-center py-10 text-slate-500">
               Nenhuma subcategoria disponível para orçamento.
             </div>
-          ) : (            <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")}>
+          ) : (
+            <>
+              {console.log('[ACCORDION RENDER]', groupedOrcamentos)}
+              <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")}>
 
               {isMobile ? (
                 groupedOrcamentos.map((group) => renderAccordionGroup(group))
@@ -1129,6 +1126,7 @@ export default function Orcamentos() {
                 </>
               )}
             </Accordion>
+            </>
           )}
         </div>
       </main>
@@ -1389,13 +1387,7 @@ export default function Orcamentos() {
               </RadioGroup>
             </div>
             
-            {deleteAffectedCount !== null && (
-              <div className="w-full bg-slate-50 border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-1 shadow-sm items-center justify-center text-center">
-                <span className="text-[14px] font-medium text-slate-600">
-                  {isLoadingDeleteCount ? "Calculando..." : `Serão removidos ${deleteAffectedCount} planejamentos.`}
-                </span>
-              </div>
-            )}
+
 
             <div className="grid gap-2 w-full pt-1">
               <Button

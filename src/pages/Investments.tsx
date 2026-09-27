@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth"; // Importar useAuth
 import { supabase } from "@/integrations/supabase/client"; // Importar supabase
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useCategories } from "@/hooks/useCategories";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; // Importar Tanstack Query hooks
 import { TablesInsert, Tables } from "@/integrations/supabase/types"; // Importar tipos do Supabase
 import { Investment, AppCategory } from "@/types/finance"; // Importar a interface Investment e AppCategory
@@ -69,74 +70,63 @@ export default function Investments() { // Alterado para export default function
   */
 
   // Fetch all subcategories
-  const { data: allSubcategories = [], isLoading: isLoadingCategories } = useQuery<AppCategory[]>({
-    queryKey: ["categories", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from("categorias")
-        .select("*")
-        .or(`user_id.eq.${user.id},user_id.is.null`)
-        .not("parent_id", "is", null) // Only subcategories
-        .order("nome");
-      if (error) throw error;
+  // Fetch all categories via SSOT
+  const { data: allCategories = [], isLoading: isLoadingCategories } = useCategories(user?.id);
 
-      // Normalização e Limpeza de Categorias (Sincronizado com Categories.tsx)
-      let cryptoAdded = false;
-      let poupancaAdded = false;
-      const normalizedData = (data as AppCategory[])
-        .filter(cat => {
-          const lowerNome = cat.nome.toLowerCase();
+  const allSubcategories = useMemo(() => {
+    let cryptoAdded = false;
+    let poupancaAdded = false;
 
-          // Filtro de Aportes
-          if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
+    return allCategories
+      .filter(cat => cat.parent_id !== null)
+      .filter(cat => {
+        const lowerNome = cat.nome.toLowerCase();
 
-          if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
-            if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
-          }
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            if (cryptoAdded) return false;
-            cryptoAdded = true;
-          }
-          // Consolidação de Poupança
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            if (poupancaAdded) return false;
-            poupancaAdded = true;
-          }
+        // Filtro de Aportes
+        if (lowerNome.includes("aportes") || lowerNome.includes("entrada de capital")) return false;
 
-          // Novos filtros solicitados: remover subcategorias específicas
-          const filterOut = [
-            "juros sobre capital",
-            "reembolsos",
-            "tesouro",
-            "rendimentos de fundos",
-            "outros rendimentos",
-            "dividendos",
-            "receitas extras",
-            "aluguel de imóveis",
-            "criptomoedas"
-          ];
+        if (lowerNome.includes("ações") || lowerNome.includes("acoes")) {
+          if (lowerNome.includes("dividendos") || lowerNome.includes("venda")) return false;
+        }
+        if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+          if (cryptoAdded) return false;
+          cryptoAdded = true;
+        }
+        // Consolidação de Poupança
+        if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+          if (poupancaAdded) return false;
+          poupancaAdded = true;
+        }
 
-          if (filterOut.some(term => lowerNome.includes(term))) return false;
+        // Novos filtros solicitados: remover subcategorias específicas
+        const filterOut = [
+          "juros sobre capital",
+          "reembolsos",
+          "tesouro",
+          "rendimentos de fundos",
+          "outros rendimentos",
+          "dividendos",
+          "receitas extras",
+          "aluguel de imóveis",
+          "criptomoedas"
+        ];
 
-          return true;
-        })
-        .map(cat => {
-          if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
-          const lowerNome = cat.nome.toLowerCase();
-          if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
-            return { ...cat, nome: "Criptomoedas" };
-          }
-          if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
-            return { ...cat, nome: "Poupança" };
-          }
-          return cat;
-        });
+        if (filterOut.some(term => lowerNome.includes(term))) return false;
 
-      return normalizedData;
-    },
-    enabled: !!user,
-  });
+        return true;
+      })
+      .map(cat => {
+        if (cat.id === "familia_filhos") return { ...cat, nome: "Família" };
+        const lowerNome = cat.nome.toLowerCase();
+        if (lowerNome.includes("criptomoedas") || lowerNome.includes("crypto") || lowerNome.includes("bitcoin")) {
+          return { ...cat, nome: "Criptomoedas" };
+        }
+        if (lowerNome.includes("poupança") || lowerNome.includes("poupanca")) {
+          return { ...cat, nome: "Poupança" };
+        }
+        return cat;
+      });
+  }, [allCategories]);
 
   const incomeInvestmentSubcategories = useMemo(() => {
     return allSubcategories.filter(cat => cat.parent_id === 'receitas_e_investimentos');
@@ -545,6 +535,7 @@ export default function Investments() { // Alterado para export default function
   };
 
   const calculatedInvestments = useMemo(() => {
+    console.log('[MEMO RECALCULADO]', 'calculatedInvestments (Investments)', new Date().toISOString());
     return (investments || []).map(inv => {
       let idxMap: Map<string, number> | undefined;
       if (inv.tipo_rentabilidade === "indexado") {
