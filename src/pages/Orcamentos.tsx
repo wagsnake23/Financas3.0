@@ -80,23 +80,23 @@ export default function Orcamentos() {
 
   // Fetch Realizado (Despesas do mês)
   const allSubIds = useMemo(() => subCategories.map(s => s.id), [subCategories]);
-  
+
   const { data: realizadoMap = {} } = useQuery<Record<string, number>>({
     queryKey: ["orcamentos-realizado", user?.id, mesAno, allSubIds],
     queryFn: async () => {
       if (!user?.id || allSubIds.length === 0) return {};
-      
+
       const { data: despesas, error: despError } = await supabase
         .from("despesas")
         .select("id, categoria_id")
         .eq("user_id", user.id)
         .in("categoria_id", allSubIds);
-      
+
       if (despError) throw despError;
       if (!despesas || despesas.length === 0) return {};
 
       const despesaIds = despesas.map(d => d.id);
-      
+
       const { data: parcelas, error: parcError } = await supabase
         .from("despesas_parcelas")
         .select("despesa_id, valor_parcela")
@@ -129,10 +129,10 @@ export default function Orcamentos() {
   useEffect(() => {
     async function handleAutoSync() {
       if (!user?.id || isLoadingCategories || isOrcamentosLoading || isSyncing) return;
-      
+
       const clearedFrom = localStorage.getItem(`orcamentos_cleared_from_${user.id}`);
       if (clearedFrom && mesAno >= clearedFrom) return;
-      
+
       const clearedExact = localStorage.getItem(`orcamentos_cleared_exact_${user.id}_${mesAno}`);
       if (clearedExact === "true") return;
 
@@ -184,7 +184,7 @@ export default function Orcamentos() {
           valor_planejado: o.valor_planejado,
           percentual_planejado: o.percentual_planejado,
         }));
-        
+
         const existingCatIds = new Set(toInsert.map(i => i.categoria_id));
         subCategories.forEach(sub => {
           if (!existingCatIds.has(sub.id)) {
@@ -206,7 +206,7 @@ export default function Orcamentos() {
       // Mês atual tem orçamento. Sincronizar subcategorias novas faltantes.
       const existingCatIds = new Set(orcamentos.map(o => o.categoria_id));
       const missingSubs = subCategories.filter(sub => !existingCatIds.has(sub.id));
-      
+
       if (missingSubs.length > 0) {
         const toInsert = missingSubs.map(sub => ({
           user_id: user.id,
@@ -221,7 +221,7 @@ export default function Orcamentos() {
     }
 
     handleAutoSync();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, mesAno, isOrcamentosLoading, isLoadingCategories]);
 
   // Estruturação dos dados para a View
@@ -229,16 +229,16 @@ export default function Orcamentos() {
     return subCategories.map(subCat => {
       const orc = orcamentos.find(o => o.categoria_id === subCat.id);
       const parentCat = parentCategories.find(p => p.id === subCat.parent_id) || null;
-      
+
       const gasto = realizadoMap[subCat.id] || 0;
 
       let absoluto = 0;
       if (orc) {
-        absoluto = orc.tipo_planejamento === "valor" 
-          ? orc.valor_planejado 
+        absoluto = orc.tipo_planejamento === "valor"
+          ? orc.valor_planejado
           : (receitaPrevista * (orc.percentual_planejado || 0)) / 100;
       }
-      
+
       const percentualGasto = absoluto > 0 ? (gasto / absoluto) * 100 : (gasto > 0 ? 100 : 0);
       const excedido = gasto > absoluto;
       const restante = absoluto - gasto;
@@ -258,14 +258,14 @@ export default function Orcamentos() {
 
   // Agrupamento por Categoria Pai
   const groupedOrcamentos = useMemo(() => {
-    const groups: Record<string, { 
-      parent: AppCategory; 
+    const groups: Record<string, {
+      parent: AppCategory;
       items: typeof calculatedOrcamentos;
       totalPlanejado: number;
       totalGasto: number;
       ativosCount: number;
     }> = {};
-    
+
     calculatedOrcamentos.forEach(item => {
       // Exibir apenas se houver planejamento ou gasto
       if (item.absoluto > 0 || item.gasto > 0) {
@@ -304,7 +304,7 @@ export default function Orcamentos() {
   // Estados Form Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<typeof calculatedOrcamentos[0] | null>(null);
-  
+
   const [formParentId, setFormParentId] = useState<string>(UNSELECTED_VALUE);
   const [formSubId, setFormSubId] = useState<string>(UNSELECTED_VALUE);
   const [formValor, setFormValor] = useState<number | undefined>(undefined);
@@ -357,7 +357,7 @@ export default function Orcamentos() {
 
   const renderPendingBell = () => {
     const hasPending = pendingOrcamentos.length > 0;
-    
+
     return (
       <Popover open={isPendingPopoverOpen} onOpenChange={setIsPendingPopoverOpen}>
         <PopoverTrigger asChild>
@@ -366,8 +366,8 @@ export default function Orcamentos() {
             className={cn(
               "relative flex items-center justify-center w-[36px] h-[36px] rounded-full transition-colors shrink-0",
               !hasPending ? "pointer-events-none" : "",
-              isMobile 
-                ? (hasPending ? "text-[#112B5E] hover:bg-slate-200/50" : "text-slate-400 bg-transparent") 
+              isMobile
+                ? (hasPending ? "text-[#112B5E] hover:bg-slate-200/50" : "text-slate-400 bg-transparent")
                 : (hasPending ? "text-[#112B5E] hover:bg-black/5 bg-transparent" : "text-slate-400 bg-transparent")
             )}
             title="Categorias sem planejamento"
@@ -380,58 +380,58 @@ export default function Orcamentos() {
             )}
           </button>
         </PopoverTrigger>
-        
+
         {hasPending && (
-          <PopoverContent 
+          <PopoverContent
             align={isMobile ? "center" : "end"}
             collisionPadding={isMobile ? 24 : 16}
             sideOffset={isMobile ? -3 : 8}
             className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white", isMobile ? "w-[calc(100vw-64px)]" : "w-[320px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto', background: '#FFFFFF', backdropFilter: 'none', WebkitBackdropFilter: 'none' }}
           >
-          <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
-            <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
-              <span className="text-[16px]">⚠️</span> Sem Planejamento
-            </h3>
-            <button
-              type="button"
-              onClick={handlePlanejaTudo}
-              disabled={isPlanejandoTudo}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-[8px] text-[11.5px] font-bold text-white transition-all active:scale-95 disabled:opacity-60 shrink-0"
-              style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}
-            >
-              {isPlanejandoTudo ? (
-                <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin inline-block" />
-              ) : (
-                <span>✓</span>
-              )}
-              Planejar Tudo
-            </button>
-          </div>
-
-          <div className="flex flex-col">
-            {pendingOrcamentos.map((item) => (
+            <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
+              <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
+                <span className="text-[16px]">⚠️</span> Sem Planejamento
+              </h3>
               <button
-                key={item.categoria_id}
-                onClick={() => {
-                  setIsPendingPopoverOpen(false);
-                  handleOpenEdit(item);
-                }}
-                className="flex items-center justify-between px-4 py-3 border-b border-[#E5E7EB] last:border-0 hover:bg-slate-50 transition-colors text-left"
+                type="button"
+                onClick={handlePlanejaTudo}
+                disabled={isPlanejandoTudo}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-[8px] text-[11.5px] font-bold text-white transition-all active:scale-95 disabled:opacity-60 shrink-0"
+                style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}
               >
-                <div className="flex items-center gap-2.5 truncate mr-3 flex-1">
-                  <DynamicIcon name={item.subCat?.icone || "FolderKanban"} className="w-[18px] h-[18px] shrink-0 opacity-90" />
-                  <span className="text-[13px] font-semibold text-slate-700 truncate">
-                    {item.subCat?.nome}
-                  </span>
-                </div>
-                <span className="text-[13px] font-bold text-red-500 whitespace-nowrap">
-                  {formatCurrency(item.gasto)}
-                </span>
+                {isPlanejandoTudo ? (
+                  <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin inline-block" />
+                ) : (
+                  <span>✓</span>
+                )}
+                Planejar Tudo
               </button>
-            ))}
-          </div>
-        </PopoverContent>
+            </div>
+
+            <div className="flex flex-col">
+              {pendingOrcamentos.map((item) => (
+                <button
+                  key={item.categoria_id}
+                  onClick={() => {
+                    setIsPendingPopoverOpen(false);
+                    handleOpenEdit(item);
+                  }}
+                  className="flex items-center justify-between px-4 py-3 border-b border-[#E5E7EB] last:border-0 hover:bg-slate-50 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2.5 truncate mr-3 flex-1">
+                    <DynamicIcon name={item.subCat?.icone || "FolderKanban"} className="w-[18px] h-[18px] shrink-0 opacity-90" />
+                    <span className="text-[13px] font-semibold text-slate-700 truncate">
+                      {item.subCat?.nome}
+                    </span>
+                  </div>
+                  <span className="text-[13px] font-bold text-red-500 whitespace-nowrap">
+                    {formatCurrency(item.gasto)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
         )}
       </Popover>
     );
@@ -473,7 +473,7 @@ export default function Orcamentos() {
           mes_ano: mesAno,
           applyToFuture: deleteApplyToFuture
         });
-        
+
         // Registrar a exclusão manual para evitar que o Auto Sync recrie os orçamentos
         if (deleteApplyToFuture) {
           localStorage.setItem(`orcamentos_cleared_from_${user?.id}`, mesAno);
@@ -504,10 +504,10 @@ export default function Orcamentos() {
     setEditingItem(item);
     setFormParentId(item.parentCat?.id || UNSELECTED_VALUE);
     setFormSubId(item.categoria_id);
-    
+
     const valorInicial = item.absoluto > 0 ? item.absoluto : item.gasto;
     setFormValor(valorInicial);
-    
+
     setFormAbrangencia("current_month");
     setIsModalOpen(true);
   };
@@ -523,7 +523,7 @@ export default function Orcamentos() {
 
   const handleSubCategoryChange = (subId: string) => {
     setFormSubId(subId);
-    
+
     if (subId === UNSELECTED_VALUE) {
       setFormValor(undefined);
       return;
@@ -621,7 +621,7 @@ export default function Orcamentos() {
 
         if (despesas && despesas.length > 0) {
           const despesaIds = despesas.map((d: any) => d.id);
-          
+
           const { data: parcelas, error: parcError } = await supabase
             .from("despesas_parcelas")
             .select("id")
@@ -639,7 +639,7 @@ export default function Orcamentos() {
             return;
           }
         }
-        
+
         setIsConfirmDeleteOpen(true);
       } catch (err) {
         showErrorToast("Erro ao verificar lançamentos futuros.");
@@ -669,216 +669,216 @@ export default function Orcamentos() {
   const navigate = useNavigate();
 
   const renderAccordionGroup = (group: any) => {
-                const semPlanejamento = group.totalPlanejado <= 0;
-                const excedido = group.totalGasto > group.totalPlanejado;
-                const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
-                const restante = group.totalPlanejado - group.totalGasto;
-                const groupPctReceita = receitaPrevista > 0 ? Math.round(((semPlanejamento ? group.totalGasto : group.totalPlanejado) / receitaPrevista) * 100) : 0;
-                const groupPctGasto = receitaPrevista > 0 ? Math.round((group.totalGasto / receitaPrevista) * 100) : 0;
+    const semPlanejamento = group.totalPlanejado <= 0;
+    const excedido = group.totalGasto > group.totalPlanejado;
+    const atingido = group.totalGasto === group.totalPlanejado && !semPlanejamento;
+    const restante = group.totalPlanejado - group.totalGasto;
+    const groupPctReceita = receitaPrevista > 0 ? Math.round(((semPlanejamento ? group.totalGasto : group.totalPlanejado) / receitaPrevista) * 100) : 0;
+    const groupPctGasto = receitaPrevista > 0 ? Math.round((group.totalGasto / receitaPrevista) * 100) : 0;
 
-                let pctVerde = 0;
-                let pctRoxo = 0;
-                let pctVermelho = 0;
+    let pctVerde = 0;
+    let pctRoxo = 0;
+    let pctVermelho = 0;
 
-                if (group.totalPlanejado > 0) {
-                  if (excedido) {
-                    pctVerde = 0;
-                    pctRoxo = (group.totalPlanejado / group.totalGasto) * 100;
-                    pctVermelho = ((group.totalGasto - group.totalPlanejado) / group.totalGasto) * 100;
-                  } else if (atingido) {
-                    pctVerde = 100;
-                    pctRoxo = 0;
-                  } else {
-                    pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
-                    pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
-                  }
+    if (group.totalPlanejado > 0) {
+      if (excedido) {
+        pctVerde = 0;
+        pctRoxo = (group.totalPlanejado / group.totalGasto) * 100;
+        pctVermelho = ((group.totalGasto - group.totalPlanejado) / group.totalGasto) * 100;
+      } else if (atingido) {
+        pctVerde = 100;
+        pctRoxo = 0;
+      } else {
+        pctVerde = (group.totalGasto / group.totalPlanejado) * 100;
+        pctRoxo = ((group.totalPlanejado - group.totalGasto) / group.totalPlanejado) * 100;
+      }
+    }
+
+    return (
+      <AccordionItem
+        key={group.parent.id}
+        value={group.parent.id}
+        className={cn(
+          "border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-200",
+          "data-[state=open]:bg-[linear-gradient(180deg,#FAFCFF_0%,#F5F9FF_100%)] data-[state=open]:border-[#BFD7FF]",
+          isMobile ? "mb-[3px]" : "mb-0"
+        )}
+      >
+        <AccordionTrigger
+          className={cn(
+            "group hover:no-underline hover:bg-transparent transition-colors",
+            "[&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-[#2563EB] [&>svg]:stroke-[4px]",
+            isMobile ? "px-3 py-2.5" : "p-4"
+          )}
+          style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
+        >
+          <div className="flex flex-col w-full text-left">
+            <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
+              <div className="flex items-center justify-center shrink-0 leading-none transition-all duration-200 group-data-[state=open]:drop-shadow-sm group-data-[state=open]:brightness-110">
+                <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
+              </div>
+              <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
+                <div className="flex justify-between items-center w-full">
+                  <span className={cn(
+                    "font-semibold group-data-[state=open]:font-bold transition-all text-[#112B5E] leading-none tracking-tight truncate pr-2",
+                    isMobile ? "text-[16px]" : "text-[18px]"
+                  )}>
+                    {group.parent.nome}
+                  </span>
+                  <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-[#112B5E]")}>
+                    {formatCurrency(group.totalGasto)}
+                  </span>
+                </div>
+                <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
+                  <span className={cn("font-semibold leading-none truncate pr-2 text-[#1D6FF0]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
+                    {groupPctReceita}% da receita
+                  </span>
+                  <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
+                    semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
+                  )}>
+                    {semPlanejamento ? "Sem planejamento" : `de ${formatCurrency(group.totalPlanejado)}`}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
+              <div className="relative flex w-full rounded-full h-[8px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
+                <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15)' }} />                            <div
+                  className="h-full transition-all duration-500 relative z-10"
+                  style={{ width: `${pctVerde}%`, background: atingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                />
+                <div
+                  className="h-full transition-all duration-500 relative z-0"
+                  style={{ width: `${pctRoxo}%`, background: excedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                />
+                {excedido && (
+                  <div
+                    className="h-full transition-all duration-500 relative z-20"
+                    style={{ width: `${pctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                  />
+                )}
+              </div>
+              <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos | {groupPctGasto}% gasto</span>
+                </div>
+
+                {semPlanejamento ? null : excedido ? (
+                  <span className={cn("inline-flex items-center justify-center px-3 py-[3px] leading-tight rounded-[26px] bg-red-100/80 text-red-700 border border-red-500/20 shadow-[0_2px_4px_rgba(239,68,68,0.08)] font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
+                    Excedido em {formatCurrency(Math.abs(restante))}
+                  </span>
+                ) : atingido ? (
+                  <span className={cn("font-semibold text-blue-500", isMobile ? "text-[12px]" : "text-[13px]")}>Planejamento atingido</span>
+                ) : (
+                  <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
+          <div className="flex flex-col gap-[10px]">
+            {group.items.map((item) => {
+              const semPlanejamentoItem = item.absoluto <= 0;
+              const itemExcedido = item.gasto > item.absoluto;
+              const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
+              const itemRestante = item.absoluto - item.gasto;
+
+              let itemPctVerde = 0;
+              let itemPctRoxo = 0;
+              let itemPctVermelho = 0;
+
+              if (item.absoluto > 0) {
+                if (itemExcedido) {
+                  itemPctVerde = 0;
+                  itemPctRoxo = (item.absoluto / item.gasto) * 100;
+                  itemPctVermelho = ((item.gasto - item.absoluto) / item.gasto) * 100;
+                } else if (itemAtingido) {
+                  itemPctVerde = 100;
+                  itemPctRoxo = 0;
+                } else {
+                  itemPctVerde = (item.gasto / item.absoluto) * 100;
+                  itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
                 }
+              }
 
-                return (
-                  <AccordionItem 
-                    key={group.parent.id} 
-                    value={group.parent.id} 
-                    className={cn(
-                      "border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-200",
-                      "data-[state=open]:bg-[linear-gradient(180deg,#FAFCFF_0%,#F5F9FF_100%)] data-[state=open]:border-[#BFD7FF]",
-                      isMobile ? "mb-[3px]" : "mb-0"
-                    )}
-                  >
-                    <AccordionTrigger 
-                      className={cn(
-                        "group hover:no-underline hover:bg-transparent transition-colors",
-                        "[&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-[#2563EB] [&>svg]:stroke-[4px]",
-                        isMobile ? "px-3 py-2.5" : "p-4"
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => handleOpenEdit(item)}
+                  className={cn(
+                    "flex flex-col w-full p-[14px] bg-[#FFFFFF] cursor-pointer",
+                    "border border-[#DCE7F7] rounded-[16px] shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
+                    !isMobile && "transition-all duration-[180ms] ease-out hover:border-[#7AA7FF] hover:-translate-y-[1px]",
+                    isMobile && "active:scale-[0.98] active:transition-transform active:duration-[100ms] active:ease-out"
+                  )}
+                >
+                  <div className="flex flex-col gap-1.5 w-full">
+                    {/* Header da linha */}
+                    <div className="flex items-center gap-3 w-full mt-0.5">
+                      <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
+                      <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
+                        <div className="flex justify-between items-center w-full">
+                          <span className="font-bold text-[#112B5E] text-[14.5px] leading-none truncate pr-2">
+                            {item.subCat?.nome}
+                          </span>
+                          <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-[#112B5E]")}>
+                            {formatCurrency(item.gasto)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center w-full">
+                          <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#1D6FF0]">
+                            {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
+                          </span>
+                          <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
+                            semPlanejamentoItem ? "text-slate-400" : ((itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75")
+                          )}>
+                            {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progresso e Status */}
+                    <div className="flex items-center gap-2.5 w-full mt-0.5">
+                      <div className="relative flex flex-1 rounded-full h-[6px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
+                        <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.15)' }} />                                      <div
+                          className="h-full transition-all duration-500 relative z-10"
+                          style={{ width: `${itemPctVerde}%`, background: itemAtingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                        />
+                        <div
+                          className="h-full transition-all duration-500 relative z-0"
+                          style={{ width: `${itemPctRoxo}%`, background: itemExcedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                        />
+                        {itemExcedido && (
+                          <div
+                            className="h-full transition-all duration-500 relative z-20"
+                            style={{ width: `${itemPctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
+                          />
+                        )}
+                      </div>
+                      {!semPlanejamentoItem ? (
+                        <span className={cn(
+                          "text-[11px] font-bold shrink-0",
+                          itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
+                        )}>
+                          {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold text-slate-400 shrink-0">
+                          Sem planejamento
+                        </span>
                       )}
-                      style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
-                    >
-                      <div className="flex flex-col w-full text-left">
-                        <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
-                          <div className="flex items-center justify-center shrink-0 leading-none transition-all duration-200 group-data-[state=open]:drop-shadow-sm group-data-[state=open]:brightness-110">
-                            <DynamicIcon name={group.parent.icone || "Tag"} className={cn("leading-none", isMobile ? "text-[32px]" : "text-[38px]")} style={{ color: group.parent.cor }} />
-                          </div>
-                          <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
-                            <div className="flex justify-between items-center w-full">
-                              <span className={cn(
-                                "font-semibold group-data-[state=open]:font-bold transition-all text-[#112B5E] leading-none tracking-tight truncate pr-2",
-                                isMobile ? "text-[16px]" : "text-[18px]"
-                              )}>
-                                {group.parent.nome}
-                              </span>
-                              <span className={cn("font-bold leading-none shrink-0", isMobile ? "text-[14px]" : "text-[15px]", excedido && !semPlanejamento ? "text-red-600" : "text-[#112B5E]")}>
-                                {formatCurrency(group.totalGasto)}
-                              </span>
-                            </div>
-                            <div className={cn("flex justify-between items-center w-full", isMobile ? "mt-0" : "mt-0.5")}>
-                              <span className={cn("font-semibold leading-none truncate pr-2 text-[#1D6FF0]", isMobile ? "text-[12.5px]" : "text-[13.5px]")}>
-                                {groupPctReceita}% da receita
-                              </span>
-                              <span className={cn("font-semibold leading-none shrink-0", isMobile ? "text-[11px]" : "text-[12px]",
-                                semPlanejamento ? "text-slate-400" : (atingido || excedido) ? "text-purple-600" : "text-purple-500/75"
-                              )}>
-                                {semPlanejamento ? "Sem planejamento" : `de ${formatCurrency(group.totalPlanejado)}`}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className={cn("flex flex-col pr-1", isMobile ? "gap-2" : "gap-2.5")}>
-                          <div className="relative flex w-full rounded-full h-[8px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
-                            <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15)' }} />                            <div 
-                              className="h-full transition-all duration-500 relative z-10"
-                              style={{ width: `${pctVerde}%`, background: atingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                            />
-                            <div 
-                              className="h-full transition-all duration-500 relative z-0"
-                              style={{ width: `${pctRoxo}%`, background: excedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                            />
-                            {excedido && (
-                              <div 
-                                className="h-full transition-all duration-500 relative z-20"
-                                style={{ width: `${pctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                              />
-                            )}
-                          </div>
-                          <div className={cn("flex justify-between items-center", isMobile ? "mt-0" : "mt-1")}>
-                            <div className="flex items-center gap-2">
-                              <span className="text-slate-400 text-[11px] font-medium">{group.ativosCount} ativos | {groupPctGasto}% gasto</span>
-                            </div>
-                            
-                            {semPlanejamento ? null : excedido ? (
-                              <span className={cn("inline-flex items-center justify-center px-3 py-[3px] leading-tight rounded-[26px] bg-red-100/80 text-red-700 border border-red-500/20 shadow-[0_2px_4px_rgba(239,68,68,0.08)] font-bold", isMobile ? "text-[10px]" : "text-[11px]")}>
-                                Excedido em {formatCurrency(Math.abs(restante))}
-                              </span>
-                            ) : atingido ? (
-                              <span className={cn("font-semibold text-blue-500", isMobile ? "text-[12px]" : "text-[13px]")}>Planejamento atingido</span>
-                            ) : (
-                              <span className={cn("font-semibold text-emerald-600", isMobile ? "text-[11px]" : "text-xs")}>Restam {formatCurrency(restante)}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
-                      <div className="flex flex-col gap-[10px]">
-                        {group.items.map((item) => {
-                          const semPlanejamentoItem = item.absoluto <= 0;
-                          const itemExcedido = item.gasto > item.absoluto;
-                          const itemAtingido = item.gasto === item.absoluto && !semPlanejamentoItem;
-                          const itemRestante = item.absoluto - item.gasto;
-
-                          let itemPctVerde = 0;
-                          let itemPctRoxo = 0;
-                          let itemPctVermelho = 0;
-
-                          if (item.absoluto > 0) {
-                            if (itemExcedido) {
-                              itemPctVerde = 0;
-                              itemPctRoxo = (item.absoluto / item.gasto) * 100;
-                              itemPctVermelho = ((item.gasto - item.absoluto) / item.gasto) * 100;
-                            } else if (itemAtingido) {
-                              itemPctVerde = 100;
-                              itemPctRoxo = 0;
-                            } else {
-                              itemPctVerde = (item.gasto / item.absoluto) * 100;
-                              itemPctRoxo = ((item.absoluto - item.gasto) / item.absoluto) * 100;
-                            }
-                          }
-
-                          return (
-                            <div 
-                              key={item.id}
-                              onClick={() => handleOpenEdit(item)}
-                              className={cn(
-                                "flex flex-col w-full p-[14px] bg-[#FFFFFF] cursor-pointer",
-                                "border border-[#DCE7F7] rounded-[16px] shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
-                                !isMobile && "transition-all duration-[180ms] ease-out hover:border-[#7AA7FF] hover:-translate-y-[1px]",
-                                isMobile && "active:scale-[0.98] active:transition-transform active:duration-[100ms] active:ease-out"
-                              )}
-                            >
-                              <div className="flex flex-col gap-1.5 w-full">
-                                {/* Header da linha */}
-                                <div className="flex items-center gap-3 w-full mt-0.5">
-                                  <DynamicIcon name={item.subCat?.icone || "Tag"} className="w-[30px] h-[30px] text-[30px] shrink-0" style={{ color: item.subCat?.cor }} />
-                                  <div className="flex flex-col flex-1 min-w-0 gap-[2px]">
-                                    <div className="flex justify-between items-center w-full">
-                                      <span className="font-bold text-[#112B5E] text-[14.5px] leading-none truncate pr-2">
-                                        {item.subCat?.nome}
-                                      </span>
-                                      <span className={cn("font-bold text-[14px] leading-none shrink-0", itemExcedido && !semPlanejamentoItem ? "text-red-600" : "text-[#112B5E]")}>
-                                        {formatCurrency(item.gasto)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between items-center w-full">
-                                      <span className="font-semibold leading-none truncate pr-2 text-[12px] text-[#1D6FF0]">
-                                        {receitaPrevista > 0 ? Math.round(((semPlanejamentoItem ? item.gasto : item.absoluto) / receitaPrevista) * 100) : 0}% da receita
-                                      </span>
-                                      <span className={cn("font-semibold leading-none shrink-0 text-[10.5px]",
-                                        semPlanejamentoItem ? "text-slate-400" : ((itemAtingido || itemExcedido) ? "text-purple-600" : "text-purple-500/75")
-                                      )}>
-                                        {semPlanejamentoItem ? "Sem planejamento" : `de ${formatCurrency(item.absoluto)}`}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                {/* Progresso e Status */}
-                                <div className="flex items-center gap-2.5 w-full mt-0.5">
-                                  <div className="relative flex flex-1 rounded-full h-[6px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #E2E8F0, #CBD5E1)' }}>
-                                      <div className="absolute inset-0 rounded-full border border-slate-300/40 pointer-events-none z-30" style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.15)' }} />                                      <div 
-                                        className="h-full transition-all duration-500 relative z-10"
-                                        style={{ width: `${itemPctVerde}%`, background: itemAtingido ? '#5A95F8' : '#43C47F', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                                      />
-                                      <div 
-                                        className="h-full transition-all duration-500 relative z-0"
-                                        style={{ width: `${itemPctRoxo}%`, background: itemExcedido ? '#9333EA' : '#C4B5FD', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                                      />
-                                      {itemExcedido && (
-                                        <div 
-                                          className="h-full transition-all duration-500 relative z-20"
-                                          style={{ width: `${itemPctVermelho}%`, background: 'linear-gradient(90deg, #EF4444, #DC2626)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.04)' }}
-                                        />
-                                      )}
-                                    </div>
-                                  {!semPlanejamentoItem ? (
-                                      <span className={cn(
-                                        "text-[11px] font-bold shrink-0",
-                                        itemExcedido ? "text-red-600" : itemAtingido ? "text-blue-500" : "text-emerald-600"
-                                      )}>
-                                      {itemExcedido ? `Excedido ${formatCurrency(Math.abs(itemRestante))}` : itemAtingido ? "Atingido" : `Restam ${formatCurrency(itemRestante)}`}
-                                    </span>
-                                  ) : (
-                                    <span className="text-[10px] font-bold text-slate-400 shrink-0">
-                                      Sem planejamento
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    );
   };
 
 
@@ -891,84 +891,84 @@ export default function Orcamentos() {
   }
 
   return (
-    <div 
+    <div
       className={cn("flex flex-col min-h-screen relative", !isMobile ? "global-bg pt-[72px]" : "pt-[calc(3.5rem+env(safe-area-inset-top))]")}
     >
-      
+
       {/* HEADER PREMIUM — FINTECH STYLE (ORÇAMENTOS) */}
       {!isMobile && (
         <div className="relative h-[220px] w-full overflow-hidden bg-transparent">
           <div className="container-app relative z-10 pt-[28px] md:pt-[42px] flex justify-between items-start">            <div className="flex-1">
-              <div className="flex flex-col items-start gap-1 w-full">
-                <div className="flex items-center gap-2">
-                  <span className="text-[22px] select-none leading-none -mt-0.5">🧮</span>
-                  <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
-                    Planejamento Mensal
-                  </h1>
-                  {renderPendingBell()}
-                </div>
-                {(() => {
-                  const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
-                  const isExcedidoReceita = totalRealizado > receitaPrevista;
-                  
-                  let pctAzulVisual = isExcedidoReceita ? 85 : (receitaPrevista > 0 ? Math.min(100, (totalRealizado / receitaPrevista) * 100) : 0);
-                  let pctRoxoVisual = isExcedidoReceita ? 0 : (receitaPrevista > 0 ? Math.min(100 - pctAzulVisual, (disponivelPlanejamento / receitaPrevista) * 100) : 0);
-                  let pctVermelhoVisual = isExcedidoReceita ? 15 : 0;
+            <div className="flex flex-col items-start gap-1 w-full">
+              <div className="flex items-center gap-2">
+                <span className="text-[22px] select-none leading-none -mt-0.5">🧮</span>
+                <h1 className="text-2xl font-extrabold text-[#112B5E] tracking-[0.5px] leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Planejamento Mensal
+                </h1>
+                {renderPendingBell()}
+              </div>
+              {(() => {
+                const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
+                const isExcedidoReceita = totalRealizado > receitaPrevista;
 
-                  return (
-                    <div className="w-[280px] mt-[1px]">
-                      <div 
-                        className="relative flex w-full rounded-full h-[11px] overflow-hidden"
-                        style={{ 
-                          background: "#D4DBE5",
-                          boxShadow: "inset 0 3px 8px rgba(0,0,0,0.18), inset 0 -2px 4px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.08)",
-                          border: "1px solid rgba(255,255,255,0.65)"
+                let pctAzulVisual = isExcedidoReceita ? 85 : (receitaPrevista > 0 ? Math.min(100, (totalRealizado / receitaPrevista) * 100) : 0);
+                let pctRoxoVisual = isExcedidoReceita ? 0 : (receitaPrevista > 0 ? Math.min(100 - pctAzulVisual, (disponivelPlanejamento / receitaPrevista) * 100) : 0);
+                let pctVermelhoVisual = isExcedidoReceita ? 15 : 0;
+
+                return (
+                  <div className="w-[280px] mt-[1px]">
+                    <div
+                      className="relative flex w-full rounded-full h-[11px] overflow-hidden"
+                      style={{
+                        background: "#D4DBE5",
+                        boxShadow: "inset 0 3px 8px rgba(0,0,0,0.18), inset 0 -2px 4px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.08)",
+                        border: "1px solid rgba(255,255,255,0.65)"
+                      }}
+                    >
+                      <div className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.18), transparent 35%)" }} />
+                      <div
+                        className="h-full transition-all duration-500 relative z-10"
+                        style={{
+                          width: `${pctAzulVisual}%`,
+                          background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6)",
+                          boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                         }}
                       >
-                        <div className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.18), transparent 35%)" }} />
-                        <div 
-                          className="h-full transition-all duration-500 relative z-10"
-                          style={{ 
-                            width: `${pctAzulVisual}%`,
-                            background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6)",
-                            boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
-                          }}
-                        >
-                        </div>
-                        <div 
-                          className="h-full transition-all duration-500 relative z-0"
-                          style={{ 
-                            width: `${pctRoxoVisual}%`,
-                            background: "linear-gradient(90deg, #9333EA, #A855F7, #C084FC)",
+                      </div>
+                      <div
+                        className="h-full transition-all duration-500 relative z-0"
+                        style={{
+                          width: `${pctRoxoVisual}%`,
+                          background: "linear-gradient(90deg, #9333EA, #A855F7, #C084FC)",
+                          boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
+                        }}
+                      />
+                      {isExcedidoReceita && (
+                        <div
+                          className="h-full transition-all duration-500 relative z-20"
+                          style={{
+                            width: `${pctVermelhoVisual}%`,
+                            background: "linear-gradient(180deg, #F87171 0%, #DC2626 45%, #B91C1C 100%)",
                             boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                           }}
                         />
-                        {isExcedidoReceita && (
-                          <div 
-                            className="h-full transition-all duration-500 relative z-20"
-                            style={{ 
-                              width: `${pctVermelhoVisual}%`,
-                              background: "linear-gradient(180deg, #F87171 0%, #DC2626 45%, #B91C1C 100%)",
-                              boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
-                            }}
-                          />
-                        )}
-                      </div>
+                      )}
                     </div>
-                  );
-                })()}
-              </div>
+                  </div>
+                );
+              })()}
             </div>
+          </div>
 
             <div className="hidden md:flex items-center gap-3">
-              <Button 
+              <Button
                 onClick={handleOpenDelete}
                 className="h-[40px] px-5 rounded-[11px] font-bold text-[14px] text-red-600 bg-white border border-red-500/30 hover:bg-red-50 hover:border-red-500/50 transition-all flex items-center justify-center gap-2 mt-1 shadow-sm"
               >
                 <Trash2 className="h-4 w-4" />
                 Excluir Planejamento
               </Button>
-              <Button 
+              <Button
                 onClick={handleOpenAdd}
                 className="h-[40px] px-5 rounded-[11px] font-bold text-[15px] text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1 mt-1"
                 style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
@@ -980,7 +980,7 @@ export default function Orcamentos() {
           </div>
         </div>
       )}
-      <main 
+      <main
         className={cn("container-app flex-grow", isMobile ? "pt-0 pb-2" : "pt-0 pb-8 -mt-[86px] space-y-6")}
         style={isMobile ? {
           background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF calc(100% - 120px), #FCFCFE 100%)"
@@ -1001,7 +1001,7 @@ export default function Orcamentos() {
                 backButtonColor="#1e3a8a"
               />
             </div>
-            
+
 
 
             {/* Bloco Planejamento do Mês */}
@@ -1031,16 +1031,16 @@ export default function Orcamentos() {
                   <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
                 </button>
               </div>
-              
+
               {(() => {
                 const disponivelPlanejamento = Math.max(0, totalPlanejado - totalRealizado);
                 const saldoNaoPlanejado = Math.max(0, receitaPrevista - totalPlanejado);
-                
+
                 const pctDispPlan = receitaPrevista > 0 ? Math.round((disponivelPlanejamento / receitaPrevista) * 100) : 0;
                 const pctNaoPlan = receitaPrevista > 0 ? Math.round((saldoNaoPlanejado / receitaPrevista) * 100) : 0;
-                
+
                 const isExcedidoReceita = totalRealizado > receitaPrevista;
-                const pctVermelhoVisual = isExcedidoReceita ? 15 : 0; 
+                const pctVermelhoVisual = isExcedidoReceita ? 15 : 0;
                 const pctAzulVisual = isExcedidoReceita ? 85 : (receitaPrevista > 0 ? Math.min(100, (totalRealizado / receitaPrevista) * 100) : 0);
                 const pctRoxoVisual = isExcedidoReceita ? 0 : (receitaPrevista > 0 ? Math.min(100 - pctAzulVisual, (disponivelPlanejamento / receitaPrevista) * 100) : 0);
 
@@ -1059,35 +1059,35 @@ export default function Orcamentos() {
                     </div>
 
                     {/* Barra de Progresso Inteligente */}
-                    <div 
+                    <div
                       className="relative flex w-full rounded-full h-[26px] overflow-hidden mt-0.5 mb-1.5"
-                      style={{ 
+                      style={{
                         background: "#D4DBE5",
                         boxShadow: "inset 0 3px 8px rgba(0,0,0,0.18), inset 0 -2px 4px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.08)",
                         border: "1px solid rgba(255,255,255,0.65)"
                       }}
                     >
                       <div className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-30" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.18), transparent 35%)" }} />
-                      <div 
+                      <div
                         className="h-full transition-all duration-500 relative z-10"
-                        style={{ 
+                        style={{
                           width: `${pctAzulVisual}%`,
                           background: "linear-gradient(180deg, #3EA0FF 0%, #1677FF 45%, #0F5FD7 100%)",
                           boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                         }}
                       />
-                      <div 
+                      <div
                         className="h-full transition-all duration-500 relative z-0"
-                        style={{ 
+                        style={{
                           width: `${pctRoxoVisual}%`,
                           background: "linear-gradient(180deg, #D8B4FE 0%, #C084FC 45%, #A855F7 100%)",
                           boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
                         }}
                       />
                       {isExcedidoReceita && (
-                        <div 
+                        <div
                           className="h-full transition-all duration-500 relative z-20"
-                          style={{ 
+                          style={{
                             width: `${pctVermelhoVisual}%`,
                             background: "linear-gradient(180deg, #f87171 0%, #dc2626 45%, #991b1b 100%)",
                             boxShadow: "inset 0 2px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.08)"
@@ -1095,7 +1095,7 @@ export default function Orcamentos() {
                         />
                       )}
                     </div>
-                    
+
                     {/* Status Inferior */}
                     <div className="flex justify-between items-start mt-0.5">
                       <div className="flex flex-col gap-0">
@@ -1109,7 +1109,7 @@ export default function Orcamentos() {
                     </div>
 
                     {/* Botão Novo Planejamento Mobile */}
-                    <Button 
+                    <Button
                       onClick={handleOpenAdd}
                       className="h-[36px] w-full mt-1.5 px-0 rounded-[11px] font-bold text-sm text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] flex items-center justify-center gap-1"
                       style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB, #1D4ED8)", borderBottom: "1px solid rgba(0,0,0,0.4)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
@@ -1126,7 +1126,7 @@ export default function Orcamentos() {
 
         {/* Controles: Seletor de Mês (Apenas Desktop) */}
         {!isMobile && (
-          <div className="relative flex flex-row justify-center items-center w-full shrink-0 -mt-[63px] mb-4 h-10">
+          <div className="relative flex flex-row justify-center items-center w-full shrink-0 -mt-[48px] mb-4 h-10">
             <MonthNavigator
               selectedMonth={currentDate}
               onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
@@ -1141,7 +1141,7 @@ export default function Orcamentos() {
         {/* Card Resumo Superior (Apenas Desktop) */}
         {!isMobile && (
           <div className="grid grid-cols-5 gap-3 mb-6">
-            <Card 
+            <Card
               className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
               style={{ background: "linear-gradient(180deg, rgba(59, 130, 246, 0.04) 0%, rgba(59, 130, 246, 0) 40%), #ffffff" }}
             >
@@ -1158,7 +1158,7 @@ export default function Orcamentos() {
               </div>
             </Card>
 
-            <Card 
+            <Card
               className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
               style={{ background: "linear-gradient(180deg, rgba(168, 85, 247, 0.04) 0%, rgba(168, 85, 247, 0) 40%), #ffffff" }}
             >
@@ -1175,7 +1175,7 @@ export default function Orcamentos() {
               </div>
             </Card>
 
-            <Card 
+            <Card
               className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
               style={{ background: "linear-gradient(180deg, rgba(239, 68, 68, 0.04) 0%, rgba(239, 68, 68, 0) 40%), #ffffff" }}
             >
@@ -1192,7 +1192,7 @@ export default function Orcamentos() {
               </div>
             </Card>
 
-            <Card 
+            <Card
               className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px]"
               style={{ background: "linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, rgba(16, 185, 129, 0) 40%), #ffffff" }}
             >
@@ -1209,7 +1209,7 @@ export default function Orcamentos() {
               </div>
             </Card>
 
-            <Card 
+            <Card
               className="rounded-[16px] bg-white shadow-sm flex flex-col p-4 pt-5 relative overflow-hidden border border-slate-100 min-h-[110px] col-span-1"
               style={{ background: "linear-gradient(180deg, rgba(245, 158, 11, 0.04) 0%, rgba(245, 158, 11, 0) 40%), #ffffff" }}
             >
@@ -1238,19 +1238,19 @@ export default function Orcamentos() {
             <>
               <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")}>
 
-              {isMobile ? (
-                groupedOrcamentos.map((group) => renderAccordionGroup(group))
-              ) : (
-                <>
-                  <div className="flex flex-col gap-3 w-full">
-                    {groupedOrcamentos.filter((_, i) => i % 2 === 0).map((group) => renderAccordionGroup(group))}
-                  </div>
-                  <div className="flex flex-col gap-3 w-full">
-                    {groupedOrcamentos.filter((_, i) => i % 2 === 1).map((group) => renderAccordionGroup(group))}
-                  </div>
-                </>
-              )}
-            </Accordion>
+                {isMobile ? (
+                  groupedOrcamentos.map((group) => renderAccordionGroup(group))
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-3 w-full">
+                      {groupedOrcamentos.filter((_, i) => i % 2 === 0).map((group) => renderAccordionGroup(group))}
+                    </div>
+                    <div className="flex flex-col gap-3 w-full">
+                      {groupedOrcamentos.filter((_, i) => i % 2 === 1).map((group) => renderAccordionGroup(group))}
+                    </div>
+                  </>
+                )}
+              </Accordion>
             </>
           )}
         </div>
@@ -1294,8 +1294,8 @@ export default function Orcamentos() {
               <div className="flex items-center ml-1">
                 <Label className="text-[14px] font-medium text-slate-600">Categoria principal</Label>
               </div>
-              <Select 
-                value={formParentId} 
+              <Select
+                value={formParentId}
                 onValueChange={(val) => {
                   setFormParentId(val);
                   setFormSubId(UNSELECTED_VALUE);
@@ -1334,8 +1334,8 @@ export default function Orcamentos() {
                   </p>
                 </div>
               ) : (
-                <Select 
-                  value={formSubId} 
+                <Select
+                  value={formSubId}
                   onValueChange={handleSubCategoryChange}
                   disabled={!!editingItem || formParentId === UNSELECTED_VALUE}
                 >
@@ -1394,7 +1394,7 @@ export default function Orcamentos() {
                 const valorEmReais = formValor || 0;
                 const pctReceita = receitaPrevista > 0 ? (valorEmReais / receitaPrevista) * 100 : 0;
                 const isHighPct = pctReceita > 80;
-                
+
                 const planejadoAnterior = editingItem ? editingItem.absoluto : 0;
                 const novoTotalPlanejado = totalPlanejado - planejadoAnterior + valorEmReais;
                 const saldoRestante = receitaPrevista - novoTotalPlanejado;
@@ -1455,7 +1455,7 @@ export default function Orcamentos() {
 
       {/* EXCLUIR PLANEJAMENTO MODAL */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-        <DialogContent 
+        <DialogContent
           className={cn(
             isMobile ? "dialog-mobile w-[99%] max-w-[99%] !px-4 p-4 !pb-4 min-h-[300px] !rounded-[22px] shadow-none border-none" : "sm:max-w-[400px] !pb-5 !rounded-[22px] shadow-none border-none"
           )}
@@ -1483,8 +1483,8 @@ export default function Orcamentos() {
           <div className="flex flex-col gap-5 w-full">
             <div className="grid gap-3 w-full mt-2">
               <Label className="font-bold text-[13px] text-slate-700 ml-1">Abrangência da Exclusão <span className="text-red-500">*</span></Label>
-              <RadioGroup 
-                value={deleteApplyToFuture ? "future_months" : "current_month"} 
+              <RadioGroup
+                value={deleteApplyToFuture ? "future_months" : "current_month"}
                 onValueChange={(val) => setDeleteApplyToFuture(val === "future_months")}
                 className="flex flex-col gap-3"
               >
@@ -1492,18 +1492,18 @@ export default function Orcamentos() {
                   "flex items-center space-x-3 border p-3.5 rounded-2xl cursor-pointer transition-all duration-200",
                   !deleteApplyToFuture ? "border-red-500 bg-red-50/50 shadow-sm" : "border-slate-200 hover:border-slate-300 bg-white"
                 )}
-                onClick={() => setDeleteApplyToFuture(false)}>
+                  onClick={() => setDeleteApplyToFuture(false)}>
                   <RadioGroupItem value="current_month" id="del-current" className={cn("w-5 h-5", !deleteApplyToFuture ? "text-red-500 border-red-500 after:bg-red-500" : "border-slate-300")} />
                   <div className="flex flex-col flex-1 leading-tight gap-1">
                     <Label htmlFor="del-current" className={cn("font-bold cursor-pointer text-[14px]", !deleteApplyToFuture ? "text-red-500" : "text-slate-700")}>Excluir somente este mês</Label>
                   </div>
                 </div>
-                
+
                 <div className={cn(
                   "flex items-center space-x-3 border p-3.5 rounded-2xl cursor-pointer transition-all duration-200",
                   deleteApplyToFuture ? "border-red-500 bg-red-50/50 shadow-sm" : "border-slate-200 hover:border-slate-300 bg-white"
                 )}
-                onClick={() => setDeleteApplyToFuture(true)}>
+                  onClick={() => setDeleteApplyToFuture(true)}>
                   <RadioGroupItem value="future_months" id="del-future" className={cn("w-5 h-5", deleteApplyToFuture ? "text-red-500 border-red-500 after:bg-red-500" : "border-slate-300")} />
                   <div className="flex flex-col flex-1 leading-tight gap-1">
                     <Label htmlFor="del-future" className={cn("font-bold cursor-pointer text-[14px]", deleteApplyToFuture ? "text-red-500" : "text-slate-700")}>Aplicar aos próximos meses</Label>
@@ -1511,7 +1511,7 @@ export default function Orcamentos() {
                 </div>
               </RadioGroup>
             </div>
-            
+
 
 
             <div className="grid gap-2 w-full pt-1">
@@ -1542,18 +1542,18 @@ export default function Orcamentos() {
               Atenção
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-slate-600 text-[15px] font-medium leading-relaxed mt-2">
-              Esta ação removerá apenas os valores planejados.<br/><br/>
-              Nenhuma despesa, parcelamento ou lançamento financeiro será excluído.<br/><br/>
+              Esta ação removerá apenas os valores planejados.<br /><br />
+              Nenhuma despesa, parcelamento ou lançamento financeiro será excluído.<br /><br />
               Deseja continuar?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex items-center gap-3 w-full mt-4">
-            <AlertDialogCancel 
+            <AlertDialogCancel
               className="w-full rounded-[14px] font-extrabold tracking-[0.2px] border border-slate-300 transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] bg-white text-slate-600 hover:bg-slate-50 m-0"
             >
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={(e) => { e.preventDefault(); handleDeleteMass(); }}
               className="w-full rounded-[14px] font-extrabold tracking-[0.2px] text-white border-none transition-all active:scale-95 text-[18px] h-[44px] flex items-center justify-center gap-[6px] btn-3d-modal m-0"
               style={{ "--cor-topo": "#EF4444", "--cor-base": "#DC2626" } as any}
@@ -1571,7 +1571,7 @@ export default function Orcamentos() {
 
       {/* Delete Validation Alert */}
       <AlertDialog open={deleteValidationAlert?.open || false} onOpenChange={(open) => !open && setDeleteValidationAlert(null)}>
-        <AlertDialogContent 
+        <AlertDialogContent
           className={cn("sm:max-w-[340px] !p-5 !pb-4 !rounded-2xl shadow-lg border border-[#DCE8F7] dialog-mobile w-[96%] max-w-[96%]")}
           style={{ backgroundColor: "#F5F9FF" }}
         >
@@ -1582,7 +1582,7 @@ export default function Orcamentos() {
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center flex flex-col gap-3 text-slate-700 m-0">
               <p className="text-[14px] leading-[1.3] m-0 font-medium">
-                {deleteValidationAlert?.type === "current" 
+                {deleteValidationAlert?.type === "current"
                   ? "Existem gastos registrados nesta subcategoria."
                   : "Foram encontrados gastos vinculados a esta subcategoria em períodos futuros."}
               </p>
@@ -1639,7 +1639,7 @@ export default function Orcamentos() {
               Confirmar Exclusão
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center">
-              {formAbrangencia === "future_months" 
+              {formAbrangencia === "future_months"
                 ? "Deseja excluir este planejamento deste mês e de todos os meses futuros?"
                 : "Deseja excluir este planejamento apenas do mês atual?"}
             </AlertDialogDescription>
@@ -1659,7 +1659,7 @@ export default function Orcamentos() {
             >
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               className={cn(
                 "flex-1 rounded-2xl btn-3d font-black text-white border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-lg h-11",
