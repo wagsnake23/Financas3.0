@@ -995,6 +995,7 @@ export default function Orcamentos() {
                 selectedMonth={currentDate}
                 onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
                 onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+                onSelectMonth={setCurrentDate}
                 isMobile={isMobile}
                 onBack={undefined}
                 backButtonColor="#1e3a8a"
@@ -1130,6 +1131,7 @@ export default function Orcamentos() {
               selectedMonth={currentDate}
               onPreviousMonth={() => setCurrentDate(subMonths(currentDate, 1))}
               onNextMonth={() => setCurrentDate(addMonths(currentDate, 1))}
+              onSelectMonth={setCurrentDate}
               isMobile={false}
               backButtonColor="#1e3a8a"
             />

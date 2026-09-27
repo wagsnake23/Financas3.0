@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import DynamicIcon from "@/components/DynamicIcon";
-import { format } from "date-fns";
+import { format, setMonth, setYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { FilterX } from "lucide-react"; // Importar cn
+import { FilterX, ChevronLeft, ChevronRight } from "lucide-react";
+
+const MONTHS = [
+  "Jan", "Fev", "Mar", "Abr",
+  "Mai", "Jun", "Jul", "Ago",
+  "Set", "Out", "Nov", "Dez",
+];
 
 interface MonthNavigatorProps {
   selectedMonth: Date;
@@ -15,6 +22,7 @@ interface MonthNavigatorProps {
   onClearFilters?: () => void;
   onBack?: () => void;
   backButtonColor?: string;
+  onSelectMonth?: (date: Date) => void;
 }
 
 export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
@@ -25,8 +33,31 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   hasFiltersActive,
   onClearFilters,
   onBack,
-  backButtonColor = "#1E6BCE", // Default blue for back button
+  backButtonColor = "#1E6BCE",
+  onSelectMonth,
 }) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(selectedMonth.getFullYear());
+
+  const handleMonthClick = (monthIndex: number) => {
+    let target = setMonth(selectedMonth, monthIndex);
+    target = setYear(target, pickerYear);
+    if (onSelectMonth) {
+      onSelectMonth(target);
+    } else {
+      // fallback: navigate via previous/next
+      const diff =
+        (pickerYear - selectedMonth.getFullYear()) * 12 +
+        (monthIndex - selectedMonth.getMonth());
+      if (diff > 0) for (let i = 0; i < diff; i++) onNextMonth();
+      else if (diff < 0) for (let i = 0; i < -diff; i++) onPreviousMonth();
+    }
+    setPickerOpen(false);
+  };
+
+  const label = format(selectedMonth, "MMMM yyyy", { locale: ptBR });
+  const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+
   return (
     <div className={cn("relative flex items-center justify-center w-full", isMobile ? "h-8" : "h-10")}>
       {onBack && (
@@ -49,27 +80,96 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
       )}
 
       <div className={cn("flex items-center justify-center", isMobile ? "gap-2" : "gap-4")}>
+        {/* Botão Anterior */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onPreviousMonth}
           className={cn(
-            "rounded-xl border-none shadow-none text-primary",
+            "rounded-xl border-none shadow-none text-primary shrink-0",
             isMobile ? "h-8 w-8" : "h-10 w-10",
             "hover:bg-primary/10 transition-all active:scale-90"
           )}
         >
           <DynamicIcon name="ChevronLeft" className={cn("h-6 w-6", isMobile && "h-5 w-5")} strokeWidth={3} />
         </Button>
-        <h2 className={cn("font-bold capitalize text-gray-700 whitespace-nowrap", isMobile ? "text-base mx-1" : "text-xl mx-2")}>
-          {format(selectedMonth, "MMMM yyyy", { locale: ptBR })}
-        </h2>
+
+        {/* Texto clicável com Popover */}
+        <Popover open={pickerOpen} onOpenChange={(open) => {
+          setPickerOpen(open);
+          if (open) setPickerYear(selectedMonth.getFullYear());
+        }}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className={cn(
+                "font-bold capitalize text-gray-700 whitespace-nowrap rounded-lg px-2 py-1 transition-colors hover:bg-primary/8 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+                isMobile ? "text-base" : "text-xl",
+                "w-[190px] text-center"
+              )}
+              title="Selecionar mês e ano"
+            >
+              {capitalizedLabel}
+            </button>
+          </PopoverTrigger>
+
+          <PopoverContent
+            align="center"
+            sideOffset={6}
+            className="w-[260px] p-0 rounded-[16px] shadow-xl border border-slate-200 bg-white overflow-hidden z-[200]"
+          >
+            {/* Header do picker — navegação de ano */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50">
+              <button
+                type="button"
+                onClick={() => setPickerYear(y => y - 1)}
+                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-200 transition-colors text-slate-600"
+              >
+                <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+              </button>
+              <span className="font-bold text-[15px] text-slate-800">{pickerYear}</span>
+              <button
+                type="button"
+                onClick={() => setPickerYear(y => y + 1)}
+                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-200 transition-colors text-slate-600"
+              >
+                <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+              </button>
+            </div>
+
+            {/* Grade de meses */}
+            <div className="grid grid-cols-4 gap-1 p-3">
+              {MONTHS.map((m, i) => {
+                const isSelected =
+                  i === selectedMonth.getMonth() &&
+                  pickerYear === selectedMonth.getFullYear();
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => handleMonthClick(i)}
+                    className={cn(
+                      "rounded-[10px] py-2 text-[13px] font-semibold transition-all active:scale-95",
+                      isSelected
+                        ? "bg-primary text-white shadow-sm"
+                        : "text-slate-700 hover:bg-primary/10 hover:text-primary"
+                    )}
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Botão Próximo */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onNextMonth}
           className={cn(
-            "rounded-xl border-none shadow-none text-primary",
+            "rounded-xl border-none shadow-none text-primary shrink-0",
             isMobile ? "h-8 w-8" : "h-10 w-10",
             "hover:bg-primary/10 transition-all active:scale-90"
           )}

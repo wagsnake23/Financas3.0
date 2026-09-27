@@ -136,13 +136,14 @@ const Lancamentos = () => {
           background: "linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 48px, #FFFFFF 110px, #FFFFFF 100%)"
         } : undefined}
       >
-        <div className={cn("relative flex items-center justify-center w-full shrink-0", isMobile ? "mt-0 mb-4 h-8" : "-mt-[63px] mb-4 h-10")}>
+        <div className={cn("relative flex items-center justify-center w-full shrink-0", isMobile ? "mt-0 mb-[7px] h-8" : "-mt-[63px] mb-4 h-10")}>
           <MonthNavigator
             selectedMonth={selectedMonth}
             onPreviousMonth={handlePreviousMonth}
             onNextMonth={handleNextMonth}
+            onSelectMonth={setSelectedMonth}
             isMobile={isMobile}
-            onBack={isMobile ? () => navigate(-1) : undefined}
+            onBack={undefined}
             backButtonColor="#E54D4D"
             hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || filterStatus !== "all" || searchTerm !== ""}
             onClearFilters={() => {
