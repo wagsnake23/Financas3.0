@@ -362,13 +362,14 @@ export default function Orcamentos() {
             type="button"
             className={cn(
               "relative flex items-center justify-center w-[36px] h-[36px] rounded-full transition-colors shrink-0",
+              !hasPending ? "pointer-events-none" : "",
               isMobile 
-                ? "text-slate-700 hover:bg-slate-200/50" 
-                : "text-[#112B5E] hover:bg-black/5 bg-transparent"
+                ? (hasPending ? "text-slate-700 hover:bg-slate-200/50" : "text-slate-400 bg-transparent") 
+                : (hasPending ? "text-[#112B5E] hover:bg-black/5 bg-transparent" : "text-slate-400 bg-transparent")
             )}
             title="Categorias sem planejamento"
           >
-            <Bell className={cn("h-[20px] w-[20px] transition-transform", hasPending ? "text-red-500" : "")} strokeWidth={2.5} />
+            <Bell className={cn("h-[20px] w-[20px]", hasPending ? "text-red-500 transition-transform" : "text-slate-400")} strokeWidth={hasPending ? 2.5 : 2} />
             {hasPending && (
               <span className="absolute top-[2px] right-[2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-[3px] text-[9.5px] font-bold text-white border-[2px] border-white transition-transform duration-300">
                 {pendingOrcamentos.length > 9 ? "9+" : pendingOrcamentos.length}
@@ -377,11 +378,13 @@ export default function Orcamentos() {
           </button>
         </PopoverTrigger>
         
-        <PopoverContent 
-          align="end" 
-          className="w-[280px] p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]" 
-          style={{ maxHeight: '60vh', overflowY: 'auto' }}
-        >
+        {hasPending && (
+          <PopoverContent 
+            align={isMobile ? "start" : "end"}
+            alignOffset={isMobile ? -80 : 0}
+            className="w-[280px] p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]" 
+            style={{ maxHeight: '60vh', overflowY: 'auto' }}
+          >
           <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center">
             <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
               <span className="text-[16px]">⚠️</span> Sem Planejamento
@@ -408,6 +411,7 @@ export default function Orcamentos() {
             ))}
           </div>
         </PopoverContent>
+        )}
       </Popover>
     );
   };
@@ -982,7 +986,7 @@ export default function Orcamentos() {
             <div className="flex flex-col rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,.06)] border border-slate-200/80 p-3 mb-4" style={{ background: "linear-gradient(180deg, #FFFFFF, #FAFBFD)" }}>
               <div className="flex items-start justify-between mb-2.5">
                 <div className="flex items-start gap-1.5">
-                  <span className="text-[1.2rem] select-none mt-[1px]">🧮</span>
+                  <span className="text-[1.2rem] select-none mt-[5px]">🧮</span>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <h2 className="text-[1.05rem] font-bold text-[#112B5E] tracking-[0.2px] leading-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -999,10 +1003,10 @@ export default function Orcamentos() {
                 <button
                   onClick={handleOpenDelete}
                   disabled={orcamentos.length === 0}
-                  className="flex items-center justify-center w-[34px] h-[34px] rounded-[10px] bg-red-500/10 text-red-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-500/20 active:scale-95"
+                  className="flex items-center justify-center text-red-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:text-red-600 active:scale-95 mt-[8px]"
                   title={orcamentos.length === 0 ? "Nenhum planejamento para excluir" : "Excluir Planejamentos"}
                 >
-                  <Trash2 className="w-[17px] h-[17px]" strokeWidth={2.5} />
+                  <Trash2 className="w-[18px] h-[18px]" strokeWidth={2.5} />
                 </button>
               </div>
               
