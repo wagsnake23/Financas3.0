@@ -171,12 +171,6 @@ export const Navigation = () => {
     document.body.style.backgroundColor = pageTopColor;
 
     // DEBUG TEMPORÁRIO — remover após confirmar funcionamento
-    console.log(
-      "[theme-color]",
-      location.pathname,
-      pageTopColor,
-      document.querySelector('meta[name="theme-color"]')?.getAttribute("content")
-    );
   }, [isMobile, pageTopColor, location.pathname]);
 
   return (

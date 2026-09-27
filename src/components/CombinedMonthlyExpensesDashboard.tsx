@@ -806,12 +806,6 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                                       {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                                     </div>
                                     {(() => {
-                                      console.log('[DASHBOARD_ICON_RENDER]', {
-                                        nome: payload.value,
-                                        svgEncontrado: typeof item?.icone === 'string' && item.icone.startsWith('brand:'),
-                                        origemIcone: typeof item?.icone,
-                                        renderizado: !!item?.icone
-                                      });
                                       return (
                                         <div className="shrink-0 flex items-center justify-center translate-y-[1px]" style={{ width: '18px', height: '18px' }}>
                                           {item?.icone ? (
@@ -905,12 +899,6 @@ export const CombinedMonthlyExpensesDashboard: React.FC<CombinedMonthlyExpensesD
                     >
                       {(() => {
                         const item = subcategoryChartData[activeBarIndex];
-                        console.log('[TOOLTIP_SUBCATEGORIA]', {
-                          subcategoria: item.name,
-                          icone: item.icone,
-                          tipoIcone: typeof item.icone,
-                          svgEncontrado: typeof item.icone === 'string' && item.icone.startsWith('brand:')
-                        });
                         return null;
                       })()}
                       <div className="bg-white/95 backdrop-blur-md p-4 shadow-[0_12px_48px_rgba(0,0,0,0.18)] border border-white/60 rounded-2xl" style={{ WebkitBackdropFilter: 'blur(10px)' }}>

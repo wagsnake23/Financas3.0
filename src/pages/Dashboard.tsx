@@ -231,12 +231,10 @@ export default function Dashboard() {
   }, [allRevenues, allExpenseInstallments]);
 
   const totalOverallExpenses = useMemo(() => {
-    console.log('[MEMO RECALCULADO]', 'totalOverallExpenses', new Date().toISOString());
     return getMonthlyExpenses(selectedMonthStr);
   }, [allExpenseInstallments]);
 
   const calculatedInvestments = useMemo(() => {
-    console.log('[MEMO RECALCULADO]', 'calculatedInvestments (Dashboard)', new Date().toISOString());
     return investments.map((inv: Investment) => {
       // Determinar o mapa de indexador correto
       let idxMap: Map<string, number> | undefined;

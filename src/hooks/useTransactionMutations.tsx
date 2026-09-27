@@ -51,7 +51,6 @@ export const useTransactionMutations = ({
   const handleDeleteTransaction = useCallback(
     async (id: string, type: "income" | "expense", deleteScope: DeleteScope) => {
       setLoadingEditData(true);
-      console.log(`[DEBUG] handleDeleteTransaction called for ID: ${id}, Type: ${type}, Scope: ${deleteScope}`);
 
       if (!user) {
         toast.error("Usuário não autenticado. Por favor, faça login novamente.", { duration: toastDuration, style: toastErrorStyle });
@@ -82,7 +81,6 @@ export const useTransactionMutations = ({
             const formattedCurrentOccurrenceDate = formatInTimeZone(currentOccurrenceDate, TARGET_TIMEZONE, 'yyyy-MM-dd'); // Usar formatInTimeZone
 
             if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
-              console.log(`[DEBUG] Deleting single income occurrence from 'receitas' table with ID: ${id}`);
               const { error: deleteOccurrenceError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
               if (deleteOccurrenceError) throw deleteOccurrenceError;
 
@@ -96,7 +94,6 @@ export const useTransactionMutations = ({
               }
 
             } else if (deleteScope === "thisMonthForward") {
-              console.log(`[DEBUG] Deleting income occurrences from 'receitas' for master ${masterRecurrenceId} from ${formattedCurrentOccurrenceDate} onwards.`);
               const { error: deleteFutureOccurrencesError } = await supabase
                 .from("receitas")
                 .delete()
@@ -117,7 +114,6 @@ export const useTransactionMutations = ({
 
             }
           } else {
-            console.log(`[DEBUG] Deleting one-off income from 'receitas' table with ID: ${id}`);
             const { error: deleteError } = await supabase.from("receitas").delete().eq("id", id).eq("user_id", user.id);
             error = deleteError;
           }
@@ -129,7 +125,6 @@ export const useTransactionMutations = ({
           }
 
           if (deleteScope === "oneOff" || deleteScope === "thisMonth") {
-            console.log(`[DEBUG] Deleting single expense installment from 'despesas_parcelas' table with ID: ${id}`);
             const { error: deleteParcelaError } = await supabase.from("despesas_parcelas").delete().eq("id", id);
             if (deleteParcelaError) throw deleteParcelaError;
 
@@ -142,7 +137,6 @@ export const useTransactionMutations = ({
               if (checkError) console.error("Error checking remaining installments after single installment deletion:", checkError);
 
               if (remainingParcelas && remainingParcelas.length === 0) {
-                console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
                 const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
                 if (deleteParentError) throw deleteParentError;
               } else {
@@ -157,8 +151,7 @@ export const useTransactionMutations = ({
             if (!parentDespesaId || !isValidUuid(parentDespesaId)) {
               throw new Error("Erro (DEL-EXP-2): ID da despesa principal inválido para exclusão 'deste mês em diante'.");
             }
-            const currentInstallmentDate = parseISO(transactionToDelete.date);
-            console.log(`[DEBUG] Deleting expense installments from 'despesas_parcelas' for parent ${parentDespesaId} from ${formatInTimeZone(currentInstallmentDate, TARGET_TIMEZONE, 'yyyy-MM-dd')} onwards.`); // Usar formatInTimeZone
+            const currentInstallmentDate = parseISO(transactionToDelete.date); // Usar formatInTimeZone
 
             const { error: deleteFutureParcelasError } = await supabase
               .from("despesas_parcelas")
@@ -176,7 +169,6 @@ export const useTransactionMutations = ({
             if (checkError) console.error("Error checking remaining installments after 'thisMonthForward' deletion:", checkError);
 
             if (remainingParcelas && remainingParcelas.length === 0) {
-              console.log(`[DEBUG] No remaining installments for ${parentDespesaId}. Deleting parent 'despesas' record.`);
               const { error: deleteParentError } = await supabase.from("despesas").delete().eq("id", parentDespesaId);
               if (deleteParentError) throw deleteParentError;
             } else {
@@ -307,7 +299,6 @@ export const useTransactionMutations = ({
               if (updateMasterError) throw updateMasterError;
 
             } else {
-              console.warn("handleUpdateTransaction: Unknown saveScope for recurring income:", saveScope);
               toast.error("Escopo de atualização desconhecido para receita recorrente.", { duration: toastDuration, style: toastErrorStyle });
             }
 
@@ -428,7 +419,6 @@ export const useTransactionMutations = ({
             if (updateTotalError) throw updateTotalError;
 
           } else {
-            console.warn("handleUpdateTransaction: Unknown saveScope:", saveScope);
             toast.error("Escopo de atualização desconhecido.", { duration: toastDuration, style: toastErrorStyle });
           }
         }

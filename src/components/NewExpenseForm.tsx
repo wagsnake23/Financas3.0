@@ -120,14 +120,12 @@ const NewExpenseForm: React.FC<NewExpenseFormProps> = ({
 
   const testarImportacaoNfce = async () => {
     const qrCodeLido = "https://www.nfce.fazenda.sp.gov.br/qrcode?p=1234"; // placeholder
-    console.log("Chamando edge function...");
     const resultado = await supabase.functions.invoke(
       'importar-nfce',
       {
         body: { url: qrCodeLido }
       }
     );
-    console.log(resultado);
   };
 
   return (

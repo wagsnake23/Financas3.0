@@ -53,10 +53,6 @@ export const MonthlyExpenseBarChart: React.FC<MonthlyExpenseBarChartProps> = ({
     return Object.values(dataMap).sort((a, b) => a.fullDate.getTime() - b.fullDate.getTime());
   }, [expenseInstallments, currentDate, getMonthlyExpensesFn, isMonthProjectedFn]);
 
-  console.log('[EXPENSE_MOBILE_DEBUG]', chartData.map(item => ({ month: item.month, expenses: item.expenses })));
-
-  console.log('[EXPENSE_PROPS_DEBUG] isMobile:', isMobile, 'getMonthlyExpensesFn:', typeof getMonthlyExpensesFn);
-
   if (chartData.every(d => d.expenses === 0)) {
     return (
       <div className={cn("h-24 flex items-center justify-center text-muted-foreground text-sm", isMobile && "h-16 text-xs")}>

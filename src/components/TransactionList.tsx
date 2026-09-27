@@ -87,8 +87,6 @@ export const TransactionList = ({
   setSearchTerm,
   isLoading,
 }: TransactionListProps) => {
-  console.log("TransactionList: User prop received:", user?.id, "Is user null?", !user);
-  console.log("TransactionList: selectedMonth (top of component):", selectedMonth, "isValid:", isValid(selectedMonth));
 
   const [localSearch, setLocalSearch] = useState(searchTerm);
 
@@ -153,14 +151,12 @@ export const TransactionList = ({
     if (isValidUuid(filterPaymentOptionId) && cartoes.length > 0) {
       const cardExists = cartoes.some(card => card.id === filterPaymentOptionId);
       if (!cardExists) {
-        console.warn(`TransactionList: Selected card ID ${filterPaymentOptionId} not found in loaded cards. Resetting filter.`);
         setFilterPaymentOptionId("all");
       }
     }
   }, [filterPaymentOptionId, cartoes, setFilterPaymentOptionId]);
 
   const filteredTransactions = useMemo(() => {
-    console.log("TransactionList: filteredTransactions useMemo re-running...");
 
     return transactions.filter(transaction => {
       const categoryName = getCategoryDisplayName(transaction.category).toLowerCase();
@@ -316,9 +312,6 @@ export const TransactionList = ({
   const handlePayInvoice = async () => {
     const monthToValidate = new Date(selectedMonth);
 
-    console.log("handlePayInvoice: monthToValidate:", monthToValidate);
-    console.log("handlePayInvoice: isValid(monthToValidate):", isValid(monthToValidate));
-
     if (!user) {
       showErrorToast("Erro de Autenticação", "Por favor, faça login novamente.");
       return;
@@ -374,8 +367,6 @@ export const TransactionList = ({
 
   const cardDetails = useMemo(() => {
     const monthForCardDetails = new Date(selectedMonth);
-    console.log("cardDetails useMemo: monthForCardDetails:", monthForCardDetails);
-    console.log("cardDetails useMemo: isValid(monthForCardDetails):", isValid(monthForCardDetails));
 
     if (!isValidUuid(filterPaymentOptionId) || !isValid(monthForCardDetails)) {
       return null;
@@ -408,9 +399,6 @@ export const TransactionList = ({
       cardLastDigits: selectedCard.ultimos_digitos,
     };
   }, [filterPaymentOptionId, selectedMonth, cartoes]);
-
-  console.log("TransactionList: Raw transactions count (for selected month):", transactions.length);
-  console.log("TransactionList: Filtered transactions count (after all filters):", filteredTransactions.length);
 
   const disablePayInvoiceButton = useMemo(() => {
     if (!isValidUuid(filterPaymentOptionId)) return true;

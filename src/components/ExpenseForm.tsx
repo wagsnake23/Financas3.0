@@ -448,12 +448,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       // NOVO: Link da NFCE com a despesa
       if (initialNfceId) {
-        console.log('[NFCE] initialNfceId:', initialNfceId);
-        console.log('[NFCE] despesaData.id:', despesaData.id);
-        console.log('[NFCE] Vinculando NFC-e à despesa', {
-          nfceId: initialNfceId,
-          despesaId: despesaData.id
-        });
         
         try {
           const { error: linkError } = await (supabase as any)
@@ -464,12 +458,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             })
             .eq('id', initialNfceId);
             
-          console.log('[NFCE] Resultado UPDATE:', linkError);
-            
           if (linkError) {
             console.error('[NFCE] ERRO AO LINKAR:', linkError);
           } else {
-            console.log('[NFCE] NFC-e marcada como processada');
           }
         } catch (err) {
           console.error('[NFCE] EXCEÇÃO FATAL AO LINKAR NFCE:', err);
@@ -479,11 +470,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       showSuccessToast("Sucesso", "Despesa adicionada com sucesso!");
 
       if (initialNfceCnpj && selectedSubcategoryId && selectedSubcategoryId !== UNSELECTED_VALUE && user) {
-        console.log('[NFCE] SALVANDO MAPEAMENTO');
-        console.log('[NFCE] USER:', user.id);
-        console.log('[NFCE] CNPJ:', initialNfceCnpj);
-        console.log('[NFCE] ESTABELECIMENTO:', initialNfceEstabelecimento);
-        console.log('[NFCE] CATEGORIA:', selectedSubcategoryId);
 
         try {
           const { data: existingMapping } = await (supabase as any)
@@ -503,7 +489,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               })
               .eq('id', existingMapping.id);
             if (updateError) throw updateError;
-            console.log('[NFCE] MAPEAMENTO ATUALIZADO');
           } else {
             const { error: insertError } = await (supabase as any)
               .from('nfce_cnpj_categoria')
@@ -514,7 +499,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 categoria_id: selectedSubcategoryId
               });
             if (insertError) throw insertError;
-            console.log('[NFCE] MAPEAMENTO CRIADO');
           }
         } catch (mappingError) {
           console.error('[NFCE] ERRO MAPEAMENTO', mappingError);

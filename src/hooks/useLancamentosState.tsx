@@ -30,7 +30,6 @@ export const useLancamentosState = () => {
     } else {
       dateToReturn = new Date();
     }
-    console.log("useLancamentosState: Initial selectedMonth:", dateToReturn, "isValid:", isValid(dateToReturn));
     return dateToReturn;
   }, [searchParams]);
 

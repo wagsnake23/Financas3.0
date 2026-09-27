@@ -246,9 +246,6 @@ export default function Despesas() {
   }, [user, cartoes, isMobile, allCategories]);
 
   const handleScan = async (barcode: string) => {
-    console.log("QR CODE LIDO:", barcode);
-    console.log("URL NFCE:", barcode);
-    console.log("CHAMANDO EDGE FUNCTION");
     setIsScannerOpen(false);
 
     const { data, error } = await supabase.functions.invoke(
@@ -258,30 +255,24 @@ export default function Despesas() {
       }
     );
 
-    console.log("RESULTADO BRUTO:", { data, error });
-
     if (error) {
       console.error("ERRO INVOKE:", error);
     }
 
     if (data) {
-      console.log("DATA RETORNADA:", JSON.stringify(data));
     }
 
     if (!data) {
-        console.log("BRANCH EXECUTADA: (!data)");
         showErrorToast("Erro", "❌ Não foi possível importar a NFC-e (Sem resposta)");
         return;
     }
 
     if (data.duplicada) {
-        console.log("BRANCH EXECUTADA: (data.duplicada)");
         showErrorToast("Atenção", "⚠ Nota fiscal já importada anteriormente");
         return;
     }
 
     if (!data.success) {
-        console.log("BRANCH EXECUTADA: (!data.success)");
         console.error("ERRO NFC-E:", data);
         const errMessage = data?.error || error?.message || "";
         showErrorToast("Erro", `❌ Não foi possível importar NFC-e\n${errMessage}`);
@@ -289,8 +280,6 @@ export default function Despesas() {
     }
 
     const compra = data.compra;
-    console.log("NFCE LIDA DO BANCO:", compra);
-    console.log("NFCE ANTES MAPEAMENTO:", data);
     
     // Delegação do preenchimento para a função compartilhada
     preencherFormularioNfce(compra, data.categoria_id);

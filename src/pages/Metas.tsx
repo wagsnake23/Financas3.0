@@ -346,7 +346,6 @@ export default function Metas() {
           .delete()
           .eq("id", params.categoriaId);
         if (subError) {
-          console.warn("Subcategoria não pôde ser excluída (pode ter dependências):", subError.message);
         }
       }
     },

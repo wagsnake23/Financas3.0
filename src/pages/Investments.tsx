@@ -203,13 +203,11 @@ export default function Investments() { // Alterado para export default function
 
   const indexadorMapCDI = useMemo(() => {
     const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "CDI"));
-    console.log("CDI Map size:", map.size);
     return map;
   }, [indexadores]);
 
   const indexadorMapIPCA = useMemo(() => {
     const map = buildIndexadorMap(indexadores.filter(i => i.tipo === "IPCA"));
-    console.log("IPCA Map size:", map.size);
     return map;
   }, [indexadores]);
 
@@ -535,7 +533,6 @@ export default function Investments() { // Alterado para export default function
   };
 
   const calculatedInvestments = useMemo(() => {
-    console.log('[MEMO RECALCULADO]', 'calculatedInvestments (Investments)', new Date().toISOString());
     return (investments || []).map(inv => {
       let idxMap: Map<string, number> | undefined;
       if (inv.tipo_rentabilidade === "indexado") {
@@ -545,21 +542,7 @@ export default function Investments() { // Alterado para export default function
 
       const tipoTributacao = getTipoTributacao(inv, allSubcategories);
 
-      console.log(`Calculando ${inv.tipo} (${inv.id}):`, {
-        tipoRentabilidade: inv.tipo_rentabilidade,
-        indexador: inv.indexador,
-        percentualIndexador: inv.percentual_indexador,
-        tipoTributacao
-      });
-
       const pIndexador = inv.tipo_rentabilidade === "indexado" ? (inv.percentual_indexador || 100) : 100;
-
-      console.log(`Debug Investimento ${inv.id}:`, {
-        rawPercentual: inv.percentual_indexador,
-        finalPercentual: pIndexador,
-        tipo: inv.tipo,
-        valor: inv.valor
-      });
 
       // Cálculo de rendimento usando dados históricos (Engine Real - Provisão Diária)
       const {

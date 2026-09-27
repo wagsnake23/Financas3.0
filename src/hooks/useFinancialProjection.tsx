@@ -113,13 +113,6 @@ export function useFinancialProjection({
         }
         page++;
       }
-      
-      console.log(
-        "[ORCAMENTOS FINAL]",
-        allData.length,
-        allData[0]?.mes_ano,
-        allData[allData.length - 1]?.mes_ano
-      );
 
       return allData;
     },
@@ -199,13 +192,6 @@ export function useFinancialProjection({
     return map;
   }, [allOrcamentos]);
 
-  console.log(
-    "[ORCAMENTOS MAP]",
-    monthlyOrcamentosMap.size,
-    monthlyOrcamentosMap.has("2027-07"),
-    monthlyOrcamentosMap.get("2027-07")
-  );
-
   // ── Expense breakdown by month (fixed + parcels) ──────────────────────────
 
   const monthlyFixedExpenses = useMemo(() => {
@@ -244,7 +230,6 @@ export function useFinancialProjection({
    * - future: fixos + parcelas + variable planning (with anti-duplication)
    */
   const getMonthlyExpenses = useMemo(() => {
-    console.log('[MEMO RECALCULADO]', 'getMonthlyExpenses (Closure Creator)', new Date().toISOString());
     return (monthStr: string): number => {
       const type = getMonthType(monthStr);
 
@@ -311,15 +296,6 @@ export function useFinancialProjection({
         }
 
         const totalGeral = fixosTot + parceladasTot + avulsasTot + orcTotalAdicionado;
-
-        console.log("=== DASHBOARD (useFinancialProjection - Out/2026) ===");
-        console.log("1. Valor total retornado:", totalGeral);
-        console.log("2. Total de despesas fixas:", fixosTot);
-        console.log("3. Total de despesas parceladas:", parceladasTot);
-        console.log("4. Total de despesas avulsas futuras:", avulsasTot);
-        console.log("5. Total de orçamentos variáveis adicionados:", orcTotalAdicionado);
-        console.log("6. Total removido pela lógica anti-duplicidade:", orcTotalRemovido);
-        console.log("7. Lista completa dos registros:");
         console.table(dashboardItens);
       }
  

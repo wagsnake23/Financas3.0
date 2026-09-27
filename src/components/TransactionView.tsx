@@ -64,7 +64,6 @@ export const TransactionView: React.FC<TransactionViewProps> = ({
   setSearchTerm,
   isLoading,
 }) => {
-  console.log("TransactionView: User prop received:", user?.id, "Is user null?", !user);
 
   const content = (
     <TransactionList

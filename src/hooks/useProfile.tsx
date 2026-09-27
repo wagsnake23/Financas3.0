@@ -10,12 +10,6 @@ export const useProfile = (userId: string | undefined) => {
         supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
         supabase.from("subscriptions" as any).select("subscription_type, subscription_status, payment_status, expires_at").eq("user_id", userId).maybeSingle()
       ]);
-      
-      console.log("================ DEBUG SUBSCRIPTIONS ================");
-      console.log("USER_ID", userId);
-      console.log("PROFILE", profileRes.data);
-      console.log("SUBSCRIPTION", subRes.data);
-      console.log("=====================================================");
 
       if (profileRes.error) throw profileRes.error;
       

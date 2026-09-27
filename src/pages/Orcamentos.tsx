@@ -289,11 +289,6 @@ export default function Orcamentos() {
     return Object.values(groups).sort((a, b) => b.totalGasto - a.totalGasto);
   }, [calculatedOrcamentos]);
 
-  console.log('[ORCAMENTOS]');
-  console.log('categorias (allCategories)', allCategories);
-  console.log('subcategorias', subCategories);
-  console.log('orcamentos', orcamentos);
-  console.log('groupedOrcamentos', groupedOrcamentos);
 
   // Indicadores Superiores
   const totalPlanejado = calculatedOrcamentos.reduce((acc, curr) => acc + curr.absoluto, 0);
@@ -304,30 +299,7 @@ export default function Orcamentos() {
   const planejadoUltrapassaReceita = totalPlanejado > receitaPrevista;
   const realizadoUltrapassaPlanejado = totalRealizado > totalPlanejado;
 
-  useEffect(() => {
-    if (mesAno === "2026-10") {
-      console.log("=== PLANEJAMENTO (Orcamentos.tsx - Out/2026) ===");
-      console.log("1. totalPlanejado:", totalPlanejado);
-      console.log("2. totalRealizado:", totalRealizado);
-      console.log("3. calculatedOrcamentos completo:", calculatedOrcamentos);
-      console.log("4. Lista de todas as subcategorias consideradas:", subCategories.map(s => s.nome));
-      console.log("5. Lista de todos os orçamentos considerados:", orcamentos);
-      
-      const despesasConsideradas: any[] = [];
-      calculatedOrcamentos.forEach(item => {
-        despesasConsideradas.push({
-          "Categoria Pai": item.parentCat?.nome || "Sem pai",
-          "Subcategoria": item.subCat?.nome || "Sem sub",
-          "Valor Planejado Absoluto": item.absoluto,
-          "Valor Realizado": item.gasto,
-          "Percentual": item.percentual_planejado || 0,
-          "Receita Prevista": receitaPrevista
-        });
-      });
-      console.log("6. Lista de todas as despesas consideradas (Planejamento):");
-      console.table(despesasConsideradas);
-    }
-  }, [mesAno, totalPlanejado, totalRealizado, calculatedOrcamentos, subCategories, orcamentos, receitaPrevista]);
+  // Auditoria de diagnóstico removida (dados de depuração)
 
   // Estados Form Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -345,6 +317,37 @@ export default function Orcamentos() {
 
   // Estados Pending Bell
   const [isPendingPopoverOpen, setIsPendingPopoverOpen] = useState(false);
+  const [isPlanejandoTudo, setIsPlanejandoTudo] = useState(false);
+
+  const handlePlanejaTudo = async () => {
+    if (!user?.id || isPlanejandoTudo || pendingOrcamentos.length === 0) return;
+    setIsPlanejandoTudo(true);
+    try {
+      for (const item of pendingOrcamentos) {
+        // Look up any existing orcamento for this category in this month
+        // (even if it has valor_planejado = 0). Pass its id so saveOrcamento
+        // takes the UPDATE path, avoiding the unique constraint violation.
+        const existingOrc = orcamentos?.find(o => o.categoria_id === item.categoria_id);
+        const payload = {
+          id: existingOrc?.id,
+          user_id: user.id,
+          categoria_id: item.categoria_id,
+          mes_ano: mesAno,
+          tipo_planejamento: "valor" as const,
+          valor_planejado: item.gasto,
+          percentual_planejado: 0,
+          applyToFuture: false,
+        };
+        await saveOrcamento(payload);
+      }
+      setIsPendingPopoverOpen(false);
+      showSuccessToast("Planejamentos criados com sucesso!");
+    } catch (err: any) {
+      showErrorToast(err.message || "Erro ao planejar categorias.");
+    } finally {
+      setIsPlanejandoTudo(false);
+    }
+  };
 
   const pendingOrcamentos = useMemo(() => {
     return calculatedOrcamentos
@@ -386,10 +389,24 @@ export default function Orcamentos() {
             className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white", isMobile ? "w-[calc(100vw-64px)]" : "w-[320px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto', background: '#FFFFFF', backdropFilter: 'none', WebkitBackdropFilter: 'none' }}
           >
-          <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center">
+          <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
             <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
               <span className="text-[16px]">⚠️</span> Sem Planejamento
             </h3>
+            <button
+              type="button"
+              onClick={handlePlanejaTudo}
+              disabled={isPlanejandoTudo}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-[8px] text-[11.5px] font-bold text-white transition-all active:scale-95 disabled:opacity-60 shrink-0"
+              style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}
+            >
+              {isPlanejandoTudo ? (
+                <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin inline-block" />
+              ) : (
+                <span>✓</span>
+              )}
+              Planejar Tudo
+            </button>
           </div>
 
           <div className="flex flex-col">
@@ -1217,7 +1234,6 @@ export default function Orcamentos() {
             </div>
           ) : (
             <>
-              {console.log('[ACCORDION RENDER]', groupedOrcamentos)}
               <Accordion type="single" collapsible className={cn("w-full items-start", isMobile ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3")}>
 
               {isMobile ? (

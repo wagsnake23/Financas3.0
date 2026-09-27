@@ -71,13 +71,6 @@ export const MobileCreditCardExpenses: React.FC<
   // AUDITORIA TEMPORÁRIA
   if (process.env.NODE_ENV === 'development') {
     console.count("MobileCreditCardExpenses render");
-    console.log({
-      selectedCardId,
-      userSelectedCardId,
-      cartoes: cartoes?.length || 0,
-      parcelas: expenseInstallments?.length || 0,
-      isLoading
-    });
   }
 
   // 4. Performance: Pre-filter installments ONCE for the active card

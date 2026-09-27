@@ -83,12 +83,6 @@ const Lancamentos = () => {
     allRevenues,
     allExpenseInstallments,
   } = useLancamentosLogic(user);
-  console.log(
-    "Lancamentos.tsx: User from useAuth:",
-    user?.id,
-    "Is user null?",
-    !user
-  );
 
 
 

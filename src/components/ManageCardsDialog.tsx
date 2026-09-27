@@ -194,8 +194,6 @@ export const ManageCardsDialog: React.FC<ManageCardsDialogProps> = ({
       .select("id", { count: 'exact' })
       .eq("cartao_id", cardToDelete);
 
-    console.log(`[DEBUG] Card ${cardToDelete}: Found ${expenseCount} associated 'despesas' records.`);
-
     if (countError) {
       toast.error("Erro ao verificar despesas associadas", { description: countError.message, duration: toastDuration, style: toastErrorStyle });
       console.error(countError);

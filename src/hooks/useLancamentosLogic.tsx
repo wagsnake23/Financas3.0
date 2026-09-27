@@ -17,10 +17,6 @@ type ReceitaStatus = Database['public']['Enums']['receita_status']; // Definir R
 export const useLancamentosLogic = (
   user: User | null
 ) => {
-  console.log(
-    "useLancamentosLogic: User received as prop:",
-    user?.id
-  );
 
   const queryClient = useQueryClient();
 

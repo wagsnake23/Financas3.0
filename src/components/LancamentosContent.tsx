@@ -77,7 +77,6 @@ export const LancamentosContent: React.FC<LancamentosContentProps> = ({
   setSearchTerm,
   isLoading,
 }) => {
-  console.log("LancamentosContent.tsx: User prop received:", user?.id, "Is user null?", !user);
 
   // Removido: const disableFilters = !!editingTransaction;
 

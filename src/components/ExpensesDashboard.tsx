@@ -176,12 +176,6 @@ export const ExpensesDashboard = ({ expenses, expenseInstallments, categories, i
                                 {String(payload.value).toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase())}
                               </div>
                               {(() => {
-                                console.log('[DASHBOARD_ICON_RENDER]', {
-                                  nome: payload.value,
-                                  svgEncontrado: typeof item?.icone === 'string' && item.icone.startsWith('brand:'),
-                                  origemIcone: typeof item?.icone,
-                                  renderizado: !!item?.icone
-                                });
                                 return (
                                   <div className="shrink-0 flex items-center justify-center translate-y-[1px]" style={{ width: '18px', height: '18px' }}>
                                     {item?.icone ? (
