@@ -381,8 +381,8 @@ export default function Orcamentos() {
         {hasPending && (
           <PopoverContent 
             align={isMobile ? "center" : "end"}
-            collisionPadding={isMobile ? 28 : 16}
-            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]", isMobile ? "w-[calc(100vw-56px)]" : "w-[280px]")}
+            collisionPadding={isMobile ? 24 : 16}
+            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden z-[100]", isMobile ? "w-[calc(100vw-64px)]" : "w-[280px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto' }}
           >
           <div className="p-3.5 bg-slate-50 border-b border-slate-100 flex items-center">
