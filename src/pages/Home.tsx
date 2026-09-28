@@ -118,6 +118,8 @@ export default function Home() {
     });
 
     // Fetch all expense installments for memory-based filtering (needed for variations, Credit Card card, and 10-month graph)
+    // NOTE: queryKey and select must match Dashboard exactly so both pages share the same React Query cache
+    // and receive identical data as input to useFinancialProjection.
     const { 
         data: allExpenseInstallments = EMPTY_ARRAY, 
         isLoading: isLoadingExpenses, 
@@ -138,23 +140,20 @@ export default function Home() {
                     | "cartao_id"
                     | "is_recurring_master"
                     | "numero_parcelas"
+                    | "data_competencia"
                 > | null;
             })[]
         >({
-            queryKey: ["allExpenseInstallments", user?.id, format(selectedMonth, "yyyy")],
+            queryKey: ["allExpenseInstallments", user?.id],
             queryFn: async () => {
                 if (!user?.id) return [];
-                // Fetch current and previous year of the selected month
-                const startRange = format(subMonths(selectedMonth, 12), "yyyy-01-01");
-                const endRange = format(selectedMonth, "yyyy-12-31");
                 const { data, error } = await supabase
                     .from("despesas_parcelas")
                     .select(
-                        "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas)"
+                        "*, despesas(id, categoria_id, user_id, descricao, forma_pagamento, tipo_pagamento, cartao_id, is_recurring_master, numero_parcelas, data_competencia)"
                     )
                     .filter("despesas.user_id", "eq", user.id)
-                    .gte("vencimento", startRange)
-                    .lte("vencimento", endRange);
+                    .order("vencimento", { ascending: true });
                 if (error) throw error;
                 return data;
             },

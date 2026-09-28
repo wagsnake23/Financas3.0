@@ -21,6 +21,7 @@ interface ExpenseInstallmentWithDespesa extends Tables<"despesas_parcelas"> {
     | "cartao_id"
     | "is_recurring_master"
     | "numero_parcelas"
+    | "data_competencia"
   > | null;
 }
 
@@ -257,48 +258,7 @@ export function useFinancialProjection({
       const orcamentosForMonth = monthlyOrcamentosMap.get(monthStr);
       const obligationCats = monthlyObligationCategories.get(monthStr) || new Set<string>();
 
-      if (monthStr === "2026-10") {
-        let orcCount = 0;
-        let orcTotalAdicionado = 0;
-        let orcTotalRemovido = 0;
-        
-        const dashboardItens: any[] = [];
-        let fixosTot = 0;
-        let parceladasTot = 0;
-        let avulsasTot = 0;
 
-        allExpenseInstallments.forEach(p => {
-          if (p.vencimento.substring(0, 7) === "2026-10") {
-            const origem = p.despesas?.tipo_pagamento || "desconhecido";
-            if (origem === "fixo") fixosTot += p.valor_parcela;
-            else if (origem === "parcelado") parceladasTot += p.valor_parcela;
-            else if (origem === "avista") avulsasTot += p.valor_parcela;
-
-            dashboardItens.push({
-              id: p.id,
-              descrição: p.despesas?.descricao || "Sem desc",
-              categoria_id: p.despesas?.categoria_id,
-              valor: p.valor_parcela,
-              origem: origem
-            });
-          }
-        });
-
-        if (orcamentosForMonth) {
-          orcamentosForMonth.forEach((valor, catId) => {
-            if (!obligationCats.has(catId)) {
-               orcTotalAdicionado += valor;
-               dashboardItens.push({ id: `orc-${catId}`, descrição: "Orçamento (Variável)", categoria_id: catId, valor: valor, origem: "orçamento" });
-            } else {
-               orcTotalRemovido += valor;
-            }
-          });
-        }
-
-        const totalGeral = fixosTot + parceladasTot + avulsasTot + orcTotalAdicionado;
-        console.table(dashboardItens);
-      }
- 
 
       let variavel = 0;
       if (orcamentosForMonth) {
