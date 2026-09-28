@@ -145,7 +145,7 @@ const Lancamentos = () => {
             isMobile={isMobile}
             onBack={undefined}
             backButtonColor="#E54D4D"
-            hasFiltersActive={filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || filterStatus !== "all" || searchTerm !== ""}
+            hasFiltersActive={!isMobile && (filterType !== "all" || filterCategory !== "all" || filterPaymentOptionId !== "all" || filterStatus !== "all" || searchTerm !== "")}
             onClearFilters={() => {
               setFilterType("all");
               setFilterStatus("all");
