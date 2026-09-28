@@ -468,17 +468,41 @@ export const TransactionList = ({
     return -1;
   }, [transactionsToDisplay, isMobile, selectedMonth, sortColumn, sortDirection]);
 
-  // Posicionamento instantâneo sem animação e sem setTimeout
+  // Scroll para o marcador "Hoje" somente após:
+  // 1) dados carregados (isLoading === false)
+  // 2) elemento ref existir no DOM
+  // 3) mês não ter sido scrollado ainda (scrolledMonthRef)
+  // Usa requestAnimationFrame para garantir que o browser finalizou
+  // o layout flex antes de calcular a posição de scroll.
   const todayMarkerRef = useRef<HTMLDivElement>(null);
   const scrolledMonthRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const monthKey = `${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`;
-    if (todayMarkerIndex !== -1 && todayMarkerRef.current && scrolledMonthRef.current !== monthKey) {
-      scrolledMonthRef.current = monthKey;
-      todayMarkerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+    // Reset da chave quando inicia nova carga, para reativar o scroll quando dados chegarem
+    if (isLoading) {
+      scrolledMonthRef.current = null;
     }
-  }, [todayMarkerIndex, selectedMonth]);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return; // Dados ainda carregando — aguarda
+    if (todayMarkerIndex === -1) return; // Não é o mês atual ou sem transações
+    if (!todayMarkerRef.current) return; // Elemento ainda não no DOM
+
+    const monthKey = `${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`;
+    if (scrolledMonthRef.current === monthKey) return; // Já scrollou para este mês
+
+    scrolledMonthRef.current = monthKey;
+
+    // rAF garante execução após o browser completar o layout flex
+    const rafId = requestAnimationFrame(() => {
+      if (todayMarkerRef.current) {
+        todayMarkerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+    });
+
+    return () => cancelAnimationFrame(rafId);
+  }, [todayMarkerIndex, selectedMonth, isLoading]);
 
   // Ordenação customizada EXCLUSIVA para os lançamentos de Hoje
   const finalDisplayTransactions = useMemo(() => {
