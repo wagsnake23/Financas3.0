@@ -86,7 +86,7 @@ const CategoryItem = ({
       <div
         className={cn(
           "flex items-center justify-between p-3 border rounded-xl hover:border-primary/50 transition-all !bg-white w-full",
-          (!isMobile && level > 0) ? "h-[68px]" : "min-h-[64px]"
+          (!isMobile && level > 0) ? "h-[59px]" : "min-h-[64px]"
         )}
         style={{
           borderColor: effectiveColor,
@@ -284,7 +284,7 @@ const CategoriesList = ({
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
 
-  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "440px");
+  const effectiveMaxHeight = maxHeight || (isMobile ? "none" : "480px");
 
   const flatCategories = useMemo(() => {
     const flatten = (cats: HierarchicalCategory[], acc: AppCategory[] = []) => {
@@ -403,7 +403,7 @@ const CategoriesList = ({
                 key={category.id}
                 onClick={() => setSelectedCategoryId(category.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 p-3 rounded-xl transition-all border text-left",
+                  "w-full flex items-center gap-3 px-3 py-[9px] rounded-xl transition-all border text-left",
                   isActive 
                     ? "shadow-sm border-[rgba(245,158,11,0.35)]" 
                     : "border-slate-200 hover:border-slate-300"
@@ -441,7 +441,7 @@ const CategoriesList = ({
         {activeCategory ? (
           <div className="space-y-1.5">
             {activeCategory.subCategories && activeCategory.subCategories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-[14px] pb-1">
+              <div className="grid grid-cols-2 gap-[12px] pb-1">
                 {activeCategory.subCategories.map((sub, idx) => (
                   <CategoryItem
                     key={sub.id}
@@ -482,7 +482,7 @@ const CategoriesList = ({
       )}
     >
       <div className={cn(
-        isMobile ? "flex-shrink-0 mb-2" : "sticky top-[-4px] z-30 bg-transparent py-0 mb-1 mt-0"
+        isMobile ? "flex-shrink-0 mb-2" : "sticky top-[-4px] z-30 bg-transparent py-0 mb-[14px] mt-0"
       )}>
         <div className={cn(
           "flex flex-col sm:flex-row sm:items-center gap-2", 

@@ -82,7 +82,6 @@ export const Navigation = () => {
   const avatarEmoji = profile?.avatar || "😎";
 
   const navItems = [
-    { to: "/", label: "Home", icon: "🏠", color: "hsl(215, 96%, 39%)" },
     { to: "/dashboard", label: "Dashboard", icon: "📊", color: "hsl(210, 70%, 50%)" },
     { to: "/despesas", label: "Despesas", icon: "💸", color: "hsl(0, 70%, 55%)" },
     { to: "/receitas", label: "Receitas", icon: "💰", color: "hsl(150, 65%, 50%)" },

@@ -443,7 +443,7 @@ const Categories = () => {
                 "rounded-[24px] overflow-hidden relative transition-all duration-300",
                 isMobile 
                   ? "px-2 pt-4 pb-0 mb-1" 
-                  : "card-despesas p-5 border border-[rgba(15,23,42,0.10)] shadow-sm h-full min-h-unset pb-2"
+                  : "card-despesas py-5 px-[15px] border border-[rgba(15,23,42,0.10)] shadow-sm min-h-unset pb-0 h-full"
               )}
               style={
                 isMobile
