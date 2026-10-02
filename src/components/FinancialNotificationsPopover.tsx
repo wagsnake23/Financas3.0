@@ -83,15 +83,28 @@ export const FinancialNotificationsPopover = () => {
       </PopoverTrigger>
       
       <PopoverContent 
-        align="end" 
-        className="w-80 p-0 rounded-[14px] shadow-xl border border-slate-200/60 overflow-hidden" 
-        style={{ maxHeight: '70vh', overflowY: 'auto' }}
+        align={isMobile ? "center" : "end"} 
+        className={cn(
+          "p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white",
+          isMobile ? "w-[calc(100vw-64px)]" : "w-80"
+        )}
+        style={{ 
+          maxHeight: isMobile ? '70vh' : '250px', 
+          overflowY: 'auto',
+          background: '#FFFFFF', 
+          backdropFilter: 'none', 
+          WebkitBackdropFilter: 'none'
+        }}
+        collisionPadding={isMobile ? 24 : 16}
+        sideOffset={isMobile ? -3 : 8}
       >
-        <div className="p-4 bg-slate-50/80 border-b border-slate-100">
-          <h3 className="font-bold text-slate-800 text-[15px]">Pendências Financeiras</h3>
+        <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
+          <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
+            {isMobile ? <><span className="text-[16px]">⚠️</span> Pendências Financeiras</> : "Pendências Financeiras"}
+          </h3>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-white">
           {allNotifications.map((item) => {
             const isDespesa = item.type === "expense";
             const category = allCategories.find((c) => c.id === item.category);
@@ -102,7 +115,7 @@ export const FinancialNotificationsPopover = () => {
               <button
                 key={item.id}
                 onClick={() => handleOpenTransaction(item)}
-                className="flex flex-col p-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors text-left"
+                className="flex flex-col px-4 py-3 border-b border-[#E5E7EB] last:border-0 hover:bg-slate-50 transition-colors text-left bg-white"
               >
                 <div className="flex items-start justify-between w-full mb-1 gap-2">
                   <div className="flex items-center gap-1.5 font-semibold text-slate-700 text-[14px] truncate">
