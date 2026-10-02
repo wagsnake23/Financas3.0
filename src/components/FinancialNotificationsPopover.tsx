@@ -86,21 +86,22 @@ export const FinancialNotificationsPopover = () => {
         align={isMobile ? "center" : "end"} 
         className={cn(
           "p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white",
-          isMobile ? "w-[calc(100vw-54px)]" : "w-80"
+          isMobile ? "w-[calc(100vw-53px)]" : "w-80"
         )}
         style={{ 
-          maxHeight: isMobile ? '70vh' : '250px', 
+          minHeight: isMobile ? 'auto' : '150px',
+          maxHeight: isMobile ? '70vh' : '350px', 
           overflowY: 'auto',
           background: '#FFFFFF', 
           backdropFilter: 'none', 
           WebkitBackdropFilter: 'none'
         }}
-        collisionPadding={isMobile ? 19 : 16}
+        collisionPadding={isMobile ? 18 : 16}
         sideOffset={isMobile ? -3 : 8}
       >
         <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
           <h3 className="font-bold text-slate-800 text-[14px] flex items-center gap-2">
-            {isMobile ? <><span className="text-[16px]">⚠️</span> Pendências Financeiras</> : "Pendências Financeiras"}
+            <span className="text-[16px]">⚠️</span> Pendências Financeiras
           </h3>
         </div>
 
