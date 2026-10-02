@@ -86,7 +86,7 @@ export const FinancialNotificationsPopover = () => {
         align={isMobile ? "center" : "end"} 
         className={cn(
           "p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white",
-          isMobile ? "w-[calc(100vw-41px)]" : "w-80"
+          isMobile ? "w-[calc(100vw-39px)]" : "w-80"
         )}
         style={{ 
           minHeight: isMobile ? 'auto' : '150px',
