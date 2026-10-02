@@ -386,7 +386,7 @@ export default function Orcamentos() {
             align={isMobile ? "center" : "end"}
             collisionPadding={isMobile ? 18 : 16}
             sideOffset={isMobile ? -3 : 8}
-            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white", isMobile ? "w-[calc(100vw-39px)]" : "w-[320px]")}
+            className={cn("p-0 rounded-[14px] shadow-xl border border-slate-200 overflow-hidden z-[100] bg-white", isMobile ? "w-[calc(100vw-37px)]" : "w-[320px]")}
             style={{ maxHeight: '60vh', overflowY: 'auto', background: '#FFFFFF', backdropFilter: 'none', WebkitBackdropFilter: 'none' }}
           >
             <div className="p-3.5 bg-slate-100 border-b border-[#E5E7EB] flex items-center justify-between gap-2">
