@@ -629,14 +629,14 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-[#FCFDFE] rounded-[7px] py-2 px-4 border border-[#E2E8F0]/60 shadow-[0_1px_2px_rgba(15,23,42,0.03)] flex items-center justify-between mb-2 animate-fade-in active:scale-[0.99] transition-all",
+                    "bg-[#FCFDFE] rounded-[7px] py-2 pl-[13px] pr-4 border border-[#E2E8F0]/60 shadow-[0_1px_2px_rgba(15,23,42,0.03)] flex items-center justify-between mb-2 animate-fade-in active:scale-[0.99] transition-all",
                     item.status ? "border-l-[3px] border-l-[#25D366]" : "border-l-[3px] border-l-[#FF8888]"
                   )}
                 >
                   <div className="flex flex-col w-full gap-1">
                     {/* 🟢 PRIMEIRA LINHA: Nº e Produto */}
                     <div className="flex items-center justify-between w-full mt-[2px]">
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-[9px] min-w-0">
                         {/* Nº */}
                         <span className="text-[0.80rem] text-[#356DD8] font-extrabold whitespace-nowrap min-w-[28px] text-center leading-none">
                           {String(index + 1).padStart(2, '0')}
@@ -660,7 +660,7 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
 
                     {/* 🟢 SEGUNDA LINHA: Data e Ações */}
                     <div className="flex items-center justify-between w-full mt-[2px]">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="flex items-center gap-[9px] min-w-0 flex-1">
                         {/* Ícone alinhado com o Nº */}
                         <div className="min-w-[28px] flex justify-center shrink-0">
                           {item.status && item.date ? (
