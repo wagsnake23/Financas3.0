@@ -25,8 +25,8 @@ export const FinancialNotificationsPopover = () => {
   const { data: rawCategories = [] } = useCategories(user?.id);
 
   const allCategories = React.useMemo(() => {
-    return rawCategories.filter(cat => cat.user_id === user?.id);
-  }, [rawCategories, user?.id]);
+    return rawCategories;
+  }, [rawCategories]);
 
   useEffect(() => {
     if (totalNotifications > prevTotal) {
