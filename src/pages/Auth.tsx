@@ -310,7 +310,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -331,7 +331,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -397,7 +397,7 @@ export default function Auth() {
               disabled={loading}
               placeholder="Seu nome completo"
               maxLength={100}
-              className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
+              className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.nome, isValid: validationErrors.nome === false }))}
             />
           </div>
           <div>
@@ -417,7 +417,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -438,7 +438,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -465,7 +465,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
@@ -519,7 +519,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="seu@email.com"
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.email, isValid: validationErrors.email === false }))}
               />
             </div>
           </div>
@@ -566,7 +566,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha..."
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.password, isValid: validationErrors.password === false }))}
               />
               <button
                 type="button"
@@ -593,7 +593,7 @@ export default function Auth() {
                 required
                 disabled={loading}
                 placeholder="Digite a senha novamente..."
-                className={cn("!h-[46px] !min-h-[46px] !max-h-[46px] rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
+                className={cn(isMobile ? "!h-[48px] !min-h-[48px] !max-h-[48px]" : "!h-[46px] !min-h-[46px] !max-h-[46px]", "rounded-[11px] pl-9 font-medium placeholder:text-[#9ca3af] placeholder:font-normal transition-all duration-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] input-3d-premium bg-white text-gray-800", getBorderClass({ isInvalid: validationErrors.confirmPassword, isValid: validationErrors.confirmPassword === false }))}
               />
               <button
                 type="button"
