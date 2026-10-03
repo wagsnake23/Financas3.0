@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Check, Circle, Package } from "lucide-react";
+import { Check, Circle, Package, CalendarDays } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -663,17 +663,23 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         {/* Ícone alinhado com o Nº */}
                         <div className="min-w-[28px] flex justify-center shrink-0">
-                          {item.status && item.date && (
+                          {item.status && item.date ? (
                             <span className="text-[12px]">📅</span>
-                          )}
+                          ) : !item.status && item.created_at ? (
+                            <CalendarDays className="w-[13px] h-[13px] text-[#356DD8]" />
+                          ) : null}
                         </div>
                         {/* Data alinhada com o Produto */}
                         <div className="min-w-0 flex-1">
-                          {item.status && item.date && (
+                          {item.status && item.date ? (
                             <span className="text-[0.75rem] text-gray-400 truncate block">
                               {item.date}
                             </span>
-                          )}
+                          ) : !item.status && item.created_at ? (
+                            <span className="text-[0.75rem] text-gray-400 truncate block">
+                              {format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                            </span>
+                          ) : null}
                         </div>
                       </div>
 
@@ -762,11 +768,16 @@ export const ShoppingListContent: React.FC<ShoppingListContentProps> = ({
                       {item.product}
                     </span>
 
-                    {item.status && item.date && (
+                    {item.status && item.date ? (
                       <p className="mt-[1px] text-sm font-medium text-gray-500">
                         📅 {item.date}
                       </p>
-                    )}
+                    ) : !item.status && item.created_at ? (
+                      <p className="mt-[1px] text-sm font-medium text-gray-500 flex items-center gap-1.5">
+                        <CalendarDays className="w-3.5 h-3.5 text-[#356DD8]" /> 
+                        <span>{format(new Date(item.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</span>
+                      </p>
+                    ) : null}
                   </div>
 
                   {/* Status */}
