@@ -1169,7 +1169,7 @@ export default function Investments() { // Alterado para export default function
                           </div>
 
                           {/* 2. Main Value and Yield */}
-                          <div className={cn("flex justify-between", isMobile ? "flex-col gap-4" : "flex-col gap-4")}>
+                          <div className={cn("flex justify-between", isMobile ? "flex-col gap-3" : "flex-col gap-4")}>
                             <div className="space-y-[7px] w-full">
                               <div className="flex flex-col">
                                 <span className={cn("text-slate-500 font-black uppercase tracking-wider leading-none", isMobile ? "text-[10px] mb-1" : "text-[10px] mb-1")}>Saldo Líquido Total</span>
@@ -1178,25 +1178,20 @@ export default function Investments() { // Alterado para export default function
                                 </span>
                               </div>
 
-                              {/* Rendimento Diário / Mensal */}
-                              <div className={cn("flex items-center gap-1 font-bold text-success/90 w-fit", isMobile ? "text-[12px] mb-3" : "text-[12px] ml-0.5 gap-1.5")}>
-                                <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>🔥</span>
-                                <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
-                              </div>
-                            </div>
-
-                            <div className={cn("flex", isMobile ? "flex-row justify-between items-center w-full" : "items-end justify-between")}>
-                              {/* Profitability Badge */}
-                              <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-                                <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
-                                <span className="font-black text-[13px] leading-none">
-                                  {investment.rentabilidadeLiquida.toFixed(2)}%
-                                </span>
-                              </div>
-
-                              {/* Data Bottom Right */}
-                              <div className={cn("font-black uppercase tracking-widest text-slate-500", isMobile ? "text-[11px]" : "text-[12px] whitespace-nowrap")}>
-                                {formattedDate}
+                              {/* Rendimento Diário / Mensal + Badge */}
+                              <div className="flex items-center justify-between w-full">
+                                <div className={cn("flex items-center gap-1 font-bold text-success/90", isMobile ? "text-[12px]" : "text-[12px] ml-0.5 gap-1.5")}>
+                                  <span className={cn(isMobile ? "text-[13px]" : "text-sm")}>🔥</span>
+                                  <span>+ {formatCurrency(yieldViewMode === "daily" ? dailyYield : monthlyYield)} / {yieldViewMode === "daily" ? "dia" : "mês"}</span>
+                                </div>
+                                
+                                {/* Profitability Badge movido para cá */}
+                                <div className="inline-flex items-center gap-1.5 text-[#1E40AF] px-2.5 py-1 rounded-full bg-[#E6F0FF] border border-[#BFDBFE]/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                                  <DynamicIcon name="TrendingUp" className="h-3.5 w-3.5" />
+                                  <span className="font-black text-[13px] leading-none">
+                                    {investment.rentabilidadeLiquida.toFixed(2)}%
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1269,7 +1264,7 @@ export default function Investments() { // Alterado para export default function
             </div>
           </div>
         ) : (
-          <div className={cn("grid gap-8 lg:mb-[40px] lg:items-start", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
+          <div className={cn("grid gap-8 lg:mb-[40px]", isMobile ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[0.9fr_1.6fr]")}>
             {/* Form */}
             <div>
               <Card
@@ -1293,7 +1288,7 @@ export default function Investments() { // Alterado para export default function
                     >
                       <SelectTrigger id="investment-category" className={cn(
                         "rounded-xl input-3d-premium font-medium transition-all duration-200",
-                        isMobile ? "h-9 text-sm" : "h-10",
+                        isMobile ? "h-9 text-sm" : "h-[42px]",
                         getBorderClass({ isInvalid: validationErrors.selectedInvestmentCategoryId, isValid: validationErrors.selectedInvestmentCategoryId === false })
                       )}>
                         <SelectValue placeholder="Selecione o investimento" />
@@ -1338,7 +1333,7 @@ export default function Investments() { // Alterado para export default function
                           }
                         }}
                       >
-                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-medium transition-all duration-200", isMobile ? "h-9 text-sm" : "h-10")}>
+                        <SelectTrigger className={cn("rounded-xl input-3d-premium font-medium transition-all duration-200", isMobile ? "h-9 text-sm" : "h-[42px]")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1352,7 +1347,7 @@ export default function Investments() { // Alterado para export default function
                       <div className="space-y-2 animate-in fade-in slide-in-from-left-4 duration-300">
                         <Label className={cn(isMobile && "text-xs")}>Indexador</Label>
                         <Select value={indexador} onValueChange={(v) => setIndexador(v as "CDI" | "IPCA")}>
-                          <SelectTrigger className={cn("rounded-xl input-3d-premium transition-all duration-200", isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium")}>
+                          <SelectTrigger className={cn("rounded-xl input-3d-premium transition-all duration-200", isMobile ? "h-9 text-sm font-bold" : "h-[42px] text-sm font-medium")}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -1383,7 +1378,7 @@ export default function Investments() { // Alterado para export default function
                           maxLength={7}
                           className={cn(
                             "rounded-xl input-3d-premium font-medium transition-all duration-200 placeholder:text-slate-300 placeholder:font-normal",
-                            isMobile ? "h-9 text-sm" : "h-10",
+                            isMobile ? "h-9 text-sm" : "h-[42px]",
                             getBorderClass({ isInvalid: validationErrors.profitability, isValid: validationErrors.profitability === false })
                           )}
                         />
@@ -1400,7 +1395,7 @@ export default function Investments() { // Alterado para export default function
                           placeholder="0,00"
                           className={cn(
                             "rounded-xl input-3d-premium placeholder:text-slate-300 placeholder:font-normal transition-all duration-200",
-                            isMobile ? "h-9 text-sm font-bold" : "h-10 text-sm font-medium",
+                            isMobile ? "h-9 text-sm font-bold" : "h-[42px] text-sm font-medium",
                             getBorderClass({ isInvalid: validationErrors.percentualIndexador })
                           )}
                         />
@@ -1418,7 +1413,7 @@ export default function Investments() { // Alterado para export default function
                         disabled={loadingForm}
                         className={cn(
                           "rounded-xl input-3d-premium font-medium transition-all duration-200",
-                          isMobile ? "h-9 text-sm" : "h-10",
+                          isMobile ? "h-9 text-sm" : "h-[42px]",
                           getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false })
                         )}
                       />
@@ -1493,7 +1488,7 @@ export default function Investments() { // Alterado para export default function
                           "w-full justify-start text-left font-medium h-10 rounded-xl",
                           "input-3d-premium transition-all duration-200",
                           !date && "text-muted-foreground",
-                          isMobile ? "h-9 text-sm" : "h-10",
+                          isMobile ? "h-9 text-sm" : "h-[42px]",
                           getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
                         )}
                         disabled={loadingForm}
@@ -1532,12 +1527,13 @@ export default function Investments() { // Alterado para export default function
             </div>
 
             {/* Investments List */}
-            <div>
-              <Card
-                className={cn("p-6 lg:pb-[18px] rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4")}
-                style={{ backgroundColor: "#F6F8FA" }}
-              >
-                <div className={cn("flex items-center justify-between", isMobile ? "mb-[19px]" : "mb-6")}>
+            <div className={cn("relative", isMobile ? "h-auto" : "h-full")}>
+              <div className={cn("", isMobile ? "" : "absolute inset-0")}>
+                <Card
+                  className={cn("h-full flex flex-col p-6 lg:pb-[18px] rounded-[18px] shadow-sm border border-[rgba(15,23,42,0.10)] card-despesas text-card-foreground", isMobile && "p-4 h-auto")}
+                  style={{ backgroundColor: "#F6F8FA" }}
+                >
+                  <div className={cn("flex items-center justify-between shrink-0", isMobile ? "mb-[19px]" : "mb-6")}>
                   <h2 className={cn("text-2xl font-extrabold", isMobile && "text-xl")} style={{ color: "#0556C3" }}>💰 Meus Investimentos</h2>
                   <ToggleGroup
                     type="single"
@@ -1567,7 +1563,7 @@ export default function Investments() { // Alterado para export default function
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
-                <div className={cn("overflow-y-auto no-scrollbar", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5 max-h-[480px]")}>
+                <div className={cn("overflow-y-auto no-scrollbar flex-1 min-h-0", isMobile ? "space-y-[12px] max-h-[490px]" : "space-y-3.5")}>
                   {calculatedInvestments.filter(i => i.status !== 'resgatado').length === 0 ? (
                     <p className="text-muted-foreground text-center py-12 bg-white/50 rounded-2xl border border-dashed border-gray-200">
                       Nenhum investimento cadastrado ainda.
@@ -1718,7 +1714,7 @@ export default function Investments() { // Alterado para export default function
                   )}
                 </div>
               </Card>
-
+              </div>
             </div>
           </div>
         )

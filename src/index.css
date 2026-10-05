@@ -659,7 +659,8 @@ body {
     min-height: 42px !important;
     max-height: 42px !important;
   }
-  .metas-module .input-3d-premium:not(textarea) {
+  .metas-module .input-3d-premium:not(textarea),
+  .investments-module .input-3d-premium:not(textarea) {
     height: 42px !important;
     min-height: 42px !important;
     max-height: 42px !important;
