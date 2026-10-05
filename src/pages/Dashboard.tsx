@@ -29,6 +29,7 @@ import { ptBR } from "date-fns/locale";
 import { cn, formatCurrency, getAliquotaIR, getTipoTributacao, IndexadorHistorico, buildIndexadorMap, calcularRendimentoComCDI } from "@/lib/utils";
 import { useTransactionsData } from "@/hooks/useTransactionsData";
 import { useFinancialProjection } from "@/hooks/useFinancialProjection";
+import { useProfile } from "@/hooks/useProfile";
 import { MobileCreditCardExpenses } from "@/components/MobileCreditCardExpenses";
 import { MonthBadge } from "@/components/MonthBadge";
 import { CombinedMonthlyExpensesDashboard } from "@/components/CombinedMonthlyExpensesDashboard";
@@ -40,7 +41,6 @@ import { MonthlyYieldsBarChart } from "@/components/MonthlyYieldsBarChart"; // I
 import { RevenueByTypeChart } from "@/components/RevenueByTypeChart";
 import { ProjectedYieldCard } from "@/components/ProjectedYieldCard";
 import { MonthlyProjectedYieldChart } from "@/components/MonthlyProjectedYieldChart";
-import { YearNavigatorCompact } from "@/components/YearNavigatorCompact";
 import { InvestmentsYieldChart } from "@/components/InvestmentsYieldChart";
 import { WealthProjection } from "@/components/WealthProjection";
 import { Investment } from "@/types/finance";
@@ -96,6 +96,7 @@ export default function Dashboard() {
           | "cartao_id"
           | "is_recurring_master"
           | "numero_parcelas"
+          | "data_competencia"
         > | null;
       })[]
     >({
@@ -127,6 +128,37 @@ export default function Dashboard() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as Investment[];
+    },
+    enabled: !!user,
+  });
+
+  // Global Balance Queries for "Saldo Atual" (Identical to Home.tsx)
+  const { data: globalReceivedIncome = 0 } = useQuery({
+    queryKey: ["globalReceivedIncome", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const { data, error } = await supabase
+        .from("receitas")
+        .select("valor")
+        .eq("user_id", user.id)
+        .eq("status", "Recebida");
+      if (error) throw error;
+      return data.reduce((sum, r) => sum + r.valor, 0);
+    },
+    enabled: !!user,
+  });
+
+  const { data: globalPaidExpenses = 0 } = useQuery({
+    queryKey: ["globalPaidExpenses", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const { data, error } = await supabase
+        .from("despesas_parcelas")
+        .select("valor_parcela, despesas!inner(user_id)")
+        .eq("despesas.user_id", user.id)
+        .eq("pago", true);
+      if (error) throw error;
+      return data.reduce((sum, p) => sum + p.valor_parcela, 0);
     },
     enabled: !!user,
   });
@@ -351,42 +383,44 @@ export default function Dashboard() {
     };
   }, [totalProjectedAnnualYield, investments, calculatedInvestments]);
 
-  const [projectedYear, setProjectedYear] = useState(getYear(new Date()));
+  const { data: profile } = useProfile(user?.id);
 
-  useEffect(() => {
-    setProjectedYear(getYear(selectedMonth));
-  }, [selectedMonth]);
+  const saldoAtualEmConta = useMemo(() => {
+    const currentActiveInvestments = investments
+      .filter((inv) => (inv.status === 'ativo' || !inv.status) && inv.origem_investimento === 'saldo_atual')
+      .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+      
+    const saldoCalculadoSistema = globalReceivedIncome - globalPaidExpenses - currentActiveInvestments;
+    return saldoCalculadoSistema + (profile?.saldo_ajuste || 0);
+  }, [globalReceivedIncome, globalPaidExpenses, investments, profile?.saldo_ajuste]);
 
-  const projectedYearValues = useMemo(() => {
-    const startYear = getYear(new Date());
-    const endYear = projectedYear;
+  const patrimonioBase = currentYieldStats.totalCurrentBalance + saldoAtualEmConta;
 
-    let cumulativeBalance = 0;
-
-    // Calculate cumulative balance from current year up to projectedYear
-    const rangeEnd = Math.max(startYear, endYear);
-
-    for (let year = startYear; year <= rangeEnd; year++) {
-      const yearBalance = getAnnualBalance(year) + currentYieldStats.annualYields;
-      cumulativeBalance += yearBalance;
+  const projecoesAcumuladas = useMemo(() => {
+    let acumulado = 0;
+    const firstProjectedMonth = startOfMonth(new Date());
+    const end = startOfMonth(selectedMonth);
+    
+    if (end >= firstProjectedMonth) {
+      let curr = firstProjectedMonth;
+      while (curr <= end) {
+        const mStr = format(curr, "yyyy-MM");
+        const rev = getMonthlyRevenues(mStr);
+        const exp = getMonthlyExpenses(mStr);
+        acumulado += (rev - exp) + currentYieldStats.monthYields;
+        curr = addMonths(curr, 1);
+      }
     }
+    return acumulado;
+  }, [selectedMonth, getMonthlyRevenues, getMonthlyExpenses, currentYieldStats.monthYields]);
 
-    // Specific values for the selected endYear
-    const revs = getAnnualRevenues(endYear);
-    const exps = getAnnualExpenses(endYear);
+  const projecaoMensalTotal = currentYieldStats.monthYields + stats.balance;
+  const patrimonioProjetado = patrimonioBase + projecoesAcumuladas;
 
-    const monthlyProjection = (revs - exps) / 12 + currentYieldStats.monthYields;
-    const annualBalance = (revs - exps) + currentYieldStats.annualYields;
-    const projectedPatrimony = currentYieldStats.totalCurrentBalance + cumulativeBalance;
-
-    return {
-      monthlyProjection,
-      annualBalance,
-      projectedPatrimony,
-      revenues: revs,
-      expenses: exps
-    };
-  }, [getAnnualBalance, getAnnualRevenues, getAnnualExpenses, projectedYear, currentYieldStats]);
+  const selectedYear = getYear(selectedMonth);
+  const selectedYearRevenues = getAnnualRevenues(selectedYear);
+  const selectedYearExpenses = getAnnualExpenses(selectedYear);
+  const projecaoAnual = (selectedYearRevenues - selectedYearExpenses) + currentYieldStats.annualYields;
 
   const projectedEndDate = useMemo(() => {
     if (allRevenues.length === 0 && allExpenseInstallments.length === 0) return "";
@@ -862,29 +896,26 @@ export default function Dashboard() {
 
             {!filter && (
               <ProjectedYieldCard
-                mainStatValue={
-                  projectedYear === getYear(selectedMonth)
-                    ? stats.balance + currentYieldStats.monthYields
-                    : projectedYearValues.monthlyProjection
-                }
-                projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+                mainStatValue={projecaoMensalTotal}
+                projectedPatrimonyValue={patrimonioProjetado}
                 projectedPatrimonyLabel="Patrimônio Projetado"
-                annualTotalValue={projectedYearValues.annualBalance}
+                annualTotalValue={projecaoAnual}
                 annualTotalLabel="Projeção anual"
                 isMobile={isMobile}
                 topRightContent={
-                  <YearNavigatorCompact
-                    year={projectedYear}
-                    onPreviousYear={() => setProjectedYear(p => p - 1)}
-                    onNextYear={() => setProjectedYear(p => p + 1)}
+                  <MonthNavigatorCompact premiumMode={true}
+                    selectedMonth={selectedMonth}
+                    onPreviousMonth={handlePreviousMonth}
+                    onNextMonth={handleNextMonth}
                     isMobile={isMobile}
+                    variant="balance"
                   />
                 }
                 chartContent={
                   <MonthlyProjectedYieldChart
                     revenues={allRevenues}
                     expenseInstallments={allExpenseInstallments}
-                    currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                    currentDate={selectedMonth}
                     projectedMonthlyYield={currentYieldStats.monthYields}
                     isMobile={isMobile}
                     onMonthClick={(date) => {
@@ -1053,29 +1084,26 @@ export default function Dashboard() {
 
               {!filter && (
                 <ProjectedYieldCard
-                  mainStatValue={
-                    projectedYear === getYear(selectedMonth)
-                      ? stats.balance + currentYieldStats.monthYields
-                      : projectedYearValues.monthlyProjection
-                  }
-                  projectedPatrimonyValue={projectedYearValues.projectedPatrimony}
+                  mainStatValue={projecaoMensalTotal}
+                  projectedPatrimonyValue={patrimonioProjetado}
                   projectedPatrimonyLabel="Patrimônio Projetado"
-                  annualTotalValue={projectedYearValues.annualBalance}
+                  annualTotalValue={projecaoAnual}
                   annualTotalLabel="Projeção anual"
                   isMobile={isMobile}
                   topRightContent={
-                    <YearNavigatorCompact
-                      year={projectedYear}
-                      onPreviousYear={() => setProjectedYear(p => p - 1)}
-                      onNextYear={() => setProjectedYear(p => p + 1)}
+                    <MonthNavigatorCompact premiumMode={true}
+                      selectedMonth={selectedMonth}
+                      onPreviousMonth={handlePreviousMonth}
+                      onNextMonth={handleNextMonth}
                       isMobile={isMobile}
+                      variant="balance"
                     />
                   }
                   chartContent={
                     <MonthlyProjectedYieldChart
                       revenues={allRevenues}
                       expenseInstallments={allExpenseInstallments}
-                      currentDate={new Date(projectedYear, getMonth(selectedMonth), 1)}
+                      currentDate={selectedMonth}
                       projectedMonthlyYield={currentYieldStats.monthYields}
                       isMobile={isMobile}
                       onMonthClick={(date) => {
