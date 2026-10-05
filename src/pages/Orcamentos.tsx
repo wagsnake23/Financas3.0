@@ -699,8 +699,8 @@ export default function Orcamentos() {
         key={group.parent.id}
         value={group.parent.id}
         className={cn(
-          "border border-[#DCE8F7] bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-200",
-          "data-[state=open]:bg-[linear-gradient(180deg,#FAFCFF_0%,#F5F9FF_100%)] data-[state=open]:border-[#BFD7FF]",
+          "border border-[#D6E2F2] bg-[#F3F6FB] rounded-2xl shadow-sm overflow-hidden transition-all duration-200",
+          "data-[state=open]:bg-[#DCE9FF] data-[state=open]:border-[#D6E2F2]",
           isMobile ? "mb-[3px]" : "mb-0"
         )}
       >
@@ -710,7 +710,6 @@ export default function Orcamentos() {
             "[&[data-state=open]]:bg-transparent [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-slate-500 [&[data-state=open]>svg]:text-[#2563EB] [&>svg]:stroke-[4px]",
             isMobile ? "px-3 py-2.5" : "p-4"
           )}
-          style={{ backgroundColor: group.parent.cor ? `${group.parent.cor}0A` : '#F8FBFF' }}
         >
           <div className="flex flex-col w-full text-left">
             <div className={cn("flex items-center w-full", isMobile ? "gap-3 mb-2" : "gap-4 mb-4")}>
@@ -720,7 +719,7 @@ export default function Orcamentos() {
               <div className={cn("flex flex-col flex-1 min-w-0", isMobile ? "gap-0" : "gap-[2px]")}>
                 <div className="flex justify-between items-center w-full">
                   <span className={cn(
-                    "font-semibold group-data-[state=open]:font-bold transition-all text-[#112B5E] leading-none tracking-tight truncate pr-2",
+                    "font-semibold group-data-[state=open]:font-bold group-data-[state=open]:text-[#2563EB] transition-all text-[#112B5E] leading-none tracking-tight truncate pr-2",
                     isMobile ? "text-[16px]" : "text-[18px]"
                   )}>
                     {group.parent.nome}
