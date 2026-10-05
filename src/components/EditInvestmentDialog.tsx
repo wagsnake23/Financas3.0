@@ -325,36 +325,32 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           {/* Divisor Visual */}
           <div className="h-[1px] bg-slate-100 mx-4" />
 
-          {/* Resumo Financeiro (Sem Container/Fundo Verde) */}
-          <div className="px-4 pb-4 pt-3 flex justify-between w-full items-center select-none text-[10px] leading-tight opacity-95">
-            {/* Coluna Esquerda */}
-            <div className="flex flex-col gap-2.5 justify-center h-full text-left">
-              <div className="flex flex-col">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Rentabilidade Líquida</span>
-                <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
-              </div>
-              <div className="flex flex-col pt-2 border-t border-slate-100">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Rendimento Líquido</span>
-                <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
-              </div>
+          {/* Resumo Financeiro */}
+          <div className="flex flex-col p-4 pt-3 gap-3 select-none">
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-semibold text-slate-500">Rentabilidade líquida</span>
+              <span className="text-success text-sm font-bold leading-tight">{metrics.taxaLiquida.toFixed(2)}% a.a.</span>
             </div>
 
-            {/* Coluna Direita */}
-            <div className="flex flex-col gap-2.5 items-end h-full justify-center text-right">
-              <div className="flex flex-col items-end">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Imposto de Renda</span>
-                {metrics.tipoTributacao === "isento" ? (
-                  <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
-                ) : (
-                  <span className="text-red-500 text-sm uppercase font-bold tracking-wider">
-                    {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col items-end pt-2 border-t border-slate-100">
-                <span className="text-slate-600 text-[9px] uppercase tracking-wider leading-none mb-1.5 font-black">Saldo Líquido Total</span>
-                <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-semibold text-slate-500">Imposto de renda</span>
+              {metrics.tipoTributacao === "isento" ? (
+                <span className="text-[#218C5C] text-sm font-black uppercase tracking-wider">Isento</span>
+              ) : (
+                <span className="text-red-500 text-sm font-bold">
+                  {metrics.aliquota}% <span className="text-red-500/50 mx-0.5">|</span> -{formatCurrency(metrics.imposto)}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-semibold text-slate-500">Rendimento líquido</span>
+              <span className="text-success text-sm font-bold leading-none">+ {formatCurrency(metrics.rendimentoLiquido)}</span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-semibold text-slate-500">Saldo líquido total</span>
+              <span className="text-[#0556C3] text-sm font-black tracking-tight leading-none">{formatCurrency(metrics.valorTotalLiquido)}</span>
             </div>
           </div>
         </div>
@@ -365,7 +361,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
           <Button 
             type="button" 
             onClick={onRescueClick} 
-            className="flex-1 rounded-[14px] btn-3d font-black !text-[#9A3412] border-none transition-all active:scale-95 shadow-[0_2px_4px_rgba(0,0,0,0.05)] text-[15px] sm:text-lg h-11 flex items-center justify-center gap-1.5 px-1"
+            className="flex-1 rounded-[14px] btn-3d font-black !text-[#9A3412] border-none transition-all active:scale-95 shadow-[0_1px_2px_rgba(0,0,0,0.03)] text-[16px] sm:text-[19px] h-11 flex items-center justify-center gap-1.5 px-1"
             style={{ "--cor-topo": "#FFEDD5", "--cor-base": "#FED7AA" } as any}
           >
             <span>💰</span> <span className="truncate">Resgatar</span>
@@ -374,7 +370,7 @@ export const EditInvestmentDialog: React.FC<EditInvestmentDialogProps> = ({
         <Button 
           type="button" 
           onClick={onCancelEdit} 
-          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] transition-all active:scale-95 text-base sm:text-lg h-11 flex items-center justify-center !border-[1px] !border-[#A5B4FC]/40 shadow-[inset_0_2px_2px_rgba(255,255,255,0.8),inset_1.5px_0_1.5px_rgba(255,255,255,0.4),inset_-1.5px_0_1.5px_rgba(255,255,255,0.4),0_2px_4px_rgba(0,0,0,0.05)]"
+          className="flex-1 rounded-[14px] btn-3d font-black !text-[#1E40AF] transition-all active:scale-95 text-[17px] sm:text-[19px] h-11 flex items-center justify-center !border-[1px] !border-[#A5B4FC]/40 shadow-[inset_0_2px_2px_rgba(255,255,255,0.8),inset_1.5px_0_1.5px_rgba(255,255,255,0.4),inset_-1.5px_0_1.5px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.03)]"
           style={{ "--cor-topo": "#C7D2FE", "--cor-base": "#A5B4FC" } as any}
         >
           Fechar
