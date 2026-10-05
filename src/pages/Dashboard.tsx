@@ -671,7 +671,6 @@ export default function Dashboard() {
                       onMonthClick={handleMonthClick}
                       getMonthlyExpensesFn={getMonthlyExpenses}
                       getMonthlyRevenuesFn={getMonthlyRevenues}
-                      isMonthProjectedFn={isMonthProjected}
                       disablePattern={filter === 'investments'}
                     />
                   }
@@ -875,7 +874,6 @@ export default function Dashboard() {
                     onMonthClick={handleMonthClick}
                     getMonthlyExpensesFn={getMonthlyExpenses}
                     getMonthlyRevenuesFn={getMonthlyRevenues}
-                    isMonthProjectedFn={isMonthProjected}
                     disablePattern={filter === 'investments'}
                   />
                 }
