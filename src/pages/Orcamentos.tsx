@@ -776,7 +776,7 @@ export default function Orcamentos() {
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="border-t border-[#E5EEF8] bg-transparent px-2 pt-3 pb-2 mt-1">
+        <AccordionContent className="border-t border-[#E5EEF8] bg-transparent p-3 mt-1">
           <div className="flex flex-col gap-[10px]">
             {group.items.map((item) => {
               const semPlanejamentoItem = item.absoluto <= 0;
