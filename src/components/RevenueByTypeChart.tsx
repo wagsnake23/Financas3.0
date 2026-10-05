@@ -80,14 +80,17 @@ export const RevenueByTypeChart = ({ revenues, revenueTypes, isMobile, annualTot
   return (
     <div className={cn(
       "p-6 flex flex-col relative overflow-hidden rounded-[24px]",
-      isMobile ? "px-3 py-5" : "h-full justify-between"
-    )} style={{ 
+      isMobile ? "px-3 py-5" : "h-full justify-between shadow-sm"
+    )} style={isMobile ? { 
       background: "linear-gradient(135deg, #F8FFF9 0%, #FFFFFF 55%, #F3FFF7 100%)",
       border: "1px solid rgba(255,255,255,.85)",
       backgroundClip: "padding-box",
       boxShadow: "0 8px 24px rgba(37,99,235,.05), 0 2px 6px rgba(37,99,235,.03), inset 0 1px 0 rgba(255,255,255,.95)",
       backdropFilter: "blur(18px) saturate(1.4)",
       WebkitBackdropFilter: "blur(18px) saturate(1.4)"
+    } : {
+      backgroundColor: "#FFFFFF",
+      border: "1px solid #FFFFFF"
     }}>
       {/* SHAPE ORGÂNICA */}
       <div aria-hidden="true" style={{ position: "absolute", top: "-20px", right: "-30px", width: "40%", height: "35%", borderRadius: "50%", background: "rgba(255,255,255,0.25)", filter: "blur(4px)", pointerEvents: "none", zIndex: 0 }} />
