@@ -807,9 +807,12 @@ export default function Orcamentos() {
                   key={item.id}
                   onClick={() => handleOpenEdit(item)}
                   className={cn(
-                    "flex flex-col w-full p-[14px] bg-[#FFFFFF] cursor-pointer",
-                    "border border-[#DCE7F7] rounded-[16px] shadow-[0_2px_8px_rgba(15,23,42,0.04)]",
-                    !isMobile && "transition-all duration-[180ms] ease-out hover:border-[#7AA7FF] hover:-translate-y-[1px]",
+                    "flex flex-col w-full bg-[#FFFFFF] cursor-pointer",
+                    "border border-[#D9E3F2] rounded-[16px] shadow-[0_3px_8px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]",
+                    "transition-all duration-[180ms] ease-out",
+                    isMobile ? "px-[14px] py-[11px]" : "p-[14px]",
+                    !isMobile && "hover:bg-[#FAFCFF] hover:border-[#C9DBF5] hover:-translate-y-[1px]",
+                    "active:shadow-[0_1px_2px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]",
                     isMobile && "active:scale-[0.98] active:transition-transform active:duration-[100ms] active:ease-out"
                   )}
                 >
