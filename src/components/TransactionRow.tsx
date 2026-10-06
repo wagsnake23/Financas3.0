@@ -330,7 +330,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return { icon: "", name: "" };
     })();
 
-    const dIsFixo = transaction.type === "expense" && transaction.tipo_pagamento === "fixo";
+    const dIsFixo = transaction.tipo_pagamento === "fixo";
     const dIsParcelado = !dIsFixo && !!(transaction.installmentNumber && transaction.totalInstallments && transaction.totalInstallments > 1);
     const dPaymentType = (() => {
       if (dIsFixo) return "Fixo";
