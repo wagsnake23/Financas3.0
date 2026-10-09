@@ -1058,3 +1058,92 @@ body {
   border: 1px solid #cbd5e1 !important;
   box-shadow: inset 0 3px 6px rgba(0,0,0,0.04), inset 0 2px 4px rgba(15, 23, 42, 0.08) !important;
 }
+
+/* ==========================================================================
+   Ajustes Visuais - Fundos dos Cards Home Mobile
+   ========================================================================== */
+.home-mobile-card.card-saldo,
+.home-mobile-card.card-despesas,
+.home-mobile-card.card-receitas,
+.home-mobile-card.card-cartoes {
+  background-image: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  /* Borda padronizada branca, baseada no card de Despesas original */
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark .home-mobile-card.card-saldo,
+.dark .home-mobile-card.card-despesas,
+.dark .home-mobile-card.card-receitas,
+.dark .home-mobile-card.card-cartoes {
+  /* Borda suave no dark mode */
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.home-mobile-card.card-saldo::before,
+.home-mobile-card.card-despesas::before,
+.home-mobile-card.card-receitas::before,
+.home-mobile-card.card-cartoes::before {
+  display: none !important;
+}
+
+/* Tom azul - Saldo em Conta */
+.home-mobile-card.card-saldo {
+  background-color: hsl(210, 100%, 93%) !important;
+}
+.dark .home-mobile-card.card-saldo {
+  background-color: hsl(210, 60%, 15%) !important;
+}
+
+/* Tom vermelho - Despesas */
+.home-mobile-card.card-despesas {
+  background-color: hsl(353, 100%, 93%) !important;
+}
+.dark .home-mobile-card.card-despesas {
+  background-color: hsl(0, 40%, 15%) !important;
+}
+
+/* Tom verde - Receitas */
+.home-mobile-card.card-receitas {
+  background-color: hsl(150, 60%, 90%) !important;
+}
+.dark .home-mobile-card.card-receitas {
+  background-color: hsl(150, 40%, 15%) !important;
+}
+
+/* Tom roxo - Cartões de Crédito */
+.home-mobile-card.card-cartoes {
+  background-color: hsl(270, 70%, 93%) !important;
+}
+.dark .home-mobile-card.card-cartoes {
+  background-color: hsl(270, 40%, 15%) !important;
+}
+
+/* Ajuste de altura (+2px) para os botões de ação (Ver Gastos/Receitas e Nova Despesa/Receita) 
+   na Home Mobile, sem afetar desktop nem os botões quadrados de ícone */
+@media (max-width: 767px) {
+  .home-mobile-card.card-despesas button.w-\[135px\],
+  .home-mobile-card.card-receitas button.w-\[135px\] {
+    height: calc(var(--home-btn-h, 36px) + 2px) !important;
+  }
+  
+  /* Botão Ver Gastos: Borda refinada temática (vermelha) e fundo branco */
+  .home-mobile-card.card-despesas button.w-\[135px\]:not(.text-white) {
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  }
+  
+  /* Botão Ver Receitas: Borda refinada temática (verde) e fundo branco */
+  .home-mobile-card.card-receitas button.w-\[135px\]:not(.text-white) {
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(34, 197, 94, 0.28) !important;
+    box-shadow: 0 2px 4px rgba(34, 197, 94, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  }
+  
+  /* Card Cartões: Ajuste de agrupamento visual e espaçamento vertical do mês/ano */
+  .home-mobile-card.card-cartoes .w-\[135px\].flex-col > span.text-\[12px\] {
+    margin-top: 8px !important;
+    margin-bottom: 0px !important;
+  }
+}
