@@ -145,7 +145,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
       <div className={cn("pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}>
         <Label htmlFor="category" className={cn("text-[#64748B] font-semibold", isMobile ? "text-xs -mb-[2px] block" : "mb-0.5 inline-block")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderColor("category"), getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -178,19 +178,21 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderColor("amount"), getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderColor("amount"), getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
-        {/* Parcela (condicional para Despesas) */}
-        {transactionType === "expense" && showInstallmentField && (
+        {/* Campo Informativo para Despesas (Sempre visível) */}
+        {transactionType === "expense" && (
           <div className={cn(isMobile && "space-y-1")}>
-            <Label className={cn("text-[#64748B] font-semibold", isMobile ? "text-xs -mb-[2px] block" : "mb-0.5 inline-block")}>{tipoPagamento === 'fixo' ? "Recorrência" : "Parcela"}</Label>
+            <Label className={cn("text-[#64748B] font-semibold", isMobile ? "text-xs -mb-[2px] block" : "mb-0.5 inline-block")}>
+              {showInstallmentField ? (tipoPagamento === 'fixo' ? "Recorrência" : "Parcela") : "Tipo"}
+            </Label>
             <Input
-              value={tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`}
+              value={showInstallmentField ? (tipoPagamento === 'fixo' ? "Recorrente" : `${String(installmentNumber || 0).padStart(2, '0')} de ${String(totalInstallments || 0).padStart(2, '0')}`) : "À vista"}
               readOnly
               disabled
-              className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] opacity-80 !h-[40px] box-border")}
+              className={cn("input-3d-premium modal-info-input !h-[40px] box-border")}
             />
           </div>
         )}
@@ -203,7 +205,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
               value={isRecurringTransaction ? "Recorrente" : "Avulsa"}
               readOnly
               disabled
-              className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] opacity-80 !h-[40px] box-border")}
+              className={cn("input-3d-premium modal-info-input !h-[40px] box-border")}
             />
           </div>
         )}
@@ -217,7 +219,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             value={selectValue}
             onValueChange={handleFormaPagamentoChange}
           >
-            <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderColor("formaPagamento"), getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderColor("formaPagamento"), getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -248,7 +250,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderColor("cartaoId"), getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("input-3d-premium modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderColor("cartaoId"), getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -276,7 +278,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             variant={"outline"}
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
             className={cn(
-              "w-full justify-start pl-3 text-left font-normal input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border",
+              "w-full justify-start pl-3 text-left font-normal input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border",
               !date && "text-muted-foreground",
               getBorderColor("date"),
               getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
@@ -323,7 +325,7 @@ export const TransactionDetailsFields: React.FC<TransactionDetailsFieldsProps> =
             rows={2}
             maxLength={100}
             className={cn(
-              "resize-y input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !pb-6",
+              "resize-y input-3d-premium input-white modal-edit-input !text-[#263449] !pb-6",
               getBorderColor("description")
             )}
             disabled={false}

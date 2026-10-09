@@ -99,7 +99,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       <div className={cn("space-y-2 pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}> {/* Removido mt-[-1rem] para mobile */}
         <Label htmlFor="category" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
+          <SelectTrigger className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
             <SelectValue placeholder="Selecione a subcategoria" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -132,19 +132,21 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               setAmount(v);
               setValidationErrors(prev => ({ ...prev, amount: false }));
             }}
-            className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
+            className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.amount, isValid: validationErrors.amount === false }))}
           />
         </div>
 
-        {/* Parcela (condicional) */}
-        {isExpenseInstallment && (
+        {/* Campo Informativo para Despesas (Sempre visível) */}
+        {transactionType === "expense" && (
           <div className={cn("space-y-2", isMobile && "space-y-1")}>
-            <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Parcela</Label>
+            <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>
+              {isExpenseInstallment ? "Parcela" : "Tipo"}
+            </Label>
             <Input
-              value={`${installmentNumber || 0} de ${totalInstallments || 0}`}
+              value={isExpenseInstallment ? `${installmentNumber || 0} de ${totalInstallments || 0}` : "À vista"}
               readOnly
               disabled
-              className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] opacity-80 !h-[40px] box-border")}
+              className={cn("input-3d-premium modal-info-input !h-[40px] box-border")}
             />
           </div>
         )}
@@ -164,7 +166,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
               setValidationErrors(prev => ({ ...prev, formaPagamento: false }));
             }}
           >
-            <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
+            <SelectTrigger className={cn("input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.formaPagamento, isValid: validationErrors.formaPagamento === false }))}>
               <SelectValue placeholder="Selecione a forma de pagamento" />
             </SelectTrigger>
             <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -198,7 +200,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
                 setValidationErrors(prev => ({ ...prev, cartaoId: false }));
               }}
             >
-              <SelectTrigger className={cn("input-3d-premium !bg-[#FFFFFF] !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
+              <SelectTrigger className={cn("input-3d-premium modal-edit-input !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.cartaoId, isValid: validationErrors.cartaoId === false }))}>
                 <SelectValue placeholder="Selecione o cartão" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-none shadow-xl">
@@ -224,7 +226,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             variant={"outline"}
             onClick={() => setIsCalendarOpen(true)}
             className={cn(
-              "w-full justify-start pl-3 text-left font-normal input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border",
+              "w-full justify-start pl-3 text-left font-normal input-3d-premium input-white modal-edit-input !text-[#263449] !h-[40px] box-border",
               !date && "text-muted-foreground",
               getBorderClass({ isInvalid: validationErrors.date, isValid: validationErrors.date === false })
             )}
@@ -267,7 +269,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
             placeholder="Adicione uma descrição..."
             rows={3}
             maxLength={100}
-            className={cn("resize-y input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !pb-6")}
+            className={cn("resize-y input-3d-premium input-white modal-edit-input !text-[#263449] !pb-6")}
           />
           <div className="absolute bottom-1.5 right-2 text-[11px] font-medium text-[#64748B] pointer-events-none">
             {description.length}/100
