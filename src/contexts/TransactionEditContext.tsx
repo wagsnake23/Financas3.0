@@ -126,8 +126,8 @@ export const TransactionEditProvider: React.FC<{ children: React.ReactNode }> = 
           <DialogContent
             className={
               window.innerWidth < 768 
-                ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4 shadow-sm border-none bg-[#F4F8FF] edit-lancamento-modal" 
-                : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px] shadow-sm border-none bg-[#F4F8FF] edit-lancamento-modal"
+                ? "dialog-mobile w-[calc(100%-4px)] max-w-[calc(100%-4px)] !rounded-[19px] !px-3 pb-4 shadow-sm border-none bg-[#FAFAFA] edit-lancamento-modal" 
+                : "sm:max-w-[415px] sm:max-h-[90vh] overflow-y-auto !rounded-[19px] sm:!pb-[19px] sm:!px-[19px] shadow-sm border-none bg-[#FAFAFA] edit-lancamento-modal"
             }
             style={{
               border: window.innerWidth < 768 ? "2px solid #FFFFFF" : "none",
