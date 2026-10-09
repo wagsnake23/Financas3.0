@@ -871,7 +871,13 @@ body {
   #expense-form textarea.input-3d-premium,
   #expense-form [role="combobox"].input-3d-premium,
   #expense-form [aria-haspopup="dialog"].input-3d-premium,
-  #expense-form button.input-3d-premium {
+  #expense-form button.input-3d-premium,
+  #income-form input.input-3d-premium,
+  #income-form select.input-3d-premium,
+  #income-form textarea.input-3d-premium,
+  #income-form [role="combobox"].input-3d-premium,
+  #income-form [aria-haspopup="dialog"].input-3d-premium,
+  #income-form button.input-3d-premium {
     background-color: #FFFFFF !important;
     color: #1e293b !important;
     font-weight: 600 !important;
