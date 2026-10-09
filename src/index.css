@@ -1128,10 +1128,7 @@ body {
 /* Ajuste de altura (+2px) para os botões de ação (Ver Gastos/Receitas e Nova Despesa/Receita) 
    na Home Mobile, sem afetar desktop nem os botões quadrados de ícone */
 @media (max-width: 767px) {
-  .home-mobile-card.card-despesas button.w-\[135px\],
-  .home-mobile-card.card-receitas button.w-\[135px\] {
-    height: calc(var(--home-btn-h, 36px) + 2px) !important;
-  }
+
   
   /* Botões removidos para usarem o btn-3d nativo diretamente */
   

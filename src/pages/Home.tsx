@@ -726,7 +726,7 @@ export default function Home() {
                                             </div>
                                             <Button
                                                 className="btn-3d px-4 rounded-[11px] font-bold border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#ef4444" } as any}
+                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", marginTop: isMobile ? "4px" : undefined, height: isMobile ? "calc(var(--home-btn-h, 36px) + 4px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#ef4444" } as any}
                                                 onClick={() => navigate(`/lancamentos?type=expense&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                             >
                                                 Ver Gastos <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -761,7 +761,7 @@ export default function Home() {
                                             </div>
                                             <Button
                                                 className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                                style={{ height: isMobile ? "calc(var(--home-btn-h, 36px) + 4px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #ef4444, #dc2626)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                                 onClick={() => navigate("/despesas")}
                                             >
                                                 <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
@@ -811,7 +811,7 @@ export default function Home() {
                                             </div>
                                             <Button
                                                 className="btn-3d px-4 rounded-[11px] font-bold border-none transition-all duration-200 shadow-[0_2px_4px_rgba(0,0,0,0.05)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#15803d" } as any}
+                                                style={{ "--cor-topo": "#FFFFFF", "--cor-base": "#F1F5F9", borderBottom: "1px solid rgba(0,0,0,0.12)", boxShadow: "inset 0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 3px rgba(0, 0, 0, 0.15)", marginTop: isMobile ? "4px" : undefined, height: isMobile ? "calc(var(--home-btn-h, 36px) + 4px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", color: "#15803d" } as any}
                                                 onClick={() => navigate(`/lancamentos?type=income&month=${format(selectedMonth, "yyyy-MM-dd")}`)}
                                             >
                                                 Ver Receitas <DynamicIcon name="ChevronRight" className="h-3.5 w-3.5" strokeWidth={4} />
@@ -846,7 +846,7 @@ export default function Home() {
                                             </div>
                                             <Button
                                                 className="px-4 rounded-[11px] font-bold text-white border-none transition-all hover:-translate-y-[1px] active:translate-y-[1px] active:shadow-[0_3px_8px_rgba(0,0,0,0.4)] w-[135px] -mr-1 flex items-center justify-center gap-1"
-                                                style={{ height: isMobile ? "var(--home-btn-h, 36px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
+                                                style={{ height: isMobile ? "calc(var(--home-btn-h, 36px) + 4px)" : "40px", fontSize: isMobile ? "var(--home-btn-text, 14px)" : "15px", background: "linear-gradient(135deg, #22c55e, #16a34a)", borderBottom: "1px solid rgba(0,0,0,0.4)", filter: "saturate(0.85)", boxShadow: "0 4px 12px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.25)", textShadow: "0 1px 1px rgba(0, 0, 0, 0.15)" }}
                                                 onClick={() => navigate("/receitas")}
                                             >
                                                 <span className="text-[18px] leading-none mb-[2px] font-medium">+</span>
