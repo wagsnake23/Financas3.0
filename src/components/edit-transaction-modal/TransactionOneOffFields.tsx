@@ -96,7 +96,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
   return (
     <div className={cn("space-y-4", isMobile && "w-full space-y-2")}> {/* Removido max-w-[280px] mx-auto */}
       {/* Subcategoria */}
-      <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}> {/* Removido mt-[-1rem] para mobile */}
+      <div className={cn("space-y-2 pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}> {/* Removido mt-[-1rem] para mobile */}
         <Label htmlFor="category" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Subcategoria</Label>
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className={cn("input-3d-premium input-white !border !border-[#D1DCE8] !text-[#263449] !h-[40px] box-border", getBorderClass({ isInvalid: validationErrors.category, isValid: validationErrors.category === false }))}>
@@ -122,7 +122,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       </div>
 
       {/* Valor e Parcela (lado a lado) */}
-      <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-2 pb-[3px]" : "grid-cols-2")}>
+      <div className={cn("grid gap-4 pb-[4px]", isMobile ? "grid-cols-2 gap-2 !pb-[7px]" : "grid-cols-2")}>
         {/* Valor */}
         <div className={cn("space-y-2", isMobile && "space-y-1")}>
           <Label htmlFor="amount" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Valor (R$)</Label>
@@ -152,7 +152,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 
       {/* NOVO: Forma de Pagamento */}
       {transactionType === "expense" && ( // Apenas para despesas
-        <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+        <div className={cn("space-y-2 pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}>
           <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Forma de Pagamento</Label>
           <Select
             value={formaPagamento}
@@ -188,7 +188,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
 
       {/* NOVO: Seleção de Cartão de Crédito (condicional) */}
       {transactionType === "expense" && formaPagamento === "cartao" && (
-        <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+        <div className={cn("space-y-2 pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}>
           <Label className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Cartão de Crédito</Label>
           <div className="flex gap-2">
             <Select
@@ -217,7 +217,7 @@ export const TransactionOneOffFields: React.FC<TransactionOneOffFieldsProps> = (
       )}
 
       {/* Data (abaixo de Valor e Parcela) */}
-      <div className={cn("space-y-2", isMobile && "space-y-1 pb-[3px]")}>
+      <div className={cn("space-y-2 pb-[4px]", isMobile && "space-y-1 !pb-[7px]")}>
         <Label htmlFor="date" className={cn("text-[#64748B] font-semibold", isMobile && "text-xs -mb-[2px] block")}>Data</Label>
           <Button
             type="button"
